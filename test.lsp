@@ -1,0 +1,12 @@
+(defun c:drawplate ( / old_osmode pt1 pt2 pt3 pt4) 
+  (setq old_osmode (getvar "osmode")) 
+  (setvar "osmode" 0) 
+  (command "._-layer" "_m" "Plate" "_c" 5 "" "") 
+  (setq pt1 '(0 0 0)) 
+  (setq pt2 '(5 0 0)) 
+  (setq pt3 '(5 2.75 0)) 
+  (setq pt4 '(0 2.75 0)) 
+  (command "._line" pt1 pt2 pt3 pt4 "_c") 
+  (setvar "osmode" old_osmode) 
+)
+
