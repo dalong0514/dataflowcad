@@ -9,7 +9,7 @@
   (alert "更新数据成功")(princ)
 )
 
-(defun c:testEquipTag (/ insPt equipInfoList equipTag equipName i tag name)
+(defun c:EquipTag (/ insPt equipInfoList equipTag equipName i tag name)
   (setvar "ATTREQ" 1)
   (setq ss (GetEquipSS))
   (setq equipInfoList (GetEquipTagList ss))
