@@ -31,7 +31,8 @@
   (if (not (new_dialog "dataflow" dcl_id))
     (exit)
   )
-  (set_tile "filename" "FileName");the default value of input box
+  ;the default value of input box
+  (set_tile "filename" "FileName")
   (mode_tile "filename" 2)
   (action_tile "filename" "(setq filename $value)")
   (setq status (start_dialog))
@@ -43,7 +44,6 @@
       (setq currentDir (getvar "dwgprefix"))
       (setq fn (strcat currentDir fn ".txt"))
     )
-    ;(alert "取消")
   )
 )
 
@@ -79,7 +79,7 @@
   )
   ; optional setting for the popup_list tile
   (set_tile "property_name" "0")
-  ;the default value of input box
+  ; the default value of input box
   (set_tile "property_value" "")
   (mode_tile "property_name" 2)
   (mode_tile "property_value" 2)
@@ -99,7 +99,6 @@
       (ModifyPropertyValue ss selectedName property_value)
       (alert "更新数据成功")(princ)
     )
-    ;(alert "取消选择")
   )
 )
 
@@ -173,6 +172,23 @@
       )
     )
   )
+  (if (= blockSSName "Equipment")
+    (progn
+      (setq ss (ssget '((0 . "INSERT") 
+            (-4 . "<OR")
+              (2 . "Reactor")
+              (2 . "Pump")
+              (2 . "Tank")
+              (2 . "Heater")
+              (2 . "Centrifuge")
+              (2 . "Vacuum")
+              (2 . "CustomEquip")
+            (-4 . "OR>")
+          )
+        )
+      )
+    )
+  )
   ss
 )
 
@@ -184,11 +200,11 @@
       (repeat (sslength ss)
         (if (/= nil (ssname ss i))
           (progn
-	    ; get the entity information of the i(th) block
+	          ; get the entity information of the i(th) block
             (setq ent (entget (ssname ss i)))
-	    ; save the entity name of the i(th) block
+	          ; save the entity name of the i(th) block
             (setq blk (ssname ss i))
-	    ; get the property information
+	          ; get the property information
             (setq entx (entget (entnext (cdr (assoc -1 ent)))))
             (while (= "ATTRIB" (cdr (assoc 0 entx)))
               (setq value (cdr (assoc 2 entx)))
@@ -199,7 +215,7 @@
                   (entmod (subst a b entx))
                 )
               )
-	      ; get the next property information
+	            ; get the next property information
               (setq entx (entget (entnext (cdr (assoc -1 entx)))))
             )
             (entupd blk)
@@ -215,7 +231,7 @@
 (defun c:EquipTag (/ insPt equipInfoList equipTag equipName i tag name)
   (setvar "ATTREQ" 1)
   (setvar "ATTDIA" 0)
-  (setq ss (GetEquipSS))
+  (setq ss (GetBlockSS "Equipment"))
   (setq equipInfoList (GetEquipTagList ss))
   (setq equipTag (car equipInfoList))
   (setq equipName (nth 1 equipInfoList))
@@ -228,23 +244,6 @@
     (setq i (+ 1 i))
   )
   (setvar "ATTREQ" 0)
-)
-
-; get the select set of equipment
-(defun GetEquipSS ()
-  (setq ss (ssget '((0 . "INSERT") 
-		    (-4 . "<OR")
-		      (2 . "Reactor")
-		      (2 . "Pump")
-		      (2 . "Tank")
-		      (2 . "Heater")
-		      (2 . "Centrifuge")
-		      (2 . "Vacuum")
-		      (2 . "CustomEquip")
-		    (-4 . "OR>")
-		   )
-	   )
-  )
 )
 
 ; get the new inserting position
@@ -278,10 +277,10 @@
             (while (= "ATTRIB" (cdr (assoc 0 entx)))
               (setq value (cdr (assoc 2 entx)))
               (if (= value "TAG")
-		(setq equipTag (append equipTag (list (cdr (assoc 1 entx)))))
+		            (setq equipTag (append equipTag (list (cdr (assoc 1 entx)))))
               )
               (if (= value "NAME")
-		(setq equipName (append equipName (list (cdr (assoc 1 entx)))))
+		            (setq equipName (append equipName (list (cdr (assoc 1 entx)))))
               )
 	            ; get the next property information
               (setq entx (entget (entnext (cdr (assoc -1 entx)))))
@@ -418,6 +417,13 @@
   (file-encode-trans fn "gb2312" "utf-8")
   (alert "数据提取成功")(princ)
 )
+
+
+
+
+
+
+
 
 ; extarct data form the for OuterPipe Blocks
 (defun ExtactOuterPipe (f ss / N index i ent blk entx value)
