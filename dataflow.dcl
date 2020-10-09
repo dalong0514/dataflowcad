@@ -21,7 +21,7 @@ dataflow :dialog {
 }
 
 modifyInstrumentProperty : dialog {
-  label = "批量修改块内的属性"; 
+  label = "批量修改仪表块内的属性"; 
   key = "dlg_layer";
   : boxed_radio_column {
     : popup_list { 
@@ -58,7 +58,7 @@ modifyInstrumentProperty : dialog {
 }
 
 modifyPipeProperty : dialog {
-  label = "批量修改块内的属性"; 
+  label = "批量修改管道块内的属性"; 
   key = "dlg_layer";
   : boxed_radio_column {
     : popup_list { 
