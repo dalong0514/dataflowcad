@@ -2,8 +2,11 @@
 (princ "\n数据流一体化开发者：冯大龙、谢雨东、华雷、靳淳、陈杰，版本号V-0.7")
 (vl-load-com)
 
+;;;-------------------------------------------------------------------------;;;
+; Utils Function 
+
 ; tansfor gb2312 to utf8
-(defun file-encode-trans (file charset1 charset2 / obj encode)
+(defun FileEncodeTransUtils (file charset1 charset2 / obj encode)
   (setq obj (vlax-create-object "ADODB.Stream"))
   (vlax-put-property obj 'type 2);1-二进制读取，2-文本读取
   (vlax-put-property obj 'mode 3);1-读，2-写，3-读写
@@ -25,8 +28,131 @@
   (vlax-release-object obj)
 )
 
+(defun GetBlockSSUtils (blockSSName selectMethod / ss)
+  ; need to refactor
+  (if (= selectMethod "all")
+    (progn
+      (if (= blockSSName "Pipe")
+        (progn
+          (setq ss (ssget "X" '((0 . "INSERT") 
+                (-4 . "<OR")
+                  (2 . "PipeArrowLeft")
+                  (2 . "PipeArrowUp")
+                (-4 . "OR>")
+              )
+            )
+          )
+        )
+      )
+      (if (= blockSSName "Instrument")
+        (progn
+          (setq ss (ssget "X" '((0 . "INSERT") 
+                (-4 . "<OR")
+                  (2 . "InstrumentP")
+                  (2 . "InstrumentL")
+                  (2 . "InstrumentSIS")
+                (-4 . "OR>")
+              )
+            )
+          )
+        )
+      )
+      (if (= blockSSName "Equipment")
+        (progn
+          (setq ss (ssget "X" '((0 . "INSERT") 
+                (-4 . "<OR")
+                  (2 . "Reactor")
+                  (2 . "Pump")
+                  (2 . "Tank")
+                  (2 . "Heater")
+                  (2 . "Centrifuge")
+                  (2 . "Vacuum")
+                  (2 . "CustomEquip")
+                (-4 . "OR>")
+              )
+            )
+          )
+        )
+      )
+    )
+    (progn
+      (if (= blockSSName "Pipe")
+        (progn
+          (setq ss (ssget '((0 . "INSERT") 
+                (-4 . "<OR")
+                  (2 . "PipeArrowLeft")
+                  (2 . "PipeArrowUp")
+                (-4 . "OR>")
+              )
+            )
+          )
+        )
+      )
+      (if (= blockSSName "Instrument")
+        (progn
+          (setq ss (ssget '((0 . "INSERT") 
+                (-4 . "<OR")
+                  (2 . "InstrumentP")
+                  (2 . "InstrumentL")
+                  (2 . "InstrumentSIS")
+                (-4 . "OR>")
+              )
+            )
+          )
+        )
+      )
+      (if (= blockSSName "Equipment")
+        (progn
+          (setq ss (ssget '((0 . "INSERT") 
+                (-4 . "<OR")
+                  (2 . "Reactor")
+                  (2 . "Pump")
+                  (2 . "Tank")
+                  (2 . "Heater")
+                  (2 . "Centrifuge")
+                  (2 . "Vacuum")
+                  (2 . "CustomEquip")
+                (-4 . "OR>")
+              )
+            )
+          )
+        )
+      )
+    )
+  )
+  ss
+)
+
+(defun GetssEntityNameListUtils (ss / i ssEntityNameList)
+  (if (/= ss nil)
+    (progn
+      (setq ssEntityNameList '())
+      (setq i 0)
+      (repeat (sslength ss)
+        (append ssEntityNameList (list (ssname ss i)))
+        (setq i (+ i 1))
+      )
+      ssEntityNameList
+    )
+  )
+)
+
+(defun MergeTwoSSUtils (firstSS secondSS / i)
+  (if (/= secondSS nil)
+    (progn
+      (setq i 0)
+      (repeat (sslength secondSS)
+        (ssadd (ssname secondSS i) firstSS)
+        (setq i (+ i 1))
+      )
+      firstSS
+    )
+    firstSS
+  )
+)
+
 ; get the current file direction
-(defun getFileDir (/ dcl_id fn currentDir filename)
+(defun GetCurrentDirByBox (/ dcl_id fn currentDir filename)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (if (not (new_dialog "dataflow" dcl_id))
     (exit)
@@ -44,8 +170,91 @@
       (setq currentDir (getvar "dwgprefix"))
       (setq fn (strcat currentDir fn ".txt"))
     )
+    ; optional
+    (done_dialog 0)
   )
 )
+
+; Utils Function 
+;;;-------------------------------------------------------------------------;;;
+
+
+;;;-------------------------------------------------------------------------;;;
+; test zoom
+
+(defun c:testfunc (/ ss)
+  (setq fn (GetCurrentDirByBox))
+  (setq f (open fn "w"))
+  (setq ss (GetGsInstrumentSS))
+  (ExtractBlockData f ss)
+  (close f)
+  (FileEncodeTransUtils fn "gb2312" "utf-8")
+  (alert "数据提取成功")(princ)
+)
+
+(defun GetGsInstrumentSS (/ InstrumentSS equipmentSS gsInstrumentSS)
+  (setq InstrumentSS (GetBlockSSUtils "Instrument" "all"))
+  (setq equipmentSS (GetBlockSSUtils "Equipment" "all"))
+  (setq pipeSS (GetBlockSSUtils "Pipe" "all"))
+  (setq gsInstrumentSS (MergeTwoSSUtils InstrumentSS equipmentSS))
+  (setq gsInstrumentSS (MergeTwoSSUtils InstrumentSS pipeSS))
+)
+
+; extract data form a Block
+(defun ExtractBlockData (f ss / i ent blk entx value direction)
+  (if (/= ss nil)
+    (progn
+      (setq i 0)
+      (repeat (sslength ss)
+        (if (/= nil (ssname ss i))
+          (progn
+            (princ "{" f)
+            (setq ent (entget (ssname ss i)))
+            (setq blk (ssname ss i))
+            (setq entx (entget (entnext (cdr (assoc -1 ent)))))
+            (while (= "ATTRIB" (cdr (assoc 0 entx)))
+              (setq value (cdr (assoc 2 entx)))
+              (writeProperty value "FUNCTION" "function" entx f)
+              (writeProperty value "TAG" "tag" entx f)
+              (writeProperty value "HALARM" "halarm" entx f)
+              (writeProperty value "LALARM" "lalarm" entx f)
+              (writeProperty value "SUBSTANCE" "substance" entx f)
+              (writeProperty value "TEMP" "temp" entx f)
+              (writeProperty value "PRESSURE" "pressure" entx f)
+	            (writeProperty value "SORT" "sort" entx f)
+              (writeProperty value "PHASE" "phase" entx f)
+              (writeProperty value "MATERIAL" "material" entx f)
+              (writeProperty value "NAME" "name" entx f)
+              (writeProperty value "LOCATION" "location" entx f)
+              (writeProperty value "MIN" "minvalue" entx f)
+              (writeProperty value "MAX" "maxvalue" entx f)
+              (writeProperty value "NOMAL" "nomal" entx f)
+              (writeProperty value "DRAWNUM" "drawnum" entx f)
+              (writeProperty value "COMMENT" "comment" entx f)
+              (writeProperty value "INSTALLSIZE" "installsize" entx f)
+              (if (= value "DIRECTION")
+                (progn
+                  (setq direction (cdr (assoc 1 entx)))
+                  (princ (strcat "\"class\": \"" "concentrated" "\",") f)
+                  (princ (strcat "\"direction\": \"" direction "\"") f)
+                )
+              )
+              ; get the next property information
+              (setq entx (entget (entnext (cdr (assoc -1 entx)))))
+            )
+            (princ "}\n" f)
+            (entupd blk)
+            (setq i (+ 1 i))
+          )
+        )
+      )
+    )
+  )
+)
+
+; test zoom
+;;;-------------------------------------------------------------------------;;;
+
 
 ;  the command for print the newest version information
 (defun c:printVersionInfo (/ versionInfo)
@@ -166,6 +375,7 @@
             (-4 . "<OR")
               (2 . "InstrumentP")
               (2 . "InstrumentL")
+              (2 . "InstrumentSIS")
             (-4 . "OR>")
           )
         )
@@ -297,7 +507,7 @@
 
 ;  the command for extarcting data from the for PipeArrow Blocks
 (defun c:gspipe (/ fn f ssLeft ssUp)
-  (setq fn (getFileDir))
+  (setq fn (GetCurrentDirByBox))
   (setq f (open fn "w"))
   (setq ssLeft (ssget "x" '((0 . "INSERT") (2 . "PipeArrowLeft"))))
   (setq ssUp (ssget "x" '((0 . "INSERT") (2 . "PipeArrowUp"))))
@@ -305,13 +515,13 @@
   (ExtactPipeArrow f ssUp)
   (close f)
   ; tansfor the encode
-  (file-encode-trans fn "gb2312" "utf-8")
+  (FileEncodeTransUtils fn "gb2312" "utf-8")
   (alert "数据提取成功")(princ)
 )
 
 ; the command for extarcting data from globalVentilation Block
 (defun c:nsglobal (/ fn f ssRoom ssSubstance ssHotWet)
-  (setq fn (getFileDir))
+  (setq fn (GetCurrentDirByBox))
   (setq f (open fn "w"))
   (setq ssRoom (ssget "x" '((0 . "INSERT") (2 . "RoomData"))))
   (setq ssSubstance (ssget "x" '((0 . "INSERT") (2 . "SubstanceData"))))
@@ -321,14 +531,14 @@
   (ExtactGlobalHotWet f ssHotWet)
   (close f)
   ; tansfor the encode
-  (file-encode-trans fn "gb2312" "utf-8")
+  (FileEncodeTransUtils fn "gb2312" "utf-8")
   (alert "数据提取成功")(princ)
 )
 
 
 ; the command for extarcting data from InstrumentP/InstrumentL Block
 (defun c:gsinstrument (/ fn f ssP ssL)
-  (setq fn (getFileDir))
+  (setq fn (GetCurrentDirByBox))
   (setq f (open fn "w"))
   (setq ssP (ssget "x" '((0 . "INSERT") (2 . "InstrumentP"))))
   (setq ssL (ssget "x" '((0 . "INSERT") (2 . "InstrumentL"))))
@@ -354,13 +564,13 @@
   (ExtactCustomEquip f ssCustomEquip)
   (close f)
   ; tansfor the encode
-  (file-encode-trans fn "gb2312" "utf-8")
+  (FileEncodeTransUtils fn "gb2312" "utf-8")
   (alert "数据提取成功")(princ)
 )
 
 ; the command for extarcting data from Equipment Block
 (defun c:gsequipment (/ fn f ssReactor ssPump ssTank ssHeater ssCentrifuge ssVacuum ssCustom)
-  (setq fn (getFileDir))
+  (setq fn (GetCurrentDirByBox))
   (setq f (open fn "w"))
   (setq ssReactor (ssget "x" '((0 . "INSERT") (2 . "Reactor"))))
   (setq ssPump (ssget "x" '((0 . "INSERT") (2 . "Pump"))))
@@ -378,13 +588,13 @@
   (ExtactCustomEquip f ssCustomEquip)
   (close f)
   ; tansfor the encode
-  (file-encode-trans fn "gb2312" "utf-8")
+  (FileEncodeTransUtils fn "gb2312" "utf-8")
   (alert "数据提取成功")(princ)
 )
 
 ; extarcting data from Equipment Block for electric condition
 (defun c:gselectric (/ fn f ssReactor ssPump ssCentrifuge ssVacuum)
-  (setq fn (getFileDir))
+  (setq fn (GetCurrentDirByBox))
   (setq f (open fn "w"))
   (setq ssReactor (ssget "x" '((0 . "INSERT") (2 . "Reactor"))))
   (setq ssPump (ssget "x" '((0 . "INSERT") (2 . "Pump"))))
@@ -396,13 +606,13 @@
   (ExtactVacuum f ssVacuum)
   (close f)
   ; tansfor the encode
-  (file-encode-trans fn "gb2312" "utf-8")
+  (FileEncodeTransUtils fn "gb2312" "utf-8")
   (alert "数据提取成功")(princ)
 )
 
 ; the command for extarcting data from OuterPipe Block
 (defun c:gsouterpipe (/ fn f ssRightTo ssRightFrom ssLeftTo ssLeftFrom)
-  (setq fn (getFileDir))
+  (setq fn (GetCurrentDirByBox))
   (setq f (open fn "w"))
   (setq ssOuterPipeRight (ssget "x" '((0 . "INSERT") (2 . "OuterPipeRight"))))
   (setq ssOuterPipeLeft (ssget "x" '((0 . "INSERT") (2 . "OuterPipeLeft"))))
@@ -414,16 +624,9 @@
   (ExtactPipeArrow f ssUp)
   (close f)
   ; tansfor the encode
-  (file-encode-trans fn "gb2312" "utf-8")
+  (FileEncodeTransUtils fn "gb2312" "utf-8")
   (alert "数据提取成功")(princ)
 )
-
-
-
-
-
-
-
 
 ; extarct data form the for OuterPipe Blocks
 (defun ExtactOuterPipe (f ss / N index i ent blk entx value)
