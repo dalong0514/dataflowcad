@@ -205,6 +205,15 @@
   )
 )
 
+(defun WritePropertyToBlock (propertyName propertyPairName entx f / propteryValue)
+  (if (= propertyName (car propertyPairName))
+    (progn
+      (setq propteryValue (cdr (assoc 1 entx)))
+      (princ (strcat "\"" (nth 1 propertyPairName) "\": \"" propteryValue "\",") f)
+    )
+  )
+)
+
 ; Utils Function 
 ;;;-------------------------------------------------------------------------;;;
 
@@ -223,7 +232,26 @@
 )
 
 (defun GetGsInstrumentSS (/ InstrumentSS equipmentSS gsInstrumentSS)
-  (setq InstrumentSS (GetBlockSSUtils "Instrument" "all"))
+  (setq propertyPairNameList '(
+                            '("FUNCTION" "function")
+                            '("TAG" "tag")
+                            '("HALARM" "halarm")
+                            '("LALARM" "lalarm")
+                            '("SUBSTANCE" "substance")
+                            '("TEMP" "temp")
+                            '("SORT" "sort")
+                            '("PHASE" "phase")
+                            '("MATERIAL" "material")
+                            '("NAME" "name")
+                            '("LOCATION" "location")
+                            '("MIN" "minvalue")
+                            '("MAX" "maxvalue")
+                            '("NOMAL" "nomal")
+                            '("DRAWNUM" "drawnum")
+                            '("COMMENT" "comment")
+                            '("INSTALLSIZE" "installsize")
+                           ))
+  (setq InstrumentSS (GetBlockSSUtils "InstrumentP" "all"))
   (setq equipmentSS (GetBlockSSUtils "Equipment" "all"))
   (setq pipeSS (GetBlockSSUtils "Pipe" "all"))
   (setq gsInstrumentSS (MergeTwoSSUtils InstrumentSS equipmentSS))
