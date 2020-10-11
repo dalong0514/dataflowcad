@@ -1057,9 +1057,37 @@
   (list aPropertyValueList entityList)
 )
 
+(defun ModifyPropertyValueByEntityName (entityList selectedName propertyValue / i ent blk entx propertyName)
+  (setq i 0)
+  (repeat (length entityList)
+    ; get the entity information of the i(th) block
+    (setq ent (entget (nth i entityList)))
+    ; save the entity name of the i(th) block
+    (setq blk (nth i entityList))
+    ; get the property information
+    (setq entx (entget (entnext (cdr (assoc -1 ent)))))
+    (while (= "ATTRIB" (cdr (assoc 0 entx)))
+      (setq propertyName (cdr (assoc 2 entx)))
+      (if (= propertyName selectedName)
+        (progn
+          (setq a (cons 1 propertyValue))
+          (setq b (assoc 1 entx))
+          (entmod (subst a b entx))
+        )
+      )
+      ; get the next property information
+      (setq entx (entget (entnext (cdr (assoc -1 entx)))))
+    )
+    (entupd blk)
+    (setq i (+ 1 i))
+  )
+)
+
 (defun c:testss (/ ss)
   (setq ss (GetPipeSSBySelectUtils))
-  (GetBlockAPropertyValueListByPropertyNamePattern ss "PIPENUM" "VT*")
+  (setq blockDataList (GetBlockAPropertyValueListByPropertyNamePattern ss "PIPENUM" "VT*"))
+  (setq entityList (car (cdr blockDataList)))
+  (ModifyPropertyValueByEntityName entityList "PIPENUM" "VT1102")
 )
 
 ; function for modify data
