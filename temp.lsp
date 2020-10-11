@@ -788,7 +788,7 @@
 )
 
 
-(defun filterAndModifyBlockPropertyByBox (tileName blockSSName / dcl_id propertyName propertyValue status selectedName ss sslen matchedList)
+(defun filterAndModifyBlockPropertyByBox (tileName blockSSName / dcl_id propertyName propertyValue filterPropertyName patternValue status selectedName selectedFilterName ss sslen matchedList)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -811,6 +811,8 @@
     (mode_tile "propertyValue" 2)
     (action_tile "propertyName" "(setq propertyName $value)")
     (action_tile "propertyValue" "(setq propertyValue $value)")
+    (action_tile "filterPropertyName" "(setq filterPropertyName $value)")
+    (action_tile "patternValue" "(setq patternValue $value)")
     (if (= nil propertyName)
       (setq propertyName "0")
     )
@@ -840,15 +842,17 @@
       (progn 
         (setq ss (GetPipeSSBySelectUtils))
         (setq sslen (sslength ss))
-        ;(setq selectedName (GetPropertyName propertyName blockSSName))
-        ;(ModifyPropertyValue ss selectedName propertyValue)
+        (setq selectedFilterName (GetPipePropertyNameListPair filterPropertyName))
+        (setq matchedList (GetBlockAPropertyValueListByPropertyName ss selectedFilterName))
       )
     )
     (if (= 3 status)
       (progn 
         (setq ss (GetAllPipeSSUtils))
         (setq sslen (sslength ss))
-        (setq matchedList (list "1" "2" "3"))
+        (setq selectedFilterName (GetPipePropertyNameListPair filterPropertyName))
+        ;(setq matchedList (list "1" "2" "3"))
+        (setq matchedList (GetBlockAPropertyValueListByPropertyName ss selectedFilterName))
       )
     )
   )
@@ -891,6 +895,20 @@
       (alert "更新数据成功")(princ)
     )
   )
+)
+
+(defun GetPipePropertyNameListPair (propertyName / propertyNameList selectedName)
+  (setq propertyNameList '((0 . "PIPENUM")
+                          (1 . "DRAWNUM")
+                          (2 . "SUBSTANCE")
+                          (3 . "TEMP")
+                          (4 . "PRESSURE")
+                          (5 . "PHASE")
+                          (6 . "FROM")
+                          (7 . "TO")
+                          (8 . "INSULATION")))
+  ; need to convert the data type of property_name
+  (setq selectedName (cdr (assoc (atoi propertyName) propertyNameList)))
 )
 
 ; get the property name of the block
@@ -970,6 +988,73 @@
       )
     )
   )
+)
+
+(defun GetBlockAPropertyValueListByPropertyName (ss selectedName property_value / i ent blk entx value)
+  (if (/= ss nil)
+    (progn
+      (setq i 0)
+      (repeat (sslength ss)
+        (if (/= nil (ssname ss i))
+          (progn
+	          ; get the entity information of the i(th) block
+            (setq ent (entget (ssname ss i)))
+	          ; save the entity name of the i(th) block
+            (setq blk (ssname ss i))
+	          ; get the property information
+            (setq entx (entget (entnext (cdr (assoc -1 ent)))))
+            (while (= "ATTRIB" (cdr (assoc 0 entx)))
+              (setq value (cdr (assoc 2 entx)))
+              (if (= value selectedName)
+                (progn
+                  (setq a (cons 1 property_value))
+                  (setq b (assoc 1 entx))
+                  (entmod (subst a b entx))
+                )
+              )
+	            ; get the next property information
+              (setq entx (entget (entnext (cdr (assoc -1 entx)))))
+            )
+            (entupd blk)
+            (setq i (+ 1 i))
+          )
+        )
+        (princ)
+      )
+    )
+  )
+)
+
+(defun GetBlockAPropertyValueListByPropertyName (ss selectedName / i ent blk entx value equipName)
+  (if (/= ss nil)
+    (progn
+      (setq i 0)
+      (setq equipName '())
+      (repeat (sslength ss)
+        (if (/= nil (ssname ss i))
+          (progn
+	          ; get the entity information of the i(th) block
+            (setq ent (entget (ssname ss i)))
+	          ; save the entity name of the i(th) block
+            (setq blk (ssname ss i))
+	          ; get the property information
+            (setq entx (entget (entnext (cdr (assoc -1 ent)))))
+            (while (= "ATTRIB" (cdr (assoc 0 entx)))
+              (setq value (cdr (assoc 2 entx)))
+              (if (= value selectedName)
+		            (setq equipName (append equipName (list (cdr (assoc 1 entx)))))
+              )
+	            ; get the next property information
+              (setq entx (entget (entnext (cdr (assoc -1 entx)))))
+            )
+            (entupd blk)
+            (setq i (+ 1 i))
+          )
+        )
+      )
+    )
+  )
+  equipName
 )
 
 ; function for modify data

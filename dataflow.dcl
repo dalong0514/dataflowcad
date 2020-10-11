@@ -111,7 +111,7 @@ filterAndModifyPipeProperty : dialog {
       : edit_box {
         label = "通配符匹配模式";
         key = "patternValue";
-        edit_width = 80;
+        edit_width = 60;
         mnemonic = "N";
         value = "";
       }
@@ -159,7 +159,7 @@ filterAndModifyPipeProperty : dialog {
       : edit_box {
         label = "要替换的属性值片段，默认全替换";
         key = "replacedValue";
-        edit_width = 80;
+        edit_width = 60;
         mnemonic = "N";
         value = "";
       }
@@ -167,7 +167,7 @@ filterAndModifyPipeProperty : dialog {
       : edit_box {
         label = "替换的新值";
         key = "propertyValue";
-        edit_width = 80;
+        edit_width = 60;
         mnemonic = "N";
         value = "";
       }
