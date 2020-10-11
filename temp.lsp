@@ -16,7 +16,6 @@
 ;;;-------------------------------------------------------------------------;;;
 
 
-
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
 ; Utils Function 
@@ -247,30 +246,6 @@
 ;;;-------------------------------------------------------------------------;;;
 
 
-
-;;;-------------------------------------------------------------------------;;;
-;;;-------------------------------------------------------------------------;;;
-; test zoom
-
-
-
-; test zoom
-;;;-------------------------------------------------------------------------;;;
-;;;-------------------------------------------------------------------------;;;
-
-
-
-;;;-------------------------------------------------------------------------;;;
-;;;-------------------------------------------------------------------------;;;
-; Gs Field
-
-
-
-; Gs Field
-;;;-------------------------------------------------------------------------;;;
-;;;-------------------------------------------------------------------------;;;
-
-
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
 ; Gs Field
@@ -329,8 +304,6 @@
 ; Gs Field
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
-
-
 
 
 ;;;-------------------------------------------------------------------------;;;
@@ -463,9 +436,6 @@
 ; Gs Field
 ;;;-------------------------------------------------------------------------;;
 ;;;-------------------------------------------------------------------------;;;
-
-
-
 
 
 ;;;-------------------------------------------------------------------------;;;
@@ -674,32 +644,26 @@
 ;;;-------------------------------------------------------------------------;;;
 
 
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+; Gs Field
+; the macro for extract data
 
-
-
-
-
-
-; write the proptery of block to txt
-(defun writeProperty (value captialName lowerName entx f / proptery)
-  (if (= value captialName)
-    (progn
-      (setq proptery (cdr (assoc 1 entx)))
-      (princ (strcat "\"" lowerName "\": \"" proptery "\",") f)
-    )
-  )
-)
-
-; command for modify the property of a Instrument block
 (defun c:modifyKsProperty ()
-  (modifyBlockProperty "modifyInstrumentProperty" "Instrument")
+  (modifyBlockPropertyByBox "modifyInstrumentProperty" "Instrument")
 )
 
 (defun c:modifyPipeProperty ()
-  (modifyBlockProperty "modifyPipeProperty" "Pipe")
+  (modifyBlockPropertyByBox "modifyPipeProperty" "Pipe")
 )
 
-(defun modifyBlockProperty (tileName blockSSName / dcl_id property_name property_value status selectedName ss)
+; Gs Field
+; the macro for extract data
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+
+
+(defun modifyBlockPropertyByBox (tileName blockSSName / dcl_id property_name property_value status selectedName ss)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (if (not (new_dialog tileName dcl_id))
     (exit)
@@ -859,7 +823,7 @@
 (defun c:EquipTag (/ insPt equipInfoList equipTag equipName i tag name)
   (setvar "ATTREQ" 1)
   (setvar "ATTDIA" 0)
-  (setq ss (GetBlockSS "Equipment"))
+  (setq ss (GetEquipmentSSBySelectUtils))
   (setq equipInfoList (GetEquipTagList ss))
   (setq equipTag (car equipInfoList))
   (setq equipName (nth 1 equipInfoList))
@@ -921,159 +885,5 @@
     )
   )
   (setq equipInfoList (list equipTag equipName))
-)
-
-; the command for extarcting data from globalVentilation Block
-(defun c:nsglobal (/ fn f ssRoom ssSubstance ssHotWet)
-  (setq fn (GetCurrentDirByBoxUtils))
-  (setq f (open fn "w"))
-  (setq ssRoom (ssget "x" '((0 . "INSERT") (2 . "RoomData"))))
-  (setq ssSubstance (ssget "x" '((0 . "INSERT") (2 . "SubstanceData"))))
-  (setq ssHotWet (ssget "x" '((0 . "INSERT") (2 . "HotWetData"))))
-  (ExtactGlobalRoom f ssRoom)
-  (ExtactGlobalSubstance f ssSubstance)
-  (ExtactGlobalHotWet f ssHotWet)
-  (close f)
-  ; tansfor the encode
-  (FileEncodeTransUtils fn "gb2312" "utf-8")
-  (alert "数据提取成功")(princ)
-)
-
-; extarct data form HotWetData Block
-(defun ExtactGlobalHotWet (f ss / N index i ent blk entx value water_temp)
-  (if (/= ss nil)
-    (progn
-      (setq N (sslength ss))
-      (setq index 0)
-      (setq i index)
-      (repeat N
-        (if (/= nil (ssname ss i))
-          (progn
-            (princ "{" f)
-            (setq ent (entget (ssname ss i)))
-            (setq blk (ssname ss i))
-            (setq entx (entget (entnext (cdr (assoc -1 ent)))))
-            (while (= "ATTRIB" (cdr (assoc 0 entx)))
-              (setq value (cdr (assoc 2 entx)))
-              (writeProperty value "ROOM_NUM" "room_num" entx f)
-              (writeProperty value "EQUIPMENT_NUM" "equipment_num" entx f)
-              (writeProperty value "TYPE" "type" entx f)
-              (writeProperty value "AIR_EXHAUST" "air_exhaust" entx f)
-              (writeProperty value "PRESERVE_HEAT" "preserve_heat" entx f)
-              (writeProperty value "POWER" "power" entx f)
-              (writeProperty value "SURFACE_AREA" "surface_area" entx f)
-              (writeProperty value "SURFACE_TEMP" "surface_temp" entx f)
-              (writeProperty value "WATER_AREA" "water_area" entx f)
-              (if (= value "WATER_TEMP")
-                (progn
-                  (setq water_temp (cdr (assoc 1 entx)))
-                  (princ (strcat "\"block_data\": \"" "hotwet" "\",") f)
-                  (princ (strcat "\"water_temp\": \"" water_temp "\"") f)
-                )
-              )
-              ; 下面的语句必须设置，否则无限写数据
-              (setq entx (entget (entnext (cdr (assoc -1 entx)))))
-            )
-            (princ "}\n" f)
-            (entupd blk)
-            (setq i (+ 1 i))
-          )
-        )
-        (setq index (+ 1 index))
-        (princ)
-      )
-    )
-  )
-)
-
-; extarct data form SubstanceData Block
-(defun ExtactGlobalSubstance (f ss / N index i ent blk entx value compress_num)
-  (if (/= ss nil)
-    (progn
-      (setq N (sslength ss))
-      (setq index 0)
-      (setq i index)
-      (repeat N
-        (if (/= nil (ssname ss i))
-          (progn
-            (princ "{" f)
-            (setq ent (entget (ssname ss i)))
-            (setq blk (ssname ss i))
-            (setq entx (entget (entnext (cdr (assoc -1 ent)))))
-            (while (= "ATTRIB" (cdr (assoc 0 entx)))
-              (setq value (cdr (assoc 2 entx)))
-              (writeProperty value "ROOM_NUM" "room_num" entx f)
-              (writeProperty value "SUBSTANCE_NAME" "substance_name" entx f)
-              (writeProperty value "VALUE_NUM" "value_num" entx f)
-              (writeProperty value "PUMPSEAL_NUM" "pumpseal_num" entx f)
-              (writeProperty value "FLANGE_NUM" "flange_num" entx f)
-              (writeProperty value "DISCHARGE_NUM" "discharge_num" entx f)
-              (writeProperty value "SAFETY_NUM" "safety_num" entx f)
-              (if (= value "COMPRESS_NUM")
-                (progn
-                  (setq compress_num (cdr (assoc 1 entx)))
-                  (princ (strcat "\"block_data\": \"" "substance" "\",") f)
-                  (princ (strcat "\"compress_num\": \"" compress_num "\"") f)
-                )
-              )
-              ; 下面的语句必须设置，否则无限写数据
-              (setq entx (entget (entnext (cdr (assoc -1 entx)))))
-            )
-            (princ "}\n" f)
-            (entupd blk)
-            (setq i (+ 1 i))
-          )
-        )
-        (setq index (+ 1 index))
-        (princ)
-      )
-    )
-  )
-)
-
-; extarct data form RoomData Block
-(defun ExtactGlobalRoom (f ss / N index i ent blk entx value winter_rehumidity)
-  (if (/= ss nil)
-    (progn
-      (setq N (sslength ss))
-      (setq index 0)
-      (setq i index)
-      (repeat N
-        (if (/= nil (ssname ss i))
-          (progn
-            (princ "{" f)
-            (setq ent (entget (ssname ss i)))
-            (setq blk (ssname ss i))
-            (setq entx (entget (entnext (cdr (assoc -1 ent)))))
-            (while (= "ATTRIB" (cdr (assoc 0 entx)))
-              (setq value (cdr (assoc 2 entx)))
-              (writeProperty value "ROOM_NUM" "room_num" entx f)
-              (writeProperty value "ROOM_NAME" "room_name" entx f)
-              (writeProperty value "ROOM_AREA" "room_area" entx f)
-              (writeProperty value "ROOM_HEIGHT" "room_height" entx f)
-              (writeProperty value "ROOM_PRESSURE" "room_pressure" entx f)
-              (writeProperty value "SUMMER_TEMP" "summer_temp" entx f)
-              (writeProperty value "SUMMER_REHUMIDITY" "summer_rehumidity" entx f)
-              (writeProperty value "WINTER_TEMP" "winter_temp" entx f)
-              (if (= value "WINTER_REHUMIDITY")
-                (progn
-                  (setq winter_rehumidity (cdr (assoc 1 entx)))
-                  (princ (strcat "\"block_data\": \"" "room" "\",") f)
-                  (princ (strcat "\"winter_rehumidity\": \"" winter_rehumidity "\"") f)
-                )
-              )
-              ; 下面的语句必须设置，否则无限写数据
-              (setq entx (entget (entnext (cdr (assoc -1 entx)))))
-            )
-            (princ "}\n" f)
-            (entupd blk)
-            (setq i (+ 1 i))
-          )
-        )
-        (setq index (+ 1 index))
-        (princ)
-      )
-    )
-  )
 )
 
