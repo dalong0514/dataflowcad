@@ -307,7 +307,7 @@
 (defun c:sspipe (/ fn f)
   (setq fn (GetCurrentDirByBoxUtils))
   (setq f (open fn "w"))
-  (GsExtractCentrifugeEquipToText)
+  (GsExtractEquipToText)
   (close f)
   (FileEncodeTransUtils fn "gb2312" "utf-8")
   (alert "数据提取成功")(princ)
@@ -372,6 +372,11 @@
   (ExtractBlockPropertyUtils f ss propertyPairNameList lastPropertyPair classValuePair)
 )
 
+(defun GsExtractEquipToText ()
+  (GsExtractCentrifugeEquipToText)
+  (GsExtractVacuumEquipToText)
+)
+
 (defun GsExtractCentrifugeEquipToText (/ ss propertyPairNameList lastPropertyPair classValuePair)
   (setq ss (ssget "X" '((0 . "INSERT") (2 . "Centrifuge"))))
   (setq propertyPairNameList (GsGetCentrifugeEquipPropertyPairNameList))
@@ -380,7 +385,13 @@
   (ExtractBlockPropertyUtils f ss propertyPairNameList lastPropertyPair classValuePair)
 )
 
-
+(defun GsExtractVacuumEquipToText (/ ss propertyPairNameList lastPropertyPair classValuePair)
+  (setq ss (ssget "X" '((0 . "INSERT") (2 . "Vacuum"))))
+  (setq propertyPairNameList (GsGetCentrifugeEquipPropertyPairNameList))
+  (setq lastPropertyPair '("NUMBER" "number"))
+  (setq classValuePair '("class" "vacuum"))
+  (ExtractBlockPropertyUtils f ss propertyPairNameList lastPropertyPair classValuePair)
+)
 
 
 
@@ -467,6 +478,27 @@
                             ("TYPE" "type")
                            ))
 )
+
+(defun GsGetVacuumEquipPropertyPairNameList (/ propertyPairNameList)
+  (setq propertyPairNameList '(
+                            ("TAG" "tag")
+                            ("NAME" "name")
+                            ("SPECIES" "first_spec")
+                            ("SUBSTANCE" "substance")
+                            ("TEMP" "temp")
+                            ("PRESSURE" "pressure")
+                            ("CAPACITY" "capacity")
+                            ("EXPRESSURE" "expressure")
+                            ("POWER" "power")
+                            ("ANTIEXPLOSIVE" "is_antiexplosive")
+                            ("MOTORSERIES" "motorseries")
+                            ("SIZE" "size")
+                            ("MATERIAL" "material")
+                            ("WEIGHT" "weight")
+                            ("TYPE" "type")
+                           ))
+)
+
 ; function for propertyPairNameList
 ; Gs Field
 ;;;-------------------------------------------------------------------------;;;
