@@ -376,6 +376,7 @@
   (ExtractCentrifugeEquipToText)
   (ExtractVacuumEquipToText)
   (ExtractHeaterEquipToText)
+  (ExtractTankEquipToText)
 )
 
 (defun ExtractCentrifugeEquipToText (/ ss propertyPairNameList lastPropertyPair classValuePair)
@@ -402,6 +403,13 @@
   (ExtractBlockPropertyUtils f ss propertyPairNameList lastPropertyPair classValuePair)
 )
 
+(defun ExtractTankEquipToText (/ ss propertyPairNameList lastPropertyPair classValuePair)
+  (setq ss (ssget "X" '((0 . "INSERT") (2 . "Tank"))))
+  (setq propertyPairNameList (GetTankEquipPropertyPairNameList))
+  (setq lastPropertyPair '("EXPRESSURE" "expressure"))
+  (setq classValuePair '("class" "tank"))
+  (ExtractBlockPropertyUtils f ss propertyPairNameList lastPropertyPair classValuePair)
+)
 ; function for extract block property to text
 ; Gs Field
 ;;;-------------------------------------------------------------------------;;
@@ -524,6 +532,27 @@
                            ))
 )
 
+(defun GetTankEquipPropertyPairNameList (/ propertyPairNameList)
+  (setq propertyPairNameList '(
+                            ("TAG" "tag")
+                            ("NAME" "name")
+                            ("SPECIES" "first_spec")
+                            ("VOLUME" "volumn")
+                            ("SUBSTANCE" "substance")
+                            ("TEMP" "temp")
+                            ("PRESSURE" "pressure")
+                            ("POWER" "power")
+                            ("ANTIEXPLOSIVE" "is_antiexplosive")
+                            ("MOTORSERIES" "motorseries")
+                            ("SIZE" "size")
+                            ("MATERIAL" "material")
+                            ("WEIGHT" "weight")
+                            ("TYPE" "type")
+                            ("INSULATIONTHICK" "insulationthick")
+                            ("NUMBER" "number")
+                            ("EXTEMP" "extemp")
+                           ))
+)
 ; function for propertyPairNameList
 ; Gs Field
 ;;;-------------------------------------------------------------------------;;;
