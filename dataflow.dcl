@@ -93,3 +93,26 @@ modifyPipeProperty : dialog {
     : spacer { height = 3; } 
   }
 }
+
+ex_hidden : dialog
+{
+  label = "Hide/Show Example";
+  key = "dlg_hide";
+  : text {
+      key = "msg";
+      label = "Point: ";
+  }
+  : row {
+    fixed_width = true;
+    alignment = right;      
+    : button {
+        key = "btn_PickPoint";
+        action = "pickPoint";
+        label = "Pick Point";
+        is_default = "true";
+        width = 12;
+    }
+    : spacer { width = 1; }
+    cancel_button;
+  }
+}

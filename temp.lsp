@@ -750,6 +750,41 @@
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
 
+; Display the ex_hidden.dcl file
+(defun c:hidden (/ dialog_name id status pt)
+  (setq dialog_name "ch23_ex_hidden")
+
+  ; Load the DCL file named ex_hidden.dcl
+  (setq id (load_dialog (strcat dialog_name ".dcl")))
+  
+  (setq status 2)
+  (while (>= status 2)
+
+    ; Create the dialog box
+    (new_dialog dialog_name id "" '(-1 -1))
+
+    ; Added the actions to the Cancel and Pick Point button
+    (action_tile "cancel" "(done_dialog 0)")
+    (action_tile "btn_PickPoint" "(done_dialog 2)")
+
+    ; Display the point value picked
+    (if (/= pt nil)
+      (set_tile "msg" (strcat "Point: "
+                              (rtos (car pt)) ", "
+                              (rtos (cadr pt)) ", "
+                              (rtos (caddr pt))))
+    )
+    
+    ; Check the status returned
+    (if (= 2 (setq status (start_dialog)))
+      (setq pt (getpoint "\nSpecify a point: "))
+    )
+  )
+
+  ; Unload the dialog box
+  (unload_dialog id)
+ (princ)
+)
 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
