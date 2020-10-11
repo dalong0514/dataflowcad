@@ -231,6 +231,26 @@
 ;;;-------------------------------------------------------------------------;;;
 
 
+
+;;;-------------------------------------------------------------------------;;;
+; test zoom
+
+(defun c:sstest (/ fn f)
+  (setq fn (GetCurrentDirByBoxUtils))
+  (setq f (open fn "w"))
+  ; do not know why f can not be a arg of the GsExtractGs2InstrumentToText--20201011
+  (GsExtractInstrumentToText)
+  (GsExtractPipeToText)
+  (close f)
+  (FileEncodeTransUtils fn "gb2312" "utf-8")
+  (alert "数据提取成功")(princ)
+)
+
+; test zoom
+;;;-------------------------------------------------------------------------;;;
+
+
+
 ;;;-------------------------------------------------------------------------;;;
 ; Gs Field
 
@@ -263,6 +283,15 @@
   (alert "数据提取成功")(princ)
 )
 
+(defun c:sspipe (/ fn f)
+  (setq fn (GetCurrentDirByBoxUtils))
+  (setq f (open fn "w"))
+  (GsExtractCentrifugeEquipToText)
+  (close f)
+  (FileEncodeTransUtils fn "gb2312" "utf-8")
+  (alert "数据提取成功")(princ)
+)
+
 ; the macro for extract data
 ; Gs Field
 ;;;-------------------------------------------------------------------------;;;
@@ -278,7 +307,6 @@
   (GsExtractInstrumentPToText)
   (GsExtractInstrumentLToText)
   (GsExtractInstrumentSISToText)
-  (GsExtractPipeToText)
 )
 
 (defun GsExtractInstrumentPToText (/ ss propertyPairNameList lastPropertyPair classValuePair)
@@ -321,6 +349,18 @@
   (ExtractBlockPropertyUtils f ss propertyPairNameList lastPropertyPair classValuePair)
 )
 
+(defun GsExtractCentrifugeEquipToText (/ ss propertyPairNameList lastPropertyPair classValuePair)
+  (setq ss (ssget "X" '((0 . "INSERT") (2 . "Centrifuge"))))
+  (setq propertyPairNameList (GsGetCentrifugeEquipPropertyPairNameList))
+  (setq lastPropertyPair '("NUMBER" "number"))
+  (setq classValuePair '("class" "centrifuge"))
+  (ExtractBlockPropertyUtils f ss propertyPairNameList lastPropertyPair classValuePair)
+)
+
+
+
+
+
 ; function for extract block property to text
 ; Gs Field
 ;;;-------------------------------------------------------------------------;;
@@ -333,8 +373,8 @@
 ; Gs Field
 ; function for propertyPairNameList
 
-(defun GsGetInstrumentPropertyPairNameList (/ instrumentPPropertyPairNameList)
-  (setq instrumentPPropertyPairNameList '(
+(defun GsGetInstrumentPropertyPairNameList (/ propertyPairNameList)
+  (setq propertyPairNameList '(
                             ("FUNCTION" "function")
                             ("TAG" "tag")
                             ("HALARM" "halarm")
@@ -356,8 +396,8 @@
                            ))
 )
 
-(defun GsGetPipePropertyPairNameList (/ pipePropertyPairNameList)
-  (setq pipePropertyPairNameList '(
+(defun GsGetPipePropertyPairNameList (/ propertyPairNameList)
+  (setq propertyPairNameList '(
                             ("PIPENUM" "pipenum")
                             ("SUBSTANCE" "substance")
                             ("TEMP" "temp")
@@ -369,8 +409,8 @@
                            ))
 )
 
-(defun GsGetOuterPipePropertyPairNameList (/ outerPipePropertyPairNameList)
-  (setq outerPipePropertyPairNameList '(
+(defun GsGetOuterPipePropertyPairNameList (/ propertyPairNameList)
+  (setq propertyPairNameList '(
                             ("PIPENUM" "pipenum")
                             ("FROMTO" "fromto")
                             ("DRAWNUM" "drawnum")
@@ -380,7 +420,28 @@
                            ))
 )
 
-
+(defun GsGetCentrifugeEquipPropertyPairNameList (/ propertyPairNameList)
+  (setq propertyPairNameList '(
+                            ("TAG" "tag")
+                            ("NAME" "name")
+                            ("SPECIES" "first_spec")
+                            ("SUBSTANCE" "substance")
+                            ("TEMP" "temp")
+                            ("PRESSURE" "pressure")
+                            ("VOLUME" "volumn")
+                            ("CAPACITY" "capacity")
+                            ("DIAMETER" "diameter")
+                            ("SPEED" "speed")
+                            ("FACTOR" "factor")
+                            ("SIZE" "size")
+                            ("POWER" "power")
+                            ("ANTIEXPLOSIVE" "is_antiexplosive")
+                            ("MOTORSERIES" "motorseries")
+                            ("MATERIAL" "material")
+                            ("WEIGHT" "weight")
+                            ("TYPE" "type")
+                           ))
+)
 ; function for propertyPairNameList
 ; Gs Field
 ;;;-------------------------------------------------------------------------;;;
@@ -389,32 +450,6 @@
 
 
 
-
-
-
-;;;-------------------------------------------------------------------------;;;
-; test zoom
-
-(defun c:sstest (/ fn f)
-  (setq fn (GetCurrentDirByBoxUtils))
-  (setq f (open fn "w"))
-  ; do not know why f can not be a arg of the GsExtractGs2InstrumentToText--20201011
-  (GsExtractInstrumentToText)
-  (close f)
-  (FileEncodeTransUtils fn "gb2312" "utf-8")
-  (alert "数据提取成功")(princ)
-)
-
-
-
-
-
-
-
-
-
-; test zoom
-;;;-------------------------------------------------------------------------;;;
 
 
 ;  the command for print the newest version information
