@@ -143,6 +143,19 @@
   )
 )
 
+(defun GetBlockSSByNameUtils (blockSSName / ss)
+  (if (= blockSSName "pipe")
+    (setq ss (GetPipeSSBySelectUtils))
+  )
+  (if (= blockSSName "instrument")
+    (setq ss (GetInstrumentSSBySelectUtils))
+  )
+  (if (= blockSSName "equipment")
+    (setq ss (GetEquipmentSSBySelectUtils))
+  )
+  ss
+)
+
 (defun GetssEntityNameListUtils (ss / i ssEntityNameList)
   (if (/= ss nil)
     (progn
@@ -647,21 +660,101 @@
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
 ; Gs Field
-; the macro for extract data
+; Generate Entity in CAD
+
+(defun c:EquipTag (/ insPt equipInfoList equipTag equipName i tag name)
+  (setvar "ATTREQ" 1)
+  (setvar "ATTDIA" 0)
+  (setq ss (GetEquipmentSSBySelectUtils))
+  (setq equipInfoList (GetEquipTagList ss))
+  (setq equipTag (car equipInfoList))
+  (setq equipName (nth 1 equipInfoList))
+  (setq insPt (getpoint "\n选取设备位号的插入点："))
+  (setq i 0)
+  (repeat (length equipTag) 
+    (setq tag (nth i equipTag))
+    (setq name (nth i equipName))
+    (InsertEquipTag (GetInsertPt insPt i) tag name)
+    (setq i (+ 1 i))
+  )
+  (setvar "ATTREQ" 0)
+)
+
+; get the new inserting position
+(defun GetInsertPt (insPt i / xPosition yPosition newInsPt)
+  (setq xPosition (+ (nth 0 insPt) (* i 30)))
+  (setq yPosition (nth 1 insPt))
+  (setq newInsPt (list xPosition yPosition))
+)
+
+(defun InsertEquipTag (insPt tag name / )
+  (command "-insert" "EquipTag" insPt 1 1 0 tag name)
+)
+
+(defun GetEquipTagList (ss / i ent blk entx value equipInfoList equipTag equipName)
+  (if (/= ss nil)
+    (progn
+      (setq i 0)
+      (setq equipTag '())
+      (setq equipName '())
+      (repeat (sslength ss)
+        (if (/= nil (ssname ss i))
+          (progn
+	          ; get the entity information of the i(th) block
+            (setq ent (entget (ssname ss i)))
+	          ; save the entity name of the i(th) block
+            (setq blk (ssname ss i))
+	          ; get the property information
+            (setq entx (entget (entnext (cdr (assoc -1 ent)))))
+            (while (= "ATTRIB" (cdr (assoc 0 entx)))
+              (setq value (cdr (assoc 2 entx)))
+              (if (= value "TAG")
+		            (setq equipTag (append equipTag (list (cdr (assoc 1 entx)))))
+              )
+              (if (= value "NAME")
+		            (setq equipName (append equipName (list (cdr (assoc 1 entx)))))
+              )
+	            ; get the next property information
+              (setq entx (entget (entnext (cdr (assoc -1 entx)))))
+            )
+            (entupd blk)
+            (setq i (+ 1 i))
+          )
+        )
+      )
+    )
+  )
+  (setq equipInfoList (list equipTag equipName))
+)
+
+; Generate Entity in CAD
+; Gs Field
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+; Gs Field
+; the macro for modify data
 
 (defun c:modifyKsProperty ()
-  (modifyBlockPropertyByBox "modifyInstrumentProperty" "Instrument")
+  (modifyBlockPropertyByBox "modifyInstrumentProperty" "instrument")
 )
 
 (defun c:modifyPipeProperty ()
-  (modifyBlockPropertyByBox "modifyPipeProperty" "Pipe")
+  (modifyBlockPropertyByBox "modifyPipeProperty" "pipe")
 )
 
-; Gs Field
 ; the macro for extract data
+; Gs Field
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
 
+
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+; Gs Field
+; function for modify data
 
 (defun modifyBlockPropertyByBox (tileName blockSSName / dcl_id property_name property_value status selectedName ss)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
@@ -685,8 +778,8 @@
   
   (if (= status 1)
     (progn 
+      (setq ss (GetBlockSSByNameUtils blockSSName))
       (setq selectedName (GetPropertyName property_name blockSSName))
-      (setq ss (GetBlockSS blockSSName))
       (ModifyPropertyValue ss selectedName property_value)
       (alert "更新数据成功")(princ)
     )
@@ -695,7 +788,7 @@
 
 ; get the property name of the block
 (defun GetPropertyName (property_name blockSSName / propertyNameList selectedName)
-  (if (= blockSSName "Pipe")
+  (if (= blockSSName "pipe")
     (progn
       (setq propertyNameList '((0 . "DRAWNUM")
                               (1 . "PIPENUM")
@@ -710,7 +803,7 @@
       (setq selectedName (cdr (assoc (atoi property_name) propertyNameList)))
     )
   )
-  (if (= blockSSName "Instrument")
+  (if (= blockSSName "instrument")
     (progn
       (setq propertyNameList '((0 . "DRAWNUM")
                               (1 . "LOCATION")
@@ -734,54 +827,6 @@
     )
   )
   selectedName
-)
-
-; get the select set
-(defun GetBlockSS (blockSSName / ss)
-  ; need to refactor
-  (if (= blockSSName "Pipe")
-    (progn
-      (setq ss (ssget '((0 . "INSERT") 
-            (-4 . "<OR")
-              (2 . "PipeArrowLeft")
-              (2 . "PipeArrowUp")
-            (-4 . "OR>")
-          )
-        )
-      )
-    )
-  )
-  (if (= blockSSName "Instrument")
-    (progn
-      (setq ss (ssget '((0 . "INSERT") 
-            (-4 . "<OR")
-              (2 . "InstrumentP")
-              (2 . "InstrumentL")
-              (2 . "InstrumentSIS")
-            (-4 . "OR>")
-          )
-        )
-      )
-    )
-  )
-  (if (= blockSSName "Equipment")
-    (progn
-      (setq ss (ssget '((0 . "INSERT") 
-            (-4 . "<OR")
-              (2 . "Reactor")
-              (2 . "Pump")
-              (2 . "Tank")
-              (2 . "Heater")
-              (2 . "Centrifuge")
-              (2 . "Vacuum")
-              (2 . "CustomEquip")
-            (-4 . "OR>")
-          )
-        )
-      )
-    )
-  )
-  ss
 )
 
 ; modify property value of a block entity
@@ -820,70 +865,7 @@
   )
 )
 
-(defun c:EquipTag (/ insPt equipInfoList equipTag equipName i tag name)
-  (setvar "ATTREQ" 1)
-  (setvar "ATTDIA" 0)
-  (setq ss (GetEquipmentSSBySelectUtils))
-  (setq equipInfoList (GetEquipTagList ss))
-  (setq equipTag (car equipInfoList))
-  (setq equipName (nth 1 equipInfoList))
-  (setq insPt (getpoint "\n选取设备位号的插入点："))
-  (setq i 0)
-  (repeat (length equipTag) 
-    (setq tag (nth i equipTag))
-    (setq name (nth i equipName))
-    (InsertEquipTag (GetInsPt insPt i) tag name)
-    (setq i (+ 1 i))
-  )
-  (setvar "ATTREQ" 0)
-)
-
-; get the new inserting position
-(defun GetInsPt (insPt i / xPosition yPosition newInsPt)
-  (setq xPosition (+ (nth 0 insPt) (* i 30)))
-  (setq yPosition (nth 1 insPt))
-  (setq newInsPt (list xPosition yPosition))
-)
-
-; command for insert the equipment tag
-(defun InsertEquipTag (insPt tag name / )
-  (command "-insert" "EquipTag" insPt 1 1 0 tag name)
-)
-
-; modify property value of a block entity
-(defun GetEquipTagList (ss / i ent blk entx value equipInfoList equipTag equipName)
-  (if (/= ss nil)
-    (progn
-      (setq i 0)
-      (setq equipTag '())
-      (setq equipName '())
-      (repeat (sslength ss)
-        (if (/= nil (ssname ss i))
-          (progn
-	          ; get the entity information of the i(th) block
-            (setq ent (entget (ssname ss i)))
-	          ; save the entity name of the i(th) block
-            (setq blk (ssname ss i))
-	          ; get the property information
-            (setq entx (entget (entnext (cdr (assoc -1 ent)))))
-            (while (= "ATTRIB" (cdr (assoc 0 entx)))
-              (setq value (cdr (assoc 2 entx)))
-              (if (= value "TAG")
-		            (setq equipTag (append equipTag (list (cdr (assoc 1 entx)))))
-              )
-              (if (= value "NAME")
-		            (setq equipName (append equipName (list (cdr (assoc 1 entx)))))
-              )
-	            ; get the next property information
-              (setq entx (entget (entnext (cdr (assoc -1 entx)))))
-            )
-            (entupd blk)
-            (setq i (+ 1 i))
-          )
-        )
-      )
-    )
-  )
-  (setq equipInfoList (list equipTag equipName))
-)
-
+; function for modify data
+; Gs Field
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
