@@ -106,6 +106,28 @@
   )
 )
 
+(defun GetAllOuterPipeSSUtils ()
+  (setq ss (ssget "X" '((0 . "INSERT") 
+        (-4 . "<OR")
+          (2 . "OuterPipeRight")
+          (2 . "OuterPipeLeft")
+        (-4 . "OR>")
+      )
+    )
+  )
+)
+
+(defun GetOuterPipeSSBySelectUtils ()
+  (setq ss (ssget '((0 . "INSERT") 
+        (-4 . "<OR")
+          (2 . "OuterPipeRight")
+          (2 . "OuterPipeLeft")
+        (-4 . "OR>")
+      )
+    )
+  )
+)
+
 (defun GetssEntityNameListUtils (ss / i ssEntityNameList)
   (if (/= ss nil)
     (progn
@@ -173,7 +195,6 @@
   )
 )
 
-; extract data form a Block
 (defun ExtractBlockPropertyUtils (f ss propertyPairNameList lastPropertyPair classValuePair / i index ent blk entx propertyName)
   (if (/= ss nil)
     (progn
@@ -211,24 +232,53 @@
 
 
 ;;;-------------------------------------------------------------------------;;;
-; test zoom
+; Gs Field
 
 
 
-(defun c:sstest (/ fn f)
+; Gs Field
+;;;-------------------------------------------------------------------------;;;
+
+
+;;;-------------------------------------------------------------------------;;;
+; Gs Field
+; the macro for extract data
+
+(defun c:gspipe (/ fn f)
   (setq fn (GetCurrentDirByBoxUtils))
   (setq f (open fn "w"))
-  ; do not know why f can not be a arg of the GsExtractGs2InstrumentToText--20201011
-  (GsExtractGs2InstrumentToText)
+  (GsExtractPipeToText)
   (close f)
   (FileEncodeTransUtils fn "gb2312" "utf-8")
   (alert "数据提取成功")(princ)
 )
 
-(defun GsExtractGs2InstrumentToText ()
+(defun c:gsouterpipe (/ fn f)
+  (setq fn (GetCurrentDirByBoxUtils))
+  (setq f (open fn "w"))
+  (GsExtractOuterPipeToText)
+  (GsExtractPipeToText)
+  (close f)
+  (FileEncodeTransUtils fn "gb2312" "utf-8")
+  (alert "数据提取成功")(princ)
+)
+
+; the macro for extract data
+; Gs Field
+;;;-------------------------------------------------------------------------;;;
+
+
+
+
+;;;-------------------------------------------------------------------------;;;
+; Gs Field
+; function for extract block property to text
+
+(defun GsExtractInstrumentToText ()
   (GsExtractInstrumentPToText)
   (GsExtractInstrumentLToText)
   (GsExtractInstrumentSISToText)
+  (GsExtractPipeToText)
 )
 
 (defun GsExtractInstrumentPToText (/ ss propertyPairNameList lastPropertyPair classValuePair)
@@ -255,6 +305,34 @@
   (ExtractBlockPropertyUtils f ss propertyPairNameList lastPropertyPair classValuePair)
 )
 
+(defun GsExtractPipeToText (/ ss propertyPairNameList lastPropertyPair classValuePair)
+  (setq ss (GetAllPipeSSUtils))
+  (setq propertyPairNameList (GsGetPipePropertyPairNameList))
+  (setq lastPropertyPair '("INSULATION" "insulation"))
+  (setq classValuePair '("class" "pipeline"))
+  (ExtractBlockPropertyUtils f ss propertyPairNameList lastPropertyPair classValuePair)
+)
+
+(defun GsExtractOuterPipeToText (/ ss propertyPairNameList lastPropertyPair classValuePair)
+  (setq ss (GetAllOuterPipeSSUtils))
+  (setq propertyPairNameList (GsGetOuterPipePropertyPairNameList))
+  (setq lastPropertyPair '("PROTECTION" "protection"))
+  (setq classValuePair '("class" "outerpipe"))
+  (ExtractBlockPropertyUtils f ss propertyPairNameList lastPropertyPair classValuePair)
+)
+
+; function for extract block property to text
+; Gs Field
+;;;-------------------------------------------------------------------------;;
+
+
+
+
+
+;;;-------------------------------------------------------------------------;;;
+; Gs Field
+; function for propertyPairNameList
+
 (defun GsGetInstrumentPropertyPairNameList (/ instrumentPPropertyPairNameList)
   (setq instrumentPPropertyPairNameList '(
                             ("FUNCTION" "function")
@@ -277,6 +355,63 @@
                             ("INSTALLSIZE" "installsize")
                            ))
 )
+
+(defun GsGetPipePropertyPairNameList (/ pipePropertyPairNameList)
+  (setq pipePropertyPairNameList '(
+                            ("PIPENUM" "pipenum")
+                            ("SUBSTANCE" "substance")
+                            ("TEMP" "temp")
+                            ("PRESSURE" "pressure")
+                            ("PHASE" "phase")
+                            ("FROM" "from")
+                            ("TO" "to")
+                            ("DRAWNUM" "drawnum")
+                           ))
+)
+
+(defun GsGetOuterPipePropertyPairNameList (/ outerPipePropertyPairNameList)
+  (setq outerPipePropertyPairNameList '(
+                            ("PIPENUM" "pipenum")
+                            ("FROMTO" "fromto")
+                            ("DRAWNUM" "drawnum")
+                            ("DESIGNFLOW" "designflow")
+                            ("OPERATESPEC" "operatespec")
+                            ("INSULATION" "insulation")
+                           ))
+)
+
+
+; function for propertyPairNameList
+; Gs Field
+;;;-------------------------------------------------------------------------;;;
+
+
+
+
+
+
+
+
+;;;-------------------------------------------------------------------------;;;
+; test zoom
+
+(defun c:sstest (/ fn f)
+  (setq fn (GetCurrentDirByBoxUtils))
+  (setq f (open fn "w"))
+  ; do not know why f can not be a arg of the GsExtractGs2InstrumentToText--20201011
+  (GsExtractInstrumentToText)
+  (close f)
+  (FileEncodeTransUtils fn "gb2312" "utf-8")
+  (alert "数据提取成功")(princ)
+)
+
+
+
+
+
+
+
+
 
 ; test zoom
 ;;;-------------------------------------------------------------------------;;;
@@ -531,20 +666,6 @@
   (setq equipInfoList (list equipTag equipName))
 )
 
-;  the command for extarcting data from the for PipeArrow Blocks
-(defun c:gspipe (/ fn f ssLeft ssUp)
-  (setq fn (GetCurrentDirByBoxUtils))
-  (setq f (open fn "w"))
-  (setq ssLeft (ssget "x" '((0 . "INSERT") (2 . "PipeArrowLeft"))))
-  (setq ssUp (ssget "x" '((0 . "INSERT") (2 . "PipeArrowUp"))))
-  (ExtactPipeArrow f ssLeft)
-  (ExtactPipeArrow f ssUp)
-  (close f)
-  ; tansfor the encode
-  (FileEncodeTransUtils fn "gb2312" "utf-8")
-  (alert "数据提取成功")(princ)
-)
-
 ; the command for extarcting data from globalVentilation Block
 (defun c:nsglobal (/ fn f ssRoom ssSubstance ssHotWet)
   (setq fn (GetCurrentDirByBoxUtils))
@@ -634,68 +755,6 @@
   ; tansfor the encode
   (FileEncodeTransUtils fn "gb2312" "utf-8")
   (alert "数据提取成功")(princ)
-)
-
-; the command for extarcting data from OuterPipe Block
-(defun c:gsouterpipe (/ fn f ssRightTo ssRightFrom ssLeftTo ssLeftFrom)
-  (setq fn (GetCurrentDirByBoxUtils))
-  (setq f (open fn "w"))
-  (setq ssOuterPipeRight (ssget "x" '((0 . "INSERT") (2 . "OuterPipeRight"))))
-  (setq ssOuterPipeLeft (ssget "x" '((0 . "INSERT") (2 . "OuterPipeLeft"))))
-  (setq ssLeft (ssget "x" '((0 . "INSERT") (2 . "PipeArrowLeft"))))
-  (setq ssUp (ssget "x" '((0 . "INSERT") (2 . "PipeArrowUp"))))
-  (ExtactOuterPipe f ssOuterPipeRight)
-  (ExtactOuterPipe f ssOuterPipeLeft)
-  (ExtactPipeArrow f ssLeft)
-  (ExtactPipeArrow f ssUp)
-  (close f)
-  ; tansfor the encode
-  (FileEncodeTransUtils fn "gb2312" "utf-8")
-  (alert "数据提取成功")(princ)
-)
-
-; extarct data form the for OuterPipe Blocks
-(defun ExtactOuterPipe (f ss / N index i ent blk entx value)
-  (if (/= ss nil)
-    (progn
-      (setq N (sslength ss))
-      (setq index 0)
-      (setq i index)
-      (repeat N
-        (if (/= nil (ssname ss i))
-          (progn
-            (princ "{" f)
-            (setq ent (entget (ssname ss i)))
-            (setq blk (ssname ss i))
-            (setq entx (entget (entnext (cdr (assoc -1 ent)))))
-            (while (= "ATTRIB" (cdr (assoc 0 entx)))
-              (setq value (cdr (assoc 2 entx)))
-              (writeProperty value "PIPENUM" "pipenum" entx f)
-              (writeProperty value "FROMTO" "fromto" entx f)
-              (writeProperty value "DWGNUM" "dwgnum" entx f)
-              (writeProperty value "DESIGNFLOW" "designflow" entx f)
-              (writeProperty value "OPERATESPEC" "operatespec" entx f)
-              (writeProperty value "INSULATION" "insulation" entx f)
-              (if (= value "PROTECTION")
-                (progn
-                  (setq protection (cdr (assoc 1 entx)))
-		  (princ (strcat "\"class\": \"" "outerpipe" "\",") f)
-                  (princ (strcat "\"protection\": \"" protection "\"") f)
-                )
-              )
-              ; 下面的语句必须设置，否则无限写数据
-              (setq entx (entget (entnext (cdr (assoc -1 entx)))))
-            )
-            (princ "}\n" f)
-            (entupd blk)
-            (setq i (+ 1 i))
-          )
-        )
-        (setq index (+ 1 index))
-        (princ)
-      )
-    )
-  )
 )
 
 ; extarct data form Centrifuge Block
@@ -1326,48 +1385,3 @@
   )
 )
 
-; extarct data form the for PipeArrow Blocks
-(defun ExtactPipeArrow (f ss / N index i ent blk entx value pipenum substance temp pressure phase fromP toP insulation)
-  (if (/= ss nil)
-    (progn
-      (setq N (sslength ss))
-      (setq index 0)
-      (setq i index)
-      (repeat N
-        (if (/= nil (ssname ss i))
-          (progn
-            (princ "{" f)
-            (setq ent (entget (ssname ss i)))
-            (setq blk (ssname ss i))
-            (setq entx (entget (entnext (cdr (assoc -1 ent)))))
-            (while (= "ATTRIB" (cdr (assoc 0 entx)))
-              (setq value (cdr (assoc 2 entx)))
-              (writeProperty value "PIPENUM" "pipenum" entx f)
-              (writeProperty value "SUBSTANCE" "substance" entx f)
-              (writeProperty value "TEMP" "temp" entx f)
-              (writeProperty value "PRESSURE" "pressure" entx f)
-              (writeProperty value "PHASE" "phase" entx f)
-              (writeProperty value "FROM" "from" entx f)
-              (writeProperty value "TO" "to" entx f)
-	      (writeProperty value "DRAWNUM" "drawnum" entx f)
-              (if (= value "INSULATION")
-                (progn
-                  (setq insulation (cdr (assoc 1 entx)))
-		  (princ (strcat "\"class\": \"" "pipeline" "\",") f)
-                  (princ (strcat "\"insulation\": \"" insulation "\"") f)
-                )
-              )
-              ; 下面的语句必须设置，否则无限写数据
-              (setq entx (entget (entnext (cdr (assoc -1 entx)))))
-            )
-            (princ "}\n" f)
-            (entupd blk)
-            (setq i (+ 1 i))
-          )
-        )
-        (setq index (+ 1 index))
-        (princ)
-      )
-    )
-  )
-)
