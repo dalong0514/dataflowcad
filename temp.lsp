@@ -788,7 +788,7 @@
 )
 
 
-(defun filterAndModifyBlockPropertyByBox (tileName blockSSName / dcl_id propertyName propertyValue status selectedName ss sslen)
+(defun filterAndModifyBlockPropertyByBox (tileName blockSSName / dcl_id propertyName propertyValue status selectedName ss sslen matchedList)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -807,17 +807,34 @@
     )
     
     ; optional setting for the popup_list tile
+    (set_tile "filterPropertyName" "0")
     (set_tile "propertyName" "0")
     ; the default value of input box
+    (set_tile "patternValue" "")
+    (set_tile "replacedValue" "")
     (set_tile "propertyValue" "")
     (mode_tile "propertyName" 2)
     (mode_tile "propertyValue" 2)
     (action_tile "propertyName" "(setq propertyName $value)")
     (action_tile "propertyValue" "(setq propertyValue $value)")
-    (if (= nil property_name)
-      (setq property_name "0")
+
+    (if (/= matchedList nil)
+      (progn
+        (start_list "matchedResult" 2)
+        (mapcar '(lambda (x) (add_list x)) 
+                 matchedList)
+        ;(add_list matchedList)
+        (end_list)
+      )
     )
-    
+
+    (if (= nil propertyName)
+      (setq propertyName "0")
+    )
+    (if (= nil filterPropertyName)
+      (setq filterPropertyName "0")
+    )
+
     ; Check the status returned
     (if (= 2 (setq status (start_dialog)))
       (progn 
@@ -829,8 +846,8 @@
     )
     (if (= 3 status)
       (progn 
-        (setq ss (GetPipeSSBySelectUtils))
-        (setq sslen (sslength ss))
+        ;(setq ss (GetAllPipeSSUtils))
+        (setq matchedList (list "1" "2" "3"))
       )
     )
   )

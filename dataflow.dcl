@@ -118,7 +118,7 @@ filterAndModifyPipeProperty : dialog {
       : spacer { height = 1; } 
       : list_box { 
         label = "匹配到的结果";
-        key = "matchedResultList"; 
+        key = "matchedResult"; 
         list = "";
         value = "";
       }
