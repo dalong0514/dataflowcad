@@ -375,6 +375,7 @@
 (defun GsExtractEquipToText ()
   (GsExtractCentrifugeEquipToText)
   (GsExtractVacuumEquipToText)
+  (GsExtractHeaterEquipToText)
 )
 
 (defun GsExtractCentrifugeEquipToText (/ ss propertyPairNameList lastPropertyPair classValuePair)
@@ -393,7 +394,13 @@
   (ExtractBlockPropertyUtils f ss propertyPairNameList lastPropertyPair classValuePair)
 )
 
-
+(defun GsExtractHeaterEquipToText (/ ss propertyPairNameList lastPropertyPair classValuePair)
+  (setq ss (ssget "X" '((0 . "INSERT") (2 . "Heater"))))
+  (setq propertyPairNameList (GsGetCentrifugeEquipPropertyPairNameList))
+  (setq lastPropertyPair '("NUMBER" "number"))
+  (setq classValuePair '("class" "heater"))
+  (ExtractBlockPropertyUtils f ss propertyPairNameList lastPropertyPair classValuePair)
+)
 
 ; function for extract block property to text
 ; Gs Field
@@ -496,6 +503,24 @@
                             ("MATERIAL" "material")
                             ("WEIGHT" "weight")
                             ("TYPE" "type")
+                           ))
+)
+
+(defun GsGetHeaterEquipPropertyPairNameList (/ propertyPairNameList)
+  (setq propertyPairNameList '(
+                            ("TAG" "tag")
+                            ("NAME" "name")
+                            ("SPECIES" "first_spec")
+                            ("AREA" "area")
+                            ("SUBSTANCE" "substance")
+                            ("TEMP" "temp")
+                            ("PRESSURE" "pressure")
+                            ("SIZE" "size")
+                            ("ELEMENT" "element")
+                            ("MATERIAL" "material")
+                            ("WEIGHT" "weight")
+                            ("TYPE" "type")
+                            ("INSULATIONTHICK" "insulationthick")
                            ))
 )
 
