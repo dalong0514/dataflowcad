@@ -377,6 +377,7 @@
   (ExtractVacuumEquipToText)
   (ExtractHeaterEquipToText)
   (ExtractTankEquipToText)
+  (ExtractPumpEquipToText)
 )
 
 (defun ExtractCentrifugeEquipToText (/ ss propertyPairNameList lastPropertyPair classValuePair)
@@ -410,6 +411,15 @@
   (setq classValuePair '("class" "tank"))
   (ExtractBlockPropertyUtils f ss propertyPairNameList lastPropertyPair classValuePair)
 )
+
+(defun ExtractPumpEquipToText (/ ss propertyPairNameList lastPropertyPair classValuePair)
+  (setq ss (ssget "X" '((0 . "INSERT") (2 . "Pump"))))
+  (setq propertyPairNameList (GetPumpEquipPropertyPairNameList))
+  (setq lastPropertyPair '("TYPE" "type"))
+  (setq classValuePair '("class" "pump"))
+  (ExtractBlockPropertyUtils f ss propertyPairNameList lastPropertyPair classValuePair)
+)
+
 ; function for extract block property to text
 ; Gs Field
 ;;;-------------------------------------------------------------------------;;
@@ -553,6 +563,27 @@
                             ("EXTEMP" "extemp")
                            ))
 )
+
+(defun GetPumpEquipPropertyPairNameList (/ propertyPairNameList)
+  (setq propertyPairNameList '(
+                            ("TAG" "tag")
+                            ("NAME" "name")
+                            ("SPECIES" "first_spec")
+                            ("SUBSTANCE" "substance")
+                            ("TEMP" "temp")
+                            ("PRESSURE" "pressure")
+                            ("FLOW" "flow")
+                            ("HEAD" "head")
+                            ("POWER" "power")
+                            ("ANTIEXPLOSIVE" "is_antiexplosive")
+                            ("MOTORSERIES" "motorseries")
+                            ("MATERIAL" "material")
+                            ("WEIGHT" "weight")
+                            ("NUMBER" "number")
+                           ))
+)
+
+
 ; function for propertyPairNameList
 ; Gs Field
 ;;;-------------------------------------------------------------------------;;;
