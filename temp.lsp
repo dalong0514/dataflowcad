@@ -787,11 +787,11 @@
   (princ)
 )
 
-
-(defun filterAndModifyBlockPropertyByBox (tileName blockSSName / dcl_id propertyName propertyValue filterPropertyName patternValue status selectedName selectedFilterName ss sslen matchedList APropertyValueList)
+(defun filterAndModifyBlockPropertyByBox (tileName blockSSName / dcl_id propertyName propertyValue filterPropertyName patternValue status selectedName selectedFilterName ss sslen matchedList APropertyValueList selectStatus)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
+    (setq selectStatus 0)
     ; Create the dialog box
     (new_dialog tileName dcl_id "" '(-1 -1))
     ; Added the actions to the Cancel and Pick Point button
@@ -804,7 +804,7 @@
     (set_tile "filterPropertyName" "0")
     (set_tile "propertyName" "0")
     ; the default value of input box
-    (set_tile "patternValue" "")
+    ;(set_tile "patternValue" "")
     (set_tile "replacedValue" "")
     (set_tile "propertyValue" "")
     (mode_tile "propertyName" 2)
@@ -838,9 +838,10 @@
       )
     )
 
-    ; Check the status returned
+    ; select button
     (if (= 2 (setq status (start_dialog)))
       (progn 
+        (setq selectStatus 1)
         (if (= patternValue nil)
           (setq patternValue "*")
         )
@@ -851,8 +852,10 @@
         (setq sslen (length APropertyValueList))
       )
     )
+    ; all select button
     (if (= 3 status)
       (progn 
+        (setq selectStatus 2)
         (if (= patternValue nil)
           (setq patternValue "*")
         )
@@ -865,8 +868,20 @@
         ;(setq matchedList (list "1" "2" patternValue))
       )
     )
+    ; modify button
+    (if (= 4 status)
+      (progn 
+        (if (= patternValue nil)
+          (setq patternValue "*")
+        )
+        (setq ss (GetAllPipeSSUtils))
+        (setq selectedFilterName (GetPipePropertyNameListPair filterPropertyName))
+        (setq APropertyValueList (GetBlockAPropertyValueListByPropertyNamePattern ss selectedFilterName patternValue))
+        (setq matchedList APropertyValueList)
+        (setq sslen (length APropertyValueList))
+      )
+    )
   )
-
   (unload_dialog dcl_id)
   (princ)
 )
