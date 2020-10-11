@@ -874,7 +874,14 @@
     (if (= 4 status)
       (progn 
         (setq selectedName (GetPipePropertyNameListPair propertyName))
-        (ModifyPropertyValueByEntityName entityList selectedName propertyValue)
+        (if (= replacedValue nil)
+          (ModifyPropertyValueByEntityName entityList selectedName propertyValue)
+          (progn 
+
+            ; ´ý¿ª·¢
+            (ModifyPropertyValueByEntityName entityList "TEMP" propertyValue)
+          )
+        )
       )
     )
   )
