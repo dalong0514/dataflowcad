@@ -252,16 +252,7 @@
 ;;;-------------------------------------------------------------------------;;;
 ; test zoom
 
-(defun c:sstest (/ fn f)
-  (setq fn (GetCurrentDirByBoxUtils))
-  (setq f (open fn "w"))
-  ; do not know why f can not be a arg of the GsExtractGs2InstrumentToText--20201011
-  (ExtractInstrumentToText)
-  (ExtractPipeToText)
-  (close f)
-  (FileEncodeTransUtils fn "gb2312" "utf-8")
-  (alert "数据提取成功")(princ)
-)
+
 
 ; test zoom
 ;;;-------------------------------------------------------------------------;;;
@@ -284,6 +275,18 @@
 ;;;-------------------------------------------------------------------------;;;
 ; Gs Field
 ; the macro for extract data
+
+(defun c:sstest (/ fn f)
+  (setq fn (GetCurrentDirByBoxUtils))
+  (setq f (open fn "w"))
+  ; do not know why f can not be a arg of the GsExtractGs2InstrumentToText--20201011
+  (ExtractInstrumentToText)
+  (ExtractPipeToText)
+  (ExtractEquipToText)
+  (close f)
+  (FileEncodeTransUtils fn "gb2312" "utf-8")
+  (alert "数据提取成功")(princ)
+)
 
 (defun c:gspipe (/ fn f)
   (setq fn (GetCurrentDirByBoxUtils))
@@ -379,6 +382,7 @@
   (ExtractPumpEquipToText)
   (ExtractVacuumEquipToText)
   (ExtractReactorEquipToText)
+  (ExtractCustomEquipToText)
 )
 
 (defun ExtractCentrifugeEquipToText (/ ss propertyPairNameList lastPropertyPair classValuePair)
@@ -426,6 +430,14 @@
   (setq propertyPairNameList (GetReactorEquipPropertyPairNameList))
   (setq lastPropertyPair '("EXPRESSURE" "expressure"))
   (setq classValuePair '("class" "reactor"))
+  (ExtractBlockPropertyUtils f ss propertyPairNameList lastPropertyPair classValuePair)
+)
+
+(defun ExtractCustomEquipToText (/ ss propertyPairNameList lastPropertyPair classValuePair)
+  (setq ss (ssget "X" '((0 . "INSERT") (2 . "CustomEquip"))))
+  (setq propertyPairNameList (GetCustomEquipPropertyPairNameList))
+  (setq lastPropertyPair '("NUMBER" "number"))
+  (setq classValuePair '("class" "custom"))
   (ExtractBlockPropertyUtils f ss propertyPairNameList lastPropertyPair classValuePair)
 )
 
@@ -612,6 +624,29 @@
                             ("INSULATIONTHICK" "insulationthick")
                             ("NUMBER" "number")
                             ("EXTEMP" "extemp")
+                           ))
+)
+
+(defun GetCustomEquipPropertyPairNameList (/ propertyPairNameList)
+  (setq propertyPairNameList '(
+                            ("TAG" "tag")
+                            ("NAME" "name")
+                            ("SPECIES" "first_spec")
+                            ("SUBSTANCE" "substance")
+                            ("TEMP" "temp")
+                            ("PRESSURE" "pressure")
+                            ("POWER" "power")
+                            ("ANTIEXPLOSIVE" "is_antiexplosive")
+                            ("MOTORSERIES" "motorseries")
+                            ("PARAM1" "param1")
+                            ("PARAM2" "param2")
+                            ("PARAM3" "param3")
+                            ("PARAM4" "param4")
+                            ("SIZE" "size")
+                            ("MATERIAL" "material")
+                            ("WEIGHT" "weight")
+                            ("TYPE" "type")
+                            ("INSULATIONTHICK" "insulationthick")
                            ))
 )
 
