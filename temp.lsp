@@ -829,6 +829,7 @@
       (progn
         (set_tile "filterPropertyName" filterPropertyName)
         (set_tile "patternValue" patternValue)
+        (set_tile "propertyName" propertyName)
         (start_list "matchedResult" 3)
         (mapcar '(lambda (x) (add_list x)) 
                  matchedList)
@@ -836,7 +837,7 @@
         (end_list)
       )
     )
-
+    
     ; select button
     (if (= 2 (setq status (start_dialog)))
       (progn 
@@ -872,23 +873,14 @@
     ; modify button
     (if (= 4 status)
       (progn 
-        (if (= patternValue nil)
-          (setq patternValue "*")
-        )
-        (setq ss (GetAllPipeSSUtils))
-        (setq selectedFilterName (GetPipePropertyNameListPair filterPropertyName))
-        (setq blockDataList (GetBlockAPropertyValueListByPropertyNamePattern ss selectedFilterName patternValue))
-        (setq APropertyValueList (car blockDataList))
-        (setq entityList (car (cdr blockDataList)))
-        (setq matchedList APropertyValueList)
-        (setq sslen (length APropertyValueList))
+        (setq selectedName (GetPipePropertyNameListPair propertyName))
+        (ModifyPropertyValueByEntityName entityList selectedName propertyValue)
       )
     )
   )
   (unload_dialog dcl_id)
   (princ)
 )
-
 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
