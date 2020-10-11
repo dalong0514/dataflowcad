@@ -787,11 +787,10 @@
   (princ)
 )
 
-(defun filterAndModifyBlockPropertyByBox (tileName blockSSName / dcl_id propertyName propertyValue filterPropertyName patternValue status selectedName selectedFilterName ss sslen matchedList APropertyValueList selectStatus)
+(defun filterAndModifyBlockPropertyByBox (tileName blockSSName / dcl_id propertyName propertyValue filterPropertyName patternValue status selectedName selectedFilterName ss sslen matchedList blockDataList APropertyValueList entityList)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
-    (setq selectStatus 0)
     ; Create the dialog box
     (new_dialog tileName dcl_id "" '(-1 -1))
     ; Added the actions to the Cancel and Pick Point button
@@ -841,13 +840,14 @@
     ; select button
     (if (= 2 (setq status (start_dialog)))
       (progn 
-        (setq selectStatus 1)
         (if (= patternValue nil)
           (setq patternValue "*")
         )
         (setq ss (GetPipeSSBySelectUtils))
         (setq selectedFilterName (GetPipePropertyNameListPair filterPropertyName))
-        (setq APropertyValueList (GetBlockAPropertyValueListByPropertyNamePattern ss selectedFilterName patternValue))
+        (setq blockDataList (GetBlockAPropertyValueListByPropertyNamePattern ss selectedFilterName patternValue))
+        (setq APropertyValueList (car blockDataList))
+        (setq entityList (car (cdr blockDataList)))
         (setq matchedList APropertyValueList)
         (setq sslen (length APropertyValueList))
       )
@@ -855,13 +855,14 @@
     ; all select button
     (if (= 3 status)
       (progn 
-        (setq selectStatus 2)
         (if (= patternValue nil)
           (setq patternValue "*")
         )
         (setq ss (GetAllPipeSSUtils))
         (setq selectedFilterName (GetPipePropertyNameListPair filterPropertyName))
-        (setq APropertyValueList (GetBlockAPropertyValueListByPropertyNamePattern ss selectedFilterName patternValue))
+        (setq blockDataList (GetBlockAPropertyValueListByPropertyNamePattern ss selectedFilterName patternValue))
+        (setq APropertyValueList (car blockDataList))
+        (setq entityList (car (cdr blockDataList)))
         (setq matchedList APropertyValueList)
         (setq sslen (length APropertyValueList))
         ;(setq matchedList (list "1" "2" "3"))
@@ -876,7 +877,9 @@
         )
         (setq ss (GetAllPipeSSUtils))
         (setq selectedFilterName (GetPipePropertyNameListPair filterPropertyName))
-        (setq APropertyValueList (GetBlockAPropertyValueListByPropertyNamePattern ss selectedFilterName patternValue))
+        (setq blockDataList (GetBlockAPropertyValueListByPropertyNamePattern ss selectedFilterName patternValue))
+        (setq APropertyValueList (car blockDataList))
+        (setq entityList (car (cdr blockDataList)))
         (setq matchedList APropertyValueList)
         (setq sslen (length APropertyValueList))
       )
@@ -1015,11 +1018,12 @@
   )
 )
 
-(defun GetBlockAPropertyValueListByPropertyNamePattern (ss selectedName patternValue / i ent blk entx propertyName aPropertyValueList)
+(defun GetBlockAPropertyValueListByPropertyNamePattern (ss selectedName patternValue / i ent blk entx propertyName aPropertyValueList entityList)
   (if (/= ss nil)
     (progn
       (setq i 0)
       (setq aPropertyValueList '())
+      (setq entityList '())
       (repeat (sslength ss)
         (if (/= nil (ssname ss i))
           (progn
@@ -1033,7 +1037,11 @@
               (setq propertyName (cdr (assoc 2 entx)))
               (if (= propertyName selectedName)
                 (if (wcmatch (cdr (assoc 1 entx)) patternValue) 
-                  (setq aPropertyValueList (append aPropertyValueList (list (cdr (assoc 1 entx)))))
+                  (progn 
+                    (setq aPropertyValueList (append aPropertyValueList (list (cdr (assoc 1 entx)))))
+                    ; the key is listing the blk
+                    (setq entityList (append entityList (list blk)))
+                  )
                 )
               )
 	            ; get the next property information
@@ -1046,7 +1054,12 @@
       )
     )
   )
-  aPropertyValueList
+  (list aPropertyValueList entityList)
+)
+
+(defun c:testss (/ ss)
+  (setq ss (GetPipeSSBySelectUtils))
+  (GetBlockAPropertyValueListByPropertyNamePattern ss "PIPENUM" "VT*")
 )
 
 ; function for modify data
