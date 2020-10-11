@@ -829,6 +829,7 @@
     (if (/= matchedList nil)
       (progn
         (set_tile "filterPropertyName" filterPropertyName)
+        (set_tile "patternValue" patternValue)
         (start_list "matchedResult" 3)
         (mapcar '(lambda (x) (add_list x)) 
                  matchedList)
@@ -843,7 +844,7 @@
         (setq ss (GetPipeSSBySelectUtils))
         (setq sslen (sslength ss))
         (setq selectedFilterName (GetPipePropertyNameListPair filterPropertyName))
-        (setq matchedList (GetBlockAPropertyValueListByPropertyName ss selectedFilterName))
+        (setq matchedList (GetBlockAPropertyValueListByPropertyNamePattern ss selectedFilterName))
       )
     )
     (if (= 3 status)
@@ -852,7 +853,8 @@
         (setq sslen (sslength ss))
         (setq selectedFilterName (GetPipePropertyNameListPair filterPropertyName))
         ;(setq matchedList (list "1" "2" "3"))
-        (setq matchedList (GetBlockAPropertyValueListByPropertyName ss selectedFilterName))
+        ;(setq matchedList (list "1" "2" patternValue))
+        (setq matchedList (GetBlockAPropertyValueListByPropertyNamePattern ss selectedFilterName patternValue))
       )
     )
   )
@@ -990,7 +992,7 @@
   )
 )
 
-(defun GetBlockAPropertyValueListByPropertyName (ss selectedName / i ent blk entx propertyName aPropertyValueList)
+(defun GetBlockAPropertyValueListByPropertyNamePattern (ss selectedName patternValue / i ent blk entx propertyName aPropertyValueList)
   (if (/= ss nil)
     (progn
       (setq i 0)
@@ -1007,7 +1009,9 @@
             (while (= "ATTRIB" (cdr (assoc 0 entx)))
               (setq propertyName (cdr (assoc 2 entx)))
               (if (= propertyName selectedName)
-		            (setq aPropertyValueList (append aPropertyValueList (list (cdr (assoc 1 entx)))))
+                (if (wcmatch (cdr (assoc 1 entx)) patternValue) 
+                  (setq aPropertyValueList (append aPropertyValueList (list (cdr (assoc 1 entx)))))
+                )
               )
 	            ; get the next property information
               (setq entx (entget (entnext (cdr (assoc -1 entx)))))
