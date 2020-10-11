@@ -132,17 +132,13 @@ filterAndModifyPipeProperty : dialog {
         fixed_width = true; 
         alignment = centered; 
         : button { 
-          // Create object button 
           key = "btnSelect"; 
-          // action = "(testfunc)"; 
           label = "选择要匹配的管道"; 
           is_default = "true"; 
         } 
         : spacer { width = 3; } 
         : button { 
-          // Create object button 
           key = "btnAll"; 
-          // action = "(testfunc)"; 
           label = "匹配图纸中的全部管道"; 
           is_default = "true"; 
         }
@@ -180,9 +176,7 @@ filterAndModifyPipeProperty : dialog {
         fixed_width = true; 
         alignment = centered; 
         : button { 
-          // Create object button 
           key = "btnModify"; 
-          // action = "(testfunc)"; 
           label = "批量修改"; 
           is_default = "true"; 
         } 

@@ -788,34 +788,55 @@
 )
 
 
-(defun filterAndModifyBlockPropertyByBox (tileName blockSSName / dcl_id property_name property_value status selectedName ss)
+(defun filterAndModifyBlockPropertyByBox (tileName blockSSName / dcl_id propertyName propertyValue status selectedName ss sslen)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
-  (if (not (new_dialog tileName dcl_id))
-    (exit)
-  )
-  ; optional setting for the popup_list tile
-  (set_tile "property_name" "0")
-  ; the default value of input box
-  (set_tile "property_value" "")
-  (mode_tile "property_name" 2)
-  (mode_tile "property_value" 2)
-  (action_tile "property_name" "(setq property_name $value)")
-  (action_tile "property_value" "(setq property_value $value)")
-  (if (= nil property_name)
-    (setq property_name "0")
-  )
+  (setq status 2)
+  (while (>= status 2)
+    ; Create the dialog box
+    (new_dialog tileName dcl_id "" '(-1 -1))
+    ; Added the actions to the Cancel and Pick Point button
+    (action_tile "cancel" "(done_dialog 0)")
+    (action_tile "btnSelect" "(done_dialog 2)")
+    (action_tile "btnAll" "(done_dialog 3)")
+    (action_tile "btnModify" "(done_dialog 4)")
 
-  (setq status (start_dialog))
-  (unload_dialog dcl_id)
-  
-  (if (= status 1)
-    (progn 
-      (setq ss (GetBlockSSByNameUtils blockSSName))
-      (setq selectedName (GetPropertyName property_name blockSSName))
-      (ModifyPropertyValue ss selectedName property_value)
-      (alert "更新数据成功")(princ)
+    ; Display the number of selected pipes
+    ; 弄了很久，不知道为啥只能引入局部变量 sslen 解决的
+    (if (/= sslen nil)
+      (set_tile "msg" (strcat "匹配到的管道数量： " (rtos sslen)))
+    )
+    
+    ; optional setting for the popup_list tile
+    (set_tile "propertyName" "0")
+    ; the default value of input box
+    (set_tile "propertyValue" "")
+    (mode_tile "propertyName" 2)
+    (mode_tile "propertyValue" 2)
+    (action_tile "propertyName" "(setq propertyName $value)")
+    (action_tile "propertyValue" "(setq propertyValue $value)")
+    (if (= nil property_name)
+      (setq property_name "0")
+    )
+    
+    ; Check the status returned
+    (if (= 2 (setq status (start_dialog)))
+      (progn 
+        (setq ss (GetPipeSSBySelectUtils))
+        (setq sslen (sslength ss))
+        ;(setq selectedName (GetPropertyName propertyName blockSSName))
+        ;(ModifyPropertyValue ss selectedName propertyValue)
+      )
+    )
+    (if (= 3 status)
+      (progn 
+        (setq ss (GetPipeSSBySelectUtils))
+        (setq sslen (sslength ss))
+      )
     )
   )
+  
+  (unload_dialog dcl_id)
+  (princ)
 )
 
 
