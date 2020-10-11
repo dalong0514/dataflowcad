@@ -173,6 +173,39 @@
   )
 )
 
+; extract data form a Block
+(defun ExtractBlockPropertyUtils (f ss propertyPairNameList lastPropertyPair classValuePair / i index ent blk entx propertyName)
+  (if (/= ss nil)
+    (progn
+      (setq i 0)
+      (repeat (sslength ss)
+        (if (/= nil (ssname ss i))
+          (progn
+            (princ "{" f)
+            (setq ent (entget (ssname ss i)))
+            (setq blk (ssname ss i))
+            (setq entx (entget (entnext (cdr (assoc -1 ent)))))
+            (while (= "ATTRIB" (cdr (assoc 0 entx)))
+              (setq index 0)
+              (setq propertyName (cdr (assoc 2 entx)))
+              (repeat (length propertyPairNameList)
+                (WriteAPropertyValueToTextUtils propertyName (nth index propertyPairNameList) entx f)
+                (setq index (+ index 1))
+              )
+              (WriteLastPropertyValueToTextUtils propertyName lastPropertyPair classValuePair entx f)
+              ; get the next property information
+              (setq entx (entget (entnext (cdr (assoc -1 entx)))))
+            )
+            (princ "}\n" f)
+            (entupd blk)
+            (setq i (+ 1 i))
+          )
+        )
+      )
+    )
+  )
+)
+
 ; Utils Function 
 ;;;-------------------------------------------------------------------------;;;
 
@@ -185,39 +218,39 @@
 (defun c:sstest ()
   (setq fn (GetCurrentDirByBoxUtils))
   (setq f (open fn "w"))
-  (ExtractInstrumentPToText)
-  (ExtractInstrumentLToText)
-  (ExtractInstrumentSISToText)
+  (GsExtractInstrumentPToText)
+  (GsExtractInstrumentLToText)
+  (GsExtractInstrumentSISToText)
   (close f)
   (FileEncodeTransUtils fn "gb2312" "utf-8")
   (alert "数据提取成功")(princ)
 )
 
-(defun ExtractInstrumentPToText (/ ss propertyPairNameList lastPropertyPair classValuePair)
+(defun GsExtractInstrumentPToText (/ ss propertyPairNameList lastPropertyPair classValuePair)
   (setq ss (ssget "X" '((0 . "INSERT") (2 . "InstrumentP"))))
-  (setq propertyPairNameList (GetInstrumentPropertyPairNameList))
+  (setq propertyPairNameList (GsGetInstrumentPropertyPairNameList))
   (setq lastPropertyPair '("DIRECTION" "direction"))
   (setq classValuePair '("class" "concentrated"))
-  (ExtractBlockData f ss propertyPairNameList lastPropertyPair classValuePair)
+  (ExtractBlockPropertyUtils f ss propertyPairNameList lastPropertyPair classValuePair)
 )
 
-(defun ExtractInstrumentLToText (/ ss propertyPairNameList lastPropertyPair classValuePair)
+(defun GsExtractInstrumentLToText (/ ss propertyPairNameList lastPropertyPair classValuePair)
   (setq ss (ssget "X" '((0 . "INSERT") (2 . "InstrumentL"))))
-  (setq propertyPairNameList (GetInstrumentPropertyPairNameList))
+  (setq propertyPairNameList (GsGetInstrumentPropertyPairNameList))
   (setq lastPropertyPair '("DIRECTION" "direction"))
   (setq classValuePair '("class" "location"))
-  (ExtractBlockData f ss propertyPairNameList lastPropertyPair classValuePair)
+  (ExtractBlockPropertyUtils f ss propertyPairNameList lastPropertyPair classValuePair)
 )
 
-(defun ExtractInstrumentSISToText (/ ss propertyPairNameList lastPropertyPair classValuePair)
+(defun GsExtractInstrumentSISToText (/ ss propertyPairNameList lastPropertyPair classValuePair)
   (setq ss (ssget "X" '((0 . "INSERT") (2 . "InstrumentSIS"))))
-  (setq propertyPairNameList (GetInstrumentPropertyPairNameList))
+  (setq propertyPairNameList (GsGetInstrumentPropertyPairNameList))
   (setq lastPropertyPair '("DIRECTION" "direction"))
   (setq classValuePair '("class" "sis"))
-  (ExtractBlockData f ss propertyPairNameList lastPropertyPair classValuePair)
+  (ExtractBlockPropertyUtils f ss propertyPairNameList lastPropertyPair classValuePair)
 )
 
-(defun GetInstrumentPropertyPairNameList (/ instrumentPPropertyPairNameList)
+(defun GsGetInstrumentPropertyPairNameList (/ instrumentPPropertyPairNameList)
   (setq instrumentPPropertyPairNameList '(
                             ("FUNCTION" "function")
                             ("TAG" "tag")
@@ -239,40 +272,6 @@
                             ("INSTALLSIZE" "installsize")
                            ))
 )
-
-; extract data form a Block
-(defun ExtractBlockData (f ss propertyPairNameList lastPropertyPair classValuePair / i index ent blk entx value direction)
-  (if (/= ss nil)
-    (progn
-      (setq i 0)
-      (repeat (sslength ss)
-        (if (/= nil (ssname ss i))
-          (progn
-            (princ "{" f)
-            (setq ent (entget (ssname ss i)))
-            (setq blk (ssname ss i))
-            (setq entx (entget (entnext (cdr (assoc -1 ent)))))
-            (while (= "ATTRIB" (cdr (assoc 0 entx)))
-              (setq index 0)
-              (setq value (cdr (assoc 2 entx)))
-              (repeat (length propertyPairNameList)
-                (WriteAPropertyValueToTextUtils value (nth index propertyPairNameList) entx f)
-                (setq index (+ index 1))
-              )
-              (WriteLastPropertyValueToTextUtils value lastPropertyPair classValuePair entx f)
-              ; get the next property information
-              (setq entx (entget (entnext (cdr (assoc -1 entx)))))
-            )
-            (princ "}\n" f)
-            (entupd blk)
-            (setq i (+ 1 i))
-          )
-        )
-      )
-    )
-  )
-)
-
 
 ; test zoom
 ;;;-------------------------------------------------------------------------;;;
