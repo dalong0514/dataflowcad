@@ -65,7 +65,7 @@ modifyPipeProperty : dialog {
       // Drop-down list 
       key = "property_name"; 
       label = "选择要修改的属性";
-      list = "流程图号\n管道编号\n工作介质\n工作温度\n工作压力\n相态\n管道起点\n管道终点\n保温材料";
+      list = "管道编号\n流程图号\n工作介质\n工作温度\n工作压力\n相态\n管道起点\n管道终点\n保温材料";
       value = "";
     }
     : spacer { height = 3; } 
@@ -91,6 +91,106 @@ modifyPipeProperty : dialog {
       cancel_button; 
     }
     : spacer { height = 3; } 
+  }
+}
+
+filterAndModifyPipeProperty : dialog {
+  label = "筛选匹配特定的管道并修改块内的属性"; 
+  key = "filter_modify_property";
+  : row {
+    : boxed_radio_column {
+      label = "匹配管道";
+      key = "filterBox";
+      : popup_list { 
+        label = "选择用哪个属性值匹配";
+        key = "filterPropertyName"; 
+        list = "管道编号\n流程图号\n工作介质\n工作温度\n工作压力\n相态\n管道起点\n管道终点\n保温材料";
+        value = "";
+      }
+      : spacer { height = 1; } 
+      : edit_box {
+        label = "通配符匹配模式";
+        key = "patternValue";
+        edit_width = 80;
+        mnemonic = "N";
+        value = "";
+      }
+      : spacer { height = 1; } 
+      : list_box { 
+        label = "匹配到的结果";
+        key = "matchedResultList"; 
+        list = "";
+        value = "";
+      }
+      : spacer { height = 1; } 
+      : text {
+        key = "msg";
+        label = "匹配到的管道数量：";
+      }
+      : spacer { height = 3; } 
+      : row { 
+        fixed_width = true; 
+        alignment = centered; 
+        : button { 
+          // Create object button 
+          key = "btnSelect"; 
+          // action = "(testfunc)"; 
+          label = "选择要匹配的管道"; 
+          is_default = "true"; 
+        } 
+        : spacer { width = 3; } 
+        : button { 
+          // Create object button 
+          key = "btnAll"; 
+          // action = "(testfunc)"; 
+          label = "匹配图纸中的全部管道"; 
+          is_default = "true"; 
+        }
+      }
+      : spacer { height = 3; } 
+    }
+
+    : boxed_radio_column {
+      label = "修改管道的属性值";
+      key = "modifyBox";
+      : popup_list { 
+        label = "选择要修改的属性";
+        key = "propertyNname"; 
+        list = "管道编号\n流程图号\n工作介质\n工作温度\n工作压力\n相态\n管道起点\n管道终点\n保温材料";
+        value = "";
+      }
+      : spacer { height = 1; } 
+      : edit_box {
+        label = "要替换的属性值片段，默认全替换";
+        key = "replacedValue";
+        edit_width = 80;
+        mnemonic = "N";
+        value = "";
+      }
+      : spacer { height = 3; } 
+      : edit_box {
+        label = "替换的新值";
+        key = "propertyValue";
+        edit_width = 80;
+        mnemonic = "N";
+        value = "";
+      }
+      : spacer { height = 3; } 
+      : row { 
+        fixed_width = true; 
+        alignment = centered; 
+        : button { 
+          // Create object button 
+          key = "btnModify"; 
+          // action = "(testfunc)"; 
+          label = "批量修改"; 
+          is_default = "true"; 
+        } 
+        : spacer { width = 3; } 
+        cancel_button; 
+      }
+      : spacer { height = 3; } 
+    }
   }
 }
 

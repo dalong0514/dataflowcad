@@ -745,23 +745,24 @@
   (modifyBlockPropertyByBox "modifyPipeProperty" "pipe")
 )
 
+(defun c:sstest ()
+  (filterAndModifyBlockPropertyByBox "filterAndModifyPipeProperty" "pipe")
+)
+
 ; the macro for extract data
 ; Gs Field
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
 
 ; Display the ex_hidden.dcl file
-(defun c:hidden (/ dialog_name id status pt)
-  (setq dialog_name "ch23_ex_hidden")
-
-  ; Load the DCL file named ex_hidden.dcl
-  (setq id (load_dialog (strcat dialog_name ".dcl")))
+(defun c:hidden (/ id status pt)
+  (setq id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   
   (setq status 2)
   (while (>= status 2)
 
     ; Create the dialog box
-    (new_dialog dialog_name id "" '(-1 -1))
+    (new_dialog "ex_hidden" id "" '(-1 -1))
 
     ; Added the actions to the Cancel and Pick Point button
     (action_tile "cancel" "(done_dialog 0)")
@@ -783,8 +784,40 @@
 
   ; Unload the dialog box
   (unload_dialog id)
- (princ)
+  (princ)
 )
+
+
+(defun filterAndModifyBlockPropertyByBox (tileName blockSSName / dcl_id property_name property_value status selectedName ss)
+  (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
+  (if (not (new_dialog tileName dcl_id))
+    (exit)
+  )
+  ; optional setting for the popup_list tile
+  (set_tile "property_name" "0")
+  ; the default value of input box
+  (set_tile "property_value" "")
+  (mode_tile "property_name" 2)
+  (mode_tile "property_value" 2)
+  (action_tile "property_name" "(setq property_name $value)")
+  (action_tile "property_value" "(setq property_value $value)")
+  (if (= nil property_name)
+    (setq property_name "0")
+  )
+
+  (setq status (start_dialog))
+  (unload_dialog dcl_id)
+  
+  (if (= status 1)
+    (progn 
+      (setq ss (GetBlockSSByNameUtils blockSSName))
+      (setq selectedName (GetPropertyName property_name blockSSName))
+      (ModifyPropertyValue ss selectedName property_value)
+      (alert "更新数据成功")(princ)
+    )
+  )
+)
+
 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
@@ -825,8 +858,8 @@
 (defun GetPropertyName (property_name blockSSName / propertyNameList selectedName)
   (if (= blockSSName "pipe")
     (progn
-      (setq propertyNameList '((0 . "DRAWNUM")
-                              (1 . "PIPENUM")
+      (setq propertyNameList '((0 . "PIPENUM")
+                              (1 . "DRAWNUM")
                               (2 . "SUBSTANCE")
                               (3 . "TEMP")
                               (4 . "PRESSURE")
