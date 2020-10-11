@@ -841,24 +841,30 @@
     ; Check the status returned
     (if (= 2 (setq status (start_dialog)))
       (progn 
+        (if (= patternValue nil)
+          (setq patternValue "*")
+        )
         (setq ss (GetPipeSSBySelectUtils))
         (setq sslen (sslength ss))
         (setq selectedFilterName (GetPipePropertyNameListPair filterPropertyName))
-        (setq matchedList (GetBlockAPropertyValueListByPropertyNamePattern ss selectedFilterName))
+        (setq matchedList (GetBlockAPropertyValueListByPropertyNamePattern ss selectedFilterName patternValue))
       )
     )
     (if (= 3 status)
       (progn 
+        (if (= patternValue nil)
+          (setq patternValue "*")
+        )
         (setq ss (GetAllPipeSSUtils))
         (setq sslen (sslength ss))
         (setq selectedFilterName (GetPipePropertyNameListPair filterPropertyName))
+        (setq matchedList (GetBlockAPropertyValueListByPropertyNamePattern ss selectedFilterName patternValue))
         ;(setq matchedList (list "1" "2" "3"))
         ;(setq matchedList (list "1" "2" patternValue))
-        (setq matchedList (GetBlockAPropertyValueListByPropertyNamePattern ss selectedFilterName patternValue))
       )
     )
   )
-  
+
   (unload_dialog dcl_id)
   (princ)
 )
