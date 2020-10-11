@@ -215,15 +215,20 @@
 
 
 
-(defun c:sstest ()
+(defun c:sstest (/ fn f)
   (setq fn (GetCurrentDirByBoxUtils))
   (setq f (open fn "w"))
-  (GsExtractInstrumentPToText)
-  (GsExtractInstrumentLToText)
-  (GsExtractInstrumentSISToText)
+  ; do not know why f can not be a arg of the GsExtractGs2InstrumentToText--20201011
+  (GsExtractGs2InstrumentToText)
   (close f)
   (FileEncodeTransUtils fn "gb2312" "utf-8")
   (alert "数据提取成功")(princ)
+)
+
+(defun GsExtractGs2InstrumentToText ()
+  (GsExtractInstrumentPToText)
+  (GsExtractInstrumentLToText)
+  (GsExtractInstrumentSISToText)
 )
 
 (defun GsExtractInstrumentPToText (/ ss propertyPairNameList lastPropertyPair classValuePair)
