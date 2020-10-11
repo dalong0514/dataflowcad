@@ -828,6 +828,7 @@
     
     (if (/= matchedList nil)
       (progn
+        (set_tile "filterPropertyName" filterPropertyName)
         (start_list "matchedResult" 3)
         (mapcar '(lambda (x) (add_list x)) 
                  matchedList)
@@ -835,7 +836,6 @@
         (end_list)
       )
     )
-
 
     ; Check the status returned
     (if (= 2 (setq status (start_dialog)))
@@ -990,10 +990,11 @@
   )
 )
 
-(defun GetBlockAPropertyValueListByPropertyName (ss selectedName property_value / i ent blk entx value)
+(defun GetBlockAPropertyValueListByPropertyName (ss selectedName / i ent blk entx propertyName aPropertyValueList)
   (if (/= ss nil)
     (progn
       (setq i 0)
+      (setq aPropertyValueList '())
       (repeat (sslength ss)
         (if (/= nil (ssname ss i))
           (progn
@@ -1004,45 +1005,9 @@
 	          ; get the property information
             (setq entx (entget (entnext (cdr (assoc -1 ent)))))
             (while (= "ATTRIB" (cdr (assoc 0 entx)))
-              (setq value (cdr (assoc 2 entx)))
-              (if (= value selectedName)
-                (progn
-                  (setq a (cons 1 property_value))
-                  (setq b (assoc 1 entx))
-                  (entmod (subst a b entx))
-                )
-              )
-	            ; get the next property information
-              (setq entx (entget (entnext (cdr (assoc -1 entx)))))
-            )
-            (entupd blk)
-            (setq i (+ 1 i))
-          )
-        )
-        (princ)
-      )
-    )
-  )
-)
-
-(defun GetBlockAPropertyValueListByPropertyName (ss selectedName / i ent blk entx value equipName)
-  (if (/= ss nil)
-    (progn
-      (setq i 0)
-      (setq equipName '())
-      (repeat (sslength ss)
-        (if (/= nil (ssname ss i))
-          (progn
-	          ; get the entity information of the i(th) block
-            (setq ent (entget (ssname ss i)))
-	          ; save the entity name of the i(th) block
-            (setq blk (ssname ss i))
-	          ; get the property information
-            (setq entx (entget (entnext (cdr (assoc -1 ent)))))
-            (while (= "ATTRIB" (cdr (assoc 0 entx)))
-              (setq value (cdr (assoc 2 entx)))
-              (if (= value selectedName)
-		            (setq equipName (append equipName (list (cdr (assoc 1 entx)))))
+              (setq propertyName (cdr (assoc 2 entx)))
+              (if (= propertyName selectedName)
+		            (setq aPropertyValueList (append aPropertyValueList (list (cdr (assoc 1 entx)))))
               )
 	            ; get the next property information
               (setq entx (entget (entnext (cdr (assoc -1 entx)))))
@@ -1054,7 +1019,7 @@
       )
     )
   )
-  equipName
+  aPropertyValueList
 )
 
 ; function for modify data
