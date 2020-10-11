@@ -276,7 +276,7 @@
 ; Gs Field
 ; the macro for extract data
 
-(defun c:sstest (/ fn f)
+(defun c:gsinstrument (/ fn f)
   (setq fn (GetCurrentDirByBoxUtils))
   (setq f (open fn "w"))
   ; do not know why f can not be a arg of the GsExtractGs2InstrumentToText--20201011
@@ -307,10 +307,19 @@
   (alert "数据提取成功")(princ)
 )
 
-(defun c:sspipe (/ fn f)
+(defun c:gsequipment (/ fn f)
   (setq fn (GetCurrentDirByBoxUtils))
   (setq f (open fn "w"))
   (ExtractEquipToText)
+  (close f)
+  (FileEncodeTransUtils fn "gb2312" "utf-8")
+  (alert "数据提取成功")(princ)
+)
+
+(defun c:gselectric (/ fn f)
+  (setq fn (GetCurrentDirByBoxUtils))
+  (setq f (open fn "w"))
+  (ExtractElectricEquipToText)
   (close f)
   (FileEncodeTransUtils fn "gb2312" "utf-8")
   (alert "数据提取成功")(princ)
@@ -383,6 +392,15 @@
   (ExtractVacuumEquipToText)
   (ExtractReactorEquipToText)
   (ExtractCustomEquipToText)
+)
+
+(defun ExtractElectricEquipToText ()
+  (ExtractCentrifugeEquipToText)
+  (ExtractPumpEquipToText)
+  (ExtractVacuumEquipToText)
+  (ExtractReactorEquipToText)
+  ; ready to require
+  ;(ExtractCustomEquipToText)
 )
 
 (defun ExtractCentrifugeEquipToText (/ ss propertyPairNameList lastPropertyPair classValuePair)
@@ -921,62 +939,6 @@
   (alert "数据提取成功")(princ)
 )
 
-
-; the command for extarcting data from InstrumentP/InstrumentL Block
-(defun c:gsinstrument (/ fn f ssP ssL)
-  (setq fn (GetCurrentDirByBoxUtils))
-  (setq f (open fn "w"))
-  (setq ssP (ssget "x" '((0 . "INSERT") (2 . "InstrumentP"))))
-  (setq ssL (ssget "x" '((0 . "INSERT") (2 . "InstrumentL"))))
-  (setq ssLeft (ssget "x" '((0 . "INSERT") (2 . "PipeArrowLeft"))))
-  (setq ssUp (ssget "x" '((0 . "INSERT") (2 . "PipeArrowUp"))))
-  (setq ssReactor (ssget "x" '((0 . "INSERT") (2 . "Reactor"))))
-  (setq ssPump (ssget "x" '((0 . "INSERT") (2 . "Pump"))))
-  (setq ssTank (ssget "x" '((0 . "INSERT") (2 . "Tank"))))
-  (setq ssHeater (ssget "x" '((0 . "INSERT") (2 . "Heater"))))
-  (setq ssCentrifuge (ssget "x" '((0 . "INSERT") (2 . "Centrifuge"))))
-  (setq ssVacuum (ssget "x" '((0 . "INSERT") (2 . "Vacuum"))))
-  (setq ssCustomEquip (ssget "x" '((0 . "INSERT") (2 . "CustomEquip"))))
-  (ExtactInstrumentP f ssP)
-  (ExtactInstrumentL f ssL)
-  (ExtactPipeArrow f ssLeft)
-  (ExtactPipeArrow f ssUp)
-  (ExtactReactor f ssReactor)
-  (ExtactPump f ssPump)
-  (ExtactTank f ssTank)
-  (ExtactHeater f ssHeater)
-  (ExtactCentrifuge f ssCentrifuge)
-  (ExtactVacuum f ssVacuum)
-  (ExtactCustomEquip f ssCustomEquip)
-  (close f)
-  ; tansfor the encode
-  (FileEncodeTransUtils fn "gb2312" "utf-8")
-  (alert "数据提取成功")(princ)
-)
-
-; the command for extarcting data from Equipment Block
-(defun c:gsequipment (/ fn f ssReactor ssPump ssTank ssHeater ssCentrifuge ssVacuum ssCustom)
-  (setq fn (GetCurrentDirByBoxUtils))
-  (setq f (open fn "w"))
-  (setq ssReactor (ssget "x" '((0 . "INSERT") (2 . "Reactor"))))
-  (setq ssPump (ssget "x" '((0 . "INSERT") (2 . "Pump"))))
-  (setq ssTank (ssget "x" '((0 . "INSERT") (2 . "Tank"))))
-  (setq ssHeater (ssget "x" '((0 . "INSERT") (2 . "Heater"))))
-  (setq ssCentrifuge (ssget "x" '((0 . "INSERT") (2 . "Centrifuge"))))
-  (setq ssVacuum (ssget "x" '((0 . "INSERT") (2 . "Vacuum"))))
-  (setq ssCustomEquip (ssget "x" '((0 . "INSERT") (2 . "CustomEquip"))))
-  (ExtactReactor f ssReactor)
-  (ExtactPump f ssPump)
-  (ExtactTank f ssTank)
-  (ExtactHeater f ssHeater)
-  (ExtactCentrifuge f ssCentrifuge)
-  (ExtactVacuum f ssVacuum)
-  (ExtactCustomEquip f ssCustomEquip)
-  (close f)
-  ; tansfor the encode
-  (FileEncodeTransUtils fn "gb2312" "utf-8")
-  (alert "数据提取成功")(princ)
-)
 
 ; extarcting data from Equipment Block for electric condition
 (defun c:gselectric (/ fn f ssReactor ssPump ssCentrifuge ssVacuum)
