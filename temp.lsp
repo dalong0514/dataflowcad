@@ -799,12 +799,6 @@
     (action_tile "btnSelect" "(done_dialog 2)")
     (action_tile "btnAll" "(done_dialog 3)")
     (action_tile "btnModify" "(done_dialog 4)")
-
-    ; Display the number of selected pipes
-    ; 弄了很久，不知道为啥只能引入局部变量 sslen 解决的
-    (if (/= sslen nil)
-      (set_tile "msg" (strcat "匹配到的管道数量： " (rtos sslen)))
-    )
     
     ; optional setting for the popup_list tile
     (set_tile "filterPropertyName" "0")
@@ -817,10 +811,22 @@
     (mode_tile "propertyValue" 2)
     (action_tile "propertyName" "(setq propertyName $value)")
     (action_tile "propertyValue" "(setq propertyValue $value)")
-
+    (if (= nil propertyName)
+      (setq propertyName "0")
+    )
+    (if (= nil filterPropertyName)
+      (setq filterPropertyName "0")
+    )
+    
+    ; Display the number of selected pipes
+    ; 弄了很久，不知道为啥只能引入局部变量 sslen 解决的
+    (if (/= sslen nil)
+      (set_tile "msg" (strcat "匹配到的管道数量： " (rtos sslen)))
+    )
+    
     (if (/= matchedList nil)
       (progn
-        (start_list "matchedResult" 2)
+        (start_list "matchedResult" 3)
         (mapcar '(lambda (x) (add_list x)) 
                  matchedList)
         ;(add_list matchedList)
@@ -828,12 +834,6 @@
       )
     )
 
-    (if (= nil propertyName)
-      (setq propertyName "0")
-    )
-    (if (= nil filterPropertyName)
-      (setq filterPropertyName "0")
-    )
 
     ; Check the status returned
     (if (= 2 (setq status (start_dialog)))
@@ -846,7 +846,8 @@
     )
     (if (= 3 status)
       (progn 
-        ;(setq ss (GetAllPipeSSUtils))
+        (setq ss (GetAllPipeSSUtils))
+        (setq sslen (sslength ss))
         (setq matchedList (list "1" "2" "3"))
       )
     )
