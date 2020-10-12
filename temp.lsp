@@ -787,7 +787,7 @@
   (princ)
 )
 
-(defun filterAndModifyBlockPropertyByBox (tileName blockSSName / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList previewList confirmList blockDataList APropertyValueList entityList)
+(defun filterAndModifyBlockPropertyByBox (tileName blockSSName / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList previewList confirmList blockDataList APropertyValueList entityList modifyStatus)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -805,8 +805,8 @@
     (set_tile "filterPropertyName" "0")
     (set_tile "propertyName" "0")
     ; the default value of input box
-    ;(set_tile "patternValue" "")
-    ;(set_tile "replacedValue" "")
+    (set_tile "patternValue" "")
+    (set_tile "replacedValue" "")
     (set_tile "propertyValue" "")
     (mode_tile "propertyName" 2)
     (mode_tile "propertyValue" 2)
@@ -826,6 +826,10 @@
     ; 弄了很久，不知道为啥只能引入局部变量 sslen 解决的
     (if (/= sslen nil)
       (set_tile "msg" (strcat "匹配到的管道数量： " (rtos sslen)))
+    )
+    
+    (if (= modifyStatus 0)
+      (set_tile "resultMsg" "请先预览修改")
     )
     
     (if (/= matchedList nil)
@@ -895,15 +899,13 @@
         (setq previewList (GetPropertyValueByEntityName entityList selectedName))
       )
     )
-    ; modify button
+    ; confirm button
     (if (= 5 status)
       (progn 
         (if (= replacedSubstring nil)
           (setq replacedSubstring "")
         )
         (setq selectedName (GetPipePropertyNameListPair propertyName))
-        ;(setq previewList (GetPropertyValueByEntityName entityList selectedName))
-        
         (if (= replacedSubstring "")
           (setq confirmList (ReplaceAllStirngOfListUtils propertyValue previewList))
           (setq confirmList (ReplaceSubstOfListByPatternUtils propertyValue replacedSubstring previewList))
@@ -913,13 +915,13 @@
     ; modify button
     (if (= 6 status)
       (progn 
-        (if (= replacedSubstring nil)
-          (setq replacedSubstring "")
+        (if (= confirmList nil)
+          (setq modifyStatus 0)
+          (progn 
+            (setq selectedName (GetPipePropertyNameListPair propertyName))
+            (ModifySubstPropertyValueByEntityName entityList selectedName confirmList)
+          )
         )
-        (setq selectedName (GetPipePropertyNameListPair propertyName))
-        (if (= replacedSubstring "")
-          (ModifyPropertyValueByEntityName entityList selectedName propertyValue)
-          (ModifyPropertyValueByEntityName entityList "TEMP" propertyValue)
         )
       )
     )
@@ -1145,6 +1147,32 @@
   )
 )
 
+(defun ModifySubstPropertyValueByEntityName (entityList selectedName confirmList / i ent blk entx propertyName newPropertyValue a b)
+  (setq i 0)
+  (repeat (length entityList)
+    ; get the entity information of the i(th) block
+    (setq ent (entget (nth i entityList)))
+    ; save the entity name of the i(th) block
+    (setq blk (nth i entityList))
+    ; get the property information
+    (setq entx (entget (entnext (cdr (assoc -1 ent)))))
+    (while (= "ATTRIB" (cdr (assoc 0 entx)))
+      (setq propertyName (cdr (assoc 2 entx)))
+      (if (= propertyName selectedName)
+        (progn
+          (setq a (cons 1 (nth i confirmList)))
+          (setq b (assoc 1 entx))
+          (entmod (subst a b entx))
+        )
+      )
+      ; get the next property information
+      (setq entx (entget (entnext (cdr (assoc -1 entx)))))
+    )
+    (entupd blk)
+    (setq i (+ 1 i))
+  )
+)
+
 (defun ReplaceAllStirngOfListUtils (newStr originList / i newList)
   (setq newList '())
   (setq i 0)
@@ -1179,11 +1207,10 @@
     str
 )
 
-(defun c:testss (/ ss)
-  (setq originList '("qwe" "234" "dqjrqkq"))
-  (ReplaceSubstOfListByPatternUtils "da" "q" originList)
-)
 
+(defun c:testss (/ ss originList)
+  (setq ss (ssget))
+)
 ; function for modify data
 ; Gs Field
 ;;;-------------------------------------------------------------------------;;;
