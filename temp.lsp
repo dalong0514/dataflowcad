@@ -882,7 +882,8 @@
     ; preview button
     (if (= 4 status)
       (progn 
-        (setq previewList matchedList)
+        (setq selectedName (GetPipePropertyNameListPair propertyName))
+        (setq previewList (GetPropertyValueByEntityName entityList selectedName))
       )
     )
     ; modify button
@@ -1070,7 +1071,31 @@
   (list aPropertyValueList entityList)
 )
 
-(defun ModifyPropertyValueByEntityName (entityList selectedName propertyValue / i ent blk entx propertyName)
+(defun GetPropertyValueByEntityName (entityList selectedName / i ent blk entx propertyName aPropertyValueList)
+  (setq i 0)
+  (setq aPropertyValueList '())
+  (repeat (length entityList)
+    ; get the entity information of the i(th) block
+    (setq ent (entget (nth i entityList)))
+    ; save the entity name of the i(th) block
+    (setq blk (nth i entityList))
+    ; get the property information
+    (setq entx (entget (entnext (cdr (assoc -1 ent)))))
+    (while (= "ATTRIB" (cdr (assoc 0 entx)))
+      (setq propertyName (cdr (assoc 2 entx)))
+      (if (= propertyName selectedName)
+        (setq aPropertyValueList (append aPropertyValueList (list (cdr (assoc 1 entx)))))
+      )
+      ; get the next property information
+      (setq entx (entget (entnext (cdr (assoc -1 entx)))))
+    )
+    (entupd blk)
+    (setq i (+ 1 i))
+  )
+  aPropertyValueList
+)
+
+(defun ModifyPropertyValueByEntityName (entityList selectedName propertyValue / i ent blk entx propertyName a b)
   (setq i 0)
   (repeat (length entityList)
     ; get the entity information of the i(th) block
