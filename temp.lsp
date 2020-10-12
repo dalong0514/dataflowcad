@@ -1154,11 +1154,23 @@
   (setq i 0)
   (repeat (length originList)
     (setq newList (append newList (list 
-                                    (vl-string-subst newStr pattern (nth i originList))
+                                    (StringSubstUtils newStr pattern (nth i originList))
                                   )))
     (setq i (+ i 1))
   )
   newList
+)
+
+(defun StringSubstUtils (new old str / inc len)
+    (setq len (strlen new)
+          inc 0
+    )
+    (while (setq inc (vl-string-search old str inc))
+        (setq str (vl-string-subst new old str inc)
+              inc (+ inc len)
+        )
+    )
+    str
 )
 
 (defun c:testss (/ ss)
