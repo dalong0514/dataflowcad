@@ -775,7 +775,8 @@
   (modifyBlockPropertyByBox "modifyInstrumentProperty" "instrument")
 )
 
-(defun c:modifyPipeProperty ()
+(defun c:modifyPipeProperty (/ pipePropertyNameList)
+  (setq pipePropertyNameList '("PIPENUM" "DRAWNUM" "SUBSTANCE" "TEMP" "PRESSURE" "PHASE" "FROM" "TO" "INSULATION"))
   (filterAndModifyBlockPropertyByBox "filterAndModifyPipeProperty" "pipe")
 )
 
@@ -992,17 +993,9 @@
 )
 
 (defun GetPipePropertyNameListPair (propertyName / propertyNameList selectedName)
-  (setq propertyNameList '((0 . "PIPENUM")
-                          (1 . "DRAWNUM")
-                          (2 . "SUBSTANCE")
-                          (3 . "TEMP")
-                          (4 . "PRESSURE")
-                          (5 . "PHASE")
-                          (6 . "FROM")
-                          (7 . "TO")
-                          (8 . "INSULATION")))
+  (setq propertyNameList '("PIPENUM" "DRAWNUM" "SUBSTANCE" "TEMP" "PRESSURE" "PHASE" "FROM" "TO" "INSULATION"))
   ; need to convert the data type of property_name
-  (setq selectedName (cdr (assoc (atoi propertyName) propertyNameList)))
+  (setq selectedName (nth (atoi propertyName) propertyNameList))
 )
 
 ; get the property name of the block
