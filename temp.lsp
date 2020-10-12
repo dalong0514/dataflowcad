@@ -970,71 +970,7 @@
 ; Gs Field
 ; function for modify data
 
-(defun modifyBlockPropertyByBox (tileName blockSSName / dcl_id property_name property_value status selectedName ss)
-  (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
-  (if (not (new_dialog tileName dcl_id))
-    (exit)
-  )
-  ; optional setting for the popup_list tile
-  (set_tile "property_name" "0")
-  ; the default value of input box
-  (set_tile "property_value" "")
-  (mode_tile "property_name" 2)
-  (mode_tile "property_value" 2)
-  (action_tile "property_name" "(setq property_name $value)")
-  (action_tile "property_value" "(setq property_value $value)")
-  (if (= nil property_name)
-    (setq property_name "0")
-  )
-
-  (setq status (start_dialog))
-  (unload_dialog dcl_id)
-  
-  (if (= status 1)
-    (progn 
-      (setq ss (GetBlockSSByNameUtils blockSSName))
-      (setq selectedName (GetPropertyName property_name blockSSName))
-      (ModifyPropertyValue ss selectedName property_value)
-      (alert "更新数据成功")(princ)
-    )
-  )
-)
-
-(defun GetPipePropertyNameListPair (propertyName / propertyNameList selectedName)
-  (setq propertyNameList '("PIPENUM" "DRAWNUM" "SUBSTANCE" "TEMP" "PRESSURE" "PHASE" "FROM" "TO" "INSULATION"))
-  ; need to convert the data type of property_name
-  (setq selectedName (nth (atoi propertyName) propertyNameList))
-)
-
-; get the property name of the block
-(defun GetPropertyName (property_name blockSSName / propertyNameList selectedName)
-  (if (= blockSSName "pipe")
-    (progn
-      (setq propertyNameList '((0 . "PIPENUM")
-                              (1 . "DRAWNUM")
-                              (2 . "SUBSTANCE")
-                              (3 . "TEMP")
-                              (4 . "PRESSURE")
-                              (5 . "PHASE")
-                              (6 . "FROM")
-                              (7 . "TO")
-                              (8 . "INSULATION")))
-      ; need to convert the data type of property_name
-      (setq selectedName (cdr (assoc (atoi property_name) propertyNameList)))
-    )
-  )
-  (if (= blockSSName "instrument")
-    (progn
-      (setq propertyNameList '("DRAWNUM" "LOCATION" "SUBSTANCE" "TEMP" "PRESSURE" "COMMENT" "PHASE" "FUNCTION" "TAG" "NAME" "SORT" "MATERIAL" "INSTALLSIZE" "MIN" "NOMAL" "MAX" "DIRECTION"))
-      ; need to convert the data type of property_name
-      (setq selectedName (cdr (assoc (atoi property_name) propertyNameList)))
-    )
-  )
-  selectedName
-)
-
-; modify property value of a block entity
-(defun ModifyPropertyValue (ss selectedName property_value / i ent blk entx value)
+(defun ModifyPropertyValueBySS (ss selectedName property_value / i ent blk entx value)
   (if (/= ss nil)
     (progn
       (setq i 0)
