@@ -140,7 +140,7 @@ filterAndModifyPipeProperty : dialog {
       : row {
         : text {
           key = "propertyValueMsg";
-          label = "替换的新字符";
+          label = "编号起点：";
         }
         : edit_box {
           key = "propertyValue";
@@ -292,7 +292,7 @@ filterAndModifyInstrumentProperty : dialog {
       : row {
         : text {
           key = "propertyValueMsg";
-          label = "替换的新字符";
+          label = "编号起点：";
         }
         : edit_box {
           key = "propertyValue";

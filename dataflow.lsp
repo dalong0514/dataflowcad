@@ -868,7 +868,7 @@
     
     (if (= modifyDataType "1")
       (set_tile "replacedSubstringMsg" "物料代号：")
-      (set_tile "propertyValueMsg" "编号起点：")
+      (set_tile "propertyValueMsg" "替换的新字符")
     )
     
     (if (/= matchedList nil)
