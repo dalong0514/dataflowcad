@@ -148,11 +148,18 @@ filterAndModifyPipeProperty : dialog {
     }
 
     : boxed_radio_column {
-      label = "显示原始数据";
+      label = "原始数据";
       key = "showOriginDataBox";
       width = 60;
+      : popup_list { 
+        label = "选择要修改的属性";
+        key = "propertyName"; 
+        list = "管道编号\n流程图号\n工作介质\n工作温度\n工作压力\n相态\n管道起点\n管道终点\n保温材料";
+        value = "";
+      }
+      : spacer { height = 1; } 
       : list_box { 
-        height = 29;
+        height = 25;
         key = "originData"; 
         list = "";
         value = "";
@@ -169,19 +176,11 @@ filterAndModifyPipeProperty : dialog {
     }
 
     : boxed_radio_column {
-      label = "修改管道的属性值";
+      label = "修改后的数据";
       key = "modifyBox";
       width = 60;
-      : popup_list { 
-        label = "选择要修改的属性";
-        key = "propertyName"; 
-        list = "管道编号\n流程图号\n工作介质\n工作温度\n工作压力\n相态\n管道起点\n管道终点\n保温材料";
-        value = "";
-      }
-      : spacer { height = 1; } 
       : list_box { 
         height = 20;
-        label = "要修改的数据";
         key = "modifyData"; 
         list = "";
         value = "";
@@ -210,11 +209,17 @@ filterAndModifyPipeProperty : dialog {
         fixed_width = true; 
         alignment = centered; 
         : button { 
+          key = "btnPreviewModify"; 
+          label = "预览修改"; 
+          is_default = "true"; 
+        } 
+        : spacer { width = 2; } 
+        : button { 
           key = "btnModify"; 
           label = "批量修改"; 
           is_default = "true"; 
         } 
-        : spacer { width = 3; } 
+        : spacer { width = 2; } 
         cancel_button; 
       }
       : spacer { height = 3; } 
