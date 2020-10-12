@@ -856,6 +856,9 @@
     (if (= nil filterPropertyName)
       (setq filterPropertyName "0")
     )
+    (if (= nil modifyDataType)
+      (setq modifyDataType "0")
+    )
 
     ; Display the number of selected pipes
     (if (/= sslen nil)
@@ -876,6 +879,7 @@
         (set_tile "filterPropertyName" filterPropertyName)
         (set_tile "patternValue" patternValue)
         (set_tile "propertyName" propertyName)
+        (set_tile "modifyDataType" modifyDataType)
         (start_list "matchedResult" 3)
         (mapcar '(lambda (x) (add_list x)) 
                  matchedList)
@@ -946,9 +950,6 @@
     ; confirm button
     (if (= 5 status)
       (progn 
-        (if (= modifyDataType nil)
-          (setq modifyDataType "0")
-        )
         (if (= modifyDataType "0")
           (progn
             (if (= replacedSubstring nil)
