@@ -787,7 +787,7 @@
   (princ)
 )
 
-(defun filterAndModifyBlockPropertyByBox (tileName blockSSName / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList blockDataList APropertyValueList entityList)
+(defun filterAndModifyBlockPropertyByBox (tileName blockSSName / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList previewList blockDataList APropertyValueList entityList)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -797,7 +797,8 @@
     (action_tile "cancel" "(done_dialog 0)")
     (action_tile "btnSelect" "(done_dialog 2)")
     (action_tile "btnAll" "(done_dialog 3)")
-    (action_tile "btnModify" "(done_dialog 4)")
+    (action_tile "btnShowOriginData" "(done_dialog 4)")
+    (action_tile "btnModify" "(done_dialog 5)")
     
     ; optional setting for the popup_list tile
     (set_tile "filterPropertyName" "0")
@@ -838,7 +839,14 @@
         (end_list)
       )
     )
-    
+    (if (/= previewList nil)
+      (progn
+        (start_list "originData" 3)
+        (mapcar '(lambda (x) (add_list x)) 
+                 previewList)
+        (end_list)
+      )
+    )
     ; select button
     (if (= 2 (setq status (start_dialog)))
       (progn 
@@ -871,8 +879,14 @@
         ;(setq matchedList (list "1" "2" patternValue))
       )
     )
-    ; modify button
+    ; preview button
     (if (= 4 status)
+      (progn 
+        (setq previewList matchedList)
+      )
+    )
+    ; modify button
+    (if (= 5 status)
       (progn 
         (setq selectedName (GetPipePropertyNameListPair propertyName))
         (if (= replacedSubstring nil)
