@@ -101,6 +101,7 @@ filterAndModifyPipeProperty : dialog {
     : boxed_radio_column {
       label = "匹配管道";
       key = "filterBox";
+      width = 60;
       : popup_list { 
         label = "选择用哪个属性值匹配";
         key = "filterPropertyName"; 
@@ -111,7 +112,6 @@ filterAndModifyPipeProperty : dialog {
       : edit_box {
         label = "通配符匹配模式";
         key = "patternValue";
-        edit_width = 60;
         mnemonic = "N";
         value = "";
       }
@@ -149,6 +149,7 @@ filterAndModifyPipeProperty : dialog {
     : boxed_radio_column {
       label = "修改管道的属性值";
       key = "modifyBox";
+      width = 60;
       : popup_list { 
         label = "选择要修改的属性";
         key = "propertyName"; 
@@ -169,17 +170,17 @@ filterAndModifyPipeProperty : dialog {
       }
       : spacer { height = 2; }
       : edit_box {
-        label = "要替换的属性值片段，空值默认整体替换";
-        key = "replacedValue";
-        edit_width = 60;
+        label = "局部字符，默认整体替换";
+        key = "replacedSubstring";
+        edit_width = 30;
         mnemonic = "N";
         value = "";
       }
       : spacer { height = 3; } 
       : edit_box {
-        label = "替换的新值";
+        label = "替换的新字符";
         key = "propertyValue";
-        edit_width = 60;
+        edit_width = 30;
         mnemonic = "N";
         value = "";
       }

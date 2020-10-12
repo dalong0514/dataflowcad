@@ -787,7 +787,7 @@
   (princ)
 )
 
-(defun filterAndModifyBlockPropertyByBox (tileName blockSSName / dcl_id propertyName propertyValue filterPropertyName patternValue status selectedName selectedFilterName ss sslen matchedList blockDataList APropertyValueList entityList)
+(defun filterAndModifyBlockPropertyByBox (tileName blockSSName / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList blockDataList APropertyValueList entityList)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -804,7 +804,7 @@
     (set_tile "propertyName" "0")
     ; the default value of input box
     ;(set_tile "patternValue" "")
-    (set_tile "replacedValue" "")
+    ;(set_tile "replacedValue" "")
     (set_tile "propertyValue" "")
     (mode_tile "propertyName" 2)
     (mode_tile "propertyValue" 2)
@@ -812,13 +812,14 @@
     (action_tile "propertyValue" "(setq propertyValue $value)")
     (action_tile "filterPropertyName" "(setq filterPropertyName $value)")
     (action_tile "patternValue" "(setq patternValue $value)")
+    (action_tile "replacedSubstring" "(setq replacedSubstring $value)")
     (if (= nil propertyName)
       (setq propertyName "0")
     )
     (if (= nil filterPropertyName)
       (setq filterPropertyName "0")
     )
-    
+
     ; Display the number of selected pipes
     ; 弄了很久，不知道为啥只能引入局部变量 sslen 解决的
     (if (/= sslen nil)
@@ -874,13 +875,12 @@
     (if (= 4 status)
       (progn 
         (setq selectedName (GetPipePropertyNameListPair propertyName))
-        (if (= replacedValue nil)
+        (if (= replacedSubstring nil)
+          (setq replacedSubstring "")
+        )
+        (if (= replacedSubstring "")
           (ModifyPropertyValueByEntityName entityList selectedName propertyValue)
-          (progn 
-
-            ; 待开发
-            (ModifyPropertyValueByEntityName entityList "TEMP" propertyValue)
-          )
+          (ModifyPropertyValueByEntityName entityList "TEMP" propertyValue)
         )
       )
     )
