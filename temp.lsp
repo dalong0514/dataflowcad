@@ -953,7 +953,7 @@
           (setq modifyStatus 0)
           (progn 
             (setq selectedName (GetPipePropertyNameListPair propertyName))
-            (ModifySubstPropertyValueByEntityName entityList selectedName confirmList)
+            (ModifyPropertyValueByEntityName entityList selectedName confirmList)
           )
         )
       )
@@ -1183,32 +1183,6 @@
     (setq newValue (cons 1 propertyValue))
   )
   (entmod (subst newValue oldValue entx))
-)
-
-(defun ModifySubstPropertyValueByEntityName (entityList selectedName newPropertyValueList / i ent blk entx propertyName newPropertyValue a b)
-  (setq i 0)
-  (repeat (length entityList)
-    ; get the entity information of the i(th) block
-    (setq ent (entget (nth i entityList)))
-    ; save the entity name of the i(th) block
-    (setq blk (nth i entityList))
-    ; get the property information
-    (setq entx (entget (entnext (cdr (assoc -1 ent)))))
-    (while (= "ATTRIB" (cdr (assoc 0 entx)))
-      (setq propertyName (cdr (assoc 2 entx)))
-      (if (= propertyName selectedName)
-        (progn
-          (setq a (cons 1 (nth i newPropertyValueList)))
-          (setq b (assoc 1 entx))
-          (entmod (subst a b entx))
-        )
-      )
-      ; get the next property information
-      (setq entx (entget (entnext (cdr (assoc -1 entx)))))
-    )
-    (entupd blk)
-    (setq i (+ 1 i))
-  )
 )
 
 ; function for modify data
