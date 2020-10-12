@@ -866,6 +866,10 @@
       (set_tile "resultMsg" "请先预览修改")
     )
     
+    (if (= modifyDataType "1")
+      (set_tile "replacedSubstringMsg" "物料代号：")
+    )
+    
     (if (/= matchedList nil)
       (progn
         (set_tile "filterPropertyName" filterPropertyName)

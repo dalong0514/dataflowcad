@@ -264,11 +264,16 @@ filterAndModifyInstrumentProperty : dialog {
         label = "修改状态：";
       }
       : spacer { height = 2; }
-      : edit_box {
-        label = "局部字符，默认整体替换";
-        key = "replacedSubstring";
-        mnemonic = "N";
-        value = "";
+      : row {
+        : text {
+          key = "replacedSubstringMsg";
+          label = "局部字符，默认整体替换";
+        }
+        : edit_box {
+          key = "replacedSubstring";
+          mnemonic = "N";
+          value = "";
+        }
       }
       : spacer { height = 3; } 
       : edit_box {
