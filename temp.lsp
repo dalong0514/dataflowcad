@@ -776,10 +776,6 @@
 )
 
 (defun c:modifyPipeProperty ()
-  (modifyBlockPropertyByBox "modifyPipeProperty" "pipe")
-)
-
-(defun c:sstest ()
   (filterAndModifyBlockPropertyByBox "filterAndModifyPipeProperty" "pipe")
 )
 
@@ -857,7 +853,6 @@
     )
 
     ; Display the number of selected pipes
-    ; 弄了很久，不知道为啥只能引入局部变量 sslen 解决的
     (if (/= sslen nil)
       (set_tile "msg" (strcat "匹配到的管道数量： " (rtos sslen)))
     )
@@ -922,8 +917,6 @@
         (setq entityList (car (cdr blockDataList)))
         (setq matchedList APropertyValueList)
         (setq sslen (length APropertyValueList))
-        ;(setq matchedList (list "1" "2" "3"))
-        ;(setq matchedList (list "1" "2" patternValue))
       )
     )
     ; preview button
