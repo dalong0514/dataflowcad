@@ -181,7 +181,7 @@ filterAndModifyPipeProperty : dialog {
       width = 60;
       : list_box { 
         height = 20;
-        key = "modifyData"; 
+        key = "modifiedData"; 
         list = "";
         value = "";
       }

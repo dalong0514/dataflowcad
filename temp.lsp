@@ -787,7 +787,7 @@
   (princ)
 )
 
-(defun filterAndModifyBlockPropertyByBox (tileName blockSSName / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList previewList blockDataList APropertyValueList entityList)
+(defun filterAndModifyBlockPropertyByBox (tileName blockSSName / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList previewList confirmList blockDataList APropertyValueList entityList)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -798,7 +798,8 @@
     (action_tile "btnSelect" "(done_dialog 2)")
     (action_tile "btnAll" "(done_dialog 3)")
     (action_tile "btnShowOriginData" "(done_dialog 4)")
-    (action_tile "btnModify" "(done_dialog 5)")
+    (action_tile "btnPreviewModify" "(done_dialog 5)")
+    (action_tile "btnModify" "(done_dialog 6)")
     
     ; optional setting for the popup_list tile
     (set_tile "filterPropertyName" "0")
@@ -847,6 +848,14 @@
         (end_list)
       )
     )
+    (if (/= confirmList nil)
+      (progn
+        (start_list "modifiedData" 3)
+        (mapcar '(lambda (x) (add_list x)) 
+                 confirmList)
+        (end_list)
+      )
+    )
     ; select button
     (if (= 2 (setq status (start_dialog)))
       (progn 
@@ -889,10 +898,29 @@
     ; modify button
     (if (= 5 status)
       (progn 
-        (setq selectedName (GetPipePropertyNameListPair propertyName))
         (if (= replacedSubstring nil)
           (setq replacedSubstring "")
         )
+        (setq selectedName (GetPipePropertyNameListPair propertyName))
+        (setq previewList (GetPropertyValueByEntityName entityList selectedName))
+        
+        (if (= replacedSubstring "")
+          (progn 
+            (setq confirmList (ReplaceSubstOfListByPatternUtils previewList propertyValue "*"))
+          )
+          (progn 
+            (ModifyPropertyValueByEntityName entityList selectedName propertyValue)
+          )
+        )
+      )
+    )
+    ; modify button
+    (if (= 6 status)
+      (progn 
+        (if (= replacedSubstring nil)
+          (setq replacedSubstring "")
+        )
+        (setq selectedName (GetPipePropertyNameListPair propertyName))
         (if (= replacedSubstring "")
           (ModifyPropertyValueByEntityName entityList selectedName propertyValue)
           (ModifyPropertyValueByEntityName entityList "TEMP" propertyValue)
@@ -1121,11 +1149,21 @@
   )
 )
 
+(defun ReplaceSubstOfListByPatternUtils (originList newStr pattern / i newList)
+  (setq newList '())
+  (setq i 0)
+  (repeat (length originList)
+    (setq newList (append newList (list 
+                                    (vl-string-subst newStr pattern (nth i originList))
+                                  )))
+    (setq i (+ i 1))
+  )
+  newList
+)
+
 (defun c:testss (/ ss)
-  (setq ss (GetPipeSSBySelectUtils))
-  (setq blockDataList (GetBlockAPropertyValueListByPropertyNamePattern ss "PIPENUM" "VT*"))
-  (setq entityList (car (cdr blockDataList)))
-  (ModifyPropertyValueByEntityName entityList "PIPENUM" "VT1102")
+  (setq originList '("qwqe" "234" "dqjrk"))
+  (ReplaceSubstOfListByPatternUtils originList "da" "q")
 )
 
 ; function for modify data
