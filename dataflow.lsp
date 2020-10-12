@@ -819,7 +819,7 @@
   (princ)
 )
 
-(defun filterAndModifyBlockPropertyByBox (propertyNameList tileName blockSSName / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList previewList confirmList blockDataList APropertyValueList entityList modifyStatus savedPatternValue)
+(defun filterAndModifyBlockPropertyByBox (propertyNameList tileName blockSSName / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList previewList confirmList blockDataList APropertyValueList entityList modifyStatus)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -866,7 +866,7 @@
     (if (/= matchedList nil)
       (progn
         (set_tile "filterPropertyName" filterPropertyName)
-        (set_tile "patternValue" savedPatternValue)
+        (set_tile "patternValue" patternValue)
         (set_tile "propertyName" propertyName)
         (start_list "matchedResult" 3)
         (mapcar '(lambda (x) (add_list x)) 
@@ -896,7 +896,6 @@
       (progn 
         (if (= patternValue nil)
           (setq patternValue "*")
-          (setq savedPatternValue pattern)
         )
 
         (if (= blockSSName "pipe")
@@ -904,7 +903,7 @@
           (setq ss (GetInstrumentSSBySelectUtils))
         )
         (setq selectedFilterName (nth (atoi filterPropertyName) propertyNameList))
-        (setq blockDataList (GetBlockAPropertyValueListByPropertyNamePattern ss selectedFilterName savedPatternValue))
+        (setq blockDataList (GetBlockAPropertyValueListByPropertyNamePattern ss selectedFilterName patternValue))
         (setq APropertyValueList (car blockDataList))
         (setq entityList (car (cdr blockDataList)))
         (setq matchedList APropertyValueList)
@@ -916,14 +915,13 @@
       (progn 
         (if (= patternValue nil)
           (setq patternValue "*")
-          (setq savedPatternValue pattern)
         )
         (if (= blockSSName "pipe")
           (setq ss (GetAllPipeSSUtils))
           (setq ss (GetAllInstrumentSSUtils))
         )
         (setq selectedFilterName (nth (atoi filterPropertyName) propertyNameList))
-        (setq blockDataList (GetBlockAPropertyValueListByPropertyNamePattern ss selectedFilterName savedPatternValue))
+        (setq blockDataList (GetBlockAPropertyValueListByPropertyNamePattern ss selectedFilterName patternValue))
         (setq APropertyValueList (car blockDataList))
         (setq entityList (car (cdr blockDataList)))
         (setq matchedList APropertyValueList)
