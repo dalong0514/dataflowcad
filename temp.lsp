@@ -954,7 +954,6 @@
           (progn 
             (setq selectedName (GetPipePropertyNameListPair propertyName))
             (ModifySubstPropertyValueByEntityName entityList selectedName confirmList)
-            (setq status 1)
           )
         )
       )
