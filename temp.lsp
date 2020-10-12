@@ -1166,11 +1166,7 @@
     (while (= "ATTRIB" (cdr (assoc 0 entx)))
       (setq propertyName (cdr (assoc 2 entx)))
       (if (= propertyName selectedName)
-        (progn
-          (setq a (cons 1 propertyValue))
-          (setq b (assoc 1 entx))
-          (entmod (subst a b entx))
-        )
+        (SwitchPropertyValueFromStringOrList propertyValue entx i)
       )
       ; get the next property information
       (setq entx (entget (entnext (cdr (assoc -1 entx)))))
@@ -1180,7 +1176,16 @@
   )
 )
 
-(defun ModifySubstPropertyValueByEntityName (entityList selectedName confirmList / i ent blk entx propertyName newPropertyValue a b)
+(defun SwitchPropertyValueFromStringOrList (propertyValue entx i / oldValue newValue)
+  (setq oldValue (assoc 1 entx))
+  (if (= (type propertyValue) 'list)
+    (setq newValue (cons 1 (nth i propertyValue)))
+    (setq newValue (cons 1 propertyValue))
+  )
+  (entmod (subst newValue oldValue entx))
+)
+
+(defun ModifySubstPropertyValueByEntityName (entityList selectedName newPropertyValueList / i ent blk entx propertyName newPropertyValue a b)
   (setq i 0)
   (repeat (length entityList)
     ; get the entity information of the i(th) block
@@ -1193,7 +1198,7 @@
       (setq propertyName (cdr (assoc 2 entx)))
       (if (= propertyName selectedName)
         (progn
-          (setq a (cons 1 (nth i confirmList)))
+          (setq a (cons 1 (nth i newPropertyValueList)))
           (setq b (assoc 1 entx))
           (entmod (subst a b entx))
         )
