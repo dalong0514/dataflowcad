@@ -942,7 +942,7 @@
     (if (= 5 status)
       (progn 
         (if (= modifyDataType nil)
-          (setq replacedSubstring "0")
+          (setq modifyDataType "0")
         )
         (if (= modifyDataType "0")
           (progn
