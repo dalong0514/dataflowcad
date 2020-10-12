@@ -147,6 +147,29 @@ filterAndModifyPipeProperty : dialog {
     }
 
     : boxed_radio_column {
+      label = "匹配管道";
+      key = "showOriginDataBox";
+      width = 60;
+      : list_box { 
+        label = "原始数据";
+        key = "originData"; 
+        list = "";
+        value = "";
+      }
+      : spacer { height = 4; } 
+      : row { 
+        fixed_width = true; 
+        alignment = centered; 
+        : button { 
+          key = "btnShowOriginData"; 
+          label = "显示原始数据"; 
+          is_default = "true"; 
+        } 
+      }
+      : spacer { height = 3; } 
+    }
+
+    : boxed_radio_column {
       label = "修改管道的属性值";
       key = "modifyBox";
       width = 60;
@@ -172,7 +195,6 @@ filterAndModifyPipeProperty : dialog {
       : edit_box {
         label = "局部字符，默认整体替换";
         key = "replacedSubstring";
-        edit_width = 30;
         mnemonic = "N";
         value = "";
       }
@@ -180,7 +202,6 @@ filterAndModifyPipeProperty : dialog {
       : edit_box {
         label = "替换的新字符";
         key = "propertyValue";
-        edit_width = 30;
         mnemonic = "N";
         value = "";
       }
