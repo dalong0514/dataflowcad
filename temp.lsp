@@ -777,7 +777,7 @@
 
 (defun c:modifyPipeProperty (/ pipePropertyNameList)
   (setq pipePropertyNameList '("PIPENUM" "DRAWNUM" "SUBSTANCE" "TEMP" "PRESSURE" "PHASE" "FROM" "TO" "INSULATION"))
-  (filterAndModifyBlockPropertyByBox "filterAndModifyPipeProperty" "pipe")
+  (filterAndModifyBlockPropertyByBox pipePropertyNameList "filterAndModifyPipeProperty" "pipe")
 )
 
 ; the macro for extract data
@@ -818,7 +818,7 @@
   (princ)
 )
 
-(defun filterAndModifyBlockPropertyByBox (tileName blockSSName / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList previewList confirmList blockDataList APropertyValueList entityList modifyStatus)
+(defun filterAndModifyBlockPropertyByBox (propertyNameList tileName blockSSName / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList previewList confirmList blockDataList APropertyValueList entityList modifyStatus)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -897,7 +897,7 @@
           (setq patternValue "*")
         )
         (setq ss (GetPipeSSBySelectUtils))
-        (setq selectedFilterName (GetPipePropertyNameListPair filterPropertyName))
+        (setq selectedFilterName (nth (atoi filterPropertyName) propertyNameList))
         (setq blockDataList (GetBlockAPropertyValueListByPropertyNamePattern ss selectedFilterName patternValue))
         (setq APropertyValueList (car blockDataList))
         (setq entityList (car (cdr blockDataList)))
@@ -912,7 +912,7 @@
           (setq patternValue "*")
         )
         (setq ss (GetAllPipeSSUtils))
-        (setq selectedFilterName (GetPipePropertyNameListPair filterPropertyName))
+        (setq selectedFilterName (nth (atoi filterPropertyName) propertyNameList))
         (setq blockDataList (GetBlockAPropertyValueListByPropertyNamePattern ss selectedFilterName patternValue))
         (setq APropertyValueList (car blockDataList))
         (setq entityList (car (cdr blockDataList)))
@@ -923,7 +923,7 @@
     ; preview button
     (if (= 4 status)
       (progn 
-        (setq selectedName (GetPipePropertyNameListPair propertyName))
+        (setq selectedName (nth (atoi propertyName) propertyNameList))
         (setq previewList (GetPropertyValueByEntityName entityList selectedName))
       )
     )
@@ -933,7 +933,7 @@
         (if (= replacedSubstring nil)
           (setq replacedSubstring "")
         )
-        (setq selectedName (GetPipePropertyNameListPair propertyName))
+        (setq selectedName (nth (atoi propertyName) propertyNameList))
         (if (= replacedSubstring "")
           (setq confirmList (ReplaceAllStirngOfListUtils propertyValue previewList))
           (setq confirmList (ReplaceSubstOfListByPatternUtils propertyValue replacedSubstring previewList))
@@ -946,7 +946,7 @@
         (if (= confirmList nil)
           (setq modifyStatus 0)
           (progn 
-            (setq selectedName (GetPipePropertyNameListPair propertyName))
+            (setq selectedName (nth (atoi propertyName) propertyNameList))
             (ModifyPropertyValueByEntityName entityList selectedName confirmList)
           )
         )
