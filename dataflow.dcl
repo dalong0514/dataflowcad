@@ -216,7 +216,7 @@ filterAndModifyPipeProperty : dialog {
         : spacer { width = 2; } 
         : button { 
           key = "btnModify"; 
-          label = "批量修改"; 
+          label = "确认修改"; 
           is_default = "true"; 
         } 
         : spacer { width = 2; } 

@@ -902,15 +902,11 @@
           (setq replacedSubstring "")
         )
         (setq selectedName (GetPipePropertyNameListPair propertyName))
-        (setq previewList (GetPropertyValueByEntityName entityList selectedName))
+        ;(setq previewList (GetPropertyValueByEntityName entityList selectedName))
         
         (if (= replacedSubstring "")
-          (progn 
-            (setq confirmList (ReplaceSubstOfListByPatternUtils previewList propertyValue "*"))
-          )
-          (progn 
-            (ModifyPropertyValueByEntityName entityList selectedName propertyValue)
-          )
+          (setq confirmList (ReplaceAllStirngOfListUtils propertyValue previewList))
+          (setq confirmList (ReplaceSubstOfListByPatternUtils propertyValue replacedSubstring previewList))
         )
       )
     )
@@ -1149,7 +1145,17 @@
   )
 )
 
-(defun ReplaceSubstOfListByPatternUtils (originList newStr pattern / i newList)
+(defun ReplaceAllStirngOfListUtils (newStr originList / i newList)
+  (setq newList '())
+  (setq i 0)
+  (repeat (length originList)
+    (setq newList (append newList (list newStr)))
+    (setq i (+ i 1))
+  )
+  newList
+)
+
+(defun ReplaceSubstOfListByPatternUtils (newStr pattern originList / i newList)
   (setq newList '())
   (setq i 0)
   (repeat (length originList)
@@ -1174,8 +1180,8 @@
 )
 
 (defun c:testss (/ ss)
-  (setq originList '("qwqe" "234" "dqjrk"))
-  (ReplaceSubstOfListByPatternUtils originList "da" "q")
+  (setq originList '("qwe" "234" "dqjrqkq"))
+  (ReplaceSubstOfListByPatternUtils "da" "q" originList)
 )
 
 ; function for modify data
