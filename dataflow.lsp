@@ -772,7 +772,7 @@
 ; the macro for modify data
 
 (defun c:modifyKsProperty (/ instrumentPropertyNameList)
-  (setq instrumentPropertyNameList '("DRAWNUM" "LOCATION" "SUBSTANCE" "TEMP" "PRESSURE" "COMMENT" "PHASE" "FUNCTION" "TAG" "NAME" "SORT" "MATERIAL" "INSTALLSIZE" "MIN" "NOMAL" "MAX" "DIRECTION"))
+  (setq instrumentPropertyNameList '("TAG" "NAME" "DRAWNUM" "LOCATION" "SUBSTANCE" "TEMP" "PRESSURE" "COMMENT" "PHASE" "FUNCTION" "SORT" "MATERIAL" "INSTALLSIZE" "MIN" "NOMAL" "MAX" "DIRECTION"))
   (filterAndModifyBlockPropertyByBox instrumentPropertyNameList "filterAndModifyInstrumentProperty" "instrument")
 )
 

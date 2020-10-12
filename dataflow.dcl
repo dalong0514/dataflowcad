@@ -77,11 +77,18 @@ filterAndModifyPipeProperty : dialog {
       label = "原始数据";
       key = "showOriginDataBox";
       width = 60;
-      : popup_list { 
-        label = "选择要修改的属性";
-        key = "propertyName"; 
-        list = "管道编号\n流程图号\n工作介质\n工作温度\n工作压力\n相态\n管道起点\n管道终点\n保温材料";
-        value = "";
+      : row {
+        : popup_list { 
+          label = "选择要修改的属性";
+          key = "propertyName"; 
+          list = "管道编号\n流程图号\n工作介质\n工作温度\n工作压力\n相态\n管道起点\n管道终点\n保温材料";
+          value = "";
+        }
+        : popup_list { 
+          key = "modifyDataType"; 
+          list = "修改数据\n自动编管道或仪表号";
+          value = "";
+        }
       }
       : spacer { height = 1; } 
       : list_box { 
@@ -164,7 +171,7 @@ filterAndModifyInstrumentProperty : dialog {
       : popup_list { 
         label = "选择用哪个属性值匹配";
         key = "filterPropertyName"; 
-        list = "流程图号\n仪表所在管道或设备\n工作介质\n工作温度\n工作压力\n备注\n相态\n仪表功能代号\n仪表位号\n控制点名称\n仪表类型\n所在位置材质\n所在位置尺寸\n最小值\n正常值\n最大值\n仪表安装方向";
+        list = "仪表位号\n仪表功能代号\n流程图号\n仪表所在管道或设备\n工作介质\n工作温度\n工作压力\n备注\n相态\n控制点名称\n仪表类型\n所在位置材质\n所在位置尺寸\n最小值\n正常值\n最大值\n仪表安装方向";
         value = "";
       }
       : spacer { height = 1; } 
@@ -210,11 +217,18 @@ filterAndModifyInstrumentProperty : dialog {
       label = "原始数据";
       key = "showOriginDataBox";
       width = 60;
-      : popup_list { 
-        label = "选择要修改的属性";
-        key = "propertyName"; 
-        list = "流程图号\n仪表所在管道或设备\n工作介质\n工作温度\n工作压力\n备注\n相态\n仪表功能代号\n仪表位号\n控制点名称\n仪表类型\n所在位置材质\n所在位置尺寸\n最小值\n正常值\n最大值\n仪表安装方向";
-        value = "";
+      : row {
+        : popup_list { 
+          label = "选择要修改的属性";
+          key = "propertyName"; 
+          list = "仪表位号\n控制点名称\n流程图号\n仪表所在管道或设备\n工作介质\n工作温度\n工作压力\n备注\n相态\n仪表功能代号\n仪表类型\n所在位置材质\n所在位置尺寸\n最小值\n正常值\n最大值\n仪表安装方向";
+          value = "";
+        }
+        : popup_list { 
+          key = "modifyDataType"; 
+          list = "修改数据\n自动编管道或仪表号";
+          value = "";
+        }
       }
       : spacer { height = 1; } 
       : list_box { 
