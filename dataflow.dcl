@@ -117,6 +117,7 @@ filterAndModifyPipeProperty : dialog {
       }
       : spacer { height = 1; } 
       : list_box { 
+        height = 20;
         label = "匹配到的结果";
         key = "matchedResult"; 
         list = "";
@@ -147,25 +148,23 @@ filterAndModifyPipeProperty : dialog {
     }
 
     : boxed_radio_column {
-      label = "匹配管道";
+      label = "显示原始数据";
       key = "showOriginDataBox";
       width = 60;
       : list_box { 
-        label = "原始数据";
+        height = 29;
         key = "originData"; 
         list = "";
         value = "";
       }
-      : spacer { height = 4; } 
-      : row { 
+      : spacer { height = 6; } 
+      : button { 
+        key = "btnShowOriginData"; 
+        label = "显示原始数据"; 
+        is_default = "true"; 
         fixed_width = true; 
         alignment = centered; 
-        : button { 
-          key = "btnShowOriginData"; 
-          label = "显示原始数据"; 
-          is_default = "true"; 
-        } 
-      }
+      } 
       : spacer { height = 3; } 
     }
 
@@ -181,6 +180,7 @@ filterAndModifyPipeProperty : dialog {
       }
       : spacer { height = 1; } 
       : list_box { 
+        height = 20;
         label = "要修改的数据";
         key = "modifyData"; 
         list = "";
