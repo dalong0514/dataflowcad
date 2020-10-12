@@ -819,7 +819,7 @@
   (princ)
 )
 
-(defun filterAndModifyBlockPropertyByBox (propertyNameList tileName blockSSName / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList previewList confirmList blockDataList APropertyValueList entityList modifyStatus)
+(defun filterAndModifyBlockPropertyByBox (propertyNameList tileName blockSSName / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList previewList confirmList blockDataList APropertyValueList entityList modifyStatus modifyDataType)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -836,10 +836,12 @@
     ; optional setting for the popup_list tile
     (set_tile "filterPropertyName" "0")
     (set_tile "propertyName" "0")
+    (set_tile "modifyDataType" "0")
     ; the default value of input box
     (set_tile "patternValue" "")
     (set_tile "replacedValue" "")
     (set_tile "propertyValue" "")
+    (mode_tile "modifyDataType" 2)
     (mode_tile "propertyName" 2)
     (mode_tile "propertyValue" 2)
     (action_tile "propertyName" "(setq propertyName $value)")
@@ -847,6 +849,7 @@
     (action_tile "filterPropertyName" "(setq filterPropertyName $value)")
     (action_tile "patternValue" "(setq patternValue $value)")
     (action_tile "replacedSubstring" "(setq replacedSubstring $value)")
+    (action_tile "modifyDataType" "(setq modifyDataType $value)")
     (if (= nil propertyName)
       (setq propertyName "0")
     )
