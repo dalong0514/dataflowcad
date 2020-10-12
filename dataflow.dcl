@@ -156,8 +156,20 @@ filterAndModifyPipeProperty : dialog {
         value = "";
       }
       : spacer { height = 1; } 
+      : list_box { 
+        label = "要修改的数据";
+        key = "modifyData"; 
+        list = "";
+        value = "";
+      }
+      : spacer { height = 1; } 
+      : text {
+        key = "resultMsg";
+        label = "修改状态：";
+      }
+      : spacer { height = 2; }
       : edit_box {
-        label = "要替换的属性值片段，默认全替换";
+        label = "要替换的属性值片段，空值默认整体替换";
         key = "replacedValue";
         edit_width = 60;
         mnemonic = "N";
