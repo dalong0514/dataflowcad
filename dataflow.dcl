@@ -29,6 +29,12 @@ filterAndModifyPipeProperty : dialog {
       key = "filterBox";
       width = 60;
       : popup_list { 
+        label = "选择数据类型）";
+        key = "selectDataType"; 
+        value = "";
+      }
+      : spacer { height = 1; } 
+      : popup_list { 
         label = "选择模式（批量修改或自动编号）";
         key = "modifyDataType"; 
         list = "修改数据\n自动编号";
