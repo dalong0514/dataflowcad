@@ -805,12 +805,12 @@
 
 (defun c:modifyKsProperty (/ instrumentPropertyNameList)
   (setq instrumentPropertyNameList '("TAG" "FUNCTION" "NAME" "DRAWNUM" "LOCATION" "SUBSTANCE" "TEMP" "PRESSURE" "COMMENT" "PHASE" "SORT" "MATERIAL" "INSTALLSIZE" "MIN" "NOMAL" "MAX" "DIRECTION"))
-  (filterAndModifyBlockPropertyByBox instrumentPropertyNameList "filterAndModifyInstrumentProperty" "instrument" "instrument")
+  (filterAndModifyBlockPropertyByBox instrumentPropertyNameList "filterAndModifyInstrumentProperty" "instrument")
 )
 
 (defun c:modifyPipeProperty (/ pipePropertyNameList)
   (setq pipePropertyNameList '("PIPENUM" "DRAWNUM" "SUBSTANCE" "TEMP" "PRESSURE" "PHASE" "FROM" "TO" "INSULATION"))
-  (filterAndModifyBlockPropertyByBox pipePropertyNameList "filterAndModifyPipeProperty" "pipe" "pipe")
+  (filterAndModifyBlockPropertyByBox pipePropertyNameList "filterAndModifyPipeProperty" "pipe")
 )
 
 ; the macro for extract data
@@ -818,7 +818,7 @@
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
 
-(defun filterAndModifyBlockPropertyByBox (propertyNameList tileName blockSSName dataType / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList previewList confirmList blockDataList APropertyValueList entityList modifyOrNumberStatus modifyOrNumberType)
+(defun filterAndModifyBlockPropertyByBox (propertyNameList tileName dataType / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList previewList confirmList blockDataList APropertyValueList entityList modifyOrNumberStatus modifyOrNumberType)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -919,7 +919,7 @@
     ; select button
     (if (= 2 (setq status (start_dialog)))
       (progn 
-        (if (= blockSSName "pipe")
+        (if (= dataType "pipe")
           (setq ss (GetPipeSSBySelectUtils))
           (setq ss (GetInstrumentSSBySelectUtils))
         )
@@ -934,7 +934,7 @@
     ; all select button
     (if (= 3 status)
       (progn 
-        (if (= blockSSName "pipe")
+        (if (= dataType "pipe")
           (setq ss (GetAllPipeSSUtils))
           (setq ss (GetAllInstrumentSSUtils))
         )
@@ -999,10 +999,6 @@
   )
   (unload_dialog dcl_id)
   (princ)
-)
-
-(defun c:foo ()
-  (GetNumberedListByStartAndLengthUtils 1101 20)
 )
 
 (defun GetNumberedListByStartAndLengthUtils (startNumer startString listLength / numberedList)
