@@ -1007,8 +1007,18 @@
         (if (= confirmList nil)
           (setq modifyStatus 0)
           (progn 
-            (setq selectedName (nth (atoi propertyName) propertyNameList))
-            (ModifyPropertyValueByEntityName entityList selectedName confirmList)
+            (if (= modifyDataType "0") 
+              (progn 
+                (setq selectedName (nth (atoi propertyName) propertyNameList))
+                (ModifyPropertyValueByEntityName entityList selectedName confirmList)
+              )
+            )
+            (if (= modifyDataType "1") 
+              (progn 
+                (setq selectedName (GetNeedToNumberPropertyName dataType))
+                (ModifyPropertyValueByEntityName entityList selectedName confirmList)
+              )
+            )
           )
         )
       )
