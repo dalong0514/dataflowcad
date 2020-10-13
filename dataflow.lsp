@@ -957,9 +957,6 @@
       (progn 
         (if (= modifyDataType "0")
           (progn
-            (if (= replacedSubstring nil)
-              (setq replacedSubstring "")
-            )
             (setq selectedName (nth (atoi propertyName) propertyNameList))
             (if (= replacedSubstring "")
               (setq confirmList (ReplaceAllStirngOfListUtils propertyValue previewList))
