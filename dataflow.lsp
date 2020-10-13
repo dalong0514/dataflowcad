@@ -850,6 +850,7 @@
     (action_tile "patternValue" "(setq patternValue $value)")
     (action_tile "replacedSubstring" "(setq replacedSubstring $value)")
     (action_tile "modifyDataType" "(setq modifyDataType $value)")
+    ; init the default data of text
     (if (= nil propertyName)
       (setq propertyName "0")
     )
@@ -859,7 +860,15 @@
     (if (= nil modifyDataType)
       (setq modifyDataType "0")
     )
-
+    (if (= nil patternValue)
+      (setq patternValue "*")
+    )
+    (if (= nil replacedSubstring)
+      (setq replacedSubstring "")
+    )
+    (if (= nil propertyValue)
+      (setq propertyValue "")
+    )
     ; Display the number of selected pipes
     (if (/= sslen nil)
       (set_tile "msg" (strcat "匹配到的管道数量： " (rtos sslen)))
@@ -876,10 +885,13 @@
     
     (if (/= matchedList nil)
       (progn
+        ; setting for saving the existed value of a box
         (set_tile "filterPropertyName" filterPropertyName)
-        (set_tile "patternValue" patternValue)
         (set_tile "propertyName" propertyName)
         (set_tile "modifyDataType" modifyDataType)
+        (set_tile "patternValue" patternValue)
+        (set_tile "replacedSubstring" replacedSubstring)
+        (set_tile "propertyValue" propertyValue)
         (start_list "matchedResult" 3)
         (mapcar '(lambda (x) (add_list x)) 
                  matchedList)
@@ -906,10 +918,6 @@
     ; select button
     (if (= 2 (setq status (start_dialog)))
       (progn 
-        (if (= patternValue nil)
-          (setq patternValue "*")
-        )
-
         (if (= blockSSName "pipe")
           (setq ss (GetPipeSSBySelectUtils))
           (setq ss (GetInstrumentSSBySelectUtils))
@@ -925,9 +933,6 @@
     ; all select button
     (if (= 3 status)
       (progn 
-        (if (= patternValue nil)
-          (setq patternValue "*")
-        )
         (if (= blockSSName "pipe")
           (setq ss (GetAllPipeSSUtils))
           (setq ss (GetAllInstrumentSSUtils))
