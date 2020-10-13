@@ -783,12 +783,12 @@
 
 (defun c:modifyKsProperty (/ instrumentPropertyNameList)
   (setq instrumentPropertyNameList '("TAG" "FUNCTION" "NAME" "DRAWNUM" "LOCATION" "SUBSTANCE" "TEMP" "PRESSURE" "COMMENT" "PHASE" "SORT" "MATERIAL" "INSTALLSIZE" "MIN" "NOMAL" "MAX" "DIRECTION"))
-  (filterAndModifyBlockPropertyByBox instrumentPropertyNameList "filterAndModifyInstrumentProperty" "instrument")
+  (filterAndModifyBlockPropertyByBox instrumentPropertyNameList "filterAndModifyInstrumentProperty" "instrument" "instrument")
 )
 
 (defun c:modifyPipeProperty (/ pipePropertyNameList)
   (setq pipePropertyNameList '("PIPENUM" "DRAWNUM" "SUBSTANCE" "TEMP" "PRESSURE" "PHASE" "FROM" "TO" "INSULATION"))
-  (filterAndModifyBlockPropertyByBox pipePropertyNameList "filterAndModifyPipeProperty" "pipe")
+  (filterAndModifyBlockPropertyByBox pipePropertyNameList "filterAndModifyPipeProperty" "pipe" "pipe")
 )
 
 ; the macro for extract data
@@ -829,7 +829,7 @@
   (princ)
 )
 
-(defun filterAndModifyBlockPropertyByBox (propertyNameList tileName blockSSName / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList previewList confirmList blockDataList APropertyValueList entityList modifyStatus modifyDataType)
+(defun filterAndModifyBlockPropertyByBox (propertyNameList tileName blockSSName dataType / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList previewList confirmList blockDataList APropertyValueList entityList modifyStatus modifyDataType)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -976,7 +976,8 @@
         )
         (if (= modifyDataType "1")
           (progn
-            (princ "test")
+            (setq selectedName (GetNeedToNumberPropertyName dataType))
+            (princ selectedName)
           )
         )
       )
@@ -999,11 +1000,14 @@
 )
 
 (defun c:foo ()
-  (setq searchedList '("pipe" "instrument" "equipment"))
-  (GetIndexforSearchMemberInListUtils "equipment" searchedList)
+  (GetNeedToNumberPropertyName "pipe")
 )
 
-
+(defun GetNeedToNumberPropertyName (dataType / needToNumberPropertyNameList dataTypeList)
+  (setq needToNumberPropertyNameList '("pipe" "instrument" "equipment"))
+  (setq dataTypeList '("PIPENUM" "TAG" "TAG"))
+  (nth (GetIndexforSearchMemberInListUtils dataType needToNumberPropertyNameList) dataTypeList)
+)
 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
