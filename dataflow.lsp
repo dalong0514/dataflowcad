@@ -818,7 +818,7 @@
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
 
-(defun filterAndModifyBlockPropertyByBox (propertyNameList tileName blockSSName dataType / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList previewList confirmList blockDataList APropertyValueList entityList modifyStatus modifyOrNumberStatus dataTypeChName)
+(defun filterAndModifyBlockPropertyByBox (propertyNameList tileName blockSSName dataType / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList previewList confirmList blockDataList APropertyValueList entityList modifyOrNumberStatus modifyOrNumberType dataTypeChName)
 
   (setq dataTypeChName '("管道数据" "仪表数据"))
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
@@ -837,12 +837,12 @@
     ; optional setting for the popup_list tile
     (set_tile "filterPropertyName" "0")
     (set_tile "propertyName" "0")
-    (set_tile "modifyOrNumberStatus" "0")
+    (set_tile "modifyOrNumberType" "0")
     ; the default value of input box
     (set_tile "patternValue" "")
     (set_tile "replacedValue" "")
     (set_tile "propertyValue" "")
-    (mode_tile "modifyOrNumberStatus" 2)
+    (mode_tile "modifyOrNumberType" 2)
     (mode_tile "propertyName" 2)
     (mode_tile "propertyValue" 2)
     (action_tile "propertyName" "(setq propertyName $value)")
@@ -850,7 +850,7 @@
     (action_tile "filterPropertyName" "(setq filterPropertyName $value)")
     (action_tile "patternValue" "(setq patternValue $value)")
     (action_tile "replacedSubstring" "(setq replacedSubstring $value)")
-    (action_tile "modifyOrNumberStatus" "(setq modifyOrNumberStatus $value)")
+    (action_tile "modifyOrNumberType" "(setq modifyOrNumberType $value)")
     ; init the default data of text
     (if (= nil propertyName)
       (setq propertyName "0")
@@ -858,8 +858,8 @@
     (if (= nil filterPropertyName)
       (setq filterPropertyName "0")
     )
-    (if (= nil modifyOrNumberStatus)
-      (setq modifyOrNumberStatus "0")
+    (if (= nil modifyOrNumberType)
+      (setq modifyOrNumberType "0")
     )
     (if (= nil patternValue)
       (setq patternValue "*")
@@ -875,11 +875,11 @@
       (set_tile "msg" (strcat "匹配到的管道数量： " (rtos sslen)))
     )
     
-    (if (= modifyStatus 0)
+    (if (= modifyOrNumberStatus 0)
       (set_tile "resultMsg" "请先预览修改")
     )
     
-    (if (= modifyOrNumberStatus "1")
+    (if (= modifyOrNumberType "1")
       (set_tile "replacedSubstringMsg" "物料代号：")
       (set_tile "propertyValueMsg" "替换的新字符：")
     )
@@ -889,7 +889,7 @@
         ; setting for saving the existed value of a box
         (set_tile "filterPropertyName" filterPropertyName)
         (set_tile "propertyName" propertyName)
-        (set_tile "modifyOrNumberStatus" modifyOrNumberStatus)
+        (set_tile "modifyOrNumberType" modifyOrNumberType)
         (set_tile "patternValue" patternValue)
         (set_tile "replacedSubstring" replacedSubstring)
         (set_tile "propertyValue" propertyValue)
@@ -956,7 +956,7 @@
     ; confirm button
     (if (= 5 status)
       (progn 
-        (if (= modifyOrNumberStatus "0")
+        (if (= modifyOrNumberType "0")
           (progn
             (setq selectedName (nth (atoi propertyName) propertyNameList))
             (if (= replacedSubstring "")
@@ -965,7 +965,7 @@
             )
           )
         )
-        (if (= modifyOrNumberStatus "1")
+        (if (= modifyOrNumberType "1")
           (progn
             (setq selectedName (GetNeedToNumberPropertyName dataType))
             (setq numberedList (GetNumberedListByStartAndLengthUtils propertyValue replacedSubstring (length previewList)))
@@ -978,15 +978,15 @@
     (if (= 6 status)
       (progn 
         (if (= confirmList nil)
-          (setq modifyStatus 0)
+          (setq modifyOrNumberStatus 0)
           (progn 
-            (if (= modifyOrNumberStatus "0") 
+            (if (= modifyOrNumberType "0") 
               (progn 
                 (setq selectedName (nth (atoi propertyName) propertyNameList))
                 (ModifyPropertyValueByEntityName entityList selectedName confirmList)
               )
             )
-            (if (= modifyOrNumberStatus "1") 
+            (if (= modifyOrNumberType "1") 
               (progn 
                 (setq selectedName (GetNeedToNumberPropertyName dataType))
                 (ModifyPropertyValueByEntityName entityList selectedName confirmList)
