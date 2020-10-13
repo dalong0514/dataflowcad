@@ -276,6 +276,24 @@
   newList
 )
 
+(defun ReplaceNumberOfListByNumberedListUtils (numberedList originList / i newList)
+  (setq newList '())
+  (setq i 0)
+  (repeat (length originList)
+    (setq newList (append newList (list 
+                                    (numberedStringSubstUtil (nth i numberedList) (nth i originList))
+                                  )))
+    (setq i (+ i 1))
+  )
+  newList
+)
+
+(defun numberedStringSubstUtil (newString originString / index replacedSubstring)
+  (setq index (vl-string-search "-" originString))
+  (setq replacedSubstring (substr originString 1 index))
+  (StringSubstUtils newString replacedSubstring originString)
+)
+
 (defun StringSubstUtils (new old str / inc len)
     (setq len (strlen new)
           inc 0
