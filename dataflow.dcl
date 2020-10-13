@@ -181,6 +181,13 @@ filterAndModifyInstrumentProperty : dialog {
       key = "filterBox";
       width = 60;
       : popup_list { 
+        label = "选择模式（批量修改或自动编号）";
+        key = "modifyOrNumberType"; 
+        list = "修改数据\n自动编号";
+        value = "";
+      }
+      : spacer { height = 1; } 
+      : popup_list { 
         label = "选择用哪个属性值匹配";
         key = "filterPropertyName"; 
         list = "仪表位号\n仪表功能代号\n控制点名称\n流程图号\n仪表所在管道或设备\n工作介质\n工作温度\n工作压力\n备注\n相态\n仪表类型\n所在位置材质\n所在位置尺寸\n最小值\n正常值\n最大值\n仪表安装方向";
@@ -236,13 +243,6 @@ filterAndModifyInstrumentProperty : dialog {
         value = "";
       }
       : spacer { height = 1; } 
-      : popup_list { 
-        label = "批量修改数据或自动编号";
-        key = "modifyOrNumberType"; 
-        list = "修改数据\n自动编号";
-        value = "";
-      }
-      : spacer { height = 1; } 
       : list_box { 
         height = 25;
         key = "originData"; 
@@ -292,7 +292,7 @@ filterAndModifyInstrumentProperty : dialog {
       : row {
         : text {
           key = "propertyValueMsg";
-          label = "编号起点：";
+          label = "替换的新字符：";
         }
         : edit_box {
           key = "propertyValue";
