@@ -36,7 +36,7 @@ filterAndModifyPipeProperty : dialog {
       : spacer { height = 1; } 
       : popup_list { 
         label = "选择模式（批量修改或自动编号）";
-        key = "modifyDataType"; 
+        key = "modifyOrNumberStatus"; 
         list = "修改数据\n自动编号";
         value = "";
       }
@@ -244,7 +244,7 @@ filterAndModifyInstrumentProperty : dialog {
       : spacer { height = 1; } 
       : popup_list { 
         label = "批量修改数据或自动编号";
-        key = "modifyDataType"; 
+        key = "modifyOrNumberStatus"; 
         list = "修改数据\n自动编号";
         value = "";
       }
