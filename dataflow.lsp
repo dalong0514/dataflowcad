@@ -851,7 +851,8 @@
   (princ)
 )
 
-(defun filterAndModifyBlockPropertyByBox (propertyNameList tileName blockSSName dataType / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList previewList confirmList blockDataList APropertyValueList entityList modifyStatus modifyDataType)
+(defun filterAndModifyBlockPropertyByBox (propertyNameList tileName blockSSName dataType / dataTypeChName dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList previewList confirmList blockDataList APropertyValueList entityList modifyStatus modifyDataType)
+  (setq dataTypeChName '("管道数据" "仪表数据"))
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -865,15 +866,22 @@
     (action_tile "btnPreviewModify" "(done_dialog 5)")
     (action_tile "btnModify" "(done_dialog 6)")
     
+    (start_list "selectDataType" 3)
+    (mapcar '(lambda (x) (add_list x)) 
+              dataTypeChName)
+    (end_list)
+    
     ; optional setting for the popup_list tile
     (set_tile "filterPropertyName" "0")
     (set_tile "propertyName" "0")
     (set_tile "modifyDataType" "0")
+    (set_tile "selectDataType" "0")
     ; the default value of input box
     (set_tile "patternValue" "")
     (set_tile "replacedValue" "")
     (set_tile "propertyValue" "")
     (mode_tile "modifyDataType" 2)
+    (mode_tile "selectDataType" 2)
     (mode_tile "propertyName" 2)
     (mode_tile "propertyValue" 2)
     (action_tile "propertyName" "(setq propertyName $value)")
@@ -882,6 +890,8 @@
     (action_tile "patternValue" "(setq patternValue $value)")
     (action_tile "replacedSubstring" "(setq replacedSubstring $value)")
     (action_tile "modifyDataType" "(setq modifyDataType $value)")
+    (action_tile "selectDataType" "(setq selectDataType $value)")
+    
     ; init the default data of text
     (if (= nil propertyName)
       (setq propertyName "0")
@@ -892,6 +902,9 @@
     (if (= nil modifyDataType)
       (setq modifyDataType "0")
     )
+    (if (= nil selectDataType)
+      (setq selectDataType "0")
+    )
     (if (= nil patternValue)
       (setq patternValue "*")
     )
@@ -901,6 +914,8 @@
     (if (= nil propertyValue)
       (setq propertyValue "")
     )
+
+    (set_tile "selectDataType" selectDataType)
     ; Display the number of selected pipes
     (if (/= sslen nil)
       (set_tile "msg" (strcat "匹配到的管道数量： " (rtos sslen)))
@@ -1030,10 +1045,6 @@
   )
   (unload_dialog dcl_id)
   (princ)
-)
-
-(defun c:foo ()
-  (GetNumberedListByStartAndLengthUtils 1101 20)
 )
 
 (defun GetNumberedListByStartAndLengthUtils (startNumer startString listLength / numberedList)
