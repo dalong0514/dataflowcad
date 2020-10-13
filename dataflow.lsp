@@ -316,6 +316,10 @@
   )
   matchedIndex
 )
+
+(defun GetDictValueByKeyUtils (value keyList ValueList /)
+  (nth (GetIndexforSearchMemberInListUtils value keyList) ValueList)
+)
 ; Utils Function 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
@@ -1047,11 +1051,7 @@
 (defun GetNeedToNumberPropertyName (dataType / needToNumberPropertyNameList dataTypeList)
   (setq dataTypeList '("pipe" "instrument" "equipment"))
   (setq needToNumberPropertyNameList '("PIPENUM" "TAG" "TAG"))
-  (nth (GetIndexforSearchMemberInListUtils dataType dataTypeList) needToNumberPropertyNameList)
-)
-
-(defun GetDictValueByKeyUtils (value keyList ValueList /)
-  (nth (GetIndexforSearchMemberInListUtils value keyList) ValueList)
+  (GetDictValueByKeyUtils dataType dataTypeList needToNumberPropertyNameList)
 )
 
 (defun c:foo ()
