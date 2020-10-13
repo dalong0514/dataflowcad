@@ -1045,9 +1045,9 @@
 )
 
 (defun GetNeedToNumberPropertyName (dataType / needToNumberPropertyNameList dataTypeList)
-  (setq needToNumberPropertyNameList '("pipe" "instrument" "equipment"))
-  (setq dataTypeList '("PIPENUM" "TAG" "TAG"))
-  (nth (GetIndexforSearchMemberInListUtils dataType needToNumberPropertyNameList) dataTypeList)
+  (setq dataTypeList '("pipe" "instrument" "equipment"))
+  (setq needToNumberPropertyNameList '("PIPENUM" "TAG" "TAG"))
+  (nth (GetIndexforSearchMemberInListUtils dataType dataTypeList) needToNumberPropertyNameList)
 )
 
 ;;;-------------------------------------------------------------------------;;;
