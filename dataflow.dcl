@@ -31,6 +31,7 @@ filterAndModifyPipeProperty : dialog {
       : popup_list { 
         label = "选择数据类型）";
         key = "selectDataType"; 
+        list = "管道数据\n仪表数据";
         value = "";
       }
       : spacer { height = 1; } 
