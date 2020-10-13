@@ -1050,6 +1050,16 @@
   (nth (GetIndexforSearchMemberInListUtils dataType dataTypeList) needToNumberPropertyNameList)
 )
 
+(defun GetDictValueByKeyUtils (value keyList ValueList /)
+  (nth (GetIndexforSearchMemberInListUtils value keyList) ValueList)
+)
+
+(defun c:foo ()
+  (setq dataTypeList '("pipe" "instrument" "equipment"))
+  (setq dataTypeChName '("管道数据" "仪表数据" "设备数据"))
+  (GetDictValueByKeyUtils "pipe" dataTypeList dataTypeChName)
+)
+
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
 ; Gs Field
