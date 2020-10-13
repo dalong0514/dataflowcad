@@ -995,7 +995,8 @@
         (if (= modifyDataType "1")
           (progn
             (setq selectedName (GetNeedToNumberPropertyName dataType))
-            (princ selectedName)
+            (setq numberedList (GetNumberedListByStartAndLengthUtils 1101 (length previewList)))
+            (setq confirmList (ReplaceNumberOfListByNumberedListUtils numberedList previewList))
           )
         )
       )
@@ -1024,10 +1025,10 @@
 (defun GetNumberedListByStartAndLengthUtils (startNumer listLength / numberedList)
   (setq numberedList '())
   (setq listLength (- listLength 1))
-  (setq numberedList (append numberedList (list startNumer)))
+  (setq numberedList (append numberedList (list (rtos startNumer))))
   (repeat listLength 
     (setq startNumer (+ startNumer 1))
-    (setq numberedList (append numberedList (list startNumer)))
+    (setq numberedList (append numberedList (list (rtos startNumer))))
   )
   numberedList
 )
