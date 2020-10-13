@@ -1000,7 +1000,18 @@
 )
 
 (defun c:foo ()
-  (GetNeedToNumberPropertyName "pipe")
+  (GetNumberedListByStartAndLengthUtils 1101 20)
+)
+
+(defun GetNumberedListByStartAndLengthUtils (startNumer listLength / numberedList)
+  (setq numberedList '())
+  (setq listLength (- listLength 1))
+  (setq numberedList (append numberedList (list startNumer)))
+  (repeat listLength 
+    (setq startNumer (+ startNumer 1))
+    (setq numberedList (append numberedList (list startNumer)))
+  )
+  numberedList
 )
 
 (defun GetNeedToNumberPropertyName (dataType / needToNumberPropertyNameList dataTypeList)
