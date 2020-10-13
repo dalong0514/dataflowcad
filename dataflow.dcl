@@ -29,13 +29,6 @@ filterAndModifyPipeProperty : dialog {
       key = "filterBox";
       width = 60;
       : popup_list { 
-        label = "选择数据类型）";
-        key = "selectDataType"; 
-        list = "管道数据\n仪表数据";
-        value = "";
-      }
-      : spacer { height = 1; } 
-      : popup_list { 
         label = "选择模式（批量修改或自动编号）";
         key = "modifyOrNumberType"; 
         list = "修改数据\n自动编号";
@@ -147,7 +140,7 @@ filterAndModifyPipeProperty : dialog {
       : row {
         : text {
           key = "propertyValueMsg";
-          label = "编号起点：";
+          label = "替换的新字符：";
         }
         : edit_box {
           key = "propertyValue";

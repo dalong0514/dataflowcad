@@ -818,8 +818,7 @@
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
 
-(defun filterAndModifyBlockPropertyByBox (propertyNameList tileName blockSSName dataType / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList previewList confirmList blockDataList APropertyValueList entityList modifyOrNumberStatus modifyOrNumberType dataTypeChName selectDataType)
-  (setq dataTypeChName '("管道数据" "仪表数据"))
+(defun filterAndModifyBlockPropertyByBox (propertyNameList tileName blockSSName dataType / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList previewList confirmList blockDataList APropertyValueList entityList modifyOrNumberStatus modifyOrNumberType)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -879,8 +878,10 @@
     )
     
     (if (= modifyOrNumberType "1")
-      (set_tile "replacedSubstringMsg" "物料代号：")
-      (set_tile "propertyValueMsg" "替换的新字符：")
+      (progn 
+        (set_tile "replacedSubstringMsg" "物料代号：")
+        (set_tile "propertyValueMsg" "编号起点：")
+      )
     )
     
     (if (/= matchedList nil)
