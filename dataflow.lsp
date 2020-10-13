@@ -288,6 +288,16 @@
     str
 )
 
+(defun GetIndexforSearchMemberInListUtils (searchedMember searchedList / searchedList i matchedIndex)
+  (setq i 0)
+  (repeat (length searchedList)
+    (if (= (nth i searchedList) searchedMember)
+      (setq matchedIndex i)
+    )
+    (setq i (+ i 1))
+  )
+  matchedIndex
+)
 ; Utils Function 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
@@ -987,6 +997,13 @@
   (unload_dialog dcl_id)
   (princ)
 )
+
+(defun c:foo ()
+  (setq searchedList '("pipe" "instrument" "equipment"))
+  (GetIndexforSearchMemberInListUtils "equipment" searchedList)
+)
+
+
 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
