@@ -1174,10 +1174,12 @@
 
 (defun c:numberPipelineAndTag (/ pipePropertyNameList)
   (setq pipePropertyNameList '("PIPENUM" "DRAWNUM" "SUBSTANCE" "TEMP" "PRESSURE" "PHASE" "FROM" "TO" "INSULATION"))
-  (filterAndModifyBlockPropertyByBox pipePropertyNameList "numberPipelineAndTagBox" "pipe")
+  (numberPipelineAndTagByBox pipePropertyNameList "filterAndNumberBox" "pipe")
 )
 
 (defun numberPipelineAndTagByBox (propertyNameList tileName dataType / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList previewList confirmList blockDataList APropertyValueList entityList modifyOrNumberStatus modifyOrNumberType)
+
+  (setq modifyOrNumberType "1")
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -1194,12 +1196,10 @@
     ; optional setting for the popup_list tile
     (set_tile "filterPropertyName" "0")
     (set_tile "propertyName" "0")
-    (set_tile "modifyOrNumberType" "0")
     ; the default value of input box
     (set_tile "patternValue" "")
     (set_tile "replacedValue" "")
     (set_tile "propertyValue" "")
-    (mode_tile "modifyOrNumberType" 2)
     (mode_tile "propertyName" 2)
     (mode_tile "propertyValue" 2)
     (action_tile "propertyName" "(setq propertyName $value)")
@@ -1207,16 +1207,12 @@
     (action_tile "filterPropertyName" "(setq filterPropertyName $value)")
     (action_tile "patternValue" "(setq patternValue $value)")
     (action_tile "replacedSubstring" "(setq replacedSubstring $value)")
-    (action_tile "modifyOrNumberType" "(setq modifyOrNumberType $value)")
     ; init the default data of text
     (if (= nil propertyName)
       (setq propertyName "0")
     )
     (if (= nil filterPropertyName)
       (setq filterPropertyName "0")
-    )
-    (if (= nil modifyOrNumberType)
-      (setq modifyOrNumberType "0")
     )
     (if (= nil patternValue)
       (setq patternValue "*")
@@ -1248,7 +1244,6 @@
         ; setting for saving the existed value of a box
         (set_tile "filterPropertyName" filterPropertyName)
         (set_tile "propertyName" propertyName)
-        (set_tile "modifyOrNumberType" modifyOrNumberType)
         (set_tile "patternValue" patternValue)
         (set_tile "replacedSubstring" replacedSubstring)
         (set_tile "propertyValue" propertyValue)
@@ -1315,22 +1310,9 @@
     ; confirm button
     (if (= 5 status)
       (progn 
-        (if (= modifyOrNumberType "0")
-          (progn
-            (setq selectedName (nth (atoi propertyName) propertyNameList))
-            (if (= replacedSubstring "")
-              (setq confirmList (ReplaceAllStirngOfListUtils propertyValue previewList))
-              (setq confirmList (ReplaceSubstOfListByPatternUtils propertyValue replacedSubstring previewList))
-            )
-          )
-        )
-        (if (= modifyOrNumberType "1")
-          (progn
-            (setq selectedName (GetNeedToNumberPropertyName dataType))
-            (setq numberedList (GetNumberedListByStartAndLengthUtils propertyValue replacedSubstring (length previewList)))
-            (setq confirmList (ReplaceNumberOfListByNumberedListUtils numberedList previewList))
-          )
-        )
+        (setq selectedName (GetNeedToNumberPropertyName dataType))
+        (setq numberedList (GetNumberedListByStartAndLengthUtils propertyValue replacedSubstring (length previewList)))
+        (setq confirmList (ReplaceNumberOfListByNumberedListUtils numberedList previewList))
       )
     )
     ; modify button

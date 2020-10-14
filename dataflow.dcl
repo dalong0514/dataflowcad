@@ -324,21 +324,14 @@ filterAndModifyInstrumentProperty : dialog {
   }
 }
 
-numberPipelineAndTagBox : dialog {
-  label = "筛选匹配特定的管道并修改块内数据"; 
-  key = "filter_modify_property";
+filterAndNumberBox : dialog {
+  label = "设计流数据一体化———批量编号"; 
+  key = "filterAndNumber";
   : row {
     : boxed_radio_column {
       label = "匹配管道";
       key = "filterBox";
       width = 60;
-      : popup_list { 
-        label = "选择模式（批量修改或自动编号）";
-        key = "modifyOrNumberType"; 
-        list = "修改数据\n自动编号";
-        value = "";
-      }
-      : spacer { height = 1; } 
       : popup_list { 
         label = "选择用哪个属性值匹配";
         key = "filterPropertyName"; 
@@ -431,7 +424,7 @@ numberPipelineAndTagBox : dialog {
       : row {
         : text {
           key = "replacedSubstringMsg";
-          label = "局部字符，默认整体替换";
+          label = "物料代号：";
         }
         : edit_box {
           key = "replacedSubstring";
@@ -444,7 +437,7 @@ numberPipelineAndTagBox : dialog {
       : row {
         : text {
           key = "propertyValueMsg";
-          label = "替换的新字符：";
+          label = "编号起点：";
         }
         : edit_box {
           key = "propertyValue";
