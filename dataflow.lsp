@@ -1343,7 +1343,6 @@
 
     (if (/= selectedDataType nil)
       (set_tile "filterPropertyName" filterPropertyName)
-      (set_tile "dataChildrenType" dataChildrenType)
     )
     
     (if (= modifyOrNumberStatus 0)
@@ -1357,6 +1356,7 @@
         (set_tile "patternValue" patternValue)
         (set_tile "replacedSubstring" replacedSubstring)
         (set_tile "propertyValue" propertyValue)
+        (set_tile "dataChildrenType" dataChildrenType)
         (start_list "matchedResult" 3)
         (mapcar '(lambda (x) (add_list x)) 
                  matchedList)
