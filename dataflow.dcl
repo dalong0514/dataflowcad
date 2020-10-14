@@ -329,7 +329,7 @@ filterAndNumberBox : dialog {
   key = "filterAndNumber";
   : row {
     : boxed_radio_column {
-      label = "匹配管道";
+      label = "匹配数据";
       key = "filterBox";
       width = 60;
       : row {
@@ -346,15 +346,8 @@ filterAndNumberBox : dialog {
         }
       }
       : spacer { height = 1; } 
-      : popup_list { 
-        label = "排序方向";
-        key = "numberSortDirection"; 
-        list = "从左到右\n从上到下";
-        value = "";
-      }
-      : spacer { height = 1; } 
       : edit_box {
-        label = "通配符匹配模式";
+        label = "管道刷选通配符匹配模式";
         key = "patternValue";
         mnemonic = "N";
         value = "";
@@ -370,7 +363,7 @@ filterAndNumberBox : dialog {
       : spacer { height = 1; } 
       : text {
         key = "msg";
-        label = "匹配到的管道数量：";
+        label = "匹配到的数量：";
       }
       : spacer { height = 3; } 
       : row { 
@@ -378,13 +371,13 @@ filterAndNumberBox : dialog {
         alignment = centered; 
         : button { 
           key = "btnSelect"; 
-          label = "选择要匹配的管道"; 
+          label = "选择要排序的块数据"; 
           is_default = "true"; 
         } 
         : spacer { width = 3; } 
         : button { 
           key = "btnAll"; 
-          label = "匹配图纸中的全部管道"; 
+          label = "匹配图纸中的全部数据"; 
           is_default = "true"; 
         }
       }

@@ -1282,7 +1282,7 @@
 
     ; Display the number of selected pipes
     (if (/= sslen nil)
-      (set_tile "msg" (strcat "匹配到的管道数量： " (rtos sslen)))
+      (set_tile "msg" (strcat "匹配到的数量： " (rtos sslen)))
     )
 
     (if (/= selectedDataType nil)
