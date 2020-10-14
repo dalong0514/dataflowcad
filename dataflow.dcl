@@ -332,18 +332,18 @@ filterAndNumberBox : dialog {
       label = "匹配数据";
       key = "filterBox";
       width = 60;
-      : row {
-        : popup_list { 
-          label = "数据类型";
-          key = "filterPropertyName"; 
-          list = "管道\n集中仪表\n就地仪表\nSIS仪表\n反应釜\n输送泵\n储罐\n换热器\n离心机\n真空泵\n自定义设备";
-          value = "";
-        }
-        : popup_list { 
-          key = "dataChildrenType"; 
-          list = "温度\n压力\n液位\n流量\n开关阀\n调节阀";
-          value = "";
-        }
+      : popup_list { 
+        label = "数据大类";
+        key = "filterPropertyName"; 
+        list = "管道\n集中仪表\n就地仪表\nSIS仪表\n反应釜\n输送泵\n储罐\n换热器\n离心机\n真空泵\n自定义设备";
+        value = "";
+      }
+      : spacer { height = 1; } 
+      : popup_list { 
+        label = "仪表子类型";
+        key = "dataChildrenType"; 
+        list = "温度\n压力\n液位\n流量\n开关阀\n调节阀";
+        value = "";
       }
       : spacer { height = 1; } 
       : edit_box {
