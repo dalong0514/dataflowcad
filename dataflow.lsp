@@ -1239,12 +1239,12 @@
 ; Gs Field
 ; Number Pipeline, Instrument and Equipment
 
-(defun c:numberPipelineAndTag (/ pipePropertyNameList)
-  (setq pipePropertyNameList '("PIPENUM" "DRAWNUM" "SUBSTANCE" "TEMP" "PRESSURE" "PHASE" "FROM" "TO" "INSULATION"))
-  (numberPipelineAndTagByBox pipePropertyNameList "filterAndNumberBox" "Pipe")
+(defun c:numberPipelineAndTag (/ dataTypeList)
+  (setq dataTypeList '("Pipe" "InstrumentL" "InstrumentP" "InstrumentSIS" "Reactor" "Pump" "Tank" "Heater" "Centrifuge" "Vacuum" "CustomEquip"))
+  (numberPipelineAndTagByBox dataTypeList "filterAndNumberBox" "Pipe")
 )
 
-(defun numberPipelineAndTagByBox (propertyNameList tileName dataType / dcl_id propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList previewList confirmList blockDataList APropertyValueList entityList modifyOrNumberStatus)
+(defun numberPipelineAndTagByBox (propertyNameList tileName dataType / dcl_id propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName selectedDataType ss sslen matchedList previewList confirmList blockDataList APropertyValueList entityList modifyOrNumberStatus)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -1316,7 +1316,8 @@
     (if (= 2 (setq status (start_dialog)))
       (progn 
         (setq ss (GetBlockSSBySelectByDataTypeUtils dataType))
-        (setq selectedFilterName (nth (atoi filterPropertyName) propertyNameList))
+        (setq selectedDataType (nth (atoi filterPropertyName) propertyNameList))
+        (setq selectedFilterName (GetNeedToNumberPropertyName selectedDataType))
         (setq blockDataList (GetBlockAPropertyValueListByPropertyNamePattern ss selectedFilterName patternValue))
         (setq APropertyValueList (car blockDataList))
         (setq entityList (car (cdr blockDataList)))
@@ -1328,7 +1329,8 @@
     (if (= 3 status)
       (progn 
         (setq ss (GetAllBlockSSByDataTypeUtils dataType))
-        (setq selectedFilterName (nth (atoi filterPropertyName) propertyNameList))
+        (setq selectedDataType (nth (atoi filterPropertyName) propertyNameList))
+        (setq selectedFilterName (GetNeedToNumberPropertyName selectedDataType))
         (setq blockDataList (GetBlockAPropertyValueListByPropertyNamePattern ss selectedFilterName patternValue))
         (setq APropertyValueList (car blockDataList))
         (setq entityList (car (cdr blockDataList)))

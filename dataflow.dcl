@@ -332,15 +332,22 @@ filterAndNumberBox : dialog {
       label = "匹配管道";
       key = "filterBox";
       width = 60;
-      : popup_list { 
-        label = "需编号的数据类型";
-        key = "filterPropertyName"; 
-        list = "管道编号\n流程图号\n工作介质\n工作温度\n工作压力\n相态\n管道起点\n管道终点\n保温材料";
-        value = "";
+      : row {
+        : popup_list { 
+          label = "数据类型";
+          key = "filterPropertyName"; 
+          list = "管道\n集中仪表\n就地仪表\nSIS仪表\n反应釜\n输送泵\n储罐\n换热器\n离心机\n真空泵\n自定义设备";
+          value = "";
+        }
+        : popup_list { 
+          key = "dataChildrenType"; 
+          list = "温度\n压力\n液位\n流量\n开关阀\n调节阀";
+          value = "";
+        }
       }
       : spacer { height = 1; } 
       : popup_list { 
-        label = "编号排序方向";
+        label = "排序方向";
         key = "numberSortDirection"; 
         list = "从左到右\n从上到下";
         value = "";
