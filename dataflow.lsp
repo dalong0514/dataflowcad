@@ -1177,9 +1177,7 @@
   (numberPipelineAndTagByBox pipePropertyNameList "filterAndNumberBox" "pipe")
 )
 
-(defun numberPipelineAndTagByBox (propertyNameList tileName dataType / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList previewList confirmList blockDataList APropertyValueList entityList modifyOrNumberStatus modifyOrNumberType)
-
-  (setq modifyOrNumberType "1")
+(defun numberPipelineAndTagByBox (propertyNameList tileName dataType / dcl_id propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList previewList confirmList blockDataList APropertyValueList entityList modifyOrNumberStatus)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -1260,7 +1258,6 @@
         (setq entityList (car (cdr blockDataList)))
         (setq matchedList APropertyValueList)
         (setq sslen (length APropertyValueList))
-        (setq previewList (GetPropertyValueByEntityName entityList "PIPENUM"))
       )
     )
     ; all select button
@@ -1276,13 +1273,13 @@
         (setq entityList (car (cdr blockDataList)))
         (setq matchedList APropertyValueList)
         (setq sslen (length APropertyValueList))
-        (setq previewList (GetPropertyValueByEntityName entityList "PIPENUM"))
       )
     )
     ; confirm button
     (if (= 5 status)
       (progn 
         (setq selectedName (GetNeedToNumberPropertyName dataType))
+        (setq previewList (GetPropertyValueByEntityName entityList selectedName))
         (setq numberedList (GetNumberedListByStartAndLengthUtils propertyValue replacedSubstring (length previewList)))
         (setq confirmList (ReplaceNumberOfListByNumberedListUtils numberedList previewList))
       )
