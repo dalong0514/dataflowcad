@@ -347,7 +347,7 @@ filterAndNumberBox : dialog {
       }
       : spacer { height = 1; } 
       : edit_box {
-        label = "管道刷选通配符匹配模式";
+        label = "筛选管道的通配符匹配";
         key = "patternValue";
         mnemonic = "N";
         value = "";

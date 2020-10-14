@@ -1242,7 +1242,7 @@
   (numberPipelineAndTagByBox dataTypeList "filterAndNumberBox" "Pipe")
 )
 
-(defun numberPipelineAndTagByBox (propertyNameList tileName dataType / dcl_id propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName selectedDataType ss sslen matchedList previewList confirmList blockDataList APropertyValueList entityList modifyOrNumberStatus)
+(defun numberPipelineAndTagByBox (propertyNameList tileName dataType / dcl_id propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName selectedDataType ss sslen matchedList previewList confirmList blockDataList APropertyValueList entityList modifyOrNumberStatus dataChildrenType)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -1257,6 +1257,7 @@
     
     ; optional setting for the popup_list tile
     (set_tile "filterPropertyName" "0")
+    (set_tile "dataChildrenType" "0")
     ; the default value of input box
     (set_tile "patternValue" "")
     (set_tile "replacedValue" "")
@@ -1266,9 +1267,13 @@
     (action_tile "filterPropertyName" "(setq filterPropertyName $value)")
     (action_tile "patternValue" "(setq patternValue $value)")
     (action_tile "replacedSubstring" "(setq replacedSubstring $value)")
+    (action_tile "dataChildrenType" "(setq dataChildrenType $value)")
     ; init the default data of text
     (if (= nil filterPropertyName)
       (setq filterPropertyName "0")
+    )
+    (if (= nil dataChildrenType)
+      (setq dataChildrenType "0")
     )
     (if (= nil patternValue)
       (setq patternValue "*")
@@ -1287,6 +1292,7 @@
 
     (if (/= selectedDataType nil)
       (set_tile "filterPropertyName" filterPropertyName)
+      (set_tile "dataChildrenType" dataChildrenType)
     )
     
     (if (= modifyOrNumberStatus 0)
@@ -1321,11 +1327,16 @@
         (setq selectedDataType (nth (atoi filterPropertyName) propertyNameList))
         (setq selectedFilterName (GetNeedToNumberPropertyName selectedDataType))
         (setq ss (GetBlockSSBySelectByDataTypeUtils selectedDataType))
-
+        ; sort by x cordinate
         (setq ss (SortSelectionSetByXYZ ss))
         (if (= selectedDataType "Pipe") 
-          (setq blockDataList (GetBlockAPropertyValueListByPropertyNamePattern ss selectedFilterName patternValue))
-          (setq blockDataList (GetBlockAPropertyValueListByPropertyNamePattern ss selectedFilterName "*"))
+          (setq blockDataList (GetBlockAPropertyValueListByPropertyNamePattern ss "PIPENUM" patternValue))
+          (progn 
+            (if (and (= selectedDataType "InstrumentP") (= dataChildrenType "1")) 
+              (setq blockDataList (GetBlockAPropertyValueListByPropertyNamePattern ss "FUNCTION" "P*"))
+              (setq blockDataList (GetBlockAPropertyValueListByPropertyNamePattern ss selectedFilterName "*"))
+            )
+          )
         )
         (setq APropertyValueList (car blockDataList))
         (setq entityList (car (cdr blockDataList)))
