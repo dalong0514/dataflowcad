@@ -1087,7 +1087,7 @@
 )
 
 (defun c:foo ()
-  (GetBlockSSBySelectByDataTypeUtils "InstrumentP")
+  (SpliceElementInTwoListUtils '("PI" "TIA") '("1101" "1102"))
 )
 
 ;;;-------------------------------------------------------------------------;;;
@@ -1167,6 +1167,57 @@
     )
   )
   (list aPropertyValueList entityList)
+)
+
+(defun GetInstrumentPropertyDataListByFunctionPattern (ss patternValue / i ent blk entx propertyName aPropertyValueList entityList)
+  (if (/= ss nil)
+    (progn
+      (setq i 0)
+      (setq instrumentFunctionList '())
+      (setq instrumentTagList '())
+      (setq entityList '())
+      (repeat (sslength ss)
+        (if (/= nil (ssname ss i))
+          (progn
+            (setq ent (entget (ssname ss i)))
+            (setq blk (ssname ss i))
+            (setq entx (entget (entnext (cdr (assoc -1 ent)))))
+            (while (= "ATTRIB" (cdr (assoc 0 entx)))
+              (setq propertyName (cdr (assoc 2 entx)))
+              (if (= propertyName "FUNCTION")
+                (if (wcmatch (cdr (assoc 1 entx)) patternValue) 
+                  (progn 
+                    (setq instrumentFunctionList (append instrumentFunctionList (list (cdr (assoc 1 entx)))))
+                    ; the key is listing the blk
+                    (setq entityList (append entityList (list blk)))
+                  )
+                )
+              )
+              (if (= propertyName "TAG")
+                (setq instrumentTagList (append instrumentTagList (list (cdr (assoc 1 entx)))))
+              )
+	            ; get the next property information
+              (setq entx (entget (entnext (cdr (assoc -1 entx)))))
+            )
+            (entupd blk)
+            (setq i (+ 1 i))
+          )
+        )
+      )
+    )
+  )
+  (setq aPropertyValueList (SpliceElementInTwoListUtils instrumentFunctionList instrumentTagList))
+  (list aPropertyValueList entityList)
+)
+
+(defun SpliceElementInTwoListUtils (firstList secondList / newList i)
+  (setq newList '())
+  (setq i 0)
+  (repeat (length firstList)
+    (setq newList (append newList (list (strcat (nth i firstList) (nth i secondList)))))
+    (setq i (+ i 1))
+  )
+  newList
 )
 
 (defun GetPropertyValueByEntityName (entityList selectedName / i ent blk entx propertyName aPropertyValueList)
