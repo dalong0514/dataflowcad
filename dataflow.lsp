@@ -400,6 +400,67 @@
 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
+; Utils Field
+; Sorting Select Set by XY cordinate
+; source code copied from web
+
+(defun sortListofSublistsbyItemX (lstOfSublists intItem intDirection)
+ (if (> intDirection 0)
+  (vl-sort lstOfSublists '(lambda (X Y) (< (nth intItem X) (nth intItem Y))))
+  (vl-sort lstOfSublists '(lambda (X Y) (> (nth intItem X) (nth intItem Y))))
+ )
+)
+
+(defun SelectionSetToList (ssSelections / intCount lstReturn)
+ (if (and ssSelections 
+          (= (type ssSelections) 'PICKSET)
+     )
+  (repeat (setq intCount (sslength ssSelections))
+   (setq intCount  (1- intCount)
+         lstReturn (cons (ssname ssSelections intCount) lstReturn)
+   )
+  )
+ )
+ (reverse lstReturn)
+)
+
+(defun ListToSelectionSet (lstOfEntities / ssReturn)
+ (if lstOfEntities      
+  (foreach entItem lstOfEntities
+   (if (= (type entItem) 'ENAME)
+    (if ssReturn 
+     (setq ssReturn (ssadd entItem ssReturn))
+     (setq ssReturn (ssadd entItem))
+    )
+   )
+  )
+ )
+ ssReturn
+)
+
+(defun SortSelectionSetByXYZ (ssSelections /  lstOfSelections lstOfSublists lstSelections)
+ (if
+  (and 
+   (setq lstSelections (SelectionSetToList ssSelections))
+   (setq lstOfSublists (mapcar '(lambda (X)(cons X (cdr (assoc 10 (entget X))))) lstSelections))
+   (setq lstOfSublists (sortlistofsublistsbyitemX lstOfSublists 3 1))
+    ; the key is -1 for y cordinate
+   (setq lstOfSublists (sortlistofsublistsbyitemX lstOfSublists 2 -1))
+   (setq lstOfSublists (sortlistofsublistsbyitemX lstOfSublists 1 1))
+   (setq ssSelections  (listtoselectionset (mapcar 'car lstOfSublists)))
+  )
+  ssSelections
+ )
+)
+
+; Sorting Select Set by XY cordinate
+; Utils Field
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+
+
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
 ; Gs Field
 ; the macro for extract data
 
@@ -1454,58 +1515,9 @@
     (setq blockDataList (GetInstrumentPropertyDataListByFunctionPattern ss "XV*"))
   )
   (if (= dataChildrenType "5") 
-    (setq blockDataList (GetInstrumentPropertyDataListByFunctionPattern ss "*V"))
+    (setq blockDataList (GetInstrumentPropertyDataListByFunctionPattern ss "[TPLF]V*"))
   )
   blockDataList
-)
-
-(defun sortListofSublistsbyItemX (lstOfSublists intItem intDirection)
- (if (> intDirection 0)
-  (vl-sort lstOfSublists '(lambda (X Y) (< (nth intItem X) (nth intItem Y))))
-  (vl-sort lstOfSublists '(lambda (X Y) (> (nth intItem X) (nth intItem Y))))
- )
-)
-
-(defun SelectionSetToList (ssSelections / intCount lstReturn)
- (if (and ssSelections 
-          (= (type ssSelections) 'PICKSET)
-     )
-  (repeat (setq intCount (sslength ssSelections))
-   (setq intCount  (1- intCount)
-         lstReturn (cons (ssname ssSelections intCount) lstReturn)
-   )
-  )
- )
- (reverse lstReturn)
-)
-
-(defun ListToSelectionSet (lstOfEntities / ssReturn)
- (if lstOfEntities      
-  (foreach entItem lstOfEntities
-   (if (= (type entItem) 'ENAME)
-    (if ssReturn 
-     (setq ssReturn (ssadd entItem ssReturn))
-     (setq ssReturn (ssadd entItem))
-    )
-   )
-  )
- )
- ssReturn
-)
-
-(defun SortSelectionSetByXYZ (ssSelections /  lstOfSelections lstOfSublists lstSelections)
- (if
-  (and 
-   (setq lstSelections (SelectionSetToList ssSelections))
-   (setq lstOfSublists (mapcar '(lambda (X)(cons X (cdr (assoc 10 (entget X))))) lstSelections))
-   (setq lstOfSublists (sortlistofsublistsbyitemX lstOfSublists 3 1))
-    ; the key is -1 for y cordinate
-   (setq lstOfSublists (sortlistofsublistsbyitemX lstOfSublists 2 -1))
-   (setq lstOfSublists (sortlistofsublistsbyitemX lstOfSublists 1 1))
-   (setq ssSelections  (listtoselectionset (mapcar 'car lstOfSublists)))
-  )
-  ssSelections
- )
 )
 
 ; Number Pipeline, Instrument and Equipment
