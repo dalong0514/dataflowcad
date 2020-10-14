@@ -1189,28 +1189,21 @@
     (action_tile "cancel" "(done_dialog 0)")
     (action_tile "btnSelect" "(done_dialog 2)")
     (action_tile "btnAll" "(done_dialog 3)")
-    (action_tile "btnShowOriginData" "(done_dialog 4)")
     (action_tile "btnPreviewModify" "(done_dialog 5)")
     (action_tile "btnModify" "(done_dialog 6)")
     
     ; optional setting for the popup_list tile
     (set_tile "filterPropertyName" "0")
-    (set_tile "propertyName" "0")
     ; the default value of input box
     (set_tile "patternValue" "")
     (set_tile "replacedValue" "")
     (set_tile "propertyValue" "")
-    (mode_tile "propertyName" 2)
     (mode_tile "propertyValue" 2)
-    (action_tile "propertyName" "(setq propertyName $value)")
     (action_tile "propertyValue" "(setq propertyValue $value)")
     (action_tile "filterPropertyName" "(setq filterPropertyName $value)")
     (action_tile "patternValue" "(setq patternValue $value)")
     (action_tile "replacedSubstring" "(setq replacedSubstring $value)")
     ; init the default data of text
-    (if (= nil propertyName)
-      (setq propertyName "0")
-    )
     (if (= nil filterPropertyName)
       (setq filterPropertyName "0")
     )
@@ -1232,18 +1225,10 @@
       (set_tile "resultMsg" "请先预览修改")
     )
     
-    (if (= modifyOrNumberType "1")
-      (progn 
-        (set_tile "replacedSubstringMsg" "物料代号：")
-        (set_tile "propertyValueMsg" "编号起点：")
-      )
-    )
-    
     (if (/= matchedList nil)
       (progn
         ; setting for saving the existed value of a box
         (set_tile "filterPropertyName" filterPropertyName)
-        (set_tile "propertyName" propertyName)
         (set_tile "patternValue" patternValue)
         (set_tile "replacedSubstring" replacedSubstring)
         (set_tile "propertyValue" propertyValue)
@@ -1251,14 +1236,6 @@
         (mapcar '(lambda (x) (add_list x)) 
                  matchedList)
         ;(add_list matchedList)
-        (end_list)
-      )
-    )
-    (if (/= previewList nil)
-      (progn
-        (start_list "originData" 3)
-        (mapcar '(lambda (x) (add_list x)) 
-                 previewList)
         (end_list)
       )
     )
@@ -1283,6 +1260,7 @@
         (setq entityList (car (cdr blockDataList)))
         (setq matchedList APropertyValueList)
         (setq sslen (length APropertyValueList))
+        (setq previewList (GetPropertyValueByEntityName entityList "PIPENUM"))
       )
     )
     ; all select button
@@ -1298,13 +1276,7 @@
         (setq entityList (car (cdr blockDataList)))
         (setq matchedList APropertyValueList)
         (setq sslen (length APropertyValueList))
-      )
-    )
-    ; preview button
-    (if (= 4 status)
-      (progn 
-        (setq selectedName (nth (atoi propertyName) propertyNameList))
-        (setq previewList (GetPropertyValueByEntityName entityList selectedName))
+        (setq previewList (GetPropertyValueByEntityName entityList "PIPENUM"))
       )
     )
     ; confirm button
@@ -1321,18 +1293,8 @@
         (if (= confirmList nil)
           (setq modifyOrNumberStatus 0)
           (progn 
-            (if (= modifyOrNumberType "0") 
-              (progn 
-                (setq selectedName (nth (atoi propertyName) propertyNameList))
-                (ModifyPropertyValueByEntityName entityList selectedName confirmList)
-              )
-            )
-            (if (= modifyOrNumberType "1") 
-              (progn 
-                (setq selectedName (GetNeedToNumberPropertyName dataType))
-                (ModifyPropertyValueByEntityName entityList selectedName confirmList)
-              )
-            )
+            (setq selectedName (GetNeedToNumberPropertyName dataType))
+            (ModifyPropertyValueByEntityName entityList selectedName confirmList)
           )
         )
       )

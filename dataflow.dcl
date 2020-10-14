@@ -378,34 +378,6 @@ filterAndNumberBox : dialog {
     }
 
     : boxed_radio_column {
-      label = "原始数据";
-      key = "showOriginDataBox";
-      width = 60;
-      : popup_list { 
-        label = "选择要修改的属性";
-        key = "propertyName"; 
-        list = "管道编号\n流程图号\n工作介质\n工作温度\n工作压力\n相态\n管道起点\n管道终点\n保温材料";
-        value = "";
-      }
-      : spacer { height = 1; } 
-      : list_box { 
-        height = 25;
-        key = "originData"; 
-        list = "";
-        value = "";
-      }
-      : spacer { height = 6; } 
-      : button { 
-        key = "btnShowOriginData"; 
-        label = "显示原始数据"; 
-        is_default = "true"; 
-        fixed_width = true; 
-        alignment = centered; 
-      } 
-      : spacer { height = 3; } 
-    }
-
-    : boxed_radio_column {
       label = "修改后的数据";
       key = "modifyBox";
       width = 60;
