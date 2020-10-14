@@ -1081,15 +1081,13 @@
 )
 
 (defun GetNeedToNumberPropertyName (dataType / needToNumberPropertyNameList dataTypeList)
-  (setq dataTypeList '("Pipe" "Instrument" "InstrumentL" "INstrumentP" "InstrumentSIS" "Reactor" "Pump" "Tank" "Heater" "Centrifuge" "Vacuum" "CustomEquip"))
+  (setq dataTypeList '("Pipe" "Instrument" "InstrumentP" "InstrumentL" "InstrumentSIS" "Reactor" "Pump" "Tank" "Heater" "Centrifuge" "Vacuum" "CustomEquip"))
   (setq needToNumberPropertyNameList '("PIPENUM" "TAG" "TAG" "TAG" "TAG" "TAG" "TAG" "TAG" "TAG" "TAG" "TAG" "TAG"))
   (GetDictValueByKeyUtils dataType dataTypeList needToNumberPropertyNameList)
 )
 
 (defun c:foo ()
-  (setq dataTypeList '("Pipe" "Instrument" "Equipment"))
-  (setq dataTypeChName '("管道数据" "仪表数据" "设备数据"))
-  (GetDictValueByKeyUtils "pipe" dataTypeList dataTypeChName)
+  (GetBlockSSBySelectByDataTypeUtils "InstrumentP")
 )
 
 ;;;-------------------------------------------------------------------------;;;
@@ -1240,7 +1238,7 @@
 ; Number Pipeline, Instrument and Equipment
 
 (defun c:numberPipelineAndTag (/ dataTypeList)
-  (setq dataTypeList '("Pipe" "InstrumentL" "InstrumentP" "InstrumentSIS" "Reactor" "Pump" "Tank" "Heater" "Centrifuge" "Vacuum" "CustomEquip"))
+  (setq dataTypeList '("Pipe" "InstrumentP" "InstrumentL" "InstrumentSIS" "Reactor" "Pump" "Tank" "Heater" "Centrifuge" "Vacuum" "CustomEquip"))
   (numberPipelineAndTagByBox dataTypeList "filterAndNumberBox" "Pipe")
 )
 
@@ -1281,9 +1279,14 @@
     (if (= nil propertyValue)
       (setq propertyValue "")
     )
+
     ; Display the number of selected pipes
     (if (/= sslen nil)
       (set_tile "msg" (strcat "匹配到的管道数量： " (rtos sslen)))
+    )
+
+    (if (/= selectedDataType nil)
+      (set_tile "filterPropertyName" filterPropertyName)
     )
     
     (if (= modifyOrNumberStatus 0)
@@ -1315,10 +1318,13 @@
     ; select button
     (if (= 2 (setq status (start_dialog)))
       (progn 
-        (setq ss (GetBlockSSBySelectByDataTypeUtils dataType))
         (setq selectedDataType (nth (atoi filterPropertyName) propertyNameList))
         (setq selectedFilterName (GetNeedToNumberPropertyName selectedDataType))
-        (setq blockDataList (GetBlockAPropertyValueListByPropertyNamePattern ss selectedFilterName patternValue))
+        (setq ss (GetBlockSSBySelectByDataTypeUtils selectedDataType))
+        (if (= selectedDataType "Pipe") 
+          (setq blockDataList (GetBlockAPropertyValueListByPropertyNamePattern ss selectedFilterName patternValue))
+          (setq blockDataList (GetBlockAPropertyValueListByPropertyNamePattern ss selectedFilterName "*"))
+        )
         (setq APropertyValueList (car blockDataList))
         (setq entityList (car (cdr blockDataList)))
         (setq matchedList APropertyValueList)
@@ -1328,10 +1334,13 @@
     ; all select button
     (if (= 3 status)
       (progn 
-        (setq ss (GetAllBlockSSByDataTypeUtils dataType))
         (setq selectedDataType (nth (atoi filterPropertyName) propertyNameList))
         (setq selectedFilterName (GetNeedToNumberPropertyName selectedDataType))
-        (setq blockDataList (GetBlockAPropertyValueListByPropertyNamePattern ss selectedFilterName patternValue))
+        (setq ss (GetAllBlockSSByDataTypeUtils selectedDataType))
+        (if (= selectedDataType "Pipe") 
+          (setq blockDataList (GetBlockAPropertyValueListByPropertyNamePattern ss selectedFilterName patternValue))
+          (setq blockDataList (GetBlockAPropertyValueListByPropertyNamePattern ss selectedFilterName "*"))
+        )
         (setq APropertyValueList (car blockDataList))
         (setq entityList (car (cdr blockDataList)))
         (setq matchedList APropertyValueList)
@@ -1341,7 +1350,7 @@
     ; confirm button
     (if (= 5 status)
       (progn 
-        (setq selectedName (GetNeedToNumberPropertyName dataType))
+        (setq selectedName (GetNeedToNumberPropertyName selectedDataType))
         (setq previewList (GetPropertyValueByEntityName entityList selectedName))
         (setq numberedList (GetNumberedListByStartAndLengthUtils propertyValue replacedSubstring (length previewList)))
         (setq confirmList (ReplaceNumberOfListByNumberedListUtils numberedList previewList))
@@ -1353,7 +1362,7 @@
         (if (= confirmList nil)
           (setq modifyOrNumberStatus 0)
           (progn 
-            (setq selectedName (GetNeedToNumberPropertyName dataType))
+            (setq selectedName (GetNeedToNumberPropertyName selectedDataType))
             (ModifyPropertyValueByEntityName entityList selectedName confirmList)
           )
         )
