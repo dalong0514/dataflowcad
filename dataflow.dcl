@@ -333,9 +333,16 @@ filterAndNumberBox : dialog {
       key = "filterBox";
       width = 60;
       : popup_list { 
-        label = "选择用哪个属性值匹配";
+        label = "需编号的数据类型";
         key = "filterPropertyName"; 
         list = "管道编号\n流程图号\n工作介质\n工作温度\n工作压力\n相态\n管道起点\n管道终点\n保温材料";
+        value = "";
+      }
+      : spacer { height = 1; } 
+      : popup_list { 
+        label = "编号排序方向";
+        key = "numberSortDirection"; 
+        list = "从左到右\n从上到下";
         value = "";
       }
       : spacer { height = 1; } 
