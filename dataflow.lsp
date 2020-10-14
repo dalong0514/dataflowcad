@@ -1321,6 +1321,8 @@
         (setq selectedDataType (nth (atoi filterPropertyName) propertyNameList))
         (setq selectedFilterName (GetNeedToNumberPropertyName selectedDataType))
         (setq ss (GetBlockSSBySelectByDataTypeUtils selectedDataType))
+
+        (setq ss (SortSelectionSetByXYZ ss))
         (if (= selectedDataType "Pipe") 
           (setq blockDataList (GetBlockAPropertyValueListByPropertyNamePattern ss selectedFilterName patternValue))
           (setq blockDataList (GetBlockAPropertyValueListByPropertyNamePattern ss selectedFilterName "*"))
