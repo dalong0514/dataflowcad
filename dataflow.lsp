@@ -1081,8 +1081,8 @@
 )
 
 (defun GetNeedToNumberPropertyName (dataType / needToNumberPropertyNameList dataTypeList)
-  (setq dataTypeList '("Pipe" "Instrument" "Equipment"))
-  (setq needToNumberPropertyNameList '("PIPENUM" "TAG" "TAG"))
+  (setq dataTypeList '("Pipe" "Instrument" "InstrumentL" "INstrumentP" "InstrumentSIS" "Reactor" "Pump" "Tank" "Heater" "Centrifuge" "Vacuum" "CustomEquip"))
+  (setq needToNumberPropertyNameList '("PIPENUM" "TAG" "TAG" "TAG" "TAG" "TAG" "TAG" "TAG" "TAG" "TAG" "TAG" "TAG"))
   (GetDictValueByKeyUtils dataType dataTypeList needToNumberPropertyNameList)
 )
 
