@@ -878,12 +878,12 @@
 
 (defun c:modifyKsProperty (/ instrumentPropertyNameList)
   (setq instrumentPropertyNameList '("TAG" "FUNCTION" "NAME" "DRAWNUM" "LOCATION" "SUBSTANCE" "TEMP" "PRESSURE" "COMMENT" "PHASE" "SORT" "MATERIAL" "INSTALLSIZE" "MIN" "NOMAL" "MAX" "DIRECTION"))
-  (filterAndModifyBlockPropertyByBox instrumentPropertyNameList "filterAndModifyInstrumentProperty" "instrument")
+  (filterAndModifyBlockPropertyByBox instrumentPropertyNameList "filterAndModifyInstrumentProperty" "Instrument")
 )
 
 (defun c:modifyPipeProperty (/ pipePropertyNameList)
   (setq pipePropertyNameList '("PIPENUM" "DRAWNUM" "SUBSTANCE" "TEMP" "PRESSURE" "PHASE" "FROM" "TO" "INSULATION"))
-  (filterAndModifyBlockPropertyByBox pipePropertyNameList "filterAndModifyPipeProperty" "pipe")
+  (filterAndModifyBlockPropertyByBox pipePropertyNameList "filterAndModifyPipeProperty" "Pipe")
 )
 
 ; the macro for modify data
@@ -992,10 +992,7 @@
     ; select button
     (if (= 2 (setq status (start_dialog)))
       (progn 
-        (if (= dataType "pipe")
-          (setq ss (GetPipeSSBySelectUtils))
-          (setq ss (GetInstrumentSSBySelectUtils))
-        )
+        (setq ss (GetBlockSSBySelectByDataTypeUtils dataType))
         (setq selectedFilterName (nth (atoi filterPropertyName) propertyNameList))
         (setq blockDataList (GetBlockAPropertyValueListByPropertyNamePattern ss selectedFilterName patternValue))
         (setq APropertyValueList (car blockDataList))
@@ -1007,10 +1004,7 @@
     ; all select button
     (if (= 3 status)
       (progn 
-        (if (= dataType "pipe")
-          (setq ss (GetAllPipeSSUtils))
-          (setq ss (GetAllInstrumentSSUtils))
-        )
+        (setq ss (GetAllBlockSSByDataTypeUtils dataType))
         (setq selectedFilterName (nth (atoi filterPropertyName) propertyNameList))
         (setq blockDataList (GetBlockAPropertyValueListByPropertyNamePattern ss selectedFilterName patternValue))
         (setq APropertyValueList (car blockDataList))
@@ -1087,13 +1081,13 @@
 )
 
 (defun GetNeedToNumberPropertyName (dataType / needToNumberPropertyNameList dataTypeList)
-  (setq dataTypeList '("pipe" "instrument" "equipment"))
+  (setq dataTypeList '("Pipe" "Instrument" "Equipment"))
   (setq needToNumberPropertyNameList '("PIPENUM" "TAG" "TAG"))
   (GetDictValueByKeyUtils dataType dataTypeList needToNumberPropertyNameList)
 )
 
 (defun c:foo ()
-  (setq dataTypeList '("pipe" "instrument" "equipment"))
+  (setq dataTypeList '("Pipe" "Instrument" "Equipment"))
   (setq dataTypeChName '("管道数据" "仪表数据" "设备数据"))
   (GetDictValueByKeyUtils "pipe" dataTypeList dataTypeChName)
 )
@@ -1247,7 +1241,7 @@
 
 (defun c:numberPipelineAndTag (/ pipePropertyNameList)
   (setq pipePropertyNameList '("PIPENUM" "DRAWNUM" "SUBSTANCE" "TEMP" "PRESSURE" "PHASE" "FROM" "TO" "INSULATION"))
-  (numberPipelineAndTagByBox pipePropertyNameList "filterAndNumberBox" "pipe")
+  (numberPipelineAndTagByBox pipePropertyNameList "filterAndNumberBox" "Pipe")
 )
 
 (defun numberPipelineAndTagByBox (propertyNameList tileName dataType / dcl_id propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList previewList confirmList blockDataList APropertyValueList entityList modifyOrNumberStatus)
@@ -1321,10 +1315,7 @@
     ; select button
     (if (= 2 (setq status (start_dialog)))
       (progn 
-        (if (= dataType "pipe")
-          (setq ss (GetPipeSSBySelectUtils))
-          (setq ss (GetInstrumentSSBySelectUtils))
-        )
+        (setq ss (GetBlockSSBySelectByDataTypeUtils dataType))
         (setq selectedFilterName (nth (atoi filterPropertyName) propertyNameList))
         (setq blockDataList (GetBlockAPropertyValueListByPropertyNamePattern ss selectedFilterName patternValue))
         (setq APropertyValueList (car blockDataList))
@@ -1336,10 +1327,7 @@
     ; all select button
     (if (= 3 status)
       (progn 
-        (if (= dataType "pipe")
-          (setq ss (GetAllPipeSSUtils))
-          (setq ss (GetAllInstrumentSSUtils))
-        )
+        (setq ss (GetAllBlockSSByDataTypeUtils dataType))
         (setq selectedFilterName (nth (atoi filterPropertyName) propertyNameList))
         (setq blockDataList (GetBlockAPropertyValueListByPropertyNamePattern ss selectedFilterName patternValue))
         (setq APropertyValueList (car blockDataList))
