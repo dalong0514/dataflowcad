@@ -1384,8 +1384,8 @@
           (setq blockDataList (GetBlockAPropertyValueListByPropertyNamePattern ss "PIPENUM" patternValue))
           (progn 
             (if (and (= selectedDataType "InstrumentP") (= dataChildrenType "1")) 
-              (setq blockDataList (GetBlockAPropertyValueListByPropertyNamePattern ss "FUNCTION" "P*"))
-              (setq blockDataList (GetBlockAPropertyValueListByPropertyNamePattern ss selectedFilterName "*"))
+              (setq blockDataList (GetInstrumentPropertyDataListByFunctionPattern ss "P*"))
+              (setq blockDataList (GetBlockAPropertyValueListByPropertyNamePattern ss "TAG" "*"))
             )
           )
         )
