@@ -947,11 +947,6 @@
   (filterAndModifyBlockPropertyByBox pipePropertyNameList "filterAndModifyPipeProperty" "Pipe")
 )
 
-(defun c:modifyBlockProperty (/ pipePropertyNameList)
-  (setq pipePropertyNameList '("PIPENUM" "DRAWNUM" "SUBSTANCE" "TEMP" "PRESSURE" "PHASE" "FROM" "TO" "INSULATION"))
-  (filterAndModifyBlockPropertyByBoxV2 pipePropertyNameList "filterAndModifyPipeProperty" "Pipe")
-)
-
 ; the macro for modify data
 ; Gs Field
 ;;;-------------------------------------------------------------------------;;;
@@ -1154,6 +1149,11 @@
 
 (defun c:foo ()
   (SpliceElementInTwoListUtils '("PI" "TIA") '("1101" "1102"))
+)
+
+(defun c:modifyBlockProperty (/ pipePropertyNameList)
+  (setq pipePropertyNameList '("PIPENUM" "DRAWNUM" "SUBSTANCE" "TEMP" "PRESSURE" "PHASE" "FROM" "TO" "INSULATION"))
+  (filterAndModifyBlockPropertyByBoxV2 pipePropertyNameList "filterAndModifyPropertyBox" "Pipe")
 )
 
 (defun filterAndModifyBlockPropertyByBoxV2 (propertyNameList tileName dataType / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList previewList confirmList blockDataList APropertyValueList entityList modifyOrNumberStatus modifyOrNumberType)
