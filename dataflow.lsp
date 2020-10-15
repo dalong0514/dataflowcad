@@ -947,6 +947,11 @@
   (filterAndModifyBlockPropertyByBox pipePropertyNameList "filterAndModifyPipeProperty" "Pipe")
 )
 
+(defun c:modifyBlockProperty (/ pipePropertyNameList)
+  (setq pipePropertyNameList '("PIPENUM" "DRAWNUM" "SUBSTANCE" "TEMP" "PRESSURE" "PHASE" "FROM" "TO" "INSULATION"))
+  (filterAndModifyBlockPropertyByBoxV2 pipePropertyNameList "filterAndModifyPipeProperty" "Pipe")
+)
+
 ; the macro for modify data
 ; Gs Field
 ;;;-------------------------------------------------------------------------;;;
@@ -1150,6 +1155,184 @@
 (defun c:foo ()
   (SpliceElementInTwoListUtils '("PI" "TIA") '("1101" "1102"))
 )
+
+(defun filterAndModifyBlockPropertyByBoxV2 (propertyNameList tileName dataType / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList previewList confirmList blockDataList APropertyValueList entityList modifyOrNumberStatus modifyOrNumberType)
+  (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
+  (setq status 2)
+  (while (>= status 2)
+    ; Create the dialog box
+    (new_dialog tileName dcl_id "" '(-1 -1))
+    ; Added the actions to the Cancel and Pick Point button
+    (action_tile "cancel" "(done_dialog 0)")
+    (action_tile "btnSelect" "(done_dialog 2)")
+    (action_tile "btnAll" "(done_dialog 3)")
+    (action_tile "btnShowOriginData" "(done_dialog 4)")
+    (action_tile "btnPreviewModify" "(done_dialog 5)")
+    (action_tile "btnModify" "(done_dialog 6)")
+    
+    ; optional setting for the popup_list tile
+    (set_tile "filterPropertyName" "0")
+    (set_tile "propertyName" "0")
+    (set_tile "modifyOrNumberType" "0")
+    ; the default value of input box
+    (set_tile "patternValue" "")
+    (set_tile "replacedValue" "")
+    (set_tile "propertyValue" "")
+    (mode_tile "modifyOrNumberType" 2)
+    (mode_tile "propertyName" 2)
+    (mode_tile "propertyValue" 2)
+    (action_tile "propertyName" "(setq propertyName $value)")
+    (action_tile "propertyValue" "(setq propertyValue $value)")
+    (action_tile "filterPropertyName" "(setq filterPropertyName $value)")
+    (action_tile "patternValue" "(setq patternValue $value)")
+    (action_tile "replacedSubstring" "(setq replacedSubstring $value)")
+    (action_tile "modifyOrNumberType" "(setq modifyOrNumberType $value)")
+    ; init the default data of text
+    (if (= nil propertyName)
+      (setq propertyName "0")
+    )
+    (if (= nil filterPropertyName)
+      (setq filterPropertyName "0")
+    )
+    (if (= nil modifyOrNumberType)
+      (setq modifyOrNumberType "0")
+    )
+    (if (= nil patternValue)
+      (setq patternValue "*")
+    )
+    (if (= nil replacedSubstring)
+      (setq replacedSubstring "")
+    )
+    (if (= nil propertyValue)
+      (setq propertyValue "")
+    )
+    ; Display the number of selected pipes
+    (if (/= sslen nil)
+      (set_tile "msg" (strcat "匹配到的管道数量： " (rtos sslen)))
+    )
+    
+    (if (= modifyOrNumberStatus 0)
+      (set_tile "resultMsg" "请先预览修改")
+    )
+    
+    (if (= modifyOrNumberType "1")
+      (progn 
+        (set_tile "replacedSubstringMsg" "物料代号：")
+        (set_tile "propertyValueMsg" "编号起点：")
+      )
+    )
+    
+    (if (/= matchedList nil)
+      (progn
+        ; setting for saving the existed value of a box
+        (set_tile "filterPropertyName" filterPropertyName)
+        (set_tile "propertyName" propertyName)
+        (set_tile "modifyOrNumberType" modifyOrNumberType)
+        (set_tile "patternValue" patternValue)
+        (set_tile "replacedSubstring" replacedSubstring)
+        (set_tile "propertyValue" propertyValue)
+        (start_list "matchedResult" 3)
+        (mapcar '(lambda (x) (add_list x)) 
+                 matchedList)
+        ;(add_list matchedList)
+        (end_list)
+      )
+    )
+    (if (/= previewList nil)
+      (progn
+        (start_list "originData" 3)
+        (mapcar '(lambda (x) (add_list x)) 
+                 previewList)
+        (end_list)
+      )
+    )
+    (if (/= confirmList nil)
+      (progn
+        (start_list "modifiedData" 3)
+        (mapcar '(lambda (x) (add_list x)) 
+                 confirmList)
+        (end_list)
+      )
+    )
+    ; select button
+    (if (= 2 (setq status (start_dialog)))
+      (progn 
+        (setq ss (GetBlockSSBySelectByDataTypeUtils dataType))
+        (setq selectedFilterName (nth (atoi filterPropertyName) propertyNameList))
+        (setq blockDataList (GetBlockAPropertyValueListByPropertyNamePattern ss selectedFilterName patternValue))
+        (setq APropertyValueList (car blockDataList))
+        (setq entityList (car (cdr blockDataList)))
+        (setq matchedList APropertyValueList)
+        (setq sslen (length APropertyValueList))
+      )
+    )
+    ; all select button
+    (if (= 3 status)
+      (progn 
+        (setq ss (GetAllBlockSSByDataTypeUtils dataType))
+        (setq selectedFilterName (nth (atoi filterPropertyName) propertyNameList))
+        (setq blockDataList (GetBlockAPropertyValueListByPropertyNamePattern ss selectedFilterName patternValue))
+        (setq APropertyValueList (car blockDataList))
+        (setq entityList (car (cdr blockDataList)))
+        (setq matchedList APropertyValueList)
+        (setq sslen (length APropertyValueList))
+      )
+    )
+    ; preview button
+    (if (= 4 status)
+      (progn 
+        (setq selectedName (nth (atoi propertyName) propertyNameList))
+        (setq previewList (GetPropertyValueByEntityName entityList selectedName))
+      )
+    )
+    ; confirm button
+    (if (= 5 status)
+      (progn 
+        (if (= modifyOrNumberType "0")
+          (progn
+            (setq selectedName (nth (atoi propertyName) propertyNameList))
+            (if (= replacedSubstring "")
+              (setq confirmList (ReplaceAllStirngOfListUtils propertyValue previewList))
+              (setq confirmList (ReplaceSubstOfListByPatternUtils propertyValue replacedSubstring previewList))
+            )
+          )
+        )
+        (if (= modifyOrNumberType "1")
+          (progn
+            (setq selectedName (GetNeedToNumberPropertyName dataType))
+            (setq numberedList (GetNumberedListByStartAndLengthUtils propertyValue replacedSubstring (length previewList)))
+            (setq confirmList (ReplaceNumberOfListByNumberedListUtils numberedList previewList))
+          )
+        )
+      )
+    )
+    ; modify button
+    (if (= 6 status)
+      (progn 
+        (if (= confirmList nil)
+          (setq modifyOrNumberStatus 0)
+          (progn 
+            (if (= modifyOrNumberType "0") 
+              (progn 
+                (setq selectedName (nth (atoi propertyName) propertyNameList))
+                (ModifyPropertyValueByEntityName entityList selectedName confirmList)
+              )
+            )
+            (if (= modifyOrNumberType "1") 
+              (progn 
+                (setq selectedName (GetNeedToNumberPropertyName dataType))
+                (ModifyPropertyValueByEntityName entityList selectedName confirmList)
+              )
+            )
+          )
+        )
+      )
+    )
+  )
+  (unload_dialog dcl_id)
+  (princ)
+)
+
 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
