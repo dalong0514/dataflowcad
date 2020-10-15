@@ -332,25 +332,31 @@ filterAndNumberBox : dialog {
       label = "匹配数据";
       key = "filterBox";
       width = 60;
-      : popup_list { 
-        label = "数据大类";
-        key = "filterPropertyName"; 
-        list = "管道\n集中仪表\n就地仪表\nSIS仪表\n反应釜\n输送泵\n储罐\n换热器\n离心机\n真空泵\n自定义设备";
-        value = "";
-      }
-      : spacer { height = 1; } 
-      : popup_list { 
-        label = "仪表子类型";
-        key = "dataChildrenType"; 
-        list = "温度\n压力\n液位\n流量\n称重\n检测\n开关阀\n温度调节阀\n压力调节阀\n液位调节阀\n流量调节阀";
-        value = "";
-      }
-      : spacer { height = 1; } 
-      : edit_box {
-        label = "筛选管道的通配符匹配";
-        key = "patternValue";
-        mnemonic = "N";
-        value = "";
+      : column {
+        height = 10;
+        : popup_list { 
+          label = "数据大类";
+          key = "filterPropertyName"; 
+          edit_width = 40;
+          list = "管道\n集中仪表\n就地仪表\nSIS仪表\n反应釜\n输送泵\n储罐\n换热器\n离心机\n真空泵\n自定义设备";
+          value = "";
+        }
+        : spacer { height = 1; } 
+        : popup_list { 
+          label = "仪表子类型";
+          key = "dataChildrenType"; 
+          edit_width = 40;
+          list = "温度\n压力\n液位\n流量\n称重\n检测\n开关阀\n温度调节阀\n压力调节阀\n液位调节阀\n流量调节阀";
+          value = "";
+        }
+        : spacer { height = 1; } 
+        : edit_box {
+          label = "管道的通配符匹配";
+          key = "patternValue";
+          edit_width = 41;
+          mnemonic = "N";
+          value = "";
+        }
       }
       : spacer { height = 1; } 
       : list_box { 
@@ -385,11 +391,42 @@ filterAndNumberBox : dialog {
     }
 
     : boxed_radio_column {
-      label = "修改后的数据";
+      label = "自动编号";
       key = "modifyBox";
       width = 60;
+      : column {
+        height = 10;
+        : row {
+          : text {
+            key = "replacedSubstringMsg";
+            label = "物料代号";
+          }
+          : edit_box {
+            key = "replacedSubstring";
+            edit_width = 40;
+            edit_width = 40;
+            mnemonic = "N";
+            value = "";
+          }
+        }
+        : spacer { height = 3; } 
+        : row {
+          : text {
+            key = "propertyValueMsg";
+            label = "编号起点";
+          }
+          : edit_box {
+            key = "propertyValue";
+            edit_width = 40;
+            mnemonic = "N";
+            value = "";
+          }
+        }
+      }
+      : spacer { height = 1; } 
       : list_box { 
         height = 20;
+        label = "编号后的数据";
         key = "modifiedData"; 
         list = "";
         value = "";
@@ -400,32 +437,6 @@ filterAndNumberBox : dialog {
         label = "修改状态：";
       }
       : spacer { height = 2; }
-      : row {
-        : text {
-          key = "replacedSubstringMsg";
-          label = "物料代号：";
-        }
-        : edit_box {
-          key = "replacedSubstring";
-          width = 15;
-          mnemonic = "N";
-          value = "";
-        }
-      }
-      : spacer { height = 3; } 
-      : row {
-        : text {
-          key = "propertyValueMsg";
-          label = "编号起点：";
-        }
-        : edit_box {
-          key = "propertyValue";
-          width = 15;
-          mnemonic = "N";
-          value = "";
-        }
-      }
-      : spacer { height = 3; } 
       : row { 
         fixed_width = true; 
         alignment = centered; 
