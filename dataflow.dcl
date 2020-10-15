@@ -342,7 +342,7 @@ filterAndNumberBox : dialog {
       : popup_list { 
         label = "仪表子类型";
         key = "dataChildrenType"; 
-        list = "温度\n压力\n液位\n流量\n开关阀\n调节阀";
+        list = "温度\n压力\n液位\n流量\n称重\n检测\n开关阀\n温度调节阀\n压力调节阀\n液位调节阀\n流量调节阀";
         value = "";
       }
       : spacer { height = 1; } 
