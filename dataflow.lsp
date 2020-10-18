@@ -1187,6 +1187,8 @@
     (action_tile "btnShowOriginData" "(done_dialog 4)")
     (action_tile "btnPreviewModify" "(done_dialog 5)")
     (action_tile "btnModify" "(done_dialog 6)")
+    (action_tile "btnExportData" "(done_dialog 7)")
+    (action_tile "btnImportData" "(done_dialog 8)")
     
     ; optional setting for the popup_list tile
     (set_tile "filterPropertyName" "0")
@@ -1346,11 +1348,21 @@
         )
       )
     )
+    ; export data button
+    (if (= 7 status)
+      (progn 
+        (if (= confirmList nil)
+          (setq modifyOrNumberStatus 0)
+          (progn 
+            ; export data functon
+          )
+        )
+      )
+    )
   )
   (unload_dialog dcl_id)
   (princ)
 )
-
 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
