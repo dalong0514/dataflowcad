@@ -1149,13 +1149,11 @@
 
 (defun c:foo ()
   (setq sourceDataList '())
-  (setq sourceDataList (append sourceDataList '("PI" "TIA" "1101" "1102")))
-  (setq sourceDataList (append sourceDataList '("PIAA" "T12IA" "YY1101" "1YU102")))
-  (setq sourceDataList (append sourceDataList '("PI" "TIA" "1101" "1102")))
+  (setq sourceDataList (list '("PIDF" "TIA" "1101" "1102") '("PIAA" "T12IA" "YY1101" "1YU102") '("PISD" "TIA" "1101" "1102")))
   (WriteLineToCSVByListUtils sourceDataList)
 )
 
-(defun WriteLineToCSVByListUtils (sourceDataList /)
+(defun WriteLineToCSVByListUtils (sourceDataList / filePtr)
   (setq filePtr (open "D:\\dataflowcad\\data\\data.csv" "w"))
   (foreach item sourceDataList 
     (write-line (strcat (car item) "," (nth 1 item) "," (nth 2 item)) filePtr)
