@@ -1148,11 +1148,18 @@
 )
 
 (defun c:foo ()
-  (setq testList '("PI" "TIA" "1101" "1102"))
-  (setq testList1 '("PIAA" "T12IA" "YY1101" "1YU102"))
+  (setq sourceDataList '())
+  (setq sourceDataList (append sourceDataList '("PI" "TIA" "1101" "1102")))
+  (setq sourceDataList (append sourceDataList '("PIAA" "T12IA" "YY1101" "1YU102")))
+  (setq sourceDataList (append sourceDataList '("PI" "TIA" "1101" "1102")))
+  (WriteLineToCSVByListUtils sourceDataList)
+)
+
+(defun WriteLineToCSVByListUtils (sourceDataList /)
   (setq filePtr (open "D:\\dataflowcad\\data\\data.csv" "w"))
-  (write-line (strcat (car testList) "," (nth 1 testList) "," (nth 2 testList)) filePtr)
-  (write-line (strcat (car testList1) "," (nth 1 testList1) "," (nth 2 testList1)) filePtr)
+  (foreach item sourceDataList 
+    (write-line (strcat (car item) "," (nth 1 item) "," (nth 2 item)) filePtr)
+  )
   (close filePtr)
 )
 
