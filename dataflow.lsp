@@ -1148,11 +1148,12 @@
 )
 
 (defun c:foo ()
-  (set testList '("PI" "TIA" "1101" "1102"))
-  (set testList1 '("PIAA" "T12IA" "YY1101" "1YU102"))
+  (setq testList '("PI" "TIA" "1101" "1102"))
+  (setq testList1 '("PIAA" "T12IA" "YY1101" "1YU102"))
   (setq filePtr (open "D:\\dataflowcad\\data\\data.csv" "w"))
-  (write-line (strcat (car testList) "," (nth 1 testList) "," (nth 2 testList)))
-  (write-line (strcat (car testList1) "," (nth 1 testList1) "," (nth 2 testList1)))
+  (write-line (strcat (car testList) "," (nth 1 testList) "," (nth 2 testList)) filePtr)
+  (write-line (strcat (car testList1) "," (nth 1 testList1) "," (nth 2 testList1)) filePtr)
+  (close filePtr)
 )
 
 (defun c:modifyBlockProperty (/ pipePropertyNameList)
