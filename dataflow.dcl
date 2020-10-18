@@ -537,13 +537,28 @@ filterAndModifyPropertyBox : dialog {
         value = "";
       }
       : spacer { height = 6; } 
-      : button { 
-        key = "btnShowOriginData"; 
-        label = "显示原始数据"; 
-        is_default = "true"; 
+      : row { 
         fixed_width = true; 
         alignment = centered; 
-      } 
+        : button { 
+          key = "btnShowOriginData"; 
+          label = "显示数据"; 
+          is_default = "true"; 
+          fixed_width = true; 
+        } 
+        : spacer { width = 3; } 
+        : button { 
+          key = "btnExportData"; 
+          label = "导出数据"; 
+          is_default = "true"; 
+        } 
+        : spacer { width = 3; } 
+        : button { 
+          key = "btnImportData"; 
+          label = "导入数据"; 
+          is_default = "true"; 
+        } 
+      }
       : spacer { height = 3; } 
     }
 
