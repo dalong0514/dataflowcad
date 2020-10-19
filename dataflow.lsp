@@ -1453,6 +1453,7 @@
     (if (= 6 status)
       (progn 
         (ModifyPropertyValueByEntityHandle importedDataList)
+        (setq importedList nil)
       )
     )
     ; export data button
