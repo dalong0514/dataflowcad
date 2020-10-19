@@ -364,13 +364,9 @@
   (setq csvPropertyString (strcat (cdr (assoc 5 ent)) "," csvPropertyString ))
 )
 
-(defun WritePipeDataToCSVByEntityNameListUtils (entityNameList / filePtr firstRow propertyNameList csvPropertyStringList)
-  (setq filePtr (open "D:\\dataflowcad\\data\\pipeData.csv" "w"))
-  (setq firstRow "数据ID,管道编号,工作介质,工作温度,工作压力,相态,管道起点,管道终点,流程图号,保温材料,")
+(defun WriteDataToCSVByEntityNameListUtils (entityNameList fileDir firstRow propertyNameList / filePtr csvPropertyStringList)
+  (setq filePtr (open fileDir "w"))
   (write-line firstRow filePtr)
-  ; the sort of  property must be consistency with the sort of block in CAD
-  (setq propertyNameList '("PIPENUM" "SUBSTANCE" "TEMP" "PRESSURE" "PHASE" "FROM" "TO" "DRAWNUM" "INSULATION"))
-  (setq csvPropertyString '())
   (foreach item entityNameList 
     (setq csvPropertyStringList (append csvPropertyStringList (list (GetCSVPropertyStringByEntityName item propertyNameList))))
   )
@@ -378,6 +374,14 @@
     (write-line item filePtr)
   )
   (close filePtr)
+)
+
+(defun WritePipeDataToCSVByEntityNameListUtils (entityNameList / fileDir firstRow propertyNameList)
+  (setq fileDir "D:\\dataflowcad\\data\\pipeData.csv")
+  (setq firstRow "数据ID,管道编号,工作介质,工作温度,工作压力,相态,管道起点,管道终点,流程图号,保温材料,")
+  ; the sort of  property must be consistency with the sort of block in CAD
+  (setq propertyNameList '("PIPENUM" "SUBSTANCE" "TEMP" "PRESSURE" "PHASE" "FROM" "TO" "DRAWNUM" "INSULATION"))
+  (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList)
 )
 
 (defun ReplaceAllStirngOfListUtils (newStr originList / i newList)
