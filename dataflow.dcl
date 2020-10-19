@@ -468,14 +468,7 @@ filterAndModifyPropertyBox : dialog {
       key = "filterBox";
       width = 60;
       : popup_list { 
-        label = "数据类型";
-        key = "dataType"; 
-        list = "管道\n仪表\n设备";
-        value = "";
-      }
-      : spacer { height = 1; } 
-      : popup_list { 
-        label = "选择要刷选的属性值";
+        label = "选择要筛选的属性";
         key = "filterPropertyName"; 
         list = "管道编号\n工作介质\n工作温度\n工作压力\n相态\n管道起点\n管道终点\n流程图号\n保温材料";
         value = "";
@@ -572,6 +565,32 @@ filterAndModifyPropertyBox : dialog {
         list = "管道编号\n工作介质\n工作温度\n工作压力\n相态\n管道起点\n管道终点\n流程图号\n保温材料";
         value = "";
       }
+      : spacer { height = 1; } 
+      : row {
+        : text {
+          key = "replacedSubstringMsg";
+          label = "局部字符，默认整体替换";
+        }
+        : edit_box {
+          key = "replacedSubstring";
+          width = 15;
+          mnemonic = "N";
+          value = "";
+        }
+      }
+      : spacer { height = 1; }
+      : row {
+        : text {
+          key = "propertyValueMsg";
+          label = "替换的新字符：";
+        }
+        : edit_box {
+          key = "propertyValue";
+          width = 15;
+          mnemonic = "N";
+          value = "";
+        }
+      }
       : spacer { height = 1; }
       : list_box { 
         height = 20;
@@ -585,32 +604,6 @@ filterAndModifyPropertyBox : dialog {
         label = "修改状态：";
       }
       : spacer { height = 2; }
-      : row {
-        : text {
-          key = "replacedSubstringMsg";
-          label = "局部字符，默认整体替换";
-        }
-        : edit_box {
-          key = "replacedSubstring";
-          width = 15;
-          mnemonic = "N";
-          value = "";
-        }
-      }
-      : spacer { height = 3; } 
-      : row {
-        : text {
-          key = "propertyValueMsg";
-          label = "替换的新字符：";
-        }
-        : edit_box {
-          key = "propertyValue";
-          width = 15;
-          mnemonic = "N";
-          value = "";
-        }
-      }
-      : spacer { height = 3; } 
       : row { 
         fixed_width = true; 
         alignment = centered; 

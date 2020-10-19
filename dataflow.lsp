@@ -1310,7 +1310,7 @@
     (set_tile "propertyValue" "")
     (mode_tile "propertyName" 2)
     (mode_tile "viewPropertyName" 2)
-    (mode_tile "propertyValue" 2)
+    (mode_tile "filterPropertyName" 2)
     (action_tile "propertyName" "(setq propertyName $value)")
     (action_tile "propertyValue" "(setq propertyValue $value)")
     (action_tile "filterPropertyName" "(setq filterPropertyName $value)")
@@ -1340,11 +1340,9 @@
     (if (/= sslen nil)
       (set_tile "msg" (strcat "匹配到的管道数量： " (rtos sslen)))
     )
-    
     (if (= modifyOrNumberStatus 0)
       (set_tile "resultMsg" "请先预览修改")
     )
-    
     (if (/= matchedList nil)
       (progn
         ; setting for saving the existed value of a box
@@ -1357,7 +1355,6 @@
         (start_list "matchedResult" 3)
         (mapcar '(lambda (x) (add_list x)) 
                  matchedList)
-        ;(add_list matchedList)
         (end_list)
       )
     )
