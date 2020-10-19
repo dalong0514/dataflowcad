@@ -389,7 +389,7 @@
     (setq entx (entget (entnext (cdr (assoc -1 entx)))))
   )
   ; add the handle to the start of the csvPropertyString
-  resultList
+  (setq resultList (cons (cdr (assoc 5 ent)) resultList))
 )
 
 (defun GetPropertyValueListListByEntityNameList (entityNameList propertyNameList / resultList)
@@ -1307,7 +1307,7 @@
   )
 )
 
-(defun filterAndModifyBlockPropertyByBoxV2 (propertyNameList tileName dataType / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList previewList confirmList blockDataList entityNameList modifyMessageStatus viewPropertyName importedDataList)
+(defun filterAndModifyBlockPropertyByBoxV2 (propertyNameList tileName dataType / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList confirmList blockDataList entityNameList modifyMessageStatus viewPropertyName importedDataList)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -1381,14 +1381,6 @@
         (end_list)
       )
     )
-    (if (/= previewList nil)
-      (progn
-        (start_list "originData" 3)
-        (mapcar '(lambda (x) (add_list x)) 
-                 previewList)
-        (end_list)
-      )
-    )
     (if (/= importedList nil)
       (progn
         (start_list "originData" 3)
@@ -1414,6 +1406,7 @@
         (setq matchedList (car blockDataList))
         (setq sslen (length matchedList))
         (setq entityNameList (nth 1 blockDataList))
+        (setq importedDataList (GetPropertyValueListListByEntityNameList entityNameList (GetPipePropertyNameList)))
       )
     )
     ; all select button
@@ -1425,16 +1418,13 @@
         (setq matchedList (car blockDataList))
         (setq sslen (length matchedList))
         (setq entityNameList (nth 1 blockDataList))
+        (setq importedDataList (GetPropertyValueListListByEntityNameList entityNameList (GetPipePropertyNameList)))
       )
     )
     ; view button
     (if (= 4 status)
       (progn 
-        (if (= importedDataList nil) 
-          (progn 
-            (setq selectedName (nth (atoi viewPropertyName) propertyNameList))
-            (setq previewList (GetPropertyValueByEntityName entityNameList selectedName))
-          )
+        (if (/= importedDataList nil) 
           (progn 
             (setq selectedName (nth (atoi viewPropertyName) propertyNameList))
             (setq importedList (GetImportedPropertyValueByPropertyName importedDataList selectedName))
@@ -1447,8 +1437,8 @@
       (progn 
         (setq selectedName (nth (atoi propertyName) propertyNameList))
         (if (= replacedSubstring "")
-          (setq confirmList (ReplaceAllStirngOfListUtils propertyValue previewList))
-          (setq confirmList (ReplaceSubstOfListByPatternUtils propertyValue replacedSubstring previewList))
+          (setq confirmList (ReplaceAllStirngOfListUtils propertyValue importedList))
+          (setq confirmList (ReplaceSubstOfListByPatternUtils propertyValue replacedSubstring importedList))
         )
       )
     )
