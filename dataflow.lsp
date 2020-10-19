@@ -396,6 +396,13 @@
     (reverse (cons strData resultList))
 )
 
+(defun StrListToListListUtils (strList / resultList)
+  (foreach item strList 
+    (setq resultList (append resultList (list (StrToListUtils item ","))))
+  )
+  resultList
+)
+
 (defun ReadDataFromCSVUtils (fileDir / filePtr i textLine resultList)
   (setq filePtr (open fileDir "r"))
   (if filePtr 
@@ -1239,7 +1246,8 @@
 (defun c:foo (/ ss entityNameList)
   ;(setq ss (ssget))
   ;(setq entityNameList (GetEntityNameListBySSUtils ss))
-  (ReadPipeDataFromCSV)
+  (setq ss (StrListToListListUtils (ReadPipeDataFromCSV)))
+  (setq ssq (car ss))
 )
 
 (defun c:modifyBlockProperty (/ pipePropertyNameList)
