@@ -1687,8 +1687,13 @@
     (setq entx (entget (entnext (cdr (assoc -1 ent)))))
     (while (= "ATTRIB" (cdr (assoc 0 entx)))
       (setq propertyName (cdr (assoc 2 entx)))
-      (if (= propertyName "PIPENUM")
-        (SwitchPropertyValueFromStringOrList "PL1201" entx i)
+
+      (setq index 0)
+      (repeat (length pipePropertyNameList) 
+        (if (= propertyName (nth index pipePropertyNameList))
+          (SwitchPropertyValueFromStringOrList (nth (+ 1 index) (nth i importedDataList)) entx i)
+        )
+        (setq index (+ 1 index))
       )
       ; get the next property information
       (setq entx (entget (entnext (cdr (assoc -1 entx)))))
