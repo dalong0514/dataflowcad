@@ -392,6 +392,13 @@
   resultList
 )
 
+(defun GetPropertyValueListListByEntityNameList (entityNameList propertyNameList / resultList)
+  (foreach item entityNameList 
+    (setq resultList (append resultList (list (GetPropertyValueListByEntityName item propertyNameList))))
+  )
+  resultList
+)
+
 (defun WriteDataToCSVByEntityNameListUtils (entityNameList fileDir firstRow propertyNameList / filePtr csvPropertyStringList)
   (setq filePtr (open fileDir "w"))
   (write-line firstRow filePtr)
@@ -1274,7 +1281,7 @@
 (defun c:foo (/ ss entityNameList)
   (setq ss (ssget))
   (setq entityNameList (GetEntityNameListBySSUtils ss))
-  (GetPropertyValueListByEntityName (car entityNameList) (GetPipePropertyNameList))
+  (GetPropertyValueListListByEntityNameList entityNameList (GetPipePropertyNameList))
 )
 
 (defun c:modifyBlockProperty (/ pipePropertyNameList)
