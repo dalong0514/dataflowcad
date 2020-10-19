@@ -455,7 +455,7 @@
 
 (defun ReadPipeDataFromCSVUtils (/ fileDir)
   (setq fileDir "D:\\dataflowcad\\data\\pipeData.csv")
-  (ReadDataFromCSV fileDir)
+  (ReadDataFromCSVUtils fileDir)
 )
 
 (defun ReplaceAllStirngOfListUtils (newStr originList / i newList)
@@ -1471,7 +1471,7 @@
           ; 提示信息待开发
           (setq modifyMessageStatus 0)
           (progn 
-            (setq importedDataList (StrListToListListUtils (ReadPipeDataFromCSV)))
+            (setq importedDataList (StrListToListListUtils (ReadPipeDataFromCSVUtils)))
           )
         )
       )
