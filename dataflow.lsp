@@ -337,6 +337,14 @@
   entityNameList
 )
 
+(defun GetEntityHandleListByEntityNameListUtils (entityNameList / entityHandleList i)
+  (setq entityHandleList '())
+  (foreach item entityNameList
+    (setq entityHandleList (append entityHandleList (list (cdr (assoc 5 (entget item))))))
+  )
+  entityHandleList
+)
+
 (defun WritePipeDataToCSVByListUtils (sourceDataList / filePtr)
   (setq filePtr (open "D:\\dataflowcad\\data\\pipeData.csv" "w"))
   (write-line "管道编号,流程图号,工作介质,工作温度,工作压力,相态,管道起点,管道终点,保温材料" filePtr)
@@ -1166,9 +1174,10 @@
   (GetDictValueByKeyUtils dataType dataTypeList needToNumberPropertyNameList)
 )
 
-(defun c:foo ()
+(defun c:foo (/ ss entityNameList)
   (setq ss (ssget))
-  (GetEntityNameListBySS ss)
+  (setq entityNameList (GetEntityNameListBySSUtils ss))
+  (GetEntityHandleListByEntityNameListUtils entityNameList)
 )
 
 (defun c:modifyBlockProperty (/ pipePropertyNameList)
