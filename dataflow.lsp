@@ -1233,7 +1233,7 @@
   )
 )
 
-(defun filterAndModifyBlockPropertyByBoxV2 (propertyNameList tileName dataType / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList previewList confirmList blockDataList APropertyValueList entityNameList modifyOrNumberStatus modifyOrNumberType)
+(defun filterAndModifyBlockPropertyByBoxV2 (propertyNameList tileName dataType / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList previewList confirmList blockDataList APropertyValueList entityNameList modifyOrNumberStatus viewPropertyName)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -1252,20 +1252,20 @@
     ; optional setting for the popup_list tile
     (set_tile "filterPropertyName" "0")
     (set_tile "propertyName" "0")
-    (set_tile "modifyOrNumberType" "0")
+    (set_tile "viewPropertyName" "0")
     ; the default value of input box
     (set_tile "patternValue" "")
     (set_tile "replacedValue" "")
     (set_tile "propertyValue" "")
-    (mode_tile "modifyOrNumberType" 2)
     (mode_tile "propertyName" 2)
+    (mode_tile "viewPropertyName" 2)
     (mode_tile "propertyValue" 2)
     (action_tile "propertyName" "(setq propertyName $value)")
     (action_tile "propertyValue" "(setq propertyValue $value)")
     (action_tile "filterPropertyName" "(setq filterPropertyName $value)")
+    (action_tile "viewPropertyName" "(setq viewPropertyName $value)")
     (action_tile "patternValue" "(setq patternValue $value)")
     (action_tile "replacedSubstring" "(setq replacedSubstring $value)")
-    (action_tile "modifyOrNumberType" "(setq modifyOrNumberType $value)")
     ; init the default data of text
     (if (= nil propertyName)
       (setq propertyName "0")
@@ -1273,8 +1273,8 @@
     (if (= nil filterPropertyName)
       (setq filterPropertyName "0")
     )
-    (if (= nil modifyOrNumberType)
-      (setq modifyOrNumberType "0")
+    (if (= nil viewPropertyName)
+      (setq viewPropertyName "0")
     )
     (if (= nil patternValue)
       (setq patternValue "*")
@@ -1294,19 +1294,11 @@
       (set_tile "resultMsg" "请先预览修改")
     )
     
-    (if (= modifyOrNumberType "1")
-      (progn 
-        (set_tile "replacedSubstringMsg" "物料代号：")
-        (set_tile "propertyValueMsg" "编号起点：")
-      )
-    )
-    
     (if (/= matchedList nil)
       (progn
         ; setting for saving the existed value of a box
         (set_tile "filterPropertyName" filterPropertyName)
         (set_tile "propertyName" propertyName)
-        (set_tile "modifyOrNumberType" modifyOrNumberType)
         (set_tile "patternValue" patternValue)
         (set_tile "replacedSubstring" replacedSubstring)
         (set_tile "propertyValue" propertyValue)
@@ -1367,21 +1359,10 @@
     ; confirm button
     (if (= 5 status)
       (progn 
-        (if (= modifyOrNumberType "0")
-          (progn
-            (setq selectedName (nth (atoi propertyName) propertyNameList))
-            (if (= replacedSubstring "")
-              (setq confirmList (ReplaceAllStirngOfListUtils propertyValue previewList))
-              (setq confirmList (ReplaceSubstOfListByPatternUtils propertyValue replacedSubstring previewList))
-            )
-          )
-        )
-        (if (= modifyOrNumberType "1")
-          (progn
-            (setq selectedName (GetNeedToNumberPropertyName dataType))
-            (setq numberedList (GetNumberedListByStartAndLengthUtils propertyValue replacedSubstring (length previewList)))
-            (setq confirmList (ReplaceNumberOfListByNumberedListUtils numberedList previewList))
-          )
+        (setq selectedName (nth (atoi propertyName) propertyNameList))
+        (if (= replacedSubstring "")
+          (setq confirmList (ReplaceAllStirngOfListUtils propertyValue previewList))
+          (setq confirmList (ReplaceSubstOfListByPatternUtils propertyValue replacedSubstring previewList))
         )
       )
     )
@@ -1391,18 +1372,8 @@
         (if (= confirmList nil)
           (setq modifyOrNumberStatus 0)
           (progn 
-            (if (= modifyOrNumberType "0") 
-              (progn 
-                (setq selectedName (nth (atoi propertyName) propertyNameList))
-                (ModifyPropertyValueByEntityName entityNameList selectedName confirmList)
-              )
-            )
-            (if (= modifyOrNumberType "1") 
-              (progn 
-                (setq selectedName (GetNeedToNumberPropertyName dataType))
-                (ModifyPropertyValueByEntityName entityNameList selectedName confirmList)
-              )
-            )
+            (setq selectedName (nth (atoi propertyName) propertyNameList))
+            (ModifyPropertyValueByEntityName entityNameList selectedName confirmList)
           )
         )
       )
