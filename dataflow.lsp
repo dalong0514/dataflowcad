@@ -1414,8 +1414,8 @@
           (setq modifyOrNumberStatus 0)
           (progn 
             ; export data functon
-            (setq sourceDataList (list '("PIDF" "TIA" "1101" "1102" "PIDF" "TIA" "1101" "1102" "1204") '("PIDF" "TIA" "1101" "1102" "1204" "PIAA" "T12IA" "YY1101" "1YU102") '("PISD" "TIA" "1101" "1102" "PIDF" "TIA" "1101" "1102" "1204")))
-            (WritePipeDataToCSVByListUtils sourceDataList)
+            ;(WritePipeDataToCSVByEntityNameListUtils entityNameList)
+            (princ entityNameList)(princ)
           )
         )
       )
@@ -1487,7 +1487,7 @@
                   (progn 
                     (setq aPropertyValueList (append aPropertyValueList (list (cdr (assoc 1 entx)))))
                     ; the key is listing the blk
-                    (setq entityNameList (append entityList (list blk)))
+                    (setq entityNameList (append entityNameList (list blk)))
                   )
                 )
               )
@@ -1524,7 +1524,7 @@
                   (progn 
                     (setq instrumentFunctionList (append instrumentFunctionList (list (cdr (assoc 1 entx)))))
                     ; the key is listing the blk
-                    (setq entityNameList (append entityList (list blk)))
+                    (setq entityNameList (append entityNameList (list blk)))
                   )
                 )
               )
