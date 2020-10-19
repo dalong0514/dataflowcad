@@ -1273,7 +1273,7 @@
   )
 )
 
-(defun filterAndModifyBlockPropertyByBoxV2 (propertyNameList tileName dataType / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList previewList confirmList blockDataList APropertyValueList entityNameList modifyOrNumberStatus viewPropertyName)
+(defun filterAndModifyBlockPropertyByBoxV2 (propertyNameList tileName dataType / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList previewList confirmList blockDataList APropertyValueList entityNameList modifyOrNumberStatus viewPropertyName importedData)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -1358,6 +1358,14 @@
         (end_list)
       )
     )
+    (if (/= importedList nil)
+      (progn
+        (start_list "originData" 3)
+        (mapcar '(lambda (x) (add_list x)) 
+                 importedList)
+        (end_list)
+      )
+    )
     (if (/= confirmList nil)
       (progn
         (start_list "modifiedData" 3)
@@ -1393,8 +1401,17 @@
     ; view button
     (if (= 4 status)
       (progn 
-        (setq selectedName (nth (atoi viewPropertyName) propertyNameList))
-        (setq previewList (GetPropertyValueByEntityName entityNameList selectedName))
+        (if (= importedData nil) 
+          (progn 
+            (setq selectedName (nth (atoi viewPropertyName) propertyNameList))
+            (setq previewList (GetPropertyValueByEntityName entityNameList selectedName))
+          )
+          (progn 
+            (setq selectedName (nth (atoi viewPropertyName) propertyNameList))
+            ;(setq importedList (GetImportedPropertyValueByPropertyName importedData selectedName))
+            (setq importedList '("dalo" "dju" "yu55"))
+          )
+        )
       )
     )
     ; confirm button
@@ -1426,6 +1443,19 @@
           ; 提示信息待开发
           (setq modifyOrNumberStatus 0)
           (WritePipeDataToCSVByEntityNameListUtils entityNameList)
+        )
+      )
+    )
+    ; import data button
+    (if (= 8 status)
+      (progn 
+        (if (= matchedList nil)
+          ; 提示信息待开发
+          (setq modifyOrNumberStatus 0)
+          (progn 
+            (setq importedData (StrListToListListUtils (ReadPipeDataFromCSV)))
+            (princ importedData)(princ)
+          )
         )
       )
     )
