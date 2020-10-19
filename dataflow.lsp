@@ -1039,7 +1039,7 @@
 )
 
 (defun c:modifyPipeProperty (/ pipePropertyNameList)
-  (setq pipePropertyNameList '("PIPENUM" "DRAWNUM" "SUBSTANCE" "TEMP" "PRESSURE" "PHASE" "FROM" "TO" "INSULATION"))
+  (setq pipePropertyNameList '("PIPENUM" "SUBSTANCE" "TEMP" "PRESSURE" "PHASE" "FROM" "TO" "DRAWNUM" "INSULATION"))
   (filterAndModifyBlockPropertyByBox pipePropertyNameList "filterAndModifyPipeProperty" "Pipe")
 )
 
@@ -1251,13 +1251,13 @@
 )
 
 (defun c:modifyBlockProperty (/ pipePropertyNameList)
-  (setq pipePropertyNameList '("PIPENUM" "DRAWNUM" "SUBSTANCE" "TEMP" "PRESSURE" "PHASE" "FROM" "TO" "INSULATION"))
+  (setq pipePropertyNameList '("PIPENUM" "SUBSTANCE" "TEMP" "PRESSURE" "PHASE" "FROM" "TO" "DRAWNUM" "INSULATION"))
   (filterAndModifyBlockPropertyByBoxV2 pipePropertyNameList "filterAndModifyPropertyBox" "Pipe")
 )
 
 (defun GetPropertyNameListByIndex (index / propertyNameList)
   (if (= index "0") 
-    (setq propertyNameList '("PIPENUM" "DRAWNUM" "SUBSTANCE" "TEMP" "PRESSURE" "PHASE" "FROM" "TO" "INSULATION"))
+    (setq propertyNameList '("PIPENUM" "SUBSTANCE" "TEMP" "PRESSURE" "PHASE" "FROM" "TO" "DRAWNUM" "INSULATION"))
   )
   (if (= index "1") 
     (setq propertyNameList '("TAG" "FUNCTION" "NAME" "DRAWNUM" "LOCATION" "SUBSTANCE" "TEMP" "PRESSURE" "COMMENT" "PHASE" "SORT" "MATERIAL" "INSTALLSIZE" "MIN" "NOMAL" "MAX" "DIRECTION"))

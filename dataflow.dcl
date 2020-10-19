@@ -38,7 +38,7 @@ filterAndModifyPipeProperty : dialog {
       : popup_list { 
         label = "选择用哪个属性值匹配";
         key = "filterPropertyName"; 
-        list = "管道编号\n流程图号\n工作介质\n工作温度\n工作压力\n相态\n管道起点\n管道终点\n保温材料";
+        list = "管道编号\n工作介质\n工作温度\n工作压力\n相态\n管道起点\n管道终点\n流程图号\n保温材料";
         value = "";
       }
       : spacer { height = 1; } 
@@ -87,7 +87,7 @@ filterAndModifyPipeProperty : dialog {
       : popup_list { 
         label = "选择要修改的属性";
         key = "propertyName"; 
-        list = "管道编号\n流程图号\n工作介质\n工作温度\n工作压力\n相态\n管道起点\n管道终点\n保温材料";
+        list = "管道编号\n工作介质\n工作温度\n工作压力\n相态\n管道起点\n管道终点\n流程图号\n保温材料";
         value = "";
       }
       : spacer { height = 1; } 
@@ -477,7 +477,7 @@ filterAndModifyPropertyBox : dialog {
       : popup_list { 
         label = "选择属性值匹配数据";
         key = "filterPropertyName"; 
-        list = "管道编号\n流程图号\n工作介质\n工作温度\n工作压力\n相态\n管道起点\n管道终点\n保温材料";
+        list = "管道编号\n工作介质\n工作温度\n工作压力\n相态\n管道起点\n管道终点\n流程图号\n保温材料";
         value = "";
       }
       : spacer { height = 1; } 
@@ -526,7 +526,7 @@ filterAndModifyPropertyBox : dialog {
       : popup_list { 
         label = "选择要查看的属性";
         key = "viewPropertyName"; 
-        list = "管道编号\n流程图号\n工作介质\n工作温度\n工作压力\n相态\n管道起点\n管道终点\n保温材料";
+        list = "管道编号\n工作介质\n工作温度\n工作压力\n相态\n管道起点\n管道终点\n流程图号\n保温材料";
         value = "";
       }
       : spacer { height = 1; } 
@@ -569,7 +569,7 @@ filterAndModifyPropertyBox : dialog {
       : popup_list { 
         label = "选择要修改的属性";
         key = "propertyName"; 
-        list = "管道编号\n流程图号\n工作介质\n工作温度\n工作压力\n相态\n管道起点\n管道终点\n保温材料";
+        list = "管道编号\n工作介质\n工作温度\n工作压力\n相态\n管道起点\n管道终点\n流程图号\n保温材料";
         value = "";
       }
       : spacer { height = 1; }
