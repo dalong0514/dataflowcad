@@ -1414,8 +1414,7 @@
           (setq modifyOrNumberStatus 0)
           (progn 
             ; export data functon
-            ;(WritePipeDataToCSVByEntityNameListUtils entityNameList)
-            (princ entityNameList)(princ)
+            (WritePipeDataToCSVByEntityNameListUtils entityNameList)
           )
         )
       )
