@@ -1402,11 +1402,16 @@
       (progn 
         (setq ss (GetBlockSSBySelectByDataTypeUtils dataType))
         (setq selectedFilterName (nth (atoi filterPropertyName) propertyNameList))
-        (setq blockDataList (GetAPropertyListAndEntityNameListByPropertyNamePattern ss selectedFilterName patternValue))
-        (setq matchedList (car blockDataList))
-        (setq sslen (length matchedList))
-        (setq entityNameList (nth 1 blockDataList))
-        (setq importedDataList (GetPropertyValueListListByEntityNameList entityNameList (GetPipePropertyNameList)))
+        (if (= patternValue "") 
+          (progn 
+            (setq patternValue "*")
+            (setq blockDataList (GetAPropertyListAndEntityNameListByPropertyNamePattern ss selectedFilterName patternValue))
+            (setq matchedList (car blockDataList))
+            (setq sslen (length matchedList))
+            (setq entityNameList (nth 1 blockDataList))
+            (setq importedDataList (GetPropertyValueListListByEntityNameList entityNameList (GetPipePropertyNameList)))
+          )
+        )
       )
     )
     ; all select button
@@ -1414,11 +1419,16 @@
       (progn 
         (setq ss (GetAllBlockSSByDataTypeUtils dataType))
         (setq selectedFilterName (nth (atoi filterPropertyName) propertyNameList))
-        (setq blockDataList (GetAPropertyListAndEntityNameListByPropertyNamePattern ss selectedFilterName patternValue))
-        (setq matchedList (car blockDataList))
-        (setq sslen (length matchedList))
-        (setq entityNameList (nth 1 blockDataList))
-        (setq importedDataList (GetPropertyValueListListByEntityNameList entityNameList (GetPipePropertyNameList)))
+        (if (= patternValue "") 
+          (progn 
+            (setq patternValue "*")
+            (setq blockDataList (GetAPropertyListAndEntityNameListByPropertyNamePattern ss selectedFilterName patternValue))
+            (setq matchedList (car blockDataList))
+            (setq sslen (length matchedList))
+            (setq entityNameList (nth 1 blockDataList))
+            (setq importedDataList (GetPropertyValueListListByEntityNameList entityNameList (GetPipePropertyNameList)))
+          )
+        )
       )
     )
     ; view button
@@ -1470,9 +1480,7 @@
         (if (= matchedList nil)
           ; 提示信息待开发
           (setq modifyMessageStatus 0)
-          (progn 
-            (setq importedDataList (StrListToListListUtils (ReadPipeDataFromCSVUtils)))
-          )
+          (setq importedDataList (StrListToListListUtils (ReadPipeDataFromCSVUtils)))
         )
       )
     )
