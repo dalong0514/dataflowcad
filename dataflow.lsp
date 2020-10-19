@@ -1307,7 +1307,7 @@
   )
 )
 
-(defun filterAndModifyBlockPropertyByBoxV2 (propertyNameList tileName dataType / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList confirmList blockDataList entityNameList modifyMessageStatus viewPropertyName importedDataList)
+(defun filterAndModifyBlockPropertyByBoxV2 (propertyNameList tileName dataType / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList confirmList blockDataList entityNameList modifyMessageStatus viewPropertyName previewDataList importedDataList)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -1381,6 +1381,14 @@
         (end_list)
       )
     )
+    (if (/= previewList nil)
+      (progn
+        (start_list "originData" 3)
+        (mapcar '(lambda (x) (add_list x)) 
+                 previewList)
+        (end_list)
+      )
+    )
     (if (/= importedList nil)
       (progn
         (start_list "originData" 3)
@@ -1406,7 +1414,7 @@
         (setq matchedList (car blockDataList))
         (setq sslen (length matchedList))
         (setq entityNameList (nth 1 blockDataList))
-        (setq importedDataList (GetPropertyValueListListByEntityNameList entityNameList (GetPipePropertyNameList)))
+        (setq previewDataList (GetPropertyValueListListByEntityNameList entityNameList (GetPipePropertyNameList)))
       )
     )
     ; all select button
@@ -1418,17 +1426,16 @@
         (setq matchedList (car blockDataList))
         (setq sslen (length matchedList))
         (setq entityNameList (nth 1 blockDataList))
-        (setq importedDataList (GetPropertyValueListListByEntityNameList entityNameList (GetPipePropertyNameList)))
+        (setq previewDataList (GetPropertyValueListListByEntityNameList entityNameList (GetPipePropertyNameList)))
       )
     )
     ; view button
     (if (= 4 status)
       (progn 
+        (setq selectedName (nth (atoi viewPropertyName) propertyNameList))
         (if (/= importedDataList nil) 
-          (progn 
-            (setq selectedName (nth (atoi viewPropertyName) propertyNameList))
-            (setq importedList (GetImportedPropertyValueByPropertyName importedDataList selectedName))
-          )
+          (setq importedList (GetImportedPropertyValueByPropertyName importedDataList selectedName))
+          (setq importedList (GetImportedPropertyValueByPropertyName previewDataList selectedName))
         )
       )
     )
@@ -1445,7 +1452,6 @@
     ; modify button
     (if (= 6 status)
       (progn 
-        (princ importedDataList)(princ)
         (ModifyPropertyValueByEntityHandle importedDataList)
       )
     )
@@ -1671,7 +1677,25 @@
     (setq entityNameList (append entityNameList (list (handent item))))
   )
   (setq pipePropertyNameList (GetPipePropertyNameList))
-  (princ entityNameList)(princ)
+  (setq i 0)
+  (repeat (length entityNameList)
+    ; get the entity information of the i(th) block
+    (setq ent (entget (nth i entityNameList)))
+    ; save the entity name of the i(th) block
+    (setq blk (nth i entityNameList))
+    ; get the property information
+    (setq entx (entget (entnext (cdr (assoc -1 ent)))))
+    (while (= "ATTRIB" (cdr (assoc 0 entx)))
+      (setq propertyName (cdr (assoc 2 entx)))
+      (if (= propertyName "PIPENUM")
+        (SwitchPropertyValueFromStringOrList "PL1201" entx i)
+      )
+      ; get the next property information
+      (setq entx (entget (entnext (cdr (assoc -1 entx)))))
+    )
+    (entupd blk)
+    (setq i (+ 1 i))
+  )
 )
 
 (defun SwitchPropertyValueFromStringOrList (propertyValue entx i / oldValue newValue)
