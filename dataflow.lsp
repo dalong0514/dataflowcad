@@ -384,7 +384,19 @@
   (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList)
 )
 
-(defun ReadDataFromCSV (fileDir / filePtr i textLine resultList)
+;; Separates a string using a given delimiter
+;; copy from [http://www.lee-mac.com/stringtolist.html]
+(defun StrToListUtils (strData delimiter / len resultList delimiterPosition)
+    (setq len (1+ (strlen delimiter)))
+    (while (setq delimiterPosition (vl-string-search delimiter strData))
+        (setq resultList (cons (substr strData 1 delimiterPosition) resultList)
+            strData (substr strData (+ delimiterPosition len))
+        )
+    )
+    (reverse (cons strData resultList))
+)
+
+(defun ReadDataFromCSVUtils (fileDir / filePtr i textLine resultList)
   (setq filePtr (open fileDir "r"))
   (if filePtr 
     (progn 
@@ -399,7 +411,7 @@
   (setq resultList (cdr resultList))
 )
 
-(defun ReadPipeDataFromCSV (/ fileDir)
+(defun ReadPipeDataFromCSVUtils (/ fileDir)
   (setq fileDir "D:\\dataflowcad\\data\\pipeData.csv")
   (ReadDataFromCSV fileDir)
 )
