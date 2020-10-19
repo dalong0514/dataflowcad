@@ -1112,7 +1112,7 @@
       (progn 
         (setq ss (GetBlockSSBySelectByDataTypeUtils dataType))
         (setq selectedFilterName (nth (atoi filterPropertyName) propertyNameList))
-        (setq blockDataList (GetBlockAPropertyValueListByPropertyNamePattern ss selectedFilterName patternValue))
+        (setq blockDataList (GetAPropertyListAndEntityNameListByPropertyNamePattern ss selectedFilterName patternValue))
         (setq APropertyValueList (car blockDataList))
         (setq entityList (car (cdr blockDataList)))
         (setq matchedList APropertyValueList)
@@ -1124,7 +1124,7 @@
       (progn 
         (setq ss (GetAllBlockSSByDataTypeUtils dataType))
         (setq selectedFilterName (nth (atoi filterPropertyName) propertyNameList))
-        (setq blockDataList (GetBlockAPropertyValueListByPropertyNamePattern ss selectedFilterName patternValue))
+        (setq blockDataList (GetAPropertyListAndEntityNameListByPropertyNamePattern ss selectedFilterName patternValue))
         (setq APropertyValueList (car blockDataList))
         (setq entityList (car (cdr blockDataList)))
         (setq matchedList APropertyValueList)
@@ -1338,7 +1338,7 @@
       (progn 
         (setq ss (GetBlockSSBySelectByDataTypeUtils dataType))
         (setq selectedFilterName (nth (atoi filterPropertyName) propertyNameList))
-        (setq blockDataList (GetBlockAPropertyValueListByPropertyNamePattern ss selectedFilterName patternValue))
+        (setq blockDataList (GetAPropertyListAndEntityNameListByPropertyNamePattern ss selectedFilterName patternValue))
         (setq APropertyValueList (car blockDataList))
         (setq entityList (car (cdr blockDataList)))
         (setq matchedList APropertyValueList)
@@ -1350,7 +1350,7 @@
       (progn 
         (setq ss (GetAllBlockSSByDataTypeUtils dataType))
         (setq selectedFilterName (nth (atoi filterPropertyName) propertyNameList))
-        (setq blockDataList (GetBlockAPropertyValueListByPropertyNamePattern ss selectedFilterName patternValue))
+        (setq blockDataList (GetAPropertyListAndEntityNameListByPropertyNamePattern ss selectedFilterName patternValue))
         (setq APropertyValueList (car blockDataList))
         (setq entityList (car (cdr blockDataList)))
         (setq matchedList APropertyValueList)
@@ -1465,7 +1465,7 @@
   )
 )
 
-(defun GetBlockAPropertyValueListByPropertyNamePattern (ss selectedName patternValue / i ent blk entx propertyName aPropertyValueList entityList)
+(defun GetAPropertyListAndEntityNameListByPropertyNamePattern (ss selectedName patternValue / i ent blk entx propertyName aPropertyValueList entityList)
   (if (/= ss nil)
     (progn
       (setq i 0)
@@ -1716,11 +1716,11 @@
         ; sort by x cordinate
         (setq ss (SortSelectionSetByXYZ ss))
         (if (= selectedDataType "Pipe") 
-          (setq blockDataList (GetBlockAPropertyValueListByPropertyNamePattern ss "PIPENUM" patternValue))
+          (setq blockDataList (GetAPropertyListAndEntityNameListByPropertyNamePattern ss "PIPENUM" patternValue))
           (progn 
             (if (or (= selectedDataType "InstrumentP") (= selectedDataType "InstrumentL") (= selectedDataType "InstrumentSIS")) 
               (setq blockDataList (GetInstrumentFunctionTagByType dataChildrenType ss))
-              (setq blockDataList (GetBlockAPropertyValueListByPropertyNamePattern ss "TAG" "*"))
+              (setq blockDataList (GetAPropertyListAndEntityNameListByPropertyNamePattern ss "TAG" "*"))
             )
           )
         )
@@ -1737,11 +1737,11 @@
         (setq selectedFilterName (GetNeedToNumberPropertyName selectedDataType))
         (setq ss (GetAllBlockSSByDataTypeUtils selectedDataType))
         (if (= selectedDataType "Pipe") 
-          (setq blockDataList (GetBlockAPropertyValueListByPropertyNamePattern ss "PIPENUM" patternValue))
+          (setq blockDataList (GetAPropertyListAndEntityNameListByPropertyNamePattern ss "PIPENUM" patternValue))
           (progn 
             (if (or (= selectedDataType "InstrumentP") (= selectedDataType "InstrumentL") (= selectedDataType "InstrumentSIS")) 
               (setq blockDataList (GetInstrumentFunctionTagByType dataChildrenType ss))
-              (setq blockDataList (GetBlockAPropertyValueListByPropertyNamePattern ss "TAG" "*"))
+              (setq blockDataList (GetAPropertyListAndEntityNameListByPropertyNamePattern ss "TAG" "*"))
             )
           )
         )
