@@ -365,9 +365,10 @@
 
 (defun WritePipeDataToCSVByEntityNameListUtils (entityNameList / filePtr firstRow propertyNameList csvPropertyStringList)
   (setq filePtr (open "D:\\dataflowcad\\data\\pipeData.csv" "w"))
-  (setq firstRow "管道编号,流程图号,工作介质,工作温度,工作压力,相态,管道起点,管道终点,保温材料,")
+  (setq firstRow "管道编号,工作介质,工作温度,工作压力,相态,管道起点,管道终点,流程图号,保温材料,")
   (write-line firstRow filePtr)
-  (setq propertyNameList '("PIPENUM" "DRAWNUM" "SUBSTANCE" "TEMP" "PRESSURE" "PHASE" "FROM" "TO" "INSULATION"))
+  ; the sort of  property must be consistency with the sort of block in CAD
+  (setq propertyNameList '("PIPENUM" "SUBSTANCE" "TEMP" "PRESSURE" "PHASE" "FROM" "TO" "DRAWNUM" "INSULATION"))
   (setq csvPropertyString '())
   (foreach item entityNameList 
     (setq csvPropertyStringList (append csvPropertyStringList (list (GetBlockPropertyValueOfCSVByEntityName item propertyNameList))))
