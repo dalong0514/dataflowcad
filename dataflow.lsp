@@ -1299,6 +1299,7 @@
         ; setting for saving the existed value of a box
         (set_tile "filterPropertyName" filterPropertyName)
         (set_tile "propertyName" propertyName)
+        (set_tile "viewPropertyName" viewPropertyName)
         (set_tile "patternValue" patternValue)
         (set_tile "replacedSubstring" replacedSubstring)
         (set_tile "propertyValue" propertyValue)
@@ -1349,10 +1350,10 @@
         (setq sslen (length APropertyValueList))
       )
     )
-    ; preview button
+    ; view button
     (if (= 4 status)
       (progn 
-        (setq selectedName (nth (atoi propertyName) propertyNameList))
+        (setq selectedName (nth (atoi viewPropertyName) propertyNameList))
         (setq previewList (GetPropertyValueByEntityName entityNameList selectedName))
       )
     )
