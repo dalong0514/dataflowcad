@@ -1258,7 +1258,7 @@
 (defun c:foo (/ ss entityNameList)
   ;(setq ss (ssget))
   ;(setq entityNameList (GetEntityNameListBySSUtils ss))
-  (GetPipePropertyNameList)
+  (GetImportedDataListIndexByPropertyName "PRESSURE")
 )
 
 (defun c:modifyBlockProperty (/ pipePropertyNameList)
@@ -1481,9 +1481,10 @@
   resultList
 )
 
-(defun GetImportedDataListIndexByPropertyName (/ importedDataListIndex)
-  (setq importedDataListIndex '(1 2 3 4 5 6 7 8 9))
+(defun GetImportedDataListIndexByPropertyName (propertyName / pipePropertyNameList importedDataListIndex result)
   (setq pipePropertyNameList (GetPipePropertyNameList))
+  (setq importedDataListIndex '(1 2 3 4 5 6 7 8 9))
+  (setq result (GetDictValueByKeyUtils propertyName pipePropertyNameList importedDataListIndex))
 )
 
 ;;;-------------------------------------------------------------------------;;;
