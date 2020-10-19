@@ -396,7 +396,7 @@
     )
   )
   (close filePtr)
-  resultList
+  (setq resultList (cdr resultList))
 )
 
 (defun ReadPipeDataFromCSV (/ fileDir)
