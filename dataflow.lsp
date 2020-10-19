@@ -1009,7 +1009,7 @@
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
 
-(defun filterAndModifyBlockPropertyByBox (propertyNameList tileName dataType / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList previewList confirmList blockDataList APropertyValueList entityList modifyOrNumberStatus modifyOrNumberType)
+(defun filterAndModifyBlockPropertyByBox (propertyNameList tileName dataType / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList previewList confirmList blockDataList APropertyValueList entityNameList modifyOrNumberStatus modifyOrNumberType)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -1114,7 +1114,7 @@
         (setq selectedFilterName (nth (atoi filterPropertyName) propertyNameList))
         (setq blockDataList (GetAPropertyListAndEntityNameListByPropertyNamePattern ss selectedFilterName patternValue))
         (setq APropertyValueList (car blockDataList))
-        (setq entityList (car (cdr blockDataList)))
+        (setq entityNameList (car (cdr blockDataList)))
         (setq matchedList APropertyValueList)
         (setq sslen (length APropertyValueList))
       )
@@ -1126,7 +1126,7 @@
         (setq selectedFilterName (nth (atoi filterPropertyName) propertyNameList))
         (setq blockDataList (GetAPropertyListAndEntityNameListByPropertyNamePattern ss selectedFilterName patternValue))
         (setq APropertyValueList (car blockDataList))
-        (setq entityList (car (cdr blockDataList)))
+        (setq entityNameList (car (cdr blockDataList)))
         (setq matchedList APropertyValueList)
         (setq sslen (length APropertyValueList))
       )
@@ -1135,7 +1135,7 @@
     (if (= 4 status)
       (progn 
         (setq selectedName (nth (atoi propertyName) propertyNameList))
-        (setq previewList (GetPropertyValueByEntityName entityList selectedName))
+        (setq previewList (GetPropertyValueByEntityName entityNameList selectedName))
       )
     )
     ; confirm button
@@ -1168,13 +1168,13 @@
             (if (= modifyOrNumberType "0") 
               (progn 
                 (setq selectedName (nth (atoi propertyName) propertyNameList))
-                (ModifyPropertyValueByEntityName entityList selectedName confirmList)
+                (ModifyPropertyValueByEntityName entityNameList selectedName confirmList)
               )
             )
             (if (= modifyOrNumberType "1") 
               (progn 
                 (setq selectedName (GetNeedToNumberPropertyName dataType))
-                (ModifyPropertyValueByEntityName entityList selectedName confirmList)
+                (ModifyPropertyValueByEntityName entityNameList selectedName confirmList)
               )
             )
           )
@@ -1233,7 +1233,7 @@
   )
 )
 
-(defun filterAndModifyBlockPropertyByBoxV2 (propertyNameList tileName dataType / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList previewList confirmList blockDataList APropertyValueList entityList modifyOrNumberStatus modifyOrNumberType)
+(defun filterAndModifyBlockPropertyByBoxV2 (propertyNameList tileName dataType / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList previewList confirmList blockDataList APropertyValueList entityNameList modifyOrNumberStatus modifyOrNumberType)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -1340,7 +1340,7 @@
         (setq selectedFilterName (nth (atoi filterPropertyName) propertyNameList))
         (setq blockDataList (GetAPropertyListAndEntityNameListByPropertyNamePattern ss selectedFilterName patternValue))
         (setq APropertyValueList (car blockDataList))
-        (setq entityList (car (cdr blockDataList)))
+        (setq entityNameList (car (cdr blockDataList)))
         (setq matchedList APropertyValueList)
         (setq sslen (length APropertyValueList))
       )
@@ -1352,7 +1352,7 @@
         (setq selectedFilterName (nth (atoi filterPropertyName) propertyNameList))
         (setq blockDataList (GetAPropertyListAndEntityNameListByPropertyNamePattern ss selectedFilterName patternValue))
         (setq APropertyValueList (car blockDataList))
-        (setq entityList (car (cdr blockDataList)))
+        (setq entityNameList (car (cdr blockDataList)))
         (setq matchedList APropertyValueList)
         (setq sslen (length APropertyValueList))
       )
@@ -1361,7 +1361,7 @@
     (if (= 4 status)
       (progn 
         (setq selectedName (nth (atoi propertyName) propertyNameList))
-        (setq previewList (GetPropertyValueByEntityName entityList selectedName))
+        (setq previewList (GetPropertyValueByEntityName entityNameList selectedName))
       )
     )
     ; confirm button
@@ -1394,13 +1394,13 @@
             (if (= modifyOrNumberType "0") 
               (progn 
                 (setq selectedName (nth (atoi propertyName) propertyNameList))
-                (ModifyPropertyValueByEntityName entityList selectedName confirmList)
+                (ModifyPropertyValueByEntityName entityNameList selectedName confirmList)
               )
             )
             (if (= modifyOrNumberType "1") 
               (progn 
                 (setq selectedName (GetNeedToNumberPropertyName dataType))
-                (ModifyPropertyValueByEntityName entityList selectedName confirmList)
+                (ModifyPropertyValueByEntityName entityNameList selectedName confirmList)
               )
             )
           )
@@ -1465,12 +1465,12 @@
   )
 )
 
-(defun GetAPropertyListAndEntityNameListByPropertyNamePattern (ss selectedName patternValue / i ent blk entx propertyName aPropertyValueList entityList)
+(defun GetAPropertyListAndEntityNameListByPropertyNamePattern (ss selectedName patternValue / i ent blk entx propertyName aPropertyValueList entityNameList)
   (if (/= ss nil)
     (progn
       (setq i 0)
       (setq aPropertyValueList '())
-      (setq entityList '())
+      (setq entityNameList '())
       (repeat (sslength ss)
         (if (/= nil (ssname ss i))
           (progn
@@ -1487,7 +1487,7 @@
                   (progn 
                     (setq aPropertyValueList (append aPropertyValueList (list (cdr (assoc 1 entx)))))
                     ; the key is listing the blk
-                    (setq entityList (append entityList (list blk)))
+                    (setq entityNameList (append entityList (list blk)))
                   )
                 )
               )
@@ -1501,16 +1501,16 @@
       )
     )
   )
-  (list aPropertyValueList entityList)
+  (list aPropertyValueList entityNameList)
 )
 
-(defun GetInstrumentPropertyDataListByFunctionPattern (ss patternValue / i ent blk entx propertyName aPropertyValueList entityList)
+(defun GetInstrumentPropertyDataListByFunctionPattern (ss patternValue / i ent blk entx propertyName aPropertyValueList entityNameList)
   (if (/= ss nil)
     (progn
       (setq i 0)
       (setq instrumentFunctionList '())
       (setq instrumentTagList '())
-      (setq entityList '())
+      (setq entityNameList '())
       (repeat (sslength ss)
         (if (/= nil (ssname ss i))
           (progn
@@ -1524,7 +1524,7 @@
                   (progn 
                     (setq instrumentFunctionList (append instrumentFunctionList (list (cdr (assoc 1 entx)))))
                     ; the key is listing the blk
-                    (setq entityList (append entityList (list blk)))
+                    (setq entityNameList (append entityList (list blk)))
                   )
                 )
               )
@@ -1542,7 +1542,7 @@
     )
   )
   (setq aPropertyValueList (SpliceElementInTwoListUtils instrumentFunctionList instrumentTagList))
-  (list aPropertyValueList entityList)
+  (list aPropertyValueList entityNameList)
 )
 
 (defun SpliceElementInTwoListUtils (firstList secondList / newList i)
@@ -1555,14 +1555,14 @@
   newList
 )
 
-(defun GetPropertyValueByEntityName (entityList selectedName / i ent blk entx propertyName aPropertyValueList)
+(defun GetPropertyValueByEntityName (entityNameList selectedName / i ent blk entx propertyName aPropertyValueList)
   (setq i 0)
   (setq aPropertyValueList '())
-  (repeat (length entityList)
+  (repeat (length entityNameList)
     ; get the entity information of the i(th) block
-    (setq ent (entget (nth i entityList)))
+    (setq ent (entget (nth i entityNameList)))
     ; save the entity name of the i(th) block
-    (setq blk (nth i entityList))
+    (setq blk (nth i entityNameList))
     ; get the property information
     (setq entx (entget (entnext (cdr (assoc -1 ent)))))
     (while (= "ATTRIB" (cdr (assoc 0 entx)))
@@ -1579,13 +1579,13 @@
   aPropertyValueList
 )
 
-(defun ModifyPropertyValueByEntityName (entityList selectedName propertyValue / i ent blk entx propertyName a b)
+(defun ModifyPropertyValueByEntityName (entityNameList selectedName propertyValue / i ent blk entx propertyName a b)
   (setq i 0)
-  (repeat (length entityList)
+  (repeat (length entityNameList)
     ; get the entity information of the i(th) block
-    (setq ent (entget (nth i entityList)))
+    (setq ent (entget (nth i entityNameList)))
     ; save the entity name of the i(th) block
-    (setq blk (nth i entityList))
+    (setq blk (nth i entityNameList))
     ; get the property information
     (setq entx (entget (entnext (cdr (assoc -1 ent)))))
     (while (= "ATTRIB" (cdr (assoc 0 entx)))
@@ -1628,7 +1628,7 @@
   (numberPipelineAndTagByBox dataTypeList "filterAndNumberBox" "Pipe")
 )
 
-(defun numberPipelineAndTagByBox (propertyNameList tileName dataType / dcl_id propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName selectedDataType ss sslen matchedList previewList confirmList blockDataList APropertyValueList entityList modifyOrNumberStatus dataChildrenType)
+(defun numberPipelineAndTagByBox (propertyNameList tileName dataType / dcl_id propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName selectedDataType ss sslen matchedList previewList confirmList blockDataList APropertyValueList entityNameList modifyOrNumberStatus dataChildrenType)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -1725,7 +1725,7 @@
           )
         )
         (setq APropertyValueList (car blockDataList))
-        (setq entityList (car (cdr blockDataList)))
+        (setq entityNameList (car (cdr blockDataList)))
         (setq matchedList APropertyValueList)
         (setq sslen (length APropertyValueList))
       )
@@ -1746,7 +1746,7 @@
           )
         )
         (setq APropertyValueList (car blockDataList))
-        (setq entityList (car (cdr blockDataList)))
+        (setq entityNameList (car (cdr blockDataList)))
         (setq matchedList APropertyValueList)
         (setq sslen (length APropertyValueList))
       )
@@ -1755,7 +1755,7 @@
     (if (= 5 status)
       (progn 
         (setq selectedName (GetNeedToNumberPropertyName selectedDataType))
-        (setq previewList (GetPropertyValueByEntityName entityList selectedName))
+        (setq previewList (GetPropertyValueByEntityName entityNameList selectedName))
         (setq numberedList (GetNumberedListByStartAndLengthUtils propertyValue replacedSubstring (length previewList)))
         (setq confirmList (ReplaceNumberOfListByNumberedListUtils numberedList previewList))
       )
@@ -1767,7 +1767,7 @@
           (setq modifyOrNumberStatus 0)
           (progn 
             (setq selectedName (GetNeedToNumberPropertyName selectedDataType))
-            (ModifyPropertyValueByEntityName entityList selectedName confirmList)
+            (ModifyPropertyValueByEntityName entityNameList selectedName confirmList)
           )
         )
       )
