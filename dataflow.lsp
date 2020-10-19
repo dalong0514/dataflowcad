@@ -1273,7 +1273,7 @@
   )
 )
 
-(defun filterAndModifyBlockPropertyByBoxV2 (propertyNameList tileName dataType / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList previewList confirmList blockDataList APropertyValueList entityNameList modifyOrNumberStatus viewPropertyName importedData)
+(defun filterAndModifyBlockPropertyByBoxV2 (propertyNameList tileName dataType / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList previewList confirmList blockDataList APropertyValueList entityNameList modifyOrNumberStatus viewPropertyName importedDataList)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -1401,15 +1401,14 @@
     ; view button
     (if (= 4 status)
       (progn 
-        (if (= importedData nil) 
+        (if (= importedDataList nil) 
           (progn 
             (setq selectedName (nth (atoi viewPropertyName) propertyNameList))
             (setq previewList (GetPropertyValueByEntityName entityNameList selectedName))
           )
           (progn 
             (setq selectedName (nth (atoi viewPropertyName) propertyNameList))
-            ;(setq importedList (GetImportedPropertyValueByPropertyName importedData selectedName))
-            (setq importedList '("dalo" "dju" "yu55"))
+            (setq importedList (GetImportedPropertyValueByPropertyName importedDataList selectedName))
           )
         )
       )
@@ -1453,8 +1452,8 @@
           ; 提示信息待开发
           (setq modifyOrNumberStatus 0)
           (progn 
-            (setq importedData (StrListToListListUtils (ReadPipeDataFromCSV)))
-            (princ importedData)(princ)
+            (setq importedDataList (StrListToListListUtils (ReadPipeDataFromCSV)))
+            (princ importedDataList)(princ)
           )
         )
       )
@@ -1462,6 +1461,13 @@
   )
   (unload_dialog dcl_id)
   (princ)
+)
+
+(defun GetImportedPropertyValueByPropertyName (importedDataList propertyName / resultList)
+  (foreach item importedDataList 
+    (setq resultList (append resultList (list (nth 1 item))))
+  )
+  resultList
 )
 
 ;;;-------------------------------------------------------------------------;;;
