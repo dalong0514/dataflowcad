@@ -360,12 +360,13 @@
     ; get the next property information
     (setq entx (entget (entnext (cdr (assoc -1 entx)))))
   )
-  csvPropertyString
+  ; add the handle to the start of the csvPropertyString
+  (setq csvPropertyString (strcat (cdr (assoc 5 ent)) "," csvPropertyString ))
 )
 
 (defun WritePipeDataToCSVByEntityNameListUtils (entityNameList / filePtr firstRow propertyNameList csvPropertyStringList)
   (setq filePtr (open "D:\\dataflowcad\\data\\pipeData.csv" "w"))
-  (setq firstRow "管道编号,工作介质,工作温度,工作压力,相态,管道起点,管道终点,流程图号,保温材料,")
+  (setq firstRow "数据ID,管道编号,工作介质,工作温度,工作压力,相态,管道起点,管道终点,流程图号,保温材料,")
   (write-line firstRow filePtr)
   ; the sort of  property must be consistency with the sort of block in CAD
   (setq propertyNameList '("PIPENUM" "SUBSTANCE" "TEMP" "PRESSURE" "PHASE" "FROM" "TO" "DRAWNUM" "INSULATION"))
