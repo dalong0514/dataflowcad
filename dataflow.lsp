@@ -327,6 +327,25 @@
   )
 )
 
+(defun GetEntityNameListBySSUtils (ss / entityNameList i)
+  (setq entityNameList '())
+  (setq i 0)
+  (repeat (sslength ss) 
+    (setq entityNameList (append entityNameList (list (ssname ss i))))
+    (setq i (+ 1 i))
+  )
+  entityNameList
+)
+
+(defun WritePipeDataToCSVByListUtils (sourceDataList / filePtr)
+  (setq filePtr (open "D:\\dataflowcad\\data\\pipeData.csv" "w"))
+  (write-line "管道编号,流程图号,工作介质,工作温度,工作压力,相态,管道起点,管道终点,保温材料" filePtr)
+  (foreach item sourceDataList 
+    (write-line (strcat (car item) "," (nth 1 item) "," (nth 2 item) "," (nth 3 item) "," (nth 4 item) "," (nth 5 item) "," (nth 6 item) "," (nth 7 item) "," (nth 8 item)) filePtr)
+  )
+  (close filePtr)
+)
+
 (defun ReplaceAllStirngOfListUtils (newStr originList / i newList)
   (setq newList '())
   (setq i 0)
@@ -1148,17 +1167,8 @@
 )
 
 (defun c:foo ()
-  (setq sourceDataList (list '("PIDF" "TIA" "1101" "1102" "PIDF" "TIA" "1101" "1102" "1204") '("PIDF" "TIA" "1101" "1102" "1204" "PIAA" "T12IA" "YY1101" "1YU102") '("PISD" "TIA" "1101" "1102" "PIDF" "TIA" "1101" "1102" "1204")))
-  (WritePipeDataToCSVByListUtils sourceDataList)
-)
-
-(defun WritePipeDataToCSVByListUtils (sourceDataList / filePtr)
-  (setq filePtr (open "D:\\dataflowcad\\data\\pipeData.csv" "w"))
-  (write-line "管道编号,流程图号,工作介质,工作温度,工作压力,相态,管道起点,管道终点,保温材料" filePtr)
-  (foreach item sourceDataList 
-    (write-line (strcat (car item) "," (nth 1 item) "," (nth 2 item) "," (nth 3 item) "," (nth 4 item) "," (nth 5 item) "," (nth 6 item) "," (nth 7 item) "," (nth 8 item)) filePtr)
-  )
-  (close filePtr)
+  (setq ss (ssget))
+  (GetEntityNameListBySS ss)
 )
 
 (defun c:modifyBlockProperty (/ pipePropertyNameList)
