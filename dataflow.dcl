@@ -475,7 +475,7 @@ filterAndModifyPropertyBox : dialog {
       }
       : spacer { height = 1; } 
       : popup_list { 
-        label = "选择属性值匹配数据";
+        label = "选择要刷选的属性值";
         key = "filterPropertyName"; 
         list = "管道编号\n工作介质\n工作温度\n工作压力\n相态\n管道起点\n管道终点\n流程图号\n保温材料";
         value = "";
@@ -506,15 +506,21 @@ filterAndModifyPropertyBox : dialog {
         alignment = centered; 
         : button { 
           key = "btnSelect"; 
-          label = "选择要匹配的管道"; 
+          label = "选择匹配管道"; 
           is_default = "true"; 
         } 
         : spacer { width = 3; } 
         : button { 
           key = "btnAll"; 
-          label = "匹配图纸中的全部管道"; 
+          label = "匹配全部管道"; 
           is_default = "true"; 
         }
+        : spacer { width = 3; } 
+        : button { 
+          key = "btnExportData"; 
+          label = "导出数据"; 
+          is_default = "true"; 
+        } 
       }
       : spacer { height = 3; } 
     }
@@ -541,22 +547,16 @@ filterAndModifyPropertyBox : dialog {
         fixed_width = true; 
         alignment = centered; 
         : button { 
+          key = "btnImportData"; 
+          label = "导入数据"; 
+          is_default = "true"; 
+        } 
+        : spacer { width = 3; } 
+        : button { 
           key = "btnShowOriginData"; 
           label = "显示数据"; 
           is_default = "true"; 
           fixed_width = true; 
-        } 
-        : spacer { width = 3; } 
-        : button { 
-          key = "btnExportData"; 
-          label = "导出数据"; 
-          is_default = "true"; 
-        } 
-        : spacer { width = 3; } 
-        : button { 
-          key = "btnImportData"; 
-          label = "导入数据"; 
-          is_default = "true"; 
         } 
       }
       : spacer { height = 3; } 
