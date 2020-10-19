@@ -15,6 +15,18 @@
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
 
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+; Get Constant Data
+
+(defun GetPipePropertyNameList ()
+  '("PIPENUM" "SUBSTANCE" "TEMP" "PRESSURE" "PHASE" "FROM" "TO" "DRAWNUM" "INSULATION")
+)
+
+; Get Constant Data
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+
 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
@@ -376,12 +388,12 @@
   (close filePtr)
 )
 
-(defun WritePipeDataToCSVByEntityNameListUtils (entityNameList / fileDir firstRow propertyNameList)
+(defun WritePipeDataToCSVByEntityNameListUtils (entityNameList / fileDir firstRow pipePropertyNameList)
   (setq fileDir "D:\\dataflowcad\\data\\pipeData.csv")
   (setq firstRow "数据ID,管道编号,工作介质,工作温度,工作压力,相态,管道起点,管道终点,流程图号,保温材料,")
   ; the sort of  property must be consistency with the sort of block in CAD
-  (setq propertyNameList '("PIPENUM" "SUBSTANCE" "TEMP" "PRESSURE" "PHASE" "FROM" "TO" "DRAWNUM" "INSULATION"))
-  (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList)
+  (setq pipePropertyNameList '("PIPENUM" "SUBSTANCE" "TEMP" "PRESSURE" "PHASE" "FROM" "TO" "DRAWNUM" "INSULATION"))
+  (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow pipePropertyNameList)
 )
 
 ;; Separates a string using a given delimiter
@@ -1246,8 +1258,7 @@
 (defun c:foo (/ ss entityNameList)
   ;(setq ss (ssget))
   ;(setq entityNameList (GetEntityNameListBySSUtils ss))
-  (setq ss (StrListToListListUtils (ReadPipeDataFromCSV)))
-  (setq ssq (car ss))
+  (GetPipePropertyNameList)
 )
 
 (defun c:modifyBlockProperty (/ pipePropertyNameList)
@@ -1468,6 +1479,11 @@
     (setq resultList (append resultList (list (nth 1 item))))
   )
   resultList
+)
+
+(defun GetImportedDataListIndexByPropertyName (/ importedDataListIndex)
+  (setq importedDataListIndex '(1 2 3 4 5 6 7 8 9))
+  (setq pipePropertyNameList '("PIPENUM" "SUBSTANCE" "TEMP" "PRESSURE" "PHASE" "FROM" "TO" "DRAWNUM" "INSULATION"))
 )
 
 ;;;-------------------------------------------------------------------------;;;
