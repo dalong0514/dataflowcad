@@ -1464,7 +1464,6 @@
           (setq modifyOrNumberStatus 0)
           (progn 
             (setq importedDataList (StrListToListListUtils (ReadPipeDataFromCSV)))
-            (princ importedDataList)(princ)
           )
         )
       )
@@ -1476,7 +1475,7 @@
 
 (defun GetImportedPropertyValueByPropertyName (importedDataList propertyName / resultList)
   (foreach item importedDataList 
-    (setq resultList (append resultList (list (nth 1 item))))
+    (setq resultList (append resultList (list (nth (GetImportedDataListIndexByPropertyName propertyName) item))))
   )
   resultList
 )
