@@ -345,7 +345,7 @@
   entityHandleList
 )
 
-(defun GetBlockPropertyValueOfCSVByEntityName (entityName propertyNameList / ent entx index propertyName csvPropertyString)
+(defun GetBlockPropertyValueOfCSVByEntityName (entityName propertyNameList / ent entx propertyName csvPropertyString)
   (setq csvPropertyString "")
   (setq ent (entget entityName))
   (setq entx (entget (entnext (cdr (assoc -1 ent)))))
@@ -363,11 +363,17 @@
   csvPropertyString
 )
 
-(defun WritePipeDataToCSVByListUtils (sourceDataList / filePtr)
+(defun WritePipeDataToCSVByEntityNameListUtils (entityNameList / filePtr firstRow propertyNameList csvPropertyStringList)
   (setq filePtr (open "D:\\dataflowcad\\data\\pipeData.csv" "w"))
-  (write-line "管道编号,流程图号,工作介质,工作温度,工作压力,相态,管道起点,管道终点,保温材料" filePtr)
-  (foreach item sourceDataList 
-    (write-line (strcat (car item) "," (nth 1 item) "," (nth 2 item) "," (nth 3 item) "," (nth 4 item) "," (nth 5 item) "," (nth 6 item) "," (nth 7 item) "," (nth 8 item)) filePtr)
+  (setq firstRow "管道编号,流程图号,工作介质,工作温度,工作压力,相态,管道起点,管道终点,保温材料,")
+  (write-line firstRow filePtr)
+  (setq propertyNameList '("PIPENUM" "DRAWNUM" "SUBSTANCE" "TEMP" "PRESSURE" "PHASE" "FROM" "TO" "INSULATION"))
+  (setq csvPropertyString '())
+  (foreach item entityNameList 
+    (setq csvPropertyStringList (append csvPropertyStringList (list (GetBlockPropertyValueOfCSVByEntityName item propertyNameList))))
+  )
+  (foreach item csvPropertyStringList 
+    (write-line item filePtr)
   )
   (close filePtr)
 )
@@ -1195,7 +1201,7 @@
 (defun c:foo (/ ss entityNameList)
   (setq ss (ssget))
   (setq entityNameList (GetEntityNameListBySSUtils ss))
-  (GetBlockPropertyValueOfCSVByEntityName (car entityNameList) '("PIPENUM" "FROM" "TO"))
+  (WritePipeDataToCSVByEntityNameListUtils entityNameList)
 )
 
 (defun c:modifyBlockProperty (/ pipePropertyNameList)
