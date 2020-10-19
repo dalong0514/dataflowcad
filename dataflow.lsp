@@ -384,6 +384,26 @@
   (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList)
 )
 
+(defun ReadDataFromCSV (filePtr / fileDir i textLine resultList)
+  (setq filePtr (open fileDir "r"))
+  (if filePtr 
+    (progn 
+      (setq i 1)
+      (while (setq textLine (read-line filePtr) 
+        (setq resultList (append resultList (list textLine)))
+        (setq i (+ 1 i))
+      ))
+    )
+  )
+  (close filePtr)
+  resultList
+)
+
+(defun ReadPipeDataFromCSV (/ filePtr)
+  (setq fileDir "D:\\dataflowcad\\data\\pipeData.csv")
+  (ReadDataFromCSV fileDir)
+)
+
 (defun ReplaceAllStirngOfListUtils (newStr originList / i newList)
   (setq newList '())
   (setq i 0)
@@ -1204,10 +1224,10 @@
   (GetDictValueByKeyUtils dataType dataTypeList needToNumberPropertyNameList)
 )
 
-(defun c:foo (/ ss entityNameList)
-  (setq ss (ssget))
-  (setq entityNameList (GetEntityNameListBySSUtils ss))
-  (WritePipeDataToCSVByEntityNameListUtils entityNameList)
+(defun c:testFunc (/)
+  ;(setq ss (ssget))
+  ;(setq entityNameList (GetEntityNameListBySSUtils ss))
+  (ReadPipeDataFromCSV)
 )
 
 (defun c:modifyBlockProperty (/ pipePropertyNameList)
