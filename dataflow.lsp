@@ -1448,8 +1448,8 @@
         (if (= confirmList nil)
           (setq modifyMessageStatus 0)
           (progn 
-            (setq selectedName (nth (atoi propertyName) propertyNameList))
-            (ModifyPropertyValueByEntityName entityNameList selectedName confirmList)
+            ;(ModifyPropertyValueByEntityName entityNameList selectedName confirmList)
+            (princ (ModifyPropertyValueByEntityHandle importedDataList))(princ)
           )
         )
       )
@@ -1666,6 +1666,16 @@
     (entupd blk)
     (setq i (+ 1 i))
   )
+)
+
+(defun ModifyPropertyValueByEntityHandle (importedDataList / entityHandleList i ent blk entx propertyName a b)
+  (foreach item importedDataList 
+    (setq entityHandleList (append entityHandleList (list (car item))))
+  )
+  (foreach item entityHandleList 
+    (setq entityNameList (append entityNameList (list (handent item))))
+  )
+  entityNameList
 )
 
 (defun SwitchPropertyValueFromStringOrList (propertyValue entx i / oldValue newValue)
