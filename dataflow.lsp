@@ -1383,11 +1383,9 @@
     (if (= 7 status)
       (progn 
         (if (= matchedList nil)
+          ; 提示信息待开发
           (setq modifyOrNumberStatus 0)
-          (progn 
-            ; export data functon
-            (WritePipeDataToCSVByEntityNameListUtils entityNameList)
-          )
+          (WritePipeDataToCSVByEntityNameListUtils entityNameList)
         )
       )
     )
