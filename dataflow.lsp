@@ -362,7 +362,6 @@
   (setq ent (entget entityName))
   (setq entx (entget (entnext (cdr (assoc -1 ent)))))
   (while (= "ATTRIB" (cdr (assoc 0 entx)))
-    (setq index 0)
     (setq propertyName (cdr (assoc 2 entx)))
     (foreach item propertyNameList 
       (if (= propertyName item) 
@@ -374,6 +373,23 @@
   )
   ; add the handle to the start of the csvPropertyString
   (setq csvPropertyString (strcat (cdr (assoc 5 ent)) "," csvPropertyString ))
+)
+
+(defun GetPropertyValueListByEntityName (entityName propertyNameList / ent entx propertyName csvPropertyString resultList)
+  (setq ent (entget entityName))
+  (setq entx (entget (entnext (cdr (assoc -1 ent)))))
+  (while (= "ATTRIB" (cdr (assoc 0 entx)))
+    (setq propertyName (cdr (assoc 2 entx)))
+    (foreach item propertyNameList 
+      (if (= propertyName item) 
+        (setq resultList (append resultList (list (cdr (assoc 1 entx)))))
+      )
+    )
+    ; get the next property information
+    (setq entx (entget (entnext (cdr (assoc -1 entx)))))
+  )
+  ; add the handle to the start of the csvPropertyString
+  resultList
 )
 
 (defun WriteDataToCSVByEntityNameListUtils (entityNameList fileDir firstRow propertyNameList / filePtr csvPropertyStringList)
@@ -1256,9 +1272,9 @@
 )
 
 (defun c:foo (/ ss entityNameList)
-  ;(setq ss (ssget))
-  ;(setq entityNameList (GetEntityNameListBySSUtils ss))
-  (GetImportedDataListIndexByPropertyName "PRESSURE")
+  (setq ss (ssget))
+  (setq entityNameList (GetEntityNameListBySSUtils ss))
+  (GetPropertyValueListByEntityName (car entityNameList) (GetPipePropertyNameList))
 )
 
 (defun c:modifyBlockProperty (/ pipePropertyNameList)
