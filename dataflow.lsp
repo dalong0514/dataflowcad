@@ -498,8 +498,8 @@
   matchedIndex
 )
 
-(defun GetDictValueByKeyUtils (value keyList ValueList /)
-  (nth (GetIndexforSearchMemberInListUtils value keyList) ValueList)
+(defun GetDictValueByKeyUtils (key keyList ValueList /)
+  (nth (GetIndexforSearchMemberInListUtils key keyList) ValueList)
 )
 ; Utils Function 
 ;;;-------------------------------------------------------------------------;;;
@@ -1483,7 +1483,7 @@
 
 (defun GetImportedDataListIndexByPropertyName (/ importedDataListIndex)
   (setq importedDataListIndex '(1 2 3 4 5 6 7 8 9))
-  (setq pipePropertyNameList '("PIPENUM" "SUBSTANCE" "TEMP" "PRESSURE" "PHASE" "FROM" "TO" "DRAWNUM" "INSULATION"))
+  (setq pipePropertyNameList (GetPipePropertyNameList))
 )
 
 ;;;-------------------------------------------------------------------------;;;
