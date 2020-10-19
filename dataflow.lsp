@@ -345,7 +345,7 @@
   entityHandleList
 )
 
-(defun GetBlockPropertyValueOfCSVByEntityName (entityName propertyNameList / ent entx propertyName csvPropertyString)
+(defun GetCSVPropertyStringByEntityName (entityName propertyNameList / ent entx propertyName csvPropertyString)
   (setq csvPropertyString "")
   (setq ent (entget entityName))
   (setq entx (entget (entnext (cdr (assoc -1 ent)))))
@@ -372,7 +372,7 @@
   (setq propertyNameList '("PIPENUM" "SUBSTANCE" "TEMP" "PRESSURE" "PHASE" "FROM" "TO" "DRAWNUM" "INSULATION"))
   (setq csvPropertyString '())
   (foreach item entityNameList 
-    (setq csvPropertyStringList (append csvPropertyStringList (list (GetBlockPropertyValueOfCSVByEntityName item propertyNameList))))
+    (setq csvPropertyStringList (append csvPropertyStringList (list (GetCSVPropertyStringByEntityName item propertyNameList))))
   )
   (foreach item csvPropertyStringList 
     (write-line item filePtr)
