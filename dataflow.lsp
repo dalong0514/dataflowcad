@@ -1443,9 +1443,31 @@
         (setq selectedName (nth (atoi propertyName) propertyNameList))
         (if (/= propertyValue "") 
           (progn 
-            (if (= replacedSubstring "")
-              (setq confirmList (ReplaceAllStirngOfListUtils propertyValue importedList))
-              (setq confirmList (ReplaceSubstOfListByPatternUtils propertyValue replacedSubstring importedList))
+            (if (= replacedSubstring "") 
+              (if (/= importedDataList nil) 
+                (progn 
+                  ; update importedDataList
+                  (setq importedDataList (ReplaceAllStrDataListByPropertyName importedDataList selectedName propertyValue))
+                  (setq confirmList (GetImportedPropertyValueByPropertyName importedDataList selectedName))
+                )
+                (progn 
+                  ; update previewDataList
+                  (setq importedDataList (ReplaceAllStrDataListByPropertyName previewDataList selectedName propertyValue))
+                  (setq confirmList (GetImportedPropertyValueByPropertyName previewDataList selectedName))
+                )
+              )
+              (if (/= importedDataList nil) 
+                (progn 
+                  ; update importedDataList
+                  (setq importedDataList (ReplaceSubStrDataListByPropertyName importedDataList selectedName propertyValue replacedSubstring))
+                  (setq confirmList (GetImportedPropertyValueByPropertyName importedDataList selectedName))
+                )
+                (progn 
+                  ; update previewDataList
+                  (setq importedDataList (ReplaceSubStrDataListByPropertyName previewDataList selectedName propertyValue replacedSubstring))
+                  (setq confirmList (GetImportedPropertyValueByPropertyName previewDataList selectedName))
+                )
+              )
             )
           )
           (if (/= importedDataList nil) 
@@ -1506,6 +1528,27 @@
   (setq result (GetDictValueByKeyUtils propertyName pipePropertyNameList importedDataListIndex))
 )
 
+(defun ReplaceAllStrDataListByPropertyName (importedDataList propertyName propertyValue / resultDataList)
+  (foreach item importedDataList 
+    (setq resultList (append resultList (list (subst 
+                                                propertyValue 
+                                                (nth (GetImportedDataListIndexByPropertyName propertyName) item) 
+                                                item
+                                              ))))
+  )
+  resultList
+)
+
+(defun ReplaceSubStrDataListByPropertyName (importedDataList propertyName propertyValue replacedSubstring / resultDataList)
+  (foreach item importedDataList 
+    (setq resultList (append resultList (list (subst 
+                                                (StringSubstUtils propertyValue replacedSubstring (nth (GetImportedDataListIndexByPropertyName propertyName) item)) 
+                                                (nth (GetImportedDataListIndexByPropertyName propertyName) item) 
+                                                item
+                                              ))))
+  )
+  resultList
+)
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
 ; Gs Field
