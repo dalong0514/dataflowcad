@@ -1307,7 +1307,7 @@
   )
 )
 
-(defun filterAndModifyBlockPropertyByBoxV2 (propertyNameList tileName dataType / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList confirmList blockDataList entityNameList viewPropertyName previewDataList importedDataList exportMsgBtnStatus importMsgBtnStatus modifyMsgBtnStatus)
+(defun filterAndModifyBlockPropertyByBoxV2 (propertyNameList tileName dataType / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList importedList confirmList blockDataList entityNameList viewPropertyName previewDataList importedDataList exportMsgBtnStatus importMsgBtnStatus modifyMsgBtnStatus)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -1447,25 +1447,15 @@
               (if (/= importedDataList nil) 
                 (progn 
                   ; update importedDataList
-                  (setq importedDataList (ReplaceAllStrDataListByPropertyName importedDataList selectedName propertyValue))
-                  (setq confirmList (GetImportedPropertyValueByPropertyName importedDataList selectedName))
+                  ;(setq importedDataList (ReplaceAllStrDataListByPropertyName importedDataList selectedName propertyValue))
+                  ;(setq confirmList (GetImportedPropertyValueByPropertyName importedDataList selectedName))
+                  (princ importedDataList)
                 )
-                (progn 
-                  ; update previewDataList
-                  (setq importedDataList (ReplaceAllStrDataListByPropertyName previewDataList selectedName propertyValue))
-                  (setq confirmList (GetImportedPropertyValueByPropertyName previewDataList selectedName))
-                )
-              )
-              (if (/= importedDataList nil) 
                 (progn 
                   ; update importedDataList
-                  (setq importedDataList (ReplaceSubStrDataListByPropertyName importedDataList selectedName propertyValue replacedSubstring))
-                  (setq confirmList (GetImportedPropertyValueByPropertyName importedDataList selectedName))
-                )
-                (progn 
-                  ; update previewDataList
-                  (setq importedDataList (ReplaceSubStrDataListByPropertyName previewDataList selectedName propertyValue replacedSubstring))
-                  (setq confirmList (GetImportedPropertyValueByPropertyName previewDataList selectedName))
+                  (setq previewDataList (ReplaceAllStrDataListByPropertyName previewDataList selectedName propertyValue))
+                  ;(setq confirmList (GetImportedPropertyValueByPropertyName previewDataList selectedName))
+                  (princ previewDataList)
                 )
               )
             )
@@ -1530,24 +1520,24 @@
 
 (defun ReplaceAllStrDataListByPropertyName (importedDataList propertyName propertyValue / resultDataList)
   (foreach item importedDataList 
-    (setq resultList (append resultList (list (subst 
+    (setq resultDataList (append resultList (list (subst 
                                                 propertyValue 
                                                 (nth (GetImportedDataListIndexByPropertyName propertyName) item) 
                                                 item
                                               ))))
   )
-  resultList
+  resultDataList
 )
 
 (defun ReplaceSubStrDataListByPropertyName (importedDataList propertyName propertyValue replacedSubstring / resultDataList)
   (foreach item importedDataList 
-    (setq resultList (append resultList (list (subst 
+    (setq resultDataList (append resultList (list (subst 
                                                 (StringSubstUtils propertyValue replacedSubstring (nth (GetImportedDataListIndexByPropertyName propertyName) item)) 
                                                 (nth (GetImportedDataListIndexByPropertyName propertyName) item) 
                                                 item
                                               ))))
   )
-  resultList
+  resultDataList
 )
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
