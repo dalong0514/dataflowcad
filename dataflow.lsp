@@ -1520,9 +1520,9 @@
 
 (defun ReplaceAllStrDataListByPropertyName (importedDataList propertyName propertyValue / resultDataList)
   (foreach item importedDataList 
-    (setq resultDataList (append resultDataList (list (subst 
+    (setq resultDataList (append resultDataList (list (ReplaceListItemByindexUtils 
                                                 propertyValue 
-                                                (nth (GetImportedDataListIndexByPropertyName propertyName) item) 
+                                                (GetImportedDataListIndexByPropertyName propertyName) 
                                                 item
                                               ))))
   )
@@ -1531,9 +1531,9 @@
 
 (defun ReplaceSubStrDataListByPropertyName (importedDataList propertyName propertyValue replacedSubstring / resultDataList)
   (foreach item importedDataList 
-    (setq resultDataList (append resultDataList (list (subst 
+    (setq resultDataList (append resultDataList (list (ReplaceListItemByindexUtils 
                                                 (StringSubstUtils propertyValue replacedSubstring (nth (GetImportedDataListIndexByPropertyName propertyName) item)) 
-                                                (nth (GetImportedDataListIndexByPropertyName propertyName) item) 
+                                                (GetImportedDataListIndexByPropertyName propertyName) 
                                                 item
                                               ))))
   )
@@ -1541,7 +1541,7 @@
 )
 
 ;; copy source code from: http://lee-mac.com/substn.html
-(defun ReplaceListItemByindexUtils ( newItem index originList / i )
+(defun ReplaceListItemByindexUtils (newItem index originList / i)
     (setq i -1)
     (mapcar '(lambda ( x ) (if (= (setq i (1+ i)) index) newItem x)) originList)
 )
