@@ -1369,7 +1369,7 @@
     (if (= importMsgBtnStatus 1)
       (set_tile "importBtnMsg" "导入数据状态：已完成")
     )
-    (if (= modifyMsgBtnStatus 0)
+    (if (= modifyMsgBtnStatus 1)
       (set_tile "modifyBtnMsg" "修改CAD数据状态：已完成")
     )
     (if (/= matchedList nil)
@@ -1450,7 +1450,10 @@
     ; modify button
     (if (= 6 status)
       (progn 
-        (ModifyPropertyValueByEntityHandle importedDataList)
+        (if (/= importedDataList nil) 
+          (ModifyPropertyValueByEntityHandle importedDataList)
+          (ModifyPropertyValueByEntityHandle previewDataList)
+        )
         (setq modifyMsgBtnStatus 1)
       )
     )
