@@ -1307,7 +1307,7 @@
   )
 )
 
-(defun filterAndModifyBlockPropertyByBoxV2 (propertyNameList tileName dataType / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList confirmList blockDataList entityNameList modifyMessageStatus viewPropertyName previewDataList importedDataList exportMsgBtnStatus importMsgBtnStatus)
+(defun filterAndModifyBlockPropertyByBoxV2 (propertyNameList tileName dataType / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList confirmList blockDataList entityNameList viewPropertyName previewDataList importedDataList exportMsgBtnStatus importMsgBtnStatus modifyMsgBtnStatus)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -1369,8 +1369,8 @@
     (if (= importMsgBtnStatus 1)
       (set_tile "importBtnMsg" "导入数据状态：已完成")
     )
-    (if (= modifyMessageStatus 0)
-      (set_tile "resultMsg" "请先预览修改")
+    (if (= modifyMsgBtnStatus 0)
+      (set_tile "modifyBtnMsg" "修改CAD数据状态：已完成")
     )
     (if (/= matchedList nil)
       (progn
@@ -1384,14 +1384,6 @@
         (start_list "matchedResult" 3)
         (mapcar '(lambda (x) (add_list x)) 
                  matchedList)
-        (end_list)
-      )
-    )
-    (if (/= previewList nil)
-      (progn
-        (start_list "originData" 3)
-        (mapcar '(lambda (x) (add_list x)) 
-                 previewList)
         (end_list)
       )
     )
@@ -1459,7 +1451,7 @@
     (if (= 6 status)
       (progn 
         (ModifyPropertyValueByEntityHandle importedDataList)
-        (setq importedList nil)
+        (setq modifyMsgBtnStatus 1)
       )
     )
     ; export data button
