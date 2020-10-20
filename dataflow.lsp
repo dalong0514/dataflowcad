@@ -475,8 +475,6 @@
   (mapcar '(lambda (x) (substr x 2)) originList)
 )
 
-(substr item 2)
-
 (defun ReadDataFromCSVUtils (fileDir / filePtr i textLine resultList)
   (setq filePtr (open fileDir "r"))
   (if filePtr 
@@ -490,6 +488,7 @@
   )
   (close filePtr)
   (setq resultList (cdr resultList))
+  (RemoveFirstCharOfItemInListUtils resultList)
 )
 
 (defun ReadDataFromCSVStrategy (dataType / fileDir)
