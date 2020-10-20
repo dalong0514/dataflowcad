@@ -24,7 +24,7 @@
 )
 
 (defun GetInstrumentPropertyNameList ()
-  '("PIPENUM" "SUBSTANCE" "TEMP" "PRESSURE" "PHASE" "FROM" "TO" "DRAWNUM" "INSULATION")
+  '("TAG" "FUNCTION" "NAME" "DRAWNUM" "LOCATION" "SUBSTANCE" "TEMP" "PRESSURE" "COMMENT" "PHASE" "SORT" "MATERIAL" "INSTALLSIZE" "MIN" "NOMAL" "MAX" "DIRECTION")
 )
 ; Get Constant Data
 ;;;-------------------------------------------------------------------------;;;

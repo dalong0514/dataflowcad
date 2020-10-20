@@ -356,7 +356,7 @@ filterAndModifyInstrumentPropertyBox : dialog {
           label = "选择要筛选的属性";
           edit_width = 40;
           key = "filterPropertyName"; 
-          list = "仪表功能代号\n仪表位号\n高报警\n低报警\n工作介质\n工作温度\n工作压力\n仪表类型\n相态\n所在位置材质\n控制点名称\n所在管道或设备\n最小值\n最大值\n正常值\n流程图号\n备注\n所在位置尺寸\n备注\n安装方向";
+          list = "仪表功能代号\n仪表位号\n工作介质\n工作温度\n工作压力\n仪表类型\n相态\n所在位置材质\n控制点名称\n所在管道或设备\n最小值\n最大值\n正常值\n流程图号\n备注\n所在位置尺寸\n备注\n安装方向";
           value = "";
         }
         : spacer { height = 1; } 
@@ -420,7 +420,7 @@ filterAndModifyInstrumentPropertyBox : dialog {
           label = "选择要查看的属性";
           edit_width = 40;
           key = "viewPropertyName"; 
-          list = "仪表功能代号\n仪表位号\n高报警\n低报警\n工作介质\n工作温度\n工作压力\n仪表类型\n相态\n所在位置材质\n控制点名称\n所在管道或设备\n最小值\n最大值\n正常值\n流程图号\n备注\n所在位置尺寸\n备注\n安装方向";
+          list = "仪表功能代号\n仪表位号\n工作介质\n工作温度\n工作压力\n仪表类型\n相态\n所在位置材质\n控制点名称\n所在管道或设备\n最小值\n最大值\n正常值\n流程图号\n备注\n所在位置尺寸\n备注\n安装方向";
           value = "";
         }
       }
@@ -465,7 +465,7 @@ filterAndModifyInstrumentPropertyBox : dialog {
           label = "选择要修改的属性";
           edit_width = 37;
           key = "propertyName"; 
-          list = "仪表功能代号\n仪表位号\n高报警\n低报警\n工作介质\n工作温度\n工作压力\n仪表类型\n相态\n所在位置材质\n控制点名称\n所在管道或设备\n最小值\n最大值\n正常值\n流程图号\n备注\n所在位置尺寸\n备注\n安装方向";
+          list = "仪表功能代号\n仪表位号\n工作介质\n工作温度\n工作压力\n仪表类型\n相态\n所在位置材质\n控制点名称\n所在管道或设备\n最小值\n最大值\n正常值\n流程图号\n备注\n所在位置尺寸\n备注\n安装方向";
           value = "";
         }
         : spacer { height = 0.5; } 
