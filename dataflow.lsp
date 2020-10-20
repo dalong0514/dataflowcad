@@ -430,6 +430,15 @@
   (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList)
 )
 
+(defun WriteDataToCSVByEntityNameListStrategy (entityNameList dataType /)
+  (if (= dataType "Pipe") 
+    (WritePipeDataToCSVByEntityNameListUtils entityNameList)
+  )
+  (if (= dataType "Instrument") 
+    (WriteInstrumentDataToCSVByEntityNameListUtils entityNameList)
+  )
+)
+
 ;; Separates a string using a given delimiter
 ;; copy from [http://www.lee-mac.com/stringtolist.html]
 (defun StrToListUtils (strData delimiter / len resultList delimiterPosition)
