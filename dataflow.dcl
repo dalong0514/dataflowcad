@@ -1,4 +1,3 @@
-// DCL code
 dataflow :dialog {
   label = "工艺专业导出数据的文件名";
   :edit_box {
@@ -18,158 +17,6 @@ dataflow :dialog {
     alignment = centered;
   }
   cancel_button;
-}
-
-filterAndModifyInstrumentProperty : dialog {
-  label = "筛选匹配特定的仪表并修改块内数据"; 
-  key = "filter_modify_property";
-  : row {
-    : boxed_radio_column {
-      label = "匹配仪表";
-      key = "filterBox";
-      width = 60;
-      : popup_list { 
-        label = "选择模式（批量修改或自动编号）";
-        key = "modifyOrNumberType"; 
-        list = "修改数据\n自动编号";
-        value = "";
-      }
-      : spacer { height = 1; } 
-      : popup_list { 
-        label = "选择用哪个属性值匹配";
-        key = "filterPropertyName"; 
-        list = "仪表位号\n仪表功能代号\n控制点名称\n流程图号\n仪表所在管道或设备\n工作介质\n工作温度\n工作压力\n备注\n相态\n仪表类型\n所在位置材质\n所在位置尺寸\n最小值\n正常值\n最大值\n仪表安装方向";
-        value = "";
-      }
-      : spacer { height = 1; } 
-      : edit_box {
-        label = "通配符匹配模式";
-        key = "patternValue";
-        mnemonic = "N";
-        value = "";
-      }
-      : spacer { height = 1; } 
-      : list_box { 
-        height = 20;
-        label = "匹配到的结果";
-        key = "matchedResult"; 
-        list = "";
-        value = "";
-      }
-      : spacer { height = 1; } 
-      : text {
-        key = "msg";
-        label = "匹配到的仪表数量：";
-      }
-      : spacer { height = 3; } 
-      : row { 
-        fixed_width = true; 
-        alignment = centered; 
-        : button { 
-          key = "btnSelect"; 
-          label = "选择要匹配的仪表"; 
-          is_default = "true"; 
-        } 
-        : spacer { width = 3; } 
-        : button { 
-          key = "btnAll"; 
-          label = "匹配图纸中的全部仪表"; 
-          is_default = "true"; 
-        }
-      }
-      : spacer { height = 3; } 
-    }
-
-    : boxed_radio_column {
-      label = "原始数据";
-      key = "showOriginDataBox";
-      width = 60;
-      : popup_list { 
-        label = "选择要修改的属性";
-        key = "propertyName"; 
-        list = "仪表位号\n仪表功能代号\n控制点名称\n流程图号\n仪表所在管道或设备\n工作介质\n工作温度\n工作压力\n备注\n相态\n仪表类型\n所在位置材质\n所在位置尺寸\n最小值\n正常值\n最大值\n仪表安装方向";
-        value = "";
-      }
-      : spacer { height = 1; } 
-      : list_box { 
-        height = 25;
-        key = "originData"; 
-        list = "";
-        value = "";
-      }
-      : spacer { height = 6; } 
-      : button { 
-        key = "btnShowOriginData"; 
-        label = "显示原始数据"; 
-        is_default = "true"; 
-        fixed_width = true; 
-        alignment = centered; 
-      } 
-      : spacer { height = 3; } 
-    }
-
-    : boxed_radio_column {
-      label = "修改后的数据";
-      key = "modifyBox";
-      width = 60;
-      : list_box { 
-        height = 20;
-        key = "modifiedData"; 
-        list = "";
-        value = "";
-      }
-      : spacer { height = 1; } 
-      : text {
-        key = "resultMsg";
-        label = "修改状态：";
-      }
-      : spacer { height = 2; }
-      : row {
-        : text {
-          key = "replacedSubstringMsg";
-          label = "局部字符，默认整体替换";
-        }
-        : edit_box {
-          key = "replacedSubstring";
-          width = 15;
-          mnemonic = "N";
-          value = "";
-        }
-      }
-      : spacer { height = 3; } 
-      : row {
-        : text {
-          key = "propertyValueMsg";
-          label = "替换的新字符：";
-        }
-        : edit_box {
-          key = "propertyValue";
-          width = 15;
-          mnemonic = "N";
-          value = "";
-        }
-      }
-      : spacer { height = 3; } 
-      : row { 
-        fixed_width = true; 
-        alignment = centered; 
-        : button { 
-          key = "btnPreviewModify"; 
-          label = "预览修改"; 
-          is_default = "true"; 
-        } 
-        : spacer { width = 2; } 
-        : button { 
-          key = "btnModify"; 
-          label = "确认修改"; 
-          is_default = "true"; 
-        } 
-        : spacer { width = 2; } 
-        cancel_button; 
-      }
-      : spacer { height = 3; } 
-    }
-  }
 }
 
 filterAndNumberBox : dialog {
@@ -431,6 +278,194 @@ filterAndModifyPipePropertyBox : dialog {
           edit_width = 37;
           key = "propertyName"; 
           list = "管道编号\n工作介质\n工作温度\n工作压力\n相态\n管道起点\n管道终点\n流程图号\n保温材料";
+          value = "";
+        }
+        : spacer { height = 0.5; } 
+        : row {
+          : text {
+            key = "replacedSubstringMsg";
+            label = "局部字符（默认整体替换）";
+          }
+          : edit_box {
+            key = "replacedSubstring";
+            edit_width = 38;
+            mnemonic = "N";
+            value = "";
+          }
+        }
+        : spacer { height = 0.5; }
+        : row {
+          : text {
+            key = "propertyValueMsg";
+            label = "替换的新字符：";
+          }
+          : edit_box {
+            key = "propertyValue";
+            edit_width = 38;
+            mnemonic = "N";
+            value = "";
+          }
+        }
+        : spacer { height = 1; }
+      }
+      : list_box { 
+        height = 25;
+        key = "modifiedData"; 
+        list = "";
+        value = "";
+      }
+      : spacer { height = 1; } 
+      : text {
+        key = "modifyBtnMsg";
+        label = "修改CAD数据状态：";
+      }
+      : spacer { height = 6; }
+      : row { 
+        fixed_width = true; 
+        alignment = centered; 
+        : button { 
+          key = "btnPreviewModify"; 
+          label = "预览修改"; 
+          is_default = "true"; 
+        } 
+        : spacer { width = 2; } 
+        : button { 
+          key = "btnModify"; 
+          label = "确认修改"; 
+          is_default = "true"; 
+        } 
+        : spacer { width = 2; } 
+        cancel_button; 
+      }
+      : spacer { height = 3; } 
+    }
+  }
+}
+
+filterAndModifyInstrumentPropertyBox : dialog {
+  label = "设计流数据一体化V1.0———批量修改管道数据"; 
+  key = "filterModifyProperty";
+  : row {
+    : boxed_radio_column {
+      label = "匹配数据";
+      key = "filterBox";
+      width = 60;
+      : column {
+        height = 10;
+        : popup_list { 
+          label = "选择要筛选的属性";
+          edit_width = 40;
+          key = "filterPropertyName"; 
+          list = "仪表功能代号\n仪表位号\n高报警\n低报警\n工作介质\n工作温度\n工作压力\n仪表类型\n相态\n所在位置材质\n控制点名称\n所在管道或设备\n最小值\n最大值\n正常值\n流程图号\n备注\n所在位置尺寸\n备注\n安装方向";
+          value = "";
+        }
+        : spacer { height = 1; } 
+        : edit_box {
+          label = "通配符匹配模式";
+          edit_width = 41;
+          key = "patternValue";
+          mnemonic = "N";
+          value = "";
+        }
+        : spacer { height = 1; } 
+      }
+      : list_box { 
+        height = 25;
+        key = "matchedResult"; 
+        list = "";
+        value = "";
+      }
+      : spacer { height = 1; } 
+      : text {
+        key = "msg";
+        label = "匹配到的管道数量：";
+      }
+      : spacer { height = 1; } 
+      : text {
+        key = "exportBtnMsg";
+        label = "导出数据状态：";
+      }
+      : spacer { height = 3; } 
+      : row { 
+        fixed_width = true; 
+        alignment = centered; 
+        : button { 
+          key = "btnSelect"; 
+          label = "选择匹配管道"; 
+          is_default = "true"; 
+        } 
+        : spacer { width = 2; } 
+        : button { 
+          key = "btnAll"; 
+          label = "匹配全部管道"; 
+          is_default = "true"; 
+        }
+        : spacer { width = 2; } 
+        : button { 
+          key = "btnExportData"; 
+          label = "导出数据"; 
+          is_default = "true"; 
+        } 
+      }
+      : spacer { height = 3; } 
+    }
+
+    : boxed_radio_column {
+      label = "原始数据";
+      key = "showOriginDataBox";
+      width = 60;
+      : column {
+        height = 10;
+        : popup_list { 
+          label = "选择要查看的属性";
+          edit_width = 40;
+          key = "viewPropertyName"; 
+          list = "仪表功能代号\n仪表位号\n高报警\n低报警\n工作介质\n工作温度\n工作压力\n仪表类型\n相态\n所在位置材质\n控制点名称\n所在管道或设备\n最小值\n最大值\n正常值\n流程图号\n备注\n所在位置尺寸\n备注\n安装方向";
+          value = "";
+        }
+      }
+      : list_box { 
+        height = 25;
+        key = "originData"; 
+        list = "";
+        value = "";
+      }
+      : spacer { height = 1; } 
+        : text {
+          key = "importBtnMsg";
+          label = "导入数据状态：";
+        }
+      : spacer { height = 6; } 
+      : row { 
+        fixed_width = true; 
+        alignment = centered; 
+        : button { 
+          key = "btnImportData"; 
+          label = "导入数据"; 
+          is_default = "true"; 
+        } 
+        : spacer { width = 2; } 
+        : button { 
+          key = "btnShowOriginData"; 
+          label = "显示数据"; 
+          is_default = "true"; 
+          fixed_width = true; 
+        } 
+      }
+      : spacer { height = 3; } 
+    }
+
+    : boxed_radio_column {
+      label = "修改后的数据";
+      key = "modifyBox";
+      width = 60;
+      : column {
+        height = 10;
+        : popup_list { 
+          label = "选择要修改的属性";
+          edit_width = 37;
+          key = "propertyName"; 
+          list = "仪表功能代号\n仪表位号\n高报警\n低报警\n工作介质\n工作温度\n工作压力\n仪表类型\n相态\n所在位置材质\n控制点名称\n所在管道或设备\n最小值\n最大值\n正常值\n流程图号\n备注\n所在位置尺寸\n备注\n安装方向";
           value = "";
         }
         : spacer { height = 0.5; } 
