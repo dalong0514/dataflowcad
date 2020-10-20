@@ -166,7 +166,7 @@ filterAndModifyPipePropertyBox : dialog {
         height = 10;
         : popup_list { 
           label = "选择要筛选的属性";
-          edit_width = 40;
+          edit_width = 30;
           key = "filterPropertyName"; 
           list = "管道编号\n工作介质\n工作温度\n工作压力\n相态\n管道起点\n管道终点\n流程图号\n保温材料";
           value = "";
@@ -174,7 +174,7 @@ filterAndModifyPipePropertyBox : dialog {
         : spacer { height = 1; } 
         : edit_box {
           label = "通配符匹配模式";
-          edit_width = 41;
+          edit_width = 31;
           key = "patternValue";
           mnemonic = "N";
           value = "";
@@ -230,7 +230,7 @@ filterAndModifyPipePropertyBox : dialog {
         height = 10;
         : popup_list { 
           label = "选择要查看的属性";
-          edit_width = 40;
+          edit_width = 30;
           key = "viewPropertyName"; 
           list = "管道编号\n工作介质\n工作温度\n工作压力\n相态\n管道起点\n管道终点\n流程图号\n保温材料";
           value = "";
@@ -275,7 +275,7 @@ filterAndModifyPipePropertyBox : dialog {
         height = 10;
         : popup_list { 
           label = "选择要修改的属性";
-          edit_width = 37;
+          edit_width = 29;
           key = "propertyName"; 
           list = "管道编号\n工作介质\n工作温度\n工作压力\n相态\n管道起点\n管道终点\n流程图号\n保温材料";
           value = "";
@@ -288,7 +288,7 @@ filterAndModifyPipePropertyBox : dialog {
           }
           : edit_box {
             key = "replacedSubstring";
-            edit_width = 38;
+            edit_width = 30;
             mnemonic = "N";
             value = "";
           }
@@ -301,7 +301,7 @@ filterAndModifyPipePropertyBox : dialog {
           }
           : edit_box {
             key = "propertyValue";
-            edit_width = 38;
+            edit_width = 30;
             mnemonic = "N";
             value = "";
           }
@@ -354,7 +354,7 @@ filterAndModifyInstrumentPropertyBox : dialog {
         height = 10;
         : popup_list { 
           label = "选择要筛选的属性";
-          edit_width = 40;
+          edit_width = 30;
           key = "filterPropertyName"; 
           list = "仪表功能代号\n仪表位号\n工作介质\n工作温度\n工作压力\n仪表类型\n相态\n所在位置材质\n控制点名称\n所在管道或设备\n最小值\n最大值\n正常值\n流程图号\n所在位置尺寸\n备注\n安装方向";
           value = "";
@@ -362,7 +362,7 @@ filterAndModifyInstrumentPropertyBox : dialog {
         : spacer { height = 1; } 
         : edit_box {
           label = "通配符匹配模式";
-          edit_width = 41;
+          edit_width = 31;
           key = "patternValue";
           mnemonic = "N";
           value = "";
@@ -418,7 +418,7 @@ filterAndModifyInstrumentPropertyBox : dialog {
         height = 10;
         : popup_list { 
           label = "选择要查看的属性";
-          edit_width = 40;
+          edit_width = 30;
           key = "viewPropertyName"; 
           list = "仪表功能代号\n仪表位号\n工作介质\n工作温度\n工作压力\n仪表类型\n相态\n所在位置材质\n控制点名称\n所在管道或设备\n最小值\n最大值\n正常值\n流程图号\n所在位置尺寸\n备注\n安装方向";
           value = "";
@@ -463,7 +463,7 @@ filterAndModifyInstrumentPropertyBox : dialog {
         height = 10;
         : popup_list { 
           label = "选择要修改的属性";
-          edit_width = 37;
+          edit_width = 29;
           key = "propertyName"; 
           list = "仪表功能代号\n仪表位号\n工作介质\n工作温度\n工作压力\n仪表类型\n相态\n所在位置材质\n控制点名称\n所在管道或设备\n最小值\n最大值\n正常值\n流程图号\n所在位置尺寸\n备注\n安装方向";
           value = "";
@@ -476,7 +476,7 @@ filterAndModifyInstrumentPropertyBox : dialog {
           }
           : edit_box {
             key = "replacedSubstring";
-            edit_width = 38;
+            edit_width = 30;
             mnemonic = "N";
             value = "";
           }
@@ -489,7 +489,7 @@ filterAndModifyInstrumentPropertyBox : dialog {
           }
           : edit_box {
             key = "propertyValue";
-            edit_width = 38;
+            edit_width = 30;
             mnemonic = "N";
             value = "";
           }
