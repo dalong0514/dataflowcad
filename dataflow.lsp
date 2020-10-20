@@ -1079,6 +1079,11 @@
   (filterAndModifyBlockPropertyByBox instrumentPropertyNameList "filterAndModifyInstrumentProperty" "Instrument")
 )
 
+(defun c:modifyPipeProperty (/ pipePropertyNameList)
+  (setq pipePropertyNameList (GetPipePropertyNameList))
+  (filterAndModifyBlockPropertyByBoxV2 pipePropertyNameList "filterAndModifyPipePropertyBox" "Pipe")
+)
+
 ; the macro for modify data
 ; Gs Field
 ;;;-------------------------------------------------------------------------;;;
@@ -1283,16 +1288,6 @@
   (setq ss (ssget))
   (setq entityNameList (GetEntityNameListBySSUtils ss))
   (GetPropertyValueListListByEntityNameList entityNameList (GetPipePropertyNameList))
-)
-
-(defun c:modifyPipeProperty (/ pipePropertyNameList)
-  (setq pipePropertyNameList (GetPipePropertyNameList))
-  (filterAndModifyBlockPropertyByBoxV2 pipePropertyNameList "filterAndModifyPropertyBox" "Pipe")
-)
-
-(defun c:modifyBlockProperty (/ pipePropertyNameList)
-  (setq pipePropertyNameList '("PIPENUM" "SUBSTANCE" "TEMP" "PRESSURE" "PHASE" "FROM" "TO" "DRAWNUM" "INSULATION"))
-  (filterAndModifyBlockPropertyByBoxV2 pipePropertyNameList "filterAndModifyPropertyBox" "Pipe")
 )
 
 (defun GetPropertyNameListByIndex (index / propertyNameList)

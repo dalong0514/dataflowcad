@@ -307,7 +307,7 @@ filterAndNumberBox : dialog {
   }
 }
 
-filterAndModifyPropertyBox : dialog {
+filterAndModifyPipePropertyBox : dialog {
   label = "设计流数据一体化V1.0———批量修改管道数据"; 
   key = "filterModifyProperty";
   : row {
@@ -327,7 +327,7 @@ filterAndModifyPropertyBox : dialog {
         : spacer { height = 1; } 
         : edit_box {
           label = "通配符匹配模式";
-          edit_width = 40;
+          edit_width = 41;
           key = "patternValue";
           mnemonic = "N";
           value = "";
