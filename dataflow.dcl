@@ -378,7 +378,7 @@ filterAndModifyInstrumentPropertyBox : dialog {
       : spacer { height = 1; } 
       : text {
         key = "msg";
-        label = "匹配到的管道数量：";
+        label = "匹配到的数量：";
       }
       : spacer { height = 1; } 
       : text {
@@ -391,13 +391,13 @@ filterAndModifyInstrumentPropertyBox : dialog {
         alignment = centered; 
         : button { 
           key = "btnSelect"; 
-          label = "选择匹配管道"; 
+          label = "选择匹配仪表"; 
           is_default = "true"; 
         } 
         : spacer { width = 2; } 
         : button { 
           key = "btnAll"; 
-          label = "匹配全部管道"; 
+          label = "匹配全部仪表"; 
           is_default = "true"; 
         }
         : spacer { width = 2; } 

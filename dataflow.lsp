@@ -1078,13 +1078,19 @@
 ; the macro for modify data
 
 (defun c:modifyKsProperty (/ instrumentPropertyNameList)
-  (setq instrumentPropertyNameList '("TAG" "FUNCTION" "NAME" "DRAWNUM" "LOCATION" "SUBSTANCE" "TEMP" "PRESSURE" "COMMENT" "PHASE" "SORT" "MATERIAL" "INSTALLSIZE" "MIN" "NOMAL" "MAX" "DIRECTION"))
+  (setq instrumentPropertyNameList (GetInstrumentPropertyNameList))
   (filterAndModifyBlockPropertyByBox instrumentPropertyNameList "filterAndModifyInstrumentPropertyBox" "Instrument")
 )
 
 (defun c:modifyPipeProperty (/ pipePropertyNameList)
   (setq pipePropertyNameList (GetPipePropertyNameList))
   (filterAndModifyBlockPropertyByBox pipePropertyNameList "filterAndModifyPipePropertyBox" "Pipe")
+)
+
+(defun c:foo (/ ss entityNameList)
+  (setq ss (ssget))
+  (setq entityNameList (GetEntityNameListBySSUtils ss))
+  (GetPropertyValueListListByEntityNameList entityNameList (GetPipePropertyNameList))
 )
 
 ; the macro for modify data
@@ -1108,12 +1114,6 @@
   (setq dataTypeList '("Pipe" "Instrument" "InstrumentP" "InstrumentL" "InstrumentSIS" "Reactor" "Pump" "Tank" "Heater" "Centrifuge" "Vacuum" "CustomEquip"))
   (setq needToNumberPropertyNameList '("PIPENUM" "TAG" "TAG" "TAG" "TAG" "TAG" "TAG" "TAG" "TAG" "TAG" "TAG" "TAG"))
   (GetDictValueByKeyUtils dataType dataTypeList needToNumberPropertyNameList)
-)
-
-(defun c:foo (/ ss entityNameList)
-  (setq ss (ssget))
-  (setq entityNameList (GetEntityNameListBySSUtils ss))
-  (GetPropertyValueListListByEntityNameList entityNameList (GetPipePropertyNameList))
 )
 
 (defun GetPropertyNameListByIndex (index / propertyNameList)
@@ -1188,7 +1188,7 @@
     )
     ; Display the number of selected pipes
     (if (/= sslen nil)
-      (set_tile "msg" (strcat "匹配到的管道数量： " (rtos sslen)))
+      (set_tile "msg" (strcat "匹配到的数量： " (rtos sslen)))
     )
     (if (= exportMsgBtnStatus 1)
       (set_tile "exportBtnMsg" "导出数据状态：已完成")
