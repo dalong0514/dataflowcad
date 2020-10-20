@@ -26,6 +26,16 @@
 (defun GetInstrumentPropertyNameList ()
   '("FUNCTION" "TAG" "SUBSTANCE" "TEMP" "PRESSURE" "SORT" "PHASE" "MATERIAL" "NAME" "LOCATION" "MIN" "MAX" "NOMAL" "DRAWNUM" "INSTALLSIZE" "COMMENT" "DIRECTION")
 )
+
+(defun GetPropertyNameListStrategy (dataType / propertyNameList)
+  (if (= dataType "Pipe") 
+    (setq propertyNameList (GetPipePropertyNameList))
+  )
+  (if (= dataType "Instrument") 
+    (setq propertyNameList (GetInstrumentPropertyNameList))
+  )
+)
+
 ; Get Constant Data
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
@@ -1094,14 +1104,14 @@
 ; Gs Field
 ; the macro for modify data
 
-(defun c:modifyKsProperty (/ instrumentPropertyNameList)
-  (setq instrumentPropertyNameList (GetInstrumentPropertyNameList))
-  (filterAndModifyBlockPropertyByBox instrumentPropertyNameList "filterAndModifyInstrumentPropertyBox" "Instrument")
-)
-
 (defun c:modifyPipeProperty (/ pipePropertyNameList)
   (setq pipePropertyNameList (GetPipePropertyNameList))
   (filterAndModifyBlockPropertyByBox pipePropertyNameList "filterAndModifyPipePropertyBox" "Pipe")
+)
+
+(defun c:modifyKsProperty (/ instrumentPropertyNameList)
+  (setq instrumentPropertyNameList (GetInstrumentPropertyNameList))
+  (filterAndModifyBlockPropertyByBox instrumentPropertyNameList "filterAndModifyInstrumentPropertyBox" "Instrument")
 )
 
 (defun c:foo (/ ss entityNameList)
@@ -1238,7 +1248,7 @@
         (setq matchedList (car blockDataList))
         (setq sslen (length matchedList))
         (setq entityNameList (nth 1 blockDataList))
-        (setq previewDataList (GetPropertyValueListListByEntityNameList entityNameList (GetPipePropertyNameList)))
+        (setq previewDataList (GetPropertyValueListListByEntityNameList entityNameList (GetPropertyNameListStrategy dataType)))
       )
     )
     ; all select button
@@ -1250,7 +1260,7 @@
         (setq matchedList (car blockDataList))
         (setq sslen (length matchedList))
         (setq entityNameList (nth 1 blockDataList))
-        (setq previewDataList (GetPropertyValueListListByEntityNameList entityNameList (GetPipePropertyNameList)))
+        (setq previewDataList (GetPropertyValueListListByEntityNameList entityNameList (GetPropertyNameListStrategy dataType)))
       )
     )
     ; view button
@@ -1348,14 +1358,20 @@
   resultList
 )
 
-(defun GetImportedDataListIndexByPropertyName (propertyName dataType / pipePropertyNameList importedDataListIndex resultList)
+(defun GetImportedDataListIndexByPropertyName (propertyName dataType / propertyNameList importedDataListIndex resultList)
   (if (= dataType "Pipe") 
     (progn 
-      (setq pipePropertyNameList (GetPipePropertyNameList))
+      (setq propertyNameList (GetPipePropertyNameList))
       (setq importedDataListIndex '(1 2 3 4 5 6 7 8 9))
     )
   )
-  (setq resultList (GetDictValueByKeyUtils propertyName pipePropertyNameList importedDataListIndex))
+  (if (= dataType "Instrument") 
+    (progn 
+      (setq propertyNameList (GetInstrumentPropertyNameList))
+      (setq importedDataListIndex '(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17))
+    )
+  )
+  (setq resultList (GetDictValueByKeyUtils propertyName propertyNameList importedDataListIndex))
 )
 
 (defun ReplaceAllStrDataListByPropertyName (importedDataList propertyName propertyValue dataType / resultDataList)
