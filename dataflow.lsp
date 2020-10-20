@@ -1579,7 +1579,7 @@
   )
 )
 
-(defun ModifyPropertyValueByEntityHandle (importedDataList pipePropertyNameList / entityHandleList entityNameList i index ent blk entx propertyName)
+(defun ModifyPropertyValueByEntityHandle (importedDataList propertyNameList / entityHandleList entityNameList i index ent blk entx propertyName)
   (foreach item importedDataList 
     (setq entityHandleList (append entityHandleList (list (car item))))
   )
@@ -1598,8 +1598,8 @@
       (setq propertyName (cdr (assoc 2 entx)))
 
       (setq index 0)
-      (repeat (length pipePropertyNameList) 
-        (if (= propertyName (nth index pipePropertyNameList))
+      (repeat (length propertyNameList) 
+        (if (= propertyName (nth index propertyNameList))
           (SwitchPropertyValueFromStringOrList (nth (+ 1 index) (nth i importedDataList)) entx i)
         )
         (setq index (+ 1 index))
