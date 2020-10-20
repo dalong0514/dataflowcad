@@ -483,8 +483,13 @@
   (setq resultList (cdr resultList))
 )
 
-(defun ReadPipeDataFromCSVUtils (/ fileDir)
-  (setq fileDir "D:\\dataflowcad\\data\\pipeData.csv")
+(defun ReadDataFromCSVStrategy (dataType / fileDir)
+  (if (= dataType "Pipe") 
+    (setq fileDir "D:\\dataflowcad\\data\\pipeData.csv")
+  )
+  (if (= dataType "Instrument") 
+    (setq fileDir "D:\\dataflowcad\\data\\instrumentData.csv")
+  )
   (ReadDataFromCSVUtils fileDir)
 )
 
@@ -1339,7 +1344,7 @@
       (progn 
         (if (= exportMsgBtnStatus 1)
           (progn 
-            (setq importedDataList (StrListToListListUtils (ReadPipeDataFromCSVUtils)))
+            (setq importedDataList (StrListToListListUtils (ReadDataFromCSVStrategy dataType)))
             (setq importMsgBtnStatus 1)
           )
         )
