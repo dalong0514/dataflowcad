@@ -1520,7 +1520,7 @@
 
 (defun ReplaceAllStrDataListByPropertyName (importedDataList propertyName propertyValue / resultDataList)
   (foreach item importedDataList 
-    (setq resultDataList (append resultList (list (subst 
+    (setq resultDataList (append resultDataList (list (subst 
                                                 propertyValue 
                                                 (nth (GetImportedDataListIndexByPropertyName propertyName) item) 
                                                 item
@@ -1531,7 +1531,7 @@
 
 (defun ReplaceSubStrDataListByPropertyName (importedDataList propertyName propertyValue replacedSubstring / resultDataList)
   (foreach item importedDataList 
-    (setq resultDataList (append resultList (list (subst 
+    (setq resultDataList (append resultDataList (list (subst 
                                                 (StringSubstUtils propertyValue replacedSubstring (nth (GetImportedDataListIndexByPropertyName propertyName) item)) 
                                                 (nth (GetImportedDataListIndexByPropertyName propertyName) item) 
                                                 item
