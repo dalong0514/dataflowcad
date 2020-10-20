@@ -343,7 +343,7 @@ filterAndModifyPipePropertyBox : dialog {
 }
 
 filterAndModifyInstrumentPropertyBox : dialog {
-  label = "设计流数据一体化V1.0———批量修改管道数据"; 
+  label = "设计流数据一体化V1.0———批量修改仪表数据"; 
   key = "filterModifyProperty";
   : row {
     : boxed_radio_column {

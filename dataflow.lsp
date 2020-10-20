@@ -1,5 +1,5 @@
-;冯大龙编于2020年
-(princ "\n数据流一体化开发者：冯大龙、谢雨东、华雷、靳淳、陈杰，版本号V-0.7")
+;冯大龙编于 2020 年
+(princ "\n数据流一体化开发者：冯大龙、谢雨东、华雷、靳淳、陈杰，版本号V-1.0")
 (vl-load-com)
 
 ;;;-------------------------------------------------------------------------;;;
@@ -7,7 +7,7 @@
 ; basic Function
 
 (defun c:printVersionInfo (/ versionInfo)
-  (setq versionInfo "最新版本号 V0.7，更新时间：2020-10-10")
+  (setq versionInfo "最新版本号 V1.0，更新时间：2020-10-27")
   (alert versionInfo)(princ)
 )
 
@@ -1076,7 +1076,7 @@
 
 (defun c:modifyKsProperty (/ instrumentPropertyNameList)
   (setq instrumentPropertyNameList '("TAG" "FUNCTION" "NAME" "DRAWNUM" "LOCATION" "SUBSTANCE" "TEMP" "PRESSURE" "COMMENT" "PHASE" "SORT" "MATERIAL" "INSTALLSIZE" "MIN" "NOMAL" "MAX" "DIRECTION"))
-  (filterAndModifyBlockPropertyByBox instrumentPropertyNameList "filterAndModifyInstrumentProperty" "Instrument")
+  (filterAndModifyBlockPropertyByBox instrumentPropertyNameList "filterAndModifyInstrumentPropertyBox" "Instrument")
 )
 
 (defun c:modifyPipeProperty (/ pipePropertyNameList)
