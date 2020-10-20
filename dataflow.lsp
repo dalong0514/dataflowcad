@@ -1452,9 +1452,9 @@
                   (princ importedDataList)
                 )
                 (progn 
-                  ; update importedDataList
+                  ; update previewDataList
                   (setq previewDataList (ReplaceAllStrDataListByPropertyName previewDataList selectedName propertyValue))
-                  ;(setq confirmList (GetImportedPropertyValueByPropertyName previewDataList selectedName))
+                  (setq confirmList (GetImportedPropertyValueByPropertyName previewDataList selectedName))
                   (princ previewDataList)
                 )
               )
@@ -1539,6 +1539,11 @@
   )
   resultDataList
 )
+
+(defun ReplaceListElementByindex ()
+  
+)
+
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
 ; Gs Field
