@@ -315,23 +315,27 @@ filterAndModifyPropertyBox : dialog {
       label = "匹配数据";
       key = "filterBox";
       width = 60;
-      : popup_list { 
-        label = "选择要筛选的属性";
-        key = "filterPropertyName"; 
-        list = "管道编号\n工作介质\n工作温度\n工作压力\n相态\n管道起点\n管道终点\n流程图号\n保温材料";
-        value = "";
+      : column {
+        height = 10;
+        : popup_list { 
+          label = "选择要筛选的属性";
+          edit_width = 40;
+          key = "filterPropertyName"; 
+          list = "管道编号\n工作介质\n工作温度\n工作压力\n相态\n管道起点\n管道终点\n流程图号\n保温材料";
+          value = "";
+        }
+        : spacer { height = 1; } 
+        : edit_box {
+          label = "通配符匹配模式";
+          edit_width = 40;
+          key = "patternValue";
+          mnemonic = "N";
+          value = "";
+        }
+        : spacer { height = 1; } 
       }
-      : spacer { height = 1; } 
-      : edit_box {
-        label = "通配符匹配模式";
-        key = "patternValue";
-        mnemonic = "N";
-        value = "";
-      }
-      : spacer { height = 1; } 
       : list_box { 
-        height = 20;
-        label = "匹配到的结果";
+        height = 25;
         key = "matchedResult"; 
         list = "";
         value = "";
@@ -355,13 +359,13 @@ filterAndModifyPropertyBox : dialog {
           label = "选择匹配管道"; 
           is_default = "true"; 
         } 
-        : spacer { width = 3; } 
+        : spacer { width = 2; } 
         : button { 
           key = "btnAll"; 
           label = "匹配全部管道"; 
           is_default = "true"; 
         }
-        : spacer { width = 3; } 
+        : spacer { width = 2; } 
         : button { 
           key = "btnExportData"; 
           label = "导出数据"; 
@@ -375,13 +379,16 @@ filterAndModifyPropertyBox : dialog {
       label = "原始数据";
       key = "showOriginDataBox";
       width = 60;
-      : popup_list { 
-        label = "选择要查看的属性";
-        key = "viewPropertyName"; 
-        list = "管道编号\n工作介质\n工作温度\n工作压力\n相态\n管道起点\n管道终点\n流程图号\n保温材料";
-        value = "";
+      : column {
+        height = 10;
+        : popup_list { 
+          label = "选择要查看的属性";
+          edit_width = 40;
+          key = "viewPropertyName"; 
+          list = "管道编号\n工作介质\n工作温度\n工作压力\n相态\n管道起点\n管道终点\n流程图号\n保温材料";
+          value = "";
+        }
       }
-      : spacer { height = 1; } 
       : list_box { 
         height = 25;
         key = "originData"; 
@@ -389,11 +396,11 @@ filterAndModifyPropertyBox : dialog {
         value = "";
       }
       : spacer { height = 1; } 
-      : text {
-        key = "importBtnMsg";
-        label = "导入数据状态：";
-      }
-      : spacer { height = 3; } 
+        : text {
+          key = "importBtnMsg";
+          label = "导入数据状态：";
+        }
+      : spacer { height = 6; } 
       : row { 
         fixed_width = true; 
         alignment = centered; 
@@ -402,7 +409,7 @@ filterAndModifyPropertyBox : dialog {
           label = "导入数据"; 
           is_default = "true"; 
         } 
-        : spacer { width = 3; } 
+        : spacer { width = 2; } 
         : button { 
           key = "btnShowOriginData"; 
           label = "显示数据"; 
@@ -417,41 +424,45 @@ filterAndModifyPropertyBox : dialog {
       label = "修改后的数据";
       key = "modifyBox";
       width = 60;
-      : popup_list { 
-        label = "选择要修改的属性";
-        key = "propertyName"; 
-        list = "管道编号\n工作介质\n工作温度\n工作压力\n相态\n管道起点\n管道终点\n流程图号\n保温材料";
-        value = "";
-      }
-      : spacer { height = 1; } 
-      : row {
-        : text {
-          key = "replacedSubstringMsg";
-          label = "局部字符，默认整体替换";
-        }
-        : edit_box {
-          key = "replacedSubstring";
-          width = 15;
-          mnemonic = "N";
+      : column {
+        height = 10;
+        : popup_list { 
+          label = "选择要修改的属性";
+          edit_width = 37;
+          key = "propertyName"; 
+          list = "管道编号\n工作介质\n工作温度\n工作压力\n相态\n管道起点\n管道终点\n流程图号\n保温材料";
           value = "";
         }
-      }
-      : spacer { height = 1; }
-      : row {
-        : text {
-          key = "propertyValueMsg";
-          label = "替换的新字符：";
+        : spacer { height = 0.5; } 
+        : row {
+          : text {
+            key = "replacedSubstringMsg";
+            label = "局部字符（默认整体替换）";
+          }
+          : edit_box {
+            key = "replacedSubstring";
+            edit_width = 38;
+            mnemonic = "N";
+            value = "";
+          }
         }
-        : edit_box {
-          key = "propertyValue";
-          width = 15;
-          mnemonic = "N";
-          value = "";
+        : spacer { height = 0.5; }
+        : row {
+          : text {
+            key = "propertyValueMsg";
+            label = "替换的新字符：";
+          }
+          : edit_box {
+            key = "propertyValue";
+            edit_width = 38;
+            mnemonic = "N";
+            value = "";
+          }
         }
+        : spacer { height = 1; }
       }
-      : spacer { height = 1; }
       : list_box { 
-        height = 20;
+        height = 25;
         key = "modifiedData"; 
         list = "";
         value = "";
@@ -461,7 +472,7 @@ filterAndModifyPropertyBox : dialog {
         key = "modifyBtnMsg";
         label = "修改CAD数据状态：";
       }
-      : spacer { height = 2; }
+      : spacer { height = 6; }
       : row { 
         fixed_width = true; 
         alignment = centered; 
