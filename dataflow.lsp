@@ -387,7 +387,8 @@
     (setq entx (entget (entnext (cdr (assoc -1 entx)))))
   )
   ; add the handle to the start of the csvPropertyString
-  (setq csvPropertyString (strcat (cdr (assoc 5 ent)) "," csvPropertyString ))
+  ; add "'" at the start of handle to prevent being converted by excel - 20201020
+  (setq csvPropertyString (strcat "'" (cdr (assoc 5 ent)) "," csvPropertyString ))
 )
 
 (defun GetPropertyValueListByEntityName (entityName propertyNameList / ent entx propertyName csvPropertyString resultList)
@@ -469,6 +470,12 @@
   )
   resultList
 )
+
+(defun RemoveFirstCharOfItemInListUtils (originList /) 
+  (mapcar '(lambda (x) (substr x 2)) originList)
+)
+
+(substr item 2)
 
 (defun ReadDataFromCSVUtils (fileDir / filePtr i textLine resultList)
   (setq filePtr (open fileDir "r"))
@@ -1124,7 +1131,7 @@
 (defun c:foo (/ ss entityNameList)
   (setq ss (ssget))
   (setq entityNameList (GetEntityNameListBySSUtils ss))
-  (GetPropertyValueListListByEntityNameList entityNameList (GetPipePropertyNameList))
+  (RemoveFirstCharOfItemInListUtils '("'jdoit,edh" "'dhjfhu,iuid"))
 )
 
 ; the macro for modify data
