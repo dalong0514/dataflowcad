@@ -1336,7 +1336,7 @@
       (progn 
         (if (/= matchedList nil)
           (progn 
-            (WritePipeDataToCSVByEntityNameListUtils entityNameList)
+            (WriteDataToCSVByEntityNameListStrategy entityNameList dataType)
             (setq exportMsgBtnStatus 1)
           )
         )
