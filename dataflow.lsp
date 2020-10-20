@@ -1540,8 +1540,10 @@
   resultDataList
 )
 
-(defun ReplaceListElementByindex ()
-  
+;; copy source code from: http://lee-mac.com/substn.html
+(defun ReplaceListItemByindexUtils ( newItem index originList / i )
+    (setq i -1)
+    (mapcar '(lambda ( x ) (if (= (setq i (1+ i)) index) newItem x)) originList)
 )
 
 ;;;-------------------------------------------------------------------------;;;
