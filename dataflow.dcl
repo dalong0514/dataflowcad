@@ -161,7 +161,7 @@ filterAndModifyPipePropertyBox : dialog {
     : boxed_radio_column {
       label = "匹配数据";
       key = "filterBox";
-      width = 60;
+      width = 50;
       : column {
         height = 10;
         : popup_list { 
@@ -203,16 +203,16 @@ filterAndModifyPipePropertyBox : dialog {
         alignment = centered; 
         : button { 
           key = "btnSelect"; 
-          label = "选择匹配管道"; 
+          label = "选择管道"; 
           is_default = "true"; 
         } 
-        : spacer { width = 2; } 
+        : spacer { width = 1; } 
         : button { 
           key = "btnAll"; 
-          label = "匹配全部管道"; 
+          label = "匹配全部"; 
           is_default = "true"; 
         }
-        : spacer { width = 2; } 
+        : spacer { width = 1; } 
         : button { 
           key = "btnExportData"; 
           label = "导出数据"; 
@@ -225,7 +225,7 @@ filterAndModifyPipePropertyBox : dialog {
     : boxed_radio_column {
       label = "原始数据";
       key = "showOriginDataBox";
-      width = 60;
+      width = 50;
       : column {
         height = 10;
         : popup_list { 
@@ -256,7 +256,7 @@ filterAndModifyPipePropertyBox : dialog {
           label = "导入数据"; 
           is_default = "true"; 
         } 
-        : spacer { width = 2; } 
+        : spacer { width = 1; } 
         : button { 
           key = "btnShowOriginData"; 
           label = "显示数据"; 
@@ -270,7 +270,7 @@ filterAndModifyPipePropertyBox : dialog {
     : boxed_radio_column {
       label = "修改后的数据";
       key = "modifyBox";
-      width = 60;
+      width = 50;
       : column {
         height = 10;
         : popup_list { 
@@ -328,13 +328,13 @@ filterAndModifyPipePropertyBox : dialog {
           label = "预览修改"; 
           is_default = "true"; 
         } 
-        : spacer { width = 2; } 
+        : spacer { width = 1; } 
         : button { 
           key = "btnModify"; 
           label = "确认修改"; 
           is_default = "true"; 
         } 
-        : spacer { width = 2; } 
+        : spacer { width = 1; } 
         cancel_button; 
       }
       : spacer { height = 3; } 
@@ -349,7 +349,7 @@ filterAndModifyInstrumentPropertyBox : dialog {
     : boxed_radio_column {
       label = "匹配数据";
       key = "filterBox";
-      width = 60;
+      width = 50;
       : column {
         height = 10;
         : popup_list { 
@@ -391,16 +391,16 @@ filterAndModifyInstrumentPropertyBox : dialog {
         alignment = centered; 
         : button { 
           key = "btnSelect"; 
-          label = "选择匹配仪表"; 
+          label = "选择仪表"; 
           is_default = "true"; 
         } 
-        : spacer { width = 2; } 
+        : spacer { width = 1; } 
         : button { 
           key = "btnAll"; 
-          label = "匹配全部仪表"; 
+          label = "匹配全部"; 
           is_default = "true"; 
         }
-        : spacer { width = 2; } 
+        : spacer { width = 1; } 
         : button { 
           key = "btnExportData"; 
           label = "导出数据"; 
@@ -413,7 +413,7 @@ filterAndModifyInstrumentPropertyBox : dialog {
     : boxed_radio_column {
       label = "原始数据";
       key = "showOriginDataBox";
-      width = 60;
+      width = 50;
       : column {
         height = 10;
         : popup_list { 
@@ -444,7 +444,7 @@ filterAndModifyInstrumentPropertyBox : dialog {
           label = "导入数据"; 
           is_default = "true"; 
         } 
-        : spacer { width = 2; } 
+        : spacer { width = 1; } 
         : button { 
           key = "btnShowOriginData"; 
           label = "显示数据"; 
@@ -458,7 +458,7 @@ filterAndModifyInstrumentPropertyBox : dialog {
     : boxed_radio_column {
       label = "修改后的数据";
       key = "modifyBox";
-      width = 60;
+      width = 50;
       : column {
         height = 10;
         : popup_list { 
@@ -516,13 +516,13 @@ filterAndModifyInstrumentPropertyBox : dialog {
           label = "预览修改"; 
           is_default = "true"; 
         } 
-        : spacer { width = 2; } 
+        : spacer { width = 1; } 
         : button { 
           key = "btnModify"; 
           label = "确认修改"; 
           is_default = "true"; 
         } 
-        : spacer { width = 2; } 
+        : spacer { width = 1; } 
         cancel_button; 
       }
       : spacer { height = 3; } 
