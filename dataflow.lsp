@@ -34,6 +34,8 @@
   (if (= dataType "Instrument") 
     (setq propertyNameList (GetInstrumentPropertyNameList))
   )
+  ; must give the return
+  propertyNameList
 )
 
 ; Get Constant Data
@@ -1322,8 +1324,8 @@
     (if (= 6 status)
       (progn 
         (if (/= importedDataList nil) 
-          (ModifyPropertyValueByEntityHandle importedDataList)
-          (ModifyPropertyValueByEntityHandle previewDataList)
+          (ModifyPropertyValueByEntityHandle importedDataList (GetPropertyNameListStrategy dataType))
+          (ModifyPropertyValueByEntityHandle previewDataList (GetPropertyNameListStrategy dataType))
         )
         (setq modifyMsgBtnStatus 1)
       )
@@ -1577,14 +1579,13 @@
   )
 )
 
-(defun ModifyPropertyValueByEntityHandle (importedDataList / entityHandleList entityNameList pipePropertyNameList i index ent blk entx propertyName)
+(defun ModifyPropertyValueByEntityHandle (importedDataList pipePropertyNameList / entityHandleList entityNameList i index ent blk entx propertyName)
   (foreach item importedDataList 
     (setq entityHandleList (append entityHandleList (list (car item))))
   )
   (foreach item entityHandleList 
     (setq entityNameList (append entityNameList (list (handent item))))
   )
-  (setq pipePropertyNameList (GetPipePropertyNameList))
   (setq i 0)
   (repeat (length entityNameList)
     ; get the entity information of the i(th) block
