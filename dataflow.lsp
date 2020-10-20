@@ -1307,7 +1307,7 @@
   )
 )
 
-(defun filterAndModifyBlockPropertyByBoxV2 (propertyNameList tileName dataType / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList confirmList blockDataList entityNameList modifyMessageStatus viewPropertyName previewDataList importedDataList)
+(defun filterAndModifyBlockPropertyByBoxV2 (propertyNameList tileName dataType / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList confirmList blockDataList entityNameList modifyMessageStatus viewPropertyName previewDataList importedDataList exportMsgBtnStatus importMsgBtnStatus)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -1362,6 +1362,12 @@
     ; Display the number of selected pipes
     (if (/= sslen nil)
       (set_tile "msg" (strcat "匹配到的管道数量： " (rtos sslen)))
+    )
+    (if (= exportMsgBtnStatus 1)
+      (set_tile "exportBtnMsg" "导出数据状态：已完成")
+    )
+    (if (= importMsgBtnStatus 1)
+      (set_tile "importBtnMsg" "导入数据状态：已完成")
     )
     (if (= modifyMessageStatus 0)
       (set_tile "resultMsg" "请先预览修改")
@@ -1459,24 +1465,27 @@
     ; export data button
     (if (= 7 status)
       (progn 
-        (if (= matchedList nil)
-          ; 提示信息待开发
-          (setq modifyMessageStatus 0)
-          (WritePipeDataToCSVByEntityNameListUtils entityNameList)
+        (if (/= matchedList nil)
+          (progn 
+            (WritePipeDataToCSVByEntityNameListUtils entityNameList)
+            (setq exportMsgBtnStatus 1)
+          )
         )
       )
     )
     ; import data button
     (if (= 8 status)
       (progn 
-        (if (= matchedList nil)
-          ; 提示信息待开发
-          (setq modifyMessageStatus 0)
-          (setq importedDataList (StrListToListListUtils (ReadPipeDataFromCSVUtils)))
+        (if (= exportMsgBtnStatus 1)
+          (progn 
+            (setq importedDataList (StrListToListListUtils (ReadPipeDataFromCSVUtils)))
+            (setq importMsgBtnStatus 1)
+          )
         )
       )
     )
   )
+  (setq importedList nil)
   (unload_dialog dcl_id)
   (princ)
 )

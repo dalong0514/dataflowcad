@@ -493,6 +493,11 @@ filterAndModifyPropertyBox : dialog {
         key = "msg";
         label = "匹配到的管道数量：";
       }
+      : spacer { height = 1; } 
+      : text {
+        key = "exportBtnMsg";
+        label = "导出数据状态：";
+      }
       : spacer { height = 3; } 
       : row { 
         fixed_width = true; 
@@ -535,7 +540,12 @@ filterAndModifyPropertyBox : dialog {
         list = "";
         value = "";
       }
-      : spacer { height = 6; } 
+      : spacer { height = 1; } 
+      : text {
+        key = "importBtnMsg";
+        label = "导入数据状态：";
+      }
+      : spacer { height = 3; } 
       : row { 
         fixed_width = true; 
         alignment = centered; 
