@@ -1112,15 +1112,12 @@
 ; Gs Field
 ; Generate Entity in CAD
 
-(defun c:EquipTag (/ insPt equipInfoList equipTag equipName i tag name)
+(defun c:EquipTag (/ insPt equipInfoList i tag name)
   (setvar "ATTREQ" 1)
   (setvar "ATTDIA" 0)
   (setq ss (GetEquipmentSSBySelectUtils))
   (setq equipInfoList (GetEquipTagList ss))
-  (setq equipTag (car equipInfoList))
-  (setq equipName (nth 1 equipInfoList))
-  ; merge equipTag and equipName
-  (setq equipInfoList (mapcar '(lambda (x y) (list x y)) equipTag equipName))
+  ; merge equipInfoList by equipTag
   (setq equipInfoList (vl-sort equipInfoList '(lambda (x y) (< (car x) (car y)))))
   (setq insPt (getpoint "\n选取设备位号的插入点："))
   (setq i 0)
@@ -1148,8 +1145,6 @@
   (if (/= ss nil)
     (progn
       (setq i 0)
-      (setq equipTag '())
-      (setq equipName '())
       (repeat (sslength ss)
         (if (/= nil (ssname ss i))
           (progn
@@ -1177,7 +1172,7 @@
       )
     )
   )
-  (setq equipInfoList (list equipTag equipName))
+  (setq equipInfoList (mapcar '(lambda (x y) (list x y)) equipTag equipName))
 )
 
 ; Generate Entity in CAD
