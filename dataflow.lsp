@@ -1119,15 +1119,14 @@
   (setq equipInfoList (GetEquipTagList ss))
   (setq equipTag (car equipInfoList))
   (setq equipName (nth 1 equipInfoList))
-  
-  ;(setq equipInfoList (mapcar '(lambda (x y) (list x y)) equipTag equipName))
-  ;(vl-sort equipInfoList '(lambda (x y) (< (car x) (car y))))
-  
+  ; merge equipTag and equipName
+  (setq equipInfoList (mapcar '(lambda (x y) (list x y)) equipTag equipName))
+  (setq equipInfoList (vl-sort equipInfoList '(lambda (x y) (< (car x) (car y)))))
   (setq insPt (getpoint "\n选取设备位号的插入点："))
   (setq i 0)
-  (repeat (length equipTag) 
-    (setq tag (nth i equipTag))
-    (setq name (nth i equipName))
+  (repeat (length equipInfoList) 
+    (setq tag (car (nth i equipInfoList)))
+    (setq name (cadr (nth i equipInfoList)))
     (InsertEquipTag (GetInsertPt insPt i) tag name)
     (setq i (+ 1 i))
   )
