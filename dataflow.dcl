@@ -739,7 +739,7 @@ exportBlockPropertyDataBox : dialog {
         : row {
           : text {
             key = "fileNameMsg";
-            label = "文件名（无需扩展名），输出文件自动存放在 CAD 文件同一个文件夹内：";
+            label = "文件名（无需扩展名）";
           }
           : edit_box {
             key = "fileName";
@@ -751,6 +751,11 @@ exportBlockPropertyDataBox : dialog {
         : spacer { height = 1; }
       }
       : text {
+        key = "fileDirMsg";
+        label = "输出文件自动存放在 CAD 文件同一个文件夹内";
+      }
+      : spacer { height = 1; }
+      : text {
         key = "exportBtnMsg";
         label = "导出数据状态：";
       }
@@ -760,7 +765,7 @@ exportBlockPropertyDataBox : dialog {
         alignment = centered; 
         : button { 
           key = "btnExportData"; 
-          label = "确认导出"; 
+          label = "导出"; 
           is_default = "true"; 
         } 
         : spacer { width = 1; } 

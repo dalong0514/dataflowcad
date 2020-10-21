@@ -644,27 +644,73 @@
 ; Gs Field
 ; the macro for extract data
 
-(defun ExportBlockProperty (/ dcl_id fileName currentDir fileDir)
+(defun ExportBlockProperty (dataTypeList / dcl_id fileName currentDir fileDir exportDataType)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
-  (new_dialog "exportBlockPropertyDataBox" dcl_id)
-  ;the default value of input box
-  (set_tile "fileName" "dataFileName")
-  (mode_tile "fileName" 2)
-  (action_tile "fileName" "(setq fileName $value)")
-  (action_tile "btnExportData" "(done_dialog 2)")
-  (if (= status 2)
-    (progn 
-      (setq currentDir (getvar "dwgprefix"))
-      (setq fileDir (strcat currentDir fileName ".txt"))
-      (princ fileDir)(princ)
+  (setq status 2)
+  (while (>= status 2)
+    ; Create the dialog box
+    (new_dialog "exportBlockPropertyDataBox" dcl_id "" '(-1 -1))
+    ; Add the actions to the button
+    (action_tile "cancel" "(done_dialog 0)")
+    (action_tile "btnExportData" "(done_dialog 2)")
+    ; Set the default value
+    (set_tile "fileName" "fileName")
+    (set_tile "exportDataType" "0")
+    (mode_tile "fileName" 2)
+    (mode_tile "exportDataType" 2)
+    (action_tile "fileName" "(setq fileName $value)")
+    (action_tile "exportDataType" "(setq exportDataType $value)")
+    ; init the default value list box
+    (if (= nil exportDataType)
+      (setq exportDataType "0")
+    )
+    ; export data button
+    (if (= 2 (setq status (start_dialog)))
+      (progn 
+        (setq dataType (nth (atoi exportDataType) dataTypeList))
+        (ExportDataByDataType fileName dataType)
+      )
     )
   )
   (unload_dialog dcl_id)
   (princ)
 )
 
-(defun c:exportBlockPropertyData (/)
-  (ExportBlockProperty)
+(defun c:exportBlockPropertyData (/ dataTypeList)
+  (setq dataTypeList '("Pipe" "Instrument" "Electric"))
+  (ExportBlockProperty dataTypeList)
+)
+
+(defun ExportDataByDataType (fileName dataType /) 
+  (if (= dataType "Pipe") 
+    (ExportPipeData fileName)
+  )
+  (if (= dataType "Instrument") 
+    (ExportInstrumentData fileName)
+  )
+)
+
+(defun GetExportDataFileDir (fileName / currentDir fileDir)
+  (setq currentDir (getvar "dwgprefix"))
+  (setq fileDir (strcat currentDir fileName ".txt"))
+)
+
+(defun ExportPipeData (fileName / fileDir f)
+  (setq fileDir (GetExportDataFileDir fileName))
+  (setq f (open fileDir "w"))
+  (ExtractPipeToText)
+  (close f)
+  (FileEncodeTransUtils fileDir "gb2312" "utf-8")
+)
+
+(defun ExportInstrumentData (fileName / fileDir f)
+  (setq fileDir (GetExportDataFileDir fileName))
+  (setq f (open fileDir "w"))
+  (ExtractInstrumentToText)
+  (ExtractPipeToText)
+  (ExtractEquipToText)
+  (close f)
+  (FileEncodeTransUtils fileDir "gb2312" "utf-8")
 )
 
 (defun c:gsinstrument (/ fn f)
