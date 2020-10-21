@@ -1127,6 +1127,11 @@
   (filterAndModifyBlockPropertyByBox instrumentPropertyNameList "filterAndModifyInstrumentPropertyBox" "Instrument")
 )
 
+(defun c:modifyEquipmentProperty (/ equipmentPropertyNameListList dataTypeList)
+  (setq equipmentPropertyNameListList (GetInstrumentPropertyNameList))
+  (filterAndModifyBlockPropertyByBox equipmentPropertyNameListList "filterAndModifyEquipmentPropertyBox" dataTypeList)
+)
+
 (defun c:foo (/ ss entityNameList)
   (setq ss (ssget))
   (setq entityNameList (GetEntityNameListBySSUtils ss))
