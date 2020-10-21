@@ -723,7 +723,6 @@ exportBlockPropertyDataBox : dialog {
   key = "exportBlockPropertyData";
   : row {
     : boxed_radio_column {
-      label = "数据类型";
       key = "exportDataTypeBox";
       width = 50;
       : column {
