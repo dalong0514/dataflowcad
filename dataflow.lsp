@@ -1119,6 +1119,10 @@
   (setq equipInfoList (GetEquipTagList ss))
   (setq equipTag (car equipInfoList))
   (setq equipName (nth 1 equipInfoList))
+  
+  ;(setq equipInfoList (mapcar '(lambda (x y) (list x y)) equipTag equipName))
+  ;(vl-sort equipInfoList '(lambda (x y) (< (car x) (car y))))
+  
   (setq insPt (getpoint "\n选取设备位号的插入点："))
   (setq i 0)
   (repeat (length equipTag) 
@@ -1202,10 +1206,13 @@
   (filterAndModifyBlockPropertyByBox equipmentPropertyNameListList "filterAndModifyEquipmentPropertyBox" dataTypeList)
 )
 
-(defun c:foo (/ ss entityNameList)
-  (setq ss (ssget))
-  (setq entityNameList (GetEntityNameListBySSUtils ss))
-  (RemoveFirstCharOfItemInListUtils '("'jdoit,edh" "'dhjfhu,iuid"))
+(defun c:foo (/ ss ss2 entityNameList)
+  ;(setq ss (ssget))
+  ;(setq entityNameList (GetEntityNameListBySSUtils ss))
+  (setq ss '("R1101" "E1103" "E1102" "R1201" "P1201"))
+  (setq ss2 '("甲醇反应釜" "换热器1" "换热器2" "反应釜1" "泵"))
+  (setq ss (mapcar '(lambda (x y) (list x y)) ss ss2))
+  (vl-sort ss '(lambda (x y) (< (car x) (car y))))
 )
 
 ; the macro for modify data
