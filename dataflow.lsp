@@ -664,6 +664,9 @@
     (if (= nil exportDataType)
       (setq exportDataType "0")
     )
+    (if (= nil fileName)
+      (setq fileName "data")
+    )
     ; export data button
     (if (= 2 (setq status (start_dialog)))
       (progn 
