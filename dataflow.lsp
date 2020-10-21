@@ -654,8 +654,6 @@
     (action_tile "cancel" "(done_dialog 0)")
     (action_tile "btnExportData" "(done_dialog 2)")
     ; Set the default value
-    (set_tile "fileName" "fileName")
-    (set_tile "exportDataType" "0")
     (mode_tile "fileName" 2)
     (mode_tile "exportDataType" 2)
     (action_tile "fileName" "(setq fileName $value)")
