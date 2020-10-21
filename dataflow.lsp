@@ -644,6 +644,29 @@
 ; Gs Field
 ; the macro for extract data
 
+(defun ExportBlockProperty (/ dcl_id fileName currentDir fileDir)
+  (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
+  (new_dialog "exportBlockPropertyDataBox" dcl_id)
+  ;the default value of input box
+  (set_tile "fileName" "dataFileName")
+  (mode_tile "fileName" 2)
+  (action_tile "fileName" "(setq fileName $value)")
+  (action_tile "btnExportData" "(done_dialog 2)")
+  (if (= status 2)
+    (progn 
+      (setq currentDir (getvar "dwgprefix"))
+      (setq fileDir (strcat currentDir fileName ".txt"))
+      (princ fileDir)(princ)
+    )
+  )
+  (unload_dialog dcl_id)
+  (princ)
+)
+
+(defun c:exportBlockPropertyData (/)
+  (ExportBlockProperty)
+)
+
 (defun c:gsinstrument (/ fn f)
   (setq fn (GetCurrentDirByBoxUtils))
   (setq f (open fn "w"))
