@@ -1223,11 +1223,6 @@
   (filterAndModifyBlockPropertyByBox instrumentPropertyNameList "filterAndModifyInstrumentPropertyBox" "Instrument")
 )
 
-(defun c:modifyReactorProperty (/ reactorPropertyNameList dataTypeList)
-  (setq reactorPropertyNameList (GetReactorPropertyNameList))
-  (filterAndModifyBlockPropertyByBox reactorPropertyNameList "filterAndModifyReactorPropertyBox" "Reactor")
-)
-
 (defun c:modifyEquipmentProperty (/ reactorPropertyNameList dataTypeList)
   (setq reactorPropertyNameList (GetReactorPropertyNameList))
   (filterAndModifyBlockPropertyByBoxV2 reactorPropertyNameList "filterAndModifyEquipmentPropertyBox" "Reactor")
