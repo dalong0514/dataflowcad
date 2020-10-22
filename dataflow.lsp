@@ -63,6 +63,14 @@
   '("设备位号" "设备名称" "设备类型" "设备体积" "工作介质" "工作温度" "工作压力" "电机功率" "电机是否防爆" "电机级数" "反应釜转数" "设备尺寸" "设备材质" "设备重量" "设备型号" "保温厚度" "设备数量" "极限温度" "极限压力")
 )
 
+(defun GetTankPropertyNameList ()
+  '("TAG" "NAME" "SPECIES" "VOLUME" "SUBSTANCE" "TEMP" "PRESSURE" "POWER" "ANTIEXPLOSIVE" "MOTORSERIES" "SIZE" "MATERIAL" "WEIGHT" "TYPE" "INSULATIONTHICK" "NUMBER" "EXTEMP" "EXPRESSURE")
+)
+
+(defun GetTankPropertyChNameList ()
+  '("设备位号" "设备名称" "设备类型" "设备体积" "工作介质" "工作温度" "工作压力" "电机功率" "电机是否防爆" "电机级数" "设备尺寸" "设备材质" "设备重量" "设备型号" "保温厚度" "设备数量" "极限温度" "极限压力")
+)
+
 (defun GetInstrumentPropertyPairNameList (/ propertyPairNameList)
   (setq propertyPairNameList '(
                             ("FUNCTION" "function")
