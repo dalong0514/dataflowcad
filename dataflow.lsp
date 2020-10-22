@@ -140,11 +140,11 @@
 )
 
 (defun GetCustomEquipPropertyNameList ()
-  '("TAG" "NAME" "SPECIES" "SUBSTANCE" "TEMP" "PRESSURE" "POWER" "ANTIEXPLOSIVE" "MOTORSERIES" "PARAM1" "PARAM2" "PARAM3" "PARAM4" "SIZE" "MATERIAL" "WEIGHT" "TYPE" "INSULATIONTHICK" "NUMBER")
+  '("TAG" "NAME" "SPECIES" "SUBSTANCE" "TEMP" "PRESSURE" "SIZE" "POWER" "ANTIEXPLOSIVE" "MOTORSERIES" "PARAM1" "PARAM2" "PARAM3" "PARAM4" "MATERIAL" "WEIGHT" "TYPE" "INSULATIONTHICK" "NUMBER")
 )
 
 (defun GetCustomEquipPropertyChNameList ()
-  '("设备位号" "设备名称" "设备类型" "工作介质" "工作温度" "工作压力" "电机功率" "电机是否防爆" "电机级数" "关键参数1" "关键参数2" "关键参数3" "关键参数4" "设备尺寸" "设备材质" "设备重量" "设备型号" "保温厚度" "设备数量")
+  '("设备位号" "设备名称" "设备类型" "工作介质" "工作温度" "工作压力" "设备尺寸" "电机功率" "电机是否防爆" "电机级数" "关键参数1" "关键参数2" "关键参数3" "关键参数4" "设备材质" "设备重量" "设备型号" "保温厚度" "设备数量")
 )
 
 (defun GetInstrumentPropertyPairNameList (/ propertyPairNameList)
@@ -875,9 +875,9 @@
   (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList)
 )
 
-(defun WriteTankCustomEquipToCSVByEntityNameListUtils (entityNameList / fileDir firstRow propertyNameList)
+(defun WriteCustomEquipDataToCSVByEntityNameListUtils (entityNameList / fileDir firstRow propertyNameList)
   (setq fileDir "D:\\dataflowcad\\data\\equipmentData.csv")
-  (setq firstRow "数据ID,设备位号,设备名称,设备类型,工作介质,工作温度,工作压力,电机功率,电机是否防爆,电机级数,关键参数1,关键参数2,关键参数3,关键参数4,设备尺寸,设备材质,设备重量,设备型号,保温厚度,设备数量,")
+  (setq firstRow "数据ID,设备位号,设备名称,设备类型,工作介质,工作温度,工作压力,设备尺寸,电机功率,电机是否防爆,电机级数,关键参数1,关键参数2,关键参数3,关键参数4,设备材质,设备重量,设备型号,保温厚度,设备数量,")
   ; the sort of  property must be consistency with the sort of block in CAD
   (setq propertyNameList (GetCustomEquipPropertyNameList))
   (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList)
@@ -974,7 +974,7 @@
   (if (= dataType "Vacuum") 
     (setq fileDir "D:\\dataflowcad\\data\\equipmentData.csv")
   )
-  (if (= dataType "Centriguge") 
+  (if (= dataType "Centrifuge") 
     (setq fileDir "D:\\dataflowcad\\data\\equipmentData.csv")
   )
   (if (= dataType "CustomEquip") 
@@ -1425,7 +1425,7 @@
 
 (defun c:modifyCentrifugeProperty (/ centrifugePropertyNameList dataTypeList)
   (setq centrifugePropertyNameList (GetCentrifugePropertyNameList))
-  (filterAndModifyBlockPropertyByBoxV2 centrifugePropertyNameList "filterAndModifyEquipmentPropertyBox" "Centriguge")
+  (filterAndModifyBlockPropertyByBoxV2 centrifugePropertyNameList "filterAndModifyEquipmentPropertyBox" "Centrifuge")
 )
 
 (defun c:modifyCustomEquipProperty (/ customEquipPropertyNameList dataTypeList)
