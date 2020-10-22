@@ -580,7 +580,7 @@ filterAndModifyEquipmentPropertyBox : dialog {
           label = "选择要筛选的属性";
           edit_width = 30;
           key = "filterPropertyName"; 
-          list = "管道编号\n工作介质\n工作温度\n工作压力\n相态\n管道起点\n管道终点\n流程图号\n保温材料";
+          list = "设备位号\n设备名称\n设备类型\n设备体积\n工作介质\n工作温度\n工作压力\n电机功率\n电机是否防爆\n电机级数\n反应釜转数\n设备尺寸\n设备材质\n设备重量\n设备型号\n保温厚度\n设备数量\n极限温度\n极限压力";
           value = "";
         }
         : spacer { height = 1; } 
@@ -644,7 +644,7 @@ filterAndModifyEquipmentPropertyBox : dialog {
           label = "选择要查看的属性";
           edit_width = 30;
           key = "viewPropertyName"; 
-          list = "管道编号\n工作介质\n工作温度\n工作压力\n相态\n管道起点\n管道终点\n流程图号\n保温材料";
+          list = "设备位号\n设备名称\n设备类型\n设备体积\n工作介质\n工作温度\n工作压力\n电机功率\n电机是否防爆\n电机级数\n反应釜转数\n设备尺寸\n设备材质\n设备重量\n设备型号\n保温厚度\n设备数量\n极限温度\n极限压力";
           value = "";
         }
       }
@@ -689,7 +689,7 @@ filterAndModifyEquipmentPropertyBox : dialog {
           label = "选择要修改的属性";
           edit_width = 29;
           key = "propertyName"; 
-          list = "管道编号\n工作介质\n工作温度\n工作压力\n相态\n管道起点\n管道终点\n流程图号\n保温材料";
+          list = "设备位号\n设备名称\n设备类型\n设备体积\n工作介质\n工作温度\n工作压力\n电机功率\n电机是否防爆\n电机级数\n反应釜转数\n设备尺寸\n设备材质\n设备重量\n设备型号\n保温厚度\n设备数量\n极限温度\n极限压力";
           value = "";
         }
         : spacer { height = 0.5; } 
