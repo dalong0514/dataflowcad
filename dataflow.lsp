@@ -87,8 +87,16 @@
   '("PIPENUM" "SUBSTANCE" "TEMP" "PRESSURE" "PHASE" "FROM" "TO" "DRAWNUM" "INSULATION")
 )
 
+(defun GetPipePropertyChNameList ()
+  '("管道编号,工作介质,工作温度,工作压力,相态,管道起点,管道终点,流程图号,保温材料")
+)
+
 (defun GetInstrumentPropertyNameList ()
   '("FUNCTION" "TAG" "SUBSTANCE" "TEMP" "PRESSURE" "SORT" "PHASE" "MATERIAL" "NAME" "LOCATION" "MIN" "MAX" "NOMAL" "DRAWNUM" "INSTALLSIZE" "COMMENT" "DIRECTION")
+)
+
+(defun GetInstrumentPropertyChNameList ()
+  '("仪表功能代号,仪表位号,工作介质,工作温度,工作压力,仪表类型,相态,所在位置材质,控制点名称,所在管道或设备,最小值,最大值,正常值,流程图号,所在位置尺寸,备注,安装方向")
 )
 
 (defun GetReactorPropertyNameList ()
