@@ -29,6 +29,9 @@
   (if (= dataType "Reactor") 
     (setq propertyNameList (GetReactorPropertyNameList))
   )
+  (if (= dataType "Tank") 
+    (setq propertyNameList (GetTankPropertyNameList))
+  )
   ; must give the return
   propertyNameList
 )
@@ -42,6 +45,9 @@
   )
   (if (= dataType "Reactor") 
     (setq propertyChNameList (GetReactorPropertyChNameList))
+  )
+  (if (= dataType "Tank") 
+    (setq propertyChNameList (GetTankPropertyChNameList))
   )
   ; must give the return
   propertyChNameList
@@ -643,106 +649,6 @@
   resultList
 )
 
-(defun WriteDataToCSVByEntityNameListUtils (entityNameList fileDir firstRow propertyNameList / filePtr csvPropertyStringList)
-  (setq filePtr (open fileDir "w"))
-  (write-line firstRow filePtr)
-  (foreach item entityNameList 
-    (setq csvPropertyStringList (append csvPropertyStringList (list (GetCSVPropertyStringByEntityName item propertyNameList))))
-  )
-  (foreach item csvPropertyStringList 
-    (write-line item filePtr)
-  )
-  (close filePtr)
-)
-
-(defun WritePipeDataToCSVByEntityNameListUtils (entityNameList / fileDir firstRow propertyNameList)
-  (setq fileDir "D:\\dataflowcad\\data\\pipeData.csv")
-  (setq firstRow "数据ID,管道编号,工作介质,工作温度,工作压力,相态,管道起点,管道终点,流程图号,保温材料,")
-  ; the sort of  property must be consistency with the sort of block in CAD
-  (setq propertyNameList (GetPipePropertyNameList))
-  (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList)
-)
-
-(defun WriteInstrumentDataToCSVByEntityNameListUtils (entityNameList / fileDir firstRow propertyNameList)
-  (setq fileDir "D:\\dataflowcad\\data\\instrumentData.csv")
-  (setq firstRow "数据ID,仪表功能代号,仪表位号,工作介质,工作温度,工作压力,仪表类型,相态,所在位置材质,控制点名称,所在管道或设备,最小值,最大值,正常值,流程图号,所在位置尺寸,备注,安装方向,")
-  ; the sort of  property must be consistency with the sort of block in CAD
-  (setq propertyNameList (GetInstrumentPropertyNameList))
-  (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList)
-)
-
-(defun WriteReactorDataToCSVByEntityNameListUtils (entityNameList / fileDir firstRow propertyNameList)
-  (setq fileDir "D:\\dataflowcad\\data\\equipmentData.csv")
-  (setq firstRow "数据ID,设备位号,设备名称,设备类型,设备体积,工作介质,工作温度,工作压力,电机功率,电机是否防爆,电机级数,反应釜转数,设备尺寸,设备材质,设备重量,设备型号,保温厚度\,设备数量,极限温度,极限压力,")
-  ; the sort of  property must be consistency with the sort of block in CAD
-  (setq propertyNameList (GetReactorPropertyNameList))
-  (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList)
-)
-
-(defun WriteDataToCSVByEntityNameListStrategy (entityNameList dataType /)
-  (if (= dataType "Pipe") 
-    (WritePipeDataToCSVByEntityNameListUtils entityNameList)
-  )
-  (if (= dataType "Instrument") 
-    (WriteInstrumentDataToCSVByEntityNameListUtils entityNameList)
-  )
-  (if (= dataType "Reactor") 
-    (WriteReactorDataToCSVByEntityNameListUtils entityNameList)
-  )
-)
-
-;; Separates a string using a given delimiter
-;; copy from [http://www.lee-mac.com/stringtolist.html]
-(defun StrToListUtils (strData delimiter / len resultList delimiterPosition)
-    (setq len (1+ (strlen delimiter)))
-    (while (setq delimiterPosition (vl-string-search delimiter strData))
-        (setq resultList (cons (substr strData 1 delimiterPosition) resultList)
-            strData (substr strData (+ delimiterPosition len))
-        )
-    )
-    (reverse (cons strData resultList))
-)
-
-(defun StrListToListListUtils (strList / resultList)
-  (foreach item strList 
-    (setq resultList (append resultList (list (StrToListUtils item ","))))
-  )
-  resultList
-)
-
-(defun RemoveFirstCharOfItemInListUtils (originList /) 
-  (mapcar '(lambda (x) (substr x 2)) originList)
-)
-
-(defun ReadDataFromCSVUtils (fileDir / filePtr i textLine resultList)
-  (setq filePtr (open fileDir "r"))
-  (if filePtr 
-    (progn 
-      (setq i 1)
-      (while (setq textLine (read-line filePtr)) 
-        (setq resultList (append resultList (list textLine)))
-        (setq i (+ 1 i))
-      )
-    )
-  )
-  (close filePtr)
-  (setq resultList (cdr resultList))
-  (RemoveFirstCharOfItemInListUtils resultList)
-)
-
-(defun ReadDataFromCSVStrategy (dataType / fileDir)
-  (if (= dataType "Pipe") 
-    (setq fileDir "D:\\dataflowcad\\data\\pipeData.csv")
-  )
-  (if (= dataType "Instrument") 
-    (setq fileDir "D:\\dataflowcad\\data\\instrumentData.csv")
-  )
-  (if (= dataType "Reactor") 
-    (setq fileDir "D:\\dataflowcad\\data\\equipmentData.csv")
-  )
-  (ReadDataFromCSVUtils fileDir)
-)
-
 (defun ReplaceAllStirngOfListUtils (newStr originList / i newList)
   (setq newList '())
   (setq i 0)
@@ -816,6 +722,113 @@
     (mapcar '(lambda ( x ) (if (= (setq i (1+ i)) index) newItem x)) originList)
 )
 ; Utils Function 
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+
+
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+; Read and Write Utils
+(defun WriteDataToCSVByEntityNameListUtils (entityNameList fileDir firstRow propertyNameList / filePtr csvPropertyStringList)
+  (setq filePtr (open fileDir "w"))
+  (write-line firstRow filePtr)
+  (foreach item entityNameList 
+    (setq csvPropertyStringList (append csvPropertyStringList (list (GetCSVPropertyStringByEntityName item propertyNameList))))
+  )
+  (foreach item csvPropertyStringList 
+    (write-line item filePtr)
+  )
+  (close filePtr)
+)
+
+(defun WritePipeDataToCSVByEntityNameListUtils (entityNameList / fileDir firstRow propertyNameList)
+  (setq fileDir "D:\\dataflowcad\\data\\pipeData.csv")
+  (setq firstRow "数据ID,管道编号,工作介质,工作温度,工作压力,相态,管道起点,管道终点,流程图号,保温材料,")
+  ; the sort of  property must be consistency with the sort of block in CAD
+  (setq propertyNameList (GetPipePropertyNameList))
+  (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList)
+)
+
+(defun WriteInstrumentDataToCSVByEntityNameListUtils (entityNameList / fileDir firstRow propertyNameList)
+  (setq fileDir "D:\\dataflowcad\\data\\instrumentData.csv")
+  (setq firstRow "数据ID,仪表功能代号,仪表位号,工作介质,工作温度,工作压力,仪表类型,相态,所在位置材质,控制点名称,所在管道或设备,最小值,最大值,正常值,流程图号,所在位置尺寸,备注,安装方向,")
+  ; the sort of  property must be consistency with the sort of block in CAD
+  (setq propertyNameList (GetInstrumentPropertyNameList))
+  (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList)
+)
+
+(defun WriteReactorDataToCSVByEntityNameListUtils (entityNameList / fileDir firstRow propertyNameList)
+  (setq fileDir "D:\\dataflowcad\\data\\equipmentData.csv")
+  (setq firstRow "数据ID,设备位号,设备名称,设备类型,设备体积,工作介质,工作温度,工作压力,电机功率,电机是否防爆,电机级数,反应釜转数,设备尺寸,设备材质,设备重量,设备型号,保温厚度,设备数量,极限温度,极限压力,")
+  ; the sort of  property must be consistency with the sort of block in CAD
+  (setq propertyNameList (GetReactorPropertyNameList))
+  (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList)
+)
+
+(defun WriteDataToCSVByEntityNameListStrategy (entityNameList dataType /)
+  (if (= dataType "Pipe") 
+    (WritePipeDataToCSVByEntityNameListUtils entityNameList)
+  )
+  (if (= dataType "Instrument") 
+    (WriteInstrumentDataToCSVByEntityNameListUtils entityNameList)
+  )
+  (if (= dataType "Reactor") 
+    (WriteReactorDataToCSVByEntityNameListUtils entityNameList)
+  )
+)
+
+;; Separates a string using a given delimiter
+;; copy from [http://www.lee-mac.com/stringtolist.html]
+(defun StrToListUtils (strData delimiter / len resultList delimiterPosition)
+    (setq len (1+ (strlen delimiter)))
+    (while (setq delimiterPosition (vl-string-search delimiter strData))
+        (setq resultList (cons (substr strData 1 delimiterPosition) resultList)
+            strData (substr strData (+ delimiterPosition len))
+        )
+    )
+    (reverse (cons strData resultList))
+)
+
+(defun StrListToListListUtils (strList / resultList)
+  (foreach item strList 
+    (setq resultList (append resultList (list (StrToListUtils item ","))))
+  )
+  resultList
+)
+
+(defun RemoveFirstCharOfItemInListUtils (originList /) 
+  (mapcar '(lambda (x) (substr x 2)) originList)
+)
+
+(defun ReadDataFromCSVUtils (fileDir / filePtr i textLine resultList)
+  (setq filePtr (open fileDir "r"))
+  (if filePtr 
+    (progn 
+      (setq i 1)
+      (while (setq textLine (read-line filePtr)) 
+        (setq resultList (append resultList (list textLine)))
+        (setq i (+ 1 i))
+      )
+    )
+  )
+  (close filePtr)
+  (setq resultList (cdr resultList))
+  (RemoveFirstCharOfItemInListUtils resultList)
+)
+
+(defun ReadDataFromCSVStrategy (dataType / fileDir)
+  (if (= dataType "Pipe") 
+    (setq fileDir "D:\\dataflowcad\\data\\pipeData.csv")
+  )
+  (if (= dataType "Instrument") 
+    (setq fileDir "D:\\dataflowcad\\data\\instrumentData.csv")
+  )
+  (if (= dataType "Reactor") 
+    (setq fileDir "D:\\dataflowcad\\data\\equipmentData.csv")
+  )
+  (ReadDataFromCSVUtils fileDir)
+)
+; Read and Write Utils
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
 
