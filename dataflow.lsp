@@ -1408,6 +1408,31 @@
   (filterAndModifyBlockPropertyByBoxV2 tankPropertyNameList "filterAndModifyEquipmentPropertyBox" "Tank")
 )
 
+(defun c:modifyHeaterProperty (/ heaterPropertyNameList dataTypeList)
+  (setq heaterPropertyNameList (GetReactorPropertyNameList))
+  (filterAndModifyBlockPropertyByBoxV2 heaterPropertyNameList "filterAndModifyEquipmentPropertyBox" "Heater")
+)
+
+(defun c:modifyPumpProperty (/ pumpPropertyNameList dataTypeList)
+  (setq pumpPropertyNameList (GetReactorPropertyNameList))
+  (filterAndModifyBlockPropertyByBoxV2 pumpPropertyNameList "filterAndModifyEquipmentPropertyBox" "Pump")
+)
+
+(defun c:modifyVacuumProperty (/ vacuumPropertyNameList dataTypeList)
+  (setq vacuumPropertyNameList (GetReactorPropertyNameList))
+  (filterAndModifyBlockPropertyByBoxV2 vacuumPropertyNameList "filterAndModifyEquipmentPropertyBox" "Vacuum")
+)
+
+(defun c:modifyCentrifugeProperty (/ centrifugePropertyNameList dataTypeList)
+  (setq centrifugePropertyNameList (GetReactorPropertyNameList))
+  (filterAndModifyBlockPropertyByBoxV2 centrifugePropertyNameList "filterAndModifyEquipmentPropertyBox" "Centriguge")
+)
+
+(defun c:modifyCustomEquipProperty (/ customEquipPropertyNameList dataTypeList)
+  (setq customEquipPropertyNameList (GetReactorPropertyNameList))
+  (filterAndModifyBlockPropertyByBoxV2 customEquipPropertyNameList "filterAndModifyEquipmentPropertyBox" "CustomEquip")
+)
+
 (defun c:foo (/ ss ss2 entityNameList)
   ;(setq ss (ssget))
   ;(setq entityNameList (GetEntityNameListBySSUtils ss))
