@@ -1731,9 +1731,6 @@
   (princ)
 )
 
-
-
-
 (defun GetImportedPropertyValueByPropertyName (importedDataList propertyName dataType / resultList)
   (foreach item importedDataList 
     (setq resultList (append resultList (list (nth (GetImportedDataListIndexByPropertyName propertyName dataType) item))))
@@ -1758,6 +1755,12 @@
     (progn 
       (setq propertyNameList (GetReactorPropertyNameList))
       (setq importedDataListIndex '(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19))
+    )
+  )
+  (if (= dataType "Tank") 
+    (progn 
+      (setq propertyNameList (GetTankPropertyNameList))
+      (setq importedDataListIndex '(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18))
     )
   )
   (setq resultList (GetDictValueByKeyUtils propertyName propertyNameList importedDataListIndex))
