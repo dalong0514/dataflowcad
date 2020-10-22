@@ -109,9 +109,13 @@
   '("设备位号" "设备名称" "设备类型" "工作介质" "工作温度" "工作压力" "设备体积" "装料限重" "转鼓直径" "转鼓转速" "最大分离因素" "设备尺寸" "电机功率" "电机是否防爆" "电机级数" "设备材质" "设备重量" "设备型号" "设备数量")
 )
 
+(defun GetCustomEquipPropertyNameList ()
+  '("TAG" "NAME" "SPECIES" "SUBSTANCE" "TEMP" "PRESSURE" "POWER" "ANTIEXPLOSIVE" "MOTORSERIES" "PARAM1" "PARAM2" "PARAM3" "PARAM4" "SIZE" "MATERIAL" "WEIGHT" "TYPE" "INSULATIONTHICK" "NUMBER")
+)
 
-
-
+(defun GetCustomEquipPropertyChNameList ()
+  '("设备位号" "设备名称" "设备类型" "工作介质" "工作温度" "工作压力" "电机功率" "电机是否防爆" "电机级数" "关键参数1" "关键参数2" "关键参数3" "关键参数4" "设备尺寸" "设备材质" "设备重量" "设备型号" "保温厚度" "设备数量")
+)
 
 (defun GetInstrumentPropertyPairNameList (/ propertyPairNameList)
   (setq propertyPairNameList '(
@@ -1820,6 +1824,12 @@
   (if (= dataType "Centrifuge") 
     (progn 
       (setq propertyNameList (GetCentrifugePropertyNameList))
+      (setq importedDataListIndex '(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19))
+    )
+  )
+  (if (= dataType "CustomEquip") 
+    (progn 
+      (setq propertyNameList (GetCustomEquipPropertyNameList))
       (setq importedDataListIndex '(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19))
     )
   )
