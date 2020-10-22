@@ -1398,12 +1398,12 @@
 
 (defun c:modifyPipeProperty (/ pipePropertyNameList)
   (setq pipePropertyNameList (GetPipePropertyNameList))
-  (filterAndModifyBlockPropertyByBoxV2 pipePropertyNameList "filterAndModifyPipePropertyBox" "Pipe")
+  (filterAndModifyBlockPropertyByBoxV2 pipePropertyNameList "filterAndModifyEquipmentPropertyBox" "Pipe")
 )
 
 (defun c:modifyKsProperty (/ instrumentPropertyNameList)
   (setq instrumentPropertyNameList (GetInstrumentPropertyNameList))
-  (filterAndModifyBlockPropertyByBoxV2 instrumentPropertyNameList "filterAndModifyInstrumentPropertyBox" "Instrument")
+  (filterAndModifyBlockPropertyByBoxV2 instrumentPropertyNameList "filterAndModifyEquipmentPropertyBox" "Instrument")
 )
 
 (defun c:modifyReactorProperty (/ reactorPropertyNameList dataTypeList)
