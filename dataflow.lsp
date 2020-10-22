@@ -93,6 +93,13 @@
   '("设备位号" "设备名称" "设备类型" "工作介质" "工作温度" "工作压力" "流量" "扬程" "电机功率" "电机是否防爆" "电机级数" "设备材质" "设备重量" "设备数量" "设备型号")
 )
 
+(defun GetVacuumPropertyNameList ()
+  '("TAG" "NAME" "SPECIES" "SUBSTANCE" "TEMP" "PRESSURE" "CAPACITY" "EXPRESSURE" "POWER" "ANTIEXPLOSIVE" "MOTORSERIES" "SIZE" "MATERIAL" "WEIGHT" "TYPE" "NUMBER")
+)
+
+(defun GetVacuumPropertyChNameList ()
+  '("设备位号" "设备名称" "设备类型" "工作介质" "工作温度" "工作压力" "抽气量" "极限压力" "电机功率" "电机是否防爆" "电机级数" "设备尺寸" "设备材质" "设备重量" "设备型号" "设备数量")
+)
 
 
 
@@ -1791,6 +1798,12 @@
   (if (= dataType "Pump") 
     (progn 
       (setq propertyNameList (GetPumpPropertyNameList))
+      (setq importedDataListIndex '(1 2 3 4 5 6 7 8 9 10 11 12 13 14))
+    )
+  )
+  (if (= dataType "Vacuum") 
+    (progn 
+      (setq propertyNameList (GetVacuumPropertyNameList))
       (setq importedDataListIndex '(1 2 3 4 5 6 7 8 9 10 11 12 13 14))
     )
   )
