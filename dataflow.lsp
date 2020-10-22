@@ -19,14 +19,6 @@
 ;;;-------------------------------------------------------------------------;;;
 ; Get Constant Data
 
-(defun GetPipePropertyNameList ()
-  '("PIPENUM" "SUBSTANCE" "TEMP" "PRESSURE" "PHASE" "FROM" "TO" "DRAWNUM" "INSULATION")
-)
-
-(defun GetInstrumentPropertyNameList ()
-  '("FUNCTION" "TAG" "SUBSTANCE" "TEMP" "PRESSURE" "SORT" "PHASE" "MATERIAL" "NAME" "LOCATION" "MIN" "MAX" "NOMAL" "DRAWNUM" "INSTALLSIZE" "COMMENT" "DIRECTION")
-)
-
 (defun GetPropertyNameListStrategy (dataType / propertyNameList)
   (if (= dataType "Pipe") 
     (setq propertyNameList (GetPipePropertyNameList))
@@ -41,8 +33,34 @@
   propertyNameList
 )
 
+(defun GetPropertyChNameListStrategy (dataType / propertyChNameList)
+  (if (= dataType "Pipe") 
+    (setq propertyChNameList (GetPipePropertyChNameList))
+  )
+  (if (= dataType "Instrument") 
+    (setq propertyChNameList (GetInstrumentPropertyChNameList))
+  )
+  (if (= dataType "Reactor") 
+    (setq propertyChNameList (GetReactorPropertyChNameList))
+  )
+  ; must give the return
+  propertyChNameList
+)
+
+(defun GetPipePropertyNameList ()
+  '("PIPENUM" "SUBSTANCE" "TEMP" "PRESSURE" "PHASE" "FROM" "TO" "DRAWNUM" "INSULATION")
+)
+
+(defun GetInstrumentPropertyNameList ()
+  '("FUNCTION" "TAG" "SUBSTANCE" "TEMP" "PRESSURE" "SORT" "PHASE" "MATERIAL" "NAME" "LOCATION" "MIN" "MAX" "NOMAL" "DRAWNUM" "INSTALLSIZE" "COMMENT" "DIRECTION")
+)
+
 (defun GetReactorPropertyNameList ()
   '("TAG" "NAME" "SPECIES" "VOLUME" "SUBSTANCE" "TEMP" "PRESSURE" "POWER" "ANTIEXPLOSIVE" "MOTORSERIES" "SPEED" "SIZE" "MATERIAL" "WEIGHT" "TYPE" "INSULATIONTHICK" "NUMBER" "EXTEMP" "EXPRESSURE")
+)
+
+(defun GetReactorPropertyChNameList ()
+  '("设备位号" "设备名称" "设备类型" "设备体积" "工作介质" "工作温度" "工作压力" "电机功率" "电机是否防爆" "电机级数" "反应釜转数" "设备尺寸" "设备材质" "设备重量" "设备型号" "保温厚度" "设备数量" "极限温度" "极限压力")
 )
 
 (defun GetInstrumentPropertyPairNameList (/ propertyPairNameList)
@@ -1488,6 +1506,15 @@
     (action_tile "viewPropertyName" "(setq viewPropertyName $value)")
     (action_tile "patternValue" "(setq patternValue $value)")
     (action_tile "replacedSubstring" "(setq replacedSubstring $value)")
+    
+    (if (= dataType "Reactor")
+      (progn
+        (start_list "filterPropertyName" 3)
+        (mapcar '(lambda (x) (add_list x)) 
+                 '("1" "2" "3"))
+        (end_list)
+      )
+    )
     ; init the default data of text
     (if (= nil propertyName)
       (setq propertyName "0")
