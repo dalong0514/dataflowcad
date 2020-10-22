@@ -1507,13 +1507,19 @@
     (action_tile "patternValue" "(setq patternValue $value)")
     (action_tile "replacedSubstring" "(setq replacedSubstring $value)")
     
-    (if (= dataType "Reactor")
-      (progn
-        (start_list "filterPropertyName" 3)
-        (mapcar '(lambda (x) (add_list x)) 
-                 '("1" "2" "3"))
-        (end_list)
-      )
+    (progn
+      (start_list "filterPropertyName" 3)
+      (mapcar '(lambda (x) (add_list x)) 
+                (GetPropertyChNameListStrategy dataType))
+      (end_list)
+      (start_list "viewPropertyName" 3)
+      (mapcar '(lambda (x) (add_list x)) 
+                (GetPropertyChNameListStrategy dataType))
+      (end_list)
+      (start_list "propertyName" 3)
+      (mapcar '(lambda (x) (add_list x)) 
+                (GetPropertyChNameListStrategy dataType))
+      (end_list)
     )
     ; init the default data of text
     (if (= nil propertyName)
