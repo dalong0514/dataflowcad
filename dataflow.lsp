@@ -1258,9 +1258,14 @@
   (filterAndModifyBlockPropertyByBox instrumentPropertyNameList "filterAndModifyInstrumentPropertyBox" "Instrument")
 )
 
-(defun c:modifyEquipmentProperty (/ reactorPropertyNameList dataTypeList)
+(defun c:modifyReactorProperty (/ reactorPropertyNameList dataTypeList)
   (setq reactorPropertyNameList (GetReactorPropertyNameList))
   (filterAndModifyBlockPropertyByBoxV2 reactorPropertyNameList "filterAndModifyEquipmentPropertyBox" "Reactor")
+)
+
+(defun c:modifyTankProperty (/ tankPropertyNameList dataTypeList)
+  (setq tankPropertyNameList (GetReactorPropertyNameList))
+  (filterAndModifyBlockPropertyByBoxV2 tankPropertyNameList "filterAndModifyEquipmentPropertyBox" "Tank")
 )
 
 (defun c:foo (/ ss ss2 entityNameList)
