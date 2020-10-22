@@ -85,27 +85,13 @@
   '("设备位号" "设备名称" "设备类型" "工作介质" "工作温度" "工作压力" "换热面积" "设备尺寸" "换热元件规格" "设备材质" "设备重量" "设备型号" "保温厚度" "设备数量")
 )
 
-
-
-(defun GetPumpEquipPropertyPairNameList (/ propertyPairNameList)
-  (setq propertyPairNameList '(
-                            ("TAG" "tag")
-                            ("NAME" "name")
-                            ("SPECIES" "first_spec")
-                            ("SUBSTANCE" "substance")
-                            ("TEMP" "temp")
-                            ("PRESSURE" "pressure")
-                            ("FLOW" "flow")
-                            ("HEAD" "head")
-                            ("POWER" "power")
-                            ("ANTIEXPLOSIVE" "is_antiexplosive")
-                            ("MOTORSERIES" "motorseries")
-                            ("MATERIAL" "material")
-                            ("WEIGHT" "weight")
-                            ("NUMBER" "number")
-                           ))
+(defun GetPumpPropertyNameList ()
+  '("TAG" "NAME" "SPECIES" "SUBSTANCE" "TEMP" "PRESSURE" "FLOW" "HEAD" "POWER" "ANTIEXPLOSIVE" "MOTORSERIES" "MATERIAL" "WEIGHT" "NUMBER" "TYPE")
 )
 
+(defun GetPumpPropertyChNameList ()
+  '("设备位号" "设备名称" "设备类型" "工作介质" "工作温度" "工作压力" "流量" "扬程" "电机功率" "电机是否防爆" "电机级数" "设备材质" "设备重量" "设备数量" "设备型号")
+)
 
 
 
@@ -1799,6 +1785,12 @@
   (if (= dataType "Heater") 
     (progn 
       (setq propertyNameList (GetHeaterPropertyNameList))
+      (setq importedDataListIndex '(1 2 3 4 5 6 7 8 9 10 11 12 13 14))
+    )
+  )
+  (if (= dataType "Pump") 
+    (progn 
+      (setq propertyNameList (GetPumpPropertyNameList))
       (setq importedDataListIndex '(1 2 3 4 5 6 7 8 9 10 11 12 13 14))
     )
   )
