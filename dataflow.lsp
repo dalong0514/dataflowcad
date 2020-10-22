@@ -88,7 +88,7 @@
 )
 
 (defun GetPipePropertyChNameList ()
-  '("管道编号,工作介质,工作温度,工作压力,相态,管道起点,管道终点,流程图号,保温材料")
+  '("管道编号" "工作介质" "工作温度" "工作压力" "相态" "管道起点" "管道终点" "流程图号" "保温材料")
 )
 
 (defun GetInstrumentPropertyNameList ()
@@ -96,7 +96,7 @@
 )
 
 (defun GetInstrumentPropertyChNameList ()
-  '("仪表功能代号,仪表位号,工作介质,工作温度,工作压力,仪表类型,相态,所在位置材质,控制点名称,所在管道或设备,最小值,最大值,正常值,流程图号,所在位置尺寸,备注,安装方向")
+  '("仪表功能代号" "仪表位号" "工作介质" "工作温度" "工作压力" "仪表类型" "相态" "所在位置材质" "控制点名称" "所在管道或设备" "最小值" "最大值" "正常值" "流程图号" "所在位置尺寸" "备注" "安装方向")
 )
 
 (defun GetReactorPropertyNameList ()
@@ -1398,12 +1398,12 @@
 
 (defun c:modifyPipeProperty (/ pipePropertyNameList)
   (setq pipePropertyNameList (GetPipePropertyNameList))
-  (filterAndModifyBlockPropertyByBox pipePropertyNameList "filterAndModifyPipePropertyBox" "Pipe")
+  (filterAndModifyBlockPropertyByBoxV2 pipePropertyNameList "filterAndModifyPipePropertyBox" "Pipe")
 )
 
 (defun c:modifyKsProperty (/ instrumentPropertyNameList)
   (setq instrumentPropertyNameList (GetInstrumentPropertyNameList))
-  (filterAndModifyBlockPropertyByBox instrumentPropertyNameList "filterAndModifyInstrumentPropertyBox" "Instrument")
+  (filterAndModifyBlockPropertyByBoxV2 instrumentPropertyNameList "filterAndModifyInstrumentPropertyBox" "Instrument")
 )
 
 (defun c:modifyReactorProperty (/ reactorPropertyNameList dataTypeList)
