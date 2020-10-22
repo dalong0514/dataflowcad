@@ -566,7 +566,7 @@ filterAndModifyInstrumentPropertyBox : dialog {
   }
 }
 
-filterAndModifyEquipmentPropertyBox : dialog {
+filterAndModifyReactorPropertyBox : dialog {
   label = "设计流数据一体化V1.0———批量修改设备数据"; 
   key = "filterModifyProperty";
   : row {
@@ -602,7 +602,7 @@ filterAndModifyEquipmentPropertyBox : dialog {
       : spacer { height = 1; } 
       : text {
         key = "msg";
-        label = "匹配到的管道数量：";
+        label = "匹配到的数量：";
       }
       : spacer { height = 1; } 
       : text {

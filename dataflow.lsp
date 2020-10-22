@@ -1207,7 +1207,7 @@
 
 (defun c:modifyEquipmentProperty (/ reactorPropertyNameList dataTypeList)
   (setq reactorPropertyNameList (GetReactorPropertyNameList))
-  (filterAndModifyBlockPropertyByBox reactorPropertyNameList "filterAndModifyEquipmentPropertyBox" "Reactor")
+  (filterAndModifyBlockPropertyByBox reactorPropertyNameList "filterAndModifyReactorPropertyBox" "Reactor")
 )
 
 (defun c:foo (/ ss ss2 entityNameList)
