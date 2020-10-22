@@ -843,6 +843,46 @@
   (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList)
 )
 
+(defun WriteHeaterDataToCSVByEntityNameListUtils (entityNameList / fileDir firstRow propertyNameList)
+  (setq fileDir "D:\\dataflowcad\\data\\equipmentData.csv")
+  (setq firstRow "数据ID,设备位号,设备名称,设备类型,工作介质,工作温度,工作压力,换热面积,设备尺寸,换热元件规格,设备材质,设备重量,设备型号,保温厚度,设备数量,")
+  ; the sort of  property must be consistency with the sort of block in CAD
+  (setq propertyNameList (GetHeaterPropertyNameList))
+  (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList)
+)
+
+(defun WritePumpDataToCSVByEntityNameListUtils (entityNameList / fileDir firstRow propertyNameList)
+  (setq fileDir "D:\\dataflowcad\\data\\equipmentData.csv")
+  (setq firstRow "数据ID,设备位号,设备名称,设备类型,工作介质,工作温度,工作压力,流量,扬程,电机功率,电机是否防爆,电机级数,设备材质,设备重量,设备数量,设备型号,")
+  ; the sort of  property must be consistency with the sort of block in CAD
+  (setq propertyNameList (GetPumpPropertyNameList))
+  (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList)
+)
+
+(defun WriteVacuumDataToCSVByEntityNameListUtils (entityNameList / fileDir firstRow propertyNameList)
+  (setq fileDir "D:\\dataflowcad\\data\\equipmentData.csv")
+  (setq firstRow "数据ID,设备位号,设备名称,设备类型,工作介质,工作温度,工作压力,抽气量,极限压力,电机功率,电机是否防爆,电机级数,设备尺寸,设备材质,设备重量,设备型号,设备数量,")
+  ; the sort of  property must be consistency with the sort of block in CAD
+  (setq propertyNameList (GetVacuumPropertyNameList))
+  (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList)
+)
+
+(defun WriteCentrifugeDataToCSVByEntityNameListUtils (entityNameList / fileDir firstRow propertyNameList)
+  (setq fileDir "D:\\dataflowcad\\data\\equipmentData.csv")
+  (setq firstRow "数据ID,设备位号,设备名称,设备类型,工作介质,工作温度,工作压力,设备体积,装料限重,转鼓直径,转鼓转速,最大分离因素,设备尺寸,电机功率,电机是否防爆,电机级数,设备材质,设备重量,设备型号,设备数量,")
+  ; the sort of  property must be consistency with the sort of block in CAD
+  (setq propertyNameList (GetCentrifugePropertyNameList))
+  (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList)
+)
+
+(defun WriteTankCustomEquipToCSVByEntityNameListUtils (entityNameList / fileDir firstRow propertyNameList)
+  (setq fileDir "D:\\dataflowcad\\data\\equipmentData.csv")
+  (setq firstRow "数据ID,设备位号,设备名称,设备类型,工作介质,工作温度,工作压力,电机功率,电机是否防爆,电机级数,关键参数1,关键参数2,关键参数3,关键参数4,设备尺寸,设备材质,设备重量,设备型号,保温厚度,设备数量,")
+  ; the sort of  property must be consistency with the sort of block in CAD
+  (setq propertyNameList (GetCustomEquipPropertyNameList))
+  (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList)
+)
+
 (defun WriteDataToCSVByEntityNameListStrategy (entityNameList dataType /)
   (if (= dataType "Pipe") 
     (WritePipeDataToCSVByEntityNameListUtils entityNameList)
@@ -854,6 +894,21 @@
     (WriteReactorDataToCSVByEntityNameListUtils entityNameList)
   )
   (if (= dataType "Tank") 
+    (WriteTankDataToCSVByEntityNameListUtils entityNameList)
+  )
+  (if (= dataType "Heater") 
+    (WriteTankDataToCSVByEntityNameListUtils entityNameList)
+  )
+  (if (= dataType "Pump") 
+    (WriteTankDataToCSVByEntityNameListUtils entityNameList)
+  )
+  (if (= dataType "Vacuum") 
+    (WriteTankDataToCSVByEntityNameListUtils entityNameList)
+  )
+  (if (= dataType "Centrifuge") 
+    (WriteTankDataToCSVByEntityNameListUtils entityNameList)
+  )
+  (if (= dataType "CustomEquip") 
     (WriteTankDataToCSVByEntityNameListUtils entityNameList)
   )
 )
