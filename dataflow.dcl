@@ -567,7 +567,7 @@ filterAndModifyInstrumentPropertyBox : dialog {
 }
 
 filterAndModifyEquipmentPropertyBox : dialog {
-  label = "设计流数据一体化V1.0———批量修改设备数据"; 
+  label = "设计流数据一体化V1.0———批量修改数据"; 
   key = "filterModifyProperty";
   : row {
     : boxed_radio_column {
@@ -582,6 +582,10 @@ filterAndModifyEquipmentPropertyBox : dialog {
           key = "filterPropertyName"; 
           list = "";
           value = "";
+        }
+        : spacer { height = 1; } 
+        : text {
+          key = "dataTypeMsg";
         }
         : spacer { height = 1; } 
         : edit_box {

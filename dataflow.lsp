@@ -19,6 +19,38 @@
 ;;;-------------------------------------------------------------------------;;;
 ; Get Constant Data
 
+(defun GetDataTypeMsgStrategy (dataType / dataTypeMsg)
+  (if (= dataType "Pipe") 
+    (setq dataTypeMsg "批量修改管道数据")
+  )
+  (if (= dataType "Instrument") 
+    (setq dataTypeMsg "批量修改仪表数据")
+  )
+  (if (= dataType "Reactor") 
+    (setq dataTypeMsg "批量修改反应釜数据")
+  )
+  (if (= dataType "Tank") 
+    (setq dataTypeMsg "批量修改储罐数据")
+  )
+  (if (= dataType "Heater") 
+    (setq dataTypeMsg "批量修改换热器数据")
+  )
+  (if (= dataType "Pump") 
+    (setq dataTypeMsg "批量修改输送泵数据")
+  )
+  (if (= dataType "Vacuum") 
+    (setq dataTypeMsg "批量修改真空泵数据")
+  )
+  (if (= dataType "Centrifuge") 
+    (setq dataTypeMsg "批量修改离心机数据")
+  )
+  (if (= dataType "CustomEquip") 
+    (setq dataTypeMsg "批量修改自定义设备数据")
+  )
+  ; must give the return
+  dataTypeMsg
+)
+
 (defun GetPropertyNameListStrategy (dataType / propertyNameList)
   (if (= dataType "Pipe") 
     (setq propertyNameList (GetPipePropertyNameList))
@@ -1728,6 +1760,7 @@
       (mapcar '(lambda (x) (add_list x)) 
                 (GetPropertyChNameListStrategy dataType))
       (end_list)
+      (set_tile "dataTypeMsg" (GetDataTypeMsgStrategy dataType))
     )
     ; init the default data of text
     (if (= nil propertyName)
