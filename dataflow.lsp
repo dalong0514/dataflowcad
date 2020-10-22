@@ -34,6 +34,9 @@
   (if (= dataType "Instrument") 
     (setq propertyNameList (GetInstrumentPropertyNameList))
   )
+  (if (= dataType "Reactor") 
+    (setq propertyNameList (GetReactorPropertyNameList))
+  )
   ; must give the return
   propertyNameList
 )
@@ -1451,6 +1454,12 @@
     (progn 
       (setq propertyNameList (GetInstrumentPropertyNameList))
       (setq importedDataListIndex '(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17))
+    )
+  )
+  (if (= dataType "Reactor") 
+    (progn 
+      (setq propertyNameList (GetReactorPropertyNameList))
+      (setq importedDataListIndex '(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19))
     )
   )
   (setq resultList (GetDictValueByKeyUtils propertyName propertyNameList importedDataListIndex))
