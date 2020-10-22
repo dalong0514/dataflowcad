@@ -77,6 +77,39 @@
   '("设备位号" "设备名称" "设备类型" "设备体积" "工作介质" "工作温度" "工作压力" "电机功率" "电机是否防爆" "电机级数" "设备尺寸" "设备材质" "设备重量" "设备型号" "保温厚度" "设备数量" "极限温度" "极限压力")
 )
 
+(defun GetHeaterPropertyNameList ()
+  '("TAG" "NAME" "SPECIES" "SUBSTANCE" "TEMP" "PRESSURE" "AREA" "SIZE" "ELEMENT" "MATERIAL" "WEIGHT" "TYPE" "INSULATIONTHICK" "NUMBER")
+)
+
+(defun GetHeaterPropertyChNameList ()
+  '("设备位号" "设备名称" "设备类型" "工作介质" "工作温度" "工作压力" "换热面积" "设备尺寸" "换热元件规格" "设备材质" "设备重量" "设备型号" "保温厚度" "设备数量")
+)
+
+
+
+(defun GetPumpEquipPropertyPairNameList (/ propertyPairNameList)
+  (setq propertyPairNameList '(
+                            ("TAG" "tag")
+                            ("NAME" "name")
+                            ("SPECIES" "first_spec")
+                            ("SUBSTANCE" "substance")
+                            ("TEMP" "temp")
+                            ("PRESSURE" "pressure")
+                            ("FLOW" "flow")
+                            ("HEAD" "head")
+                            ("POWER" "power")
+                            ("ANTIEXPLOSIVE" "is_antiexplosive")
+                            ("MOTORSERIES" "motorseries")
+                            ("MATERIAL" "material")
+                            ("WEIGHT" "weight")
+                            ("NUMBER" "number")
+                           ))
+)
+
+
+
+
+
 (defun GetInstrumentPropertyPairNameList (/ propertyPairNameList)
   (setq propertyPairNameList '(
                             ("FUNCTION" "function")
@@ -1761,6 +1794,12 @@
     (progn 
       (setq propertyNameList (GetTankPropertyNameList))
       (setq importedDataListIndex '(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18))
+    )
+  )
+  (if (= dataType "Heater") 
+    (progn 
+      (setq propertyNameList (GetHeaterPropertyNameList))
+      (setq importedDataListIndex '(1 2 3 4 5 6 7 8 9 10 11 12 13 14))
     )
   )
   (setq resultList (GetDictValueByKeyUtils propertyName propertyNameList importedDataListIndex))
