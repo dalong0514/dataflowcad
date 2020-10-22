@@ -615,7 +615,7 @@ filterAndModifyEquipmentPropertyBox : dialog {
         alignment = centered; 
         : button { 
           key = "btnSelect"; 
-          label = "选择管道"; 
+          label = "选择数据"; 
           is_default = "true"; 
         } 
         : spacer { width = 1; } 
