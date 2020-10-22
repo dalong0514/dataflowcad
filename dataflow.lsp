@@ -2053,7 +2053,7 @@
   (numberPipelineAndTagByBox dataTypeList "filterAndNumberBox" "Pipe")
 )
 
-(defun numberPipelineAndTagByBox (propertyNameList tileName dataType / dcl_id propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName selectedDataType ss sslen matchedList previewList confirmList blockDataList APropertyValueList entityNameList modifyMessageStatus dataChildrenType)
+(defun numberPipelineAndTagByBox (propertyNameList tileName dataType / dcl_id propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName selectedDataType ss sslen matchedList previewList confirmList blockDataList APropertyValueList entityNameList modifyMessageStatus dataChildrenType modifyMsgBtnStatus)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -2065,7 +2065,6 @@
     (action_tile "btnAll" "(done_dialog 3)")
     (action_tile "btnPreviewModify" "(done_dialog 5)")
     (action_tile "btnModify" "(done_dialog 6)")
-    
     ; optional setting for the popup_list tile
     (set_tile "filterPropertyName" "0")
     (set_tile "dataChildrenType" "0")
@@ -2095,12 +2094,13 @@
     (if (= nil propertyValue)
       (setq propertyValue "")
     )
-
     ; Display the number of selected pipes
     (if (/= sslen nil)
       (set_tile "msg" (strcat "匹配到的数量： " (rtos sslen)))
     )
-
+    (if (= modifyMsgBtnStatus 1)
+      (set_tile "modifyBtnMsg" "编号状态：已完成")
+    )
     (if (/= selectedDataType nil)
       (set_tile "filterPropertyName" filterPropertyName)
     )
@@ -2195,6 +2195,7 @@
             (ModifyPropertyValueByEntityName entityNameList selectedName confirmList)
           )
         )
+        (setq modifyMsgBtnStatus 1)
       )
     )
   )

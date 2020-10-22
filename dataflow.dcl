@@ -108,13 +108,13 @@ filterAndNumberBox : dialog {
         alignment = centered; 
         : button { 
           key = "btnSelect"; 
-          label = "选择要排序的块数据"; 
+          label = "选择要编号的数据"; 
           is_default = "true"; 
         } 
         : spacer { width = 3; } 
         : button { 
           key = "btnAll"; 
-          label = "匹配图纸中的全部数据"; 
+          label = "匹配图纸全部数据"; 
           is_default = "true"; 
         }
       }
@@ -164,8 +164,8 @@ filterAndNumberBox : dialog {
       }
       : spacer { height = 1; } 
       : text {
-        key = "resultMsg";
-        label = "修改状态：";
+        key = "modifyBtnMsg";
+        label = "编号状态：";
       }
       : spacer { height = 2; }
       : row { 
