@@ -1655,7 +1655,7 @@
     (if (= 5 status)
       (progn 
         (setq selectedName (nth (atoi propertyName) propertyNameList))
-        (if (/= propertyValue "") 
+        (if (or (/= propertyValue "") (/= replacedSubstring "")) 
           (progn 
             (if (= replacedSubstring "") 
               (if (/= importedDataList nil) 
