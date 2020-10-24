@@ -13,7 +13,7 @@
 )
 
 (defun StringSubstUtilsTest ()
-  (Assert 'StringSubstUtils '("fengda" "da" "dalong") "fengdalon")
+  (Assert 'StringSubstUtils '("fengda" "da" "dalong") "fengdalong")
   (Assert 'StringSubstUtils '("-80-" "-50-" "PL1201-50-2J1") "PL1201-80-2J1")
   (Assert 'StringSubstUtils '("YC" "PL" "PL1201-50-2J1") "YC1201-50-2J1")
   (Assert 'StringSubstUtils '("" "-2J1" "PL1201-50-2J1") "PL1201-50")
@@ -66,7 +66,17 @@
 	(princ expectedReturn)
 	(princ "\n")
 	(setq *testList* (append *testList* (list passed)))
-	
+
+  (if (/= passed T) 
+    (setq *failedTestList* (append *failedTestList* (list (strcat 
+                                                            (strcase (vl-symbol-name functionName) T) 
+                                                            " "
+                                                            (vl-prin1-to-string argumentList) 
+                                                            " returned "
+                                                            actualReturn
+                                                            expectedReturn
+                                                          ))))
+  )
 	passed
 )
 
@@ -127,6 +137,12 @@
 	(princ "\n  ")(princ trues)(princ " tests passed")
 	(princ "\n  ")(princ falses)(princ " tests failed")
   (setq *testList* nil)
+  ; print message of failed Tests
+  (princ "\n-----------------\n  ")
+  (foreach item *failedTestList* 
+    (princ "failed...")(princ item)(princ "\n  ")
+  )
+  (setq *failedTestList* nil)
 	(princ)
 )
 
