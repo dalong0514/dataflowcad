@@ -161,13 +161,16 @@
 ; Input: simple list of boolean values - (T T T T T T T T T T)
 ; Output: none
 ; Return: assoc. list of the qty of T's and F's - (("T" . 10) ("F" . 0))
-(defun JD:CountBooleans ( booleanList / countList)
-	(setq countList '(("T" . 0)("F" . 0)))
+(defun JD:CountBooleans ( booleanList / countList totalTList totalFList)
 	(foreach listItem booleanList
 		(if (= listItem T)
-			(setq countList (Assoc++ "T" countList))
-			(setq countList (Assoc++ "F" countList))))
-	(SortKeys countList '>)
+			(setq totalTList (append totalTList (list listItem)))
+			(setq totalFList (append totalFList (list listItem))))
+  )
+  (setq countList (list 
+                    (cons "T" (length totalTList)) 
+                    (cons "F" (length totalFList))))
+  countList
 )
 
 ; Prints test results
