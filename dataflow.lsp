@@ -919,6 +919,7 @@
   newList
 )
 
+; Unit Test Compeleted
 (defun numberedStringSubstUtil (newString originString / index replacedSubstring)
   (setq index (vl-string-search "-" originString))
   (setq replacedSubstring (substr originString 1 index))
@@ -938,7 +939,7 @@
     str
 )
 
-(defun GetIndexforSearchMemberInListUtils (searchedMember searchedList / searchedList i matchedIndex)
+(defun GetIndexforSearchMemberInListUtils (searchedMember searchedList / i matchedIndex)
   (setq i 0)
   (repeat (length searchedList)
     (if (= (nth i searchedList) searchedMember)
