@@ -6,31 +6,16 @@
 ;;;-------------------------------------------------------------------------;;;
 ; Unit Test
 
-(defun addTest (firstNum secondNum /)
-  (+ firstNum secondNum)  
-)
-
-(defun mergeString (ss1 ss2 / ss) 
-  (setq ss (strcat ss1 ss2))
-)
-
-(defun UnitTest ()
-  (Assert 'addTest (list 1 3) 5)
-  (Assert 'addTest (list 2 3) 5)
-  (Assert 'addTest (list 4 3) 7)
-  (Assert 'addTest (list 11 3) 14)
-  (Assert 'addTest (list 15 3) 14)
-  (Assert 'addTest (list 15 3) 18)
-)
-
-(defun mergeStringTest ()
-  (Assert 'mergeString (list "feng" "da") "fengda")
-)
-
 (defun c:RunTest ()
-  (mergeStringTest)
-  (UnitTest)
+  (StringSubstUtilsTest)(princ)
   (DL:PrintTestResults (DL:CountBooleans testList))
+)
+
+(defun StringSubstUtilsTest ()
+  (Assert 'StringSubstUtils '("fengda" "da" "dalong") "fengdalong")
+  (Assert 'StringSubstUtils '("-80-" "-50-" "PL1201-50-2J1") "PL1201-80-2J1")
+  (Assert 'StringSubstUtils '("YC" "PL" "PL1201-50-2J1") "YC1201-50-2J1")
+  (Assert 'StringSubstUtils '("" "-2J1" "PL1201-50-2J1") "PL1201-50")
 )
 
 ; Unit Test
@@ -918,6 +903,7 @@
   (StringSubstUtils newString replacedSubstring originString)
 )
 
+; Unit Test Compeleted
 (defun StringSubstUtils (new old str / inc len)
     (setq len (strlen new)
           inc 0
