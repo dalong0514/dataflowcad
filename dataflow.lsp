@@ -900,18 +900,6 @@
   resultList
 )
 
-(defun ReplaceSubstOfListByPatternUtils (newStr pattern originList / i newList)
-  (setq newList '())
-  (setq i 0)
-  (repeat (length originList)
-    (setq newList (append newList (list 
-                                    (StringSubstUtils newStr pattern (nth i originList))
-                                  )))
-    (setq i (+ i 1))
-  )
-  newList
-)
-
 (defun ReplaceNumberOfListByNumberedListUtils (numberedList originList / i newList)
   (setq newList '())
   (setq i 0)
