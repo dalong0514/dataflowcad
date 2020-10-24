@@ -4,6 +4,147 @@
 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
+; Unit Test
+
+(defun addTest (firstNum secondNum /)
+  (+ firstNum secondNum)  
+)
+
+(defun mergeString (ss1 ss2/) 
+  (strcat ss1 ss2)
+)
+
+(defun UnitTest ()
+  (Assert 'addTest (list 1 3) 5)
+  (Assert 'addTest (list 2 3) 5)
+  (Assert 'addTest (list 4 3) 7)
+  (Assert 'addTest (list 11 3) 14)
+  (Assert 'addTest (list 15 3) 14)
+  (Assert 'addTest (list 15 3) 18)
+)
+
+(defun mergeStringTest ()
+  (Assert 'mergeString '("feng" "da") "xxx")
+)
+
+(defun c:RunTest ()
+  (mergeStringTest)
+  ;(UnitTest)
+  (DL:PrintTestResults (DL:CountBooleans testList))
+)
+
+; Unit Test
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+; Unit Test Source Code
+
+(defun Assert (functionName argumentList expectedReturn / actualReturn passed)
+	(if (not (= (type argumentList) 'LIST))
+		(setq argumentList (list argumentList))
+  )
+	(cond
+		((equal (setq actualReturn (eval (cons functionName argumentList)))
+			  expectedReturn)
+			(princ "passed...(")
+			(setq passed T)
+			(setq actualReturn nil)
+    )
+		(T
+			(princ "failed...(")
+			(setq passed nil)
+			(setq actualReturn 
+				(strcat (vl-princ-to-string actualReturn) " instead of ")
+      )
+    )
+  )
+	
+	;; continue printing result...
+	(princ (strcase (vl-symbol-name functionName) T))
+	(princ " ")
+	(princ 
+		(DL:ReplaceAllSubst 
+			"'"
+			"(QUOTE " 
+			(vl-prin1-to-string argumentList))
+  )
+	(princ ") returned ")
+	(if actualReturn (princ actualReturn))
+	(princ expectedReturn)
+	(princ "\n")
+	(setq testList (append testList (list passed)))
+	
+	passed
+)
+
+; Changes all "pattern"s to "newSubst". Like vl-string-subst, but replaces
+;    ALL instances of pattern instead of just the first one.
+; Argument: String to alter.
+; Return: Altered string.
+(defun DL:ReplaceAllSubst (newSubst pattern string / pattern)
+	(while (vl-string-search pattern string)
+		(setq
+			string
+			(vl-string-subst newSubst pattern string)))
+	string
+)
+
+; Counts boolean values
+; Input: simple list of boolean values - (T T T T T T T T T T)
+; Output: none
+; Return: assoc. list of the qty of T's and F's - (("T" . 10) ("F" . 0))
+(defun DL:CountBooleans ( booleanList / countList totalTList totalFList)
+	(foreach listItem booleanList
+		(if (= listItem T)
+			(setq totalTList (append totalTList (list listItem)))
+			(setq totalFList (append totalFList (list listItem))))
+  )
+  (setq countList (list 
+                    (cons "T" (length totalTList)) 
+                    (cons "F" (length totalFList))))
+  countList
+)
+
+; Prints test results
+; Input: assoc list of T's and F's - (("T" . 10) ("F" . 0))
+; Output: simple description of the results -
+;			Results:
+;			----------------
+;			 10 tests passed
+;			  0 tests failed
+; Note: there are always four characters before each "tests"
+(defun DL:PrintTestResults ( testResults / trues falses)
+	(setq trues (cdr (assoc "T" testResults)))
+	(setq falses (cdr (assoc "F" testResults)))
+	
+	(if (= trues nil)
+		(setq trues 0))
+	(if (= falses nil)
+		(setq falses 0))
+	
+	(princ "\nResults:")
+	(if (= falses 0)
+		(princ " ALL PASS"))
+	(princ "\n-----------------")
+	
+	
+	; add code to count digits in numbers and add correct space before.
+	; also, choose between "test" and "tests" correctly?
+	
+	(princ "\n  ")(princ trues)(princ " tests passed")
+	(princ "\n  ")(princ falses)(princ " tests failed")
+  (setq testList nil)
+	(princ)
+)
+
+; Unit Test Source Code
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
 ; basic Function
 
 (defun c:printVersionInfo (/ versionInfo)
@@ -1471,15 +1612,6 @@
 (defun c:modifyCustomEquipProperty (/ customEquipPropertyNameList dataTypeList)
   (setq customEquipPropertyNameList (GetCustomEquipPropertyNameList))
   (filterAndModifyBlockPropertyByBox customEquipPropertyNameList "filterAndModifyEquipmentPropertyBox" "CustomEquip")
-)
-
-(defun c:foo (/ ss ss2 entityNameList)
-  ;(setq ss (ssget))
-  ;(setq entityNameList (GetEntityNameListBySSUtils ss))
-  (setq ss '("R1101" "E1103" "E1102" "R1201" "P1201"))
-  (setq ss2 '("甲醇反应釜" "换热器1" "换热器2" "反应釜1" "泵"))
-  (setq ss (mapcar '(lambda (x y) (list x y)) ss ss2))
-  (vl-sort ss '(lambda (x y) (< (car x) (car y))))
 )
 
 ; the macro for modify data
