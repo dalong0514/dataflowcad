@@ -10,8 +10,8 @@
   (+ firstNum secondNum)  
 )
 
-(defun mergeString (ss1 ss2/) 
-  (strcat ss1 ss2)
+(defun mergeString (ss1 ss2 / ss) 
+  (setq ss (strcat ss1 ss2))
 )
 
 (defun UnitTest ()
@@ -24,12 +24,12 @@
 )
 
 (defun mergeStringTest ()
-  (Assert 'mergeString '("feng" "da") "xxx")
+  (Assert 'mergeString (list "feng" "da") "fengda")
 )
 
 (defun c:RunTest ()
   (mergeStringTest)
-  ;(UnitTest)
+  (UnitTest)
   (DL:PrintTestResults (DL:CountBooleans testList))
 )
 
