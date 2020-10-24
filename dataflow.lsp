@@ -900,16 +900,6 @@
   resultList
 )
 
-(defun ReplaceAllStirngOfListUtils (newStr originList / i newList)
-  (setq newList '())
-  (setq i 0)
-  (repeat (length originList)
-    (setq newList (append newList (list newStr)))
-    (setq i (+ i 1))
-  )
-  newList
-)
-
 (defun ReplaceSubstOfListByPatternUtils (newStr pattern originList / i newList)
   (setq newList '())
   (setq i 0)
