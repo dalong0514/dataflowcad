@@ -7,15 +7,21 @@
 ; Unit Test
 
 (defun c:RunTest ()
-  (StringSubstUtilsTest)(princ)
-  (DL:PrintTestResults (DL:CountBooleans testList))
+  (StringSubstUtilsTest)
+  (numberedStringSubstUtilTest)
+  (DL:PrintTestResults (DL:CountBooleans *testList*))
 )
 
 (defun StringSubstUtilsTest ()
-  (Assert 'StringSubstUtils '("fengda" "da" "dalong") "fengdalong")
+  (Assert 'StringSubstUtils '("fengda" "da" "dalong") "fengdalon")
   (Assert 'StringSubstUtils '("-80-" "-50-" "PL1201-50-2J1") "PL1201-80-2J1")
   (Assert 'StringSubstUtils '("YC" "PL" "PL1201-50-2J1") "YC1201-50-2J1")
   (Assert 'StringSubstUtils '("" "-2J1" "PL1201-50-2J1") "PL1201-50")
+)
+
+(defun numberedStringSubstUtilTest ()
+  (Assert 'numberedStringSubstUtil '("PL1201" "PL1301-50-2J1") "PL1201-50-2J1")
+  (Assert 'numberedStringSubstUtil '("YC1101" "PL-50-2J1") "YC1101-50-2J1")
 )
 
 ; Unit Test
@@ -59,7 +65,7 @@
 	(if actualReturn (princ actualReturn))
 	(princ expectedReturn)
 	(princ "\n")
-	(setq testList (append testList (list passed)))
+	(setq *testList* (append *testList* (list passed)))
 	
 	passed
 )
@@ -120,7 +126,7 @@
 	
 	(princ "\n  ")(princ trues)(princ " tests passed")
 	(princ "\n  ")(princ falses)(princ " tests failed")
-  (setq testList nil)
+  (setq *testList* nil)
 	(princ)
 )
 
