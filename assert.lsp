@@ -28,7 +28,6 @@
 ;;                                              ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-
 ; Tests the testing functions.
 ; Output: T if all unit tests passed, else nil
 
@@ -211,12 +210,11 @@
 
 ;(defun reloadFile ( fileToLoad /)
 	;reload code)
-	
-	
-	
+
 ;;----------------------------------------------------------------------;;
 
 (vl-load-com)
+
 (princ
    (strcat
       "\n:: TEST.lsp loaded. | \\U+00A9 dalong "
@@ -228,10 +226,13 @@
 ;;                             End of File                              ;;
 ;;----------------------------------------------------------------------;;
 
-(defun testAddTest (firstNum secondNum /)
+(defun addTest (firstNum secondNum /)
   (+ firstNum secondNum)  
 )
 
-(defun c:dalongTest ()
-  (assertEqual 4 'testAddTest (list 1 3))
+(defun c:foo ()
+  (Assert 'addTest (list 1 3) 5)
+  (Assert 'addTest (list 2 3) 5)
+  (Assert 'addTest (list 4 3) 7)
+  (Assert 'addTest (list 11 3) 14)
 )
