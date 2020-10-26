@@ -9,6 +9,7 @@
 (defun c:RunTest ()
   (StringSubstUtilsTest)
   (numberedStringSubstUtilTest)
+  (GetIndexforSearchMemberInListUtilsTest)
   (DL:PrintTestResults (DL:CountBooleans *testList*))
 )
 
@@ -22,6 +23,11 @@
 (defun numberedStringSubstUtilTest ()
   (AssertEqual 'numberedStringSubstUtil '("PL1201" "PL1301-50-2J1") "PL1201-50-2J1")
   (AssertEqual 'numberedStringSubstUtil '("YC1101" "PL-50-2J1") "YC1101-50-2J1")
+)
+
+(defun GetIndexforSearchMemberInListUtilsTest ()
+  (AssertEqual 'GetIndexforSearchMemberInListUtils (list "PL1101" (list "PL1101" "PL1102")) 0)
+  (AssertEqual 'GetIndexforSearchMemberInListUtils (list "PL1102" (list "PL1101" "PL1102")) 1)
 )
 
 ; Unit Test
@@ -939,6 +945,7 @@
     str
 )
 
+; Unit Test Compeleted
 (defun GetIndexforSearchMemberInListUtils (searchedMember searchedList / i matchedIndex)
   (setq i 0)
   (repeat (length searchedList)
