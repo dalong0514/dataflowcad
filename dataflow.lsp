@@ -13,15 +13,15 @@
 )
 
 (defun StringSubstUtilsTest ()
-  (Assert 'StringSubstUtils '("fengda" "da" "dalong") "fengdalong")
-  (Assert 'StringSubstUtils '("-80-" "-50-" "PL1201-50-2J1") "PL1201-80-2J1")
-  (Assert 'StringSubstUtils '("YC" "PL" "PL1201-50-2J1") "YC1201-50-2J1")
-  (Assert 'StringSubstUtils '("" "-2J1" "PL1201-50-2J1") "PL1201-50")
+  (AssertEqual 'StringSubstUtils '("fengda" "da" "dalong") "fengdalong")
+  (AssertEqual 'StringSubstUtils '("-80-" "-50-" "PL1201-50-2J1") "PL1201-80-2J1")
+  (AssertEqual 'StringSubstUtils '("YC" "PL" "PL1201-50-2J1") "YC1201-50-2J1")
+  (AssertEqual 'StringSubstUtils '("" "-2J1" "PL1201-50-2J1") "PL1201-50")
 )
 
 (defun numberedStringSubstUtilTest ()
-  (Assert 'numberedStringSubstUtil '("PL1201" "PL1301-50-2J1") "PL1201-50-2J1")
-  (Assert 'numberedStringSubstUtil '("YC1101" "PL-50-2J1") "YC1101-50-2J1")
+  (AssertEqual 'numberedStringSubstUtil '("PL1201" "PL1301-50-2J1") "PL1201-50-2J1")
+  (AssertEqual 'numberedStringSubstUtil '("YC1101" "PL-50-2J1") "YC1101-50-2J1")
 )
 
 ; Unit Test
@@ -32,7 +32,7 @@
 ;;;-------------------------------------------------------------------------;;;
 ; Unit Test Source Code
 
-(defun Assert (functionName argumentList expectedReturn / actualReturn passed)
+(defun AssertEqual (functionName argumentList expectedReturn / actualReturn passed)
 	(if (not (= (type argumentList) 'LIST))
 		(setq argumentList (list argumentList))
   )
