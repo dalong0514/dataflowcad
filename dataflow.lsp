@@ -37,7 +37,7 @@
 		(setq argumentList (list argumentList))
   )
 	(cond
-		((equal (setq actualReturn (eval (cons functionName argumentList)))
+		((equal (setq actualReturn (vl-catch-all-apply functionName argumentList))
 			  expectedReturn)
 			(princ "passed...(")
 			(setq passed T)
