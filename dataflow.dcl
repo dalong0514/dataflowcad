@@ -226,6 +226,7 @@ filterAndModifyEquipmentPropertyBox : dialog {
         key = "matchedResult"; 
         list = "";
         value = "";
+        // action = true;
       }
       : spacer { height = 1; } 
       : text {

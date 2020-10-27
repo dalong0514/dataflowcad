@@ -1631,6 +1631,10 @@
   (GetDictValueByKeyUtils dataType dataTypeList needToNumberPropertyNameList)
 )
 
+(defun testDoubleClick (index /)
+  (alert index)(princ)
+)
+
 (defun filterAndModifyBlockPropertyByBox (propertyNameList tileName dataType / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList importedList confirmList blockDataList entityNameList viewPropertyName previewDataList importedDataList exportMsgBtnStatus importMsgBtnStatus modifyMsgBtnStatus)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
@@ -1658,12 +1662,14 @@
     (mode_tile "propertyName" 2)
     (mode_tile "viewPropertyName" 2)
     (mode_tile "filterPropertyName" 2)
+    ;(mode_tile "matchedResult" 2)
     (action_tile "propertyName" "(setq propertyName $value)")
     (action_tile "propertyValue" "(setq propertyValue $value)")
     (action_tile "filterPropertyName" "(setq filterPropertyName $value)")
     (action_tile "viewPropertyName" "(setq viewPropertyName $value)")
     (action_tile "patternValue" "(setq patternValue $value)")
     (action_tile "replacedSubstring" "(setq replacedSubstring $value)")
+    ;(action_tile "matchedResult" "(testDoubleClick $value)")
     
     (progn
       (start_list "filterPropertyName" 3)
