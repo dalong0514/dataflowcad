@@ -2226,6 +2226,9 @@
     (if (= nil propertyValue)
       (setq propertyValue "")
     )
+    (set_tile "filterPropertyName" filterPropertyName)
+    (set_tile "dataChildrenType" dataChildrenType)
+    (set_tile "patternValue" patternValue)
     ; Display the number of selected pipes
     (if (/= sslen nil)
       (set_tile "msg" (strcat "匹配到的数量： " (rtos sslen)))
@@ -2244,11 +2247,8 @@
     (if (/= matchedList nil)
       (progn
         ; setting for saving the existed value of a box
-        (set_tile "filterPropertyName" filterPropertyName)
-        (set_tile "patternValue" patternValue)
         (set_tile "replacedSubstring" replacedSubstring)
         (set_tile "propertyValue" propertyValue)
-        (set_tile "dataChildrenType" dataChildrenType)
         (start_list "matchedResult" 3)
         (mapcar '(lambda (x) (add_list x)) 
                  matchedList)
