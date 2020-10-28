@@ -1613,7 +1613,7 @@
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
 
-(defun c:generatePublicProcess (/ pipePropertyNameList)
+(defun c:generatePublicProcessElement (/ pipePropertyNameList)
   (setq pipePropertyNameList (GetPipePropertyNameList))
   (filterAndModifyBlockPropertyByBox pipePropertyNameList "generatePublicProcessElementBox" "Pipe")
 )
