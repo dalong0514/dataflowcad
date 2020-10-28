@@ -382,3 +382,77 @@ filterAndModifyEquipmentPropertyBox : dialog {
     }
   }
 }
+
+generatePublicProcessElementBox : dialog {
+  label = "设计流数据一体化V1.0———自动生成辅助流程组件"; 
+  key = "generatePublicProcessElement";
+  : boxed_radio_column {
+    label = "匹配数据";
+    key = "filterBox";
+    width = 80;
+    : column {
+      height = 10;
+      : popup_list { 
+        label = "选择要筛选的属性";
+        edit_width = 30;
+        key = "filterPropertyName"; 
+        list = "";
+        value = "";
+      }
+      : spacer { height = 1; } 
+      : text {
+        key = "dataTypeMsg";
+      }
+      : spacer { height = 1; } 
+      : edit_box {
+        label = "通配符匹配模式";
+        edit_width = 31;
+        key = "patternValue";
+        mnemonic = "N";
+        value = "";
+      }
+      : spacer { height = 1; } 
+    }
+    : list_box { 
+      height = 25;
+      key = "matchedResult"; 
+      list = "";
+      value = "";
+      // action = true;
+    }
+    : spacer { height = 1; } 
+    : text {
+      key = "msg";
+      label = "匹配到的数量：";
+    }
+    : spacer { height = 1; } 
+    : text {
+      key = "exportBtnMsg";
+      label = "导出数据状态：";
+    }
+    : spacer { height = 3; } 
+    : row { 
+      fixed_width = true; 
+      alignment = centered; 
+      : button { 
+        key = "btnSelect"; 
+        label = "选择数据"; 
+        is_default = "true"; 
+      } 
+      : spacer { width = 1; } 
+      : button { 
+        key = "btnAll"; 
+        label = "匹配全部"; 
+        is_default = "true"; 
+      }
+      : spacer { width = 1; } 
+      : button { 
+        key = "btnShowOriginData"; 
+        label = "显示数据"; 
+        is_default = "true"; 
+      } 
+      cancel_button; 
+    }
+    : spacer { height = 3; } 
+  }
+}

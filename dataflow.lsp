@@ -1613,6 +1613,102 @@
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
 
+(defun c:generatePublicProcess (/ pipePropertyNameList)
+  (setq pipePropertyNameList (GetPipePropertyNameList))
+  (filterAndModifyBlockPropertyByBox pipePropertyNameList "generatePublicProcessElementBox" "Pipe")
+)
+
+(defun generatePublicProcessElementByBox (propertyNameList tileName dataType / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList importedList confirmList blockDataList entityNameList viewPropertyName previewDataList importedDataList exportMsgBtnStatus importMsgBtnStatus modifyMsgBtnStatus)
+  (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
+  (setq status 2)
+  (while (>= status 2)
+    ; Create the dialog box
+    (new_dialog tileName dcl_id "" '(-1 -1))
+    ; Added the actions to the Cancel and Pick Point button
+    (action_tile "cancel" "(done_dialog 0)")
+    (action_tile "btnSelect" "(done_dialog 2)")
+    (action_tile "btnAll" "(done_dialog 3)")
+    (action_tile "btnShowOriginData" "(done_dialog 4)")
+    
+    ; optional setting for the popup_list tile
+    (set_tile "filterPropertyName" "0")
+    ; the default value of input box
+    (mode_tile "filterPropertyName" 2)
+    (action_tile "filterPropertyName" "(setq filterPropertyName $value)")
+    (action_tile "patternValue" "(setq patternValue $value)")
+    
+    (progn
+      (start_list "filterPropertyName" 3)
+      (mapcar '(lambda (x) (add_list x)) 
+                (GetPropertyChNameListStrategy dataType))
+      (end_list)
+      (set_tile "dataTypeMsg" (GetDataTypeMsgStrategy dataType))
+    )
+    ; init the default data of text
+    (if (= nil filterPropertyName)
+      (setq filterPropertyName "0")
+    )
+    (if (= nil patternValue)
+      (setq patternValue "*")
+    )
+    (set_tile "filterPropertyName" filterPropertyName)
+    (set_tile "patternValue" patternValue)
+    ; Display the number of selected pipes
+    (if (/= sslen nil)
+      (set_tile "msg" (strcat "匹配到的数量： " (rtos sslen)))
+    )
+    (if (= modifyMsgBtnStatus 1)
+      (set_tile "modifyBtnMsg" "修改CAD数据状态：已完成")
+    )
+    (if (/= matchedList nil)
+      (progn
+        ; setting for saving the existed value of a box
+        (start_list "matchedResult" 3)
+        (mapcar '(lambda (x) (add_list x)) 
+                 matchedList)
+        (end_list)
+      )
+    )
+    ; select button
+    (if (= 2 (setq status (start_dialog)))
+      (progn 
+        (setq ss (GetBlockSSBySelectByDataTypeUtils dataType))
+        (setq selectedFilterName (nth (atoi filterPropertyName) propertyNameList))
+        (setq blockDataList (GetAPropertyListAndEntityNameListByPropertyNamePattern ss selectedFilterName patternValue))
+        (setq matchedList (car blockDataList))
+        (setq sslen (length matchedList))
+        (setq entityNameList (nth 1 blockDataList))
+        (setq previewDataList (GetPropertyValueListListByEntityNameList entityNameList (GetPropertyNameListStrategy dataType)))
+      )
+    )
+    ; all select button
+    (if (= 3 status)
+      (progn 
+        (setq ss (GetAllBlockSSByDataTypeUtils dataType))
+        (setq selectedFilterName (nth (atoi filterPropertyName) propertyNameList))
+        (setq blockDataList (GetAPropertyListAndEntityNameListByPropertyNamePattern ss selectedFilterName patternValue))
+        (setq matchedList (car blockDataList))
+        (setq sslen (length matchedList))
+        (setq entityNameList (nth 1 blockDataList))
+        (setq previewDataList (GetPropertyValueListListByEntityNameList entityNameList (GetPropertyNameListStrategy dataType)))
+      )
+    )
+    ; view button
+    (if (= 4 status)
+      (progn 
+        (setq selectedName (nth (atoi viewPropertyName) propertyNameList))
+        (if (/= importedDataList nil) 
+          (setq importedList (GetImportedPropertyValueByPropertyName importedDataList selectedName dataType))
+          (setq importedList (GetImportedPropertyValueByPropertyName previewDataList selectedName dataType))
+        )
+      )
+    )
+  )
+  (setq importedList nil)
+  (unload_dialog dcl_id)
+  (princ)
+)
+
 (defun GetNumberedListByStartAndLengthUtils (startNumer startString listLength / numberedList)
   (setq numberedList '())
   (setq startNumer (atoi startNumer))
