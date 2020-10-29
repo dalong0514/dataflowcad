@@ -1600,10 +1600,7 @@
 ; get the new inserting position
 ; Unit Test Compeleted
 (defun GetInsertPt (insPt i removeDistance /)
-  (list (+ (car insPt) (* i removeDistance)) 
-         (nth 1 insPt) 
-         (nth 2 insPt)
-  )
+  (ReplaceListItemByindexUtils (+ (car insPt) (* i removeDistance)) 0 insPt)
 )
 
 (defun GetEquipTagList (ss / i ent blk entx value equipInfoList equipTag equipName)
