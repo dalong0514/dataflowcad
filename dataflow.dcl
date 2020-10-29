@@ -387,7 +387,7 @@ generatePublicProcessElementBox : dialog {
   label = "设计流数据一体化V1.0———自动生成辅助流程组件"; 
   key = "generatePublicProcessElement";
   : boxed_radio_column {
-    label = "匹配数据";
+    label = "单回路辅助流程组件";
     key = "filterBox";
     width = 80;
     : column {
@@ -396,14 +396,6 @@ generatePublicProcessElementBox : dialog {
         label = "来自总管还是去总管";
         edit_width = 30;
         key = "pipeSourceDirection"; 
-        list = "";
-        value = "";
-      }
-      : spacer { height = 1; } 
-      : popup_list { 
-        label = "单回路如 N、VT；双回路如 CWS/CWR";
-        edit_width = 30;
-        key = "loopStatus"; 
         list = "";
         value = "";
       }
@@ -422,7 +414,6 @@ generatePublicProcessElementBox : dialog {
       key = "matchedResult"; 
       list = "";
       value = "";
-      // action = true;
     }
     : spacer { height = 1; } 
     : text {

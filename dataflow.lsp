@@ -1731,7 +1731,7 @@
   (generatePublicProcessElementByBox "generatePublicProcessElementBox" "Pipe")
 )
 
-(defun generatePublicProcessElementByBox (tileName dataType / dcl_id propertyName propertyValue pipeSourceDirection patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList importedList blockDataList entityNameList viewPropertyName previewDataList importedDataList loopStatus)
+(defun generatePublicProcessElementByBox (tileName dataType / dcl_id pipeSourceDirection patternValue status ss sslen matchedList blockDataList entityNameList previewDataList)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -1745,12 +1745,9 @@
     
     ; optional setting for the popup_list tile
     (set_tile "pipeSourceDirection" "0")
-    (set_tile "loopStatus" "0")
     ; the default value of input box
     (mode_tile "pipeSourceDirection" 2)
-    (mode_tile "loopStatus" 2)
     (action_tile "pipeSourceDirection" "(setq pipeSourceDirection $value)")
-    (action_tile "loopStatus" "(setq loopStatus $value)")
     (action_tile "patternValue" "(setq patternValue $value)")
     
     (progn
@@ -1758,23 +1755,15 @@
       (mapcar '(lambda (x) (add_list x)) 
                 '("自总管" "去总管"))
       (end_list)
-      (start_list "loopStatus" 3)
-      (mapcar '(lambda (x) (add_list x)) 
-                '("单回路" "双回路"))
-      (end_list)
     )
     ; init the default data of text
     (if (= nil pipeSourceDirection)
       (setq pipeSourceDirection "0")
     )
-    (if (= nil loopStatus)
-      (setq loopStatus "0")
-    )
     (if (= nil patternValue)
       (setq patternValue "*")
     )
     (set_tile "pipeSourceDirection" pipeSourceDirection)
-    (set_tile "loopStatus" loopStatus)
     (set_tile "patternValue" patternValue)
     ; Display the number of selected pipes
     (if (/= sslen nil)
@@ -1814,7 +1803,6 @@
     ; view button
     (if (= 4 status)
       (progn 
-        ;(princ (strlen (nth 4 (car previewDataList))))
         (InsertPublicPipeElement previewDataList pipeSourceDirection)
         (setq status 1)
       )
