@@ -12,19 +12,20 @@
   (GetIndexforSearchMemberInListUtilsTest)
   (GenerateSortedNumByListTest)
   (GetInsertPtTest)
+  (ExtractDrawNumTest)
   (DL:PrintTestResults (DL:CountBooleans *testList*))
 )
 
-(defun StringSubstUtilsTest ()
-  (AssertEqual 'StringSubstUtils '("fengda" "da" "dalong") "fengdalong")
-  (AssertEqual 'StringSubstUtils '("-80-" "-50-" "PL1201-50-2J1") "PL1201-80-2J1")
-  (AssertEqual 'StringSubstUtils '("YC" "PL" "PL1201-50-2J1") "YC1201-50-2J1")
-  (AssertEqual 'StringSubstUtils '("" "-2J1" "PL1201-50-2J1") "PL1201-50")
+(defun ExtractDrawNumTest ()
+  (AssertEqual 'ExtractDrawNum '("S20101GS-101-04-04") "04-04")
 )
 
-(defun numberedStringSubstUtilTest ()
-  (AssertEqual 'numberedStringSubstUtil '("PL1201" "PL1301-50-2J1") "PL1201-50-2J1")
-  (AssertEqual 'numberedStringSubstUtil '("YC1101" "PL-50-2J1") "YC1101-50-2J1")
+(defun GetInsertPtTest () 
+  (AssertEqual 'GetInsertPt (list '(100 100 0) 1 10) '(110 100 0))
+)
+
+(defun GenerateSortedNumByListTest ()
+  (AssertEqual 'GenerateSortedNumByList (list '("13" "134" "456")) '(0 1 2))
 )
 
 (defun GetIndexforSearchMemberInListUtilsTest ()
@@ -32,12 +33,16 @@
   (AssertEqual 'GetIndexforSearchMemberInListUtils (list "PL1102" (list "PL1101" "PL1102" "PL1103")) 1)
 )
 
-(defun GenerateSortedNumByListTest ()
-  (AssertEqual 'GenerateSortedNumByList (list '("13" "134" "456")) '(0 1 2))
+(defun numberedStringSubstUtilTest ()
+  (AssertEqual 'numberedStringSubstUtil '("PL1201" "PL1301-50-2J1") "PL1201-50-2J1")
+  (AssertEqual 'numberedStringSubstUtil '("YC1101" "PL-50-2J1") "YC1101-50-2J1")
 )
 
-(defun GetInsertPtTest () 
-  (AssertEqual 'GetInsertPt (list '(100 100 0) 1 10) '(110 100 0))
+(defun StringSubstUtilsTest ()
+  (AssertEqual 'StringSubstUtils '("fengda" "da" "dalong") "fengdalong")
+  (AssertEqual 'StringSubstUtils '("-80-" "-50-" "PL1201-50-2J1") "PL1201-80-2J1")
+  (AssertEqual 'StringSubstUtils '("YC" "PL" "PL1201-50-2J1") "YC1201-50-2J1")
+  (AssertEqual 'StringSubstUtils '("" "-2J1" "PL1201-50-2J1") "PL1201-50")
 )
 
 ; Unit Test
@@ -1514,6 +1519,16 @@
 ; Gs Field
 ; Generate Entity in CAD
 
+(defun InsertPublicPipeElementS (dataList / insPt)
+  (setq insPt (getpoint "\n选取辅助流程组件插入点："))
+  (InsertBlockByBlockName "PublicPipeElementS" insPt dataList)
+)
+
+; Unit Test Completed
+(defun ExtractDrawNum (str /)
+  (substr str (- (strlen str) 4))
+)
+
 (defun c:EquipTag (/ ss equipInfoList insPt)
   (setq ss (GetEquipmentSSBySelectUtils))
   (setq equipInfoList (GetEquipTagList ss))
@@ -1521,11 +1536,6 @@
   (setq equipInfoList (vl-sort equipInfoList '(lambda (x y) (< (car x) (car y)))))
   (setq insPt (getpoint "\n选取设备位号的插入点："))
   (InsertBlockByBlockName "EquipTag" insPt equipInfoList)
-)
-
-(defun InsertPublicPipeElementS (dataList / insPt)
-  (setq insPt (getpoint "\n选取辅助流程组件插入点："))
-  (InsertBlockByBlockName "PublicPipeElementS" insPt dataList)
 )
 
 (defun InsertBlockByBlockName (blockName insPt dataList /)

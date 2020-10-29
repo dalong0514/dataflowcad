@@ -447,6 +447,7 @@ generatePublicProcessElementBox : dialog {
         label = "—°‘Ò≤Â»Îµ„"; 
         is_default = "true"; 
       } 
+      : spacer { width = 1; } 
       cancel_button; 
     }
     : spacer { height = 3; } 
