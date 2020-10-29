@@ -1615,10 +1615,10 @@
 
 (defun c:generatePublicProcessElement (/ pipePropertyNameList)
   (setq pipePropertyNameList (GetPipePropertyNameList))
-  (filterAndModifyBlockPropertyByBox pipePropertyNameList "generatePublicProcessElementBox" "Pipe")
+  (generatePublicProcessElementByBox pipePropertyNameList "generatePublicProcessElementBox" "Pipe")
 )
 
-(defun generatePublicProcessElementByBox (propertyNameList tileName dataType / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList importedList confirmList blockDataList entityNameList viewPropertyName previewDataList importedDataList exportMsgBtnStatus importMsgBtnStatus modifyMsgBtnStatus)
+(defun generatePublicProcessElementByBox (propertyNameList tileName dataType / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList importedList blockDataList entityNameList viewPropertyName previewDataList importedDataList)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -1640,9 +1640,9 @@
     (progn
       (start_list "filterPropertyName" 3)
       (mapcar '(lambda (x) (add_list x)) 
-                (GetPropertyChNameListStrategy dataType))
+                '("单回路" "双回路"))
       (end_list)
-      (set_tile "dataTypeMsg" (GetDataTypeMsgStrategy dataType))
+      (set_tile "loopDescribeMsg" "单回路如 CA、N、VT；双回路如 CWS/CWR")
     )
     ; init the default data of text
     (if (= nil filterPropertyName)
@@ -1657,9 +1657,6 @@
     (if (/= sslen nil)
       (set_tile "msg" (strcat "匹配到的数量： " (rtos sslen)))
     )
-    (if (= modifyMsgBtnStatus 1)
-      (set_tile "modifyBtnMsg" "修改CAD数据状态：已完成")
-    )
     (if (/= matchedList nil)
       (progn
         ; setting for saving the existed value of a box
@@ -1673,7 +1670,7 @@
     (if (= 2 (setq status (start_dialog)))
       (progn 
         (setq ss (GetBlockSSBySelectByDataTypeUtils dataType))
-        (setq selectedFilterName (nth (atoi filterPropertyName) propertyNameList))
+        (setq selectedFilterName "PIPENUM")
         (setq blockDataList (GetAPropertyListAndEntityNameListByPropertyNamePattern ss selectedFilterName patternValue))
         (setq matchedList (car blockDataList))
         (setq sslen (length matchedList))
@@ -1685,7 +1682,7 @@
     (if (= 3 status)
       (progn 
         (setq ss (GetAllBlockSSByDataTypeUtils dataType))
-        (setq selectedFilterName (nth (atoi filterPropertyName) propertyNameList))
+        (setq selectedFilterName "PIPENUM")
         (setq blockDataList (GetAPropertyListAndEntityNameListByPropertyNamePattern ss selectedFilterName patternValue))
         (setq matchedList (car blockDataList))
         (setq sslen (length matchedList))

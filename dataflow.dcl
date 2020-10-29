@@ -401,11 +401,12 @@ generatePublicProcessElementBox : dialog {
       }
       : spacer { height = 1; } 
       : text {
-        key = "dataTypeMsg";
+        key = "loopDescribeMsg";
+        value = "";
       }
       : spacer { height = 1; } 
       : edit_box {
-        label = "通配符匹配模式";
+        label = "管道号通配符匹配";
         edit_width = 31;
         key = "patternValue";
         mnemonic = "N";
@@ -425,11 +426,6 @@ generatePublicProcessElementBox : dialog {
       key = "msg";
       label = "匹配到的数量：";
     }
-    : spacer { height = 1; } 
-    : text {
-      key = "exportBtnMsg";
-      label = "导出数据状态：";
-    }
     : spacer { height = 3; } 
     : row { 
       fixed_width = true; 
@@ -448,7 +444,7 @@ generatePublicProcessElementBox : dialog {
       : spacer { width = 1; } 
       : button { 
         key = "btnShowOriginData"; 
-        label = "显示数据"; 
+        label = "选择插入点"; 
         is_default = "true"; 
       } 
       cancel_button; 
