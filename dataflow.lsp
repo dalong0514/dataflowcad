@@ -1523,6 +1523,10 @@
   (InsertBlockByBlockName "PublicPipeElementS" insPt dataList)
 )
 
+(defun c:foo (/ insPt)
+  (setq insPt (getpoint "\n选取辅助流程组件插入点："))
+)
+
 (defun InsertBlockByBlockName (blockName insPt dataList /)
   (setvar "ATTREQ" 1)
   (setvar "ATTDIA" 0)
@@ -1568,7 +1572,8 @@
 (defun GetInsertPt (insPt i removeDistance / xPosition yPosition newInsPt)
   (setq xPosition (+ (nth 0 insPt) (* i removeDistance)))
   (setq yPosition (nth 1 insPt))
-  (setq newInsPt (list xPosition yPosition))
+  ; the position must be three item list 
+  (setq newInsPt (list xPosition yPosition 0))
 )
 
 (defun GetEquipTagList (ss / i ent blk entx value equipInfoList equipTag equipName)
