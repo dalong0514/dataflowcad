@@ -384,10 +384,9 @@ filterAndModifyEquipmentPropertyBox : dialog {
 }
 
 generatePublicProcessElementBox : dialog {
-  label = "设计流数据一体化V1.0———自动生成辅助流程组件"; 
+  label = "设计流数据一体化V1.0———自动生成单回路辅助流程组件"; 
   key = "generatePublicProcessElement";
   : boxed_radio_column {
-    label = "单回路辅助流程组件";
     key = "filterBox";
     width = 80;
     : column {
