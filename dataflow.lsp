@@ -1540,6 +1540,8 @@
 (defun InsertPublicPipeElementS (dataList / insPt)
   (setq insPt (getpoint "\n选取辅助流程组件插入点："))
   (setq dataList (ProcessPublicPipeElementData dataList))
+  ; sort data by drawnum
+  (setq dataList (vl-sort dataList '(lambda (x y) (< (nth 4 x) (nth 4 y)))))
   (InsertBlockByBlockName "PublicPipeElementS" insPt dataList)
 )
 
