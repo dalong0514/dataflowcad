@@ -11,6 +11,7 @@
   (numberedStringSubstUtilTest)
   (GetIndexforSearchMemberInListUtilsTest)
   (GenerateSortedNumByListTest)
+  (GetInsertPtTest)
   (DL:PrintTestResults (DL:CountBooleans *testList*))
 )
 
@@ -33,6 +34,10 @@
 
 (defun GenerateSortedNumByListTest ()
   (AssertEqual 'GenerateSortedNumByList (list '("13" "134" "456")) '(0 1 2))
+)
+
+(defun GetInsertPtTest () 
+  (AssertEqual 'GetInsertPt (list '(100 100 0) 1 10) '(110 100 0))
 )
 
 ; Unit Test
@@ -1569,11 +1574,12 @@
 )
 
 ; get the new inserting position
-(defun GetInsertPt (insPt i removeDistance / xPosition yPosition newInsPt)
-  (setq xPosition (+ (nth 0 insPt) (* i removeDistance)))
-  (setq yPosition (nth 1 insPt))
-  ; the position must be three item list 
-  (setq newInsPt (list xPosition yPosition 0))
+; Unit Test Compeleted
+(defun GetInsertPt (insPt i removeDistance /)
+  (list (+ (car insPt) (* i removeDistance)) 
+         (nth 1 insPt) 
+         (nth 2 insPt)
+  )
 )
 
 (defun GetEquipTagList (ss / i ent blk entx value equipInfoList equipTag equipName)
