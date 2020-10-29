@@ -1523,7 +1523,7 @@
   (InsertBlockByBlockName "EquipTag" insPt equipInfoList)
 )
 
-(defun InsertPublicProcessElementS (dataList / insPt)
+(defun InsertPublicPipeElementS (dataList / insPt)
   (setq insPt (getpoint "\n选取辅助流程组件插入点："))
   (InsertBlockByBlockName "PublicPipeElementS" insPt dataList)
 )
@@ -1751,7 +1751,7 @@
     (if (= 4 status)
       (progn 
         (princ previewDataList)(princ)
-        (InsertPublicProcessElementS previewDataList)
+        (InsertPublicPipeElementS previewDataList)
         (setq status 1)
       )
     )
