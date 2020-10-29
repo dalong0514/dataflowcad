@@ -1509,7 +1509,7 @@
 ; Gs Field
 ; Generate Entity in CAD
 
-(defun c:EquipTag (/ insPt equipInfoList i tag name)
+(defun c:EquipTag (/ insPt equipInfoList)
   (setvar "ATTREQ" 1)
   (setvar "ATTDIA" 0)
   (setq ss (GetEquipmentSSBySelectUtils))
