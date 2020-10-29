@@ -13,7 +13,15 @@
   (GenerateSortedNumByListTest)
   (GetInsertPtTest)
   (ExtractDrawNumTest)
+  (ReplaceListItemByindexUtilsTest)
   (DL:PrintTestResults (DL:CountBooleans *testList*))
+)
+
+(defun ReplaceListItemByindexUtilsTest ()
+  (AssertEqual 'ReplaceListItemByindexUtils 
+    (list "PL1101" 1 '("PL1201" "PL1202" "PL1203" "PL1203")) 
+    '("PL1201" "PL1101" "PL1203" "PL1203")
+  )
 )
 
 (defun ExtractDrawNumTest ()
@@ -991,10 +999,20 @@
 )
 
 ;; copy source code from: [http://lee-mac.com/substn.html]
+; Unit Test Compeleted
+; do not understand the function now - 2020-10-29
 (defun ReplaceListItemByindexUtils (newItem index originList / i)
     (setq i -1)
-    (mapcar '(lambda ( x ) (if (= (setq i (1+ i)) index) newItem x)) originList)
+    (mapcar '(lambda (x) 
+               (if (= (setq i (1+ i)) index) 
+                 newItem 
+                 x
+               )
+             ) 
+             originList
+    )
 )
+
 ; Utils Function 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
