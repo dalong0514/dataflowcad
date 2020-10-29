@@ -1518,22 +1518,22 @@
   (InsertBlockByBlockName "EquipTag" insPt equipInfoList)
 )
 
-(defun InsertBlockByBlockName (blockName insPt equipInfoList /)
+(defun InsertBlockByBlockName (blockName insPt dataList /)
   (setvar "ATTREQ" 1)
   (setvar "ATTDIA" 0)
-  (InsertBlockStrategy blockName insPt equipInfoList)
+  (InsertBlockStrategy blockName insPt dataList)
   (setvar "ATTREQ" 0)
 )
 
-(defun InsertBlockStrategy (blockName insPt equipInfoList /)
+(defun InsertBlockStrategy (blockName insPt dataList /)
   (if (= blockName "EquipTag") 
     (mapcar '(lambda (x y) 
                (command "-insert" blockName (GetInsertPt insPt y 30) 1 1 0 
                         (car x) 
                         (cadr x))
             ) 
-            equipInfoList
-            (GenerateSortedNumByList equipInfoList)
+            dataList
+            (GenerateSortedNumByList dataList)
     )
   )
 )
