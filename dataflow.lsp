@@ -1520,7 +1520,7 @@
 
 (defun InsertPublicProcessElementS (dataList / insPt)
   (setq insPt (getpoint "\n选取辅助流程组件插入点："))
-  (InsertBlockByBlockName "publicProcessElementS" insPt dataList)
+  (InsertBlockByBlockName "PublicPipeElementS" insPt dataList)
 )
 
 (defun InsertBlockByBlockName (blockName insPt dataList /)
@@ -1541,9 +1541,9 @@
             (GenerateSortedNumByList dataList)
     )
   )
-  (if (= blockName "publicProcessElementS") 
+  (if (= blockName "PublicPipeElementS") 
     (mapcar '(lambda (x y) 
-               (command "-insert" blockName (GetInsertPt insPt y 30) 1 1 0 
+               (command "-insert" blockName (GetInsertPt insPt y 10) 1 1 0 
                         (cadr x) 
                         (nth 3 x)
                         (nth 4 x))
