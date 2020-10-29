@@ -1550,7 +1550,11 @@
 
 (defun ProcessPublicPipeElementData (dataList /) 
   (mapcar '(lambda (x) 
-             (ReplaceListItemByindexUtils (ExtractDrawNum (nth 4 x)) 4 x)
+             ; the property value of drawnum may be null
+             (if (< (strlen (nth 4 x)) 3) 
+               (ReplaceListItemByindexUtils "XXXXX" 4 x)
+               (ReplaceListItemByindexUtils (ExtractDrawNum (nth 4 x)) 4 x)
+             )
            ) 
     dataList
   )
@@ -1810,7 +1814,7 @@
     ; view button
     (if (= 4 status)
       (progn 
-        ;(princ previewDataList)(princ)
+        ;(princ (strlen (nth 4 (car previewDataList))))
         (InsertPublicPipeElement previewDataList pipeSourceDirection)
         (setq status 1)
       )
