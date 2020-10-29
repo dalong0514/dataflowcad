@@ -393,15 +393,18 @@ generatePublicProcessElementBox : dialog {
     : column {
       height = 10;
       : popup_list { 
-        label = "选择要筛选的属性";
+        label = "来自总管还是去总管";
         edit_width = 30;
         key = "filterPropertyName"; 
         list = "";
         value = "";
       }
       : spacer { height = 1; } 
-      : text {
-        key = "loopDescribeMsg";
+      : popup_list { 
+        label = "单回路如 N、VT；双回路如 CWS/CWR";
+        edit_width = 30;
+        key = "loopStatus"; 
+        list = "";
         value = "";
       }
       : spacer { height = 1; } 

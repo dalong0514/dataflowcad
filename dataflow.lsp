@@ -1713,7 +1713,7 @@
   (generatePublicProcessElementByBox "generatePublicProcessElementBox" "Pipe")
 )
 
-(defun generatePublicProcessElementByBox (tileName dataType / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList importedList blockDataList entityNameList viewPropertyName previewDataList importedDataList)
+(defun generatePublicProcessElementByBox (tileName dataType / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList importedList blockDataList entityNameList viewPropertyName previewDataList importedDataList loopStatus)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -1727,26 +1727,36 @@
     
     ; optional setting for the popup_list tile
     (set_tile "filterPropertyName" "0")
+    (set_tile "loopStatus" "0")
     ; the default value of input box
     (mode_tile "filterPropertyName" 2)
+    (mode_tile "loopStatus" 2)
     (action_tile "filterPropertyName" "(setq filterPropertyName $value)")
+    (action_tile "loopStatus" "(setq loopStatus $value)")
     (action_tile "patternValue" "(setq patternValue $value)")
     
     (progn
       (start_list "filterPropertyName" 3)
       (mapcar '(lambda (x) (add_list x)) 
+                '("自总管" "去总管"))
+      (end_list)
+      (start_list "loopStatus" 3)
+      (mapcar '(lambda (x) (add_list x)) 
                 '("单回路" "双回路"))
       (end_list)
-      (set_tile "loopDescribeMsg" "单回路如 CA、N、VT；双回路如 CWS/CWR")
     )
     ; init the default data of text
     (if (= nil filterPropertyName)
       (setq filterPropertyName "0")
     )
+    (if (= nil loopStatus)
+      (setq loopStatus "0")
+    )
     (if (= nil patternValue)
       (setq patternValue "*")
     )
     (set_tile "filterPropertyName" filterPropertyName)
+    (set_tile "loopStatus" loopStatus)
     (set_tile "patternValue" patternValue)
     ; Display the number of selected pipes
     (if (/= sslen nil)
