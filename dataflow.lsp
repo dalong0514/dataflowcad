@@ -1544,7 +1544,7 @@
   (setq dataList (vl-sort dataList '(lambda (x y) (< (nth 4 x) (nth 4 y)))))
   (if (= pipeSourceDirection "0") 
     (InsertBlockByBlockName "PublicPipeElementS" insPt dataList)
-    (princ "dalong")
+    (InsertBlockByBlockName "PublicPipeElementW" insPt dataList)
   )
 )
 
@@ -1589,6 +1589,17 @@
     )
   )
   (if (= blockName "PublicPipeElementS") 
+    (mapcar '(lambda (x y) 
+               (command "-insert" blockName (GetInsertPt insPt y 10) 1 1 0 
+                        (cadr x) 
+                        (nth 3 x)
+                        (nth 4 x))
+            ) 
+            dataList
+            (GenerateSortedNumByList dataList)
+    )
+  )
+  (if (= blockName "PublicPipeElementW") 
     (mapcar '(lambda (x y) 
                (command "-insert" blockName (GetInsertPt insPt y 10) 1 1 0 
                         (cadr x) 
