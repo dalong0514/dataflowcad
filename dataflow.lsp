@@ -10,6 +10,7 @@
   (StringSubstUtilsTest)
   (numberedStringSubstUtilTest)
   (GetIndexforSearchMemberInListUtilsTest)
+  (GenerateSortedNumByListTest)
   (DL:PrintTestResults (DL:CountBooleans *testList*))
 )
 
@@ -28,6 +29,10 @@
 (defun GetIndexforSearchMemberInListUtilsTest ()
   (AssertEqual 'GetIndexforSearchMemberInListUtils (list "PL1101" (list "PL1101" "PL1102" "PL1103")) 0)
   (AssertEqual 'GetIndexforSearchMemberInListUtils (list "PL1102" (list "PL1101" "PL1102" "PL1103")) 1)
+)
+
+(defun GenerateSortedNumByListTest ()
+  (AssertEqual 'GenerateSortedNumByList (list '("13" "134" "456")) '(0 1 2))
 )
 
 ; Unit Test
@@ -1512,14 +1517,26 @@
   ; merge equipInfoList by equipTag
   (setq equipInfoList (vl-sort equipInfoList '(lambda (x y) (< (car x) (car y)))))
   (setq insPt (getpoint "\n选取设备位号的插入点："))
-  (setq i 0)
-  (repeat (length equipInfoList) 
-    (setq tag (car (nth i equipInfoList)))
-    (setq name (cadr (nth i equipInfoList)))
-    (InsertEquipTag (GetInsertPt insPt i) tag name)
-    (setq i (+ 1 i))
+  (mapcar '(lambda (x y) 
+              (InsertEquipTag (GetInsertPt insPt y) 
+                (car x) 
+                (cadr x)
+              )
+           ) 
+          equipInfoList
+          (GenerateSortedNumByList equipInfoList)
   )
   (setvar "ATTREQ" 0)
+)
+
+; Unit Test Completed
+(defun GenerateSortedNumByList (originList / i resultList)
+  (setq i 0)
+  (repeat (length originList) 
+    (setq resultList (append resultList (list i)))
+    (setq i (+ i 1))
+  )
+  resultList
 )
 
 ; get the new inserting position
