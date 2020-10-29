@@ -1509,7 +1509,7 @@
 ; Gs Field
 ; Generate Entity in CAD
 
-(defun c:EquipTag (/ insPt equipInfoList)
+(defun c:EquipTag (/ ss equipInfoList insPt)
   (setvar "ATTREQ" 1)
   (setvar "ATTDIA" 0)
   (setq ss (GetEquipmentSSBySelectUtils))
@@ -1527,6 +1527,27 @@
           (GenerateSortedNumByList equipInfoList)
   )
   (setvar "ATTREQ" 0)
+)
+
+(defun InsertBlockByBlockName (blockName equipInfoList insertBlockMsg / insPt)
+  (setvar "ATTREQ" 1)
+  (setvar "ATTDIA" 0)
+  (setq insPt (getpoint insertBlockMsg))
+  (InsertBlockStrategy "EquipTag" insPt equipInfoList)
+  (setvar "ATTREQ" 0)
+)
+
+(defun InsertBlockStrategy (blockName insPt equipInfoList /)
+  (if (= blockName "EquipTag") 
+    (mapcar '(lambda (x y) 
+               (command "-insert" blockName insPt 1 1 0 
+                        (car x) 
+                        (cadr x))
+            ) 
+            equipInfoList
+            (GenerateSortedNumByList equipInfoList)
+    )
+  )
 )
 
 ; Unit Test Completed
