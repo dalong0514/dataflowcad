@@ -1584,34 +1584,34 @@
 (defun InsertBlockStrategy (blockName insPt dataList /)
   (if (= blockName "EquipTag") 
     (mapcar '(lambda (x y) 
-               (command "-insert" blockName (GetInsertPt insPt y 30) 1 1 0 
-                        (car x) 
-                        (cadr x))
+               (command "-insert" blockName (GetInsertPt insPt x 30) 1 1 0 
+                        (car y) 
+                        (cadr y))
             ) 
+            (GenerateSortedNumByList dataList) 
             dataList
-            (GenerateSortedNumByList dataList)
     )
   )
   (if (= blockName "PublicPipeElementS") 
     (mapcar '(lambda (x y) 
-               (command "-insert" blockName (GetInsertPt insPt y 10) 1 1 0 
-                        (cadr x) 
-                        (nth 3 x)
-                        (nth 4 x))
+               (command "-insert" blockName (GetInsertPt insPt x 10) 1 1 0 
+                        (nth 1 y) 
+                        (nth 3 y)
+                        (nth 4 y))
             ) 
-            dataList
             (GenerateSortedNumByList dataList)
+            dataList
     )
   )
   (if (= blockName "PublicPipeElementW") 
     (mapcar '(lambda (x y) 
-               (command "-insert" blockName (GetInsertPt insPt y 10) 1 1 0 
-                        (cadr x) 
-                        (nth 3 x)
-                        (nth 4 x))
+               (command "-insert" blockName (GetInsertPt insPt x 10) 1 1 0 
+                        (nth 1 y) 
+                        (nth 2 y)
+                        (nth 4 y))
             ) 
-            dataList
             (GenerateSortedNumByList dataList)
+            dataList
     )
   )
 )
