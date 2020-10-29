@@ -1539,7 +1539,16 @@
 
 (defun InsertPublicPipeElementS (dataList / insPt)
   (setq insPt (getpoint "\n选取辅助流程组件插入点："))
+  (setq dataList (ProcessPublicPipeElementData dataList))
   (InsertBlockByBlockName "PublicPipeElementS" insPt dataList)
+)
+
+(defun ProcessPublicPipeElementData (dataList /) 
+  (mapcar '(lambda (x) 
+             (ReplaceListItemByindexUtils (ExtractDrawNum (nth 4 x)) 4 x)
+           ) 
+    dataList
+  )
 )
 
 ; Unit Test Completed
