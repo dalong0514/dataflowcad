@@ -209,6 +209,9 @@
   (if (= dataType "Pipe") 
     (setq propertyNameList (GetPipePropertyNameList))
   )
+  (if (= dataType "PublicPipe") 
+    (setq propertyNameList (GetPublicPipePropertyNameList))
+  )
   (if (= dataType "Instrument") 
     (setq propertyNameList (GetInstrumentPropertyNameList))
   )
@@ -240,6 +243,9 @@
 (defun GetPropertyChNameListStrategy (dataType / propertyChNameList)
   (if (= dataType "Pipe") 
     (setq propertyChNameList (GetPipePropertyChNameList))
+  )
+  (if (= dataType "PublicPipe") 
+    (setq propertyChNameList (GetPublicPipePropertyChNameList))
   )
   (if (= dataType "Instrument") 
     (setq propertyChNameList (GetInstrumentPropertyChNameList))
@@ -275,6 +281,14 @@
 
 (defun GetPipePropertyChNameList ()
   '("管道编号" "工作介质" "工作温度" "工作压力" "相态" "管道起点" "管道终点" "流程图号" "保温材料")
+)
+
+(defun GetPublicPipePropertyNameList ()
+  '("PIPENUM" "FROM" "TO" "DRAWNUM")
+)
+
+(defun GetPublicPipePropertyChNameList ()
+  '("管道编号" "管道起点" "管道终点" "流程图号")
 )
 
 (defun GetInstrumentPropertyNameList ()
