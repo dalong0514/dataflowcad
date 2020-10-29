@@ -395,7 +395,7 @@ generatePublicProcessElementBox : dialog {
       : popup_list { 
         label = "来自总管还是去总管";
         edit_width = 30;
-        key = "filterPropertyName"; 
+        key = "pipeSourceDirection"; 
         list = "";
         value = "";
       }

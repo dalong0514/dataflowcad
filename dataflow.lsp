@@ -1537,12 +1537,15 @@
 ; Gs Field
 ; Generate Entity in CAD
 
-(defun InsertPublicPipeElementS (dataList / insPt)
+(defun InsertPublicPipeElement (dataList pipeSourceDirection / insPt)
   (setq insPt (getpoint "\n选取辅助流程组件插入点："))
   (setq dataList (ProcessPublicPipeElementData dataList))
   ; sort data by drawnum
   (setq dataList (vl-sort dataList '(lambda (x y) (< (nth 4 x) (nth 4 y)))))
-  (InsertBlockByBlockName "PublicPipeElementS" insPt dataList)
+  (if (= pipeSourceDirection "0") 
+    (InsertBlockByBlockName "PublicPipeElementS" insPt dataList)
+    (princ "dalong")
+  )
 )
 
 (defun ProcessPublicPipeElementData (dataList /) 
@@ -1713,7 +1716,7 @@
   (generatePublicProcessElementByBox "generatePublicProcessElementBox" "Pipe")
 )
 
-(defun generatePublicProcessElementByBox (tileName dataType / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList importedList blockDataList entityNameList viewPropertyName previewDataList importedDataList loopStatus)
+(defun generatePublicProcessElementByBox (tileName dataType / dcl_id propertyName propertyValue pipeSourceDirection patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList importedList blockDataList entityNameList viewPropertyName previewDataList importedDataList loopStatus)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -1726,17 +1729,17 @@
     (action_tile "btnShowOriginData" "(done_dialog 4)")
     
     ; optional setting for the popup_list tile
-    (set_tile "filterPropertyName" "0")
+    (set_tile "pipeSourceDirection" "0")
     (set_tile "loopStatus" "0")
     ; the default value of input box
-    (mode_tile "filterPropertyName" 2)
+    (mode_tile "pipeSourceDirection" 2)
     (mode_tile "loopStatus" 2)
-    (action_tile "filterPropertyName" "(setq filterPropertyName $value)")
+    (action_tile "pipeSourceDirection" "(setq pipeSourceDirection $value)")
     (action_tile "loopStatus" "(setq loopStatus $value)")
     (action_tile "patternValue" "(setq patternValue $value)")
     
     (progn
-      (start_list "filterPropertyName" 3)
+      (start_list "pipeSourceDirection" 3)
       (mapcar '(lambda (x) (add_list x)) 
                 '("自总管" "去总管"))
       (end_list)
@@ -1746,8 +1749,8 @@
       (end_list)
     )
     ; init the default data of text
-    (if (= nil filterPropertyName)
-      (setq filterPropertyName "0")
+    (if (= nil pipeSourceDirection)
+      (setq pipeSourceDirection "0")
     )
     (if (= nil loopStatus)
       (setq loopStatus "0")
@@ -1755,7 +1758,7 @@
     (if (= nil patternValue)
       (setq patternValue "*")
     )
-    (set_tile "filterPropertyName" filterPropertyName)
+    (set_tile "pipeSourceDirection" pipeSourceDirection)
     (set_tile "loopStatus" loopStatus)
     (set_tile "patternValue" patternValue)
     ; Display the number of selected pipes
@@ -1796,8 +1799,8 @@
     ; view button
     (if (= 4 status)
       (progn 
-        (princ previewDataList)(princ)
-        (InsertPublicPipeElementS previewDataList)
+        ;(princ previewDataList)(princ)
+        (InsertPublicPipeElement previewDataList pipeSourceDirection)
         (setq status 1)
       )
     )
