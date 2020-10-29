@@ -1528,10 +1528,6 @@
   (InsertBlockByBlockName "PublicPipeElementS" insPt dataList)
 )
 
-(defun c:foo (/ insPt)
-  (setq insPt (getpoint "\n选取辅助流程组件插入点："))
-)
-
 (defun InsertBlockByBlockName (blockName insPt dataList /)
   (setvar "ATTREQ" 1)
   (setvar "ATTDIA" 0)
