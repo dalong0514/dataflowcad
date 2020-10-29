@@ -1510,37 +1510,25 @@
 ; Generate Entity in CAD
 
 (defun c:EquipTag (/ ss equipInfoList insPt)
-  (setvar "ATTREQ" 1)
-  (setvar "ATTDIA" 0)
   (setq ss (GetEquipmentSSBySelectUtils))
   (setq equipInfoList (GetEquipTagList ss))
   ; merge equipInfoList by equipTag
   (setq equipInfoList (vl-sort equipInfoList '(lambda (x y) (< (car x) (car y)))))
   (setq insPt (getpoint "\n选取设备位号的插入点："))
-  (mapcar '(lambda (x y) 
-              (InsertEquipTag (GetInsertPt insPt y) 
-                (car x) 
-                (cadr x)
-              )
-           ) 
-          equipInfoList
-          (GenerateSortedNumByList equipInfoList)
-  )
-  (setvar "ATTREQ" 0)
+  (InsertBlockByBlockName "EquipTag" insPt equipInfoList)
 )
 
-(defun InsertBlockByBlockName (blockName equipInfoList insertBlockMsg / insPt)
+(defun InsertBlockByBlockName (blockName insPt equipInfoList /)
   (setvar "ATTREQ" 1)
   (setvar "ATTDIA" 0)
-  (setq insPt (getpoint insertBlockMsg))
-  (InsertBlockStrategy "EquipTag" insPt equipInfoList)
+  (InsertBlockStrategy blockName insPt equipInfoList)
   (setvar "ATTREQ" 0)
 )
 
 (defun InsertBlockStrategy (blockName insPt equipInfoList /)
   (if (= blockName "EquipTag") 
     (mapcar '(lambda (x y) 
-               (command "-insert" blockName insPt 1 1 0 
+               (command "-insert" blockName (GetInsertPt insPt y 30) 1 1 0 
                         (car x) 
                         (cadr x))
             ) 
@@ -1561,14 +1549,10 @@
 )
 
 ; get the new inserting position
-(defun GetInsertPt (insPt i / xPosition yPosition newInsPt)
-  (setq xPosition (+ (nth 0 insPt) (* i 30)))
+(defun GetInsertPt (insPt i removeDistance / xPosition yPosition newInsPt)
+  (setq xPosition (+ (nth 0 insPt) (* i removeDistance)))
   (setq yPosition (nth 1 insPt))
   (setq newInsPt (list xPosition yPosition))
-)
-
-(defun InsertEquipTag (insPt tag name / )
-  (command "-insert" "EquipTag" insPt 1 1 0 tag name)
 )
 
 (defun GetEquipTagList (ss / i ent blk entx value equipInfoList equipTag equipName)
