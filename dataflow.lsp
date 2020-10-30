@@ -1582,6 +1582,25 @@
   (entmake (list (cons 0 "ENDBLK")))
 )
 
+(defun c:sssfoo() 
+  ; Creates a block reference based on the block definition BlockNumber at 1.0,-0.5 
+  (entmake '((0. "INSERT")(100. "AcDbEntity")(100. "AcDbBlockReference") (66. 1) (2. "roomnum") (10 1.0 -0.5 0.0))) 
+  ((0. "INSERT")(100. "AcDbEntity")(100. "AcDbBlockReference") (66. 1) (2. "RoomNum") (10 1.0 -0.5 0.0)) 
+
+  ; Creates an attribute reference with the tag ROOM# and adds it to the block 
+  (entmake '((0. "ATTRIB") (100. "AcDbEntity") (100. "AcDbText") (10 0.533834 -0.7 0.0) 
+    (40. 9.0) (1. "101") (7. "Standard") (71. 0) (72. 1) (11 1.0 -0.5 0.0) 
+    (100. "AcDbAttribute") (280. 0) (2. "ROOM#") (70. 0) (74. 2) (280. 1))
+  ) 
+  (entmake '((0. "ATTRIB") (100. "AcDbEntity") (100. "AcDbText") (10 0.533834 -0.7 0.0) 
+    (40. 0.4) (1. "101") (7. "Standard") (71. 0) (72. 1) (11 1.0 -0.5 0.0) 
+    (100. "AcDbAttribute") (280. 0) (2. "ROOM#") (70. 0) (74. 2) (280. 1))
+  ) 
+
+  ; Adds the end marker for the block reference 
+  (entmake ' ((0. "SEQEND") (100. "AcDbEntity"))) ((0. "SEQEND") (100. "AcDbEntity"))
+)
+
 (defun GenerateOnePublicPipeElementS (insPt blockName /)
   (entmake (list (cons 0 "INSERT") (cons 100 "AcDbEntity") (cons 100 "AcDbBlockReference") 
                  (cons 2 blockName) (cons 10 insPt) 
