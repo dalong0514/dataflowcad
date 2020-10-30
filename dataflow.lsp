@@ -1561,6 +1561,13 @@
 ; Gs Field
 ; Generate Entity in CAD
 
+(defun GenerateOnePublicPipeElementS (insPt / insPt)
+  (entmake (list (cons 0 "INSERT") (cons 100 "AcDbEntity") (cons 100 "AcDbBlockReference") 
+                 (cons 2 "PublicPipeElementS") (cons 10 insPt) 
+           )
+  )
+)
+
 (defun InsertPublicPipeElement (dataList pipeSourceDirection / insPt)
   (setq insPt (getpoint "\n选取辅助流程组件插入点："))
   (setq dataList (ProcessPublicPipeElementData dataList))
