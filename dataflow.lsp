@@ -1618,7 +1618,7 @@
   (GenerateTextByPositionAndContent (MoveInsertPosition insPt 1.21 -10) (nth 4 pipeData))
 )
 
-(defun GeneratePublicPipeElementS (blockName insPtList dataList /)
+(defun GeneratePublicPipeElement (blockName insPtList dataList /)
   (mapcar '(lambda (x y) 
              (GenerateOnePublicPipeElementS x y blockName)
           ) 
@@ -1643,8 +1643,8 @@
   (setq dataList (vl-sort dataList '(lambda (x y) (< (nth 4 x) (nth 4 y)))))
   (setq insPtList (GetInsertPtList insPt (GenerateSortedNumByList dataList) 10))
   (if (= pipeSourceDirection "0") 
-    (GeneratePublicPipeElementS "PublicPipeElementS" insPtList dataList)
-    (GeneratePublicPipeElementS "PublicPipeElementW" insPtList dataList)
+    (GeneratePublicPipeElement "PublicPipeElementS" insPtList dataList)
+    (GeneratePublicPipeElement "PublicPipeElementW" insPtList dataList)
   )
 )
 
