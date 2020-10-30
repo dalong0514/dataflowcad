@@ -585,8 +585,8 @@
 ; tansfor gb2312 to utf8
 (defun FileEncodeTransUtils (file charset1 charset2 / obj encode)
   (setq obj (vlax-create-object "ADODB.Stream"))
-  (vlax-put-property obj 'type 2);1-二进制读取，2-文本读取
-  (vlax-put-property obj 'mode 3);1-读，2-写，3-读写
+  (vlax-put-property obj 'type 2);1-reading binary, 2-reading text
+  (vlax-put-property obj 'mode 3);1-read, 2-write, 3-read and write
   (vlax-invoke obj 'open)
   (vlax-put-property obj "charset" charset1);;unicode;utf-8;ascii;gb2312;big5;gbk
   (vlax-invoke-method obj 'loadfromfile file)
@@ -600,7 +600,7 @@
   (vlax-put-property obj "charset" charset2);;unicode;utf-8;ascii;gb2312;big5;gbk
   (vlax-invoke obj 'writetext encode)
   (vlax-invoke-method obj 'savetofile file 2);1-create，2-rewrite
-  (vlax-invoke obj 'flush);将缓存中的数据强制输出
+  (vlax-invoke obj 'flush);force the data in cache outputed
   (vlax-invoke obj 'close)
   (vlax-release-object obj)
 )
