@@ -1614,7 +1614,10 @@
            )
   )
   (GenerateTextByPositionAndContent (MoveInsertPosition insPt -0.85 6.3) (nth 1 pipeData))
-  (GenerateTextByPositionAndContent (MoveInsertPosition insPt -3.5 -10) (nth 3 pipeData))
+  (if (= blockName "PublicPipeElementS") 
+    (GenerateTextByPositionAndContent (MoveInsertPosition insPt -3.5 -10) (nth 3 pipeData))
+    (GenerateTextByPositionAndContent (MoveInsertPosition insPt -3.5 -10) (nth 2 pipeData))
+  )
   (GenerateTextByPositionAndContent (MoveInsertPosition insPt 1.21 -10) (nth 4 pipeData))
 )
 
