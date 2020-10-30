@@ -610,6 +610,13 @@
   (cdr (assoc DXFcode (entget entityName)))
 )
 
+(defun ViewSelectedEntityDataUtils (/ ss ent entx)
+  (setq ss (ssget))
+  (setq ent (entget (ssname ss 0)))
+  ;(setq entx (entget (entnext (cdr (assoc -1 ent)))))
+  (princ ent)(princ)
+)
+
 ; Sets the value of the specified DXF group code for the supplied entity name
 (defun SetDXFValueUtils (entityName DXFcode newValue / entityData newPropList
                                                     oldPropList)
@@ -2361,13 +2368,6 @@
     (setq i (+ 1 i))
   )
   aPropertyValueList
-)
-
-(defun c:foo (/ ss ent entx)
-  (setq ss (ssget))
-  (setq ent (entget (ssname ss 0)))
-  (setq entx (entget (entnext (cdr (assoc -1 ent)))))
-  (princ entx)(princ)
 )
 
 (defun ModifyPropertyValueByEntityName (entityNameList selectedName propertyValue / i ent blk entx propertyName)
