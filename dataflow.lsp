@@ -1566,6 +1566,11 @@
                  (cons 2 blockName) (cons 10 insPt) 
            )
   )
+  (entmake (list (cons 0 "ATTRIB") (cons 100 "AcDbEntity") (cons 410 "Model") (cons 100 "AcDbText") 
+                 (cons 100 "AcDbAttribute") (cons 2 "PIPENUM") 
+           )
+  )
+  (entmake (list (cons 0 "ENDBLK")))
 )
 
 (defun GeneratePublicPipeElementS (blockName insPt dataList /)
@@ -2361,6 +2366,13 @@
     (setq i (+ 1 i))
   )
   aPropertyValueList
+)
+
+(defun c:foo (/ ss ent entx)
+  (setq ss (ssget))
+  (setq ent (entget (ssname ss 0)))
+  (setq entx (entget (entnext (cdr (assoc -1 ent)))))
+  (princ entx)(princ)
 )
 
 (defun ModifyPropertyValueByEntityName (entityNameList selectedName propertyValue / i ent blk entx propertyName)
