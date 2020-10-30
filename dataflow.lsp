@@ -1622,22 +1622,40 @@
   (GenerateEquipTagText insPt "V1101")
 )
 
-(defun GenerateOnePublicPipeElementS (insPt pipeData blockName /)
+(defun GenerateOnePublicPipeElement (insPt textDataList blockName /)
   (entmake (list (cons 0 "INSERT") (cons 100 "AcDbEntity") (cons 100 "AcDbBlockReference") 
                  (cons 2 blockName) (cons 10 insPt) 
            )
   )
-  (GenerateTextByPositionAndContent (MoveInsertPosition insPt -0.85 6.3) (nth 1 pipeData))
+  (GenerateTextDataStrategy blockName insPt textDataList)
+)
+
+(defun GenerateTextDataStrategy (blockName insPt textDataList /) 
   (if (= blockName "PublicPipeElementS") 
-    (GenerateTextByPositionAndContent (MoveInsertPosition insPt -3.5 -10) (nth 3 pipeData))
-    (GenerateTextByPositionAndContent (MoveInsertPosition insPt -3.5 -10) (nth 2 pipeData))
+    (progn 
+      (GenerateTextByPositionAndContent (MoveInsertPosition insPt -0.85 6.3) (nth 1 textDataList))
+      (GenerateTextByPositionAndContent (MoveInsertPosition insPt -3.5 -10) (nth 3 textDataList))
+      (GenerateTextByPositionAndContent (MoveInsertPosition insPt 1.21 -10) (nth 4 textDataList))
+    )
   )
-  (GenerateTextByPositionAndContent (MoveInsertPosition insPt 1.21 -10) (nth 4 pipeData))
+  (if (= blockName "PublicPipeElementW") 
+    (progn 
+      (GenerateTextByPositionAndContent (MoveInsertPosition insPt -0.85 6.3) (nth 1 textDataList))
+      (GenerateTextByPositionAndContent (MoveInsertPosition insPt -3.5 -11.5) (nth 2 textDataList))
+      (GenerateTextByPositionAndContent (MoveInsertPosition insPt 1.21 -11.5) (nth 4 textDataList))
+    )
+  )
+  (if (= blockName "EquipTagV2") 
+    (progn 
+      (GenerateTextByPositionAndContent (MoveInsertPosition insPt -0.85 6.3) (nth 1 textDataList))
+      (GenerateTextByPositionAndContent (MoveInsertPosition insPt -3.5 -10) (nth 2 textDataList))
+    )
+  )
 )
 
 (defun GeneratePublicPipeElement (blockName insPtList dataList /)
   (mapcar '(lambda (x y) 
-             (GenerateOnePublicPipeElementS x y blockName)
+             (GenerateOnePublicPipeElement x y blockName)
           ) 
           insPtList
           dataList
@@ -1682,12 +1700,13 @@
   (substr str (- (strlen str) 4))
 )
 
-(defun c:EquipTag (/ ss equipInfoList insPt)
+(defun c:EquipTag (/ ss equipInfoList insPt insPtList)
   (setq ss (GetEquipmentSSBySelectUtils))
   (setq equipInfoList (GetEquipTagList ss))
   ; merge equipInfoList by equipTag
   (setq equipInfoList (vl-sort equipInfoList '(lambda (x y) (< (car x) (car y)))))
   (setq insPt (getpoint "\n选取设备位号的插入点："))
+  (setq insPtList (GetInsertPtList insPt (GenerateSortedNumByList equipInfoList) 30))
   (InsertBlockByBlockName "EquipTag" insPt equipInfoList)
 )
 
