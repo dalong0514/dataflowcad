@@ -1613,9 +1613,9 @@
                  (cons 2 blockName) (cons 10 insPt) 
            )
   )
-  (GenerateTextByPositionAndContent insPt (nth 1 pipeData))
-  (GenerateTextByPositionAndContent insPt (nth 3 pipeData))
-  (GenerateTextByPositionAndContent insPt (nth 4 pipeData))
+  (GenerateTextByPositionAndContent (MoveInsertPosition insPt -0.85 6.3) (nth 1 pipeData))
+  (GenerateTextByPositionAndContent (MoveInsertPosition insPt -3.5 -10) (nth 3 pipeData))
+  (GenerateTextByPositionAndContent (MoveInsertPosition insPt 1.21 -10) (nth 4 pipeData))
 )
 
 (defun GeneratePublicPipeElementS (blockName insPtList dataList /)
@@ -1642,8 +1642,6 @@
   ; sort data by drawnum
   (setq dataList (vl-sort dataList '(lambda (x y) (< (nth 4 x) (nth 4 y)))))
   (setq insPtList (GetInsertPtList insPt (GenerateSortedNumByList dataList) 10))
-  ; add position info to dataList
-  ;setq dataList (AddItemToListStartUtils insPtList dataList))
   (if (= pipeSourceDirection "0") 
     (GeneratePublicPipeElementS "PublicPipeElementS" insPtList dataList)
     (GeneratePublicPipeElementS "PublicPipeElementW" insPtList dataList)
