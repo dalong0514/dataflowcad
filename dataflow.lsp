@@ -605,6 +605,30 @@
   (vlax-release-object obj)
 )
 
+; Returns the value of the specified DXF group code for the supplied entity name
+(defun GetDXFValueUtils (entityName DXFcode / )
+  (cdr (assoc DXFcode (entget entityName)))
+)
+
+; Sets the value of the specified DXF group code for the supplied entity name
+(defun SetDXFValueUtils (entityName DXFcode newValue / entityData newPropList
+                                                    oldPropList)
+  ; Get the entity data list for the object
+  (setq entityData (entget entityName))
+  ; Create the dotted pair for the new property value
+  (setq newPropList (cons DXFcode newValue))
+  (if (setq oldPropList (assoc DXFcode entityData))
+    (setq entityData (subst newPropList oldPropList entityData))
+    (setq entityData (append entityData (list newPropList)))
+  )
+  ; Update the object¡¯s entity data list 
+  (entmod entityData)
+  ; Refresh the object on-screen
+  (entupd entityName)
+  ; Return the new entity data list
+  entityData
+)
+
 (defun GetAllInstrumentSSUtils ()
   (setq ss (ssget "X" '((0 . "INSERT") 
         (-4 . "<OR")
