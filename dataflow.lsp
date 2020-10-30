@@ -14,6 +14,7 @@
   (GetInsertPtTest)
   (ExtractDrawNumTest)
   (ReplaceListItemByindexUtilsTest)
+  (AddItemToListStartUtilsTest)
   (DL:PrintTestResults (DL:CountBooleans *testList*))
 )
 
@@ -21,6 +22,12 @@
   (AssertEqual 'ReplaceListItemByindexUtils 
     (list "PL1101" 1 '("PL1201" "PL1202" "PL1203" "PL1203")) 
     '("PL1201" "PL1101" "PL1203" "PL1203")
+  )
+)
+
+(defun AddItemToListStartUtilsTest ()
+  (AssertEqual 'AddItemToListStartUtils (list (list 0 1 2) (list (list "PL01" "PL02") (list "PL01" "PL02") (list "PL05" "PL06"))) 
+    (list (list 0 "PL01" "PL02") (list 1 "PL01" "PL02") (list 2 "PL05" "PL06"))
   )
 )
 
@@ -1568,6 +1575,14 @@
 ; Gs Field
 ; Generate Entity in CAD
 
+; Unit Test Completed
+(defun AddItemToListStartUtils (firstList secondList /)
+  (mapcar '(lambda (x y) (cons x y)) 
+           firstList 
+           secondList
+  )
+)
+
 (defun GenerateTextByPositionAndContent (insPt textContent /)
   (entmake (list (cons 0 "TEXT") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 "¹ÜµÀ±àºÅ") (cons 100 "AcDbText") 
              (cons 10 insPt) (cons 40 3.0) (cons 1 textContent) (cons 50 1.5708) (cons 41 0.7) (cons 51 0.0) (cons 7 "HZTXT") 
@@ -1606,11 +1621,11 @@
   (setq dataList (ProcessPublicPipeElementData dataList))
   ; sort data by drawnum
   (setq dataList (vl-sort dataList '(lambda (x y) (< (nth 4 x) (nth 4 y)))))
+  ; add position info to dataList
   (if (= pipeSourceDirection "0") 
     (GeneratePublicPipeElementS "PublicPipeElementS" insPt dataList)
     (GeneratePublicPipeElementS "PublicPipeElementW" insPt dataList)
   )
-  (princ (GetEntityNameListAfterGenerated lastEntityName))(princ)
 )
 
 (defun InsertPublicPipeElementV2 (dataList pipeSourceDirection / insPt)
