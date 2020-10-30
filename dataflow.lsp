@@ -1561,14 +1561,33 @@
 ; Gs Field
 ; Generate Entity in CAD
 
-(defun GenerateOnePublicPipeElementS (insPt / insPt)
+(defun GenerateOnePublicPipeElementS (insPt blockName /)
   (entmake (list (cons 0 "INSERT") (cons 100 "AcDbEntity") (cons 100 "AcDbBlockReference") 
-                 (cons 2 "PublicPipeElementS") (cons 10 insPt) 
+                 (cons 2 blockName) (cons 10 insPt) 
            )
   )
 )
 
+(defun GeneratePublicPipeElementS (blockName insPt dataList /)
+  (mapcar '(lambda (x) 
+             (GenerateOnePublicPipeElementS (GetInsertPt insPt x 10) blockName)
+          ) 
+          (GenerateSortedNumByList dataList) 
+  )
+)
+
 (defun InsertPublicPipeElement (dataList pipeSourceDirection / insPt)
+  (setq insPt (getpoint "\n选取辅助流程组件插入点："))
+  (setq dataList (ProcessPublicPipeElementData dataList))
+  ; sort data by drawnum
+  (setq dataList (vl-sort dataList '(lambda (x y) (< (nth 4 x) (nth 4 y)))))
+  (if (= pipeSourceDirection "0") 
+    (GeneratePublicPipeElementS "PublicPipeElementS" insPt dataList)
+    (GeneratePublicPipeElementS "PublicPipeElementW" insPt dataList)
+  )
+)
+
+(defun InsertPublicPipeElementV2 (dataList pipeSourceDirection / insPt)
   (setq insPt (getpoint "\n选取辅助流程组件插入点："))
   (setq dataList (ProcessPublicPipeElementData dataList))
   ; sort data by drawnum
