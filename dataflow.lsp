@@ -1568,11 +1568,20 @@
 ; Gs Field
 ; Generate Entity in CAD
 
+(defun GenerateTextByPositionAndContent (insPt textContent /)
+  (entmake (list (cons 0 "TEXT") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 "¹ÜµÀ±àºÅ") (cons 100 "AcDbText") 
+             (cons 10 insPt) (cons 40 3.0) (cons 1 textContent) (cons 50 1.5708) (cons 41 0.7) (cons 51 0.0) (cons 7 "HZTXT") 
+             (cons 71 0) (cons 72 0) (cons 11 '(0.0 0.0 0.0)) (cons 210 '(0.0 0.0 1.0)) (cons 100 "AcDbText") (cons 73 0)
+             )
+  )(princ)
+)
+
 (defun GenerateOnePublicPipeElementS (insPt blockName /)
   (entmake (list (cons 0 "INSERT") (cons 100 "AcDbEntity") (cons 100 "AcDbBlockReference") 
                  (cons 2 blockName) (cons 10 insPt) 
            )
   )
+  (GenerateTextByPositionAndContent insPt "PL1101")
 )
 
 (defun GeneratePublicPipeElementS (blockName insPt dataList /)
