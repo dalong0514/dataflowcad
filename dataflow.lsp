@@ -1648,17 +1648,6 @@
   )
 )
 
-(defun InsertPublicPipeElementV2 (dataList pipeSourceDirection / insPt)
-  (setq insPt (getpoint "\n选取辅助流程组件插入点："))
-  (setq dataList (ProcessPublicPipeElementData dataList))
-  ; sort data by drawnum
-  (setq dataList (vl-sort dataList '(lambda (x y) (< (nth 4 x) (nth 4 y)))))
-  (if (= pipeSourceDirection "0") 
-    (InsertBlockByBlockName "PublicPipeElementS" insPt dataList)
-    (InsertBlockByBlockName "PublicPipeElementW" insPt dataList)
-  )
-)
-
 (defun ProcessPublicPipeElementData (dataList /) 
   (mapcar '(lambda (x) 
              ; the property value of drawnum may be null
