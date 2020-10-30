@@ -1617,9 +1617,8 @@
 )
 
 (defun c:foo (/ insPt)
-  ;(ViewSelectedEntityDataUtils)
-  (setq insPt (getpoint "\n选取辅助流程组件插入点："))
-  (GenerateEquipTagText insPt "V1101")
+  (ViewSelectedEntityDataUtils)
+  ;(setq insPt (getpoint "\n选取插入点："))
 )
 
 (defun GenerateOnePublicPipeElement (insPt textDataList blockName /)
@@ -1647,8 +1646,8 @@
   )
   (if (= blockName "EquipTagV2") 
     (progn 
-      (GenerateTextByPositionAndContent (MoveInsertPosition insPt -0.85 6.3) (nth 1 textDataList))
-      (GenerateTextByPositionAndContent (MoveInsertPosition insPt -3.5 -10) (nth 2 textDataList))
+      (GenerateEquipTagText (MoveInsertPosition insPt 0 1) (nth 0 textDataList))
+      (GenerateEquipTagText (MoveInsertPosition insPt 0 -4.5) (nth 1 textDataList))
     )
   )
 )
@@ -1707,49 +1706,7 @@
   (setq equipInfoList (vl-sort equipInfoList '(lambda (x y) (< (car x) (car y)))))
   (setq insPt (getpoint "\n选取设备位号的插入点："))
   (setq insPtList (GetInsertPtList insPt (GenerateSortedNumByList equipInfoList) 30))
-  (InsertBlockByBlockName "EquipTag" insPt equipInfoList)
-)
-
-(defun InsertBlockByBlockName (blockName insPt dataList /)
-  (setvar "ATTREQ" 1)
-  (setvar "ATTDIA" 0)
-  (InsertBlockStrategy blockName insPt dataList)
-  (setvar "ATTREQ" 0)
-)
-
-(defun InsertBlockStrategy (blockName insPt dataList /)
-  (if (= blockName "EquipTag") 
-    (mapcar '(lambda (x y) 
-               (command "-insert" blockName (GetInsertPt insPt x 30) 1 1 0 
-                        (car y) 
-                        (cadr y))
-            ) 
-            (GenerateSortedNumByList dataList) 
-            dataList
-    )
-  )
-  (if (= blockName "PublicPipeElementS") 
-    (mapcar '(lambda (x y) 
-               (command "-insert" blockName (GetInsertPt insPt x 10) 1 1 0 
-                        (nth 1 y) 
-                        (nth 3 y)
-                        (nth 4 y))
-            ) 
-            (GenerateSortedNumByList dataList)
-            dataList
-    )
-  )
-  (if (= blockName "PublicPipeElementW") 
-    (mapcar '(lambda (x y) 
-               (command "-insert" blockName (GetInsertPt insPt x 10) 1 1 0 
-                        (nth 1 y) 
-                        (nth 2 y)
-                        (nth 4 y))
-            ) 
-            (GenerateSortedNumByList dataList)
-            dataList
-    )
-  )
+  (GeneratePublicPipeElement "EquipTagV2" insPtList equipInfoList)
 )
 
 ; Unit Test Completed
