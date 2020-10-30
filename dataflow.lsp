@@ -16,7 +16,14 @@
   (ReplaceListItemByindexUtilsTest)
   (AddItemToListStartUtilsTest)
   (GetInsertPtListTest)
+  (MoveInsertPositionTest)
   (DL:PrintTestResults (DL:CountBooleans *testList*))
+)
+
+(defun MoveInsertPositionTest ()
+  (AssertEqual 'MoveInsertPosition (list '(1 1 0) 10 20) '(11 21 0))
+  (AssertEqual 'MoveInsertPosition (list '(10 10 0) -15 -20) '(-5 -10 0))
+  (AssertEqual 'MoveInsertPosition (list '(1.5 3.6 0) -5 -2) '(-3.5 1.6 0))
 )
 
 (defun GetInsertPtListTest ()
@@ -1730,6 +1737,13 @@
     (setq i (+ i 1))
   )
   resultList
+)
+
+; Unit Test Compeleted
+(defun MoveInsertPosition (insPt xOffset yOffset / result)
+  (setq result (ReplaceListItemByindexUtils (+ (car insPt) xOffset) 0 insPt))
+  (setq result (ReplaceListItemByindexUtils (+ (nth 1 result) yOffset) 1 result))
+  result
 )
 
 ; get the new inserting position
