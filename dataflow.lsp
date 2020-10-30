@@ -1068,6 +1068,14 @@
     )
 )
 
+; Unit Test Completed
+(defun AddItemToListStartUtils (firstList secondList /)
+  (mapcar '(lambda (x y) (cons x y)) 
+           firstList 
+           secondList
+  )
+)
+
 ; Utils Function 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
@@ -1590,15 +1598,7 @@
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
 ; Gs Field
-; Generate Entity in CAD
-
-; Unit Test Completed
-(defun AddItemToListStartUtils (firstList secondList /)
-  (mapcar '(lambda (x y) (cons x y)) 
-           firstList 
-           secondList
-  )
-)
+; Generate Entity Object in CAD
 
 (defun GenerateTextByPositionAndContent (insPt textContent /)
   (entmake (list (cons 0 "TEXT") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 "管道编号") (cons 100 "AcDbText") 
@@ -1614,11 +1614,6 @@
                   (cons 7 "HZTXT") (cons 71 0) (cons 72 1) (cons 73 0) (cons 210 '(0.0 0.0 1.0)) (cons 100 "AcDbText") 
              )
   )(princ)
-)
-
-(defun c:foo (/ insPt)
-  (ViewSelectedEntityDataUtils)
-  ;(setq insPt (getpoint "\n选取插入点："))
 )
 
 (defun GenerateOnePublicPipeElement (insPt textDataList blockName /)
@@ -1652,7 +1647,7 @@
   )
 )
 
-(defun GeneratePublicPipeElement (blockName insPtList dataList /)
+(defun GeneratEntityObjectElement (blockName insPtList dataList /)
   (mapcar '(lambda (x y) 
              (GenerateOnePublicPipeElement x y blockName)
           ) 
@@ -1661,7 +1656,8 @@
   )
 )
 
-(defun GetEntityNameListAfterGenerated (lastEntityName / resultList)
+; have not been used now - 2020-10-30
+(defun GetEntityNameListAfterGeneratedUtils (lastEntityName / resultList)
   (while lastEntityName 
     (setq lastEntityName (entnext lastEntityName))
     (setq resultList (append resultList (list lastEntityName)))
@@ -1677,8 +1673,8 @@
   (setq dataList (vl-sort dataList '(lambda (x y) (< (nth 4 x) (nth 4 y)))))
   (setq insPtList (GetInsertPtList insPt (GenerateSortedNumByList dataList) 10))
   (if (= pipeSourceDirection "0") 
-    (GeneratePublicPipeElement "PublicPipeElementS" insPtList dataList)
-    (GeneratePublicPipeElement "PublicPipeElementW" insPtList dataList)
+    (GeneratEntityObjectElement "PublicPipeElementS" insPtList dataList)
+    (GeneratEntityObjectElement "PublicPipeElementW" insPtList dataList)
   )
 )
 
@@ -1706,7 +1702,7 @@
   (setq equipInfoList (vl-sort equipInfoList '(lambda (x y) (< (car x) (car y)))))
   (setq insPt (getpoint "\n选取设备位号的插入点："))
   (setq insPtList (GetInsertPtList insPt (GenerateSortedNumByList equipInfoList) 30))
-  (GeneratePublicPipeElement "EquipTagV2" insPtList equipInfoList)
+  (GeneratEntityObjectElement "EquipTagV2" insPtList equipInfoList)
 )
 
 ; Unit Test Completed
@@ -1773,7 +1769,7 @@
   (setq equipInfoList (mapcar '(lambda (x y) (list x y)) equipTag equipName))
 )
 
-; Generate Entity in CAD
+; Generate Entity Object in CAD
 ; Gs Field
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
