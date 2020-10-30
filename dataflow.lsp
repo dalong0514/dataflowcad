@@ -1601,19 +1601,22 @@
   )(princ)
 )
 
-(defun GenerateOnePublicPipeElementS (insPt blockName /)
+(defun GenerateOnePublicPipeElementS (insPt pipeData blockName /)
   (entmake (list (cons 0 "INSERT") (cons 100 "AcDbEntity") (cons 100 "AcDbBlockReference") 
                  (cons 2 blockName) (cons 10 insPt) 
            )
   )
-  (GenerateTextByPositionAndContent insPt "PL1101")
+  (GenerateTextByPositionAndContent insPt (nth 1 pipeData))
+  (GenerateTextByPositionAndContent insPt (nth 3 pipeData))
+  (GenerateTextByPositionAndContent insPt (nth 4 pipeData))
 )
 
-(defun GeneratePublicPipeElementS (blockName insPt dataList /)
-  (mapcar '(lambda (x) 
-             (GenerateOnePublicPipeElementS (GetInsertPt insPt x 10) blockName)
+(defun GeneratePublicPipeElementS (blockName insPtList dataList /)
+  (mapcar '(lambda (x y) 
+             (GenerateOnePublicPipeElementS x y blockName)
           ) 
-          (GenerateSortedNumByList dataList) 
+          insPtList
+          dataList
   )
 )
 
@@ -1631,12 +1634,12 @@
   (setq dataList (ProcessPublicPipeElementData dataList))
   ; sort data by drawnum
   (setq dataList (vl-sort dataList '(lambda (x y) (< (nth 4 x) (nth 4 y)))))
-
-  (setq insPtList ())
+  (setq insPtList (GetInsertPtList insPt (GenerateSortedNumByList dataList) 10))
   ; add position info to dataList
+  ;setq dataList (AddItemToListStartUtils insPtList dataList))
   (if (= pipeSourceDirection "0") 
-    (GeneratePublicPipeElementS "PublicPipeElementS" insPt dataList)
-    (GeneratePublicPipeElementS "PublicPipeElementW" insPt dataList)
+    (GeneratePublicPipeElementS "PublicPipeElementS" insPtList dataList)
+    (GeneratePublicPipeElementS "PublicPipeElementW" insPtList dataList)
   )
 )
 
