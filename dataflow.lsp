@@ -1576,7 +1576,16 @@
   )
 )
 
-(defun InsertPublicPipeElement (dataList pipeSourceDirection / insPt)
+(defun GetEntityNameListAfterGenerated (lastEntityName / resultList)
+  (while lastEntityName 
+    (setq lastEntityName (entnext lastEntityName))
+    (setq resultList (append resultList (list lastEntityName)))
+  )
+  resultList
+)
+
+(defun InsertPublicPipeElement (dataList pipeSourceDirection / lastEntityName insPt) 
+  (setq lastEntityName (entlast))
   (setq insPt (getpoint "\n选取辅助流程组件插入点："))
   (setq dataList (ProcessPublicPipeElementData dataList))
   ; sort data by drawnum
@@ -1585,6 +1594,7 @@
     (GeneratePublicPipeElementS "PublicPipeElementS" insPt dataList)
     (GeneratePublicPipeElementS "PublicPipeElementW" insPt dataList)
   )
+  (princ (GetEntityNameListAfterGenerated lastEntityName))(princ)
 )
 
 (defun InsertPublicPipeElementV2 (dataList pipeSourceDirection / insPt)
