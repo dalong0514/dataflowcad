@@ -15,13 +15,13 @@
   (ExtractDrawNumTest)
   (ReplaceListItemByindexUtilsTest)
   (AddItemToListStartUtilsTest)
+  (GetInsertPtListTest)
   (DL:PrintTestResults (DL:CountBooleans *testList*))
 )
 
-(defun ReplaceListItemByindexUtilsTest ()
-  (AssertEqual 'ReplaceListItemByindexUtils 
-    (list "PL1101" 1 '("PL1201" "PL1202" "PL1203" "PL1203")) 
-    '("PL1201" "PL1101" "PL1203" "PL1203")
+(defun GetInsertPtListTest ()
+  (AssertEqual 'GetInsertPtList (list '(1 1 1) '(0 1 2 3 4) 10) 
+    (list '(1 1 1) '(11 1 1) '(21 1 1) '(31 1 1) '(41 1 1))
   )
 )
 
@@ -31,6 +31,13 @@
   )
   (AssertEqual 'AddItemToListStartUtils (list (list '(1 1 1) '(2 2 2) '(3 3 3)) (list (list "PL01" "PL02") (list "PL01" "PL02") (list "PL05" "PL06"))) 
     (list (list '(1 1 1) "PL01" "PL02") (list '(2 2 2) "PL01" "PL02") (list '(3 3 3) "PL05" "PL06"))
+  )
+)
+
+(defun ReplaceListItemByindexUtilsTest ()
+  (AssertEqual 'ReplaceListItemByindexUtils 
+    (list "PL1101" 1 '("PL1201" "PL1202" "PL1203" "PL1203")) 
+    '("PL1201" "PL1101" "PL1203" "PL1203")
   )
 )
 
@@ -1618,12 +1625,14 @@
   resultList
 )
 
-(defun InsertPublicPipeElement (dataList pipeSourceDirection / lastEntityName insPt) 
+(defun InsertPublicPipeElement (dataList pipeSourceDirection / lastEntityName insPt insPtList) 
   (setq lastEntityName (entlast))
   (setq insPt (getpoint "\n选取辅助流程组件插入点："))
   (setq dataList (ProcessPublicPipeElementData dataList))
   ; sort data by drawnum
   (setq dataList (vl-sort dataList '(lambda (x y) (< (nth 4 x) (nth 4 y)))))
+
+  (setq insPtList ())
   ; add position info to dataList
   (if (= pipeSourceDirection "0") 
     (GeneratePublicPipeElementS "PublicPipeElementS" insPt dataList)
@@ -1724,6 +1733,13 @@
 ; Unit Test Compeleted
 (defun GetInsertPt (insPt i removeDistance /)
   (ReplaceListItemByindexUtils (+ (car insPt) (* i removeDistance)) 0 insPt)
+)
+
+; Unit Test Compeleted
+(defun GetInsertPtList (insPt SortedNumByList removeDistance / resultList)
+  (mapcar '(lambda (x) (GetInsertPt insPt x removeDistance)) 
+    SortedNumByList
+  )
 )
 
 (defun GetEquipTagList (ss / i ent blk entx value equipInfoList equipTag equipName)
