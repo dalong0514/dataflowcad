@@ -651,8 +651,7 @@
 )
 
 ; Sets the value of the specified DXF group code for the supplied entity name
-(defun SetDXFValueUtils (entityName DXFcode newValue / entityData newPropList
-                                                    oldPropList)
+(defun SetDXFValueUtils (entityName DXFcode newValue / entityData newPropList oldPropList)
   ; Get the entity data list for the object
   (setq entityData (entget entityName))
   ; Create the dotted pair for the new property value
@@ -2407,6 +2406,26 @@
     (setq i (+ 1 i))
   )
   aPropertyValueList
+)
+
+(defun GetAllPropertyValueByEntityName (entityName / entityData entx propertyValueList)
+  (setq entityData (entget entityName))
+  ; get the property information
+  (setq entx (entget (entnext (cdr (assoc -1 entityData)))))
+  (while (= "ATTRIB" (cdr (assoc 0 entx)))
+    (setq propertyValueList (append propertyValueList 
+                              (list (cons (strcase (cdr (assoc 2 entx)) T) (cdr (assoc 1 entx))))
+                            )
+    )
+    ; get the next property information
+    (setq entx (entget (entnext (cdr (assoc -1 entx)))))
+  )
+  propertyValueList
+)
+
+(defun c:foo (/ ss entityName)
+  (setq entityName (ssname (ssget) 0))
+  (cdr (assoc "tag" (GetAllPropertyValueByEntityName entityName)))
 )
 
 (defun ModifyPropertyValueByEntityName (entityNameList selectedName propertyValue / i ent blk entx propertyName)
