@@ -446,3 +446,67 @@ generatePublicProcessElementBox : dialog {
     : spacer { height = 3; } 
   }
 }
+
+brushBlockPropertyValueBox : dialog {
+  label = "设计流数据一体化V1.0———刷块属性数据"; 
+  key = "brushBlockPropertyValue";
+  : boxed_radio_column {
+    key = "filterBox";
+    width = 80;
+    : column {
+      height = 10;
+      : popup_list { 
+        label = "来自总管还是去总管";
+        edit_width = 30;
+        key = "pipeSourceDirection"; 
+        list = "";
+        value = "";
+      }
+      : spacer { height = 1; } 
+      : edit_box {
+        label = "管道号通配符匹配";
+        edit_width = 31;
+        key = "patternValue";
+        mnemonic = "N";
+        value = "";
+      }
+      : spacer { height = 1; } 
+    }
+    : list_box { 
+      height = 25;
+      key = "matchedResult"; 
+      list = "";
+      value = "";
+    }
+    : spacer { height = 1; } 
+    : text {
+      key = "msg";
+      label = "匹配到的数量：";
+    }
+    : spacer { height = 3; } 
+    : row { 
+      fixed_width = true; 
+      alignment = centered; 
+      : button { 
+        key = "btnSelect"; 
+        label = "选择数据"; 
+        is_default = "true"; 
+      } 
+      : spacer { width = 1; } 
+      : button { 
+        key = "btnAll"; 
+        label = "匹配全部"; 
+        is_default = "true"; 
+      }
+      : spacer { width = 1; } 
+      : button { 
+        key = "btnShowOriginData"; 
+        label = "选择插入点"; 
+        is_default = "true"; 
+      } 
+      : spacer { width = 1; } 
+      cancel_button; 
+    }
+    : spacer { height = 3; } 
+  }
+}

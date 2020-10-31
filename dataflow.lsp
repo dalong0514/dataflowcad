@@ -1817,64 +1817,13 @@
 )
 
 ; Generate Entity Object in CAD
-; Gs Field
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
 
+
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
-; Gs Field
-; the macro for modify data
-
-(defun c:modifyPipeProperty (/ pipePropertyNameList)
-  (setq pipePropertyNameList (GetPipePropertyNameList))
-  (filterAndModifyBlockPropertyByBox pipePropertyNameList "filterAndModifyEquipmentPropertyBox" "Pipe")
-)
-
-(defun c:modifyKsProperty (/ instrumentPropertyNameList)
-  (setq instrumentPropertyNameList (GetInstrumentPropertyNameList))
-  (filterAndModifyBlockPropertyByBox instrumentPropertyNameList "filterAndModifyEquipmentPropertyBox" "Instrument")
-)
-
-(defun c:modifyReactorProperty (/ reactorPropertyNameList dataTypeList)
-  (setq reactorPropertyNameList (GetReactorPropertyNameList))
-  (filterAndModifyBlockPropertyByBox reactorPropertyNameList "filterAndModifyEquipmentPropertyBox" "Reactor")
-)
-
-(defun c:modifyTankProperty (/ tankPropertyNameList dataTypeList)
-  (setq tankPropertyNameList (GetTankPropertyNameList))
-  (filterAndModifyBlockPropertyByBox tankPropertyNameList "filterAndModifyEquipmentPropertyBox" "Tank")
-)
-
-(defun c:modifyHeaterProperty (/ heaterPropertyNameList dataTypeList)
-  (setq heaterPropertyNameList (GetHeaterPropertyNameList))
-  (filterAndModifyBlockPropertyByBox heaterPropertyNameList "filterAndModifyEquipmentPropertyBox" "Heater")
-)
-
-(defun c:modifyPumpProperty (/ pumpPropertyNameList dataTypeList)
-  (setq pumpPropertyNameList (GetPumpPropertyNameList))
-  (filterAndModifyBlockPropertyByBox pumpPropertyNameList "filterAndModifyEquipmentPropertyBox" "Pump")
-)
-
-(defun c:modifyVacuumProperty (/ vacuumPropertyNameList dataTypeList)
-  (setq vacuumPropertyNameList (GetVacuumPropertyNameList))
-  (filterAndModifyBlockPropertyByBox vacuumPropertyNameList "filterAndModifyEquipmentPropertyBox" "Vacuum")
-)
-
-(defun c:modifyCentrifugeProperty (/ centrifugePropertyNameList dataTypeList)
-  (setq centrifugePropertyNameList (GetCentrifugePropertyNameList))
-  (filterAndModifyBlockPropertyByBox centrifugePropertyNameList "filterAndModifyEquipmentPropertyBox" "Centrifuge")
-)
-
-(defun c:modifyCustomEquipProperty (/ customEquipPropertyNameList dataTypeList)
-  (setq customEquipPropertyNameList (GetCustomEquipPropertyNameList))
-  (filterAndModifyBlockPropertyByBox customEquipPropertyNameList "filterAndModifyEquipmentPropertyBox" "CustomEquip")
-)
-
-; the macro for modify data
-; Gs Field
-;;;-------------------------------------------------------------------------;;;
-;;;-------------------------------------------------------------------------;;;
+; logic for generatePublicProcessElement
 
 (defun c:generatePublicProcessElement (/ pipePropertyNameList)
   (setq pipePropertyNameList (GetPipePropertyNameList))
@@ -1962,6 +1911,64 @@
   (unload_dialog dcl_id)
   (princ)
 )
+
+; logic for generatePublicProcessElement
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+; the macro for modify data
+
+(defun c:modifyPipeProperty (/ pipePropertyNameList)
+  (setq pipePropertyNameList (GetPipePropertyNameList))
+  (filterAndModifyBlockPropertyByBox pipePropertyNameList "filterAndModifyEquipmentPropertyBox" "Pipe")
+)
+
+(defun c:modifyKsProperty (/ instrumentPropertyNameList)
+  (setq instrumentPropertyNameList (GetInstrumentPropertyNameList))
+  (filterAndModifyBlockPropertyByBox instrumentPropertyNameList "filterAndModifyEquipmentPropertyBox" "Instrument")
+)
+
+(defun c:modifyReactorProperty (/ reactorPropertyNameList dataTypeList)
+  (setq reactorPropertyNameList (GetReactorPropertyNameList))
+  (filterAndModifyBlockPropertyByBox reactorPropertyNameList "filterAndModifyEquipmentPropertyBox" "Reactor")
+)
+
+(defun c:modifyTankProperty (/ tankPropertyNameList dataTypeList)
+  (setq tankPropertyNameList (GetTankPropertyNameList))
+  (filterAndModifyBlockPropertyByBox tankPropertyNameList "filterAndModifyEquipmentPropertyBox" "Tank")
+)
+
+(defun c:modifyHeaterProperty (/ heaterPropertyNameList dataTypeList)
+  (setq heaterPropertyNameList (GetHeaterPropertyNameList))
+  (filterAndModifyBlockPropertyByBox heaterPropertyNameList "filterAndModifyEquipmentPropertyBox" "Heater")
+)
+
+(defun c:modifyPumpProperty (/ pumpPropertyNameList dataTypeList)
+  (setq pumpPropertyNameList (GetPumpPropertyNameList))
+  (filterAndModifyBlockPropertyByBox pumpPropertyNameList "filterAndModifyEquipmentPropertyBox" "Pump")
+)
+
+(defun c:modifyVacuumProperty (/ vacuumPropertyNameList dataTypeList)
+  (setq vacuumPropertyNameList (GetVacuumPropertyNameList))
+  (filterAndModifyBlockPropertyByBox vacuumPropertyNameList "filterAndModifyEquipmentPropertyBox" "Vacuum")
+)
+
+(defun c:modifyCentrifugeProperty (/ centrifugePropertyNameList dataTypeList)
+  (setq centrifugePropertyNameList (GetCentrifugePropertyNameList))
+  (filterAndModifyBlockPropertyByBox centrifugePropertyNameList "filterAndModifyEquipmentPropertyBox" "Centrifuge")
+)
+
+(defun c:modifyCustomEquipProperty (/ customEquipPropertyNameList dataTypeList)
+  (setq customEquipPropertyNameList (GetCustomEquipPropertyNameList))
+  (filterAndModifyBlockPropertyByBox customEquipPropertyNameList "filterAndModifyEquipmentPropertyBox" "CustomEquip")
+)
+
+; the macro for modify data
+; Gs Field
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
 
 (defun GetNumberedListByStartAndLengthUtils (startNumer startString listLength / numberedList)
   (setq numberedList '())
@@ -2301,7 +2308,6 @@
 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
-; Gs Field
 ; function for modify data
 
 (defun GetAPropertyListAndEntityNameListByPropertyNamePattern (ss selectedName patternValue / i ent blk entx propertyName aPropertyValueList entityNameList)
@@ -2476,16 +2482,12 @@
 )
 
 ; function for modify data
-; Gs Field
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
 
 
-
-
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
-; Gs Field
 ; Number Pipeline, Instrument and Equipment
 
 (defun c:numberPipelineAndTag (/ dataTypeList)
@@ -2682,6 +2684,5 @@
 )
 
 ; Number Pipeline, Instrument and Equipment
-; Gs Field
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
