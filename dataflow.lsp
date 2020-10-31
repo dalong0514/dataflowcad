@@ -2291,41 +2291,6 @@
 ; Gs Field
 ; function for modify data
 
-(defun ModifyPropertyValueBySS (ss selectedName property_value / i ent blk entx value)
-  (if (/= ss nil)
-    (progn
-      (setq i 0)
-      (repeat (sslength ss)
-        (if (/= nil (ssname ss i))
-          (progn
-	          ; get the entity information of the i(th) block
-            (setq ent (entget (ssname ss i)))
-	          ; save the entity name of the i(th) block
-            (setq blk (ssname ss i))
-	          ; get the property information
-            (setq entx (entget (entnext (cdr (assoc -1 ent)))))
-            (while (= "ATTRIB" (cdr (assoc 0 entx)))
-              (setq value (cdr (assoc 2 entx)))
-              (if (= value selectedName)
-                (progn
-                  (setq a (cons 1 property_value))
-                  (setq b (assoc 1 entx))
-                  (entmod (subst a b entx))
-                )
-              )
-	            ; get the next property information
-              (setq entx (entget (entnext (cdr (assoc -1 entx)))))
-            )
-            (entupd blk)
-            (setq i (+ 1 i))
-          )
-        )
-        (princ)
-      )
-    )
-  )
-)
-
 (defun GetAPropertyListAndEntityNameListByPropertyNamePattern (ss selectedName patternValue / i ent blk entx propertyName aPropertyValueList entityNameList)
   (if (/= ss nil)
     (progn
