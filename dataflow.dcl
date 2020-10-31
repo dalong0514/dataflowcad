@@ -490,21 +490,15 @@ brushBlockPropertyValueBox : dialog {
       alignment = centered; 
       : button { 
         key = "btnSelect"; 
-        label = "选择数据"; 
+        label = "选择提取的块"; 
         is_default = "true"; 
       } 
       : spacer { width = 1; } 
       : button { 
         key = "btnAll"; 
-        label = "匹配全部"; 
+        label = "选择要刷的块"; 
         is_default = "true"; 
       }
-      : spacer { width = 1; } 
-      : button { 
-        key = "btnShowOriginData"; 
-        label = "选择插入点"; 
-        is_default = "true"; 
-      } 
       : spacer { width = 1; } 
       cancel_button; 
     }

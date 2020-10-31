@@ -1850,7 +1850,7 @@
     (progn
       (start_list "pipeSourceDirection" 3)
       (mapcar '(lambda (x) (add_list x)) 
-                '("自总管" "去总管" "温度"))
+                '("工作介质" "工作温度" "工作压力" "流程图号"))
       (end_list)
     )
     ; init the default data of text
@@ -1889,19 +1889,7 @@
     ; all select button
     (if (= 3 status)
       (progn 
-        (setq ss (GetAllBlockSSByDataTypeUtils dataType))
-        (setq blockDataList (GetAPropertyListAndEntityNameListByPropertyNamePattern ss "PIPENUM" patternValue))
-        (setq matchedList (car blockDataList))
-        (setq sslen (length matchedList))
-        (setq entityNameList (nth 1 blockDataList))
-        (setq previewDataList (GetPropertyValueListListByEntityNameList entityNameList (GetPropertyNameListStrategy "PublicPipe")))
-      )
-    )
-    ; view button
-    (if (= 4 status)
-      (progn 
-        (InsertPublicPipeElement previewDataList pipeSourceDirection)
-        (setq status 1)
+        (princ pipeSourceDirection)(princ)
       )
     )
   )
