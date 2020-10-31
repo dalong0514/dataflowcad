@@ -1118,6 +1118,11 @@
   )
 )
 
+; Unit Test Compeleted
+(defun SpliceElementInTwoListUtils (firstList secondList /)
+  (mapcar '(lambda (x y) (strcat x y)) firstList secondList)
+)
+
 ; Utils Function 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
@@ -2377,17 +2382,6 @@
   )
   (setq aPropertyValueList (SpliceElementInTwoListUtils instrumentFunctionList instrumentTagList))
   (list aPropertyValueList entityNameList)
-)
-
-; Unit Test Compeleted
-(defun SpliceElementInTwoListUtils (firstList secondList / newList i)
-  (setq newList '())
-  (setq i 0)
-  (repeat (length firstList)
-    (setq newList (append newList (list (strcat (nth i firstList) (nth i secondList)))))
-    (setq i (+ i 1))
-  )
-  newList
 )
 
 (defun GetPropertyValueByEntityName (entityNameList selectedName / i ent blk entx propertyName aPropertyValueList)
