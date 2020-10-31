@@ -2384,30 +2384,6 @@
   (list aPropertyValueList entityNameList)
 )
 
-(defun GetPropertyValueByEntityName (entityNameList selectedName / i ent blk entx propertyName aPropertyValueList)
-  (setq i 0)
-  (setq aPropertyValueList '())
-  (repeat (length entityNameList)
-    ; get the entity information of the i(th) block
-    (setq ent (entget (nth i entityNameList)))
-    ; save the entity name of the i(th) block
-    (setq blk (nth i entityNameList))
-    ; get the property information
-    (setq entx (entget (entnext (cdr (assoc -1 ent)))))
-    (while (= "ATTRIB" (cdr (assoc 0 entx)))
-      (setq propertyName (cdr (assoc 2 entx)))
-      (if (= propertyName selectedName)
-        (setq aPropertyValueList (append aPropertyValueList (list (cdr (assoc 1 entx)))))
-      )
-      ; get the next property information
-      (setq entx (entget (entnext (cdr (assoc -1 entx)))))
-    )
-    (entupd blk)
-    (setq i (+ 1 i))
-  )
-  aPropertyValueList
-)
-
 (defun GetOnePropertyValueListByEntityNameList (entityNameList selectedName / onePropertyValueList)
   (mapcar '(lambda (x) 
              (setq onePropertyValueList (append onePropertyValueList 
@@ -2433,11 +2409,6 @@
     (setq entx (entget (entnext (cdr (assoc -1 entx)))))
   )
   propertyValueList
-)
-
-(defun c:foo (/ ss entityName)
-  (setq entityNameList (GetEntityNameListBySSUtils (ssget)))
-  (GetOnePropertyValueListByEntityNameList entityNameList "tag")
 )
 
 (defun ModifyPropertyValueByEntityName (entityNameList selectedName propertyValue / i ent blk entx propertyName)
@@ -2650,7 +2621,7 @@
     (if (= 5 status)
       (progn 
         (setq selectedName (GetNeedToNumberPropertyName selectedDataType))
-        (setq previewList (GetPropertyValueByEntityName entityNameList selectedName))
+        (setq previewList (GetOnePropertyValueListByEntityNameList entityNameList selectedName))
         (setq numberedList (GetNumberedListByStartAndLengthUtils propertyValue replacedSubstring (length previewList)))
         (setq confirmList (ReplaceNumberOfListByNumberedListUtils numberedList previewList))
       )
