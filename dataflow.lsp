@@ -637,17 +637,17 @@
   (vlax-release-object obj)
 )
 
-; Returns the value of the specified DXF group code for the supplied entity name
-(defun GetDXFValueUtils (entityName DXFcode / )
-  (cdr (assoc DXFcode (entget entityName)))
-)
-
 (defun ViewSelectedEntityDataUtils (/ ss ent entx)
   (setq ss (ssget))
   (setq ent (entget (ssname ss 0)))
   ;(setq entx (entget (entnext (cdr (assoc -1 ent)))))
   ;(setq entx (entget (cdr (assoc -1 ent))))
   (princ ent)(princ)
+)
+
+; Returns the value of the specified DXF group code for the supplied entity name
+(defun GetDXFValueUtils (entityName DXFcode / )
+  (cdr (assoc DXFcode (entget entityName)))
 )
 
 ; Sets the value of the specified DXF group code for the supplied entity name
