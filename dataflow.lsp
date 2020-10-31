@@ -17,7 +17,15 @@
   (AddItemToListStartUtilsTest)
   (GetInsertPtListTest)
   (MoveInsertPositionTest)
+  (SpliceElementInTwoListUtilsTest)
   (DL:PrintTestResults (DL:CountBooleans *testList*))
+)
+
+(defun SpliceElementInTwoListUtilsTest ()
+  (AssertEqual 'SpliceElementInTwoListUtils 
+    (list '("PL" "YC" "EC") '("1101" "1102" "1103")) 
+    '("PL1101" "YC1102" "EC1103")
+  )
 )
 
 (defun MoveInsertPositionTest ()
@@ -2371,6 +2379,7 @@
   (list aPropertyValueList entityNameList)
 )
 
+; Unit Test Compeleted
 (defun SpliceElementInTwoListUtils (firstList secondList / newList i)
   (setq newList '())
   (setq i 0)
