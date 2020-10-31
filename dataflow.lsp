@@ -646,6 +646,7 @@
   (setq ss (ssget))
   (setq ent (entget (ssname ss 0)))
   ;(setq entx (entget (entnext (cdr (assoc -1 ent)))))
+  ;(setq entx (entget (cdr (assoc -1 ent))))
   (princ ent)(princ)
 )
 
