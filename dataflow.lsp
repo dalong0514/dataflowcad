@@ -2408,6 +2408,18 @@
   aPropertyValueList
 )
 
+(defun GetOnePropertyValueListByEntityNameList (entityNameList selectedName / onePropertyValueList)
+  (mapcar '(lambda (x) 
+             (setq onePropertyValueList (append onePropertyValueList 
+                                          (list (cdr (assoc selectedName (GetAllPropertyValueByEntityName x))))
+                                        )
+             )
+           ) 
+    entityNameList
+  )
+  onePropertyValueList
+)
+
 (defun GetAllPropertyValueByEntityName (entityName / entityData entx propertyValueList)
   (setq entityData (entget entityName))
   ; get the property information
@@ -2424,8 +2436,8 @@
 )
 
 (defun c:foo (/ ss entityName)
-  (setq entityName (ssname (ssget) 0))
-  (cdr (assoc "tag" (GetAllPropertyValueByEntityName entityName)))
+  (setq entityNameList (GetEntityNameListBySSUtils (ssget)))
+  (GetOnePropertyValueListByEntityNameList entityNameList "tag")
 )
 
 (defun ModifyPropertyValueByEntityName (entityNameList selectedName propertyValue / i ent blk entx propertyName)
