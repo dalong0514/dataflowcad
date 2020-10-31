@@ -455,10 +455,11 @@ brushBlockPropertyValueBox : dialog {
     width = 80;
     : column {
       height = 10;
-      : popup_list { 
-        label = "来自总管还是去总管";
+      : list_box { 
+        label = "选择要提取的属性（可多选）";
         edit_width = 30;
         key = "pipeSourceDirection"; 
+        multiple_select = true;
         list = "";
         value = "";
       }

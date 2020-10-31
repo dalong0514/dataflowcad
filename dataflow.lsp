@@ -1820,13 +1820,106 @@
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
 
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+; logic for brushBlockPropertyValue
+
+(defun c:brushBlockPropertyValue ()
+  (brushBlockPropertyValueByBox "brushBlockPropertyValueBox" "Pipe")
+)
+
+(defun brushBlockPropertyValueByBox (tileName dataType / dcl_id pipeSourceDirection patternValue status ss sslen matchedList blockDataList entityNameList previewDataList)
+  (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
+  (setq status 2)
+  (while (>= status 2)
+    ; Create the dialog box
+    (new_dialog tileName dcl_id "" '(-1 -1))
+    ; Added the actions to the Cancel and Pick Point button
+    (action_tile "cancel" "(done_dialog 0)")
+    (action_tile "btnSelect" "(done_dialog 2)")
+    (action_tile "btnAll" "(done_dialog 3)")
+    (action_tile "btnShowOriginData" "(done_dialog 4)")
+    
+    ; optional setting for the popup_list tile
+    (set_tile "pipeSourceDirection" "0")
+    ; the default value of input box
+    (mode_tile "pipeSourceDirection" 2)
+    (action_tile "pipeSourceDirection" "(setq pipeSourceDirection $value)")
+    (action_tile "patternValue" "(setq patternValue $value)")
+    
+    (progn
+      (start_list "pipeSourceDirection" 3)
+      (mapcar '(lambda (x) (add_list x)) 
+                '("自总管" "去总管" "温度"))
+      (end_list)
+    )
+    ; init the default data of text
+    (if (= nil pipeSourceDirection)
+      (setq pipeSourceDirection "0")
+    )
+    (if (= nil patternValue)
+      (setq patternValue "*")
+    )
+    (set_tile "pipeSourceDirection" pipeSourceDirection)
+    (set_tile "patternValue" patternValue)
+    ; Display the number of selected pipes
+    (if (/= sslen nil)
+      (set_tile "msg" (strcat "匹配到的数量： " (rtos sslen)))
+    )
+    (if (/= matchedList nil)
+      (progn
+        ; setting for saving the existed value of a box
+        (start_list "matchedResult" 3)
+        (mapcar '(lambda (x) (add_list x)) 
+                 matchedList)
+        (end_list)
+      )
+    )
+    ; select button
+    (if (= 2 (setq status (start_dialog)))
+      (progn 
+        (setq ss (GetBlockSSBySelectByDataTypeUtils dataType))
+        (setq blockDataList (GetAPropertyListAndEntityNameListByPropertyNamePattern ss "PIPENUM" patternValue))
+        (setq matchedList (car blockDataList))
+        (setq sslen (length matchedList))
+        (setq entityNameList (nth 1 blockDataList))
+        (setq previewDataList (GetPropertyValueListListByEntityNameList entityNameList (GetPropertyNameListStrategy "PublicPipe")))
+      )
+    )
+    ; all select button
+    (if (= 3 status)
+      (progn 
+        (setq ss (GetAllBlockSSByDataTypeUtils dataType))
+        (setq blockDataList (GetAPropertyListAndEntityNameListByPropertyNamePattern ss "PIPENUM" patternValue))
+        (setq matchedList (car blockDataList))
+        (setq sslen (length matchedList))
+        (setq entityNameList (nth 1 blockDataList))
+        (setq previewDataList (GetPropertyValueListListByEntityNameList entityNameList (GetPropertyNameListStrategy "PublicPipe")))
+      )
+    )
+    ; view button
+    (if (= 4 status)
+      (progn 
+        (InsertPublicPipeElement previewDataList pipeSourceDirection)
+        (setq status 1)
+      )
+    )
+  )
+  (setq matchedList nil)
+  (unload_dialog dcl_id)
+  (princ)
+)
+
+; logic for brushBlockPropertyValue
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+
 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
 ; logic for generatePublicProcessElement
 
-(defun c:generatePublicProcessElement (/ pipePropertyNameList)
-  (setq pipePropertyNameList (GetPipePropertyNameList))
+(defun c:generatePublicProcessElement ()
   (generatePublicProcessElementByBox "generatePublicProcessElementBox" "Pipe")
 )
 
@@ -1915,6 +2008,7 @@
 ; logic for generatePublicProcessElement
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
+
 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
