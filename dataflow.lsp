@@ -1923,6 +1923,25 @@
 ;;;-------------------------------------------------------------------------;;;
 ; logic for brushBlockPropertyValue
 
+(defun c:brushLocationForInstrument (/ locationData entityNameList)
+  (prompt "\n选择仪表所在位置（管道或设备）：")
+  (setq locationData (GetPipeStartOrEndData))
+  (prompt "\n选择要刷的仪表（可批量选择）：")
+  (setq entityNameList (GetEntityNameListBySSUtils (GetInstrumentSSBySelectUtils)))
+  (ModifyLocatonForInstrument entityNameList locationData)
+  (princ)
+)
+
+(defun ModifyLocatonForInstrument (entityNameList locationData /)
+  (if (/= locationData "") 
+    (mapcar '(lambda (x) 
+              (ModifyMultiplePropertyForOneBlockUtils x (list "LOCATION") (list locationData))
+            ) 
+      entityNameList
+    )
+  )
+)
+
 (defun c:brushStartEndForPipe (/ startData endData entityNameList)
   (prompt "\n选择管道起点（直接空格表示不修改）：")
   (setq startData (GetPipeStartOrEndData))
@@ -2007,7 +2026,7 @@
     (progn
       (start_list "pipeSourceDirection" 3)
       (mapcar '(lambda (x) (add_list x)) 
-                '("工作介质" "工作温度" "工作压力" "流程图号"))
+                '("工作介质" "工作温度" "工作压力" "流程图号" "相态"))
       (end_list)
     )
     ; init the default data of text
