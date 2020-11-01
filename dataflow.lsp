@@ -1851,19 +1851,22 @@
 ;;;-------------------------------------------------------------------------;;;
 ; logic for brushBlockPropertyValue
 
-(defun c:brushStartEndForPipe (/ )
+(defun c:brushStartEndForPipe (/ startData endData)
   (prompt "选择管道起点：")
-  (GetEquipmentAndPipeSSBySelectUtils)
+  (setq startData (GetPipeStartOrEndData (GetPipeStartOrEndDataList)))
   (prompt "选择管道终点：")
-  (GetEquipmentAndPipeSSBySelectUtils)
+  (setq endData (GetPipeStartOrEndData (GetPipeStartOrEndDataList)))
   (prompt "选择要刷的管道：")
-  (GetPipeSSBySelectUtils)
+  (GetEntityNameListBySSUtils (GetEquipmentAndPipeSSBySelectUtils))
 )
 
-(defun c:foo (/ startDataList startData)
+(defun c:foo (/ startData endData)
   (prompt "选择管道起点：")
-  (setq startDataList (GetPipeStartOrEndDataList))
-  (setq startData (GetPipeStartOrEndData startDataList))
+  (setq startData (GetPipeStartOrEndData (GetPipeStartOrEndDataList)))
+  (prompt "选择管道终点：")
+  (setq endData (GetPipeStartOrEndData (GetPipeStartOrEndDataList)))
+  (prompt "选择要刷的管道：")
+  (GetEntityNameListBySSUtils (GetEquipmentAndPipeSSBySelectUtils))
 )
 
 (defun GetPipeStartOrEndDataList ()
