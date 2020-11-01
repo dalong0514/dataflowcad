@@ -1150,6 +1150,27 @@
   (mapcar '(lambda (x y) (strcat x y)) firstList secondList)
 )
 
+(defun ModifyOnePropertyForOneBlockUtils (entityName modifiedPropertyName newPropertyValue / entityData entx propertyName)
+  (setq entityData (entget entityName))
+  ; get attribute data of block
+  (setq entx (entget (entnext (cdr (assoc -1 entityData)))))
+  (while (= "ATTRIB" (cdr (assoc 0 entx)))
+    (setq propertyName (cdr (assoc 2 entx)))
+    (if (= propertyName modifiedPropertyName)
+      (SetDXFValueByEntityDataUtils entx 1 newPropertyValue)
+    )
+    ; get the next property information
+    (setq entx (entget (entnext (cdr (assoc -1 entx)))))
+  )
+  (entupd entityName)
+)
+
+(defun SetDXFValueByEntityDataUtils (entityData DXFcode propertyValue / oldValue newValue)
+  (setq oldValue (assoc DXFcode entityData))
+  (setq newValue (cons DXFcode propertyValue))
+  (entmod (subst newValue oldValue entityData))
+)
+
 ; Utils Function 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
@@ -1850,27 +1871,6 @@
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
 ; logic for brushBlockPropertyValue
-
-(defun ModifyOnePropertyForOneBlockUtils (entityName modifiedPropertyName newPropertyValue / entityData entx propertyName)
-  (setq entityData (entget entityName))
-  ; get attribute data of block
-  (setq entx (entget (entnext (cdr (assoc -1 entityData)))))
-  (while (= "ATTRIB" (cdr (assoc 0 entx)))
-    (setq propertyName (cdr (assoc 2 entx)))
-    (if (= propertyName modifiedPropertyName)
-      (SetDXFValueByEntityDataUtils entx 1 newPropertyValue)
-    )
-    ; get the next property information
-    (setq entx (entget (entnext (cdr (assoc -1 entx)))))
-  )
-  (entupd entityName)
-)
-
-(defun SetDXFValueByEntityDataUtils (entityData DXFcode propertyValue / oldValue newValue)
-  (setq oldValue (assoc DXFcode entityData))
-  (setq newValue (cons DXFcode propertyValue))
-  (entmod (subst newValue oldValue entityData))
-)
 
 (defun c:brushStartEndForPipe (/ startData endData entityNameList)
   (prompt "选择管道起点：")
