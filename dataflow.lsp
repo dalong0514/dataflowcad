@@ -1905,8 +1905,7 @@
 
 (defun ModifyStartEndForPipes (entityNameList startData endData /)
   (mapcar '(lambda (x) 
-             (ModifyOnePropertyForOneBlockUtils x "FROM" startData)
-             (ModifyOnePropertyForOneBlockUtils x "TO" endData)
+             (ModifyMultiplePropertyForOneBlockUtils x (list "FROM" "TO") (list startData endData))
            ) 
     entityNameList
   )
