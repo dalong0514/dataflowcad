@@ -1872,13 +1872,15 @@
   (entmod (subst newValue oldValue entityData))
 )
 
-(defun c:brushStartEndForPipe (/ startData endData)
+(defun c:brushStartEndForPipe (/ startData endData entityNameList)
   (prompt "选择管道起点：")
   (setq startData (GetPipeStartOrEndData (GetPipeStartOrEndDataList)))
   (prompt "选择管道终点：")
   (setq endData (GetPipeStartOrEndData (GetPipeStartOrEndDataList)))
   (prompt "选择要刷的管道：")
-  (GetEntityNameListBySSUtils (GetEquipmentAndPipeSSBySelectUtils))
+  (setq entityNameList (GetEntityNameListBySSUtils (GetEquipmentAndPipeSSBySelectUtils)))
+  (ModifyStartEndForPipes entityNameList startData endData)
+  (princ)
 )
 
 (defun c:foo (/ startData endData entityNameList)
