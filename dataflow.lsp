@@ -1824,6 +1824,18 @@
 ;;;-------------------------------------------------------------------------;;;
 ; logic for brushBlockPropertyValue
 
+(defun c:brushFromToForPipe (/ )
+  (prompt "选择管道起点")
+)
+
+(defun c:foo ()
+  (prompt "选择管道起点：")
+  (GetInstrumentAndPipeSSBySelectUtils)
+  (prompt "选择管道终点：")
+  (GetInstrumentAndPipeSSBySelectUtils)
+)
+
+
 (defun c:brushBlockPropertyValue ()
   (brushBlockPropertyValueByBox "brushBlockPropertyValueBox" "Pipe")
 )
