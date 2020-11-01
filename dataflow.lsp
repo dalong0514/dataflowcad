@@ -1883,11 +1883,13 @@
   (princ)
 )
 
-(defun c:foo (/ startData endData entityNameList)
+(defun c:foo (/ startDataSS endDataSS startData endData entityNameList)
   (prompt "选择管道起点：")
-  (setq startData (GetPipeStartOrEndData (GetPipeStartOrEndDataList)))
+  (setq startDataSS (GetEquipmentAndPipeSSBySelectUtils))
+  (setq startData (GetPipeStartOrEndData (GetPipeStartOrEndDataList startDataSS)))
   (prompt "选择管道终点：")
-  (setq endData (GetPipeStartOrEndData (GetPipeStartOrEndDataList)))
+  (setq endDataSS (GetEquipmentAndPipeSSBySelectUtils))
+  (setq endData (GetPipeStartOrEndData (GetPipeStartOrEndDataList endDataSS)))
   (prompt "选择要刷的管道：")
   (setq entityNameList (GetEntityNameListBySSUtils (GetEquipmentAndPipeSSBySelectUtils)))
   (ModifyStartEndForPipes entityNameList startData endData)
@@ -1903,9 +1905,9 @@
   )
 )
 
-(defun GetPipeStartOrEndDataList ()
+(defun GetPipeStartOrEndDataList (startDataSS /)
   (GetAllPropertyValueByEntityName 
-    (car (GetEntityNameListBySSUtils (GetEquipmentAndPipeSSBySelectUtils)))
+    (car (GetEntityNameListBySSUtils startDataSS))
   )
 )
 
