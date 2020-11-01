@@ -1924,11 +1924,11 @@
 ; logic for brushBlockPropertyValue
 
 (defun c:brushStartEndForPipe (/ startData endData entityNameList)
-  (prompt "\n选择管道起点：")
+  (prompt "\n选择管道起点（直接空格表示不修改）：")
   (setq startData (GetPipeStartOrEndData))
-  (prompt "\n选择管道终点：")
+  (prompt "\n选择管道终点（直接空格表示不修改）：")
   (setq endData (GetPipeStartOrEndData))
-  (prompt "\n选择要刷的管道：")
+  (prompt "\n选择要刷的管道（可批量选择）：")
   (setq entityNameList (GetEntityNameListBySSUtils (GetEquipmentAndPipeSSBySelectUtils)))
   (ModifyStartEndForPipes entityNameList startData endData)
   (princ)
