@@ -1881,14 +1881,24 @@
   (GetEntityNameListBySSUtils (GetEquipmentAndPipeSSBySelectUtils))
 )
 
-(defun c:foo (/ startData endData entityName)
+(defun c:foo (/ startData endData entityNameList)
   (prompt "选择管道起点：")
   (setq startData (GetPipeStartOrEndData (GetPipeStartOrEndDataList)))
   (prompt "选择管道终点：")
   (setq endData (GetPipeStartOrEndData (GetPipeStartOrEndDataList)))
   (prompt "选择要刷的管道：")
-  (setq entityName (car (GetEntityNameListBySSUtils (GetEquipmentAndPipeSSBySelectUtils))))
-  (ModifyOnePropertyValue entityName "FROM" startData)
+  (setq entityNameList (GetEntityNameListBySSUtils (GetEquipmentAndPipeSSBySelectUtils)))
+  (ModifyStartEndForPipes entityNameList startData endData)
+  (princ)
+)
+
+(defun ModifyStartEndForPipes (entityNameList startData endData /)
+  (mapcar '(lambda (x) 
+             (ModifyOnePropertyValue x "FROM" startData)
+             (ModifyOnePropertyValue x "TO" endData)
+           ) 
+    entityNameList
+  )
 )
 
 (defun GetPipeStartOrEndDataList ()
