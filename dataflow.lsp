@@ -1740,9 +1740,22 @@
   (princ)
 )
 
-(defun c:foo (/ insPt)
-  (setq insPt (getpoint "\n选取辅助流程组件插入点："))
-  (GeneratePublicPipePolyline insPt)
+(defun GeneratePublicPipeDownArrow (insPt /)
+  (entmake 
+    (list (cons 0 "LWPOLYLINE") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 "PL2") (cons 62 30) (cons 370 13) (cons 100 "AcDbPolyline") 
+          (cons 90 2) (cons 70 0) (cons 38 0.0) (cons 39 0.0) (cons 10 insPt) (cons 40 0.5) (cons 41 2.0) (cons 42 0.0) (cons 91 0) 
+          (cons 10 (MoveInsertPosition insPt 0 4.75)) (cons 40 0.9) (cons 41 0.9) (cons 42 0.0) (cons 91 0) (cons 210 '(0.0 0.0 1.0))
+    ))
+  (princ)
+)
+
+(defun GeneratePublicPipeUpArrow (insPt /)
+  (entmake 
+    (list (cons 0 "LWPOLYLINE") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 "PL2") (cons 62 30) (cons 370 13) (cons 100 "AcDbPolyline") 
+          (cons 90 2) (cons 70 0) (cons 38 0.0) (cons 39 0.0) (cons 10 (MoveInsertPosition insPt 0 4.75)) (cons 40 0.5) (cons 41 2.0) (cons 42 0.0) (cons 91 0) 
+          (cons 10 insPt) (cons 40 0.9) (cons 41 0.9) (cons 42 0.0) (cons 91 0) (cons 210 '(0.0 0.0 1.0))
+    ))
+  (princ)
 )
 
 (defun GenerateOnePublicPipeElement (insPt textDataList blockName /)
@@ -1760,6 +1773,7 @@
       (GenerateTextByPositionAndContent (MoveInsertPosition insPt -3.5 -10) (nth 3 textDataList))
       (GenerateTextByPositionAndContent (MoveInsertPosition insPt 1.21 -10) (nth 4 textDataList))
       (GeneratePublicPipePolyline insPt)
+      (GeneratePublicPipeDownArrow (MoveInsertPosition insPt 0 20))
     )
   )
   (if (= blockName "PublicPipeElementW") 
@@ -1768,6 +1782,7 @@
       (GenerateTextByPositionAndContent (MoveInsertPosition insPt -3.5 -11.5) (nth 2 textDataList))
       (GenerateTextByPositionAndContent (MoveInsertPosition insPt 1.21 -11.5) (nth 4 textDataList))
       (GeneratePublicPipePolyline insPt)
+      (GeneratePublicPipeUpArrow (MoveInsertPosition insPt 0 20))
     )
   )
   (if (= blockName "EquipTagV2") 
