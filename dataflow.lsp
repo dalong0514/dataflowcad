@@ -1935,10 +1935,26 @@
 )
 
 (defun ModifyStartEndForPipes (entityNameList startData endData /)
-  (mapcar '(lambda (x) 
-             (ModifyMultiplePropertyForOneBlockUtils x (list "FROM" "TO") (list startData endData))
-           ) 
-    entityNameList
+  (if (and (/= startData "") (/= endData "")) 
+    (mapcar '(lambda (x) 
+              (ModifyMultiplePropertyForOneBlockUtils x (list "FROM" "TO") (list startData endData))
+            ) 
+      entityNameList
+    )
+  )
+  (if (and (/= startData "") (= endData "")) 
+    (mapcar '(lambda (x) 
+              (ModifyMultiplePropertyForOneBlockUtils x (list "FROM") (list startData))
+            ) 
+      entityNameList
+    )
+  )
+  (if (and (= startData "") (/= endData "")) 
+    (mapcar '(lambda (x) 
+              (ModifyMultiplePropertyForOneBlockUtils x (list "TO") (list endData))
+            ) 
+      entityNameList
+    )
   )
 )
 
@@ -1960,7 +1976,7 @@
         (setq result (cdr (assoc "pipenum" dataList)))
       )
     )
-    (setq result (getstring "\n输入想要自己填的数据（直接空格默认为空字符）："))
+    (setq result "")
   )
   result
 )
