@@ -930,20 +930,6 @@
   ss
 )
 
-(defun GetssEntityNameListUtils (ss / i ssEntityNameList)
-  (if (/= ss nil)
-    (progn
-      (setq ssEntityNameList '())
-      (setq i 0)
-      (repeat (sslength ss)
-        (append ssEntityNameList (list (ssname ss i)))
-        (setq i (+ i 1))
-      )
-      ssEntityNameList
-    )
-  )
-)
-
 (defun MergeTwoSSUtils (firstSS secondSS / i)
   (if (/= secondSS nil)
     (progn
@@ -1029,7 +1015,6 @@
 )
 
 (defun GetEntityNameListBySSUtils (ss / entityNameList i)
-  (setq entityNameList '())
   (setq i 0)
   (repeat (sslength ss) 
     (setq entityNameList (append entityNameList (list (ssname ss i))))
@@ -1867,16 +1852,17 @@
 ; logic for brushBlockPropertyValue
 
 (defun c:brushFromToForPipe (/ )
-  (prompt "选择管道起点")
-)
-
-(defun c:foo ()
   (prompt "选择管道起点：")
   (GetEquipmentAndPipeSSBySelectUtils)
   (prompt "选择管道终点：")
   (GetEquipmentAndPipeSSBySelectUtils)
   (prompt "选择要刷的管道：")
   (GetPipeSSBySelectUtils)
+)
+
+(defun c:foo ()
+  (prompt "选择管道起点：")
+  (car (GetEntityNameListBySSUtils (GetEquipmentAndPipeSSBySelectUtils)))
 )
 
 (defun c:brushBlockPropertyValue ()
