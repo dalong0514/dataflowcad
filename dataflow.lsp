@@ -1925,8 +1925,8 @@
 
 (defun c:brushLocationForInstrument (/ locationData entityNameList)
   (prompt "\n选择仪表所在位置（管道或设备）：")
-  (setq locationData (GetPipeStartOrEndData))
-  (prompt "\n选择要刷的仪表（可批量选择）：")
+  (setq locationData (GetPipenumOrTag))
+  (prompt "\n选择要刷所在位置的仪表（可批量选择）：")
   (setq entityNameList (GetEntityNameListBySSUtils (GetInstrumentSSBySelectUtils)))
   (ModifyLocatonForInstrument entityNameList locationData)
   (princ)
@@ -1944,9 +1944,9 @@
 
 (defun c:brushStartEndForPipe (/ startData endData entityNameList)
   (prompt "\n选择管道起点（直接空格表示不修改）：")
-  (setq startData (GetPipeStartOrEndData))
+  (setq startData (GetPipenumOrTag))
   (prompt "\n选择管道终点（直接空格表示不修改）：")
-  (setq endData (GetPipeStartOrEndData))
+  (setq endData (GetPipenumOrTag))
   (prompt "\n选择要刷的管道（可批量选择）：")
   (setq entityNameList (GetEntityNameListBySSUtils (GetEquipmentAndPipeSSBySelectUtils)))
   (ModifyStartEndForPipes entityNameList startData endData)
@@ -1977,17 +1977,17 @@
   )
 )
 
-(defun GetPipeStartOrEndDataList (dataSS /)
+(defun GetPipenumOrTagList (dataSS /)
   (GetAllPropertyValueByEntityName 
     (car (GetEntityNameListBySSUtils dataSS))
   )
 )
 
-(defun GetPipeStartOrEndData (/ dataSS dataList result)
+(defun GetPipenumOrTag (/ dataSS dataList result)
   (setq dataSS (GetEquipmentAndPipeSSBySelectUtils))
   (if (/= dataSS nil) 
     (progn 
-      (setq dataList (GetPipeStartOrEndDataList dataSS))
+      (setq dataList (GetPipenumOrTagList dataSS))
       (if (/= (cdr (assoc "tag" dataList)) nil) 
         (setq result (cdr (assoc "tag" dataList)))
       )
