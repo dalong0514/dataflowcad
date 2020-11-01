@@ -1851,7 +1851,7 @@
 ;;;-------------------------------------------------------------------------;;;
 ; logic for brushBlockPropertyValue
 
-(defun c:brushFromToForPipe (/ )
+(defun c:brushStartEndForPipe (/ )
   (prompt "选择管道起点：")
   (GetEquipmentAndPipeSSBySelectUtils)
   (prompt "选择管道终点：")
@@ -1860,9 +1860,26 @@
   (GetPipeSSBySelectUtils)
 )
 
-(defun c:foo ()
+(defun c:foo (/ startDataList startData)
   (prompt "选择管道起点：")
-  (car (GetEntityNameListBySSUtils (GetEquipmentAndPipeSSBySelectUtils)))
+  (setq startDataList (GetPipeStartOrEndDataList))
+  (setq startData (GetPipeStartOrEndData startDataList))
+)
+
+(defun GetPipeStartOrEndDataList ()
+  (GetAllPropertyValueByEntityName 
+    (car (GetEntityNameListBySSUtils (GetEquipmentAndPipeSSBySelectUtils)))
+  )
+)
+
+(defun GetPipeStartOrEndData (startDataList / startData)
+  (if (/= (cdr (assoc "tag" startDataList)) nil) 
+    (setq startData (cdr (assoc "tag" startDataList)))
+  )
+  (if (/= (cdr (assoc "pipenum" startDataList)) nil) 
+    (setq startData (cdr (assoc "pipenum" startDataList)))
+  )
+  startData
 )
 
 (defun c:brushBlockPropertyValue ()
