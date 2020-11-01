@@ -1851,7 +1851,7 @@
 ;;;-------------------------------------------------------------------------;;;
 ; logic for brushBlockPropertyValue
 
-(defun ModifyOnePropertyValue (entityName modifiedPropertyName newPropertyValue / entityData entx propertyName)
+(defun ModifyOnePropertyForOneBlockUtils (entityName modifiedPropertyName newPropertyValue / entityData entx propertyName)
   (setq entityData (entget entityName))
   ; get attribute data of block
   (setq entx (entget (entnext (cdr (assoc -1 entityData)))))
@@ -1874,17 +1874,6 @@
 
 (defun c:brushStartEndForPipe (/ startData endData entityNameList)
   (prompt "选择管道起点：")
-  (setq startData (GetPipeStartOrEndData (GetPipeStartOrEndDataList)))
-  (prompt "选择管道终点：")
-  (setq endData (GetPipeStartOrEndData (GetPipeStartOrEndDataList)))
-  (prompt "选择要刷的管道：")
-  (setq entityNameList (GetEntityNameListBySSUtils (GetEquipmentAndPipeSSBySelectUtils)))
-  (ModifyStartEndForPipes entityNameList startData endData)
-  (princ)
-)
-
-(defun c:foo (/ startData endData entityNameList)
-  (prompt "选择管道起点：")
   (setq startData (GetPipeStartOrEndData))
   (prompt "选择管道终点：")
   (setq endData (GetPipeStartOrEndData))
@@ -1896,8 +1885,8 @@
 
 (defun ModifyStartEndForPipes (entityNameList startData endData /)
   (mapcar '(lambda (x) 
-             (ModifyOnePropertyValue x "FROM" startData)
-             (ModifyOnePropertyValue x "TO" endData)
+             (ModifyOnePropertyForOneBlockUtils x "FROM" startData)
+             (ModifyOnePropertyForOneBlockUtils x "TO" endData)
            ) 
     entityNameList
   )
