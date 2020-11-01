@@ -1917,14 +1917,14 @@
   )
 )
 
-(defun GetPipeStartOrEndData (startDataList / startData)
-  (if (/= (cdr (assoc "tag" startDataList)) nil) 
-    (setq startData (cdr (assoc "tag" startDataList)))
+(defun GetPipeStartOrEndData (dataList / result)
+  (if (/= (cdr (assoc "tag" dataList)) nil) 
+    (setq result (cdr (assoc "tag" dataList)))
   )
-  (if (/= (cdr (assoc "pipenum" startDataList)) nil) 
-    (setq startData (cdr (assoc "pipenum" startDataList)))
+  (if (/= (cdr (assoc "pipenum" dataList)) nil) 
+    (setq result (cdr (assoc "pipenum" dataList)))
   )
-  startData
+  result
 )
 
 (defun c:brushBlockPropertyValue ()
