@@ -1165,6 +1165,26 @@
   (entupd entityName)
 )
 
+(defun ModifyMultiplePropertyForOneBlockUtils (entityName modifiedPropertyNameList newPropertyValueList / entityData entx propertyName)
+  (setq entityData (entget entityName))
+  ; get attribute data of block
+  (setq entx (entget (entnext (cdr (assoc -1 entityData)))))
+  (while (= "ATTRIB" (cdr (assoc 0 entx)))
+    (setq propertyName (cdr (assoc 2 entx)))
+    (mapcar '(lambda (x y) 
+                (if (= propertyName x)
+                  (SetDXFValueByEntityDataUtils entx 1 y)
+                ) 
+             ) 
+      modifiedPropertyNameList 
+      newPropertyValueList 
+    )
+    ; get the next property information
+    (setq entx (entget (entnext (cdr (assoc -1 entx)))))
+  )
+  (entupd entityName)
+)
+
 (defun SetDXFValueByEntityDataUtils (entityData DXFcode propertyValue / oldValue newValue)
   (setq oldValue (assoc DXFcode entityData))
   (setq newValue (cons DXFcode propertyValue))
