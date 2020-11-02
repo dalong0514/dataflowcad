@@ -888,7 +888,10 @@
   )
 )
 
-(defun GetBlockSSBySelectByDataTypeUtils (dataType / ss)
+(defun GetBlockSSBySelectByDataTypeUtils (dataType / ss) 
+  (if (= dataType "AllDataType")
+    (setq ss (GetAllDataSSBySelectUtils))
+  )
   (if (= dataType "Pipe")
     (setq ss (GetPipeSSBySelectUtils))
   )
@@ -937,7 +940,10 @@
   ss
 )
 
-(defun GetAllBlockSSByDataTypeUtils (dataType / ss)
+(defun GetAllBlockSSByDataTypeUtils (dataType / ss) 
+  (if (= dataType "AllDataType")
+    (setq ss (GetAllDataSSUtils))
+  )
   (if (= dataType "Pipe")
     (setq ss (GetAllPipeSSUtils))
   )
