@@ -291,6 +291,9 @@
   (if (= dataType "CustomEquip") 
     (setq propertyNameList (GetCustomEquipPropertyNameList))
   )
+  (if (= dataType "BrushedProperty") 
+    (setq propertyNameList (GetBrushedPropertyNameList))
+  )
   ; must give the return
   propertyNameList
 )
@@ -325,6 +328,9 @@
   )
   (if (= dataType "CustomEquip") 
     (setq propertyChNameList (GetCustomEquipPropertyChNameList))
+  )
+  (if (= dataType "BrushedProperty") 
+    (setq propertyChNameList (GetBrushedPropertyChNameList))
   )
   ; must give the return
   propertyChNameList

@@ -474,7 +474,7 @@ brushBlockPropertyValueBox : dialog {
       : spacer { height = 1; }
     } 
     : list_box { 
-      label = "提取导的数据";
+      label = "提取出的数据";
       height = 15;
       key = "matchedResult"; 
       list = "";
