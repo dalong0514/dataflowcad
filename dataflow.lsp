@@ -2004,7 +2004,7 @@
   (brushBlockPropertyValueByBox "brushBlockPropertyValueBox" "Pipe")
 )
 
-(defun brushBlockPropertyValueByBox (tileName dataType / dcl_id pipeSourceDirection patternValue status ss sslen matchedList blockDataList entityNameList previewDataList)
+(defun brushBlockPropertyValueByBox (tileName dataType / dcl_id pipeSourceDirection selectedPropertyIndexList status ss sslen matchedList blockDataList entityNameList previewDataList)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -2021,7 +2021,7 @@
     ; the default value of input box
     (mode_tile "pipeSourceDirection" 2)
     (action_tile "pipeSourceDirection" "(setq pipeSourceDirection $value)")
-    (action_tile "patternValue" "(setq patternValue $value)")
+    
     
     (progn
       (start_list "pipeSourceDirection" 3)
@@ -2033,11 +2033,7 @@
     (if (= nil pipeSourceDirection)
       (setq pipeSourceDirection "0")
     )
-    (if (= nil patternValue)
-      (setq patternValue "*")
-    )
     (set_tile "pipeSourceDirection" pipeSourceDirection)
-    (set_tile "patternValue" patternValue)
     ; Display the number of selected pipes
     (if (/= sslen nil)
       (set_tile "msg" (strcat "匹配到的数量： " (rtos sslen)))
@@ -2055,17 +2051,18 @@
     (if (= 2 (setq status (start_dialog)))
       (progn 
         (setq ss (GetBlockSSBySelectByDataTypeUtils dataType))
-        (setq blockDataList (GetAPropertyListAndEntityNameListByPropertyNamePattern ss "PIPENUM" patternValue))
-        (setq matchedList (car blockDataList))
-        (setq sslen (length matchedList))
-        (setq entityNameList (nth 1 blockDataList))
-        (setq previewDataList (GetPropertyValueListListByEntityNameList entityNameList (GetPropertyNameListStrategy "PublicPipe")))
+        ;(setq blockDataList (GetAPropertyListAndEntityNameListByPropertyNamePattern ss "PIPENUM" patternValue))
+        ;(setq matchedList (car blockDataList))
+        ;(setq sslen (length matchedList))
+        ;(setq entityNameList (nth 1 blockDataList))
+        ;(setq previewDataList (GetPropertyValueListListByEntityNameList entityNameList (GetPropertyNameListStrategy "PublicPipe")))
       )
     )
     ; all select button
     (if (= 3 status)
       (progn 
-        (princ pipeSourceDirection)(princ)
+        (setq selectedPropertyIndexList (StrToListUtils pipeSourceDirection " "))
+        (princ (nth 0 selectedPropertyIndexList))(princ)
       )
     )
   )
