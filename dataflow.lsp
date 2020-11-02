@@ -1241,6 +1241,25 @@
   (entupd entityName)
 )
 
+(defun GetMultiplePropertyForOneBlockUtils (entityName propertyNameList / entityData entx propertyName propertyValueList)
+  (setq entityData (entget entityName))
+  ; get attribute data of block
+  (setq entx (entget (entnext (cdr (assoc -1 entityData)))))
+  (while (= "ATTRIB" (cdr (assoc 0 entx)))
+    (setq propertyName (cdr (assoc 2 entx)))
+    (mapcar '(lambda (x y) 
+                (if (= propertyName x)
+                  (setq propertyValueList (append propertyValueList (list (assoc 1 entityData))))
+                ) 
+             ) 
+      propertyNameList 
+    )
+    ; get the next property information
+    (setq entx (entget (entnext (cdr (assoc -1 entx)))))
+  )
+  propertyValueList
+)
+
 (defun SetDXFValueByEntityDataUtils (entityData DXFcode propertyValue / oldValue newValue)
   (setq oldValue (assoc DXFcode entityData))
   (setq newValue (cons DXFcode propertyValue))
@@ -2102,12 +2121,15 @@
         (setq selectedPropertyIndexList (StrToListUtils selectedProperty " "))
         (setq selectedPropertyNameList (GetSelectedPropertyNameList selectedPropertyIndexList (GetBrushedPropertyNameDictList)))
         (princ selectedPropertyNameList)(princ)
-        ;(setq ss (GetAllDataSSBySelectUtils))
+        (setq ss (GetAllDataSSBySelectUtils))
+        (setq entityNameList (GetEntityNameListBySSUtils ss))
+
+        (GetAllPropertyValueByEntityName)
 
         ;(setq blockDataList (GetAPropertyListAndEntityNameListByPropertyNamePattern ss "PIPENUM" patternValue))
         ;(setq matchedList (car blockDataList))
         ;(setq sslen (length matchedList))
-        ;(setq entityNameList (nth 1 blockDataList))
+        ;
         ;(setq previewDataList (GetPropertyValueListListByEntityNameList entityNameList (GetPropertyNameListStrategy "PublicPipe")))
       )
     )
