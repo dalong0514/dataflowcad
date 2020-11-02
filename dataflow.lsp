@@ -2159,14 +2159,20 @@
     ; all select button
     (if (= 3 status)
       (progn 
-        (setq selectedPropertyIndexList (StrToListUtils selectedProperty " "))
-        (princ (nth 0 selectedPropertyIndexList))(princ)
+        (princ (cdr (assoc modifiedDataType (GetBrushedPropertyDataTypeDict))))(princ)
       )
     )
   )
   (setq matchedList nil)
   (unload_dialog dcl_id)
   (princ)
+)
+
+(defun GetBrushedPropertyDataTypeDict () 
+  (mapcar '(lambda (x y) (cons x y)) 
+    '("0" "1" "2" "3")
+    '("BrushedProperty" "Pipe" "Instrument" "Equipment")      
+  )
 )
 
 (defun GetSelectedPropertyNameList (selectedPropertyIndexList GetBrushedPropertyNameDictList / selectedPropertyNameList) 
