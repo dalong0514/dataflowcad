@@ -3094,3 +3094,146 @@
 ; Number Pipeline, Instrument and Equipment
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
+
+
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+; Number DrawNum
+
+(defun c:numberDrawNum () 
+  (NumberDrawNumByBox "numberDrawNumBox")
+)
+
+(defun NumberDrawNumByBox (tileName / dcl_id propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName selectedDataType ss sslen matchedList previewList confirmList blockDataList APropertyValueList entityNameList modifyMessageStatus dataChildrenType modifyMsgBtnStatus)
+  (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
+  (setq status 2)
+  (while (>= status 2)
+    ; Create the dialog box
+    (new_dialog tileName dcl_id "" '(-1 -1))
+    ; Added the actions to the Cancel and Pick Point button
+    (action_tile "cancel" "(done_dialog 0)")
+    (action_tile "btnSelect" "(done_dialog 2)")
+    (action_tile "btnAll" "(done_dialog 3)")
+    (action_tile "btnPreviewModify" "(done_dialog 5)")
+    (action_tile "btnModify" "(done_dialog 6)")
+    ; optional setting for the popup_list tile
+    (set_tile "filterPropertyName" "0")
+    (set_tile "dataChildrenType" "0")
+    ; the default value of input box
+    (set_tile "patternValue" "")
+    (set_tile "replacedValue" "")
+    (set_tile "propertyValue" "")
+    (mode_tile "filterPropertyName" 2)
+    (mode_tile "dataChildrenType" 2)
+    (action_tile "filterPropertyName" "(setq filterPropertyName $value)")
+    (action_tile "dataChildrenType" "(setq dataChildrenType $value)")
+    (action_tile "patternValue" "(setq patternValue $value)")
+    (action_tile "propertyValue" "(setq propertyValue $value)")
+    (action_tile "replacedSubstring" "(setq replacedSubstring $value)")
+    ; init the default data of text
+    (if (= nil filterPropertyName)
+      (setq filterPropertyName "0")
+    )
+    (if (= nil dataChildrenType)
+      (setq dataChildrenType "0")
+    )
+    (if (= nil patternValue)
+      (setq patternValue "*")
+    )
+    (if (= nil propertyValue)
+      (setq propertyValue "")
+    )
+    (if (= nil replacedSubstring)
+      (setq replacedSubstring "")
+    )
+    (set_tile "filterPropertyName" filterPropertyName)
+    (set_tile "dataChildrenType" dataChildrenType)
+    (set_tile "patternValue" patternValue)
+    ; Display the number of selected pipes
+    (if (/= sslen nil)
+      (set_tile "msg" (strcat "匹配到的数量： " (rtos sslen)))
+    )
+    (if (= modifyMsgBtnStatus 1)
+      (set_tile "modifyBtnMsg" "编号状态：已完成")
+    )
+    (if (/= selectedDataType nil)
+      (set_tile "filterPropertyName" filterPropertyName)
+    )
+    
+    (if (= modifyMessageStatus 0)
+      (set_tile "resultMsg" "请先预览修改")
+    )
+    
+    (if (/= matchedList nil)
+      (progn
+        ; setting for saving the existed value of a box
+        (set_tile "replacedSubstring" replacedSubstring)
+        (set_tile "propertyValue" propertyValue)
+        (start_list "matchedResult" 3)
+        (mapcar '(lambda (x) (add_list x)) 
+                 matchedList)
+        ;(add_list matchedList)
+        (end_list)
+      )
+    )
+    (if (/= confirmList nil)
+      (progn
+        (start_list "modifiedData" 3)
+        (mapcar '(lambda (x) (add_list x)) 
+                 confirmList)
+        (end_list)
+      )
+    )
+    ; select button
+    (if (= 2 (setq status (start_dialog)))
+      (progn 
+        (setq selectedDataType (nth (atoi filterPropertyName) propertyNameList))
+        (setq selectedFilterName (GetNeedToNumberPropertyName selectedDataType))
+        (setq ss (GetBlockSSBySelectByDataTypeUtils selectedDataType))
+        ; sort by x cordinate
+        (setq ss (SortSelectionSetByXYZ ss))
+        (if (= selectedDataType "Pipe") 
+          (setq blockDataList (GetAPropertyListAndEntityNameListByPropertyNamePattern ss "PIPENUM" patternValue))
+          (progn 
+            (if (or (= selectedDataType "InstrumentP") (= selectedDataType "InstrumentL") (= selectedDataType "InstrumentSIS")) 
+              (setq blockDataList (GetInstrumentFunctionTagByType dataChildrenType ss))
+              (setq blockDataList (GetAPropertyListAndEntityNameListByPropertyNamePattern ss "TAG" "*"))
+            )
+          )
+        )
+        (setq APropertyValueList (car blockDataList))
+        (setq entityNameList (car (cdr blockDataList)))
+        (setq matchedList APropertyValueList)
+        (setq sslen (length APropertyValueList))
+      )
+    )
+    ; confirm button
+    (if (= 5 status)
+      (progn 
+        (setq selectedName (GetNeedToNumberPropertyName selectedDataType))
+        (setq previewList (GetOnePropertyValueListByEntityNameList entityNameList selectedName))
+        (setq numberedList (GetNumberedListByStartAndLengthUtils propertyValue replacedSubstring (length previewList)))
+        (setq confirmList (ReplaceNumberOfListByNumberedListUtils numberedList previewList))
+      )
+    )
+    ; modify button
+    (if (= 6 status)
+      (progn 
+        (if (= confirmList nil)
+          (setq modifyMessageStatus 0)
+          (progn 
+            (setq selectedName (GetNeedToNumberPropertyName selectedDataType))
+            (ModifyPropertyValueByEntityName entityNameList selectedName confirmList)
+          )
+        )
+        (setq modifyMsgBtnStatus 1)
+      )
+    )
+  )
+  (unload_dialog dcl_id)
+  (princ)
+)
+
+; Number DrawNum
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;

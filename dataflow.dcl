@@ -502,3 +502,79 @@ brushBlockPropertyValueBox : dialog {
     : spacer { height = 3; } 
   }
 }
+
+numberDrawNumBox : dialog {
+  label = "设计流数据一体化V1.1———批量编图签流程图号"; 
+  key = "numberDrawNum";
+  : boxed_radio_column {
+    key = "modifyBox";
+    width = 80;
+    : column {
+      height = 10;
+      : row {
+        : text {
+          key = "replacedSubstringMsg";
+          label = "物料代号";
+        }
+        : edit_box {
+          key = "replacedSubstring";
+          edit_width = 40;
+          edit_width = 40;
+          mnemonic = "N";
+          value = "";
+        }
+      }
+      : spacer { height = 3; } 
+      : row {
+        : text {
+          key = "propertyValueMsg";
+          label = "编号起点";
+        }
+        : edit_box {
+          key = "propertyValue";
+          edit_width = 40;
+          mnemonic = "N";
+          value = "";
+        }
+      }
+    }
+    : spacer { height = 1; } 
+    : list_box { 
+      height = 20;
+      label = "编号后的数据";
+      key = "modifiedData"; 
+      list = "";
+      value = "";
+    }
+    : spacer { height = 1; } 
+    : text {
+      key = "modifyBtnMsg";
+      label = "编号状态：";
+    }
+    : spacer { height = 2; }
+    : row { 
+      fixed_width = true; 
+      alignment = centered; 
+      : button { 
+        key = "btnSelect"; 
+        label = "选择图签"; 
+        is_default = "true"; 
+      } 
+      : spacer { width = 2; } 
+      : button { 
+        key = "btnPreviewModify"; 
+        label = "预览编号"; 
+        is_default = "true"; 
+      } 
+      : spacer { width = 2; } 
+      : button { 
+        key = "btnModify"; 
+        label = "确认编号"; 
+        is_default = "true"; 
+      } 
+      : spacer { width = 2; } 
+      cancel_button; 
+    }
+    : spacer { height = 3; } 
+  }
+}
