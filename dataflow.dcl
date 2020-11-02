@@ -1,5 +1,5 @@
 exportBlockPropertyDataBox : dialog {
-  label = "设计流数据一体化V1.0———导出数据"; 
+  label = "设计流数据一体化V1.1———导出数据"; 
   key = "exportBlockPropertyData";
   : row {
     : boxed_radio_column {
@@ -56,7 +56,7 @@ exportBlockPropertyDataBox : dialog {
 }
 
 filterAndNumberBox : dialog {
-  label = "设计流数据一体化———批量编号"; 
+  label = "设计流数据一体化V1.1———批量编号"; 
   key = "filterAndNumber";
   : row {
     : boxed_radio_column {
@@ -191,7 +191,7 @@ filterAndNumberBox : dialog {
 }
 
 filterAndModifyEquipmentPropertyBox : dialog {
-  label = "设计流数据一体化V1.0———批量修改数据"; 
+  label = "设计流数据一体化V1.1———批量修改数据"; 
   key = "filterModifyProperty";
   : row {
     : boxed_radio_column {
@@ -384,7 +384,7 @@ filterAndModifyEquipmentPropertyBox : dialog {
 }
 
 generatePublicProcessElementBox : dialog {
-  label = "设计流数据一体化V1.0———自动生成单回路辅助流程组件"; 
+  label = "设计流数据一体化V1.1———自动生成单回路辅助流程组件"; 
   key = "generatePublicProcessElement";
   : boxed_radio_column {
     key = "filterBox";
@@ -448,7 +448,7 @@ generatePublicProcessElementBox : dialog {
 }
 
 brushBlockPropertyValueBox : dialog {
-  label = "设计流数据一体化V1.0———刷块属性数据"; 
+  label = "设计流数据一体化V1.1———刷块属性数据"; 
   key = "brushBlockPropertyValue";
   : boxed_radio_column {
     key = "filterBox";
@@ -457,6 +457,7 @@ brushBlockPropertyValueBox : dialog {
       height = 10;
       : list_box { 
         label = "选择要提取的属性（可多选）";
+        height = 15;
         edit_width = 30;
         key = "selectedProperty"; 
         multiple_select = true;
