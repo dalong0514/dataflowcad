@@ -291,9 +291,6 @@
   (if (= dataType "CustomEquip") 
     (setq propertyNameList (GetCustomEquipPropertyNameList))
   )
-  (if (= dataType "BrushedProperty") 
-    (setq propertyNameList (GetPropertyNameListForBrush))
-  )
   ; must give the return
   propertyNameList
 )
@@ -328,9 +325,6 @@
   )
   (if (= dataType "CustomEquip") 
     (setq propertyChNameList (GetCustomEquipPropertyChNameList))
-  )
-  (if (= dataType "BrushedProperty") 
-    (setq propertyChNameList (GetBrushedPropertyChNameList))
   )
   ; must give the return
   propertyChNameList
@@ -414,14 +408,6 @@
 
 (defun GetCustomEquipPropertyChNameList ()
   '("设备位号" "设备名称" "设备类型" "工作介质" "工作温度" "工作压力" "设备尺寸" "电机功率" "电机是否防爆" "电机级数" "关键参数1" "关键参数2" "关键参数3" "关键参数4" "设备材质" "设备重量" "设备型号" "保温厚度" "设备数量")
-)
-
-(defun GetPropertyNameListForBrush ()
-  '("SUBSTANCE" "TEMP" "PRESSURE" "PHASE" "DRAWNUM")
-)
-
-(defun GetBrushedPropertyChNameList ()
-  '("工作介质" "工作温度" "工作压力" "相态" "流程图号")
 )
 
 (defun GetInstrumentPropertyPairNameList (/ propertyPairNameList)
@@ -2123,7 +2109,7 @@
     (progn
       (start_list "selectedProperty" 3)
       (mapcar '(lambda (x) (add_list x)) 
-                (GetPropertyChNameListStrategy "BrushedProperty"))
+                '("工作介质" "工作温度" "工作压力" "相态" "流程图号"))
       (end_list)
     )
     (progn
@@ -2215,7 +2201,7 @@
 (defun GetSelectedPropertyNameList (selectedPropertyIndexList GetBrushedPropertyNameDictList / selectedPropertyNameList) 
   (mapcar '(lambda (x) 
              (setq selectedPropertyNameList 
-                (append selectedPropertyNameList (list (cdr (assoc (atoi x) GetBrushedPropertyNameDictList))))
+                (append selectedPropertyNameList (list (cdr (assoc x GetBrushedPropertyNameDictList))))
              )
            ) 
     selectedPropertyIndexList
@@ -2224,8 +2210,8 @@
 )
 
 (defun GetBrushedPropertyNameDictList (/ listBoxValueList brushedPropertyNameList) 
-  (setq listBoxValueList '(0 1 2 3 4))
-  (setq brushedPropertyNameList (GetPropertyNameListStrategy "BrushedProperty"))
+  (setq listBoxValueList '("0" "1" "2" "3" "4"))
+  (setq brushedPropertyNameList '("SUBSTANCE" "TEMP" "PRESSURE" "PHASE" "DRAWNUM"))
   (mapcar '(lambda (x y) (cons x y)) 
     listBoxValueList 
     brushedPropertyNameList 
