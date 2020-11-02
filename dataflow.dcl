@@ -458,7 +458,7 @@ brushBlockPropertyValueBox : dialog {
       : list_box { 
         label = "选择要提取的属性（可多选）";
         edit_width = 30;
-        key = "pipeSourceDirection"; 
+        key = "selectedProperty"; 
         multiple_select = true;
         list = "";
         value = "";
@@ -466,7 +466,7 @@ brushBlockPropertyValueBox : dialog {
       : spacer { height = 1; } 
       : popup_list { 
         label = "数据大类";
-        key = "filterPropertyName"; 
+        key = "modifiedDataType"; 
         edit_width = 40;
         list = "管道\n集中仪表\n就地仪表\nSIS仪表\n反应釜\n输送泵\n储罐\n换热器\n离心机\n真空泵\n自定义设备";
         value = "";

@@ -2004,7 +2004,7 @@
   (brushBlockPropertyValueByBox "brushBlockPropertyValueBox" "Pipe")
 )
 
-(defun brushBlockPropertyValueByBox (tileName dataType / dcl_id pipeSourceDirection selectedPropertyIndexList status ss sslen matchedList blockDataList entityNameList previewDataList)
+(defun brushBlockPropertyValueByBox (tileName dataType / dcl_id selectedProperty selectedPropertyIndexList status ss sslen matchedList blockDataList entityNameList previewDataList)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -2017,23 +2017,23 @@
     (action_tile "btnShowOriginData" "(done_dialog 4)")
     
     ; optional setting for the popup_list tile
-    (set_tile "pipeSourceDirection" "0")
+    (set_tile "selectedProperty" "0")
     ; the default value of input box
-    (mode_tile "pipeSourceDirection" 2)
-    (action_tile "pipeSourceDirection" "(setq pipeSourceDirection $value)")
+    (mode_tile "selectedProperty" 2)
+    (action_tile "selectedProperty" "(setq selectedProperty $value)")
     
     
     (progn
-      (start_list "pipeSourceDirection" 3)
+      (start_list "selectedProperty" 3)
       (mapcar '(lambda (x) (add_list x)) 
                 '("工作介质" "工作温度" "工作压力" "流程图号" "相态"))
       (end_list)
     )
     ; init the default data of text
-    (if (= nil pipeSourceDirection)
-      (setq pipeSourceDirection "0")
+    (if (= nil selectedProperty)
+      (setq selectedProperty "0")
     )
-    (set_tile "pipeSourceDirection" pipeSourceDirection)
+    (set_tile "pipeSourceDirection" selectedProperty)
     ; Display the number of selected pipes
     (if (/= sslen nil)
       (set_tile "msg" (strcat "匹配到的数量： " (rtos sslen)))
@@ -2061,7 +2061,7 @@
     ; all select button
     (if (= 3 status)
       (progn 
-        (setq selectedPropertyIndexList (StrToListUtils pipeSourceDirection " "))
+        (setq selectedPropertyIndexList (StrToListUtils selectedProperty " "))
         (princ (nth 0 selectedPropertyIndexList))(princ)
       )
     )
