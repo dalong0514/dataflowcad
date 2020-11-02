@@ -2159,7 +2159,7 @@
         (setq ss (GetAllDataSSBySelectUtils))
         (setq entityNameList (GetEntityNameListBySSUtils ss))
         (setq brushedPropertyDict (GetMultiplePropertyDictForOneBlockUtils (car entityNameList) selectedPropertyNameList))
-        (setq matchedList (GetMultiplePropertyForOneBlockUtils (car entityNameList) selectedPropertyNameList))
+        (setq matchedList (GetBrushedPropertyValueList brushedPropertyDict))
       )
     )
     ; all select button
