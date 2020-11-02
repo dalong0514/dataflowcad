@@ -292,7 +292,7 @@
     (setq propertyNameList (GetCustomEquipPropertyNameList))
   )
   (if (= dataType "BrushedProperty") 
-    (setq propertyNameList (GetBrushedPropertyNameList))
+    (setq propertyNameList (GetPropertyNameListForBrush))
   )
   ; must give the return
   propertyNameList
@@ -416,7 +416,7 @@
   '("设备位号" "设备名称" "设备类型" "工作介质" "工作温度" "工作压力" "设备尺寸" "电机功率" "电机是否防爆" "电机级数" "关键参数1" "关键参数2" "关键参数3" "关键参数4" "设备材质" "设备重量" "设备型号" "保温厚度" "设备数量")
 )
 
-(defun GetBrushedPropertyNameList ()
+(defun GetPropertyNameListForBrush ()
   '("SUBSTANCE" "TEMP" "PRESSURE" "PHASE" "DRAWNUM")
 )
 
@@ -2105,7 +2105,7 @@
 )
 
 (defun brushBlockPropertyValueByBox (tileName / dcl_id selectedProperty selectedPropertyIndexList selectedPropertyNameList 
-                                     status ss entityNameList brushedPropertyDict matchedList modifiedDataType)
+                                     status ss entityNameList brushedPropertyDict matchedList modifiedDataType modifiedSS modifiedEntityNameList)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -2165,7 +2165,9 @@
     ; all select button
     (if (= 3 status)
       (progn 
-        (princ (cdr (assoc modifiedDataType (GetBrushedPropertyDataTypeDict))))(princ)
+        (setq modifiedSS (GetBlockSSBySelectByDataTypeUtils (cdr (assoc modifiedDataType (GetBrushedPropertyDataTypeDict)))))
+        (setq modifiedEntityNameList (GetEntityNameListBySSUtils modifiedSS))
+        (ModifyBrushedProperty modifiedEntityNameList brushedPropertyDict)
       )
     )
   )
@@ -2174,10 +2176,39 @@
   (princ)
 )
 
+(defun ModifyBrushedProperty (entityNameList brushedPropertyDict /)
+  (mapcar '(lambda (x) 
+            (ModifyMultiplePropertyForOneBlockUtils x 
+              (GetBrushedPropertyNameList brushedPropertyDict) 
+              (GetBrushedPropertyValueList brushedPropertyDict)
+            )
+          ) 
+    entityNameList 
+  )
+)
+
+(defun GetBrushedPropertyNameList (brushedPropertyDict / brushedPropertyNameList) 
+  (mapcar '(lambda (x) 
+             (setq brushedPropertyNameList (append brushedPropertyNameList (list (strcase (car x)))))
+           ) 
+    brushedPropertyDict
+  )
+  brushedPropertyNameList
+)
+
+(defun GetBrushedPropertyValueList (brushedPropertyDict / brushedPropertyValueList) 
+  (mapcar '(lambda (x) 
+             (setq brushedPropertyValueList (append brushedPropertyValueList (list (cdr x))))
+           ) 
+    brushedPropertyDict
+  )
+  brushedPropertyValueList
+)
+
 (defun GetBrushedPropertyDataTypeDict () 
   (mapcar '(lambda (x y) (cons x y)) 
     '("0" "1" "2" "3")
-    '("BrushedProperty" "Pipe" "Instrument" "Equipment")      
+    '("AllDataType" "Pipe" "Instrument" "Equipment")      
   )
 )
 
