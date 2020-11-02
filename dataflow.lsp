@@ -416,6 +416,14 @@
   '("设备位号" "设备名称" "设备类型" "工作介质" "工作温度" "工作压力" "设备尺寸" "电机功率" "电机是否防爆" "电机级数" "关键参数1" "关键参数2" "关键参数3" "关键参数4" "设备材质" "设备重量" "设备型号" "保温厚度" "设备数量")
 )
 
+(defun GetBrushedPropertyNameList ()
+  '("SUBSTANCE" "TEMP" "PRESSURE" "PHASE" "DRAWNUM")
+)
+
+(defun GetBrushedPropertyChNameList ()
+  '("工作介质" "工作温度" "工作压力" "相态" "流程图号")
+)
+
 (defun GetInstrumentPropertyPairNameList (/ propertyPairNameList)
   (setq propertyPairNameList '(
                             ("FUNCTION" "function")
