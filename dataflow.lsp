@@ -2099,7 +2099,7 @@
 )
 
 (defun brushBlockPropertyValueByBox (tileName / dcl_id selectedProperty selectedPropertyIndexList selectedPropertyNameList 
-                                     status ss entityNameList brushedPropertyDict matchedList)
+                                     status ss entityNameList brushedPropertyDict matchedList modifiedDataType)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -2109,21 +2109,32 @@
     (action_tile "cancel" "(done_dialog 0)")
     (action_tile "btnSelect" "(done_dialog 2)")
     (action_tile "btnAll" "(done_dialog 3)")
-    (action_tile "btnShowOriginData" "(done_dialog 4)")
     ; the default value of input box
     (mode_tile "selectedProperty" 2)
+    (mode_tile "modifiedDataType" 2)
     (action_tile "selectedProperty" "(setq selectedProperty $value)")
+    (action_tile "modifiedDataType" "(setq modifiedDataType $value)")
     (progn
       (start_list "selectedProperty" 3)
       (mapcar '(lambda (x) (add_list x)) 
                 (GetPropertyChNameListStrategy "BrushedProperty"))
       (end_list)
     )
+    (progn
+      (start_list "modifiedDataType" 3)
+      (mapcar '(lambda (x) (add_list x)) 
+                '("全部" "管道" "仪表" "设备"))
+      (end_list)
+    )
     ; init the default data of text
     (if (= nil selectedProperty)
       (setq selectedProperty "0")
     )
+    (if (= nil modifiedDataType)
+      (setq modifiedDataType "0")
+    )
     (set_tile "selectedProperty" selectedProperty)
+    (set_tile "modifiedDataType" modifiedDataType)
     ; Display the number of selected pipes
     (if (/= matchedList nil)
       (progn

@@ -468,7 +468,7 @@ brushBlockPropertyValueBox : dialog {
         label = "数据大类";
         key = "modifiedDataType"; 
         edit_width = 40;
-        list = "全部\n管道\n仪表\n设备";
+        list = "";
         value = "";
       }
       : spacer { height = 1; }
