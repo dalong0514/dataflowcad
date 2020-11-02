@@ -2100,7 +2100,7 @@
     (if (= 2 (setq status (start_dialog))) 
       (progn 
         (setq selectedPropertyIndexList (StrToListUtils selectedProperty " "))
-        (setq selectedPropertyNameList (GetSelectedPropertyNameList selectedPropertyIndexList))
+        (setq selectedPropertyNameList (GetSelectedPropertyNameList selectedPropertyIndexList (GetBrushedPropertyNameDictList)))
         (princ selectedPropertyNameList)(princ)
         ;(setq ss (GetAllDataSSBySelectUtils))
 
@@ -2124,12 +2124,23 @@
   (princ)
 )
 
-(defun GetSelectedPropertyNameList (selectedPropertyIndexList /) 
+(defun GetSelectedPropertyNameList (selectedPropertyIndexList GetBrushedPropertyNameDictList / selectedPropertyNameList) 
+  (mapcar '(lambda (x) 
+             (setq selectedPropertyNameList 
+                (append selectedPropertyNameList (list (cdr (assoc (atoi x) GetBrushedPropertyNameDictList))))
+             )
+           ) 
+    selectedPropertyIndexList
+  )
+  selectedPropertyNameList
+)
+
+(defun GetBrushedPropertyNameDictList (/ listBoxValueList brushedPropertyNameList) 
   (setq listBoxValueList '(0 1 2 3 4))
-  (setq propertyNameList (GetPropertyNameListStrategy "BrushedProperty"))
+  (setq brushedPropertyNameList (GetPropertyNameListStrategy "BrushedProperty"))
   (mapcar '(lambda (x y) (cons x y)) 
     listBoxValueList 
-    propertyNameList 
+    brushedPropertyNameList 
   )
 )
 
