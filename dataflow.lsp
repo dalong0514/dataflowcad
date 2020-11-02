@@ -2378,6 +2378,7 @@
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
 
+; Unit Test Compeleted
 (defun GetNumberedListByStartAndLengthUtils (startNumer startString listLength / numberedList)
   (setq numberedList '())
   (setq startNumer (atoi startNumer))
@@ -3150,17 +3151,13 @@
       (progn 
         (setq ss (GetBlockSSBySelectByDataTypeUtils "DrawLabel"))
         (setq entityNameList (GetEntityNameListBySSUtils ss))
-
-        (princ (GetDrawNumList entityNameList))(princ)
-        ;(setq confirmList APropertyValueList)
-        ;(setq sslen (length APropertyValueList))
+        (setq confirmList (GetDrawNumList entityNameList))
+        (setq sslen (length confirmList))
       )
     )
     ; confirm button
     (if (= 5 status)
       (progn 
-        (setq selectedName (GetNeedToNumberPropertyName selectedDataType))
-        (setq previewList (GetOnePropertyValueListByEntityNameList entityNameList selectedName))
         (setq numberedList (GetNumberedListByStartAndLengthUtils propertyValue replacedSubstring (length previewList)))
         (setq confirmList (ReplaceNumberOfListByNumberedListUtils numberedList previewList))
       )
@@ -3186,7 +3183,7 @@
 (defun GetDrawNumList (entityNameList / drawNumList)
   (mapcar '(lambda (x) 
              (setq drawNumList 
-                (append drawNumList (list (cdr (assoc "drawno" (GetAllPropertyValueByEntityName x)))))
+                (append drawNumList (list (cdr (assoc "dwgno" (GetAllPropertyValueByEntityName x)))))
              )
            ) 
     entityNameList
