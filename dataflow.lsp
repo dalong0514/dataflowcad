@@ -1247,9 +1247,9 @@
   (setq entx (entget (entnext (cdr (assoc -1 entityData)))))
   (while (= "ATTRIB" (cdr (assoc 0 entx)))
     (setq propertyName (cdr (assoc 2 entx)))
-    (mapcar '(lambda (x y) 
+    (mapcar '(lambda (x) 
                 (if (= propertyName x)
-                  (setq propertyValueList (append propertyValueList (list (assoc 1 entityData))))
+                  (setq propertyValueList (append propertyValueList (list (cdr (assoc 1 entx)))))
                 ) 
              ) 
       propertyNameList 
@@ -2120,11 +2120,11 @@
       (progn 
         (setq selectedPropertyIndexList (StrToListUtils selectedProperty " "))
         (setq selectedPropertyNameList (GetSelectedPropertyNameList selectedPropertyIndexList (GetBrushedPropertyNameDictList)))
-        (princ selectedPropertyNameList)(princ)
         (setq ss (GetAllDataSSBySelectUtils))
         (setq entityNameList (GetEntityNameListBySSUtils ss))
 
-        (GetAllPropertyValueByEntityName)
+        
+        (princ (GetMultiplePropertyForOneBlockUtils (car entityNameList) selectedPropertyNameList))(princ)
 
         ;(setq blockDataList (GetAPropertyListAndEntityNameListByPropertyNamePattern ss "PIPENUM" patternValue))
         ;(setq matchedList (car blockDataList))
@@ -2144,6 +2144,10 @@
   (setq matchedList nil)
   (unload_dialog dcl_id)
   (princ)
+)
+
+(defun GetBrushedPropertyValueList (entityNameList selectedPropertyNameList /)
+  (GetMultiplePropertyForOneBlockUtils (car entityNameList) selectedPropertyNameList)
 )
 
 (defun GetSelectedPropertyNameList (selectedPropertyIndexList GetBrushedPropertyNameDictList / selectedPropertyNameList) 
