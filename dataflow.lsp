@@ -923,6 +923,9 @@
   (if (= dataType "CustomEquip")
     (setq ss (ssget '((0 . "INSERT") (2 . "CustomEquip"))))
   )
+  (if (= dataType "DrawLabel")
+    (setq ss (ssget '((0 . "INSERT") (2 . "title.2017"))))
+  )
   ss
 )
 
@@ -974,6 +977,9 @@
   )
   (if (= dataType "CustomEquip")
     (setq ss (ssget "X" '((0 . "INSERT") (2 . "CustomEquip"))))
+  )
+  (if (= dataType "DrawLabel")
+    (setq ss (ssget "X" '((0 . "INSERT") (2 . "title.2017"))))
   )
   ss
 )
