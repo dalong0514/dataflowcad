@@ -2099,7 +2099,7 @@
 )
 
 (defun brushBlockPropertyValueByBox (tileName dataType / dcl_id selectedProperty selectedPropertyIndexList selectedPropertyNameList 
-                                     status ss sslen matchedList blockDataList entityNameList previewDataList)
+                                     status ss entityNameList brushedPropertyDict matchedList)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -2141,14 +2141,8 @@
         (setq selectedPropertyNameList (GetSelectedPropertyNameList selectedPropertyIndexList (GetBrushedPropertyNameDictList)))
         (setq ss (GetAllDataSSBySelectUtils))
         (setq entityNameList (GetEntityNameListBySSUtils ss))
-        (setq brushedPropertyValueList (GetMultiplePropertyDictForOneBlockUtils (car entityNameList) selectedPropertyNameList))
-        (princ brushedPropertyValueList)(princ)
-
-        ;(setq blockDataList (GetAPropertyListAndEntityNameListByPropertyNamePattern ss "PIPENUM" patternValue))
-        ;(setq matchedList (car blockDataList))
-        ;(setq sslen (length matchedList))
-        ;
-        ;(setq previewDataList (GetPropertyValueListListByEntityNameList entityNameList (GetPropertyNameListStrategy "PublicPipe")))
+        (setq brushedPropertyDict (GetMultiplePropertyDictForOneBlockUtils (car entityNameList) selectedPropertyNameList))
+        (setq matchedList (GetMultiplePropertyForOneBlockUtils (car entityNameList) selectedPropertyNameList))
       )
     )
     ; all select button
