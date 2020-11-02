@@ -31,6 +31,7 @@
   (GetInsertPtListTest)
   (MoveInsertPositionTest)
   (SpliceElementInTwoListUtilsTest)
+  (GetNumberedListByStartAndLengthUtilsTest)
   (DL:PrintTestResults (DL:CountBooleans *testList*))
 )
 
@@ -2380,7 +2381,6 @@
 
 ; Unit Test Compeleted
 (defun GetNumberedListByStartAndLengthUtils (startNumer startString listLength / numberedList)
-  (setq numberedList '())
   (setq startNumer (atoi startNumer))
   (setq listLength (- listLength 1))
   (setq numberedList (append numberedList (list (strcat startString (rtos startNumer)))))
@@ -2389,6 +2389,13 @@
     (setq numberedList (append numberedList (list (strcat startString (rtos startNumer)))))
   )
   numberedList
+)
+
+(defun GetNumberedListByStartAndLengthUtilsTest ()
+  (AssertEqual 'GetNumberedListByStartAndLengthUtils 
+    (list "2" "PL" 4) 
+    (list "PL2" "PL3" "PL4" "PL5")
+  )
 )
 
 (defun GetNeedToNumberPropertyName (dataType / needToNumberPropertyNameList dataTypeList)
