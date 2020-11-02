@@ -548,6 +548,11 @@ numberDrawNumBox : dialog {
     }
     : spacer { height = 1; } 
     : text {
+      key = "msg";
+      label = "Í¼Ç©ÊýÁ¿£º";
+    }
+    : spacer { height = 1; } 
+    : text {
       key = "modifyBtnMsg";
       label = "±àºÅ×´Ì¬£º";
     }
