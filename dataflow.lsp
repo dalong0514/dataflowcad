@@ -2015,14 +2015,9 @@
     (action_tile "btnSelect" "(done_dialog 2)")
     (action_tile "btnAll" "(done_dialog 3)")
     (action_tile "btnShowOriginData" "(done_dialog 4)")
-    
-    ; optional setting for the popup_list tile
-    (set_tile "selectedProperty" "0")
     ; the default value of input box
     (mode_tile "selectedProperty" 2)
     (action_tile "selectedProperty" "(setq selectedProperty $value)")
-    
-    
     (progn
       (start_list "selectedProperty" 3)
       (mapcar '(lambda (x) (add_list x)) 
@@ -2033,7 +2028,7 @@
     (if (= nil selectedProperty)
       (setq selectedProperty "0")
     )
-    (set_tile "pipeSourceDirection" selectedProperty)
+    (set_tile "selectedProperty" selectedProperty)
     ; Display the number of selected pipes
     (if (/= sslen nil)
       (set_tile "msg" (strcat "匹配到的数量： " (rtos sslen)))
