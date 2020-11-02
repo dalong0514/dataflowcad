@@ -2095,10 +2095,10 @@
 )
 
 (defun c:brushBlockPropertyValue ()
-  (brushBlockPropertyValueByBox "brushBlockPropertyValueBox" "BrushedProperty")
+  (brushBlockPropertyValueByBox "brushBlockPropertyValueBox")
 )
 
-(defun brushBlockPropertyValueByBox (tileName dataType / dcl_id selectedProperty selectedPropertyIndexList selectedPropertyNameList 
+(defun brushBlockPropertyValueByBox (tileName / dcl_id selectedProperty selectedPropertyIndexList selectedPropertyNameList 
                                      status ss entityNameList brushedPropertyDict matchedList)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
@@ -2116,7 +2116,7 @@
     (progn
       (start_list "selectedProperty" 3)
       (mapcar '(lambda (x) (add_list x)) 
-                (GetPropertyChNameListStrategy dataType))
+                (GetPropertyChNameListStrategy "BrushedProperty"))
       (end_list)
     )
     ; init the default data of text
