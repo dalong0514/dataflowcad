@@ -2060,7 +2060,8 @@
   (brushBlockPropertyValueByBox "brushBlockPropertyValueBox" "BrushedProperty")
 )
 
-(defun brushBlockPropertyValueByBox (tileName dataType / dcl_id selectedProperty selectedPropertyIndexList status ss sslen matchedList blockDataList entityNameList previewDataList)
+(defun brushBlockPropertyValueByBox (tileName dataType / dcl_id selectedProperty selectedPropertyIndexList selectedPropertyNameList 
+                                     status ss sslen matchedList blockDataList entityNameList previewDataList)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -2086,9 +2087,6 @@
     )
     (set_tile "selectedProperty" selectedProperty)
     ; Display the number of selected pipes
-    (if (/= sslen nil)
-      (set_tile "msg" (strcat "匹配到的数量： " (rtos sslen)))
-    )
     (if (/= matchedList nil)
       (progn
         ; setting for saving the existed value of a box
@@ -2099,9 +2097,13 @@
       )
     )
     ; select button
-    (if (= 2 (setq status (start_dialog)))
+    (if (= 2 (setq status (start_dialog))) 
       (progn 
-        (setq ss (GetBlockSSBySelectByDataTypeUtils dataType))
+        (setq selectedPropertyIndexList (StrToListUtils selectedProperty " "))
+        (setq selectedPropertyNameList (GetSelectedPropertyNameList selectedPropertyIndexList))
+        (princ selectedPropertyNameList)(princ)
+        ;(setq ss (GetAllDataSSBySelectUtils))
+
         ;(setq blockDataList (GetAPropertyListAndEntityNameListByPropertyNamePattern ss "PIPENUM" patternValue))
         ;(setq matchedList (car blockDataList))
         ;(setq sslen (length matchedList))
@@ -2120,6 +2122,15 @@
   (setq matchedList nil)
   (unload_dialog dcl_id)
   (princ)
+)
+
+(defun GetSelectedPropertyNameList (selectedPropertyIndexList /) 
+  (setq listBoxValueList '(0 1 2 3 4))
+  (setq propertyNameList (GetPropertyNameListStrategy "BrushedProperty"))
+  (mapcar '(lambda (x y) (cons x y)) 
+    listBoxValueList 
+    propertyNameList 
+  )
 )
 
 ; logic for brushBlockPropertyValue

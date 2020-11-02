@@ -480,11 +480,6 @@ brushBlockPropertyValueBox : dialog {
       list = "";
       value = "";
     }
-    : spacer { height = 1; } 
-    : text {
-      key = "msg";
-      label = "匹配到的数量：";
-    }
     : spacer { height = 3; } 
     : row { 
       fixed_width = true; 
