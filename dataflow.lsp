@@ -1260,6 +1260,25 @@
   propertyValueList
 )
 
+(defun GetMultiplePropertyDictForOneBlockUtils (entityName propertyNameList / entityData entx propertyName propertyValueDict)
+  (setq entityData (entget entityName))
+  ; get attribute data of block
+  (setq entx (entget (entnext (cdr (assoc -1 entityData)))))
+  (while (= "ATTRIB" (cdr (assoc 0 entx)))
+    (setq propertyName (cdr (assoc 2 entx)))
+    (mapcar '(lambda (x) 
+                (if (= propertyName x)
+                  (setq propertyValueDict (append propertyValueDict (list (cons (strcase propertyName T) (cdr (assoc 1 entx))))))
+                ) 
+             ) 
+      propertyNameList 
+    )
+    ; get the next property information
+    (setq entx (entget (entnext (cdr (assoc -1 entx)))))
+  )
+  propertyValueDict
+)
+
 (defun SetDXFValueByEntityDataUtils (entityData DXFcode propertyValue / oldValue newValue)
   (setq oldValue (assoc DXFcode entityData))
   (setq newValue (cons DXFcode propertyValue))
@@ -2122,9 +2141,8 @@
         (setq selectedPropertyNameList (GetSelectedPropertyNameList selectedPropertyIndexList (GetBrushedPropertyNameDictList)))
         (setq ss (GetAllDataSSBySelectUtils))
         (setq entityNameList (GetEntityNameListBySSUtils ss))
-
-        
-        (princ (GetMultiplePropertyForOneBlockUtils (car entityNameList) selectedPropertyNameList))(princ)
+        (setq brushedPropertyValueList (GetMultiplePropertyDictForOneBlockUtils (car entityNameList) selectedPropertyNameList))
+        (princ brushedPropertyValueList)(princ)
 
         ;(setq blockDataList (GetAPropertyListAndEntityNameListByPropertyNamePattern ss "PIPENUM" patternValue))
         ;(setq matchedList (car blockDataList))
@@ -2144,10 +2162,6 @@
   (setq matchedList nil)
   (unload_dialog dcl_id)
   (princ)
-)
-
-(defun GetBrushedPropertyValueList (entityNameList selectedPropertyNameList /)
-  (GetMultiplePropertyForOneBlockUtils (car entityNameList) selectedPropertyNameList)
 )
 
 (defun GetSelectedPropertyNameList (selectedPropertyIndexList GetBrushedPropertyNameDictList / selectedPropertyNameList) 
