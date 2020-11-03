@@ -3090,7 +3090,7 @@
       (progn 
         (setq selectedName (GetNeedToNumberPropertyName selectedDataType))
         (setq previewList (GetOnePropertyValueListByEntityNameList entityNameList selectedName))
-        (setq numberedList (GetNumberedListByStartAndLengthUtils propertyValue replacedSubstring (length previewList)))
+        (setq numberedList (GetNumberedListByStartAndLengthUtils replacedSubstring propertyValue (length previewList)))
         (setq confirmList (ReplaceNumberOfListByNumberedListUtils numberedList previewList))
       )
     )
@@ -3215,7 +3215,7 @@
     ; confirm button
     (if (= 5 status)
       (progn 
-        (setq numberedList (GetNumberedListByStartAndLengthUtils propertyValue replacedSubstring (length previewList)))
+        (setq numberedList (GetNumberedListByStartAndLengthUtils replacedSubstring propertyValue (length previewList)))
         (setq confirmList (ReplaceNumberOfListByNumberedListUtils numberedList previewList))
       )
     )
