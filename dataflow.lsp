@@ -1330,6 +1330,25 @@
   )
 )
 
+(defun ModifyPropertyValueByEntityHandleUtils (importedDataList propertyNameList / entityHandleList entityNameList propertyValueList)
+  (foreach item importedDataList 
+    (setq entityHandleList (append entityHandleList (list (car item))))
+  )
+  (foreach item entityHandleList 
+    (setq entityNameList (append entityNameList (list (handent item))))
+  )
+  (setq propertyValueList (mapcar '(lambda (x) (cdr x)) 
+                            importedDataList
+                          )
+  )
+  (mapcar '(lambda (x y) 
+            (ModifyMultiplePropertyForOneBlockUtils x propertyNameList y)
+          ) 
+    entityNameList
+    propertyValueList      
+  )
+)
+
 ; Utils Function 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
@@ -2656,8 +2675,8 @@
     (if (= 6 status)
       (progn 
         (if (/= importedDataList nil) 
-          (ModifyPropertyValueByEntityHandle importedDataList (GetPropertyNameListStrategy dataType))
-          (ModifyPropertyValueByEntityHandle previewDataList (GetPropertyNameListStrategy dataType))
+          (ModifyPropertyValueByEntityHandleUtils importedDataList (GetPropertyNameListStrategy dataType))
+          (ModifyPropertyValueByEntityHandleUtils previewDataList (GetPropertyNameListStrategy dataType))
         )
         (setq modifyMsgBtnStatus 1)
       )
@@ -2888,25 +2907,6 @@
     (setq entx (entget (entnext (cdr (assoc -1 entx)))))
   )
   propertyValueList
-)
-
-(defun ModifyPropertyValueByEntityHandle (importedDataList propertyNameList / entityHandleList entityNameList propertyValueList)
-  (foreach item importedDataList 
-    (setq entityHandleList (append entityHandleList (list (car item))))
-  )
-  (foreach item entityHandleList 
-    (setq entityNameList (append entityNameList (list (handent item))))
-  )
-  (setq propertyValueList (mapcar '(lambda (x) (cdr x)) 
-                            importedDataList
-                          )
-  )
-  (mapcar '(lambda (x y) 
-            (ModifyMultiplePropertyForOneBlockUtils x propertyNameList y)
-          ) 
-    entityNameList
-    propertyValueList      
-  )
 )
 
 ; function for modify data
