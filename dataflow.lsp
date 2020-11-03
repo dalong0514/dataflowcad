@@ -33,6 +33,7 @@
   (SpliceElementInTwoListUtilsTest)
   (GetNumberedListByStartAndLengthUtilsTest)
   (GetIncreasedNumberListUtilsTest)
+  (GetIncreasedNumberStringListUtilsTest)
   (DL:PrintTestResults (DL:CountBooleans *testList*))
 )
 
@@ -2393,27 +2394,24 @@
 )
 
 ; Unit Test Compeleted
-(defun GetNumberedListUtils (startNumer startString listLength / numberedList)
-  (if (< 10 startNumer) 
-    (princ "")
-  )
-  (setq startNumer (atoi startNumer))
-  (setq listLength (- listLength 1))
-  (setq numberedList (append numberedList (list (strcat startString (rtos startNumer)))))
-  (repeat listLength 
-    (setq startNumer (+ startNumer 1))
-    (setq numberedList (append numberedList (list (strcat startString (rtos startNumer)))))
-  )
-  numberedList
-)
-
-; Unit Test Compeleted
 (defun GetIncreasedNumberListUtils (startNumer listLength / numberedList)
   (repeat listLength 
     (setq numberedList (append numberedList (list startNumer)))
     (setq startNumer (+ startNumer 1))
   )
   numberedList
+)
+
+; Unit Test Compeleted
+(defun GetIncreasedNumberStringListUtils (startNumer listLength / increasedNumberList) 
+  (setq increasedNumberList (GetIncreasedNumberListUtils startNumer listLength))
+)
+
+(defun GetIncreasedNumberStringListUtilsTest ()
+  (AssertEqual 'GetIncreasedNumberStringListUtils
+    (list 2 5)
+    '("02" "03" "04" "05" "06")
+  )
 )
 
 (defun GetIncreasedNumberListUtilsTest ()
