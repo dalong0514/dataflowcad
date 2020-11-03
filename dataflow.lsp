@@ -32,6 +32,7 @@
   (MoveInsertPositionTest)
   (SpliceElementInTwoListUtilsTest)
   (GetNumberedListByStartAndLengthUtilsTest)
+  (GetIncreasedNumberListUtilsTest)
   (DL:PrintTestResults (DL:CountBooleans *testList*))
 )
 
@@ -2389,6 +2390,37 @@
     (setq numberedList (append numberedList (list (strcat startString (rtos startNumer)))))
   )
   numberedList
+)
+
+; Unit Test Compeleted
+(defun GetNumberedListUtils (startNumer startString listLength / numberedList)
+  (if (< 10 startNumer) 
+    (princ "")
+  )
+  (setq startNumer (atoi startNumer))
+  (setq listLength (- listLength 1))
+  (setq numberedList (append numberedList (list (strcat startString (rtos startNumer)))))
+  (repeat listLength 
+    (setq startNumer (+ startNumer 1))
+    (setq numberedList (append numberedList (list (strcat startString (rtos startNumer)))))
+  )
+  numberedList
+)
+
+; Unit Test Compeleted
+(defun GetIncreasedNumberListUtils (startNumer listLength / numberedList)
+  (repeat listLength 
+    (setq numberedList (append numberedList (list startNumer)))
+    (setq startNumer (+ startNumer 1))
+  )
+  numberedList
+)
+
+(defun GetIncreasedNumberListUtilsTest ()
+  (AssertEqual 'GetIncreasedNumberListUtils 
+    (list 2 5)
+    '(2 3 4 5 6)
+  )
 )
 
 (defun GetNumberedListByStartAndLengthUtilsTest ()
