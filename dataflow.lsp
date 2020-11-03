@@ -3162,7 +3162,7 @@
   (NumberDrawNumByBox "numberDrawNumBox")
 )
 
-(defun NumberDrawNumByBox (tileName / dcl_id propertyValue replacedSubstring status selectedName selectedFilterName selectedDataType ss sslen matchedList previewList confirmList blockDataList APropertyValueList entityNameList modifyMessageStatus dataChildrenType modifyMsgBtnStatus)
+(defun NumberDrawNumByBox (tileName / dcl_id propertyValue replacedSubstring status ss sslen previewList confirmList entityNameList modifyMsgBtnStatus)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -3171,8 +3171,8 @@
     ; Added the actions to the Cancel and Pick Point button
     (action_tile "cancel" "(done_dialog 0)")
     (action_tile "btnSelect" "(done_dialog 2)")
-    (action_tile "btnPreviewModify" "(done_dialog 5)")
-    (action_tile "btnModify" "(done_dialog 6)")
+    (action_tile "btnPreviewModify" "(done_dialog 3)")
+    (action_tile "btnModify" "(done_dialog 4)")
     ; the default value of input box
     (action_tile "propertyValue" "(setq propertyValue $value)")
     (action_tile "replacedSubstring" "(setq replacedSubstring $value)")
@@ -3220,13 +3220,11 @@
       )
     )
     ; confirm button
-    (if (= 5 status)
-      (progn 
-        (setq confirmList (GetNumberedListByStartAndLengthUtils replacedSubstring propertyValue (length previewList)))
-      )
+    (if (= 3 status)
+      (setq confirmList (GetNumberedListByStartAndLengthUtils replacedSubstring propertyValue (length previewList)))
     )
     ; modify button
-    (if (= 6 status)
+    (if (= 4 status)
       (progn 
         (ModifyPropertyValueByEntityName entityNameList "DwgNo" confirmList)
         (setq modifyMsgBtnStatus 1)
