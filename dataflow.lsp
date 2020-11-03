@@ -3233,7 +3233,7 @@
     ; modify button
     (if (= 4 status)
       (progn 
-        (ModifyPropertyValueByEntityName entityNameList "DwgNo" confirmList)
+        (ModifyDrawNum entityNameList confirmList)
         (setq modifyMsgBtnStatus 1)
         (setq previewList nil confirmList nil)
       )
@@ -3241,6 +3241,15 @@
   )
   (unload_dialog dcl_id)
   (princ)
+)
+
+(defun ModifyDrawNum (entityNameList drawNumList /)
+  (mapcar '(lambda (x y) 
+            (ModifyMultiplePropertyForOneBlockUtils x (list "DwgNo") (list y))
+          ) 
+    entityNameList
+    drawNumList      
+  )
 )
 
 (defun GetDrawNumList (entityNameList / drawNumList)
