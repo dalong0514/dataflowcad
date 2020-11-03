@@ -2890,28 +2890,6 @@
   propertyValueList
 )
 
-(defun ModifyPropertyValueByEntityName (entityNameList selectedName propertyValue / i ent blk entx propertyName)
-  (setq i 0)
-  (repeat (length entityNameList)
-    ; get the entity information of the i(th) block
-    (setq ent (entget (nth i entityNameList)))
-    ; save the entity name of the i(th) block
-    (setq blk (nth i entityNameList))
-    ; get the property information
-    (setq entx (entget (entnext (cdr (assoc -1 ent)))))
-    (while (= "ATTRIB" (cdr (assoc 0 entx)))
-      (setq propertyName (cdr (assoc 2 entx)))
-      (if (= propertyName selectedName)
-        (SwitchPropertyValueFromStringOrList propertyValue entx i)
-      )
-      ; get the next property information
-      (setq entx (entget (entnext (cdr (assoc -1 entx)))))
-    )
-    (entupd blk)
-    (setq i (+ 1 i))
-  )
-)
-
 (defun ModifyPropertyValueByEntityHandle (importedDataList propertyNameList / entityHandleList entityNameList i index ent blk entx propertyName)
   (foreach item importedDataList 
     (setq entityHandleList (append entityHandleList (list (car item))))
