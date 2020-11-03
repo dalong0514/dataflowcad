@@ -2403,14 +2403,34 @@
 )
 
 ; Unit Test Compeleted
-(defun GetIncreasedNumberStringListUtils (startNumer listLength / increasedNumberList) 
-  (setq increasedNumberList (GetIncreasedNumberListUtils startNumer listLength))
+(defun GetIncreasedNumberStringListUtils (startNumer listLength / minIncreasedNumberList maxIncreasedNumberList resultList) 
+  (setq minIncreasedNumberList 
+    (vl-remove-if-not '(lambda (x) (< x 10)) 
+      (GetIncreasedNumberListUtils startNumer listLength)
+    )
+  )
+  (setq maxIncreasedNumberList 
+    (vl-remove-if-not '(lambda (x) (>= x 10)) 
+      (GetIncreasedNumberListUtils startNumer listLength)
+    )
+  )
+  (append (mapcar '(lambda (x) (strcat "0" (rtos x))) minIncreasedNumberList) 
+    (mapcar '(lambda (x) (rtos x)) maxIncreasedNumberList)
+  )
 )
 
 (defun GetIncreasedNumberStringListUtilsTest ()
   (AssertEqual 'GetIncreasedNumberStringListUtils
-    (list 2 5)
-    '("02" "03" "04" "05" "06")
+    (list 7 5)
+    '("07" "08" "09" "10" "11")
+  )
+  (AssertEqual 'GetIncreasedNumberStringListUtils
+    (list 1 5)
+    '("01" "02" "03" "04" "05")
+  )
+  (AssertEqual 'GetIncreasedNumberStringListUtils
+    (list 12 5)
+    '("12" "13" "14" "15" "16")
   )
 )
 
