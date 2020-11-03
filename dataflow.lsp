@@ -44,6 +44,35 @@
   )
 )
 
+(defun GetIncreasedNumberStringListUtilsTest ()
+  (AssertEqual 'GetIncreasedNumberStringListUtils
+    (list 7 5)
+    '("07" "08" "09" "10" "11")
+  )
+  (AssertEqual 'GetIncreasedNumberStringListUtils
+    (list 1 5)
+    '("01" "02" "03" "04" "05")
+  )
+  (AssertEqual 'GetIncreasedNumberStringListUtils
+    (list 12 5)
+    '("12" "13" "14" "15" "16")
+  )
+)
+
+(defun GetIncreasedNumberListUtilsTest ()
+  (AssertEqual 'GetIncreasedNumberListUtils 
+    (list 2 5)
+    '(2 3 4 5 6)
+  )
+)
+
+(defun GetNumberedListByStartAndLengthUtilsTest ()
+  (AssertEqual 'GetNumberedListByStartAndLengthUtils 
+    (list "2" "PL" 4) 
+    (list "PL2" "PL3" "PL4" "PL5")
+  )
+)
+
 (defun MoveInsertPositionTest ()
   (AssertEqual 'MoveInsertPosition (list '(1 1 0) 10 20) '(11 21 0))
   (AssertEqual 'MoveInsertPosition (list '(10 10 0) -15 -20) '(-5 -10 0))
@@ -2416,35 +2445,6 @@
   )
   (append (mapcar '(lambda (x) (strcat "0" (rtos x))) minIncreasedNumberList) 
     (mapcar '(lambda (x) (rtos x)) maxIncreasedNumberList)
-  )
-)
-
-(defun GetIncreasedNumberStringListUtilsTest ()
-  (AssertEqual 'GetIncreasedNumberStringListUtils
-    (list 7 5)
-    '("07" "08" "09" "10" "11")
-  )
-  (AssertEqual 'GetIncreasedNumberStringListUtils
-    (list 1 5)
-    '("01" "02" "03" "04" "05")
-  )
-  (AssertEqual 'GetIncreasedNumberStringListUtils
-    (list 12 5)
-    '("12" "13" "14" "15" "16")
-  )
-)
-
-(defun GetIncreasedNumberListUtilsTest ()
-  (AssertEqual 'GetIncreasedNumberListUtils 
-    (list 2 5)
-    '(2 3 4 5 6)
-  )
-)
-
-(defun GetNumberedListByStartAndLengthUtilsTest ()
-  (AssertEqual 'GetNumberedListByStartAndLengthUtils 
-    (list "2" "PL" 4) 
-    (list "PL2" "PL3" "PL4" "PL5")
   )
 )
 
