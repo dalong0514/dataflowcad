@@ -2204,14 +2204,10 @@
   (princ)
 )
 
-(defun ModifyBrushedProperty (entityNameList brushedPropertyDict /)
-  (mapcar '(lambda (x) 
-            (ModifyMultiplePropertyForOneBlockUtils x 
-              (GetBrushedPropertyNameList brushedPropertyDict) 
-              (GetBrushedPropertyValueList brushedPropertyDict)
-            )
-          ) 
-    entityNameList 
+(defun ModifyBrushedProperty (entityNameList brushedPropertyDict /) 
+  (ModifyPropertyByNameAndValueListUtils entityNameList 
+    (GetBrushedPropertyNameList brushedPropertyDict) 
+    (GetBrushedPropertyValueList brushedPropertyDict)
   )
 )
 
