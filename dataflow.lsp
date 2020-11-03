@@ -1330,12 +1330,10 @@
   )
 )
 
-(defun ModifyPropertyValueByEntityHandleUtils (importedDataList propertyNameList / entityHandleList entityNameList propertyValueList)
-  (foreach item importedDataList 
-    (setq entityHandleList (append entityHandleList (list (car item))))
-  )
-  (foreach item entityHandleList 
-    (setq entityNameList (append entityNameList (list (handent item))))
+(defun ModifyPropertyValueByEntityHandleUtils (importedDataList propertyNameList / entityNameList propertyValueList)
+  (setq entityNameList (mapcar '(lambda (x) (handent (car x))) 
+                            importedDataList
+                          )
   )
   (setq propertyValueList (mapcar '(lambda (x) (cdr x)) 
                             importedDataList
