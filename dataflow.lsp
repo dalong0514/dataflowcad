@@ -1319,6 +1319,17 @@
   (entmod (subst newValue oldValue entityData))
 )
 
+(defun ModifyPropertyByNameAndValueListUtils (entityNameList propertyNameList propertyValueList /)
+  (mapcar '(lambda (x) 
+            (ModifyMultiplePropertyForOneBlockUtils x 
+              propertyNameList
+              propertyValueList
+            )
+          ) 
+    entityNameList 
+  )
+)
+
 ; Utils Function 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
@@ -2208,17 +2219,6 @@
   (ModifyPropertyByNameAndValueListUtils entityNameList 
     (GetBrushedPropertyNameList brushedPropertyDict) 
     (GetBrushedPropertyValueList brushedPropertyDict)
-  )
-)
-
-(defun ModifyPropertyByNameAndValueListUtils (entityNameList propertyNameList propertyValueList /)
-  (mapcar '(lambda (x) 
-            (ModifyMultiplePropertyForOneBlockUtils x 
-              propertyNameList
-              propertyValueList
-            )
-          ) 
-    entityNameList 
   )
 )
 
