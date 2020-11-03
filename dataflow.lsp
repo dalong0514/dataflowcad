@@ -3162,7 +3162,7 @@
   (NumberDrawNumByBox "numberDrawNumBox")
 )
 
-(defun NumberDrawNumByBox (tileName / dcl_id propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName selectedDataType ss sslen matchedList previewList confirmList blockDataList APropertyValueList entityNameList modifyMessageStatus dataChildrenType modifyMsgBtnStatus)
+(defun NumberDrawNumByBox (tileName / dcl_id propertyValue replacedSubstring status selectedName selectedFilterName selectedDataType ss sslen matchedList previewList confirmList blockDataList APropertyValueList entityNameList modifyMessageStatus dataChildrenType modifyMsgBtnStatus)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -3195,6 +3195,14 @@
     (if (= modifyMessageStatus 0)
       (set_tile "resultMsg" "«Îœ»‘§¿¿–ﬁ∏ƒ")
     )
+    (if (/= previewList nil)
+      (progn
+        (start_list "modifiedData" 3)
+        (mapcar '(lambda (x) (add_list x)) 
+                 previewList)
+        (end_list)
+      )
+    )
     (if (/= confirmList nil)
       (progn
         (start_list "modifiedData" 3)
@@ -3210,27 +3218,21 @@
         ; sort by x cordinate
         (setq ss (SortSelectionSetByXYZ ss))
         (setq entityNameList (GetEntityNameListBySSUtils ss))
-        (setq confirmList (GetDrawNumList entityNameList))
-        (setq sslen (length confirmList))
+        (setq previewList (GetDrawNumList entityNameList))
+        (setq sslen (length previewList))
       )
     )
     ; confirm button
     (if (= 5 status)
       (progn 
-        (setq numberedList (GetNumberedListByStartAndLengthUtils replacedSubstring propertyValue (length previewList)))
-        (setq confirmList (ReplaceNumberOfListByNumberedListUtils numberedList previewList))
+        (setq confirmList (GetNumberedListByStartAndLengthUtils replacedSubstring propertyValue (length previewList)))
       )
     )
     ; modify button
     (if (= 6 status)
       (progn 
-        (if (= confirmList nil)
-          (setq modifyMessageStatus 0)
-          (progn 
-            (setq selectedName (GetNeedToNumberPropertyName selectedDataType))
-            (ModifyPropertyValueByEntityName entityNameList selectedName confirmList)
-          )
-        )
+        (setq modifyMessageStatus 0)
+        (ModifyPropertyValueByEntityName entityNameList "DWGNO" confirmList)
         (setq modifyMsgBtnStatus 1)
       )
     )
