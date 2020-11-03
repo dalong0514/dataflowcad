@@ -3138,6 +3138,7 @@
     (action_tile "btnSelect" "(done_dialog 2)")
     (action_tile "btnPreviewModify" "(done_dialog 3)")
     (action_tile "btnModify" "(done_dialog 4)")
+    (action_tile "btnBrushDrawNum" "(done_dialog 5)")
     ; the default value of input box
     (action_tile "propertyValue" "(setq propertyValue $value)")
     (action_tile "replacedSubstring" "(setq replacedSubstring $value)")
@@ -3194,6 +3195,13 @@
         (ModifyDrawNum entityNameList confirmList)
         (setq modifyMsgBtnStatus 1)
         (setq previewList nil confirmList nil)
+      )
+    )
+    ; brush drawnum button
+    (if (= 45 status)
+      (progn 
+        (BrushDrawNum)
+        (setq status 1)
       )
     )
   )

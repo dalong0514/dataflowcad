@@ -578,6 +578,12 @@ numberDrawNumBox : dialog {
         is_default = "true"; 
       } 
       : spacer { width = 2; } 
+      : button { 
+        key = "btnBrushDrawNum"; 
+        label = "刷数据所在图号"; 
+        is_default = "true"; 
+      } 
+      : spacer { width = 2; } 
       cancel_button; 
     }
     : spacer { height = 3; } 
