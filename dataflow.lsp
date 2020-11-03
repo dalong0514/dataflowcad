@@ -3207,6 +3207,8 @@
     (if (= 2 (setq status (start_dialog)))
       (progn 
         (setq ss (GetBlockSSBySelectByDataTypeUtils "DrawLabel"))
+        ; sort by x cordinate
+        (setq ss (SortSelectionSetByXYZ ss))
         (setq entityNameList (GetEntityNameListBySSUtils ss))
         (setq confirmList (GetDrawNumList entityNameList))
         (setq sslen (length confirmList))
