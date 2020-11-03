@@ -2215,6 +2215,17 @@
   )
 )
 
+(defun ModifyPropertyByNameAndValueListUtils (entityNameList propertyNameList propertyValueList /)
+  (mapcar '(lambda (x) 
+            (ModifyMultiplePropertyForOneBlockUtils x 
+              propertyNameList
+              propertyValueList
+            )
+          ) 
+    entityNameList 
+  )
+)
+
 (defun GetBrushedPropertyNameList (brushedPropertyDict / brushedPropertyNameList) 
   (mapcar '(lambda (x) 
              (setq brushedPropertyNameList (append brushedPropertyNameList (list (strcase (car x)))))
