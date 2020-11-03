@@ -1113,6 +1113,23 @@
   entityNameList
 )
 
+(defun GetEntityNameListByXPositionSortedUtils (ss / entityNameList resultList) 
+  (setq entityNameList (GetEntityNameListBySSUtils ss))
+  (setq resultList 
+    (mapcar '(lambda (x) 
+              (list (cdr (assoc -1 (entget x))) (car (cdr (assoc 10 (entget x)))))
+            ) 
+      entityNameList
+    )
+  )
+  (setq resultList 
+    (vl-sort resultList 
+      '(lambda (x y) (< (cadr x) (cadr y)))
+    )
+  )
+  (mapcar '(lambda (x) (car x)) resultList)
+)
+
 (defun GetEntityHandleListByEntityNameListUtils (entityNameList / entityHandleList i)
   (setq entityHandleList '())
   (foreach item entityNameList
