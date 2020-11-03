@@ -2855,7 +2855,8 @@
   (list aPropertyValueList entityNameList)
 )
 
-(defun GetOnePropertyValueListByEntityNameList (entityNameList selectedName / onePropertyValueList)
+(defun GetOnePropertyValueListByEntityNameList (entityNameList selectedName / onePropertyValueList) 
+  (setq selectedName (strcase selectedName T))
   (mapcar '(lambda (x) 
              (setq onePropertyValueList (append onePropertyValueList 
                                           (list (cdr (assoc selectedName (GetAllPropertyValueByEntityName x))))
@@ -3089,7 +3090,7 @@
       (progn 
         (setq selectedName (GetNeedToNumberPropertyName selectedDataType))
         (setq previewList (GetOnePropertyValueListByEntityNameList entityNameList selectedName))
-        (setq numberedList (GetNumberedListByStartAndLengthUtils replacedSubstring propertyValue (length previewList)))
+        (setq numberedList (GetNumberedListByStartAndLengthUtils propertyValue replacedSubstring (length previewList)))
         (setq confirmList (ReplaceNumberOfListByNumberedListUtils numberedList previewList))
       )
     )
@@ -3214,7 +3215,7 @@
     ; confirm button
     (if (= 5 status)
       (progn 
-        (setq numberedList (GetNumberedListByStartAndLengthUtils replacedSubstring propertyValue (length previewList)))
+        (setq numberedList (GetNumberedListByStartAndLengthUtils propertyValue replacedSubstring (length previewList)))
         (setq confirmList (ReplaceNumberOfListByNumberedListUtils numberedList previewList))
       )
     )
