@@ -514,7 +514,7 @@ numberDrawNumBox : dialog {
       : row {
         : text {
           key = "replacedSubstringMsg";
-          label = "物料代号";
+          label = "图号前面部分（比如 S20C14-23-04-）";
         }
         : edit_box {
           key = "replacedSubstring";
@@ -528,7 +528,7 @@ numberDrawNumBox : dialog {
       : row {
         : text {
           key = "propertyValueMsg";
-          label = "编号起点";
+          label = "编号起点（比如 01）";
         }
         : edit_box {
           key = "propertyValue";
