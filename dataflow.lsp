@@ -68,8 +68,12 @@
 
 (defun GetNumberedListByStartAndLengthUtilsTest ()
   (AssertEqual 'GetNumberedListByStartAndLengthUtils 
-    (list "2" "PL" 4) 
-    (list "PL2" "PL3" "PL4" "PL5")
+    (list "PL" "2" 4) 
+    (list "PL02" "PL03" "PL04" "PL05")
+  )
+  (AssertEqual 'GetNumberedListByStartAndLengthUtils 
+    (list "PL" "1101" 4) 
+    (list "PL1101" "PL1102" "PL1103" "PL1104")
   )
 )
 
@@ -2411,15 +2415,10 @@
 ;;;-------------------------------------------------------------------------;;;
 
 ; Unit Test Compeleted
-(defun GetNumberedListByStartAndLengthUtils (startNumer startString listLength / numberedList)
+(defun GetNumberedListByStartAndLengthUtils (startString startNumer listLength / numberedList)
   (setq startNumer (atoi startNumer))
-  (setq listLength (- listLength 1))
-  (setq numberedList (append numberedList (list (strcat startString (rtos startNumer)))))
-  (repeat listLength 
-    (setq startNumer (+ startNumer 1))
-    (setq numberedList (append numberedList (list (strcat startString (rtos startNumer)))))
-  )
-  numberedList
+  (setq numberedList (GetIncreasedNumberStringListUtils startNumer listLength))
+  (mapcar '(lambda (x) (strcat startString x)) numberedList)
 )
 
 ; Unit Test Compeleted
@@ -3090,7 +3089,7 @@
       (progn 
         (setq selectedName (GetNeedToNumberPropertyName selectedDataType))
         (setq previewList (GetOnePropertyValueListByEntityNameList entityNameList selectedName))
-        (setq numberedList (GetNumberedListByStartAndLengthUtils propertyValue replacedSubstring (length previewList)))
+        (setq numberedList (GetNumberedListByStartAndLengthUtils replacedSubstring propertyValue (length previewList)))
         (setq confirmList (ReplaceNumberOfListByNumberedListUtils numberedList previewList))
       )
     )
@@ -3215,7 +3214,7 @@
     ; confirm button
     (if (= 5 status)
       (progn 
-        (setq numberedList (GetNumberedListByStartAndLengthUtils propertyValue replacedSubstring (length previewList)))
+        (setq numberedList (GetNumberedListByStartAndLengthUtils replacedSubstring propertyValue (length previewList)))
         (setq confirmList (ReplaceNumberOfListByNumberedListUtils numberedList previewList))
       )
     )
