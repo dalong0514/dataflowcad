@@ -3198,7 +3198,7 @@
       )
     )
     ; brush drawnum button
-    (if (= 45 status)
+    (if (= 5 status)
       (progn 
         (BrushDrawNum)
         (setq status 1)
@@ -3227,6 +3227,29 @@
     entityNameList
   )
   DrawNumList 
+)
+
+(defun BrushDrawNum (/ drawNum dataSS entityNameList)
+  (prompt "\n选择图签：")
+  (setq drawNum 
+    (car (GetDrawNumList (GetEntityNameListBySSUtils (GetBlockSSBySelectByDataTypeUtils "DrawLabel"))))
+  )
+  (prompt (strcat "\n所选择的图号：" drawNum))
+  (prompt "\n选择要刷的数据（管道、仪表）：")
+  (setq entityNameList (GetEntityNameListBySSUtils (GetInstrumentAndPipeSSBySelectUtils)))
+  (ModifyDrawNumForData entityNameList drawNum)
+  (prompt "\n刷数据所在图号完成！")
+  (princ)
+)
+
+(defun ModifyDrawNumForData (entityNameList drawNum /)
+  (if (/= drawNum "") 
+    (mapcar '(lambda (x) 
+              (ModifyMultiplePropertyForOneBlockUtils x (list "DRAWNUM") (list drawNum))
+            ) 
+      entityNameList
+    )
+  )
 )
 
 ; Number DrawNum
