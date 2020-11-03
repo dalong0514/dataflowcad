@@ -3144,7 +3144,8 @@
   (NumberDrawNumByBox "numberDrawNumBox")
 )
 
-(defun NumberDrawNumByBox (tileName / dcl_id propertyValue replacedSubstring status ss sslen previewList confirmList entityNameList modifyMsgBtnStatus)
+(defun NumberDrawNumByBox (tileName / dcl_id propertyValue replacedSubstring status ss sslen previewList 
+                           confirmList entityNameList modifyMsgBtnStatus numMsgStatus)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -3169,11 +3170,17 @@
     (set_tile "propertyValue" propertyValue)
     (set_tile "replacedSubstring" replacedSubstring)
     ; Display the number of selected pipes
-    (if (/= sslen nil)
-      (set_tile "msg" (strcat "匹配到的数量： " (rtos sslen)))
+    (if (= modifyMsgBtnStatus 0)
+      (set_tile "msg" (strcat "匹配到的数量：" (rtos sslen)))
     )
     (if (= modifyMsgBtnStatus 1)
       (set_tile "modifyBtnMsg" "编号状态：已完成")
+    )
+    (if (= modifyMsgBtnStatus 2)
+      (set_tile "modifyBtnMsg" "刷数据所在图号已完成")
+    )
+    (if (= numMsgStatus 1)
+      (set_tile "msg" (strcat "所刷数据的数量：" (rtos sslen)))
     )
     (if (/= previewList nil)
       (progn
@@ -3199,6 +3206,7 @@
         (setq entityNameList (GetEntityNameListByXPositionSortedUtils ss))
         (setq previewList (GetDrawNumList entityNameList))
         (setq sslen (length previewList))
+        (setq modifyMsgBtnStatus 0)
       )
     )
     ; confirm button
@@ -3216,8 +3224,9 @@
     ; brush drawnum button
     (if (= 5 status)
       (progn 
-        (BrushDrawNum)
-        (setq status 1)
+        (setq sslen (BrushDrawNum))
+        (setq modifyMsgBtnStatus 2)
+        (setq numMsgStatus 1)
       )
     )
   )
@@ -3255,7 +3264,7 @@
   (setq entityNameList (GetEntityNameListBySSUtils (GetInstrumentAndPipeSSBySelectUtils)))
   (ModifyDrawNumForData entityNameList drawNum)
   (prompt "\n刷数据所在图号完成！")
-  (princ)
+  (length entityNameList)
 )
 
 (defun ModifyDrawNumForData (entityNameList drawNum /)
