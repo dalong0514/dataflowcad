@@ -3108,7 +3108,12 @@
           (setq modifyMessageStatus 0)
           (progn 
             (setq selectedName (GetNeedToNumberPropertyName selectedDataType))
-            (ModifyPropertyValueByEntityName entityNameList selectedName confirmList)
+            (mapcar '(lambda (x y) 
+                      (ModifyMultiplePropertyForOneBlockUtils x (list selectedName) (list y))
+                    ) 
+              entityNameList
+              confirmList      
+            )
           )
         )
         (setq modifyMsgBtnStatus 1)
