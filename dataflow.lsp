@@ -3196,8 +3196,7 @@
       (progn 
         (setq ss (GetBlockSSBySelectByDataTypeUtils "DrawLabel"))
         ; sort by x cordinate
-        (setq ss (SortSelectionSetByXYZ ss))
-        (setq entityNameList (GetEntityNameListBySSUtils ss))
+        (setq entityNameList (GetEntityNameListByXPositionSortedUtils ss))
         (setq previewList (GetDrawNumList entityNameList))
         (setq sslen (length previewList))
       )
