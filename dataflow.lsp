@@ -3192,9 +3192,6 @@
     (if (= modifyMsgBtnStatus 1)
       (set_tile "modifyBtnMsg" "编号状态：已完成")
     )
-    (if (= modifyMessageStatus 0)
-      (set_tile "resultMsg" "请先预览修改")
-    )
     (if (/= previewList nil)
       (progn
         (start_list "modifiedData" 3)
@@ -3231,9 +3228,9 @@
     ; modify button
     (if (= 6 status)
       (progn 
-        (setq modifyMessageStatus 0)
-        (ModifyPropertyValueByEntityName entityNameList "DWGNO" confirmList)
+        (ModifyPropertyValueByEntityName entityNameList "DwgNo" confirmList)
         (setq modifyMsgBtnStatus 1)
+        (setq previewList nil confirmList nil)
       )
     )
   )
