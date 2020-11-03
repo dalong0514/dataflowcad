@@ -2890,46 +2890,23 @@
   propertyValueList
 )
 
-(defun ModifyPropertyValueByEntityHandle (importedDataList propertyNameList / entityHandleList entityNameList i index ent blk entx propertyName)
+(defun ModifyPropertyValueByEntityHandle (importedDataList propertyNameList / entityHandleList entityNameList propertyValueList)
   (foreach item importedDataList 
     (setq entityHandleList (append entityHandleList (list (car item))))
   )
   (foreach item entityHandleList 
     (setq entityNameList (append entityNameList (list (handent item))))
   )
-  (setq i 0)
-  (repeat (length entityNameList)
-    ; get the entity information of the i(th) block
-    (setq ent (entget (nth i entityNameList)))
-    ; save the entity name of the i(th) block
-    (setq blk (nth i entityNameList))
-    ; get the property information
-    (setq entx (entget (entnext (cdr (assoc -1 ent)))))
-    (while (= "ATTRIB" (cdr (assoc 0 entx)))
-      (setq propertyName (cdr (assoc 2 entx)))
-
-      (setq index 0)
-      (repeat (length propertyNameList) 
-        (if (= propertyName (nth index propertyNameList))
-          (SwitchPropertyValueFromStringOrList (nth (+ 1 index) (nth i importedDataList)) entx i)
-        )
-        (setq index (+ 1 index))
-      )
-      ; get the next property information
-      (setq entx (entget (entnext (cdr (assoc -1 entx)))))
-    )
-    (entupd blk)
-    (setq i (+ 1 i))
+  (setq propertyValueList (mapcar '(lambda (x) (cdr x)) 
+                            importedDataList
+                          )
   )
-)
-
-(defun SwitchPropertyValueFromStringOrList (propertyValue entx i / oldValue newValue)
-  (setq oldValue (assoc 1 entx))
-  (if (= (type propertyValue) 'list)
-    (setq newValue (cons 1 (nth i propertyValue)))
-    (setq newValue (cons 1 propertyValue))
+  (mapcar '(lambda (x y) 
+            (ModifyMultiplePropertyForOneBlockUtils x propertyNameList y)
+          ) 
+    entityNameList
+    propertyValueList      
   )
-  (entmod (subst newValue oldValue entx))
 )
 
 ; function for modify data
