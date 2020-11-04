@@ -1068,24 +1068,30 @@
 )
 
 (defun ExtractBlockPropertyToJsonStringUtils (entityName propertyNameList / jsonPropertyString)
-  (setq jsonPropertyString "")
-  (mapcar '(lambda (x) 
-             (setq jsonPropertyString (strcat "\"" (car x) "\": \"" (cdr x) "\","))
-           ) 
-    ; remove the first item - entityhandle
-    (car (GetPropertyDictListForOneBlockByEntityName entityName propertyNameList))
+  (setq jsonPropertyString 
+    (apply 'strcat 
+      (mapcar '(lambda (x) 
+                (strcat "\"" (strcase (car x) T) "\": \"" (cdr x) "\",")
+              ) 
+        ; remove the first item (entityhandle)
+        (cdr (GetPropertyDictListForOneBlockByEntityName entityName propertyNameList))
+      ) 
+    )
   )
   (setq jsonPropertyString (RemoveLastNumCharForStringUtils jsonPropertyString 1))
   (setq jsonPropertyString (strcat "{" jsonPropertyString "}"))
 )
 
 (defun ExtractBlockPropertyToJsonStringByClassUtils (entityName propertyNameList classDict / jsonPropertyString)
-  (setq jsonPropertyString "")
-  (mapcar '(lambda (x) 
-             (setq jsonPropertyString (strcat "\"" (car x) "\": \"" (cdr x) "\","))
-           ) 
-    ; remove the first item (entityhandle) and add the item (class)
-    (cons classDict (car (GetPropertyDictListForOneBlockByEntityName entityName propertyNameList)))
+  (setq jsonPropertyString 
+    (apply 'strcat 
+      (mapcar '(lambda (x) 
+                (strcat "\"" (strcase (car x) T) "\": \"" (cdr x) "\",")
+              ) 
+        ; remove the first item (entityhandle) and add the item (class)
+        (cons classDict (cdr (GetPropertyDictListForOneBlockByEntityName entityName propertyNameList)))
+      ) 
+    )
   )
   (setq jsonPropertyString (RemoveLastNumCharForStringUtils jsonPropertyString 1))
   (setq jsonPropertyString (strcat "{" jsonPropertyString "}"))
@@ -1411,6 +1417,20 @@
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
 ; Read and Write Utils
+
+(defun WriteDataToJsonUtils (dataList / fileDir propertyNameList)
+  (setq fileDir "D:\\dataflowcad\\data\\ksdata.txt")
+  (WriteDataListToFileUtils fileDir dataList)
+)
+
+(defun WriteDataListToFileUtils (fileDir dataList / filePtr)
+  (setq filePtr (open fileDir "w"))
+  (foreach item dataList 
+    (write-line item filePtr)
+  )
+  (close filePtr)
+)
+
 (defun WriteDataToCSVByEntityNameListUtils (entityNameList fileDir firstRow propertyNameList / filePtr csvPropertyStringList)
   (setq filePtr (open fileDir "w"))
   (write-line firstRow filePtr)
@@ -1801,7 +1821,7 @@
   (ExtractInstrumentSISToText)
 )
 
-(defun ExtractInstrumentPToTextV2 (/ ss propertyPairNameList lastPropertyPair classValuePair)
+(defun ExtractInstrumentPToText (/ ss propertyPairNameList lastPropertyPair classValuePair)
   (setq ss (ssget "X" '((0 . "INSERT") (2 . "InstrumentP"))))
   (setq propertyPairNameList (GetInstrumentPropertyPairNameList))
   (setq lastPropertyPair '("DIRECTION" "direction"))
@@ -1823,6 +1843,10 @@
     )
   )
   resultList
+)
+
+(defun c:foo ()
+  (WriteDataToJsonUtils (ExtractInstrumentPToJsonList))
 )
 
 (defun ExtractInstrumentLToText (/ ss propertyPairNameList lastPropertyPair classValuePair)
