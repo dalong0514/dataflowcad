@@ -1159,29 +1159,15 @@
   (setq csvPropertyString (strcat "'" (cdr (assoc 5 ent)) "," csvPropertyString ))
 )
 
-(defun GetPropertyValueListByEntityName (entityName propertyNameList / ent entx propertyName csvPropertyString resultList)
-  (setq ent (entget entityName))
-  (setq entx (entget (entnext (cdr (assoc -1 ent)))))
-  (while (= "ATTRIB" (cdr (assoc 0 entx)))
-    (setq propertyName (cdr (assoc 2 entx)))
-    (foreach item propertyNameList 
-      (if (= propertyName item) 
-        (setq resultList (append resultList (list (cdr (assoc 1 entx)))))
-      )
-    )
-    ; get the next property information
-    (setq entx (entget (entnext (cdr (assoc -1 entx)))))
-  )
-  ; add the handle to the start of the csvPropertyString
-  (setq resultList (cons (cdr (assoc 5 ent)) resultList))
-)
-
-(defun GetPropertyValueListByEntityNameV2 (entityName propertyNameList / allPropertyValue resultList) 
+(defun GetPropertyValueListByEntityName (entityName propertyNameList / allPropertyValue resultList) 
   (setq allPropertyValue (GetAllPropertyValueByEntityName entityName))
-  
-  ;(cons "entityhandle" (GetEntityHandleByEntityNameUtils entityName))
-  ; add the handle to the start of the csvPropertyString
-  ;(setq resultList (cons (cdr (assoc 5 ent)) resultList))
+  (setq propertyNameList (cons "entityhandle" propertyNameList))
+  (mapcar '(lambda (x) 
+             (setq resultList (append resultList (list (cdr (assoc (strcase x T) allPropertyValue)))))
+           ) 
+    propertyNameList
+  )
+  resultList
 )
 
 (defun GetPropertyValueListListByEntityNameList (entityNameList propertyNameList / resultList)
