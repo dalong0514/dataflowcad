@@ -761,6 +761,9 @@
   (if (= dataType "EquipmentAndPipe")
     (setq ss (GetEquipmentAndPipeSSBySelectUtils))
   )
+  (if (= dataType "OuterPipe")
+    (setq ss (GetOuterPipeSSBySelectUtils))
+  )
   (if (= dataType "InstrumentL")
     (setq ss (ssget '((0 . "INSERT") (2 . "InstrumentL"))))
   )
@@ -815,6 +818,9 @@
   )
   (if (= dataType "EquipmentAndPipe")
     (setq ss (GetAllEquipmentAndPipeSSUtils))
+  )
+  (if (= dataType "OuterPipe")
+    (setq ss (GetAllOuterPipeSSUtils))
   )
   (if (= dataType "InstrumentL")
     (setq ss (ssget "X" '((0 . "INSERT") (2 . "InstrumentL"))))
@@ -1746,6 +1752,20 @@
     ((= dataType "CustomEquip") (setq result (cons "class" "custom")))
   )
   result
+)
+
+(defun ExtractOuterPipeToJsonList (/ ss entityNameList propertyNameList classDict resultList)
+  (setq ss (GetAllBlockSSByDataTypeUtils "OuterPipe"))
+  (setq entityNameList (GetEntityNameListBySSUtils ss))
+  (setq propertyNameList (GetPipePropertyNameList))
+  (setq classDict (cons "class" "pipeline"))
+  (setq resultList 
+    (mapcar '(lambda (x) 
+              (ExtractBlockPropertyToJsonStringByClassUtils x propertyNameList classDict)
+            ) 
+      entityNameList
+    )
+  )
 )
 
 (defun ExtractPipeToText (/ ss propertyPairNameList lastPropertyPair classValuePair)
