@@ -1130,12 +1130,14 @@
   (mapcar '(lambda (x) (car x)) resultList)
 )
 
-(defun GetEntityHandleListByEntityNameListUtils (entityNameList / entityHandleList i)
-  (setq entityHandleList '())
-  (foreach item entityNameList
-    (setq entityHandleList (append entityHandleList (list (cdr (assoc 5 (entget item))))))
+(defun GetEntityHandleListByEntityNameListUtils (entityNameList /) 
+  (mapcar '(lambda (x) (GetEntityHandleByEntityNameUtils x)) 
+    entityNameList
   )
-  entityHandleList
+)
+
+(defun GetEntityHandleByEntityNameUtils (entityName / entityHandleList) 
+  (setq entityHandle (cdr (assoc 5 (entget entityName))))
 )
 
 (defun GetCSVPropertyStringByEntityName (entityName propertyNameList / ent entx propertyName csvPropertyString)
@@ -1170,6 +1172,13 @@
     ; get the next property information
     (setq entx (entget (entnext (cdr (assoc -1 entx)))))
   )
+  ; add the handle to the start of the csvPropertyString
+  (setq resultList (cons (cdr (assoc 5 ent)) resultList))
+)
+
+(defun GetPropertyValueListByEntityNameV2 (entityName propertyNameList / allPropertyValue resultList) 
+  (setq allPropertyValue (GetAllPropertyValueByEntityName entityName))
+  (GetEntityHandleListByEntityNameListUtils)
   ; add the handle to the start of the csvPropertyString
   (setq resultList (cons (cdr (assoc 5 ent)) resultList))
 )
