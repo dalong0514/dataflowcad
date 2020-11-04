@@ -1421,6 +1421,7 @@
 (defun WriteDataToJsonUtils (dataList / fileDir propertyNameList)
   (setq fileDir "D:\\dataflowcad\\data\\ksdata.txt")
   (WriteDataListToFileUtils fileDir dataList)
+  (FileEncodeTransUtils fileDir "gb2312" "utf-8")
 )
 
 (defun WriteDataListToFileUtils (fileDir dataList / filePtr)
@@ -1842,7 +1843,20 @@
       entityNameList
     )
   )
-  resultList
+  (setq resultList 
+    (mapcar '(lambda (x) 
+              (StringSubstUtils "minvalue" "min" x)
+            ) 
+      resultList
+    )
+  )
+  (setq resultList 
+    (mapcar '(lambda (x) 
+              (StringSubstUtils "maxvalue" "max" x)
+            ) 
+      resultList
+    )
+  )
 )
 
 (defun c:foo ()
