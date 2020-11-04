@@ -1159,7 +1159,7 @@
   (setq csvPropertyString (strcat "'" (cdr (assoc 5 ent)) "," csvPropertyString ))
 )
 
-(defun GetPropertyValueListByEntityName (entityName propertyNameList / allPropertyValue resultList) 
+(defun GetPropertyValueListForOneBlockByEntityName (entityName propertyNameList / allPropertyValue resultList) 
   (setq allPropertyValue (GetAllPropertyValueByEntityName entityName))
   (setq propertyNameList (cons "entityhandle" propertyNameList))
   (mapcar '(lambda (x) 
@@ -1170,9 +1170,9 @@
   resultList
 )
 
-(defun GetPropertyValueListListByEntityNameList (entityNameList propertyNameList / resultList) 
+(defun GetPropertyValueListByEntityNameList (entityNameList propertyNameList / resultList) 
   (mapcar '(lambda (x) 
-             (setq resultList (append resultList (list (GetPropertyValueListByEntityName x propertyNameList))))
+             (setq resultList (append resultList (list (GetPropertyValueListForOneBlockByEntityName x propertyNameList))))
            ) 
     entityNameList
   )
@@ -2367,7 +2367,7 @@
         (setq matchedList (car blockDataList))
         (setq sslen (length matchedList))
         (setq entityNameList (nth 1 blockDataList))
-        (setq previewDataList (GetPropertyValueListListByEntityNameList entityNameList (GetPropertyNameListStrategy "PublicPipe")))
+        (setq previewDataList (GetPropertyValueListByEntityNameList entityNameList (GetPropertyNameListStrategy "PublicPipe")))
       )
     )
     ; all select button
@@ -2378,7 +2378,7 @@
         (setq matchedList (car blockDataList))
         (setq sslen (length matchedList))
         (setq entityNameList (nth 1 blockDataList))
-        (setq previewDataList (GetPropertyValueListListByEntityNameList entityNameList (GetPropertyNameListStrategy "PublicPipe")))
+        (setq previewDataList (GetPropertyValueListByEntityNameList entityNameList (GetPropertyNameListStrategy "PublicPipe")))
       )
     )
     ; view button
@@ -2619,7 +2619,7 @@
         (setq matchedList (car blockDataList))
         (setq sslen (length matchedList))
         (setq entityNameList (nth 1 blockDataList))
-        (setq previewDataList (GetPropertyValueListListByEntityNameList entityNameList (GetPropertyNameListStrategy dataType)))
+        (setq previewDataList (GetPropertyValueListByEntityNameList entityNameList (GetPropertyNameListStrategy dataType)))
       )
     )
     ; all select button
@@ -2631,7 +2631,7 @@
         (setq matchedList (car blockDataList))
         (setq sslen (length matchedList))
         (setq entityNameList (nth 1 blockDataList))
-        (setq previewDataList (GetPropertyValueListListByEntityNameList entityNameList (GetPropertyNameListStrategy dataType)))
+        (setq previewDataList (GetPropertyValueListByEntityNameList entityNameList (GetPropertyNameListStrategy dataType)))
       )
     )
     ; view button
