@@ -1178,9 +1178,10 @@
 
 (defun GetPropertyValueListByEntityNameV2 (entityName propertyNameList / allPropertyValue resultList) 
   (setq allPropertyValue (GetAllPropertyValueByEntityName entityName))
-  (GetEntityHandleListByEntityNameListUtils)
+  
+  ;(cons "entityhandle" (GetEntityHandleByEntityNameUtils entityName))
   ; add the handle to the start of the csvPropertyString
-  (setq resultList (cons (cdr (assoc 5 ent)) resultList))
+  ;(setq resultList (cons (cdr (assoc 5 ent)) resultList))
 )
 
 (defun GetPropertyValueListListByEntityNameList (entityNameList propertyNameList / resultList)
@@ -2930,7 +2931,7 @@
     ; get the next property information
     (setq entx (entget (entnext (cdr (assoc -1 entx)))))
   )
-  propertyValueList
+  (cons (cons "entityhandle" (cdr (assoc 5 entityData))) propertyValueList)
 )
 
 ; function for modify data
