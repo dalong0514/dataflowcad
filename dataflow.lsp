@@ -2072,7 +2072,7 @@
     (progn
       (start_list "modifiedDataType" 3)
       (mapcar '(lambda (x) (add_list x)) 
-                '("全部" "管道" "仪表" "设备"))
+                '("全部" "仪表和管道" "管道" "仪表" "设备"))
       (end_list)
     )
     ; init the default data of text
@@ -2146,8 +2146,8 @@
 
 (defun GetBrushedPropertyDataTypeDict () 
   (mapcar '(lambda (x y) (cons x y)) 
-    '("0" "1" "2" "3")
-    '("AllDataType" "Pipe" "Instrument" "Equipment")      
+    '("0" "1" "2" "3" "4")
+    '("AllDataType" "InstrumentAndPipe" "Pipe" "Instrument" "Equipment")      
   )
 )
 
