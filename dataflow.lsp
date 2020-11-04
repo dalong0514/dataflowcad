@@ -456,30 +456,6 @@
   '("设备位号" "设备名称" "设备类型" "工作介质" "工作温度" "工作压力" "设备尺寸" "电机功率" "电机是否防爆" "电机级数" "关键参数1" "关键参数2" "关键参数3" "关键参数4" "设备材质" "设备重量" "设备型号" "保温厚度" "设备数量")
 )
 
-(defun GetPipePropertyPairNameList (/ propertyPairNameList)
-  (setq propertyPairNameList '(
-                            ("PIPENUM" "pipenum")
-                            ("SUBSTANCE" "substance")
-                            ("TEMP" "temp")
-                            ("PRESSURE" "pressure")
-                            ("PHASE" "phase")
-                            ("FROM" "from")
-                            ("TO" "to")
-                            ("DRAWNUM" "drawnum")
-                           ))
-)
-
-(defun GetOuterPipePropertyPairNameList (/ propertyPairNameList)
-  (setq propertyPairNameList '(
-                            ("PIPENUM" "pipenum")
-                            ("FROMTO" "fromto")
-                            ("DRAWNUM" "drawnum")
-                            ("DESIGNFLOW" "designflow")
-                            ("OPERATESPEC" "operatespec")
-                            ("INSULATION" "insulation")
-                           ))
-)
-
 ; Get Constant Data
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
@@ -1641,13 +1617,12 @@
   )
 )
 
-(defun ExportOuterPipeData (fileName / fileDir f)
+(defun ExportOuterPipeData (fileName / fileDir)
   (setq fileDir (GetExportDataFileDir fileName))
-  (setq f (open fileDir "w"))
-  (ExtractOuterPipeToText)
-  (ExtractPipeToText)
-  (close f)
-  (FileEncodeTransUtils fileDir "gb2312" "utf-8")
+  (WriteDataListToFileUtils fileDir (append (ExtractPipeToJsonList)
+                                            (ExtractOuterPipeToJsonList)
+                                    )
+  )
 )
 
 ; the macro for extract data
@@ -1770,22 +1745,6 @@
       entityNameList
     )
   )
-)
-
-(defun ExtractPipeToText (/ ss propertyPairNameList lastPropertyPair classValuePair)
-  (setq ss (GetAllPipeSSUtils))
-  (setq propertyPairNameList (GetPipePropertyPairNameList))
-  (setq lastPropertyPair '("INSULATION" "insulation"))
-  (setq classValuePair '("class" "pipeline"))
-  (ExtractBlockPropertyUtils f ss propertyPairNameList lastPropertyPair classValuePair)
-)
-
-(defun ExtractOuterPipeToText (/ ss propertyPairNameList lastPropertyPair classValuePair)
-  (setq ss (GetAllOuterPipeSSUtils))
-  (setq propertyPairNameList (GetOuterPipePropertyPairNameList))
-  (setq lastPropertyPair '("PROTECTION" "protection"))
-  (setq classValuePair '("class" "outerpipe"))
-  (ExtractBlockPropertyUtils f ss propertyPairNameList lastPropertyPair classValuePair)
 )
 
 ; function for extract block property to text
