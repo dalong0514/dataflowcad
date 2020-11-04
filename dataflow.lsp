@@ -1760,6 +1760,7 @@
   (WriteDataListToFileUtils fileDir (append (ExtractInstrumentToJsonList "InstrumentP")
                                             (ExtractInstrumentToJsonList "InstrumentSIS")
                                             (ExtractInstrumentToJsonList "InstrumentL")
+                                            (ExtractPipeToJsonList))
                                     )
   )
 )
@@ -1767,16 +1768,6 @@
 (defun ExportPipeData (fileName / fileDir)
   (setq fileDir (GetExportDataFileDir fileName))
   (WriteDataListToFileUtils fileDir (ExtractPipeToJsonList))
-)
-
-(defun ExportPipeDataV2 (fileName / fileDir f)
-  (setq fileDir (GetExportDataFileDir fileName))
-  ; do not know why f can not be a arg of the GsExtractGs2InstrumentToText - 20201011
-  ; f should be the global variable - 20201021
-  (setq f (open fileDir "w"))
-  (ExtractPipeToText)
-  (close f)
-  (FileEncodeTransUtils fileDir "gb2312" "utf-8")
 )
 
 (defun ExportEquipmentData (fileName / fileDir f)
