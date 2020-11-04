@@ -1757,14 +1757,19 @@
 
 (defun ExportInstrumentData (fileName / fileDir)
   (setq fileDir (GetExportDataFileDir fileName))
-  (WriteDataListToFileUtils fileDir (append (ExtractInstrumentPToJsonList "InstrumentP")
-                                            (ExtractInstrumentPToJsonList "InstrumentSIS")
-                                            (ExtractInstrumentPToJsonList "InstrumentL")
+  (WriteDataListToFileUtils fileDir (append (ExtractInstrumentToJsonList "InstrumentP")
+                                            (ExtractInstrumentToJsonList "InstrumentSIS")
+                                            (ExtractInstrumentToJsonList "InstrumentL")
                                     )
   )
 )
 
-(defun ExportPipeData (fileName / fileDir f)
+(defun ExportPipeData (fileName / fileDir)
+  (setq fileDir (GetExportDataFileDir fileName))
+  (WriteDataListToFileUtils fileDir (ExtractPipeToJsonList))
+)
+
+(defun ExportPipeDataV2 (fileName / fileDir f)
   (setq fileDir (GetExportDataFileDir fileName))
   ; do not know why f can not be a arg of the GsExtractGs2InstrumentToText - 20201011
   ; f should be the global variable - 20201021
@@ -1810,7 +1815,7 @@
 ; Gs Field
 ; function for extract block property to text
 
-(defun ExtractInstrumentPToJsonList (dataType / ss entityNameList propertyNameList classDict resultList)
+(defun ExtractInstrumentToJsonList (dataType / ss entityNameList propertyNameList classDict resultList)
   (setq ss (GetAllBlockSSByDataTypeUtils dataType))
   (setq entityNameList (GetEntityNameListBySSUtils ss))
   (setq propertyNameList (GetInstrumentPropertyNameList))
@@ -1837,6 +1842,20 @@
               (StringSubstUtils "maxvalue" "max" x)
             ) 
       resultList
+    )
+  )
+)
+
+(defun ExtractPipeToJsonList (/ ss entityNameList propertyNameList classDict resultList)
+  (setq ss (GetAllBlockSSByDataTypeUtils "Pipe"))
+  (setq entityNameList (GetEntityNameListBySSUtils ss))
+  (setq propertyNameList (GetPipePropertyNameList))
+  (setq classDict (cons "class" "pipeline"))
+  (setq resultList 
+    (mapcar '(lambda (x) 
+              (ExtractBlockPropertyToJsonStringByClassUtils x propertyNameList classDict)
+            ) 
+      entityNameList
     )
   )
 )
