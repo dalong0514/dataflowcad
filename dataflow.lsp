@@ -1824,26 +1824,12 @@
 ; Gs Field
 ; function for extract block property to text
 
-(defun ExtractInstrumentToText ()
-  (ExtractInstrumentPToText)
-  (ExtractInstrumentLToText)
-  (ExtractInstrumentSISToText)
-)
-
-(defun ExtractInstrumentPToText (/ ss propertyPairNameList lastPropertyPair classValuePair)
-  (setq ss (ssget "X" '((0 . "INSERT") (2 . "InstrumentP"))))
-  (setq propertyPairNameList (GetInstrumentPropertyPairNameList))
-  (setq lastPropertyPair '("DIRECTION" "direction"))
-  (setq classValuePair '("class" "concentrated"))
-  (ExtractBlockPropertyUtils f ss propertyPairNameList lastPropertyPair classValuePair)
-)
-
 (defun ExtractInstrumentPToJsonList (dataType / ss entityNameList propertyNameList classDict resultList)
   (setq ss (GetAllBlockSSByDataTypeUtils dataType))
   (setq entityNameList (GetEntityNameListBySSUtils ss))
   (setq propertyNameList (GetInstrumentPropertyNameList))
   (setq propertyNameList (append propertyNameList '("HALARM" "LALARM")))
-  (setq classDict (cons "class" "concentrated"))
+  (setq classDict (GetClassDictStrategy dataType))
   (setq resultList 
     (mapcar '(lambda (x) 
               (ExtractBlockPropertyToJsonStringByClassUtils x propertyNameList classDict)
@@ -1865,6 +1851,29 @@
       resultList
     )
   )
+)
+
+(defun GetClassDictStrategy (dataType / result) 
+  (cond 
+    ((= dataType "InstrumentP") (setq result (cons "class" "concentrated")))
+    ((= dataType "InstrumentL") (setq result (cons "class" "location")))
+    ((= dataType "InstrumentSIS") (setq result (cons "class" "sis")))
+  )
+  result
+)
+
+(defun ExtractInstrumentToText ()
+  (ExtractInstrumentPToText)
+  (ExtractInstrumentLToText)
+  (ExtractInstrumentSISToText)
+)
+
+(defun ExtractInstrumentPToText (/ ss propertyPairNameList lastPropertyPair classValuePair)
+  (setq ss (ssget "X" '((0 . "INSERT") (2 . "InstrumentP"))))
+  (setq propertyPairNameList (GetInstrumentPropertyPairNameList))
+  (setq lastPropertyPair '("DIRECTION" "direction"))
+  (setq classValuePair '("class" "concentrated"))
+  (ExtractBlockPropertyUtils f ss propertyPairNameList lastPropertyPair classValuePair)
 )
 
 (defun ExtractInstrumentLToText (/ ss propertyPairNameList lastPropertyPair classValuePair)
