@@ -380,6 +380,10 @@
   '("管道编号" "工作介质" "工作温度" "工作压力" "相态" "管道起点" "管道终点" "流程图号" "保温材料")
 )
 
+(defun GetOuterPipePropertyNameList ()
+  '("PIPENUM" "FROMTO" "DRAWNUM" "DESIGNFLOW" "OPERATESPEC" "INSULATION")
+)
+
 (defun GetPublicPipePropertyNameList ()
   '("PIPENUM" "FROM" "TO" "DRAWNUM")
 )
@@ -1757,8 +1761,8 @@
 (defun ExtractOuterPipeToJsonList (/ ss entityNameList propertyNameList classDict resultList)
   (setq ss (GetAllBlockSSByDataTypeUtils "OuterPipe"))
   (setq entityNameList (GetEntityNameListBySSUtils ss))
-  (setq propertyNameList (GetPipePropertyNameList))
-  (setq classDict (cons "class" "pipeline"))
+  (setq propertyNameList (GetOuterPipePropertyNameList))
+  (setq classDict (cons "class" "outerpipe"))
   (setq resultList 
     (mapcar '(lambda (x) 
               (ExtractBlockPropertyToJsonStringByClassUtils x propertyNameList classDict)
