@@ -452,28 +452,7 @@
   '("设备位号" "设备名称" "设备类型" "工作介质" "工作温度" "工作压力" "设备尺寸" "电机功率" "电机是否防爆" "电机级数" "关键参数1" "关键参数2" "关键参数3" "关键参数4" "设备材质" "设备重量" "设备型号" "保温厚度" "设备数量")
 )
 
-(defun GetInstrumentPropertyPairNameList (/ propertyPairNameList)
-  (setq propertyPairNameList '(
-                            ("FUNCTION" "function")
-                            ("TAG" "tag")
-                            ("HALARM" "halarm")
-                            ("LALARM" "lalarm")
-                            ("SUBSTANCE" "substance")
-                            ("TEMP" "temp")
-                            ("PRESSURE" "pressure")
-                            ("SORT" "sort")
-                            ("PHASE" "phase")
-                            ("MATERIAL" "material")
-                            ("NAME" "name")
-                            ("LOCATION" "location")
-                            ("MIN" "minvalue")
-                            ("MAX" "maxvalue")
-                            ("NOMAL" "nomal")
-                            ("DRAWNUM" "drawnum")
-                            ("COMMENT" "comment")
-                            ("INSTALLSIZE" "installsize")
-                           ))
-)
+
 
 (defun GetPipePropertyPairNameList (/ propertyPairNameList)
   (setq propertyPairNameList '(
@@ -1771,7 +1750,17 @@
   (WriteDataListToFileUtils fileDir (ExtractPipeToJsonList))
 )
 
-(defun ExportEquipmentData (fileName / fileDir f)
+(defun ExportEquipmentData (fileName / fileDir)
+  (setq fileDir (GetExportDataFileDir fileName))
+  (WriteDataListToFileUtils fileDir (append (ExtractEquipmentToJsonList "Reactor")
+                                            (ExtractEquipmentToJsonList "Tank")
+                                            (ExtractEquipmentToJsonList "Heater")
+                                            ;()
+                                    )
+  )
+)
+
+(defun ExportEquipmentDataV2 (fileName / fileDir f)
   (setq fileDir (GetExportDataFileDir fileName))
   (setq f (open fileDir "w"))
   (ExtractEquipToText)
@@ -1852,11 +1841,54 @@
   )
 )
 
+(defun ExtractEquipmentToJsonList (dataType / ss entityNameList propertyNameList classDict resultList)
+  (setq ss (GetAllBlockSSByDataTypeUtils dataType))
+  (setq entityNameList (GetEntityNameListBySSUtils ss))
+  (setq propertyNameList (GetPropertyNameListStrategy dataType))
+  (setq classDict (GetClassDictStrategy dataType))
+  (setq resultList 
+    (mapcar '(lambda (x) 
+              (ExtractBlockPropertyToJsonStringByClassUtils x propertyNameList classDict)
+            ) 
+      entityNameList
+    )
+  )
+  (setq resultList 
+    (mapcar '(lambda (x) 
+              (StringSubstUtils "first_spec" "species" x)
+            ) 
+      resultList
+    )
+  )
+  (setq resultList 
+    (mapcar '(lambda (x) 
+              (StringSubstUtils "is_antiexplosive" "antiexplosive" x)
+            ) 
+      resultList
+    )
+  )
+  ; correct mistake made before
+  (setq resultList 
+    (mapcar '(lambda (x) 
+              (StringSubstUtils "volumn" "volume" x)
+            ) 
+      resultList
+    )
+  )
+)
+
 (defun GetClassDictStrategy (dataType / result) 
   (cond 
     ((= dataType "InstrumentP") (setq result (cons "class" "concentrated")))
     ((= dataType "InstrumentL") (setq result (cons "class" "location")))
     ((= dataType "InstrumentSIS") (setq result (cons "class" "sis")))
+    ((= dataType "Reactor") (setq result (cons "class" "reactor")))
+    ((= dataType "Tank") (setq result (cons "class" "tank")))
+    ((= dataType "Heater") (setq result (cons "class" "heater")))
+    ((= dataType "Pump") (setq result (cons "class" "pump")))
+    ((= dataType "Vacuum") (setq result (cons "class" "vacuum")))
+    ((= dataType "Centrifuge") (setq result (cons "class" "centrifuge")))
+    ((= dataType "CustomEquip") (setq result (cons "class" "custom")))
   )
   result
 )
