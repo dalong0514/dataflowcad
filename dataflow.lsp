@@ -1809,21 +1809,20 @@
   (ExtractBlockPropertyUtils f ss propertyPairNameList lastPropertyPair classValuePair)
 )
 
-(defun ExtractInstrumentPToJsonList (/ ss entityNameList propertyNameList classValuePair resultList)
+(defun ExtractInstrumentPToJsonList (/ ss entityNameList propertyNameList classDict resultList)
   (setq ss (ssget "X" '((0 . "INSERT") (2 . "InstrumentP"))))
   (setq entityNameList (GetEntityNameListBySSUtils ss))
   (setq propertyNameList (GetInstrumentPropertyNameList))
   (setq propertyNameList (append propertyNameList '("HALARM" "LALARM")))
-  (setq classValuePair (cons "class" "concentrated"))
-
-  (mapcar '(lambda (x) 
-             (ExtractBlockPropertyToJsonStringUtils x propertyNameList)
-           ) 
-    entityNameList
+  (setq classDict (cons "class" "concentrated"))
+  (setq resultList 
+    (mapcar '(lambda (x) 
+              (ExtractBlockPropertyToJsonStringByClassUtils x propertyNameList classDict)
+            ) 
+      entityNameList
+    )
   )
-
-
-  
+  resultList
 )
 
 (defun ExtractInstrumentLToText (/ ss propertyPairNameList lastPropertyPair classValuePair)
