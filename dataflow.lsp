@@ -34,7 +34,13 @@
   (GetNumberedListByStartAndLengthUtilsTest)
   (GetIncreasedNumberListUtilsTest)
   (GetIncreasedNumberStringListUtilsTest)
+  (RemoveLastNumCharForStringUtilsTest)
   (DL:PrintTestResults (DL:CountBooleans *testList*))
+)
+
+(defun RemoveLastNumCharForStringUtilsTest ()
+  (AssertEqual 'RemoveLastNumCharForStringUtils (list "dalong" 1) "dalon")
+  (AssertEqual 'RemoveLastNumCharForStringUtils (list "dalong" 2) "dalo")
 )
 
 (defun SpliceElementInTwoListUtilsTest ()
@@ -1057,15 +1063,20 @@
   )
 )
 
+(defun RemoveLastNumCharForStringUtils (oldStr num / )
+  (substr oldStr 1 (- (strlen oldStr) num))
+)
+
 (defun GetJsonPropertyStringByEntityName (entityName propertyNameList / jsonPropertyString)
   (setq jsonPropertyString "")
   (mapcar '(lambda (x) 
-             (setq jsonPropertyString (strcat jsonPropertyString x ","))
+             (setq jsonPropertyString (strcat "\"" (car x) "\": \"" (cdr x) "\","))
            ) 
     ; remove the first item - entityhandle
     (car (GetPropertyDictListForOneBlockByEntityName entityName propertyNameList))
   )
-  (setq jsonPropertyString (strcat "'" jsonPropertyString))
+  (setq jsonPropertyString (RemoveLastNumCharForStringUtils jsonPropertyString 1))
+  (setq jsonPropertyString (strcat "{" jsonPropertyString "}"))
 )
 
 (defun WriteAPropertyValueToTextUtils (propertyName propertyNamePair entx f /)
