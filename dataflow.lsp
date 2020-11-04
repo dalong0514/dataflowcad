@@ -1681,6 +1681,11 @@
 ; Gs Field
 ; the macro for extract data
 
+(defun c:exportBlockPropertyData (/ dataTypeList)
+  (setq dataTypeList '("Pipe" "Equipment" "Instrument" "Electric" "OuterPipe"))
+  (ExportBlockProperty dataTypeList)
+)
+
 (defun ExportBlockProperty (dataTypeList / dcl_id fileName currentDir fileDir exportDataType exportMsgBtnStatus)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
@@ -1727,19 +1732,6 @@
   (princ)
 )
 
-(defun c:exportBlockPropertyData (/ dataTypeList)
-  (setq dataTypeList '("Pipe" "Equipment" "Instrument" "Electric" "OuterPipe"))
-  (ExportBlockProperty dataTypeList)
-)
-
-
-
-
-(defun c:exportBlockPropertyDataV2 (/ dataTypeList)
-  (setq dataTypeList '("Pipe" "Equipment" "Instrument" "Electric" "OuterPipe"))
-  (ExportBlockProperty dataTypeList)
-)
-
 (defun ExportDataByDataType (fileName dataType /) 
   (if (= dataType "Pipe") 
     (ExportPipeData fileName)
@@ -1763,6 +1755,15 @@
   (setq fileDir (strcat currentDir fileName ".txt"))
 )
 
+(defun ExportInstrumentData (fileName / fileDir)
+  (setq fileDir (GetExportDataFileDir fileName))
+  (WriteDataListToFileUtils fileDir (append (ExtractInstrumentPToJsonList "InstrumentP")
+                                            (ExtractInstrumentPToJsonList "InstrumentSIS")
+                                            (ExtractInstrumentPToJsonList "InstrumentL")
+                                    )
+  )
+)
+
 (defun ExportPipeData (fileName / fileDir f)
   (setq fileDir (GetExportDataFileDir fileName))
   ; do not know why f can not be a arg of the GsExtractGs2InstrumentToText - 20201011
@@ -1779,15 +1780,6 @@
   (ExtractEquipToText)
   (close f)
   (FileEncodeTransUtils fileDir "gb2312" "utf-8")
-)
-
-(defun ExportInstrumentData (fileName / fileDir)
-  (setq fileDir (GetExportDataFileDir fileName))
-  (WriteDataListToFileUtils fileDir (append (ExtractInstrumentPToJsonList "InstrumentP")
-                                            (ExtractInstrumentPToJsonList "InstrumentSIS")
-                                            (ExtractInstrumentPToJsonList "InstrumentL")
-                                    )
-  )
 )
 
 (defun ExportElectricData (fileName / fileDir f)
@@ -1856,36 +1848,6 @@
     ((= dataType "InstrumentSIS") (setq result (cons "class" "sis")))
   )
   result
-)
-
-(defun ExtractInstrumentToText ()
-  (ExtractInstrumentPToText)
-  (ExtractInstrumentLToText)
-  (ExtractInstrumentSISToText)
-)
-
-(defun ExtractInstrumentPToText (/ ss propertyPairNameList lastPropertyPair classValuePair)
-  (setq ss (ssget "X" '((0 . "INSERT") (2 . "InstrumentP"))))
-  (setq propertyPairNameList (GetInstrumentPropertyPairNameList))
-  (setq lastPropertyPair '("DIRECTION" "direction"))
-  (setq classValuePair '("class" "concentrated"))
-  (ExtractBlockPropertyUtils f ss propertyPairNameList lastPropertyPair classValuePair)
-)
-
-(defun ExtractInstrumentLToText (/ ss propertyPairNameList lastPropertyPair classValuePair)
-  (setq ss (ssget "X" '((0 . "INSERT") (2 . "InstrumentL"))))
-  (setq propertyPairNameList (GetInstrumentPropertyPairNameList))
-  (setq lastPropertyPair '("DIRECTION" "direction"))
-  (setq classValuePair '("class" "location"))
-  (ExtractBlockPropertyUtils f ss propertyPairNameList lastPropertyPair classValuePair)
-)
-
-(defun ExtractInstrumentSISToText (/ ss propertyPairNameList lastPropertyPair classValuePair)
-  (setq ss (ssget "X" '((0 . "INSERT") (2 . "InstrumentSIS"))))
-  (setq propertyPairNameList (GetInstrumentPropertyPairNameList))
-  (setq lastPropertyPair '("DIRECTION" "direction"))
-  (setq classValuePair '("class" "sis"))
-  (ExtractBlockPropertyUtils f ss propertyPairNameList lastPropertyPair classValuePair)
 )
 
 (defun ExtractPipeToText (/ ss propertyPairNameList lastPropertyPair classValuePair)
