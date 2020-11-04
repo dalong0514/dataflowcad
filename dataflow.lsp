@@ -1067,7 +1067,7 @@
   (substr oldStr 1 (- (strlen oldStr) num))
 )
 
-(defun GetJsonPropertyStringByEntityNameUtils (entityName propertyNameList / jsonPropertyString)
+(defun ExtractBlockPropertyToJsonStringUtils (entityName propertyNameList / jsonPropertyString)
   (setq jsonPropertyString "")
   (mapcar '(lambda (x) 
              (setq jsonPropertyString (strcat "\"" (car x) "\": \"" (cdr x) "\","))
