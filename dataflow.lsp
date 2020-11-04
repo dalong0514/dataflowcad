@@ -1140,23 +1140,17 @@
   (setq entityHandle (cdr (assoc 5 (entget entityName))))
 )
 
-(defun GetCSVPropertyStringByEntityName (entityName propertyNameList / ent entx propertyName csvPropertyString)
+(defun GetCSVPropertyStringByEntityName (entityName propertyNameList / csvPropertyString)
   (setq csvPropertyString "")
-  (setq ent (entget entityName))
-  (setq entx (entget (entnext (cdr (assoc -1 ent)))))
-  (while (= "ATTRIB" (cdr (assoc 0 entx)))
-    (setq propertyName (cdr (assoc 2 entx)))
-    (foreach item propertyNameList 
-      (if (= propertyName item) 
-        (setq csvPropertyString (strcat csvPropertyString (cdr (assoc 1 entx)) ","))
-      )
-    )
-    ; get the next property information
-    (setq entx (entget (entnext (cdr (assoc -1 entx)))))
+  (mapcar '(lambda (x) 
+             (setq csvPropertyString (strcat csvPropertyString x ","))
+           ) 
+    (GetPropertyValueListForOneBlockByEntityName entityName propertyNameList)
   )
-  ; add the handle to the start of the csvPropertyString
+  ; add the handle to the start of the csvPropertyString 
+  ; (move to GetPropertyValueListForOneBlockByEntityName) - 20201104
   ; add "'" at the start of handle to prevent being converted by excel - 20201020
-  (setq csvPropertyString (strcat "'" (cdr (assoc 5 ent)) "," csvPropertyString ))
+  (setq csvPropertyString (strcat "'" csvPropertyString))
 )
 
 (defun GetPropertyValueListForOneBlockByEntityName (entityName propertyNameList / allPropertyValue resultList) 
