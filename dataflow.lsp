@@ -1057,6 +1057,17 @@
   )
 )
 
+(defun GetJsonPropertyStringByEntityName (entityName propertyNameList / jsonPropertyString)
+  (setq jsonPropertyString "")
+  (mapcar '(lambda (x) 
+             (setq jsonPropertyString (strcat jsonPropertyString x ","))
+           ) 
+    ; remove the first item - entityhandle
+    (car (GetPropertyDictListForOneBlockByEntityName entityName propertyNameList))
+  )
+  (setq jsonPropertyString (strcat "'" jsonPropertyString))
+)
+
 (defun WriteAPropertyValueToTextUtils (propertyName propertyNamePair entx f /)
   (if (= propertyName (car propertyNamePair))
     (princ (strcat "\"" (nth 1 propertyNamePair) "\": \"" (cdr (assoc 1 entx)) "\",") f)
@@ -1155,9 +1166,22 @@
 
 (defun GetPropertyValueListForOneBlockByEntityName (entityName propertyNameList / allPropertyValue resultList) 
   (setq allPropertyValue (GetAllPropertyValueByEntityName entityName))
+  ; add the entityhandle property default
   (setq propertyNameList (cons "entityhandle" propertyNameList))
   (mapcar '(lambda (x) 
              (setq resultList (append resultList (list (cdr (assoc (strcase x T) allPropertyValue)))))
+           ) 
+    propertyNameList
+  )
+  resultList
+)
+
+(defun GetPropertyDictListForOneBlockByEntityName (entityName propertyNameList / allPropertyValue resultList) 
+  (setq allPropertyValue (GetAllPropertyValueByEntityName entityName))
+  ; add the entityhandle property default
+  (setq propertyNameList (cons "entityhandle" propertyNameList))
+  (mapcar '(lambda (x) 
+             (setq resultList (append resultList (list (cons x (cdr (assoc (strcase x T) allPropertyValue))))))
            ) 
     propertyNameList
   )
