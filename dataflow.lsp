@@ -1170,9 +1170,11 @@
   resultList
 )
 
-(defun GetPropertyValueListListByEntityNameList (entityNameList propertyNameList / resultList)
-  (foreach item entityNameList 
-    (setq resultList (append resultList (list (GetPropertyValueListByEntityName item propertyNameList))))
+(defun GetPropertyValueListListByEntityNameList (entityNameList propertyNameList / resultList) 
+  (mapcar '(lambda (x) 
+             (setq resultList (append resultList (list (GetPropertyValueListByEntityName x propertyNameList))))
+           ) 
+    entityNameList
   )
   resultList
 )
