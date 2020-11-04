@@ -1418,18 +1418,13 @@
 ;;;-------------------------------------------------------------------------;;;
 ; Read and Write Utils
 
-(defun WriteDataToJsonUtils (dataList / fileDir propertyNameList)
-  (setq fileDir "D:\\dataflowcad\\data\\ksdata.txt")
-  (WriteDataListToFileUtils fileDir dataList)
-  (FileEncodeTransUtils fileDir "gb2312" "utf-8")
-)
-
 (defun WriteDataListToFileUtils (fileDir dataList / filePtr)
   (setq filePtr (open fileDir "w"))
   (foreach item dataList 
     (write-line item filePtr)
   )
   (close filePtr)
+  (FileEncodeTransUtils fileDir "gb2312" "utf-8")
 )
 
 (defun WriteDataToCSVByEntityNameListUtils (entityNameList fileDir firstRow propertyNameList / filePtr csvPropertyStringList)
@@ -1737,6 +1732,14 @@
   (ExportBlockProperty dataTypeList)
 )
 
+
+
+
+(defun c:exportBlockPropertyDataV2 (/ dataTypeList)
+  (setq dataTypeList '("Pipe" "Equipment" "Instrument" "Electric" "OuterPipe"))
+  (ExportBlockProperty dataTypeList)
+)
+
 (defun ExportDataByDataType (fileName dataType /) 
   (if (= dataType "Pipe") 
     (ExportPipeData fileName)
@@ -1778,7 +1781,7 @@
   (FileEncodeTransUtils fileDir "gb2312" "utf-8")
 )
 
-(defun ExportInstrumentData (fileName / fileDir f)
+(defun ExportInstrumentDataV2 (fileName / fileDir f)
   (setq fileDir (GetExportDataFileDir fileName))
   (setq f (open fileDir "w"))
   (ExtractInstrumentToText)
@@ -1786,6 +1789,11 @@
   (ExtractEquipToText)
   (close f)
   (FileEncodeTransUtils fileDir "gb2312" "utf-8")
+)
+
+(defun ExportInstrumentData (fileName / fileDir)
+  (setq fileDir (GetExportDataFileDir fileName))
+  (WriteDataListToFileUtils fileDir (ExtractInstrumentPToJsonList "InstrumentP"))
 )
 
 (defun ExportElectricData (fileName / fileDir f)
@@ -1830,8 +1838,8 @@
   (ExtractBlockPropertyUtils f ss propertyPairNameList lastPropertyPair classValuePair)
 )
 
-(defun ExtractInstrumentPToJsonList (/ ss entityNameList propertyNameList classDict resultList)
-  (setq ss (ssget "X" '((0 . "INSERT") (2 . "InstrumentP"))))
+(defun ExtractInstrumentPToJsonList (dataType / ss entityNameList propertyNameList classDict resultList)
+  (setq ss (GetAllBlockSSByDataTypeUtils dataType))
   (setq entityNameList (GetEntityNameListBySSUtils ss))
   (setq propertyNameList (GetInstrumentPropertyNameList))
   (setq propertyNameList (append propertyNameList '("HALARM" "LALARM")))
@@ -1857,10 +1865,6 @@
       resultList
     )
   )
-)
-
-(defun c:foo ()
-  (WriteDataToJsonUtils (ExtractInstrumentPToJsonList))
 )
 
 (defun ExtractInstrumentLToText (/ ss propertyPairNameList lastPropertyPair classValuePair)
