@@ -1717,6 +1717,20 @@
   )
 )
 
+(defun ExtractOuterPipeToJsonList (/ ss entityNameList propertyNameList classDict resultList)
+  (setq ss (GetAllBlockSSByDataTypeUtils "OuterPipe"))
+  (setq entityNameList (GetEntityNameListBySSUtils ss))
+  (setq propertyNameList (GetOuterPipePropertyNameList))
+  (setq classDict (cons "class" "outerpipe"))
+  (setq resultList 
+    (mapcar '(lambda (x) 
+              (ExtractBlockPropertyToJsonStringByClassUtils x propertyNameList classDict)
+            ) 
+      entityNameList
+    )
+  )
+)
+
 (defun GetClassDictStrategy (dataType / result) 
   (cond 
     ((= dataType "InstrumentP") (setq result (cons "class" "concentrated")))
@@ -1733,19 +1747,6 @@
   result
 )
 
-(defun ExtractOuterPipeToJsonList (/ ss entityNameList propertyNameList classDict resultList)
-  (setq ss (GetAllBlockSSByDataTypeUtils "OuterPipe"))
-  (setq entityNameList (GetEntityNameListBySSUtils ss))
-  (setq propertyNameList (GetOuterPipePropertyNameList))
-  (setq classDict (cons "class" "outerpipe"))
-  (setq resultList 
-    (mapcar '(lambda (x) 
-              (ExtractBlockPropertyToJsonStringByClassUtils x propertyNameList classDict)
-            ) 
-      entityNameList
-    )
-  )
-)
 
 ; function for extract block property to text
 ; Gs Field
