@@ -455,6 +455,14 @@ brushBlockPropertyValueBox : dialog {
     width = 80;
     : column {
       height = 10;
+      : popup_list { 
+        label = "要刷的数据大类";
+        key = "modifiedDataType"; 
+        edit_width = 40;
+        list = "";
+        value = "";
+      }
+      : spacer { height = 1; }
       : list_box { 
         label = "选择要提取的属性（可多选）";
         height = 15;
@@ -465,14 +473,6 @@ brushBlockPropertyValueBox : dialog {
         value = "";
       }
       : spacer { height = 1; } 
-      : popup_list { 
-        label = "数据大类";
-        key = "modifiedDataType"; 
-        edit_width = 40;
-        list = "";
-        value = "";
-      }
-      : spacer { height = 1; }
     } 
     : list_box { 
       label = "提取出的数据";
