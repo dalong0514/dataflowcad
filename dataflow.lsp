@@ -1642,7 +1642,10 @@
 )
 
 (defun ModifyPropertyNameForJsonListStrategy (dataType resultList /) 
-  (if (or (= dataType "InstrumentP") (= dataType "InstrumentL") (= dataType "InstrumentSIS")) 
+  (if (or (= dataType "InstrumentP") 
+          (= dataType "InstrumentL") 
+          (= dataType "InstrumentSIS")
+      ) 
     (progn 
       (setq resultList 
         (mapcar '(lambda (x) 
@@ -1654,6 +1657,39 @@
       (setq resultList 
         (mapcar '(lambda (x) 
                   (StringSubstUtils "maxvalue" "max" x)
+                ) 
+          resultList
+        )
+      )
+    )
+  )
+  (if (or (= dataType "Reactor") 
+          (= dataType "Tank") 
+          (= dataType "Heater")
+          (= dataType "Pump")
+          (= dataType "Vacuum")
+          (= dataType "Centrifuge")
+          (= dataType "CustomEquip")
+      ) 
+    (progn 
+      (setq resultList 
+        (mapcar '(lambda (x) 
+                  (StringSubstUtils "first_spec" "species" x)
+                ) 
+          resultList
+        )
+      )
+      (setq resultList 
+        (mapcar '(lambda (x) 
+                  (StringSubstUtils "is_antiexplosive" "antiexplosive" x)
+                ) 
+          resultList
+        )
+      )
+      ; correct mistake made before
+      (setq resultList 
+        (mapcar '(lambda (x) 
+                  (StringSubstUtils "volumn" "volume" x)
                 ) 
           resultList
         )
