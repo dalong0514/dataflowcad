@@ -1623,7 +1623,7 @@
 
 (defun ExportOuterPipeData (fileName / fileDir)
   (setq fileDir (GetExportDataFileDir fileName))
-  (WriteDataListToFileUtils fileDir (ExtractOuterPipeToJsonList "OuterPipe")
+  (WriteDataListToFileUtils fileDir (ExtractOuterPipeToJsonList)
   )
 )
 
@@ -1711,20 +1711,6 @@
   resultList
 )
 
-(defun ExtractOuterPipeToJsonList (dataType / ss entityNameList propertyNameList classDict resultList)
-  (setq ss (GetAllBlockSSByDataTypeUtils dataType))
-  (setq entityNameList (GetEntityNameListBySSUtils ss))
-  (setq propertyNameList (GetPropertyNameListStrategy dataType))
-  (setq classDict (GetClassDictStrategy dataType))
-  (setq resultList 
-    (mapcar '(lambda (x) 
-              (ExtractBlockPropertyToJsonStringByClassUtils x propertyNameList classDict)
-            ) 
-      entityNameList
-    )
-  )
-)
-
 (defun GetClassDictStrategy (dataType / result) 
   (cond 
     ((= dataType "InstrumentP") (setq result (cons "class" "concentrated")))
@@ -1741,6 +1727,11 @@
     ((= dataType "CustomEquip") (setq result (cons "class" "custom")))
   )
   result
+)
+
+(defun ExtractOuterPipeToJsonList (/ resultList) 
+  (setq resultList (ExtractBlockPropertyToJsonList "OuterPipe"))
+  resultList
 )
 
 ; function for extract block property to text
