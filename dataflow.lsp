@@ -381,7 +381,7 @@
 )
 
 (defun GetOuterPipePropertyNameList ()
-  '("PIPENUM" "FROMTO" "DRAWNUM" "DESIGNFLOW" "OPERATESPEC" "INSULATION")
+  '("PIPENUM" "FROMTO" "DRAWNUM" "DESIGNFLOW" "OPERATESPEC" "INSULATION" "PROTECTION")
 )
 
 (defun GetPublicPipePropertyNameList ()
@@ -1575,7 +1575,7 @@
   (WriteDataListToFileUtils fileDir (append (ExtractInstrumentToJsonList "InstrumentP")
                                             (ExtractInstrumentToJsonList "InstrumentSIS")
                                             (ExtractInstrumentToJsonList "InstrumentL")
-                                            (ExtractPipeToJsonList)
+                                            (ExtractPipeToJsonList "Pipe")
                                             (ExtractEquipmentToJsonList "Reactor")
                                             (ExtractEquipmentToJsonList "Tank")
                                             (ExtractEquipmentToJsonList "Heater")
@@ -1589,7 +1589,7 @@
 
 (defun ExportPipeData (fileName / fileDir)
   (setq fileDir (GetExportDataFileDir fileName))
-  (WriteDataListToFileUtils fileDir (ExtractPipeToJsonList))
+  (WriteDataListToFileUtils fileDir (ExtractPipeToJsonList "Pipe"))
 )
 
 (defun ExportEquipmentData (fileName / fileDir)
@@ -1607,9 +1607,7 @@
 
 (defun ExportOuterPipeData (fileName / fileDir)
   (setq fileDir (GetExportDataFileDir fileName))
-  (WriteDataListToFileUtils fileDir (append (ExtractPipeToJsonList)
-                                            (ExtractOuterPipeToJsonList)
-                                    )
+  (WriteDataListToFileUtils fileDir (ExtractOuterPipeToJsonList)
   )
 )
 
@@ -1655,11 +1653,11 @@
   )
 )
 
-(defun ExtractPipeToJsonList (/ ss entityNameList propertyNameList classDict resultList)
-  (setq ss (GetAllBlockSSByDataTypeUtils "Pipe"))
+(defun ExtractPipeToJsonList (dataType / ss entityNameList propertyNameList classDict resultList)
+  (setq ss (GetAllBlockSSByDataTypeUtils dataType))
   (setq entityNameList (GetEntityNameListBySSUtils ss))
   (setq propertyNameList (GetPipePropertyNameList))
-  (setq classDict (cons "class" "pipeline"))
+  (setq classDict (GetClassDictStrategy dataType))
   (setq resultList 
     (mapcar '(lambda (x) 
               (ExtractBlockPropertyToJsonStringByClassUtils x propertyNameList classDict)
@@ -1724,6 +1722,7 @@
     ((= dataType "InstrumentP") (setq result (cons "class" "concentrated")))
     ((= dataType "InstrumentL") (setq result (cons "class" "location")))
     ((= dataType "InstrumentSIS") (setq result (cons "class" "sis")))
+    ((= dataType "Pipe") (setq result (cons "class" "pipeline")))
     ((= dataType "Reactor") (setq result (cons "class" "reactor")))
     ((= dataType "Tank") (setq result (cons "class" "tank")))
     ((= dataType "Heater") (setq result (cons "class" "heater")))
@@ -1734,7 +1733,6 @@
   )
   result
 )
-
 
 ; function for extract block property to text
 ; Gs Field
