@@ -306,6 +306,9 @@
   (if (= dataType "Pipe") 
     (setq propertyNameList (GetPipePropertyNameList))
   )
+  (if (= dataType "OuterPipe") 
+    (setq propertyNameList (GetOuterPipePropertyNameList))
+  )
   (if (= dataType "PublicPipe") 
     (setq propertyNameList (GetPublicPipePropertyNameList))
   )
@@ -1607,7 +1610,7 @@
 
 (defun ExportOuterPipeData (fileName / fileDir)
   (setq fileDir (GetExportDataFileDir fileName))
-  (WriteDataListToFileUtils fileDir (ExtractOuterPipeToJsonList)
+  (WriteDataListToFileUtils fileDir (ExtractOuterPipeToJsonList "OuterPipe")
   )
 )
 
@@ -1656,7 +1659,7 @@
 (defun ExtractPipeToJsonList (dataType / ss entityNameList propertyNameList classDict resultList)
   (setq ss (GetAllBlockSSByDataTypeUtils dataType))
   (setq entityNameList (GetEntityNameListBySSUtils ss))
-  (setq propertyNameList (GetPipePropertyNameList))
+  (setq propertyNameList (GetPropertyNameListStrategy dataType))
   (setq classDict (GetClassDictStrategy dataType))
   (setq resultList 
     (mapcar '(lambda (x) 
@@ -1703,11 +1706,11 @@
   )
 )
 
-(defun ExtractOuterPipeToJsonList (/ ss entityNameList propertyNameList classDict resultList)
-  (setq ss (GetAllBlockSSByDataTypeUtils "OuterPipe"))
+(defun ExtractOuterPipeToJsonList (dataType / ss entityNameList propertyNameList classDict resultList)
+  (setq ss (GetAllBlockSSByDataTypeUtils dataType))
   (setq entityNameList (GetEntityNameListBySSUtils ss))
-  (setq propertyNameList (GetOuterPipePropertyNameList))
-  (setq classDict (cons "class" "outerpipe"))
+  (setq propertyNameList (GetPropertyNameListStrategy dataType))
+  (setq classDict (GetClassDictStrategy dataType))
   (setq resultList 
     (mapcar '(lambda (x) 
               (ExtractBlockPropertyToJsonStringByClassUtils x propertyNameList classDict)
@@ -1723,6 +1726,7 @@
     ((= dataType "InstrumentL") (setq result (cons "class" "location")))
     ((= dataType "InstrumentSIS") (setq result (cons "class" "sis")))
     ((= dataType "Pipe") (setq result (cons "class" "pipeline")))
+    ((= dataType "OuterPipe") (setq result (cons "class" "outerpipe")))
     ((= dataType "Reactor") (setq result (cons "class" "reactor")))
     ((= dataType "Tank") (setq result (cons "class" "tank")))
     ((= dataType "Heater") (setq result (cons "class" "heater")))
