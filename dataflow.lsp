@@ -1742,12 +1742,25 @@
   result
 )
 
-(defun ExtractOuterPipeToJsonList (/ pipeSS pipeEntityNameList pipePropertyNameList pipeList selectedPipeEntityNameList outerPipeList resultList) 
+(defun ExtractOuterPipeToJsonList (/ outerPipeList pipeSS pipeEntityNameList pipePropertyNameList pipeList selectedPipeEntityNameList 
+                                   outerPipeSS outerPipeEntityNameList outerPipePropertyNameList resultList) 
+  (setq outerPipeList (ExtractBlockPropertyToJsonList "OuterPipe"))
   (setq pipeSS (GetAllBlockSSByDataTypeUtils "Pipe"))
   (setq pipeEntityNameList (GetEntityNameListBySSUtils pipeSS))
   (setq pipePropertyNameList (GetPropertyNameListStrategy "Pipe"))
-  ;(setq pipeList (ExtractBlockPropertyToJsonList "Pipe"))
-  ;(setq outerPipeList (ExtractBlockPropertyToJsonList "OuterPipe"))
+  (setq outerPipeSS (GetAllBlockSSByDataTypeUtils "OuterPipe"))
+  (setq outerPipeEntityNameList (GetEntityNameListBySSUtils outerPipeSS))
+  (setq outerPipePropertyNameList (GetPropertyNameListStrategy "OuterPipe"))
+
+  
+  (setq outerPipePipeNumList 
+    (mapcar '(lambda (x) 
+              (cdr (assoc "PIPENUM" x))
+            ) 
+      (GetPropertyDictListByEntityNameList outerPipeEntityNameList outerPipePropertyNameList)
+    ) 
+  )
+  
   (setq pipeList 
     (vl-remove-if-not '(lambda (x) 
                         (= (cdr (assoc "PIPENUM" x)) "PL23101-25-2J1")
