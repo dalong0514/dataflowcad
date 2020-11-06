@@ -1578,7 +1578,7 @@
   (WriteDataListToFileUtils fileDir (append (ExtractInstrumentToJsonList "InstrumentP")
                                             (ExtractInstrumentToJsonList "InstrumentSIS")
                                             (ExtractInstrumentToJsonList "InstrumentL")
-                                            (ExtractPipeToJsonList "Pipe")
+                                            (ExtractBlockPropertyToJsonList "Pipe")
                                             (ExtractEquipmentToJsonList "Reactor")
                                             (ExtractEquipmentToJsonList "Tank")
                                             (ExtractEquipmentToJsonList "Heater")
@@ -1592,7 +1592,7 @@
 
 (defun ExportPipeData (fileName / fileDir)
   (setq fileDir (GetExportDataFileDir fileName))
-  (WriteDataListToFileUtils fileDir (ExtractPipeToJsonList "Pipe"))
+  (WriteDataListToFileUtils fileDir (ExtractBlockPropertyToJsonList "Pipe"))
 )
 
 (defun ExportEquipmentData (fileName / fileDir)
@@ -1697,20 +1697,6 @@
               (StringSubstUtils "maxvalue" "max" x)
             ) 
       resultList
-    )
-  )
-)
-
-(defun ExtractPipeToJsonList (dataType / ss entityNameList propertyNameList classDict resultList)
-  (setq ss (GetAllBlockSSByDataTypeUtils dataType))
-  (setq entityNameList (GetEntityNameListBySSUtils ss))
-  (setq propertyNameList (GetPropertyNameListStrategy dataType))
-  (setq classDict (GetClassDictStrategy dataType))
-  (setq resultList 
-    (mapcar '(lambda (x) 
-              (ExtractBlockPropertyToJsonStringByClassUtils x propertyNameList classDict)
-            ) 
-      entityNameList
     )
   )
 )
