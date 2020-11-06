@@ -550,6 +550,8 @@
           (2 . "Centrifuge")
           (2 . "Vacuum")
           (2 . "CustomEquip")
+          (2 . "OuterPipeRight")
+          (2 . "OuterPipeLeft")
         (-4 . "OR>")
       )
     )
@@ -571,6 +573,8 @@
           (2 . "Centrifuge")
           (2 . "Vacuum")
           (2 . "CustomEquip")
+          (2 . "OuterPipeRight")
+          (2 . "OuterPipeLeft")
         (-4 . "OR>")
       )
     )
@@ -1729,7 +1733,8 @@
   result
 )
 
-(defun ExtractOuterPipeToJsonList (/ resultList) 
+(defun ExtractOuterPipeToJsonList (/ pipeList outerPipeList resultList) 
+  (setq pipeList (ExtractBlockPropertyToJsonList "Pipe"))
   (setq resultList (ExtractBlockPropertyToJsonList "OuterPipe"))
   resultList
 )
@@ -2053,7 +2058,7 @@
     (progn
       (start_list "selectedProperty" 3)
       (mapcar '(lambda (x) (add_list x)) 
-                '("工作介质" "工作温度" "工作压力" "相态" "流程图号"))
+                '("工作介质" "工作温度" "工作压力" "相态" "流程图号" "管道编号"))
       (end_list)
     )
     (progn
@@ -2150,8 +2155,8 @@
 )
 
 (defun GetBrushedPropertyNameDictList (/ listBoxValueList brushedPropertyNameList) 
-  (setq listBoxValueList '("0" "1" "2" "3" "4"))
-  (setq brushedPropertyNameList '("SUBSTANCE" "TEMP" "PRESSURE" "PHASE" "DRAWNUM"))
+  (setq listBoxValueList '("0" "1" "2" "3" "4" "5"))
+  (setq brushedPropertyNameList '("SUBSTANCE" "TEMP" "PRESSURE" "PHASE" "DRAWNUM" "PIPENUM"))
   (mapcar '(lambda (x y) (cons x y)) 
     listBoxValueList 
     brushedPropertyNameList 
