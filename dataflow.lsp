@@ -1625,6 +1625,51 @@
 ; Gs Field
 ; function for extract block property to text
 
+(defun ExtractBlockPropertyToJsonList (dataType / ss entityNameList propertyNameList classDict resultList)
+  (setq ss (GetAllBlockSSByDataTypeUtils dataType))
+  (setq entityNameList (GetEntityNameListBySSUtils ss))
+  (setq propertyNameList (GetPropertyNameListStrategy dataType))
+  (setq propertyNameList (ModifyPropertyNameListStrategy propertyNameList))
+  (setq classDict (GetClassDictStrategy dataType))
+  (setq resultList 
+    (mapcar '(lambda (x) 
+              (ExtractBlockPropertyToJsonStringByClassUtils x propertyNameList classDict)
+            ) 
+      entityNameList
+    )
+  )
+  (setq resultList (ModifyPropertyNameForJsonListStrategy dataType resultList))
+)
+
+(defun ModifyPropertyNameForJsonListStrategy (dataType resultList /) 
+  (if (or (= dataType "InstrumentP") (= dataType "InstrumentL") (= dataType "InstrumentSIS")) 
+    (progn 
+      (setq resultList 
+        (mapcar '(lambda (x) 
+                  (StringSubstUtils "minvalue" "min" x)
+                ) 
+          resultList
+        )
+      )
+      (setq resultList 
+        (mapcar '(lambda (x) 
+                  (StringSubstUtils "maxvalue" "max" x)
+                ) 
+          resultList
+        )
+      )
+    )
+  )
+  resultList
+)
+
+(defun ModifyPropertyNameListStrategy (propertyNameList /) 
+  (if (or (= dataType "InstrumentP") (= dataType "InstrumentSIS")) 
+    (setq propertyNameList (append propertyNameList '("HALARM" "LALARM")))
+  )
+  propertyNameList
+)
+
 (defun ExtractInstrumentToJsonList (dataType / ss entityNameList propertyNameList classDict resultList)
   (setq ss (GetAllBlockSSByDataTypeUtils dataType))
   (setq entityNameList (GetEntityNameListBySSUtils ss))
