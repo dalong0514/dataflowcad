@@ -315,6 +315,15 @@
   (if (= dataType "Instrument") 
     (setq propertyNameList (GetInstrumentPropertyNameList))
   )
+  (if (= dataType "InstrumentL") 
+    (setq propertyNameList (GetInstrumentPropertyNameList))
+  )
+  (if (= dataType "InstrumentP") 
+    (setq propertyNameList (GetInstrumentPPropertyNameList))
+  )
+  (if (= dataType "InstrumentSIS") 
+    (setq propertyNameList (GetInstrumentPPropertyNameList))
+  )
   (if (= dataType "Reactor") 
     (setq propertyNameList (GetReactorPropertyNameList))
   )
@@ -397,6 +406,10 @@
 
 (defun GetInstrumentPropertyNameList ()
   '("FUNCTION" "TAG" "SUBSTANCE" "TEMP" "PRESSURE" "SORT" "PHASE" "MATERIAL" "NAME" "LOCATION" "MIN" "MAX" "NOMAL" "DRAWNUM" "INSTALLSIZE" "COMMENT" "DIRECTION")
+)
+
+(defun GetInstrumentPPropertyNameList ()
+  '("FUNCTION" "TAG" "HALARM" "LALARM" "SUBSTANCE" "TEMP" "PRESSURE" "SORT" "PHASE" "MATERIAL" "NAME" "LOCATION" "MIN" "MAX" "NOMAL" "DRAWNUM" "INSTALLSIZE" "COMMENT" "DIRECTION")
 )
 
 (defun GetInstrumentPropertyChNameList ()
@@ -1575,9 +1588,9 @@
 
 (defun ExportInstrumentData (fileName / fileDir)
   (setq fileDir (GetExportDataFileDir fileName))
-  (WriteDataListToFileUtils fileDir (append (ExtractInstrumentToJsonList "InstrumentP")
-                                            (ExtractInstrumentToJsonList "InstrumentSIS")
-                                            (ExtractInstrumentToJsonList "InstrumentL")
+  (WriteDataListToFileUtils fileDir (append (ExtractBlockPropertyToJsonList "InstrumentP")
+                                            (ExtractBlockPropertyToJsonList "InstrumentSIS")
+                                            (ExtractBlockPropertyToJsonList "InstrumentL")
                                             (ExtractBlockPropertyToJsonList "Pipe")
                                             (ExtractBlockPropertyToJsonList "Reactor")
                                             (ExtractBlockPropertyToJsonList "Tank")
@@ -1629,7 +1642,6 @@
   (setq ss (GetAllBlockSSByDataTypeUtils dataType))
   (setq entityNameList (GetEntityNameListBySSUtils ss))
   (setq propertyNameList (GetPropertyNameListStrategy dataType))
-  (setq propertyNameList (ModifyPropertyNameListStrategy propertyNameList))
   (setq classDict (GetClassDictStrategy dataType))
   (setq resultList 
     (mapcar '(lambda (x) 
@@ -1697,44 +1709,6 @@
     )
   )
   resultList
-)
-
-(defun ModifyPropertyNameListStrategy (propertyNameList /) 
-  (if (or (= dataType "InstrumentP") (= dataType "InstrumentSIS")) 
-    (setq propertyNameList (append propertyNameList '("HALARM" "LALARM")))
-  )
-  propertyNameList
-)
-
-(defun ExtractInstrumentToJsonList (dataType / ss entityNameList propertyNameList classDict resultList)
-  (setq ss (GetAllBlockSSByDataTypeUtils dataType))
-  (setq entityNameList (GetEntityNameListBySSUtils ss))
-  (setq propertyNameList (GetInstrumentPropertyNameList))
-  (if (/= dataType "InstrumentL") 
-    (setq propertyNameList (append propertyNameList '("HALARM" "LALARM")))
-  )
-  (setq classDict (GetClassDictStrategy dataType))
-  (setq resultList 
-    (mapcar '(lambda (x) 
-              (ExtractBlockPropertyToJsonStringByClassUtils x propertyNameList classDict)
-            ) 
-      entityNameList
-    )
-  )
-  (setq resultList 
-    (mapcar '(lambda (x) 
-              (StringSubstUtils "minvalue" "min" x)
-            ) 
-      resultList
-    )
-  )
-  (setq resultList 
-    (mapcar '(lambda (x) 
-              (StringSubstUtils "maxvalue" "max" x)
-            ) 
-      resultList
-    )
-  )
 )
 
 (defun ExtractOuterPipeToJsonList (dataType / ss entityNameList propertyNameList classDict resultList)
