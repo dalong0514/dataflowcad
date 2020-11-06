@@ -1052,6 +1052,15 @@
   resultList
 )
 
+(defun GetPropertyDictListByEntityNameList (entityNameList propertyNameList / resultList) 
+  (mapcar '(lambda (x) 
+             (setq resultList (append resultList (list (GetPropertyDictListForOneBlockByEntityName x propertyNameList))))
+           ) 
+    entityNameList
+  )
+  resultList
+)
+
 (defun GetPropertyValueListByEntityNameList (entityNameList propertyNameList / resultList) 
   (mapcar '(lambda (x) 
              (setq resultList (append resultList (list (GetPropertyValueListForOneBlockByEntityName x propertyNameList))))
@@ -1733,9 +1742,34 @@
   result
 )
 
-(defun ExtractOuterPipeToJsonList (/ pipeList outerPipeList resultList) 
-  (setq pipeList (ExtractBlockPropertyToJsonList "Pipe"))
-  (setq resultList (ExtractBlockPropertyToJsonList "OuterPipe"))
+(defun ExtractOuterPipeToJsonList (/ pipeSS pipeEntityNameList pipePropertyNameList pipeList selectedPipeEntityNameList outerPipeList resultList) 
+  (setq pipeSS (GetAllBlockSSByDataTypeUtils "Pipe"))
+  (setq pipeEntityNameList (GetEntityNameListBySSUtils pipeSS))
+  (setq pipePropertyNameList (GetPropertyNameListStrategy "Pipe"))
+  ;(setq pipeList (ExtractBlockPropertyToJsonList "Pipe"))
+  ;(setq outerPipeList (ExtractBlockPropertyToJsonList "OuterPipe"))
+  (setq pipeList 
+    (vl-remove-if-not '(lambda (x) 
+                        (= (cdr (assoc "PIPENUM" x)) "PL23101-25-2J1")
+                      ) 
+      (GetPropertyDictListByEntityNameList pipeEntityNameList pipePropertyNameList)
+    )
+  )
+  (setq selectedPipeEntityNameList 
+    (mapcar '(lambda (x) 
+              (handent (cdr (assoc "entityhandle" x)))
+            ) 
+      pipeList
+    ) 
+  )
+  (setq resultList 
+    (mapcar '(lambda (x) 
+              (ExtractBlockPropertyToJsonStringByClassUtils x pipePropertyNameList (GetClassDictStrategy "Pipe"))
+            ) 
+      selectedPipeEntityNameList
+    )
+  )
+  (princ resultList)
   resultList
 )
 
