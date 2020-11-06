@@ -1742,17 +1742,15 @@
   result
 )
 
-(defun ExtractOuterPipeToJsonList (/ outerPipeList pipeSS pipeEntityNameList pipePropertyNameList pipeList selectedPipeEntityNameList 
-                                   outerPipeSS outerPipeEntityNameList outerPipePropertyNameList resultList) 
-  (setq outerPipeList (ExtractBlockPropertyToJsonList "OuterPipe"))
+(defun ExtractOuterPipeToJsonList (/ outerPipeJsonList pipeSS pipeEntityNameList pipePropertyNameList outerPipeSS outerPipeEntityNameList 
+                                   outerPipePropertyNameList outerPipePipeNumList pipeList selectedPipeEntityNameList selectedPipeList resultList) 
+  (setq outerPipeJsonList (ExtractBlockPropertyToJsonList "OuterPipe"))
   (setq pipeSS (GetAllBlockSSByDataTypeUtils "Pipe"))
   (setq pipeEntityNameList (GetEntityNameListBySSUtils pipeSS))
   (setq pipePropertyNameList (GetPropertyNameListStrategy "Pipe"))
   (setq outerPipeSS (GetAllBlockSSByDataTypeUtils "OuterPipe"))
   (setq outerPipeEntityNameList (GetEntityNameListBySSUtils outerPipeSS))
   (setq outerPipePropertyNameList (GetPropertyNameListStrategy "OuterPipe"))
-
-  
   (setq outerPipePipeNumList 
     (mapcar '(lambda (x) 
               (cdr (assoc "PIPENUM" x))
@@ -1760,10 +1758,9 @@
       (GetPropertyDictListByEntityNameList outerPipeEntityNameList outerPipePropertyNameList)
     ) 
   )
-  
   (setq pipeList 
     (vl-remove-if-not '(lambda (x) 
-                        (= (cdr (assoc "PIPENUM" x)) "PL23101-25-2J1")
+                        (= (type (member (cdr (assoc "PIPENUM" x)) outerPipePipeNumList)) 'list)
                       ) 
       (GetPropertyDictListByEntityNameList pipeEntityNameList pipePropertyNameList)
     )
@@ -1775,15 +1772,14 @@
       pipeList
     ) 
   )
-  (setq resultList 
+  (setq selectedPipeJsonList 
     (mapcar '(lambda (x) 
               (ExtractBlockPropertyToJsonStringByClassUtils x pipePropertyNameList (GetClassDictStrategy "Pipe"))
             ) 
       selectedPipeEntityNameList
     )
   )
-  (princ resultList)
-  resultList
+  (setq resultList (append outerPipeJsonList selectedPipeJsonList))
 )
 
 ; function for extract block property to text
