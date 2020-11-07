@@ -2855,6 +2855,7 @@
     (action_tile "btnAll" "(done_dialog 3)")
     (action_tile "btnPreviewModify" "(done_dialog 5)")
     (action_tile "btnModify" "(done_dialog 6)")
+    (action_tile "btnClickSelect" "(done_dialog 4)")
     ; optional setting for the popup_list tile
     (set_tile "filterPropertyName" "0")
     (set_tile "dataChildrenType" "0")
@@ -2952,6 +2953,27 @@
         (setq selectedDataType (nth (atoi filterPropertyName) propertyNameList))
         (setq selectedFilterName (GetNeedToNumberPropertyName selectedDataType))
         (setq ss (GetAllBlockSSByDataTypeUtils selectedDataType))
+        (if (= selectedDataType "Pipe") 
+          (setq blockDataList (GetAPropertyListAndEntityNameListByPropertyNamePattern ss "PIPENUM" patternValue))
+          (progn 
+            (if (or (= selectedDataType "InstrumentP") (= selectedDataType "InstrumentL") (= selectedDataType "InstrumentSIS")) 
+              (setq blockDataList (GetInstrumentFunctionTagByType dataChildrenType ss))
+              (setq blockDataList (GetAPropertyListAndEntityNameListByPropertyNamePattern ss "TAG" "*"))
+            )
+          )
+        )
+        (setq APropertyValueList (car blockDataList))
+        (setq entityNameList (car (cdr blockDataList)))
+        (setq matchedList APropertyValueList)
+        (setq sslen (length APropertyValueList))
+      )
+    )
+    ; click select button
+    (if (= 4 status)
+      (progn 
+        (setq selectedDataType (nth (atoi filterPropertyName) propertyNameList))
+        (setq selectedFilterName (GetNeedToNumberPropertyName selectedDataType))
+        (setq ss (GetBlockSSBySelectByDataTypeUtils selectedDataType))
         (if (= selectedDataType "Pipe") 
           (setq blockDataList (GetAPropertyListAndEntityNameListByPropertyNamePattern ss "PIPENUM" patternValue))
           (progn 
