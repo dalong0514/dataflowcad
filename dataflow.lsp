@@ -1653,17 +1653,21 @@
 
 (defun ExtractBlockPropertyToJsonList (dataType / ss entityNameList propertyNameList classDict resultList)
   (setq ss (GetAllBlockSSByDataTypeUtils dataType))
-  (setq entityNameList (GetEntityNameListBySSUtils ss))
-  (setq propertyNameList (GetPropertyNameListStrategy dataType))
-  (setq classDict (GetClassDictStrategy dataType))
-  (setq resultList 
-    (mapcar '(lambda (x) 
-              (ExtractBlockPropertyToJsonStringByClassUtils x propertyNameList classDict)
-            ) 
-      entityNameList
+  (if (/= ss nil) ; repair bug for scenes of no exiting entity in CAD
+    (progn 
+      (setq entityNameList (GetEntityNameListBySSUtils ss))
+      (setq propertyNameList (GetPropertyNameListStrategy dataType))
+      (setq classDict (GetClassDictStrategy dataType))
+      (setq resultList 
+        (mapcar '(lambda (x) 
+                  (ExtractBlockPropertyToJsonStringByClassUtils x propertyNameList classDict)
+                ) 
+          entityNameList
+        )
+      )
+      (setq resultList (ModifyPropertyNameForJsonListStrategy dataType resultList))
     )
   )
-  (setq resultList (ModifyPropertyNameForJsonListStrategy dataType resultList))
 )
 
 (defun ModifyPropertyNameForJsonListStrategy (dataType resultList /) 
