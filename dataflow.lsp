@@ -1844,6 +1844,44 @@
   (princ)
 )
 
+(defun GenerateBlockReference (insPt blockName /) 
+  (entmake (list (cons 0 "INSERT") (cons 100 "AcDbEntity") (cons 100 "AcDbBlockReference") 
+                 (cons 66 1) (cons 2 blockName) (cons 10 insPt) 
+           )
+  )
+  (princ)
+)
+
+(defun GenerateAttributeDefinition (insPt propertyName /)
+  (entmake 
+    (list (cons 0 "ATTRIB") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 "接图箭头") (cons 100 "AcDbText") 
+          (cons 10 insPt) (cons 40 3.0) (cons 1 "") (cons 50 0.0) (cons 41 0.7) (cons 51 0.0) (cons  7 "Standard") (cons 71 0) (cons 72 0) 
+          (cons 11 '(0.0 0.0 0.0)) (cons 210 '(0.0 0.0 1.0)) (cons 100 "AcDbAttribute") (cons 280 0) (cons 2 propertyName) (cons 70 0) 
+          (cons 73 0) (cons 74 0) (cons 280 0)
+    )
+  )
+)
+
+(defun GeneratejoinDrawArrow (/ insPt) 
+  (setq insPt (getpoint "\n选取辅助流程组件插入点："))
+  (GenerateBlockReference insPt "JoinDrawArrowTo")
+)
+
+(defun c:foo ()
+  (setq insPt (getpoint "\n选取辅助流程组件插入点："))
+  (entmake 
+    (list (cons 0 "INSERT") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 "接图箭头") (cons 100 "AcDbBlockReference") 
+          (cons 66 1) (cons 2 "JoinDrawArrowTo") (cons 10 insPt) (cons 41 1.0) (cons 42 1.0) (cons 43 1.0) (cons 50 0.0) (cons 70 0) (cons 71 0) 
+          (cons 44 0.0) (cons 45 0.0) (cons 210 '(0.0 0.0 1.0))
+    )
+  ) 
+  (GenerateAttributeDefinition (MoveInsertPosition insPt 1 4) "FROMTO")
+  (GenerateAttributeDefinition (MoveInsertPosition insPt 1 -1.5) "DRAWNUM")
+  (entmake 
+    (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
+  )
+)
+
 (defun GenerateOnePublicPipeElement (insPt textDataList blockName /)
   (entmake (list (cons 0 "INSERT") (cons 100 "AcDbEntity") (cons 100 "AcDbBlockReference") 
                  (cons 2 blockName) (cons 10 insPt) 
