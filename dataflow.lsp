@@ -512,6 +512,10 @@
   (princ ent)(princ)
 )
 
+(defun GetEntityDataUtils ()
+  (entget (car (entsel)))
+)
+
 ; Returns the value of the specified DXF group code for the supplied entity name
 (defun GetDXFValueUtils (entityName DXFcode / )
   (cdr (assoc DXFcode (entget entityName)))
