@@ -2054,7 +2054,8 @@
 ; logic for generate joinDrawArrow
 
 (defun c:foo ()
-  (GetRelatedEquipDataByTag "R23122")
+  (GetRelatedEquipDrawNum (GetRelatedEquipDataByTag "R23122"))
+  
 )
 
 (defun GenerateJoinDrawArrowTo (/ pipeSS pipeData insPt entityNameList)
@@ -2072,14 +2073,21 @@
 
 (defun GetRelatedEquipDataByTag (tag / equipData) 
   (setq equipData (GetAllPropertyValueListByEntityNameList (GetEntityNameListBySSUtils (GetAllEquipmentSSUtils))))
-  (vl-remove-if-not '(lambda (x) 
-                       (= (cdr (assoc "tag" x)) tag)
-                     ) 
-    equipData
+  (car 
+    (vl-remove-if-not '(lambda (x) 
+                        (= (cdr (assoc "tag" x)) tag)
+                      ) 
+      equipData
+    ) 
   )
 )
 
-(defun GetRelatedEquipDrawNum (equipData /) 
+(defun GetRelatedEquipDrawNum (equipData / result) 
+  (if (/= equipData nil) 
+    (setq result (cdr (assoc "drawnum" equipData)))
+    (setq result "无此设备位号")
+  )
+  result
 )
 
 ; logic for generate joinDrawArrow
