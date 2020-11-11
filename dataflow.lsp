@@ -2054,7 +2054,7 @@
 ; logic for generate joinDrawArrow
 
 (defun c:foo ()
-  (GenerateJoinDrawArrowTo)
+  (GetRelatedEquipDrawNum "V1101")
 )
 
 (defun GenerateJoinDrawArrowTo (/ pipeSS pipeData insPt entityNameList)
@@ -2068,6 +2068,11 @@
     (cdr (assoc "entityhandle" pipeData)) 
   )
   (princ)
+)
+
+(defun GetRelatedEquipDrawNum (tag / equipData) 
+  (setq equipData (GetAllPropertyValueListByEntityNameList (GetEntityNameListBySSUtils (GetAllEquipmentSSUtils))))
+  (car equipData)
 )
 
 ; logic for generate joinDrawArrow
@@ -2904,6 +2909,15 @@
     (setq entx (entget (entnext (cdr (assoc -1 entx)))))
   )
   (cons (cons "entityhandle" (cdr (assoc 5 entityData))) propertyValueList)
+)
+
+(defun GetAllPropertyValueListByEntityNameList (entityNameList / resultList)
+  (mapcar '(lambda (x) 
+             (setq resultList (append resultList (list (GetAllPropertyValueByEntityName x))))
+           ) 
+    entityNameList
+  )
+  resultList
 )
 
 ; function for modify data
