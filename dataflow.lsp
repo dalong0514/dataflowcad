@@ -1,5 +1,5 @@
 ;冯大龙编于 2020 年
-(princ "\n数据流一体化开发者：冯大龙、谢雨东、华雷、曾涵卫、靳淳、陈杰，版本号V-1.1")
+(princ "\n数据流一体化开发者：冯大龙、谢雨东、华雷、曾涵卫、靳淳、陈杰，版本号V-1.2")
 (vl-load-com)
 
 ;;;-------------------------------------------------------------------------;;;
@@ -7,7 +7,7 @@
 ; basic Function
 
 (defun c:printVersionInfo (/ versionInfo)
-  (setq versionInfo "最新版本号 V1.1，更新时间：2020-11-09")
+  (setq versionInfo "最新版本号 V1.2，更新时间：2020-11-23")
   (alert versionInfo)(princ)
 )
 
@@ -2106,7 +2106,7 @@
   
 )
 
-(defun UpdateJoinDrawArrowTo (/ entityNameList relatedPipeData) 
+(defun c:UpdateJoinDrawArrowTo (/ entityNameList relatedPipeData) 
   (setq entityNameList 
     (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "JoinDrawArrowTo"))
   )
@@ -2129,9 +2129,10 @@
     entityNameList
     relatedPipeData 
   )
+  (alert "更新完成")(princ)
 )
 
-(defun GenerateJoinDrawArrowTo (/ pipeSS pipeData insPt entityNameList)
+(defun c:GenerateJoinDrawArrowTo (/ pipeSS pipeData insPt entityNameList)
   (prompt "\n选择生成接图箭头的边界管道：")
   (setq pipeSS (GetPipeSSBySelectUtils))
   (setq pipeData (GetAllPropertyValueByEntityName (car (GetEntityNameListBySSUtils pipeSS))))
