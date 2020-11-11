@@ -2102,8 +2102,33 @@
 ; logic for generate joinDrawArrow
 
 (defun c:foo ()
-  (GenerateJoinDrawArrowTo)
+  (UpdateJoinDrawArrowTo)
   
+)
+
+(defun UpdateJoinDrawArrowTo (/ entityNameList relatedPipeData) 
+  (setq entityNameList 
+    (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "JoinDrawArrowTo"))
+  )
+  (mapcar '(lambda (x) 
+             (setq relatedPipeData (append relatedPipeData 
+                                     (list (GetAllPropertyValueByEntityName (handent (cdr (assoc "relatedid" x)))))
+                                   ))
+           ) 
+    (GetAllPropertyValueListByEntityNameList entityNameList)
+  )
+  (mapcar '(lambda (x y) 
+            (ModifyMultiplePropertyForOneBlockUtils x 
+              (list "FROMTO" "DRAWNUM") 
+              (list 
+                (cdr (assoc "to" y))
+                (GetRelatedEquipDrawNum (GetRelatedEquipDataByTag (cdr (assoc "to" y))))
+              )
+            )
+          ) 
+    entityNameList
+    relatedPipeData 
+  )
 )
 
 (defun GenerateJoinDrawArrowTo (/ pipeSS pipeData insPt entityNameList)
