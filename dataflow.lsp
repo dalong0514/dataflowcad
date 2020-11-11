@@ -1876,8 +1876,7 @@
   (princ)
 )
 
-(defun GeneratejoinDrawArrowTo (fromtoValue drawnumValue relatedIDValue/)
-  (setq insPt (getpoint "\n选取接图箭头的插入点："))
+(defun GenerateJoinDrawArrowToElement (insPt fromtoValue drawnumValue relatedIDValue/)
   (GenerateBlockReference insPt "JoinDrawArrowTo" "接图箭头")
   (GenerateBlockAttribute (MoveInsertPosition insPt 1 4) "FROMTO" fromtoValue "接图箭头")
   (GenerateBlockAttribute (MoveInsertPosition insPt 1 -1.5) "DRAWNUM" drawnumValue "接图箭头")
@@ -1886,10 +1885,6 @@
     (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
   )
   (princ)
-)
-
-(defun c:foo ()
-  (GeneratejoinDrawArrowTo "V1101" "04-03" "EA")
 )
 
 (defun GenerateOnePublicPipeElement (insPt textDataList blockName /)
@@ -2050,6 +2045,32 @@
 )
 
 ; Generate Entity Object in CAD
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+
+
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+; logic for generate joinDrawArrow
+
+(defun c:foo ()
+  (GenerateJoinDrawArrowTo)
+)
+
+(defun GenerateJoinDrawArrowTo (/ pipeSS pipeData insPt entityNameList)
+  (prompt "\n选择生成接图箭头的边界管道：")
+  (setq pipeSS (GetPipeSSBySelectUtils))
+  (setq pipeData (GetAllPropertyValueByEntityName (car (GetEntityNameListBySSUtils pipeSS))))
+  (setq insPt (getpoint "\n选取接图箭头的插入点："))
+  (GenerateJoinDrawArrowToElement insPt
+    (cdr (assoc "to" pipeData)) 
+    (cdr (assoc "drawnum" pipeData)) 
+    (cdr (assoc "entityhandle" pipeData)) 
+  )
+  (princ)
+)
+
+; logic for generate joinDrawArrow
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
 
