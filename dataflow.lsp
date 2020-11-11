@@ -2114,13 +2114,13 @@
 ; logic for generate joinDrawArrow
 
 (defun c:foo ()
-  (GenerateJoinDrawArrowFrom)
-  
+  (UpdateJoinDrawArrow "JoinDrawArrowTo")
+  (UpdateJoinDrawArrow "JoinDrawArrowFrom")
 )
 
-(defun c:UpdateJoinDrawArrowTo (/ entityNameList relatedPipeData) 
+(defun UpdateJoinDrawArrow (dataType / entityNameList relatedPipeData) 
   (setq entityNameList 
-    (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "JoinDrawArrowTo"))
+    (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils dataType))
   )
   (mapcar '(lambda (x) 
              (setq relatedPipeData (append relatedPipeData 
@@ -2131,8 +2131,9 @@
   )
   (mapcar '(lambda (x y) 
             (ModifyMultiplePropertyForOneBlockUtils x 
-              (list "FROMTO" "DRAWNUM") 
+              (list "PIPENUM" "FROMTO" "DRAWNUM") 
               (list 
+                (cdr (assoc "pipenum" y)) 
                 (cdr (assoc "to" y))
                 (GetRelatedEquipDrawNum (GetRelatedEquipDataByTag (cdr (assoc "to" y))))
               )
@@ -2142,6 +2143,42 @@
     relatedPipeData 
   )
   (alert "更新完成")(princ)
+)
+
+(defun UpdateJoinDrawArrowByDataType (dataType entityNameList relatedPipeData /) 
+  (cond 
+    ((= dataType "JoinDrawArrowFrom") 
+      (mapcar '(lambda (x y) 
+                (ModifyMultiplePropertyForOneBlockUtils x 
+                  (list "PIPENUM" "FROMTO" "DRAWNUM") 
+                  (list 
+                    (cdr (assoc "pipenum" y)) 
+                    (cdr (assoc "to" y))
+                    (ExtractDrawNum (cdr (assoc "drawnum" y)))
+                  )
+                )
+              ) 
+        entityNameList
+        relatedPipeData 
+      )
+    )
+  )
+  (cond 
+    ((= dataType "JoinDrawArrowTo") 
+      (mapcar '(lambda (x y) 
+                (ModifyMultiplePropertyForOneBlockUtils x 
+                  (list "FROMTO" "DRAWNUM") 
+                  (list 
+                    (cdr (assoc "to" y))
+                    (GetRelatedEquipDrawNum (cdr (assoc "drawnum" y)))
+                  )
+                )
+              ) 
+        entityNameList
+        relatedPipeData 
+      )
+    )
+  )
 )
 
 (defun c:GenerateJoinDrawArrow (/ pipeSS pipeData insPt entityNameList)
@@ -2157,7 +2194,7 @@
   (GenerateJoinDrawArrowFromElement (MoveInsertPosition insPt 0 -15)
     (cdr (assoc "pipenum" pipeData)) 
     (cdr (assoc "to" pipeData)) 
-    (GetRelatedEquipDrawNum (GetRelatedEquipDataByTag (cdr (assoc "to" pipeData))))
+    (ExtractDrawNum (cdr (assoc "drawnum" pipeData)))
     (cdr (assoc "entityhandle" pipeData)) 
   ) 
   (princ)
