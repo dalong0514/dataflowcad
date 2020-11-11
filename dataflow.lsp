@@ -1881,7 +1881,7 @@
   (GenerateBlockReference insPt "JoinDrawArrowTo" "接图箭头")
   (GenerateBlockAttribute (MoveInsertPosition insPt 1 4) "FROMTO" fromtoValue "接图箭头")
   (GenerateBlockAttribute (MoveInsertPosition insPt 1 -1.5) "DRAWNUM" drawnumValue "接图箭头")
-  (GenerateBlockHiddenAttribute (MoveInsertPosition insPt 1 -7) "RELTEDID" relatedIDValue/ "接图箭头")
+  (GenerateBlockHiddenAttribute (MoveInsertPosition insPt 1 -7) "RELATEDID" relatedIDValue/ "接图箭头")
   (entmake 
     (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
   )
