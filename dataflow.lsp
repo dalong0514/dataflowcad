@@ -113,6 +113,7 @@
 
 (defun ExtractDrawNumTest ()
   (AssertEqual 'ExtractDrawNum '("S20101GS-101-04-04") "04-04")
+  (AssertEqual 'ExtractDrawNum '("") "ÎÞÍ¼ºÅ")
 )
 
 (defun GetInsertPtTest () 
@@ -1966,8 +1967,11 @@
 )
 
 ; Unit Test Completed
-(defun ExtractDrawNum (str /)
-  (substr str (- (strlen str) 4))
+(defun ExtractDrawNum (str / result) 
+  (if (> (strlen str) 2) 
+    (setq result (substr str (- (strlen str) 4)))
+    (setq result "ÎÞÍ¼ºÅ")
+  )
 )
 
 (defun c:EquipTag (/ ss equipInfoList insPt insPtList)
