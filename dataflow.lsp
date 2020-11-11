@@ -2054,7 +2054,7 @@
 ; logic for generate joinDrawArrow
 
 (defun c:foo ()
-  (GetRelatedEquipDrawNum (GetRelatedEquipDataByTag "R23122"))
+  (GenerateJoinDrawArrowTo)
   
 )
 
@@ -2065,7 +2065,7 @@
   (setq insPt (getpoint "\n选取接图箭头的插入点："))
   (GenerateJoinDrawArrowToElement insPt
     (cdr (assoc "to" pipeData)) 
-    (ExtractDrawNum (cdr (assoc "drawnum" pipeData))) 
+    (GetRelatedEquipDrawNum (GetRelatedEquipDataByTag (cdr (assoc "to" pipeData))))
     (cdr (assoc "entityhandle" pipeData)) 
   )
   (princ)
@@ -2084,8 +2084,8 @@
 
 (defun GetRelatedEquipDrawNum (equipData / result) 
   (if (/= equipData nil) 
-    (setq result (cdr (assoc "drawnum" equipData)))
-    (setq result "无此设备位号")
+    (setq result (ExtractDrawNum (cdr (assoc "drawnum" equipData))))
+    (setq result "无此设备")
   )
   result
 )
