@@ -1865,11 +1865,23 @@
   (princ)
 )
 
+(defun GenerateBlockHiddenAttribute (insPt propertyName blockLayer /)
+  (entmake 
+    (list (cons 0 "ATTRIB") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 blockLayer) (cons 100 "AcDbText") 
+          (cons 10 insPt) (cons 40 3.0) (cons 1 "") (cons 50 0.0) (cons 41 0.7) (cons 51 0.0) (cons  7 "Standard") (cons 71 0) (cons 72 0) 
+          (cons 11 '(0.0 0.0 0.0)) (cons 210 '(0.0 0.0 1.0)) (cons 100 "AcDbAttribute") (cons 280 0) (cons 2 propertyName) (cons 70 1) 
+          (cons 73 0) (cons 74 0) (cons 280 0)
+    )
+  )
+  (princ)
+)
+
 (defun GeneratejoinDrawArrowTo ()
   (setq insPt (getpoint "\n选取接图箭头的插入点："))
   (GenerateBlockReference insPt "JoinDrawArrowTo" "接图箭头")
   (GenerateBlockAttribute (MoveInsertPosition insPt 1 4) "FROMTO" "接图箭头")
   (GenerateBlockAttribute (MoveInsertPosition insPt 1 -1.5) "DRAWNUM" "接图箭头")
+  (GenerateBlockHiddenAttribute (MoveInsertPosition insPt 1 -7) "RELTEDID" "接图箭头")
   (entmake 
     (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
   )
