@@ -2064,7 +2064,7 @@
   (setq insPt (getpoint "\n选取接图箭头的插入点："))
   (GenerateJoinDrawArrowToElement insPt
     (cdr (assoc "to" pipeData)) 
-    (cdr (assoc "drawnum" pipeData)) 
+    (ExtractDrawNum (cdr (assoc "drawnum" pipeData))) 
     (cdr (assoc "entityhandle" pipeData)) 
   )
   (princ)
