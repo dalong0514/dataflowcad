@@ -2141,7 +2141,7 @@
                   (list "PIPENUM" "FROMTO" "DRAWNUM") 
                   (list 
                     (cdr (assoc "pipenum" y)) 
-                    (cdr (assoc "from" y))
+                    (strcat "自" (cdr (assoc "from" y)))
                     (GetRelatedEquipDrawNum (GetRelatedEquipDataByTag (cdr (assoc "from" y))))
                   )
                 )
@@ -2157,7 +2157,7 @@
                 (ModifyMultiplePropertyForOneBlockUtils x 
                   (list "FROMTO" "DRAWNUM") 
                   (list 
-                    (cdr (assoc "to" y))
+                    (strcat "去" (cdr (assoc "to" y)))
                     (GetRelatedEquipDrawNum (GetRelatedEquipDataByTag (cdr (assoc "to" y))))
                   )
                 )
@@ -2175,13 +2175,13 @@
   (setq pipeData (GetAllPropertyValueByEntityName (car (GetEntityNameListBySSUtils pipeSS))))
   (setq insPt (getpoint "\n选取接图箭头的插入点："))
   (GenerateJoinDrawArrowToElement insPt
-    (cdr (assoc "to" pipeData)) 
+    (strcat "去" (cdr (assoc "to" pipeData))) 
     (GetRelatedEquipDrawNum (GetRelatedEquipDataByTag (cdr (assoc "to" pipeData))))
     (cdr (assoc "entityhandle" pipeData)) 
   )
   (GenerateJoinDrawArrowFromElement (MoveInsertPosition insPt 0 -15)
     (cdr (assoc "pipenum" pipeData)) 
-    (cdr (assoc "from" pipeData)) 
+    (strcat "自" (cdr (assoc "from" pipeData)))
     (GetRelatedEquipDrawNum (GetRelatedEquipDataByTag (cdr (assoc "from" pipeData))))
     (cdr (assoc "entityhandle" pipeData)) 
   ) 
