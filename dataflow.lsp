@@ -2179,7 +2179,7 @@
     (GetRelatedEquipDrawNum (GetRelatedEquipDataByTag (cdr (assoc "to" pipeData))))
     (cdr (assoc "entityhandle" pipeData)) 
   )
-  (GenerateJoinDrawArrowFromElement (MoveInsertPosition insPt 0 -15)
+  (GenerateJoinDrawArrowFromElement (MoveInsertPosition insPt 20 0)
     (cdr (assoc "pipenum" pipeData)) 
     (strcat "вт" (cdr (assoc "from" pipeData)))
     (GetRelatedEquipDrawNum (GetRelatedEquipDataByTag (cdr (assoc "from" pipeData))))
