@@ -1120,16 +1120,13 @@
   resultList
 )
 
-(defun ReplaceNumberOfListByNumberedListUtils (numberedList originList / i newList)
-  (setq newList '())
-  (setq i 0)
-  (repeat (length originList)
-    (setq newList (append newList (list 
-                                    (numberedStringSubstUtil (nth i numberedList) (nth i originList))
-                                  )))
-    (setq i (+ i 1))
+(defun ReplaceNumberOfListByNumberedListUtils (numberedList originList /) 
+  (mapcar '(lambda (x y)  
+             (numberedStringSubstUtil x y)
+           ) 
+    numberedList
+    originList
   )
-  newList
 )
 
 ; Unit Test Compeleted
