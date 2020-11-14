@@ -69,7 +69,7 @@ filterAndNumberBox : dialog {
           label = "数据大类";
           key = "filterPropertyName"; 
           edit_width = 40;
-          list = "管道\n集中仪表\n就地仪表\nSIS仪表\n反应釜\n输送泵\n储罐\n换热器\n离心机\n真空泵\n自定义设备";
+          list = "管道\n仪表\n反应釜\n输送泵\n储罐\n换热器\n离心机\n真空泵\n自定义设备";
           value = "";
         }
         : spacer { height = 1; } 

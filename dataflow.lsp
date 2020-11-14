@@ -3062,7 +3062,7 @@
 ; Number Pipeline, Instrument and Equipment
 
 (defun c:numberPipelineAndTag (/ dataTypeList)
-  (setq dataTypeList '("Pipe" "InstrumentP" "InstrumentL" "InstrumentSIS" "Reactor" "Pump" "Tank" "Heater" "Centrifuge" "Vacuum" "CustomEquip"))
+  (setq dataTypeList '("Pipe" "Instrument" "Reactor" "Pump" "Tank" "Heater" "Centrifuge" "Vacuum" "CustomEquip"))
   (numberPipelineAndTagByBox dataTypeList "filterAndNumberBox" "Pipe")
 )
 
@@ -3155,19 +3155,12 @@
         (setq ss (GetBlockSSBySelectByDataTypeUtils selectedDataType))
         ; sort by x cordinate
         (setq ss (SortSelectionSetByXYZ ss))
-        (if (= selectedDataType "Pipe") 
-          (setq blockDataList (GetAPropertyListAndEntityNameListByPropertyNamePattern ss "PIPENUM" patternValue))
-          (progn 
-            (if (or (= selectedDataType "InstrumentP") (= selectedDataType "InstrumentL") (= selectedDataType "InstrumentSIS")) 
-              (setq blockDataList (GetInstrumentFunctionTagByType dataChildrenType ss))
-              (setq blockDataList (GetAPropertyListAndEntityNameListByPropertyNamePattern ss "TAG" "*"))
-            )
-          )
-        )
-        (setq APropertyValueList (car blockDataList))
-        (setq entityNameList (car (cdr blockDataList)))
-        (setq matchedList APropertyValueList)
-        (setq sslen (length APropertyValueList))
+        (setq entityNameList (GetEntityNameListBySSUtils ss))
+        (setq blockDataList (GetAllPropertyValueListByEntityNameList entityNameList))
+        ;(setq APropertyValueList (car blockDataList))
+        ;(setq matchedList APropertyValueList)
+        ;(setq sslen (length APropertyValueList))
+        (princ blockDataList)(princ)
       )
     )
     ; all select button
@@ -3179,7 +3172,7 @@
         (if (= selectedDataType "Pipe") 
           (setq blockDataList (GetAPropertyListAndEntityNameListByPropertyNamePattern ss "PIPENUM" patternValue))
           (progn 
-            (if (or (= selectedDataType "InstrumentP") (= selectedDataType "InstrumentL") (= selectedDataType "InstrumentSIS")) 
+            (if (= selectedDataType "Instrument") 
               (setq blockDataList (GetInstrumentFunctionTagByType dataChildrenType ss))
               (setq blockDataList (GetAPropertyListAndEntityNameListByPropertyNamePattern ss "TAG" "*"))
             )
@@ -3200,7 +3193,7 @@
         (if (= selectedDataType "Pipe") 
           (setq blockDataList (GetAPropertyListAndEntityNameListByPropertyNamePattern ss "PIPENUM" patternValue))
           (progn 
-            (if (or (= selectedDataType "InstrumentP") (= selectedDataType "InstrumentL") (= selectedDataType "InstrumentSIS")) 
+            (if (= selectedDataType "Instrument") 
               (setq blockDataList (GetInstrumentFunctionTagByType dataChildrenType ss))
               (setq blockDataList (GetAPropertyListAndEntityNameListByPropertyNamePattern ss "TAG" "*"))
             )
