@@ -67,7 +67,7 @@ filterAndNumberBox : dialog {
         height = 10;
         : popup_list { 
           label = "数据大类";
-          key = "filterPropertyName"; 
+          key = "dataType"; 
           edit_width = 40;
           list = "管道\n仪表\n反应釜\n输送泵\n储罐\n换热器\n离心机\n真空泵\n自定义设备";
           value = "";

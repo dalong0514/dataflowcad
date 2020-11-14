@@ -3072,7 +3072,7 @@
   (numberPipelineAndTagByBox dataTypeList "filterAndNumberBox")
 )
 
-(defun numberPipelineAndTagByBox (propertyNameList tileName / dcl_id propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName selectedDataType ss sslen matchedList previewList confirmList blockDataList APropertyValueList entityNameList modifyMessageStatus dataChildrenType modifyMsgBtnStatus numberedList)
+(defun numberPipelineAndTagByBox (propertyNameList tileName / dcl_id propertyValue dataType patternValue replacedSubstring status selectedName selectedFilterName selectedDataType ss sslen matchedList previewList confirmList blockDataList APropertyValueList entityNameList modifyMessageStatus dataChildrenType modifyMsgBtnStatus numberedList)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -3085,16 +3085,16 @@
     (action_tile "btnPreviewModify" "(done_dialog 5)")
     (action_tile "btnModify" "(done_dialog 6)")
     (action_tile "btnClickSelect" "(done_dialog 4)")
-    (mode_tile "filterPropertyName" 2)
+    (mode_tile "dataType" 2)
     (mode_tile "dataChildrenType" 2)
-    (action_tile "filterPropertyName" "(setq filterPropertyName $value)")
+    (action_tile "dataType" "(setq dataType $value)")
     (action_tile "dataChildrenType" "(setq dataChildrenType $value)")
     (action_tile "patternValue" "(setq patternValue $value)")
     (action_tile "propertyValue" "(setq propertyValue $value)")
     (action_tile "replacedSubstring" "(setq replacedSubstring $value)")
     ; init the default data of text
-    (if (= nil filterPropertyName)
-      (setq filterPropertyName "0")
+    (if (= nil dataType)
+      (setq dataType "0")
     )
     (if (= nil dataChildrenType)
       (setq dataChildrenType "0")
@@ -3109,7 +3109,7 @@
       (setq replacedSubstring "")
     )
     ; setting for saving the existed value of a box
-    (set_tile "filterPropertyName" filterPropertyName)
+    (set_tile "dataType" dataType)
     (set_tile "dataChildrenType" dataChildrenType)
     (set_tile "patternValue" patternValue)
     (set_tile "replacedSubstring" replacedSubstring)
@@ -3122,7 +3122,7 @@
       (set_tile "modifyBtnMsg" "±àºÅ×´Ì¬£ºÒÑÍê³É")
     )
     (if (/= selectedDataType nil)
-      (set_tile "filterPropertyName" filterPropertyName)
+      (set_tile "dataType" dataType)
     )
     (if (= modifyMessageStatus 0)
       (set_tile "resultMsg" "ÇëÏÈÔ¤ÀÀÐÞ¸Ä")
@@ -3147,7 +3147,7 @@
     ; select button
     (if (= 2 (setq status (start_dialog)))
       (progn 
-        (setq selectedDataType (nth (atoi filterPropertyName) propertyNameList))
+        (setq selectedDataType (nth (atoi dataType) propertyNameList))
         (setq ss (GetBlockSSBySelectByDataTypeUtils selectedDataType))
         ; sort by x cordinate
         (setq ss (SortSelectionSetByXYZ ss))
@@ -3161,7 +3161,7 @@
     ; all select button
     (if (= 3 status)
       (progn 
-        (setq selectedDataType (nth (atoi filterPropertyName) propertyNameList))
+        (setq selectedDataType (nth (atoi dataType) propertyNameList))
         (setq selectedFilterName (GetNeedToNumberPropertyName selectedDataType))
         (setq ss (GetAllBlockSSByDataTypeUtils selectedDataType))
         ; sort by x cordinate
@@ -3175,7 +3175,7 @@
     ; click select button
     (if (= 4 status)
       (progn 
-        (setq selectedDataType (nth (atoi filterPropertyName) propertyNameList))
+        (setq selectedDataType (nth (atoi dataType) propertyNameList))
         (setq ss (GetBlockSSBySelectByDataTypeUtils selectedDataType))
         (setq entityNameList (GetNumberedEntityNameList ss selectedDataType dataChildrenType))
         (setq APropertyValueList (GetPropertyDictListByEntityNameList entityNameList (numberedPropertyNameListStrategy selectedDataType)))
