@@ -3156,11 +3156,10 @@
         ; sort by x cordinate
         (setq ss (SortSelectionSetByXYZ ss))
         (setq entityNameList (GetEntityNameListBySSUtils ss))
-        (setq blockDataList (GetAllPropertyValueListByEntityNameList entityNameList))
-        ;(setq APropertyValueList (car blockDataList))
-        ;(setq matchedList APropertyValueList)
-        ;(setq sslen (length APropertyValueList))
-        (princ blockDataList)(princ)
+        (setq APropertyValueList (GetPropertyDictListByEntityNameList entityNameList (numberedPropertyNameListStrategy selectedDataType)))
+        (setq matchedList (GetNumberedPropertyValueList selectedDataType APropertyValueList))
+        (setq sslen (length matchedList))
+        ;(princ matchedList)(princ)
       )
     )
     ; all select button
@@ -3235,6 +3234,27 @@
   )
   (unload_dialog dcl_id)
   (princ)
+)
+
+(defun numberedPropertyNameListStrategy (dataType /)
+  (cond 
+    ((= dataType "Pipe") '("PIPENUM"))
+    ((= dataType "Instrument") '("FUNCTION" "TAG"))
+    ((= dataType "Reactor") '("TAG"))
+    ((= dataType "Pump") '("TAG"))
+    ((= dataType "Tank") '("TAG"))
+    ((= dataType "Heater") '("TAG"))
+    ((= dataType "Centrifuge") '("TAG"))
+    ((= dataType "CustomEquip") '("TAG"))
+  )
+)
+
+(defun GetNumberedPropertyValueList (dataType dictList /) 
+  (mapcar '(lambda (x) 
+             (cdr (assoc (car (numberedPropertyNameListStrategy dataType)) x))
+           ) 
+    dictList
+  )
 )
 
 (defun GetInstrumentFunctionTagByType (dataChildrenType ss / blockDataList)
