@@ -35,6 +35,7 @@
   (GetIncreasedNumberListUtilsTest)
   (GetIncreasedNumberStringListUtilsTest)
   (RemoveLastNumCharForStringUtilsTest)
+  (ReplaceNumberOfListByNumberedListUtilsTest)
   (DL:PrintTestResults (DL:CountBooleans *testList*))
 )
 
@@ -1129,6 +1130,14 @@
     (setq i (+ i 1))
   )
   newList
+)
+
+; Unit Test Compeleted
+(defun ReplaceNumberOfListByNumberedListUtilsTest ()
+  (AssertEqual 'ReplaceNumberOfListByNumberedListUtils 
+    (list '("PL1201" "PL1202") '("YC-50-2J1" "YC-50-2J1"))
+    '("PL1201-50-2J1" "PL1202-50-2J1")
+  )
 )
 
 ; Unit Test Compeleted
