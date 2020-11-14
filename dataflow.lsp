@@ -3072,7 +3072,7 @@
   (numberPipelineAndTagByBox dataTypeList "filterAndNumberBox")
 )
 
-(defun numberPipelineAndTagByBox (propertyNameList tileName / dcl_id propertyValue dataType patternValue replacedSubstring status selectedName selectedFilterName selectedDataType ss sslen matchedList previewList confirmList blockDataList APropertyValueList entityNameList modifyMessageStatus dataChildrenType modifyMsgBtnStatus numberedList)
+(defun numberPipelineAndTagByBox (propertyNameList tileName / dcl_id dataType dataChildrenType patternValue propertyValue replacedSubstring status selectedName selectedFilterName selectedDataType ss sslen matchedList confirmList APropertyValueList entityNameList modifyMessageStatus modifyMsgBtnStatus numberedList)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -3121,11 +3121,11 @@
     (if (= modifyMsgBtnStatus 1)
       (set_tile "modifyBtnMsg" "编号状态：已完成")
     )
-    (if (/= selectedDataType nil)
-      (set_tile "dataType" dataType)
-    )
     (if (= modifyMessageStatus 0)
       (set_tile "resultMsg" "请先预览修改")
+    )
+    (if (/= selectedDataType nil)
+      (set_tile "dataType" dataType)
     )
     (if (/= matchedList nil)
       (progn
