@@ -3069,10 +3069,10 @@
 
 (defun c:numberPipelineAndTag (/ dataTypeList)
   (setq dataTypeList '("Pipe" "Instrument" "Reactor" "Pump" "Tank" "Heater" "Centrifuge" "Vacuum" "CustomEquip"))
-  (numberPipelineAndTagByBox dataTypeList "filterAndNumberBox" "Pipe")
+  (numberPipelineAndTagByBox dataTypeList "filterAndNumberBox")
 )
 
-(defun numberPipelineAndTagByBox (propertyNameList tileName dataType / dcl_id propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName selectedDataType ss sslen matchedList previewList confirmList blockDataList APropertyValueList entityNameList modifyMessageStatus dataChildrenType modifyMsgBtnStatus numberedList)
+(defun numberPipelineAndTagByBox (propertyNameList tileName / dcl_id propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName selectedDataType ss sslen matchedList previewList confirmList blockDataList APropertyValueList entityNameList modifyMessageStatus dataChildrenType modifyMsgBtnStatus numberedList)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
