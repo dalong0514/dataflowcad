@@ -3159,7 +3159,7 @@
         (setq APropertyValueList (GetPropertyDictListByEntityNameList entityNameList (numberedPropertyNameListStrategy selectedDataType)))
         (setq matchedList (GetNumberedPropertyValueList selectedDataType APropertyValueList))
         (setq sslen (length matchedList))
-        ;(princ matchedList)(princ)
+        ;(princ APropertyValueList)(princ)
       )
     )
     ; all select button
@@ -3189,19 +3189,10 @@
         (setq selectedDataType (nth (atoi filterPropertyName) propertyNameList))
         (setq selectedFilterName (GetNeedToNumberPropertyName selectedDataType))
         (setq ss (GetBlockSSBySelectByDataTypeUtils selectedDataType))
-        (if (= selectedDataType "Pipe") 
-          (setq blockDataList (GetAPropertyListAndEntityNameListByPropertyNamePattern ss "PIPENUM" patternValue))
-          (progn 
-            (if (= selectedDataType "Instrument") 
-              (setq blockDataList (GetInstrumentFunctionTagByType dataChildrenType ss))
-              (setq blockDataList (GetAPropertyListAndEntityNameListByPropertyNamePattern ss "TAG" "*"))
-            )
-          )
-        )
-        (setq APropertyValueList (car blockDataList))
-        (setq entityNameList (car (cdr blockDataList)))
-        (setq matchedList APropertyValueList)
-        (setq sslen (length APropertyValueList))
+        (setq entityNameList (GetEntityNameListBySSUtils ss))
+        (setq APropertyValueList (GetPropertyDictListByEntityNameList entityNameList (numberedPropertyNameListStrategy selectedDataType)))
+        (setq matchedList (GetNumberedPropertyValueList selectedDataType APropertyValueList))
+        (setq sslen (length matchedList))
       )
     )
     ; confirm button
@@ -3250,10 +3241,19 @@
 )
 
 (defun GetNumberedPropertyValueList (dataType dictList /) 
-  (mapcar '(lambda (x) 
-             (cdr (assoc (car (numberedPropertyNameListStrategy dataType)) x))
-           ) 
-    dictList
+  (if (= dataType "Instrument") 
+    (mapcar '(lambda (x) 
+              (strcat (cdr (assoc (car (numberedPropertyNameListStrategy dataType)) x)) 
+                (cdr (assoc (nth 1 (numberedPropertyNameListStrategy dataType)) x))
+              )
+            ) 
+      dictList
+    )
+    (mapcar '(lambda (x) 
+              (cdr (assoc (car (numberedPropertyNameListStrategy dataType)) x))
+            ) 
+      dictList
+    ) 
   )
 )
 
