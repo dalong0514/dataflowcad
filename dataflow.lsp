@@ -3085,13 +3085,6 @@
     (action_tile "btnPreviewModify" "(done_dialog 5)")
     (action_tile "btnModify" "(done_dialog 6)")
     (action_tile "btnClickSelect" "(done_dialog 4)")
-    ; optional setting for the popup_list tile
-    (set_tile "filterPropertyName" "0")
-    (set_tile "dataChildrenType" "0")
-    ; the default value of input box
-    (set_tile "patternValue" "")
-    (set_tile "replacedValue" "")
-    (set_tile "propertyValue" "")
     (mode_tile "filterPropertyName" 2)
     (mode_tile "dataChildrenType" 2)
     (action_tile "filterPropertyName" "(setq filterPropertyName $value)")
@@ -3115,9 +3108,12 @@
     (if (= nil replacedSubstring)
       (setq replacedSubstring "")
     )
+    ; setting for saving the existed value of a box
     (set_tile "filterPropertyName" filterPropertyName)
     (set_tile "dataChildrenType" dataChildrenType)
     (set_tile "patternValue" patternValue)
+    (set_tile "replacedSubstring" replacedSubstring)
+    (set_tile "propertyValue" propertyValue) 
     ; Display the number of selected pipes
     (if (/= sslen nil)
       (set_tile "msg" (strcat "匹配到的数量： " (rtos sslen)))
@@ -3128,16 +3124,11 @@
     (if (/= selectedDataType nil)
       (set_tile "filterPropertyName" filterPropertyName)
     )
-    
     (if (= modifyMessageStatus 0)
       (set_tile "resultMsg" "请先预览修改")
     )
-    
     (if (/= matchedList nil)
       (progn
-        ; setting for saving the existed value of a box
-        (set_tile "replacedSubstring" replacedSubstring)
-        (set_tile "propertyValue" propertyValue)
         (start_list "matchedResult" 3)
         (mapcar '(lambda (x) (add_list x)) 
                  matchedList)
