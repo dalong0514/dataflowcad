@@ -3066,7 +3066,7 @@
   (numberPipelineAndTagByBox dataTypeList "filterAndNumberBox" "Pipe")
 )
 
-(defun numberPipelineAndTagByBox (propertyNameList tileName dataType / dcl_id propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName selectedDataType ss sslen matchedList previewList confirmList blockDataList APropertyValueList entityNameList modifyMessageStatus dataChildrenType modifyMsgBtnStatus)
+(defun numberPipelineAndTagByBox (propertyNameList tileName dataType / dcl_id propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName selectedDataType ss sslen matchedList previewList confirmList blockDataList APropertyValueList entityNameList modifyMessageStatus dataChildrenType modifyMsgBtnStatus numberedList)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -3151,13 +3151,12 @@
     (if (= 2 (setq status (start_dialog)))
       (progn 
         (setq selectedDataType (nth (atoi filterPropertyName) propertyNameList))
-        (setq selectedFilterName (GetNeedToNumberPropertyName selectedDataType))
         (setq ss (GetBlockSSBySelectByDataTypeUtils selectedDataType))
         ; sort by x cordinate
         (setq ss (SortSelectionSetByXYZ ss))
         (setq entityNameList (GetEntityNameListBySSUtils ss))
         (setq APropertyValueList (GetPropertyDictListByEntityNameList entityNameList (numberedPropertyNameListStrategy selectedDataType)))
-        (setq matchedList (GetNumberedPropertyValueList selectedDataType APropertyValueList))
+        (setq matchedList (GetNumberedPropertyValueList APropertyValueList selectedDataType dataChildrenType))
         (setq sslen (length matchedList))
         ;(princ APropertyValueList)(princ)
       )
@@ -3187,21 +3186,18 @@
     (if (= 4 status)
       (progn 
         (setq selectedDataType (nth (atoi filterPropertyName) propertyNameList))
-        (setq selectedFilterName (GetNeedToNumberPropertyName selectedDataType))
         (setq ss (GetBlockSSBySelectByDataTypeUtils selectedDataType))
         (setq entityNameList (GetEntityNameListBySSUtils ss))
         (setq APropertyValueList (GetPropertyDictListByEntityNameList entityNameList (numberedPropertyNameListStrategy selectedDataType)))
-        (setq matchedList (GetNumberedPropertyValueList selectedDataType APropertyValueList))
+        (setq matchedList (GetNumberedPropertyValueList APropertyValueList selectedDataType dataChildrenType))
         (setq sslen (length matchedList))
       )
     )
     ; confirm button
     (if (= 5 status)
       (progn 
-        (setq selectedName (GetNeedToNumberPropertyName selectedDataType))
-        (setq previewList (GetOnePropertyValueListByEntityNameList entityNameList selectedName))
-        (setq numberedList (GetNumberedListByStartAndLengthUtils replacedSubstring propertyValue (length previewList)))
-        (setq confirmList (ReplaceNumberOfListByNumberedListUtils numberedList previewList))
+        (setq numberedList (GetNumberedListByStartAndLengthUtils replacedSubstring propertyValue (length matchedList)))
+        (setq confirmList (ReplaceNumberOfListByNumberedListUtils numberedList matchedList))
       )
     )
     ; modify button
@@ -3240,20 +3236,33 @@
   )
 )
 
-(defun GetNumberedPropertyValueList (dataType dictList /) 
+(defun GetNumberedPropertyValueList (dictList dataType dataChildrenType /) 
   (if (= dataType "Instrument") 
-    (mapcar '(lambda (x) 
-              (strcat (cdr (assoc (car (numberedPropertyNameListStrategy dataType)) x)) 
-                (cdr (assoc (nth 1 (numberedPropertyNameListStrategy dataType)) x))
-              )
-            ) 
-      dictList
+    (progn 
+      (setq dictList (GetInstrumentChildrenTypeList dictList dataType dataChildrenType))
+      (mapcar '(lambda (x) 
+                (strcat (cdr (assoc (car (numberedPropertyNameListStrategy dataType)) x)) 
+                  (cdr (assoc (nth 1 (numberedPropertyNameListStrategy dataType)) x))
+                )
+              ) 
+        dictList
+      ) 
     )
     (mapcar '(lambda (x) 
               (cdr (assoc (car (numberedPropertyNameListStrategy dataType)) x))
             ) 
       dictList
     ) 
+  )
+)
+
+(defun GetInstrumentChildrenTypeList (dictList dataType dataChildrenType /)
+  (vl-remove-if-not '(lambda (x) 
+                       (wcmatch (cdr (assoc (car (numberedPropertyNameListStrategy dataType)) x)) 
+                                (instrumentFunctionMatchStrategy dataChildrenType)
+                       ) 
+                     ) 
+    dictList
   )
 )
 
@@ -3292,6 +3301,22 @@
     (setq blockDataList (GetInstrumentPropertyDataListByFunctionPattern ss "F[CV]*"))
   )
   blockDataList
+)
+
+(defun instrumentFunctionMatchStrategy (dataChildrenType /)
+  (cond 
+    ((= dataChildrenType "0") "T[~CV]*")
+    ((= dataChildrenType "1") "P[~CV]*")
+    ((= dataChildrenType "2") "L[~CV]*")
+    ((= dataChildrenType "3") "F[~CV]*")
+    ((= dataChildrenType "4") "W[~CV]*")
+    ((= dataChildrenType "5") "A[~CV]*")
+    ((= dataChildrenType "6") "XV*")
+    ((= dataChildrenType "7") "T[CV]*")
+    ((= dataChildrenType "8") "P[CV]*")
+    ((= dataChildrenType "9") "L[CV]*")
+    ((= dataChildrenType "10") "F[CV]*")
+  )
 )
 
 ; Number Pipeline, Instrument and Equipment
