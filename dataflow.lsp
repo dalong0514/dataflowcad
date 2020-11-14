@@ -35,8 +35,16 @@
   (GetIncreasedNumberListUtilsTest)
   (GetIncreasedNumberStringListUtilsTest)
   (RemoveLastNumCharForStringUtilsTest)
-  (ReplaceNumberOfListByNumberedListUtilsTest)
+  (GetNumberedListByFirstDashUtilsTest)
   (DL:PrintTestResults (DL:CountBooleans *testList*))
+)
+
+; Unit Test Compeleted
+(defun GetNumberedListByFirstDashUtilsTest ()
+  (AssertEqual 'GetNumberedListByFirstDashUtils 
+    (list '("PL1201" "PL1202") '("YC-50-2J1" "YC-50-2J1"))
+    '("PL1201-50-2J1" "PL1202-50-2J1")
+  )
 )
 
 (defun RemoveLastNumCharForStringUtilsTest ()
@@ -1120,20 +1128,12 @@
   resultList
 )
 
-(defun ReplaceNumberOfListByNumberedListUtils (numberedList originList /) 
+(defun GetNumberedListByFirstDashUtils (numberedList originList /) 
   (mapcar '(lambda (x y)  
              (numberedStringSubstUtil x y)
            ) 
     numberedList
     originList
-  )
-)
-
-; Unit Test Compeleted
-(defun ReplaceNumberOfListByNumberedListUtilsTest ()
-  (AssertEqual 'ReplaceNumberOfListByNumberedListUtils 
-    (list '("PL1201" "PL1202") '("YC-50-2J1" "YC-50-2J1"))
-    '("PL1201-50-2J1" "PL1202-50-2J1")
   )
 )
 
@@ -3203,7 +3203,7 @@
     (if (= 5 status)
       (progn 
         (setq numberedList (GetNumberedListByStartAndLengthUtils replacedSubstring propertyValue (length matchedList)))
-        (setq confirmList (ReplaceNumberOfListByNumberedListUtils numberedList matchedList))
+        (setq confirmList (GetNumberedListByFirstDashUtils numberedList matchedList))
       )
     )
     ; modify button
