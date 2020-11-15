@@ -1315,6 +1315,124 @@
 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
+; Extract and Replace subString by Reguar Match
+
+;; RegExpSet
+;; Returns the current VBScript.RegExp instance after defining its properties.
+;;
+;; Arguments
+;; pattern    : Pattern to search.
+;; ignoreCase : If non nil, the search is done ignoring the case.
+;; global     : If non nil, search all occurences of the pattern;
+;;              if nil, only searches the first occurence.
+
+(defun RegExpSet (pattern ignoreCase global / regex)
+  (setq regex
+         (cond
+           ((vl-bb-ref '*regexp*))
+           ((vl-bb-set '*regexp* (vlax-create-object "VBScript.RegExp")))
+         )
+  )
+  (vlax-put regex 'Pattern pattern)
+  (if ignoreCase
+    (vlax-put regex 'IgnoreCase acTrue)
+    (vlax-put regex 'IgnoreCase acFalse)
+  )
+  (if global
+    (vlax-put regex 'Global acTrue)
+    (vlax-put regex 'Global acFalse)
+  )
+  regex
+)
+
+;; RegexpTest
+;; Return T if a match with the pattern is found in the string; otherwise, nil.
+;;
+;; Arguments
+;; string     : String in which the pattern is searched.
+;; pattern    : Pattern to search.
+;; ignoreCase : If non nil, the search is done ignoring the case.
+;;
+;; Examples :
+;; (RegexpTest "foo bar" "Ba" nil)  ; => nil
+;; (RegexpTest "foo bar" "Ba" T)    ; => T
+;; (RegExpTest "42C" "[0-9]+" nil)  ; => T
+
+(defun RegexpTest (string pattern ignoreCase)
+  (= (vlax-invoke (RegExpSet pattern ignoreCase nil) 'Test string) -1)
+)
+
+;; RegExpExecute
+;; Returns the list of matches with the pattern found in the string.
+;; Each match is returned as a sub-list containing:
+;; - the match value
+;; - the index of the first character (0 based)
+;; - a list of sub-groups.
+;;
+;; Arguments
+;; string     : String in which the pattern is searched.
+;; pattern    : Pattern to search.
+;; ignoreCase : If non nil, the search is done ignoring the case.
+;; global     : If non nil, search all occurences of the pattern;
+;;              if nil, only searches the first occurence.
+
+;;
+;; Examples
+;; (RegExpExecute "foo bar baz" "ba" nil nil)               ; => (("ba" 4 nil))
+;; (RegexpExecute "12B 4bis" "([0-9]+)([A-Z]+)" T T)        ; => (("12B" 0 ("12" "B")) ("4bis" 4 ("4" "bis")))
+;; (RegexpExecute "-12 25.4" "(-?\\d+(?:\\.\\d+)?)" nil T)  ; => (("-12" 0 ("-12")) ("25.4" 4 ("25.4")))
+
+(defun RegExpExecute (string pattern ignoreCase global / sublst lst)
+  (vlax-for match (vlax-invoke (RegExpSet pattern ignoreCase global) 'Execute string)
+    (setq sublst nil)
+    (vl-catch-all-apply
+      '(lambda ()
+	 (vlax-for submatch (vlax-get match 'SubMatches)
+	   (if submatch
+	     (setq sublst (cons submatch sublst))
+	   )
+	 )
+       )
+    )
+    (setq lst (cons (list (vlax-get match 'Value)
+			  (vlax-get match 'FirstIndex)
+			  (reverse sublst)
+		    )
+		    lst
+	      )
+    )
+  )
+  (reverse lst)
+)
+
+;; RegExpReplace
+;; Returns the string after replacing matches with the pattern
+;;
+;; Arguments
+;; string     : String in which the pattern is searched.
+;; pattern    : Pattern to search.
+;; newStr     : replacement string.
+;; pattern    : Pattern to search.
+;; ignoreCase : If non nil, the search is done ignoring the case.
+;; global     : If non nil, search all occurences of the pattern;
+;;              if nil, only searches the first occurence.
+;;
+;; Examples :
+;; (RegexpReplace "foo bar baz" "a" "oo" nil T)                  ; => "foo boor booz"
+;; (RegexpReplace "foo bar baz" "(\\w)\\w(\\w)" "$1_$2" nil T)   ; => "f_o b_r b_z"
+;; (RegexpReplace "$ 3.25" "\\$ (\\d+(\\.\\d+)?)" "$1 €" nil T)  ; => "3.25 €"
+
+(defun RegExpReplace (string pattern newStr ignoreCase global)
+  (vlax-invoke (RegExpSet pattern ignoreCase global) 'Replace string newStr)
+)
+
+; Extract and Replace subString by Reguar Match
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+
+
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
 ; Read and Write Utils
 
 (defun WriteDataListToFileUtils (fileDir dataList / filePtr)
