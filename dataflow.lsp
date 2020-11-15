@@ -3067,13 +3067,47 @@
 ;;;-------------------------------------------------------------------------;;;
 ; Number Pipeline, Instrument and Equipment
 
+(defun GetNumberDataTypeChName ()
+  '("管道" "仪表" "反应釜" "输送泵" "储罐" "换热器" "离心机" "真空泵" "自定义设备")
+)
+
+(defun GetNumberdataChildrenTypeChName ()
+  '("温度" "压力" "液位" "流量" "称重" "检测" "开关阀" "温度调节阀" "压力调节阀" "液位调节阀" "流量调节阀")
+)
+
+(defun numberedPropertyNameListStrategy (dataType /)
+  (cond 
+    ((= dataType "Pipe") '("PIPENUM"))
+    ((= dataType "Instrument") '("TAG" "FUNCTION"))
+    ((= dataType "Reactor") '("TAG"))
+    ((= dataType "Pump") '("TAG"))
+    ((= dataType "Tank") '("TAG"))
+    ((= dataType "Heater") '("TAG"))
+    ((= dataType "Centrifuge") '("TAG"))
+    ((= dataType "Vacuum") '("TAG"))
+    ((= dataType "CustomEquip") '("TAG"))
+  )
+)
+
+(defun instrumentFunctionMatchStrategy (dataChildrenType /)
+  (cond 
+    ((= dataChildrenType "0") "T[~CV]*")
+    ((= dataChildrenType "1") "P[~CV]*")
+    ((= dataChildrenType "2") "L[~CV]*")
+    ((= dataChildrenType "3") "F[~CV]*")
+    ((= dataChildrenType "4") "W[~CV]*")
+    ((= dataChildrenType "5") "A[~CV]*")
+    ((= dataChildrenType "6") "XV*")
+    ((= dataChildrenType "7") "T[CV]*")
+    ((= dataChildrenType "8") "P[CV]*")
+    ((= dataChildrenType "9") "L[CV]*")
+    ((= dataChildrenType "10") "F[CV]*")
+  )
+)
+
 (defun c:numberPipelineAndTag (/ dataTypeList)
   (setq dataTypeList '("Pipe" "Instrument" "Reactor" "Pump" "Tank" "Heater" "Centrifuge" "Vacuum" "CustomEquip"))
   (numberPipelineAndTagByBox dataTypeList "filterAndNumberBox")
-)
-
-(defun GetNumberDataTypeChName ()
-  '("管道" "仪表" "反应釜" "输送泵" "储罐" "换热器" "离心机" "真空泵" "自定义设备")
 )
 
 (defun numberPipelineAndTagByBox (propertyNameList tileName / dcl_id dataType dataChildrenType patternValue propertyValue replacedSubstring status selectedName selectedDataType ss sslen matchedList confirmList APropertyValueList entityNameList modifyMessageStatus modifyMsgBtnStatus numberedList)
@@ -3101,6 +3135,11 @@
       (start_list "dataType" 3)
       (mapcar '(lambda (x) (add_list x)) 
                 (GetNumberDataTypeChName)
+      )
+      (end_list)
+      (start_list "dataChildrenType" 3)
+      (mapcar '(lambda (x) (add_list x)) 
+                (GetNumberdataChildrenTypeChName)
       )
       (end_list)
     )  
@@ -3246,35 +3285,6 @@
     (setq resultList (GetEntityNameListBySSUtils ss))
   )
   resultList
-)
-
-(defun numberedPropertyNameListStrategy (dataType /)
-  (cond 
-    ((= dataType "Pipe") '("PIPENUM"))
-    ((= dataType "Instrument") '("TAG" "FUNCTION"))
-    ((= dataType "Reactor") '("TAG"))
-    ((= dataType "Pump") '("TAG"))
-    ((= dataType "Tank") '("TAG"))
-    ((= dataType "Heater") '("TAG"))
-    ((= dataType "Centrifuge") '("TAG"))
-    ((= dataType "CustomEquip") '("TAG"))
-  )
-)
-
-(defun instrumentFunctionMatchStrategy (dataChildrenType /)
-  (cond 
-    ((= dataChildrenType "0") "T[~CV]*")
-    ((= dataChildrenType "1") "P[~CV]*")
-    ((= dataChildrenType "2") "L[~CV]*")
-    ((= dataChildrenType "3") "F[~CV]*")
-    ((= dataChildrenType "4") "W[~CV]*")
-    ((= dataChildrenType "5") "A[~CV]*")
-    ((= dataChildrenType "6") "XV*")
-    ((= dataChildrenType "7") "T[CV]*")
-    ((= dataChildrenType "8") "P[CV]*")
-    ((= dataChildrenType "9") "L[CV]*")
-    ((= dataChildrenType "10") "F[CV]*")
-  )
 )
 
 (defun GetNumberedPropertyValueList (dictList dataType dataChildrenType /) 
