@@ -3110,7 +3110,7 @@
   (numberPipelineAndTagByBox dataTypeList "filterAndNumberBox")
 )
 
-(defun numberPipelineAndTagByBox (propertyNameList tileName / dcl_id dataType dataChildrenType patternValue propertyValue replacedSubstring status selectedName selectedDataType ss sslen matchedList confirmList APropertyValueList entityNameList modifyMessageStatus modifyMsgBtnStatus numberedList)
+(defun numberPipelineAndTagByBox (propertyNameList tileName / dcl_id dataType dataChildrenType patternValue propertyValue replacedSubstring status selectedPropertyName selectedDataType ss sslen matchedList confirmList APropertyValueList entityNameList modifyMessageStatus modifyMsgBtnStatus numberedList)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -3245,9 +3245,9 @@
         (if (= confirmList nil)
           (setq modifyMessageStatus 0)
           (progn 
-            (setq selectedName (car (numberedPropertyNameListStrategy selectedDataType)))
+            (setq selectedPropertyName (car (numberedPropertyNameListStrategy selectedDataType)))
             (mapcar '(lambda (x y) 
-                      (ModifyMultiplePropertyForOneBlockUtils x (list selectedName) (list y))
+                      (ModifyMultiplePropertyForOneBlockUtils x (list selectedPropertyName) (list y))
                     ) 
               entityNameList
               confirmList 
