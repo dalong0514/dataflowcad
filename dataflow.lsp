@@ -3259,6 +3259,10 @@
   '("温度" "压力" "液位" "流量" "称重" "检测" "开关阀" "温度调节阀" "压力调节阀" "液位调节阀" "流量调节阀")
 )
 
+(defun GetEnhancedNumberDataTypeList ()
+  '("Pipe" "Instrument" "Equipment")
+)
+
 (defun numberedPropertyNameListStrategy (dataType /)
   (cond 
     ((= dataType "Pipe") '("PIPENUM"))
@@ -3295,7 +3299,7 @@
 )
 
 (defun c:enhancedNumber (/ dataTypeList)
-  (setq dataTypeList (GetNumberDataTypeList))
+  (setq dataTypeList (GetEnhancedNumberDataTypeList))
   (enhancedNumberByBox dataTypeList "enhancedNumberBox")
 )
 
