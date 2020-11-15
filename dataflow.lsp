@@ -3072,7 +3072,11 @@
   (numberPipelineAndTagByBox dataTypeList "filterAndNumberBox")
 )
 
-(defun numberPipelineAndTagByBox (propertyNameList tileName / dcl_id dataType dataChildrenType patternValue propertyValue replacedSubstring status selectedName selectedFilterName selectedDataType ss sslen matchedList confirmList APropertyValueList entityNameList modifyMessageStatus modifyMsgBtnStatus numberedList)
+(defun GetNumberDataTypeChName ()
+  '("管道" "仪表" "反应釜" "输送泵" "储罐" "换热器" "离心机" "真空泵" "自定义设备")
+)
+
+(defun numberPipelineAndTagByBox (propertyNameList tileName / dcl_id dataType dataChildrenType patternValue propertyValue replacedSubstring status selectedName selectedDataType ss sslen matchedList confirmList APropertyValueList entityNameList modifyMessageStatus modifyMsgBtnStatus numberedList)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -3093,6 +3097,13 @@
     (action_tile "propertyValue" "(setq propertyValue $value)")
     (action_tile "replacedSubstring" "(setq replacedSubstring $value)")
     ; init the default data of text
+    (progn 
+      (start_list "dataType" 3)
+      (mapcar '(lambda (x) (add_list x)) 
+                (GetNumberDataTypeChName)
+      )
+      (end_list)
+    )  
     (if (= nil dataType)
       (setq dataType "0")
     )
@@ -3162,7 +3173,6 @@
     (if (= 3 status)
       (progn 
         (setq selectedDataType (nth (atoi dataType) propertyNameList))
-        (setq selectedFilterName (GetNeedToNumberPropertyName selectedDataType))
         (setq ss (GetAllBlockSSByDataTypeUtils selectedDataType))
         ; sort by x cordinate
         (setq ss (SortSelectionSetByXYZ ss))
