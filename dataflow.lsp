@@ -54,18 +54,18 @@
 ;;              if nil, only searches the first occurence.
 ;;
 ;; Examples :
-;; (RegexpReplace "foo bar baz" "a" "oo" nil T)                  ; => "foo boor booz"
-;; (RegexpReplace "foo bar baz" "(\\w)\\w(\\w)" "$1_$2" nil T)   ; => "f_o b_r b_z"
+;; (RegexpReplace "fsoo bar baz" "a" "oo" nil T)                  ; => "fsoo boor booz"
+;; (RegexpReplace "fsoo bar baz" "(\\w)\\w(\\w)" "$1_$2" nil T)   ; => "f_o b_r b_z"
 ;; (RegexpReplace "$ 3.25" "\\$ (\\d+(\\.\\d+)?)" "$1 €" nil T)  ; => "3.25 €"
 ; similar using with php regular replace - 2020-11-15
 (defun RegExpReplaceTest ()
   (AssertEqual 'RegExpReplace 
-    (list "foo dalong baz" "a" "oo" nil T)
-    "foo doolong booz"
+    (list "fsoo dalong baz" "a" "oo" nil T)
+    "fsoo doolong booz"
   )
   (AssertEqual 'RegExpReplace 
-    (list "foo bar baz" "(\\w)\\w(\\w)" "$1_$2" nil T)
-    "f_o b_r b_z"
+    (list "fos bar baz" "(\\w)\\w(\\w)" "$1_$2" nil T)
+    "f_s b_r b_z"
   )
   (AssertEqual 'RegExpReplace 
     (list "$ 3.25" "\\$ (\\d+(\\.\\d+)?)" "$1 €" nil T)
@@ -88,8 +88,8 @@
 ;;              if nil, only searches the first occurence.
 (defun RegExpExecuteUtilsTest ()
   (AssertEqual 'RegExpExecuteUtils 
-    (list "foo dalong baz" "da" nil nil)
-    (list '("da" 4 nil))
+    (list "fsoo dalong baz" "da" nil nil)
+    (list '("da" 5 nil))
   )
   (AssertEqual 'RegExpExecuteUtils 
     (list "12B 4bis" "([0-9]+)([A-Z]+)" T T)
@@ -1415,8 +1415,8 @@
 ;; ignoreCase : If non nil, the search is done ignoring the case.
 ;;
 ;; Examples :
-;; (RegexpTest "foo bar" "Ba" nil)  ; => nil
-;; (RegexpTest "foo bar" "Ba" T)    ; => T
+;; (RegexpTest "fsoo bar" "Ba" nil)  ; => nil
+;; (RegexpTest "fsoo bar" "Ba" T)    ; => T
 ;; (RegExpTest "42C" "[0-9]+" nil)  ; => T
 
 (defun RegexpTest (string pattern ignoreCase)
@@ -1439,7 +1439,7 @@
 
 ;;
 ;; Examples
-;; (RegExpExecute "foo bar baz" "ba" nil nil)               ; => (("ba" 4 nil))
+;; (RegExpExecute "fsoo bar baz" "ba" nil nil)               ; => (("ba" 4 nil))
 ;; (RegexpExecute "12B 4bis" "([0-9]+)([A-Z]+)" T T)        ; => (("12B" 0 ("12" "B")) ("4bis" 4 ("4" "bis")))
 ;; (RegexpExecute "-12 25.4" "(-?\\d+(?:\\.\\d+)?)" nil T)  ; => (("-12" 0 ("-12")) ("25.4" 4 ("25.4")))
 
@@ -1479,8 +1479,8 @@
 ;;              if nil, only searches the first occurence.
 ;;
 ;; Examples :
-;; (RegexpReplace "foo bar baz" "a" "oo" nil T)                  ; => "foo boor booz"
-;; (RegexpReplace "foo bar baz" "(\\w)\\w(\\w)" "$1_$2" nil T)   ; => "f_o b_r b_z"
+;; (RegexpReplace "fsoo bar baz" "a" "oo" nil T)                  ; => "fsoo boor booz"
+;; (RegexpReplace "fsoo bar baz" "(\\w)\\w(\\w)" "$1_$2" nil T)   ; => "f_o b_r b_z"
 ;; (RegexpReplace "$ 3.25" "\\$ (\\d+(\\.\\d+)?)" "$1 €" nil T)  ; => "3.25 €"
 
 ; similar using with php regular replace - 2020-11-15
