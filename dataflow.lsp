@@ -41,7 +41,66 @@
   (DL:PrintTestResults (DL:CountBooleans *testList*))
 )
 
-; Unit Test Compeleted
+;; RegExpReplaceUtils
+;; Returns the string after replacing matches with the pattern
+;;
+;; Arguments
+;; string     : String in which the pattern is searched.
+;; pattern    : Pattern to search.
+;; newStr     : replacement string.
+;; pattern    : Pattern to search.
+;; ignoreCase : If non nil, the search is done ignoring the case.
+;; global     : If non nil, search all occurences of the pattern;
+;;              if nil, only searches the first occurence.
+;;
+;; Examples :
+;; (RegexpReplace "foo bar baz" "a" "oo" nil T)                  ; => "foo boor booz"
+;; (RegexpReplace "foo bar baz" "(\\w)\\w(\\w)" "$1_$2" nil T)   ; => "f_o b_r b_z"
+;; (RegexpReplace "$ 3.25" "\\$ (\\d+(\\.\\d+)?)" "$1 €" nil T)  ; => "3.25 €"
+; similar using with php regular replace - 2020-11-15
+(defun RegExpReplaceTest ()
+  (AssertEqual 'RegExpReplace 
+    (list "foo dalong baz" "a" "oo" nil T)
+    "foo doolong booz"
+  )
+  (AssertEqual 'RegExpReplace 
+    (list "foo bar baz" "(\\w)\\w(\\w)" "$1_$2" nil T)
+    "f_o b_r b_z"
+  )
+  (AssertEqual 'RegExpReplace 
+    (list "$ 3.25" "\\$ (\\d+(\\.\\d+)?)" "$1 €" nil T)
+    "3.25 €"
+  )
+)
+
+;; RegExpExecuteUtils
+;; Returns the list of matches with the pattern found in the string.
+;; Each match is returned as a sub-list containing:
+;; - the match value
+;; - the index of the first character (0 based)
+;; - a list of sub-groups.
+;;
+;; Arguments
+;; string     : String in which the pattern is searched.
+;; pattern    : Pattern to search.
+;; ignoreCase : If non nil, the search is done ignoring the case.
+;; global     : If non nil, search all occurences of the pattern;
+;;              if nil, only searches the first occurence.
+(defun RegExpExecuteUtilsTest ()
+  (AssertEqual 'RegExpExecuteUtils 
+    (list "foo dalong baz" "da" nil nil)
+    (list '("da" 4 nil))
+  )
+  (AssertEqual 'RegExpExecuteUtils 
+    (list "12B 4bis" "([0-9]+)([A-Z]+)" T T)
+    (list (list "12B" 0 '("12" "B")) (list "4bis" 4 '("4" "bis")))
+  )
+  (AssertEqual 'RegExpExecuteUtils 
+    (list "-12 25.4" "(-?\\d+(?:\\.\\d+)?)" T T)
+    (list (list "-12" 0 '("-12")) (list "25.4" 4 '("25.4")))
+  )
+)
+
 (defun GetNumberedListByFirstDashUtilsTest ()
   (AssertEqual 'GetNumberedListByFirstDashUtils 
     (list '("PL1201" "PL1202") '("YC-50-2J1" "YC-50-2J1"))
@@ -1407,34 +1466,6 @@
   (reverse lst)
 )
 
-;; RegExpExecuteUtils
-;; Returns the list of matches with the pattern found in the string.
-;; Each match is returned as a sub-list containing:
-;; - the match value
-;; - the index of the first character (0 based)
-;; - a list of sub-groups.
-;;
-;; Arguments
-;; string     : String in which the pattern is searched.
-;; pattern    : Pattern to search.
-;; ignoreCase : If non nil, the search is done ignoring the case.
-;; global     : If non nil, search all occurences of the pattern;
-;;              if nil, only searches the first occurence.
-(defun RegExpExecuteUtilsTest ()
-  (AssertEqual 'RegExpExecuteUtils 
-    (list "foo dalong baz" "da" nil nil)
-    (list '("da" 4 nil))
-  )
-  (AssertEqual 'RegExpExecuteUtils 
-    (list "12B 4bis" "([0-9]+)([A-Z]+)" T T)
-    (list (list "12B" 0 '("12" "B")) (list "4bis" 4 '("4" "bis")))
-  )
-  (AssertEqual 'RegExpExecuteUtils 
-    (list "-12 25.4" "(-?\\d+(?:\\.\\d+)?)" T T)
-    (list (list "-12" 0 '("-12")) (list "25.4" 4 '("25.4")))
-  )
-)
-
 ;; RegExpReplaceUtils
 ;; Returns the string after replacing matches with the pattern
 ;;
@@ -1452,15 +1483,9 @@
 ;; (RegexpReplace "foo bar baz" "(\\w)\\w(\\w)" "$1_$2" nil T)   ; => "f_o b_r b_z"
 ;; (RegexpReplace "$ 3.25" "\\$ (\\d+(\\.\\d+)?)" "$1 €" nil T)  ; => "3.25 €"
 
+; similar using with php regular replace - 2020-11-15
 (defun RegExpReplace (string pattern newStr ignoreCase global)
   (vlax-invoke (RegExpSet pattern ignoreCase global) 'Replace string newStr)
-)
-
-(defun RegExpReplaceTest ()
-  (AssertEqual 'RegExpReplace 
-    (list "foo dalong baz" "a" "oo" nil T)
-    '("qw")
-  )
 )
 
 ; Extract and Replace subString by Reguar Match
