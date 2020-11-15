@@ -36,6 +36,8 @@
   (GetIncreasedNumberStringListUtilsTest)
   (RemoveLastNumCharForStringUtilsTest)
   (GetNumberedListByFirstDashUtilsTest)
+  (RegExpExecuteUtilsTest)
+  (RegExpReplaceTest)
   (DL:PrintTestResults (DL:CountBooleans *testList*))
 )
 
@@ -1382,7 +1384,7 @@
 ;; (RegexpExecute "12B 4bis" "([0-9]+)([A-Z]+)" T T)        ; => (("12B" 0 ("12" "B")) ("4bis" 4 ("4" "bis")))
 ;; (RegexpExecute "-12 25.4" "(-?\\d+(?:\\.\\d+)?)" nil T)  ; => (("-12" 0 ("-12")) ("25.4" 4 ("25.4")))
 
-(defun RegExpExecute (string pattern ignoreCase global / sublst lst)
+(defun RegExpExecuteUtils (string pattern ignoreCase global / sublst lst)
   (vlax-for match (vlax-invoke (RegExpSet pattern ignoreCase global) 'Execute string)
     (setq sublst nil)
     (vl-catch-all-apply
@@ -1405,7 +1407,35 @@
   (reverse lst)
 )
 
-;; RegExpReplace
+;; RegExpExecuteUtils
+;; Returns the list of matches with the pattern found in the string.
+;; Each match is returned as a sub-list containing:
+;; - the match value
+;; - the index of the first character (0 based)
+;; - a list of sub-groups.
+;;
+;; Arguments
+;; string     : String in which the pattern is searched.
+;; pattern    : Pattern to search.
+;; ignoreCase : If non nil, the search is done ignoring the case.
+;; global     : If non nil, search all occurences of the pattern;
+;;              if nil, only searches the first occurence.
+(defun RegExpExecuteUtilsTest ()
+  (AssertEqual 'RegExpExecuteUtils 
+    (list "foo dalong baz" "da" nil nil)
+    (list '("da" 4 nil))
+  )
+  (AssertEqual 'RegExpExecuteUtils 
+    (list "12B 4bis" "([0-9]+)([A-Z]+)" T T)
+    (list (list "12B" 0 '("12" "B")) (list "4bis" 4 '("4" "bis")))
+  )
+  (AssertEqual 'RegExpExecuteUtils 
+    (list "-12 25.4" "(-?\\d+(?:\\.\\d+)?)" T T)
+    (list (list "-12" 0 '("-12")) (list "25.4" 4 '("25.4")))
+  )
+)
+
+;; RegExpReplaceUtils
 ;; Returns the string after replacing matches with the pattern
 ;;
 ;; Arguments
@@ -1424,6 +1454,13 @@
 
 (defun RegExpReplace (string pattern newStr ignoreCase global)
   (vlax-invoke (RegExpSet pattern ignoreCase global) 'Replace string newStr)
+)
+
+(defun RegExpReplaceTest ()
+  (AssertEqual 'RegExpReplace 
+    (list "foo dalong baz" "a" "oo" nil T)
+    '("qw")
+  )
 )
 
 ; Extract and Replace subString by Reguar Match
