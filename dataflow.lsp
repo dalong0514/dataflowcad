@@ -3672,6 +3672,10 @@
   (NumberDrawNumByBox "numberDrawNumBox")
 )
 
+(defun c:brushDataDrawNum () 
+  (BrushDrawNum)
+)
+
 (defun NumberDrawNumByBox (tileName / dcl_id propertyValue replacedSubstring status ss sslen previewList 
                            confirmList entityNameList modifyMsgBtnStatus numMsgStatus)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
