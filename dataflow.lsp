@@ -3247,11 +3247,15 @@
 ;;;-------------------------------------------------------------------------;;;
 ; Number Pipeline, Instrument and Equipment
 
-(defun GetNumberDataTypeChName ()
+(defun GetNumberDataTypeChNameList ()
   '("管道" "仪表" "反应釜" "输送泵" "储罐" "换热器" "离心机" "真空泵" "自定义设备")
 )
 
-(defun GetNumberdataChildrenTypeChName ()
+(defun GetNumberDataTypeList ()
+  '("Pipe" "Instrument" "Reactor" "Pump" "Tank" "Heater" "Centrifuge" "Vacuum" "CustomEquip")
+)
+
+(defun GetNumberdataChildrenTypeChNameList ()
   '("温度" "压力" "液位" "流量" "称重" "检测" "开关阀" "温度调节阀" "压力调节阀" "液位调节阀" "流量调节阀")
 )
 
@@ -3286,7 +3290,7 @@
 )
 
 (defun c:numberPipelineAndTag (/ dataTypeList)
-  (setq dataTypeList '("Pipe" "Instrument" "Reactor" "Pump" "Tank" "Heater" "Centrifuge" "Vacuum" "CustomEquip"))
+  (setq dataTypeList (GetNumberDataTypeList))
   (numberPipelineAndTagByBox dataTypeList "filterAndNumberBox")
 )
 
@@ -3314,12 +3318,12 @@
     (progn 
       (start_list "dataType" 3)
       (mapcar '(lambda (x) (add_list x)) 
-                (GetNumberDataTypeChName)
+                (GetNumberDataTypeChNameList)
       )
       (end_list)
       (start_list "dataChildrenType" 3)
       (mapcar '(lambda (x) (add_list x)) 
-                (GetNumberdataChildrenTypeChName)
+                (GetNumberdataChildrenTypeChNameList)
       )
       (end_list)
     )  
