@@ -196,6 +196,72 @@ filterAndNumberBox : dialog {
   }
 }
 
+enhancedNumberBox : dialog {
+  label = "设计流数据一体化V1.1———加强版批量编号"; 
+  key = "enhancedNumberBox";
+  : boxed_radio_column {
+    key = "numberBox";
+    width = 80;
+    : column {
+      height = 10;
+      : popup_list { 
+        label = "数据大类";
+        key = "dataType"; 
+        edit_width = 40;
+        list = "";
+        value = "";
+      }
+      : spacer { height = 1; } 
+      : popup_list { 
+        label = "编号模式";
+        key = "numberMode"; 
+        edit_width = 40;
+        list = "";
+        value = "";
+      }
+      : spacer { height = 1; } 
+    }
+    : spacer { height = 1; } 
+    : list_box { 
+      height = 20;
+      label = "匹配到的结果";
+      key = "matchedResult"; 
+      list = "";
+      value = "";
+    }
+    : spacer { height = 1; } 
+    : text {
+      key = "msg";
+      label = "匹配到的数量：";
+    }
+    : spacer { height = 3; } 
+    : row { 
+      fixed_width = true; 
+      alignment = centered; 
+      : button { 
+        key = "btnSelect"; 
+        label = "批量选择"; 
+        is_default = "true"; 
+      } 
+      : spacer { width = 2; } 
+      : button { 
+        key = "btnPreviewNumber"; 
+        label = "预览编号"; 
+        is_default = "true"; 
+      } 
+      : spacer { width = 2; } 
+      : button { 
+        key = "btnComfirmNumber"; 
+        label = "确认修改"; 
+        is_default = "true"; 
+      } 
+      : spacer { width = 2; }
+      cancel_button; 
+    }
+    : spacer { height = 3; } 
+  }
+}
+
 filterAndModifyEquipmentPropertyBox : dialog {
   label = "设计流数据一体化V1.1———批量修改数据"; 
   key = "filterModifyProperty";
