@@ -3294,7 +3294,7 @@
   (numberPipelineAndTagByBox dataTypeList "filterAndNumberBox")
 )
 
-(defun numberPipelineAndTagByBox (propertyNameList tileName / dcl_id dataType dataChildrenType patternValue propertyValue replacedSubstring status selectedPropertyName selectedDataType ss sslen matchedList confirmList APropertyValueList entityNameList modifyMessageStatus modifyMsgBtnStatus numberedList)
+(defun numberPipelineAndTagByBox (propertyNameList tileName / dcl_id dataType dataChildrenType patternValue propertyValue replacedSubstring status selectedPropertyName selectedDataType ss sslen matchedList confirmList propertyValueDictList entityNameList modifyMessageStatus modifyMsgBtnStatus numberedList)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -3386,10 +3386,9 @@
         ; sort by x cordinate
         (setq ss (SortSelectionSetByXYZ ss))
         (setq entityNameList (GetNumberedEntityNameList ss selectedDataType dataChildrenType))
-        (setq APropertyValueList (GetPropertyDictListByEntityNameList entityNameList (numberedPropertyNameListStrategy selectedDataType)))
-        (setq matchedList (GetNumberedPropertyValueList APropertyValueList selectedDataType dataChildrenType))
+        (setq propertyValueDictList (GetPropertyDictListByEntityNameList entityNameList (numberedPropertyNameListStrategy selectedDataType)))
+        (setq matchedList (GetNumberedPropertyValueList propertyValueDictList selectedDataType dataChildrenType))
         (setq sslen (length matchedList))
-        ;(princ APropertyValueList)(princ)
       )
     )
     ; all select button
@@ -3400,8 +3399,8 @@
         ; sort by x cordinate
         (setq ss (SortSelectionSetByXYZ ss))
         (setq entityNameList (GetNumberedEntityNameList ss selectedDataType dataChildrenType))
-        (setq APropertyValueList (GetPropertyDictListByEntityNameList entityNameList (numberedPropertyNameListStrategy selectedDataType)))
-        (setq matchedList (GetNumberedPropertyValueList APropertyValueList selectedDataType dataChildrenType))
+        (setq propertyValueDictList (GetPropertyDictListByEntityNameList entityNameList (numberedPropertyNameListStrategy selectedDataType)))
+        (setq matchedList (GetNumberedPropertyValueList propertyValueDictList selectedDataType dataChildrenType))
         (setq sslen (length matchedList))
       )
     )
@@ -3411,8 +3410,8 @@
         (setq selectedDataType (nth (atoi dataType) propertyNameList))
         (setq ss (GetBlockSSBySelectByDataTypeUtils selectedDataType))
         (setq entityNameList (GetNumberedEntityNameList ss selectedDataType dataChildrenType))
-        (setq APropertyValueList (GetPropertyDictListByEntityNameList entityNameList (numberedPropertyNameListStrategy selectedDataType)))
-        (setq matchedList (GetNumberedPropertyValueList APropertyValueList selectedDataType dataChildrenType))
+        (setq propertyValueDictList (GetPropertyDictListByEntityNameList entityNameList (numberedPropertyNameListStrategy selectedDataType)))
+        (setq matchedList (GetNumberedPropertyValueList propertyValueDictList selectedDataType dataChildrenType))
         (setq sslen (length matchedList))
       )
     )
