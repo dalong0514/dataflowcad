@@ -3567,7 +3567,7 @@
       (progn 
         (setq codeNameList (GetCodeNameListStrategy propertyValueDictList selectedDataType))
         (setq numberedDataList (GetNumberedDataListStrategy propertyValueDictList selectedDataType codeNameList numberMode))
-        (setq matchedList (GetNumberedList numberedDataList selectedDataType))
+        (setq matchedList (GetNumberedListStrategy numberedDataList selectedDataType))
         (setq confirmList matchedList)
         ;(princ numberedDataList)(princ)
       )
@@ -3782,7 +3782,7 @@
   ) 
 )
 
-(defun GetNumberedList (numberedDataList dataType / resultList) 
+(defun GetNumberedListStrategy (numberedDataList dataType / resultList) 
   (foreach item numberedDataList 
     (mapcar '(lambda (x) 
               (setq resultList 
