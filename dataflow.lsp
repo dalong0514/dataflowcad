@@ -3795,6 +3795,38 @@
   resultList
 )
 
+(defun GetPipeAndEquipNumberedList (numberedDataList dataType / resultList) 
+  (foreach item numberedDataList 
+    (mapcar '(lambda (x) 
+              (setq resultList 
+                (append resultList (list (GetNumberedStringforEnhancedNumber x dataType)))
+              )
+            ) 
+      item
+    ) 
+  )
+  resultList
+)
+
+(defun GetInstrumentNumberedList (numberedDataList dataType / resultList) 
+  (foreach item numberedDataList 
+    (mapcar '(lambda (x) 
+              (setq resultList 
+                (append resultList 
+                  (list (strcat 
+                        (cdr (assoc "FUNCTION" x)) 
+                        (GetNumberedStringforEnhancedNumber x dataType)
+                        )
+                  )
+                )
+              )
+            ) 
+      item
+    ) 
+  )
+  resultList
+)
+
 (defun GetUniqueDrawNumList (propertyValueDictList / resultList) 
   (setq resultList 
     (mapcar '(lambda (x) 
