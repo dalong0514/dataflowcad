@@ -3548,7 +3548,7 @@
     ; confirm button
     (if (= 3 status)
       (progn 
-        (princ (GetValueListByOneKeyUtils propertyValueDictList "PIPENUM"))(princ)
+        (princ (GetPipeCodeNameList (GetValueListByOneKeyUtils propertyValueDictList "PIPENUM")))(princ)
         ;(setq confirmList (GetNumberedListByFirstDashUtils numberedList matchedList))
       )
     )
@@ -3573,6 +3573,17 @@
   )
   (unload_dialog dcl_id)
   (princ)
+)
+
+(defun GetPipeCodeNameList (pipeNumList / resultList) 
+  (setq resultList 
+    (mapcar '(lambda (x) 
+              (RegExpReplace x "([A-Za-z]+)\\d*-.*" "$1" nil nil)
+            ) 
+      pipeNumList
+    )
+  )
+  (vl-sort resultList '<)
 )
 
 (defun GetNumberedEntityNameList (ss dataType dataChildrenType / dictList entityNameList resultList)
