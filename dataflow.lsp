@@ -3567,7 +3567,7 @@
       (progn 
         (setq codeNameList (GetCodeNameListStrategy propertyValueDictList selectedDataType))
         (setq numberedDataList (GetNumberedDataList propertyValueDictList selectedDataType codeNameList numberMode))
-        (setq matchedList (GetNumberedList numberedDataList selectedDataType numberMode))
+        (setq matchedList (GetNumberedList numberedDataList selectedDataType))
         (setq confirmList matchedList)
         ;(princ numberedDataList)(princ)
       )
@@ -3577,7 +3577,7 @@
       (progn 
         (if (= matchedList nil)
           (setq modifyMessageStatus 0)
-          (UpdateNumberedData numberedDataList selectedDataType numberMode)
+          (UpdateNumberedData numberedDataList selectedDataType)
         )
         (setq modifyMsgBtnStatus 1)
       )
@@ -3594,7 +3594,7 @@
   )
 )
 
-(defun UpdateNumberedData (numberedDataList dataType numberMode / selectedPropertyName numberedString) 
+(defun UpdateNumberedData (numberedDataList dataType / selectedPropertyName numberedString) 
   (setq selectedPropertyName (car (numberedPropertyNameListStrategy dataType)))
   (foreach item numberedDataList 
     (mapcar '(lambda (x) 
@@ -3643,7 +3643,7 @@
   ) 
 )
 
-(defun GetNumberedList (numberedDataList dataType numberMode / resultList) 
+(defun GetNumberedList (numberedDataList dataType / resultList) 
   (foreach item numberedDataList 
     (mapcar '(lambda (x) 
               (setq resultList 
