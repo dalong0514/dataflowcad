@@ -1385,6 +1385,15 @@
   )
 )
 
+;; Returns a list with duplicate elements removed.
+(defun DeduplicateForListUtils ( l )
+  (if l 
+    (cons (car l) 
+          (DeduplicateForListUtils (vl-remove (car l) (cdr l)))
+    )
+  )
+)
+
 ; Utils Function 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
