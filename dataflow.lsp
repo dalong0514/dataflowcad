@@ -3594,7 +3594,7 @@
   (princ)
 )
 
-(defun GetNumberedList (propertyValueDictList codeNameList / childrenData childrenDataList resultList) 
+(defun GetNumberedList (propertyValueDictList codeNameList / childrenData childrenDataList numberedList resultList) 
   (foreach item codeNameList 
     (setq childrenData 
       (vl-remove-if-not '(lambda (x) 
@@ -3604,9 +3604,10 @@
       ) 
     )
     (setq childrenDataList (append childrenDataList (list childrenData))) 
+    (setq numberedList (append numberedList (list (GetNumberedListByStartAndLengthUtils item "1" (length childrenData))))) 
   )
   ;(setq resultList (append resultList (list (GetNumberedListByStartAndLengthUtils item "1" (length childrenDataList))))) 
-  childrenDataList
+  numberedList
 )
 
 (defun GetCodeNameListStrategy (propertyValueDictList dataType / propertyName dataList resultList) 
