@@ -1369,6 +1369,14 @@
   )
 )
 
+(defun GetValueListByOneKeyUtils (dataList key /)
+  (mapcar '(lambda (x) 
+             (cdr (assoc key x))
+           ) 
+    dataList
+  )
+)
+
 ; Utils Function 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
@@ -3456,7 +3464,9 @@
   (princ)
 )
 
-(defun enhancedNumberByBox (propertyNameList tileName / dcl_id dataType numberMode status selectedPropertyName selectedDataType ss sslen matchedList propertyValueDictList entityNameList modifyMessageStatus modifyMsgBtnStatus numberedList)
+(defun enhancedNumberByBox (propertyNameList tileName / dcl_id dataType numberMode status selectedPropertyName 
+                            selectedDataType ss sslen matchedList confirmList propertyValueDictList entityNameList 
+                            modifyMessageStatus modifyMsgBtnStatus numberedList)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -3530,8 +3540,8 @@
     ; confirm button
     (if (= 3 status)
       (progn 
-        (setq numberedList (GetNumberedListByStartAndLengthUtils replacedSubstring propertyValue (length matchedList)))
-        (setq confirmList (GetNumberedListByFirstDashUtils numberedList matchedList))
+        (princ (GetValueListByOneKeyUtils propertyValueDictList "PIPENUM"))(princ)
+        ;(setq confirmList (GetNumberedListByFirstDashUtils numberedList matchedList))
       )
     )
     ; modify button
