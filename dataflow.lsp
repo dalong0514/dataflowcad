@@ -3274,6 +3274,7 @@
     ((= dataType "Centrifuge") '("TAG"))
     ((= dataType "Vacuum") '("TAG"))
     ((= dataType "CustomEquip") '("TAG"))
+    ((= dataType "Equipment") '("TAG"))
   )
 )
 
@@ -3290,6 +3291,7 @@
     ((= dataChildrenType "8") "P[CV]*")
     ((= dataChildrenType "9") "L[CV]*")
     ((= dataChildrenType "10") "F[CV]*")
+    ((= dataChildrenType "Instrument") "*")
   )
 )
 
@@ -3518,11 +3520,10 @@
       (progn 
         (setq selectedDataType (nth (atoi dataType) propertyNameList))
         (setq ss (GetBlockSSBySelectByDataTypeUtils selectedDataType))
-        ; sort by x cordinate
-        (setq ss (SortSelectionSetByXYZ ss))
-        (setq entityNameList (GetNumberedEntityNameList ss selectedDataType dataChildrenType))
+        (setq ss (SortSelectionSetByXYZ ss))  ; sort by x cordinate
+        (setq entityNameList (GetEntityNameListBySSUtils ss))
         (setq propertyValueDictList (GetPropertyDictListByEntityNameList entityNameList (numberedPropertyNameListStrategy selectedDataType)))
-        (setq matchedList (GetNumberedPropertyValueList propertyValueDictList selectedDataType dataChildrenType))
+        (setq matchedList (GetNumberedPropertyValueList propertyValueDictList selectedDataType "Instrument"))
         (setq sslen (length matchedList))
       )
     )
