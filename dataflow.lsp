@@ -3708,6 +3708,17 @@
   resultList
 )
 
+(defun GetUniqueDrawNumList (propertyValueDictList / resultList) 
+  (setq resultList 
+    (mapcar '(lambda (x) 
+              (ExtractDrawNum x)
+            ) 
+      (GetValueListByOneKeyUtils propertyValueDictList "DRAWNUM")
+    )
+  )
+  (DeduplicateForListUtils resultList)
+)
+
 (defun GetCodeNameListStrategy (propertyValueDictList dataType / propertyName dataList resultList) 
   (if (= dataType "Pipe") 
     (progn 
