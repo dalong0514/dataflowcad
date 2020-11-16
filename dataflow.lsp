@@ -3566,7 +3566,7 @@
     (if (= 3 status)
       (progn 
         (setq codeNameList (GetCodeNameListStrategy propertyValueDictList selectedDataType))
-        (setq numberedDataList (GetNumberedDataList propertyValueDictList selectedDataType codeNameList numberMode))
+        (setq numberedDataList (GetNumberedDataListStrategy propertyValueDictList selectedDataType codeNameList numberMode))
         (setq matchedList (GetNumberedList numberedDataList selectedDataType))
         (setq confirmList matchedList)
         ;(princ numberedDataList)(princ)
@@ -3607,24 +3607,40 @@
   )
 )
 
-(defun GetNumberedDataList (propertyValueDictList dataType codeNameList numberMode / childrenData childrenDataList numberedList drawNum) 
+(defun GetNumberedDataListStrategy (propertyValueDictList dataType codeNameList numberMode / childrenData childrenDataList numberedList) 
   (cond 
     ((or (= dataType "Pipe") (= dataType "Equipment") ) 
-      (progn 
-        (setq childrenDataList (car (GetPipeAndEquipChildrenDataList propertyValueDictList dataType codeNameList)))
-        (setq numberedList (cadr (GetPipeAndEquipChildrenDataList propertyValueDictList dataType codeNameList)))
-      )
+      (GetPipeAndEquipChildrenDataList propertyValueDictList dataType codeNameList numberMode)
     )
     ((= dataType "Instrument") 
-      (progn 
-        (setq childrenDataList (car (GetInstrumentChildrenDataList propertyValueDictList dataType codeNameList)))
-        (setq numberedList (cadr (GetInstrumentChildrenDataList propertyValueDictList dataType codeNameList)))
-      )
+      (GetInstrumentChildrenDataList propertyValueDictList dataType numberMode)
     )
+  )
+)
+
+(defun GetInstrumentTypeMatchList ()
+  '("T[~CV]*" "P[~CV]*" "L[~CV]*" "F[~CV]*" "W[~CV]*" "A[~CV]*" "XV*" "T[CV]*" "P[CV]*" "L[CV]*" "F[CV]*")
+)
+
+(defun GetInstrumentChildrenDataList (propertyValueDictList dataType numberMode / instrumentTypeMatchList childrenData childrenDataList numberedList) 
+  (setq instrumentTypeMatchList (GetInstrumentTypeMatchList))
+  (foreach item instrumentTypeMatchList 
+    (setq childrenData 
+      (vl-remove-if-not '(lambda (x) 
+                           ; sort data by codeName
+                          (wcmatch (cdr (assoc (cadr (numberedPropertyNameListStrategy dataType)) x)) item)
+                        ) 
+        propertyValueDictList
+      ) 
+    )
+    (setq childrenDataList (append childrenDataList (list childrenData))) 
+    (setq numberedList 
+      (append numberedList (list (GetNumberedListByStartAndLengthUtils "" "1" (length childrenData))))
+    ) 
   )
   (mapcar '(lambda (x y) 
               (mapcar '(lambda (xx yy) 
-                        (append xx (list (cons "numberedString" (GetcodeNameByNumberMode yy numberMode (cdr (assoc "DRAWNUM" xx))))))
+                        (append xx (list (cons "numberedString" (GetInstrumentCodeNameByNumberMode yy numberMode (cdr (assoc "DRAWNUM" xx))))))
                       ) 
                 x 
                 y
@@ -3635,25 +3651,7 @@
   ) 
 )
 
-(defun GetInstrumentChildrenDataList (propertyValueDictList dataType codeNameList / childrenData childrenDataList numberedList) 
-  (foreach item codeNameList 
-    (setq childrenData 
-      (vl-remove-if-not '(lambda (x) 
-                           ; sort data by codeName
-                          (wcmatch (cdr (assoc (cadr (numberedPropertyNameListStrategy dataType)) x)) (strcat item "*"))
-                        ) 
-        propertyValueDictList
-      ) 
-    )
-    (setq childrenDataList (append childrenDataList (list childrenData))) 
-    (setq numberedList 
-      (append numberedList (list (GetNumberedListByStartAndLengthUtils item "1" (length childrenData))))
-    ) 
-  )
-  (list childrenDataList numberedList)
-)
-
-(defun GetPipeAndEquipChildrenDataList (propertyValueDictList dataType codeNameList / childrenData childrenDataList numberedList) 
+(defun GetPipeAndEquipChildrenDataList (propertyValueDictList dataType codeNameList numberMode / childrenData childrenDataList numberedList) 
   (foreach item codeNameList 
     (setq childrenData 
       (vl-remove-if-not '(lambda (x) 
@@ -3668,13 +3666,31 @@
       (append numberedList (list (GetNumberedListByStartAndLengthUtils item "1" (length childrenData))))
     ) 
   )
-  (list childrenDataList numberedList)
+  (mapcar '(lambda (x y) 
+              (mapcar '(lambda (xx yy) 
+                        (append xx (list (cons "numberedString" (GetPipeCodeNameByNumberMode yy numberMode (cdr (assoc "DRAWNUM" xx))))))
+                      ) 
+                x 
+                y
+              )  
+           ) 
+    childrenDataList 
+    numberedList
+  ) 
 )
 
-(defun GetcodeNameByNumberMode (originString numberMode drawNum /) 
+(defun GetPipeCodeNameByNumberMode (originString numberMode drawNum /) 
   (setq drawNum (RegExpReplace (ExtractDrawNum drawNum) "0(\\d)-(\\d*)" (strcat "$1" "$2") nil nil))
   (cond 
     ((= numberMode "0") (RegExpReplace originString "([A-Za-z]+)(\\d*).*" (strcat "$1" drawNum "$2") nil nil))
+    ((= numberMode "1") originString)
+  ) 
+)
+
+(defun GetInstrumentCodeNameByNumberMode (originString numberMode drawNum /) 
+  (setq drawNum (RegExpReplace (ExtractDrawNum drawNum) "0(\\d)-(\\d*)" (strcat "$1" "$2") nil nil))
+  (cond 
+    ((= numberMode "0") (strcat drawNum originString))
     ((= numberMode "1") originString)
   ) 
 )
@@ -3737,11 +3753,6 @@
           ) 
     tagList
   )
-)
-
-(defun GetInstrumentCodeNameList (functionCodeList / resultList) 
-  ; ready for refactor
-  functionCodeList
 )
 
 (defun GetNumberedEntityNameList (ss dataType dataChildrenType / dictList entityNameList resultList)
