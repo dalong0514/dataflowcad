@@ -3592,8 +3592,14 @@
   (princ)
 )
 
-(defun GetCodeNameListStrategy (propertyValueDictList dataType / dataList) 
-  (setq dataList (GetValueListByOneKeyUtils propertyValueDictList "PIPENUM"))
+(defun GetCodeNameListStrategy (propertyValueDictList dataType / propertyName dataList) 
+  (if (= dataType "Instrument") 
+    (setq propertyName (cadr (numberedPropertyNameListStrategy dataType)))
+    (setq propertyName (car (numberedPropertyNameListStrategy dataType)))
+  )
+  (setq dataList 
+    (GetValueListByOneKeyUtils propertyValueDictList propertyName)
+  )
   (DeduplicateForListUtils (GetPipeCodeNameList dataList))
 )
 
