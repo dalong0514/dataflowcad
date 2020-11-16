@@ -3609,13 +3609,7 @@
 
 (defun GetNumberedDataList (propertyValueDictList dataType codeNameList numberMode / childrenData childrenDataList numberedList drawNum) 
   (cond 
-    ((= dataType "Pipe") 
-      (progn 
-        (setq childrenDataList (car (GetPipeAndEquipChildrenDataList propertyValueDictList dataType codeNameList)))
-        (setq numberedList (cadr (GetPipeAndEquipChildrenDataList propertyValueDictList dataType codeNameList)))
-      )
-    )
-    ((= dataType "Equipment") 
+    ((or (= dataType "Pipe") (= dataType "Equipment") ) 
       (progn 
         (setq childrenDataList (car (GetPipeAndEquipChildrenDataList propertyValueDictList dataType codeNameList)))
         (setq numberedList (cadr (GetPipeAndEquipChildrenDataList propertyValueDictList dataType codeNameList)))
