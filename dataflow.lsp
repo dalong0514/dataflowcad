@@ -38,7 +38,15 @@
   (GetNumberedListByFirstDashUtilsTest)
   (RegExpExecuteUtilsTest)
   (RegExpReplaceTest)
+  (DeduplicateForListUtilsTest)
   (DL:PrintTestResults (DL:CountBooleans *testList*))
+)
+
+(defun DeduplicateForListUtilsTest ()
+  (AssertEqual 'DeduplicateForListUtils 
+    (list '("aa" "bb" "cc" "aa" "cc"))
+    '("aa" "bb" "cc")
+  )
 )
 
 ;; RegExpReplaceUtils
@@ -3557,7 +3565,7 @@
     ; confirm button
     (if (= 3 status)
       (progn 
-        (princ (GetPipeCodeNameList (GetValueListByOneKeyUtils propertyValueDictList "PIPENUM")))(princ)
+        (princ (GetCodeNameList (GetValueListByOneKeyUtils propertyValueDictList "PIPENUM")))(princ)
         ;(setq confirmList (GetNumberedListByFirstDashUtils numberedList matchedList))
       )
     )
@@ -3584,7 +3592,7 @@
   (princ)
 )
 
-(defun GetPipeCodeNameList (pipeNumList / resultList) 
+(defun GetCodeNameList (pipeNumList / resultList) 
   (setq resultList 
     (mapcar '(lambda (x) 
               (RegExpReplace x "([A-Za-z]+)\\d*-.*" "$1" nil nil)
@@ -3592,7 +3600,7 @@
       pipeNumList
     )
   )
-  (vl-sort resultList '<)
+  (DeduplicateForListUtils resultList)
 )
 
 (defun GetNumberedEntityNameList (ss dataType dataChildrenType / dictList entityNameList resultList)
