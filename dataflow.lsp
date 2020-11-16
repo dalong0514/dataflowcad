@@ -3491,7 +3491,7 @@
 
 (defun enhancedNumberByBox (propertyNameList tileName / dcl_id dataType numberMode status selectedPropertyName 
                             selectedDataType ss sslen matchedList confirmList propertyValueDictList entityNameList 
-                            modifyMessageStatus modifyMsgBtnStatus numberedList)
+                            modifyMessageStatus modifyMsgBtnStatus numberedList codeNameList)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -3565,7 +3565,9 @@
     ; confirm button
     (if (= 3 status)
       (progn 
-        (princ (GetCodeNameListStrategy propertyValueDictList selectedDataType))(princ)
+        (setq codeNameList (GetCodeNameListStrategy propertyValueDictList selectedDataType))
+        (princ codeNameList)
+        (princ)
         ;(setq confirmList (GetNumberedListByFirstDashUtils numberedList matchedList))
       )
     )
@@ -3592,23 +3594,56 @@
   (princ)
 )
 
-(defun GetCodeNameListStrategy (propertyValueDictList dataType / propertyName dataList) 
+(defun GetCodeNameListStrategy (propertyValueDictList dataType / propertyName dataList resultList) 
+  (if (= dataType "Pipe") 
+    (progn 
+      (setq propertyName (car (numberedPropertyNameListStrategy dataType)))
+      (setq dataList 
+        (GetValueListByOneKeyUtils propertyValueDictList propertyName)
+      ) 
+      (setq resultList (GetPipeCodeNameList dataList))
+    )
+  ) 
+  (if (= dataType "Equipment") 
+    (progn 
+      (setq propertyName (car (numberedPropertyNameListStrategy dataType)))
+      (setq dataList 
+        (GetValueListByOneKeyUtils propertyValueDictList propertyName)
+      ) 
+      (setq resultList (GetEquipmentCodeNameList dataList))
+    )
+  ) 
   (if (= dataType "Instrument") 
-    (setq propertyName (cadr (numberedPropertyNameListStrategy dataType)))
-    (setq propertyName (car (numberedPropertyNameListStrategy dataType)))
+    (progn 
+      (setq propertyName (cadr (numberedPropertyNameListStrategy dataType)))
+      (setq dataList 
+        (GetValueListByOneKeyUtils propertyValueDictList propertyName)
+      ) 
+      (setq resultList (GetPipeCodeNameList dataList)) 
+    )
   )
-  (setq dataList 
-    (GetValueListByOneKeyUtils propertyValueDictList propertyName)
-  )
-  (DeduplicateForListUtils (GetPipeCodeNameList dataList))
+  (DeduplicateForListUtils resultList)
 )
 
-(defun GetPipeCodeNameList (pipeNumList / resultList) 
+(defun GetPipeCodeNameList (pipeNumList /) 
   (mapcar '(lambda (x) 
             (RegExpReplace x "([A-Za-z]+)\\d*-.*" "$1" nil nil)
           ) 
     pipeNumList
   )
+)
+
+(defun GetEquipmentCodeNameList (tagList /) 
+  (mapcar '(lambda (x) 
+            (RegExpReplace x "([A-Za-z]+).*" "$1" nil nil)
+          ) 
+    tagList
+  )
+)
+
+(defun GetInstrumentCodeNameList (functionCodeList / resultList) 
+  ; ready for refactor
+  functionCodeList
 )
 
 (defun GetNumberedEntityNameList (ss dataType dataChildrenType / dictList entityNameList resultList)
