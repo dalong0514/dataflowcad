@@ -3679,6 +3679,24 @@
   ) 
 )
 
+(defun GetPipeAndEquipChildrenDataListByNoDrawNum (propertyValueDictList dataType codeNameList numberMode / childrenData childrenDataList numberedList) 
+  (foreach item codeNameList 
+    (setq childrenData 
+      (vl-remove-if-not '(lambda (x) 
+                           ; sort data by codeName
+                          (wcmatch (cdr (assoc (car (numberedPropertyNameListStrategy dataType)) x)) (strcat item "*"))
+                        ) 
+        propertyValueDictList
+      ) 
+    )
+    (setq childrenDataList (append childrenDataList (list childrenData))) 
+    (setq numberedList 
+      (append numberedList (list (GetNumberedListByStartAndLengthUtils item "1" (length childrenData))))
+    ) 
+  )
+  (list childrenDataList numberedList)
+)
+
 (defun GetPipeAndEquipChildrenDataListByDrawNum (propertyValueDictList dataType codeNameList numberMode / childrenData childrenDataList numberedList) 
   (mapcar '(lambda (drawNum) 
             (foreach item codeNameList 
