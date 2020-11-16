@@ -3565,7 +3565,7 @@
     ; confirm button
     (if (= 3 status)
       (progn 
-        (princ (GetCodeNameListStrategy (GetValueListByOneKeyUtils propertyValueDictList "PIPENUM")))(princ)
+        (princ (GetCodeNameListStrategy propertyValueDictList selectedDataType))(princ)
         ;(setq confirmList (GetNumberedListByFirstDashUtils numberedList matchedList))
       )
     )
@@ -3592,7 +3592,8 @@
   (princ)
 )
 
-(defun GetCodeNameListStrategy (dataList /) 
+(defun GetCodeNameListStrategy (propertyValueDictList dataType / dataList) 
+  (setq dataList (GetValueListByOneKeyUtils propertyValueDictList "PIPENUM"))
   (DeduplicateForListUtils (GetPipeCodeNameList dataList))
 )
 
