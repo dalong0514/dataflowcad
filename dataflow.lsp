@@ -3623,20 +3623,19 @@
 )
 
 (defun GetInstrumentChildrenDataList (propertyValueDictList dataType numberMode / instrumentTypeMatchList childrenData childrenDataList numberedList) 
-  (setq instrumentTypeMatchList (GetInstrumentTypeMatchList))
-  (foreach item instrumentTypeMatchList 
-    (setq childrenData 
-      (vl-remove-if-not '(lambda (x) 
-                           ; sort data by codeName
-                          (wcmatch (cdr (assoc (cadr (numberedPropertyNameListStrategy dataType)) x)) item)
-                        ) 
-        propertyValueDictList
-      ) 
+  (cond 
+    ((= numberMode "0") 
+      (progn 
+        (setq childrenDataList (car (GetInstrumentChildrenDataListByDrawNum propertyValueDictList dataType)))
+        (setq numberedList (cadr (GetInstrumentChildrenDataListByDrawNum propertyValueDictList dataType)))
+      )
     )
-    (setq childrenDataList (append childrenDataList (list childrenData))) 
-    (setq numberedList 
-      (append numberedList (list (GetNumberedListByStartAndLengthUtils "" "1" (length childrenData))))
-    ) 
+    ((= numberMode "1") 
+      (progn 
+        (setq childrenDataList (car (GetInstrumentChildrenDataListByNoDrawNum propertyValueDictList dataType)))
+        (setq numberedList (cadr (GetInstrumentChildrenDataListByNoDrawNum propertyValueDictList dataType)))
+      )
+    )
   )
   (mapcar '(lambda (x y) 
               (mapcar '(lambda (xx yy) 
