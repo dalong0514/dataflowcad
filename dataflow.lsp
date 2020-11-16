@@ -3608,6 +3608,26 @@
 )
 
 (defun GetNumberedDataList (propertyValueDictList dataType codeNameList numberMode / childrenData childrenDataList numberedList drawNum) 
+  (if (or (= dataType "Pipe") (= dataType "Pipe")) 
+    (progn 
+      (setq childrenDataList (car (GetPipeAndEquipChildrenDataList propertyValueDictList dataType codeNameList)))
+      (setq numberedList (cadr (GetPipeAndEquipChildrenDataList propertyValueDictList dataType codeNameList)))
+    )
+  )
+  (mapcar '(lambda (x y) 
+              (mapcar '(lambda (xx yy) 
+                        (append xx (list (cons "numberedString" (GetcodeNameByNumberMode yy numberMode (cdr (assoc "DRAWNUM" xx))))))
+                      ) 
+                x 
+                y
+              )  
+           ) 
+    childrenDataList 
+    numberedList
+  ) 
+)
+
+(defun GetPipeAndEquipChildrenDataList (propertyValueDictList dataType codeNameList / childrenData childrenDataList numberedList) 
   (foreach item codeNameList 
     (setq childrenData 
       (vl-remove-if-not '(lambda (x) 
@@ -3622,17 +3642,7 @@
       (append numberedList (list (GetNumberedListByStartAndLengthUtils item "1" (length childrenData))))
     ) 
   )
-  (mapcar '(lambda (x y) 
-              (mapcar '(lambda (xx yy) 
-                        (append xx (list (cons "numberedString" (GetcodeNameByNumberMode yy numberMode (cdr (assoc "DRAWNUM" xx))))))
-                      ) 
-                x 
-                y
-              )  
-           ) 
-    childrenDataList 
-    numberedList
-  ) 
+  (list childrenDataList numberedList)
 )
 
 (defun GetcodeNameByNumberMode (originString numberMode drawNum /) 
