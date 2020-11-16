@@ -3566,7 +3566,7 @@
     (if (= 3 status)
       (progn 
         (setq codeNameList (GetCodeNameListStrategy propertyValueDictList selectedDataType))
-        (princ codeNameList)
+        (princ (GetNumberedList propertyValueDictList codeNameList))
         (princ)
         ;(setq confirmList (GetNumberedListByFirstDashUtils numberedList matchedList))
       )
@@ -3592,6 +3592,17 @@
   )
   (unload_dialog dcl_id)
   (princ)
+)
+
+(defun GetNumberedList (propertyValueDictList codeNameList / childrenDataList resultList) 
+  (setq childrenDataList 
+    (vl-remove-if-not '(lambda (x) 
+                        (wcmatch (cdr (assoc "PIPENUM" x)) "PL*")
+                      ) 
+      propertyValueDictList
+    ) 
+  )
+  (setq resultList (GetNumberedListByStartAndLengthUtils "PL" "1" (length childrenDataList)))
 )
 
 (defun GetCodeNameListStrategy (propertyValueDictList dataType / propertyName dataList resultList) 
