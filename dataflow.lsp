@@ -3565,7 +3565,7 @@
     ; confirm button
     (if (= 3 status)
       (progn 
-        (princ (GetCodeNameList (GetValueListByOneKeyUtils propertyValueDictList "PIPENUM")))(princ)
+        (princ (GetCodeNameListStrategy (GetValueListByOneKeyUtils propertyValueDictList "PIPENUM")))(princ)
         ;(setq confirmList (GetNumberedListByFirstDashUtils numberedList matchedList))
       )
     )
@@ -3592,15 +3592,16 @@
   (princ)
 )
 
-(defun GetCodeNameList (pipeNumList / resultList) 
-  (setq resultList 
-    (mapcar '(lambda (x) 
-              (RegExpReplace x "([A-Za-z]+)\\d*-.*" "$1" nil nil)
-            ) 
-      pipeNumList
-    )
+(defun GetCodeNameListStrategy (dataList /) 
+  (DeduplicateForListUtils (GetPipeCodeNameList dataList))
+)
+
+(defun GetPipeCodeNameList (pipeNumList / resultList) 
+  (mapcar '(lambda (x) 
+            (RegExpReplace x "([A-Za-z]+)\\d*-.*" "$1" nil nil)
+          ) 
+    pipeNumList
   )
-  (DeduplicateForListUtils resultList)
 )
 
 (defun GetNumberedEntityNameList (ss dataType dataChildrenType / dictList entityNameList resultList)
