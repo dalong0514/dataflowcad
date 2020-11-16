@@ -3783,16 +3783,12 @@
 )
 
 (defun GetNumberedListStrategy (numberedDataList dataType / resultList) 
-  (foreach item numberedDataList 
-    (mapcar '(lambda (x) 
-              (setq resultList 
-                (append resultList (list (GetNumberedStringforEnhancedNumber x dataType)))
-              )
-            ) 
-      item
-    ) 
-  )
-  resultList
+  (cond 
+    ((or (= dataType "Pipe") (= dataType "Equipment"))
+      (GetPipeAndEquipNumberedList numberedDataList dataType)
+    )
+    ((= dataType "Instrument") (GetInstrumentNumberedList numberedDataList dataType))
+  ) 
 )
 
 (defun GetPipeAndEquipNumberedList (numberedDataList dataType / resultList) 
