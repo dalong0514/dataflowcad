@@ -3567,7 +3567,7 @@
       (progn 
         (setq codeNameList (GetCodeNameListStrategy propertyValueDictList selectedDataType))
         (setq numberedDataList (GetNumberedDataList propertyValueDictList selectedDataType codeNameList))
-        (setq matchedList (GetNumberedList numberedDataList selectedDataType))
+        (setq matchedList (GetNumberedList numberedDataList selectedDataType numberMode))
         (setq confirmList matchedList)
         ;(princ numberedDataList)(princ)
       )
@@ -3577,7 +3577,7 @@
       (progn 
         (if (= matchedList nil)
           (setq modifyMessageStatus 0)
-          (UpdateNumberedData numberedDataList selectedDataType)
+          (UpdateNumberedData numberedDataList selectedDataType numberMode)
         )
         (setq modifyMsgBtnStatus 1)
       )
@@ -3587,11 +3587,18 @@
   (princ)
 )
 
-(defun UpdateNumberedData (numberedDataList dataType / selectedPropertyName numberedString) 
+(defun GetNumberedStringforEnhancedNumber (childrenData dataType /)
+  (numberedStringSubstUtil 
+    (cdr (assoc "numberedString" childrenData)) 
+    (cdr (assoc (car (numberedPropertyNameListStrategy dataType)) childrenData))
+  )
+)
+
+(defun UpdateNumberedData (numberedDataList dataType numberMode / selectedPropertyName numberedString) 
   (setq selectedPropertyName (car (numberedPropertyNameListStrategy dataType)))
   (foreach item numberedDataList 
     (mapcar '(lambda (x) 
-               (setq numberedString (numberedStringSubstUtil (cdr (assoc "numberedString" x)) (cdr (assoc (car (numberedPropertyNameListStrategy dataType)) x))))
+               (setq numberedString (GetNumberedStringforEnhancedNumber x dataType))
                (setq entityName (handent (cdr (assoc "entityhandle" x))))
                (ModifyMultiplePropertyForOneBlockUtils entityName (list selectedPropertyName) (list numberedString))
             ) 
@@ -3626,13 +3633,11 @@
   ) 
 )
 
-(defun GetNumberedList (numberedDataList dataType / resultList) 
+(defun GetNumberedList (numberedDataList dataType numberMode / resultList) 
   (foreach item numberedDataList 
     (mapcar '(lambda (x) 
               (setq resultList 
-                (append resultList 
-                  (list (numberedStringSubstUtil (cdr (assoc "numberedString" x)) (cdr (assoc (car (numberedPropertyNameListStrategy dataType)) x))))
-                )
+                (append resultList (list (GetNumberedStringforEnhancedNumber x dataType)))
               )
             ) 
       item
