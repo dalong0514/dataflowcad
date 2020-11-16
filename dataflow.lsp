@@ -3298,16 +3298,16 @@
 
 (defun numberedPropertyNameListStrategy (dataType /)
   (cond 
-    ((= dataType "Pipe") '("PIPENUM"))
-    ((= dataType "Instrument") '("TAG" "FUNCTION"))
-    ((= dataType "Reactor") '("TAG"))
-    ((= dataType "Pump") '("TAG"))
-    ((= dataType "Tank") '("TAG"))
-    ((= dataType "Heater") '("TAG"))
-    ((= dataType "Centrifuge") '("TAG"))
-    ((= dataType "Vacuum") '("TAG"))
-    ((= dataType "CustomEquip") '("TAG"))
-    ((= dataType "Equipment") '("TAG"))
+    ((= dataType "Pipe") '("PIPENUM" "DRAWNUM"))
+    ((= dataType "Instrument") '("TAG" "FUNCTION" "DRAWNUM"))
+    ((= dataType "Reactor") '("TAG" "DRAWNUM"))
+    ((= dataType "Pump") '("TAG" "DRAWNUM"))
+    ((= dataType "Tank") '("TAG" "DRAWNUM"))
+    ((= dataType "Heater") '("TAG" "DRAWNUM"))
+    ((= dataType "Centrifuge") '("TAG" "DRAWNUM"))
+    ((= dataType "Vacuum") '("TAG" "DRAWNUM"))
+    ((= dataType "CustomEquip") '("TAG" "DRAWNUM"))
+    ((= dataType "Equipment") '("TAG" "DRAWNUM"))
   )
 )
 
@@ -3566,15 +3566,15 @@
     (if (= 3 status)
       (progn 
         (setq codeNameList (GetCodeNameListStrategy propertyValueDictList selectedDataType))
-        (setq numberedDataList (GetNumberedDataList propertyValueDictList codeNameList))
-        (princ (GetNumberedList numberedDataList))(princ)
-        (setq matchedList (GetNumberedList numberedDataList))
+        (setq numberedDataList (GetNumberedDataList propertyValueDictList selectedDataType codeNameList))
+        ;(princ (GetNumberedList numberedDataList))(princ)
+        (setq matchedList (GetNumberedList numberedDataList selectedDataType))
       )
     )
     ; modify button
     (if (= 4 status)
       (progn 
-        (if (= confirmList nil)
+        (if (= matchedList nil)
           (setq modifyMessageStatus 0)
           (progn 
             (setq selectedPropertyName (car (numberedPropertyNameListStrategy selectedDataType)))
@@ -3594,11 +3594,12 @@
   (princ)
 )
 
-(defun GetNumberedDataList (propertyValueDictList codeNameList / childrenData childrenDataList numberedList) 
+(defun GetNumberedDataList (propertyValueDictList dataType codeNameList / childrenData childrenDataList numberedList) 
   (foreach item codeNameList 
     (setq childrenData 
       (vl-remove-if-not '(lambda (x) 
-                          (wcmatch (cdr (assoc "PIPENUM" x)) (strcat item "*"))
+                           ; sort data by codeName
+                          (wcmatch (cdr (assoc (car (numberedPropertyNameListStrategy dataType)) x)) (strcat item "*"))
                         ) 
         propertyValueDictList
       ) 
@@ -3619,12 +3620,12 @@
   ) 
 )
 
-(defun GetNumberedList (numberedDataList / resultList) 
+(defun GetNumberedList (numberedDataList dataType / resultList) 
   (foreach item numberedDataList 
     (mapcar '(lambda (x) 
               (setq resultList 
                 (append resultList 
-                  (list (numberedStringSubstUtil (cdr (assoc "numberedString" x)) (cdr (assoc "PIPENUM" x))))
+                  (list (numberedStringSubstUtil (cdr (assoc "numberedString" x)) (cdr (assoc (car (numberedPropertyNameListStrategy dataType)) x))))
                 )
               )
             ) 
