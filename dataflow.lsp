@@ -71,6 +71,14 @@
     (list "$ 3.25" "\\$ (\\d+(\\.\\d+)?)" "$1 €" nil T)
     "3.25 €"
   )
+  (AssertEqual 'RegExpReplace 
+    (list "PL1201-50-2J1" "([A-Z]+)\\d*-.*" "$1" nil nil)
+    "PL"
+  ) 
+  (AssertEqual 'RegExpReplace 
+    (list "VT-50-2J1" "([A-Z]+)\\d*-.*" "$1" nil nil)
+    "VT"
+  )  
 )
 
 ;; RegExpExecuteUtils
