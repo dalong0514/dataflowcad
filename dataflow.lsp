@@ -3608,10 +3608,24 @@
 )
 
 (defun GetNumberedDataList (propertyValueDictList dataType codeNameList numberMode / childrenData childrenDataList numberedList drawNum) 
-  (if (or (= dataType "Pipe") (= dataType "Pipe")) 
-    (progn 
-      (setq childrenDataList (car (GetPipeAndEquipChildrenDataList propertyValueDictList dataType codeNameList)))
-      (setq numberedList (cadr (GetPipeAndEquipChildrenDataList propertyValueDictList dataType codeNameList)))
+  (cond 
+    ((= dataType "Pipe") 
+      (progn 
+        (setq childrenDataList (car (GetPipeAndEquipChildrenDataList propertyValueDictList dataType codeNameList)))
+        (setq numberedList (cadr (GetPipeAndEquipChildrenDataList propertyValueDictList dataType codeNameList)))
+      )
+    )
+    ((= dataType "Equipment") 
+      (progn 
+        (setq childrenDataList (car (GetPipeAndEquipChildrenDataList propertyValueDictList dataType codeNameList)))
+        (setq numberedList (cadr (GetPipeAndEquipChildrenDataList propertyValueDictList dataType codeNameList)))
+      )
+    )
+    ((= dataType "Instrument") 
+      (progn 
+        (setq childrenDataList (car (GetInstrumentChildrenDataList propertyValueDictList dataType codeNameList)))
+        (setq numberedList (cadr (GetInstrumentChildrenDataList propertyValueDictList dataType codeNameList)))
+      )
     )
   )
   (mapcar '(lambda (x y) 
@@ -3625,6 +3639,24 @@
     childrenDataList 
     numberedList
   ) 
+)
+
+(defun GetInstrumentChildrenDataList (propertyValueDictList dataType codeNameList / childrenData childrenDataList numberedList) 
+  (foreach item codeNameList 
+    (setq childrenData 
+      (vl-remove-if-not '(lambda (x) 
+                           ; sort data by codeName
+                          (wcmatch (cdr (assoc (cadr (numberedPropertyNameListStrategy dataType)) x)) (strcat item "*"))
+                        ) 
+        propertyValueDictList
+      ) 
+    )
+    (setq childrenDataList (append childrenDataList (list childrenData))) 
+    (setq numberedList 
+      (append numberedList (list (GetNumberedListByStartAndLengthUtils item "1" (length childrenData))))
+    ) 
+  )
+  (list childrenDataList numberedList)
 )
 
 (defun GetPipeAndEquipChildrenDataList (propertyValueDictList dataType codeNameList / childrenData childrenDataList numberedList) 
