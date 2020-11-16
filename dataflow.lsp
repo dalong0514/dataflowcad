@@ -3594,15 +3594,19 @@
   (princ)
 )
 
-(defun GetNumberedList (propertyValueDictList codeNameList / childrenDataList resultList) 
-  (setq childrenDataList 
-    (vl-remove-if-not '(lambda (x) 
-                        (wcmatch (cdr (assoc "PIPENUM" x)) "PL*")
-                      ) 
-      propertyValueDictList
-    ) 
+(defun GetNumberedList (propertyValueDictList codeNameList / childrenData childrenDataList resultList) 
+  (foreach item codeNameList 
+    (setq childrenData 
+      (vl-remove-if-not '(lambda (x) 
+                          (wcmatch (cdr (assoc "PIPENUM" x)) (strcat item "*"))
+                        ) 
+        propertyValueDictList
+      ) 
+    )
+    (setq childrenDataList (append childrenDataList (list childrenData))) 
   )
-  (setq resultList (GetNumberedListByStartAndLengthUtils "PL" "1" (length childrenDataList)))
+  ;(setq resultList (append resultList (list (GetNumberedListByStartAndLengthUtils item "1" (length childrenDataList))))) 
+  childrenDataList
 )
 
 (defun GetCodeNameListStrategy (propertyValueDictList dataType / propertyName dataList resultList) 
