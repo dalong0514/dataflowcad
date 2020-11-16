@@ -3652,19 +3652,19 @@
 )
 
 (defun GetPipeAndEquipChildrenDataList (propertyValueDictList dataType codeNameList numberMode / childrenData childrenDataList numberedList) 
-  (foreach item codeNameList 
-    (setq childrenData 
-      (vl-remove-if-not '(lambda (x) 
-                           ; sort data by codeName
-                          (wcmatch (cdr (assoc (car (numberedPropertyNameListStrategy dataType)) x)) (strcat item "*"))
-                        ) 
-        propertyValueDictList
-      ) 
+  (cond 
+    ((= numberMode "0") 
+      (progn 
+        (setq childrenDataList (car (GetPipeAndEquipChildrenDataListByDrawNum propertyValueDictList dataType codeNameList)))
+        (setq numberedList (cadr (GetPipeAndEquipChildrenDataListByDrawNum propertyValueDictList dataType codeNameList)))
+      )
     )
-    (setq childrenDataList (append childrenDataList (list childrenData))) 
-    (setq numberedList 
-      (append numberedList (list (GetNumberedListByStartAndLengthUtils item "1" (length childrenData))))
-    ) 
+    ((= numberMode "1") 
+      (progn 
+        (setq childrenDataList (car (GetPipeAndEquipChildrenDataListByNoDrawNum propertyValueDictList dataType codeNameList)))
+        (setq numberedList (cadr (GetPipeAndEquipChildrenDataListByNoDrawNum propertyValueDictList dataType codeNameList)))
+      )
+    )
   )
   (mapcar '(lambda (x y) 
               (mapcar '(lambda (xx yy) 
@@ -3679,7 +3679,7 @@
   ) 
 )
 
-(defun GetPipeAndEquipChildrenDataListByNoDrawNum (propertyValueDictList dataType codeNameList numberMode / childrenData childrenDataList numberedList) 
+(defun GetPipeAndEquipChildrenDataListByNoDrawNum (propertyValueDictList dataType codeNameList / childrenData childrenDataList numberedList) 
   (foreach item codeNameList 
     (setq childrenData 
       (vl-remove-if-not '(lambda (x) 
@@ -3697,7 +3697,7 @@
   (list childrenDataList numberedList)
 )
 
-(defun GetPipeAndEquipChildrenDataListByDrawNum (propertyValueDictList dataType codeNameList numberMode / childrenData childrenDataList numberedList) 
+(defun GetPipeAndEquipChildrenDataListByDrawNum (propertyValueDictList dataType codeNameList / childrenData childrenDataList numberedList) 
   (mapcar '(lambda (drawNum) 
             (foreach item codeNameList 
               (setq childrenData 
