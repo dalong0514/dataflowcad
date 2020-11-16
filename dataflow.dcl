@@ -230,11 +230,17 @@ enhancedNumberBox : dialog {
       value = "";
     }
     : spacer { height = 1; } 
-    : text {
-      key = "msg";
-      label = "匹配到的数量：";
+    : row {
+      : text {
+        key = "msg";
+        label = "匹配到的数量：";
+      }
+      : text {
+        key = "modifyBtnMsg";
+        label = "编号状态：";
+      }
     }
-    : spacer { height = 3; } 
+    : spacer { height = 3; }  
     : row { 
       fixed_width = true; 
       alignment = centered; 

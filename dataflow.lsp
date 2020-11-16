@@ -3567,8 +3567,9 @@
       (progn 
         (setq codeNameList (GetCodeNameListStrategy propertyValueDictList selectedDataType))
         (setq numberedDataList (GetNumberedDataList propertyValueDictList selectedDataType codeNameList))
-        ;(princ (GetNumberedList numberedDataList))(princ)
         (setq matchedList (GetNumberedList numberedDataList selectedDataType))
+        (setq confirmList matchedList)
+        ;(princ numberedDataList)(princ)
       )
     )
     ; modify button
@@ -3576,15 +3577,7 @@
       (progn 
         (if (= matchedList nil)
           (setq modifyMessageStatus 0)
-          (progn 
-            (setq selectedPropertyName (car (numberedPropertyNameListStrategy selectedDataType)))
-            (mapcar '(lambda (x y) 
-                      (ModifyMultiplePropertyForOneBlockUtils x (list selectedPropertyName) (list y))
-                    ) 
-              entityNameList
-              confirmList 
-            )
-          )
+          (UpdateNumberedData numberedDataList selectedDataType)
         )
         (setq modifyMsgBtnStatus 1)
       )
@@ -3592,6 +3585,19 @@
   )
   (unload_dialog dcl_id)
   (princ)
+)
+
+(defun UpdateNumberedData (numberedDataList dataType / selectedPropertyName numberedString) 
+  (setq selectedPropertyName (car (numberedPropertyNameListStrategy dataType)))
+  (foreach item numberedDataList 
+    (mapcar '(lambda (x) 
+               (setq numberedString (numberedStringSubstUtil (cdr (assoc "numberedString" x)) (cdr (assoc (car (numberedPropertyNameListStrategy dataType)) x))))
+               (setq entityName (handent (cdr (assoc "entityhandle" x))))
+               (ModifyMultiplePropertyForOneBlockUtils entityName (list selectedPropertyName) (list numberedString))
+            ) 
+      item
+    ) 
+  )
 )
 
 (defun GetNumberedDataList (propertyValueDictList dataType codeNameList / childrenData childrenDataList numberedList) 
