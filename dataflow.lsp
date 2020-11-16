@@ -3606,8 +3606,19 @@
     (setq childrenDataList (append childrenDataList (list childrenData))) 
     (setq numberedList (append numberedList (list (GetNumberedListByStartAndLengthUtils item "1" (length childrenData))))) 
   )
-  ;(setq resultList (append resultList (list (GetNumberedListByStartAndLengthUtils item "1" (length childrenDataList))))) 
-  numberedList
+  (mapcar '(lambda (x y) 
+              (mapcar '(lambda (xx yy) 
+                        (append xx (list (cons "numberedString" yy)))
+                      ) 
+                x 
+                y
+              )  
+           ) 
+    childrenDataList 
+    numberedList
+  ) 
+  ;numberedList
+  ;childrenDataList
 )
 
 (defun GetCodeNameListStrategy (propertyValueDictList dataType / propertyName dataList resultList) 
