@@ -3491,7 +3491,7 @@
 
 (defun enhancedNumberByBox (propertyNameList tileName / dcl_id dataType numberMode status selectedPropertyName 
                             selectedDataType ss sslen matchedList confirmList propertyValueDictList entityNameList 
-                            modifyMessageStatus modifyMsgBtnStatus numberedList codeNameList)
+                            modifyMessageStatus modifyMsgBtnStatus numberedDataList numberedList codeNameList)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -3566,9 +3566,9 @@
     (if (= 3 status)
       (progn 
         (setq codeNameList (GetCodeNameListStrategy propertyValueDictList selectedDataType))
-        (princ (GetNumberedList propertyValueDictList codeNameList))
-        (princ)
-        ;(setq confirmList (GetNumberedListByFirstDashUtils numberedList matchedList))
+        (setq numberedDataList (GetNumberedDataList propertyValueDictList codeNameList))
+        (princ (GetNumberedList numberedDataList))(princ)
+        (setq matchedList (GetNumberedList numberedDataList))
       )
     )
     ; modify button
@@ -3594,7 +3594,7 @@
   (princ)
 )
 
-(defun GetNumberedList (propertyValueDictList codeNameList / childrenData childrenDataList numberedList resultList) 
+(defun GetNumberedDataList (propertyValueDictList codeNameList / childrenData childrenDataList numberedList) 
   (foreach item codeNameList 
     (setq childrenData 
       (vl-remove-if-not '(lambda (x) 
@@ -3617,8 +3617,21 @@
     childrenDataList 
     numberedList
   ) 
-  ;numberedList
-  ;childrenDataList
+)
+
+(defun GetNumberedList (numberedDataList / resultList) 
+  (foreach item numberedDataList 
+    (mapcar '(lambda (x) 
+              (setq resultList 
+                (append resultList 
+                  (list (numberedStringSubstUtil (cdr (assoc "numberedString" x)) (cdr (assoc "PIPENUM" x))))
+                )
+              )
+            ) 
+      item
+    ) 
+  )
+  resultList
 )
 
 (defun GetCodeNameListStrategy (propertyValueDictList dataType / propertyName dataList resultList) 
