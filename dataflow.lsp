@@ -3454,7 +3454,7 @@
   (princ)
 )
 
-(defun enhancedNumberByBox (propertyNameList tileName / dcl_id dataType dataChildrenType patternValue propertyValue replacedSubstring status selectedPropertyName selectedDataType ss sslen matchedList confirmList propertyValueDictList entityNameList modifyMessageStatus modifyMsgBtnStatus numberedList)
+(defun enhancedNumberByBox (propertyNameList tileName / dcl_id dataType numberMode status selectedPropertyName selectedDataType ss sslen matchedList propertyValueDictList entityNameList modifyMessageStatus modifyMsgBtnStatus numberedList)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -3463,17 +3463,12 @@
     ; Added the actions to the Cancel and Pick Point button
     (action_tile "cancel" "(done_dialog 0)")
     (action_tile "btnSelect" "(done_dialog 2)")
-    (action_tile "btnAll" "(done_dialog 3)")
-    (action_tile "btnPreviewModify" "(done_dialog 5)")
-    (action_tile "btnModify" "(done_dialog 6)")
-    (action_tile "btnClickSelect" "(done_dialog 4)")
+    (action_tile "btnPreviewNumber" "(done_dialog 3)")
+    (action_tile "btnComfirmNumber" "(done_dialog 4)")
     (mode_tile "dataType" 2)
-    (mode_tile "dataChildrenType" 2)
+    (mode_tile "numberMode" 2)
     (action_tile "dataType" "(setq dataType $value)")
-    (action_tile "dataChildrenType" "(setq dataChildrenType $value)")
-    (action_tile "patternValue" "(setq patternValue $value)")
-    (action_tile "propertyValue" "(setq propertyValue $value)")
-    (action_tile "replacedSubstring" "(setq replacedSubstring $value)")
+    (action_tile "numberMode" "(setq numberMode $value)")
     ; init the default data of text
     (progn 
       (start_list "dataType" 3)
@@ -3490,24 +3485,12 @@
     (if (= nil dataType)
       (setq dataType "0")
     )
-    (if (= nil dataChildrenType)
-      (setq dataChildrenType "0")
-    )
-    (if (= nil patternValue)
-      (setq patternValue "*")
-    )
-    (if (= nil propertyValue)
-      (setq propertyValue "")
-    )
-    (if (= nil replacedSubstring)
-      (setq replacedSubstring "")
+    (if (= nil numberMode)
+      (setq numberMode "0")
     )
     ; setting for saving the existed value of a box
     (set_tile "dataType" dataType)
-    (set_tile "dataChildrenType" dataChildrenType)
-    (set_tile "patternValue" patternValue)
-    (set_tile "replacedSubstring" replacedSubstring)
-    (set_tile "propertyValue" propertyValue) 
+    (set_tile "numberMode" numberMode)
     ; Display the number of selected pipes
     (if (/= sslen nil)
       (set_tile "msg" (strcat "匹配到的数量： " (rtos sslen)))
@@ -3530,14 +3513,6 @@
         (end_list)
       )
     )
-    (if (/= confirmList nil)
-      (progn
-        (start_list "modifiedData" 3)
-        (mapcar '(lambda (x) (add_list x)) 
-                 confirmList)
-        (end_list)
-      )
-    )
     ; select button
     (if (= 2 (setq status (start_dialog)))
       (progn 
@@ -3551,39 +3526,15 @@
         (setq sslen (length matchedList))
       )
     )
-    ; all select button
-    (if (= 3 status)
-      (progn 
-        (setq selectedDataType (nth (atoi dataType) propertyNameList))
-        (setq ss (GetAllBlockSSByDataTypeUtils selectedDataType))
-        ; sort by x cordinate
-        (setq ss (SortSelectionSetByXYZ ss))
-        (setq entityNameList (GetNumberedEntityNameList ss selectedDataType dataChildrenType))
-        (setq propertyValueDictList (GetPropertyDictListByEntityNameList entityNameList (numberedPropertyNameListStrategy selectedDataType)))
-        (setq matchedList (GetNumberedPropertyValueList propertyValueDictList selectedDataType dataChildrenType))
-        (setq sslen (length matchedList))
-      )
-    )
-    ; click select button
-    (if (= 4 status)
-      (progn 
-        (setq selectedDataType (nth (atoi dataType) propertyNameList))
-        (setq ss (GetBlockSSBySelectByDataTypeUtils selectedDataType))
-        (setq entityNameList (GetNumberedEntityNameList ss selectedDataType dataChildrenType))
-        (setq propertyValueDictList (GetPropertyDictListByEntityNameList entityNameList (numberedPropertyNameListStrategy selectedDataType)))
-        (setq matchedList (GetNumberedPropertyValueList propertyValueDictList selectedDataType dataChildrenType))
-        (setq sslen (length matchedList))
-      )
-    )
     ; confirm button
-    (if (= 5 status)
+    (if (= 3 status)
       (progn 
         (setq numberedList (GetNumberedListByStartAndLengthUtils replacedSubstring propertyValue (length matchedList)))
         (setq confirmList (GetNumberedListByFirstDashUtils numberedList matchedList))
       )
     )
     ; modify button
-    (if (= 6 status)
+    (if (= 4 status)
       (progn 
         (if (= confirmList nil)
           (setq modifyMessageStatus 0)
@@ -3604,9 +3555,6 @@
   (unload_dialog dcl_id)
   (princ)
 )
-
-
-
 
 (defun GetNumberedEntityNameList (ss dataType dataChildrenType / dictList entityNameList resultList)
   (if (= dataType "Instrument") 
