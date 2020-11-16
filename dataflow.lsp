@@ -3651,6 +3651,51 @@
   ) 
 )
 
+(defun GetInstrumentChildrenDataListByNoDrawNum (propertyValueDictList dataType / instrumentTypeMatchList childrenData childrenDataList numberedList) 
+  (setq instrumentTypeMatchList (GetInstrumentTypeMatchList))
+  (foreach item instrumentTypeMatchList 
+    (setq childrenData 
+      (vl-remove-if-not '(lambda (x) 
+                           ; sort data by codeName
+                          (wcmatch (cdr (assoc (cadr (numberedPropertyNameListStrategy dataType)) x)) item)
+                        ) 
+        propertyValueDictList
+      ) 
+    )
+    (setq childrenDataList (append childrenDataList (list childrenData))) 
+    (setq numberedList 
+      (append numberedList (list (GetNumberedListByStartAndLengthUtils "" "1" (length childrenData))))
+    ) 
+  )
+  (list childrenDataList numberedList)
+)
+
+(defun GetInstrumentChildrenDataListByDrawNum (propertyValueDictList dataType / instrumentTypeMatchList childrenData childrenDataList numberedList) 
+  (setq instrumentTypeMatchList (GetInstrumentTypeMatchList))
+  (mapcar '(lambda (drawNum) 
+      (foreach item instrumentTypeMatchList 
+        (setq childrenData 
+          (vl-remove-if-not '(lambda (x) 
+                                ; sort data by codeName
+                                (and 
+                                  (wcmatch (cdr (assoc (cadr (numberedPropertyNameListStrategy dataType)) x)) item)
+                                  (= drawNum (ExtractDrawNum (cdr (assoc "DRAWNUM" x))))
+                                )
+                            ) 
+            propertyValueDictList
+          ) 
+        )
+        (setq childrenDataList (append childrenDataList (list childrenData))) 
+        (setq numberedList 
+          (append numberedList (list (GetNumberedListByStartAndLengthUtils "" "1" (length childrenData))))
+        ) 
+      ) 
+    ) 
+    (GetUniqueDrawNumList propertyValueDictList)
+  )
+  (list childrenDataList numberedList)
+)
+
 (defun GetPipeAndEquipChildrenDataList (propertyValueDictList dataType codeNameList numberMode / childrenData childrenDataList numberedList) 
   (cond 
     ((= numberMode "0") 
