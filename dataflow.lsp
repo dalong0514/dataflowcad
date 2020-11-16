@@ -3566,7 +3566,7 @@
     (if (= 3 status)
       (progn 
         (setq codeNameList (GetCodeNameListStrategy propertyValueDictList selectedDataType))
-        (setq numberedDataList (GetNumberedDataList propertyValueDictList selectedDataType codeNameList))
+        (setq numberedDataList (GetNumberedDataList propertyValueDictList selectedDataType codeNameList numberMode))
         (setq matchedList (GetNumberedList numberedDataList selectedDataType numberMode))
         (setq confirmList matchedList)
         ;(princ numberedDataList)(princ)
@@ -3607,7 +3607,7 @@
   )
 )
 
-(defun GetNumberedDataList (propertyValueDictList dataType codeNameList / childrenData childrenDataList numberedList) 
+(defun GetNumberedDataList (propertyValueDictList dataType codeNameList numberMode / childrenData childrenDataList numberedList drawNum) 
   (foreach item codeNameList 
     (setq childrenData 
       (vl-remove-if-not '(lambda (x) 
@@ -3618,11 +3618,13 @@
       ) 
     )
     (setq childrenDataList (append childrenDataList (list childrenData))) 
-    (setq numberedList (append numberedList (list (GetNumberedListByStartAndLengthUtils item "1" (length childrenData))))) 
+    (setq numberedList 
+      (append numberedList (list (GetNumberedListByStartAndLengthUtils item "1" (length childrenData))))
+    ) 
   )
   (mapcar '(lambda (x y) 
               (mapcar '(lambda (xx yy) 
-                        (append xx (list (cons "numberedString" yy)))
+                        (append xx (list (cons "numberedString" (GetcodeNameByNumberMode yy numberMode (cdr (assoc "DRAWNUM" xx))))))
                       ) 
                 x 
                 y
@@ -3630,6 +3632,14 @@
            ) 
     childrenDataList 
     numberedList
+  ) 
+)
+
+(defun GetcodeNameByNumberMode (originString numberMode drawNum /) 
+  (setq drawNum (RegExpReplace (ExtractDrawNum drawNum) "0(\\d)-(\\d*)" (strcat "$1" "$2") nil nil))
+  (cond 
+    ((= numberMode "0") (RegExpReplace originString "([A-Za-z]+)(\\d*).*" (strcat "$1" drawNum "$2") nil nil))
+    ((= numberMode "1") originString)
   ) 
 )
 
