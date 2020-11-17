@@ -2533,7 +2533,12 @@
                                      (list (GetAllPropertyValueByEntityName (handent (cdr (assoc "relatedid" x)))))
                                    ))
            ) 
-    (GetAllPropertyValueListByEntityNameList entityNameList)
+    ; relatedid value maybe null
+    (vl-remove-if-not '(lambda (x) 
+                        (/= (cdr (assoc "relatedid" x)) "")
+                      ) 
+      (GetAllPropertyValueListByEntityNameList entityNameList)
+    )
   )
   (UpdateJoinDrawArrowStrategy dataType entityNameList relatedPipeData)
 )
