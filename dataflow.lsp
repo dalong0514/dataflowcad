@@ -3333,11 +3333,6 @@
   (numberPipelineAndTagByBox dataTypeList "filterAndNumberBox")
 )
 
-(defun c:enhancedNumber (/ dataTypeList)
-  (setq dataTypeList (GetEnhancedNumberDataTypeList))
-  (enhancedNumberByBox dataTypeList "enhancedNumberBox")
-)
-
 (defun numberPipelineAndTagByBox (propertyNameList tileName / dcl_id dataType dataChildrenType patternValue propertyValue replacedSubstring status selectedPropertyName selectedDataType ss sslen matchedList confirmList propertyValueDictList entityNameList modifyMessageStatus modifyMsgBtnStatus numberedList)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
@@ -3487,6 +3482,68 @@
   )
   (unload_dialog dcl_id)
   (princ)
+)
+
+(defun GetNumberedEntityNameList (ss dataType dataChildrenType / dictList entityNameList resultList)
+  (if (= dataType "Instrument") 
+    (progn 
+      (setq entityNameList (GetEntityNameListBySSUtils ss))
+      (setq dictList (GetPropertyDictListByEntityNameList entityNameList '("entityhandle" "FUNCTION")))
+      (setq dictList 
+        (vl-remove-if-not '(lambda (x) 
+                            (wcmatch (cdr (assoc "FUNCTION" x)) 
+                                      (instrumentFunctionMatchStrategy dataChildrenType)
+                            ) 
+                          ) 
+          dictList
+        ) 
+      )
+      (mapcar '(lambda (x) 
+                 (setq resultList (append resultList (list (handent (cdr (assoc "entityhandle" x))))))
+               ) 
+        dictList
+      )
+    )
+    (setq resultList (GetEntityNameListBySSUtils ss))
+  )
+  resultList
+)
+
+(defun GetNumberedPropertyValueList (dictList dataType dataChildrenType /) 
+  (if (= dataType "Instrument") 
+    (progn 
+      (setq dictList (GetInstrumentChildrenTypeList dictList dataType dataChildrenType))
+      (mapcar '(lambda (x) 
+                (strcat (cdr (assoc (nth 1  (numberedPropertyNameListStrategy dataType)) x)) 
+                  (cdr (assoc (car (numberedPropertyNameListStrategy dataType)) x))
+                )
+              ) 
+        dictList
+      ) 
+    )
+    (mapcar '(lambda (x) 
+              (cdr (assoc (car (numberedPropertyNameListStrategy dataType)) x))
+            ) 
+      dictList
+    ) 
+  )
+)
+
+(defun GetInstrumentChildrenTypeList (dictList dataType dataChildrenType /)
+  (vl-remove-if-not '(lambda (x) 
+                       (wcmatch (cdr (assoc (nth 1 (numberedPropertyNameListStrategy dataType)) x)) 
+                                (instrumentFunctionMatchStrategy dataChildrenType)
+                       ) 
+                     ) 
+    dictList
+  )
+)
+
+;;;----------------------------Enhanced Number Data------------------------;;;
+
+(defun c:enhancedNumber (/ dataTypeList)
+  (setq dataTypeList (GetEnhancedNumberDataTypeList))
+  (enhancedNumberByBox dataTypeList "enhancedNumberBox")
 )
 
 (defun enhancedNumberByBox (propertyNameList tileName / dcl_id dataType numberMode status selectedPropertyName 
@@ -3885,61 +3942,7 @@
     tagList
   )
 )
-
-(defun GetNumberedEntityNameList (ss dataType dataChildrenType / dictList entityNameList resultList)
-  (if (= dataType "Instrument") 
-    (progn 
-      (setq entityNameList (GetEntityNameListBySSUtils ss))
-      (setq dictList (GetPropertyDictListByEntityNameList entityNameList '("entityhandle" "FUNCTION")))
-      (setq dictList 
-        (vl-remove-if-not '(lambda (x) 
-                            (wcmatch (cdr (assoc "FUNCTION" x)) 
-                                      (instrumentFunctionMatchStrategy dataChildrenType)
-                            ) 
-                          ) 
-          dictList
-        ) 
-      )
-      (mapcar '(lambda (x) 
-                 (setq resultList (append resultList (list (handent (cdr (assoc "entityhandle" x))))))
-               ) 
-        dictList
-      )
-    )
-    (setq resultList (GetEntityNameListBySSUtils ss))
-  )
-  resultList
-)
-
-(defun GetNumberedPropertyValueList (dictList dataType dataChildrenType /) 
-  (if (= dataType "Instrument") 
-    (progn 
-      (setq dictList (GetInstrumentChildrenTypeList dictList dataType dataChildrenType))
-      (mapcar '(lambda (x) 
-                (strcat (cdr (assoc (nth 1  (numberedPropertyNameListStrategy dataType)) x)) 
-                  (cdr (assoc (car (numberedPropertyNameListStrategy dataType)) x))
-                )
-              ) 
-        dictList
-      ) 
-    )
-    (mapcar '(lambda (x) 
-              (cdr (assoc (car (numberedPropertyNameListStrategy dataType)) x))
-            ) 
-      dictList
-    ) 
-  )
-)
-
-(defun GetInstrumentChildrenTypeList (dictList dataType dataChildrenType /)
-  (vl-remove-if-not '(lambda (x) 
-                       (wcmatch (cdr (assoc (nth 1 (numberedPropertyNameListStrategy dataType)) x)) 
-                                (instrumentFunctionMatchStrategy dataChildrenType)
-                       ) 
-                     ) 
-    dictList
-  )
-)
+;;;----------------------------Enhanced Number Data------------------------;;;
 
 ; Number Pipeline, Instrument and Equipment
 ;;;-------------------------------------------------------------------------;;;
