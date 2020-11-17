@@ -3631,14 +3631,14 @@
   (cond 
     ((= numberMode "0") 
       (progn 
-        (setq childrenDataList (car (GetInstrumentChildrenDataListByDrawNum propertyValueDictList dataType startNumberString)))
-        (setq numberedList (cadr (GetInstrumentChildrenDataListByDrawNum propertyValueDictList dataType startNumberString)))
+        (setq childrenDataList (car (GetInstrumentChildrenDataListByDrawNum propertyValueDictList dataType)))
+        (setq numberedList (cadr (GetInstrumentChildrenDataListByDrawNum propertyValueDictList dataType)))
       )
     )
     ((= numberMode "1") 
       (progn 
-        (setq childrenDataList (car (GetInstrumentChildrenDataListByNoDrawNum propertyValueDictList dataType startNumberString)))
-        (setq numberedList (cadr (GetInstrumentChildrenDataListByNoDrawNum propertyValueDictList dataType startNumberString)))
+        (setq childrenDataList (car (GetInstrumentChildrenDataListByNoDrawNum propertyValueDictList dataType)))
+        (setq numberedList (cadr (GetInstrumentChildrenDataListByNoDrawNum propertyValueDictList dataType)))
       )
     )
   )
@@ -3655,7 +3655,7 @@
   ) 
 )
 
-(defun GetInstrumentChildrenDataListByNoDrawNum (propertyValueDictList dataType startNumberString / instrumentTypeMatchList childrenData childrenDataList numberedList) 
+(defun GetInstrumentChildrenDataListByNoDrawNum (propertyValueDictList dataType / instrumentTypeMatchList childrenData childrenDataList numberedList) 
   (setq instrumentTypeMatchList (GetInstrumentTypeMatchList))
   (foreach item instrumentTypeMatchList 
     (setq childrenData 
@@ -3674,7 +3674,7 @@
   (list childrenDataList numberedList)
 )
 
-(defun GetInstrumentChildrenDataListByDrawNum (propertyValueDictList dataType startNumberString / instrumentTypeMatchList childrenData childrenDataList numberedList) 
+(defun GetInstrumentChildrenDataListByDrawNum (propertyValueDictList dataType / instrumentTypeMatchList childrenData childrenDataList numberedList) 
   (setq instrumentTypeMatchList (GetInstrumentTypeMatchList))
   (mapcar '(lambda (drawNum) 
       (foreach item instrumentTypeMatchList 
@@ -3704,14 +3704,14 @@
   (cond 
     ((= numberMode "0") 
       (progn 
-        (setq childrenDataList (car (GetPipeAndEquipChildrenDataListByDrawNum propertyValueDictList dataType codeNameList startNumberString)))
-        (setq numberedList (cadr (GetPipeAndEquipChildrenDataListByDrawNum propertyValueDictList dataType codeNameList startNumberString)))
+        (setq childrenDataList (car (GetPipeAndEquipChildrenDataListByDrawNum propertyValueDictList dataType codeNameList)))
+        (setq numberedList (cadr (GetPipeAndEquipChildrenDataListByDrawNum propertyValueDictList dataType codeNameList)))
       )
     )
     ((= numberMode "1") 
       (progn 
-        (setq childrenDataList (car (GetPipeAndEquipChildrenDataListByNoDrawNum propertyValueDictList dataType codeNameList startNumberString)))
-        (setq numberedList (cadr (GetPipeAndEquipChildrenDataListByNoDrawNum propertyValueDictList dataType codeNameList startNumberString)))
+        (setq childrenDataList (car (GetPipeAndEquipChildrenDataListByNoDrawNum propertyValueDictList dataType codeNameList)))
+        (setq numberedList (cadr (GetPipeAndEquipChildrenDataListByNoDrawNum propertyValueDictList dataType codeNameList)))
       )
     )
   )
@@ -3728,7 +3728,7 @@
   ) 
 )
 
-(defun GetPipeAndEquipChildrenDataListByNoDrawNum (propertyValueDictList dataType codeNameList startNumberString / childrenData childrenDataList numberedList) 
+(defun GetPipeAndEquipChildrenDataListByNoDrawNum (propertyValueDictList dataType codeNameList / childrenData childrenDataList numberedList) 
   (foreach item codeNameList 
     (setq childrenData 
       (vl-remove-if-not '(lambda (x) 
@@ -3746,7 +3746,7 @@
   (list childrenDataList numberedList)
 )
 
-(defun GetPipeAndEquipChildrenDataListByDrawNum (propertyValueDictList dataType codeNameList startNumberString / childrenData childrenDataList numberedList) 
+(defun GetPipeAndEquipChildrenDataListByDrawNum (propertyValueDictList dataType codeNameList / childrenData childrenDataList numberedList) 
   (mapcar '(lambda (drawNum) 
             (foreach item codeNameList 
               (setq childrenData 
