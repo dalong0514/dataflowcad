@@ -2242,26 +2242,8 @@
 )
 
 (defun GenerateTextDataStrategy (blockName insPt textDataList /) 
-  (if (= blockName "PublicPipeElementS") 
-    (progn 
-      (GenerateTextByPositionAndContent (MoveInsertPosition insPt -0.85 6.3) (nth 1 textDataList))
-      (GenerateTextByPositionAndContent (MoveInsertPosition insPt -3.5 -10) (nth 3 textDataList))
-      (GenerateTextByPositionAndContent (MoveInsertPosition insPt 1.21 -10) (nth 4 textDataList))
-      (GeneratePublicPipePolyline insPt)
-      (GeneratePublicPipeDownArrow (MoveInsertPosition insPt 0 20))
-    )
-  )
-  (if (= blockName "PublicPipeElementW") 
-    (progn 
-      (GenerateTextByPositionAndContent (MoveInsertPosition insPt -0.85 6.3) (nth 1 textDataList))
-      (GenerateTextByPositionAndContent (MoveInsertPosition insPt -3.5 -11.5) (nth 2 textDataList))
-      (GenerateTextByPositionAndContent (MoveInsertPosition insPt 1.21 -11.5) (nth 4 textDataList))
-      (GeneratePublicPipePolyline insPt)
-      (GeneratePublicPipeUpArrow (MoveInsertPosition insPt 0 20))
-    )
-  )
-  (if (= blockName "EquipTagV2") 
-    (progn 
+  (cond 
+    ((= blockName "EquipTagV2") 
       (GenerateEquipTagText (MoveInsertPosition insPt 0 1) (nth 0 textDataList))
       (GenerateEquipTagText (MoveInsertPosition insPt 0 -4.5) (nth 1 textDataList))
     )
