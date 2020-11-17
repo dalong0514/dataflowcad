@@ -1394,10 +1394,10 @@
 )
 
 ;; Returns a list with duplicate elements removed.
-(defun DeduplicateForListUtils ( l )
-  (if l 
-    (cons (car l) 
-          (DeduplicateForListUtils (vl-remove (car l) (cdr l)))
+(defun DeduplicateForListUtils (resultList /)
+  (if resultList 
+    (cons (car resultList) 
+          (DeduplicateForListUtils (vl-remove (car resultList) (cdr resultList)))
     )
   )
 )
