@@ -2306,9 +2306,31 @@
   ; sort data by drawnum
   (setq dataList (vl-sort dataList '(lambda (x y) (< (nth 4 x) (nth 4 y)))))
   (setq insPtList (GetInsertPtList insPt (GenerateSortedNumByList dataList) 10))
-  (if (= pipeSourceDirection "0") 
-    (GeneratEntityObjectElement "PublicPipeElementS" insPtList dataList)
-    (GeneratEntityObjectElement "PublicPipeElementW" insPtList dataList)
+  (cond 
+    ((= pipeSourceDirection "0") (GenerateDownPublicPipe insPtList dataList))
+    ((= pipeSourceDirection "1") (GenerateUpPublicPipe insPtList dataList))
+  )
+)
+
+(defun GenerateUpPublicPipe (insPtList dataList /)
+  (mapcar '(lambda (x y) 
+             (GenerateOnePublicPipeUpArrow x (nth 2 y) (nth 4 y) (nth 0 y))
+             (GenerateOnePublicPipeUpPipeLine (MoveInsertPosition x 0 20) (nth 1 y) (nth 0 y))
+             (GeneratePublicPipePolyline x)
+          ) 
+          insPtList
+          dataList
+  )
+)
+
+(defun GenerateDownPublicPipe (insPtList dataList /)
+  (mapcar '(lambda (x y) 
+             (GenerateOnePublicPipeDownArrow x (nth 3 y) (nth 4 y) (nth 0 y))
+             (GenerateOnePublicPipeDownPipeLine (MoveInsertPosition x 0 20) (nth 1 y) (nth 0 y))
+             (GeneratePublicPipePolyline x)
+          ) 
+          insPtList
+          dataList
   )
 )
 
@@ -2790,7 +2812,7 @@
         (setq matchedList (car blockDataList))
         (setq sslen (length matchedList))
         (setq entityNameList (nth 1 blockDataList))
-        (setq previewDataList (GetPropertyDictListByEntityNameList entityNameList (GetPropertyNameListStrategy "PublicPipe")))
+        (setq previewDataList (GetPropertyValueListByEntityNameList entityNameList (GetPropertyNameListStrategy "PublicPipe")))
       )
     )
     ; all select button
@@ -2801,7 +2823,7 @@
         (setq matchedList (car blockDataList))
         (setq sslen (length matchedList))
         (setq entityNameList (nth 1 blockDataList))
-        (setq previewDataList (GetPropertyDictListByEntityNameList entityNameList (GetPropertyNameListStrategy "PublicPipe")))
+        (setq previewDataList (GetPropertyValueListByEntityNameList entityNameList (GetPropertyNameListStrategy "PublicPipe")))
       )
     )
     ; view button
