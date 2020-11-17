@@ -2233,26 +2233,22 @@
   (princ)
 )
 
-(defun GenerateOnePublicPipeElement (insPt textDataList blockName /)
-  (entmake (list (cons 0 "INSERT") (cons 100 "AcDbEntity") (cons 100 "AcDbBlockReference") 
-                 (cons 2 blockName) (cons 10 insPt) 
-           )
-  )
-  (GenerateTextDataStrategy blockName insPt textDataList)
-)
-
-(defun GenerateTextDataStrategy (blockName insPt textDataList /) 
+(defun GenerateOneEntityObjectElement (insPt textDataList blockName /) 
   (cond 
     ((= blockName "EquipTagV2") 
+      (entmake (list (cons 0 "INSERT") (cons 100 "AcDbEntity") (cons 100 "AcDbBlockReference") 
+                    (cons 2 blockName) (cons 10 insPt) 
+              )
+      )
       (GenerateEquipTagText (MoveInsertPosition insPt 0 1) (nth 0 textDataList))
       (GenerateEquipTagText (MoveInsertPosition insPt 0 -4.5) (nth 1 textDataList))
     )
   )
 )
 
-(defun GeneratEntityObjectElement (blockName insPtList dataList /)
+(defun GenerateEntityObjectElement (blockName insPtList dataList /)
   (mapcar '(lambda (x y) 
-             (GenerateOnePublicPipeElement x y blockName)
+             (GenerateOneEntityObjectElement x y blockName)
           ) 
           insPtList
           dataList
@@ -2330,7 +2326,7 @@
   (setq equipInfoList (vl-sort equipInfoList '(lambda (x y) (< (car x) (car y)))))
   (setq insPt (getpoint "\n选取设备位号的插入点："))
   (setq insPtList (GetInsertPtList insPt (GenerateSortedNumByList equipInfoList) 30))
-  (GeneratEntityObjectElement "EquipTagV2" insPtList equipInfoList)
+  (GenerateEntityObjectElement "EquipTagV2" insPtList equipInfoList)
 )
 
 ; Unit Test Completed
