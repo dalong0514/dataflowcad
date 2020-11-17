@@ -1402,6 +1402,15 @@
   )
 )
 
+; have not been used now - 2020-10-30
+(defun GetEntityNameListAfterGeneratedUtils (lastEntityName / resultList)
+  (while lastEntityName 
+    (setq lastEntityName (entnext lastEntityName))
+    (setq resultList (append resultList (list lastEntityName)))
+  )
+  resultList
+)
+
 ; Utils Function 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
@@ -2255,62 +2264,6 @@
   )
 )
 
-; have not been used now - 2020-10-30
-(defun GetEntityNameListAfterGeneratedUtils (lastEntityName / resultList)
-  (while lastEntityName 
-    (setq lastEntityName (entnext lastEntityName))
-    (setq resultList (append resultList (list lastEntityName)))
-  )
-  resultList
-)
-
-(defun InsertPublicPipeElement (dataList pipeSourceDirection / lastEntityName insPt insPtList) 
-  (setq lastEntityName (entlast))
-  (setq insPt (getpoint "\n选取辅助流程组件插入点："))
-  (setq dataList (ProcessPublicPipeElementData dataList))
-  ; sort data by drawnum
-  (setq dataList (vl-sort dataList '(lambda (x y) (< (nth 4 x) (nth 4 y)))))
-  (setq insPtList (GetInsertPtList insPt (GenerateSortedNumByList dataList) 10))
-  (cond 
-    ((= pipeSourceDirection "0") (GenerateDownPublicPipe insPtList dataList))
-    ((= pipeSourceDirection "1") (GenerateUpPublicPipe insPtList dataList))
-  )
-)
-
-(defun GenerateUpPublicPipe (insPtList dataList /)
-  (mapcar '(lambda (x y) 
-             (GenerateOnePublicPipeUpArrow x (nth 2 y) (nth 4 y) (nth 0 y))
-             (GenerateOnePublicPipeUpPipeLine (MoveInsertPosition x 0 20) (nth 1 y) (nth 0 y))
-             (GeneratePublicPipePolyline x)
-          ) 
-          insPtList
-          dataList
-  )
-)
-
-(defun GenerateDownPublicPipe (insPtList dataList /)
-  (mapcar '(lambda (x y) 
-             (GenerateOnePublicPipeDownArrow x (nth 3 y) (nth 4 y) (nth 0 y))
-             (GenerateOnePublicPipeDownPipeLine (MoveInsertPosition x 0 20) (nth 1 y) (nth 0 y))
-             (GeneratePublicPipePolyline x)
-          ) 
-          insPtList
-          dataList
-  )
-)
-
-(defun ProcessPublicPipeElementData (dataList /) 
-  (mapcar '(lambda (x) 
-             ; the property value of drawnum may be null
-             (if (< (strlen (nth 4 x)) 3) 
-               (ReplaceListItemByindexUtils "XXXXX" 4 x)
-               (ReplaceListItemByindexUtils (ExtractDrawNum (nth 4 x)) 4 x)
-             )
-           ) 
-    dataList
-  )
-)
-
 ; Unit Test Completed
 (defun ExtractDrawNum (str / result) 
   (if (> (strlen str) 2) 
@@ -2394,6 +2347,62 @@
 )
 
 ; Generate Entity Object in CAD
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+
+
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+; logic for generate PublicPipe
+
+(defun InsertPublicPipeElement (dataList pipeSourceDirection / lastEntityName insPt insPtList) 
+  (setq lastEntityName (entlast))
+  (setq insPt (getpoint "\n选取辅助流程组件插入点："))
+  (setq dataList (ProcessPublicPipeElementData dataList))
+  ; sort data by drawnum
+  (setq dataList (vl-sort dataList '(lambda (x y) (< (nth 4 x) (nth 4 y)))))
+  (setq insPtList (GetInsertPtList insPt (GenerateSortedNumByList dataList) 10))
+  (cond 
+    ((= pipeSourceDirection "0") (GenerateDownPublicPipe insPtList dataList))
+    ((= pipeSourceDirection "1") (GenerateUpPublicPipe insPtList dataList))
+  )
+)
+
+(defun GenerateUpPublicPipe (insPtList dataList /)
+  (mapcar '(lambda (x y) 
+             (GenerateOnePublicPipeUpArrow x (nth 2 y) (nth 4 y) (nth 0 y))
+             (GenerateOnePublicPipeUpPipeLine (MoveInsertPosition x 0 20) (nth 1 y) (nth 0 y))
+             (GeneratePublicPipePolyline x)
+          ) 
+          insPtList
+          dataList
+  )
+)
+
+(defun GenerateDownPublicPipe (insPtList dataList /)
+  (mapcar '(lambda (x y) 
+             (GenerateOnePublicPipeDownArrow x (nth 3 y) (nth 4 y) (nth 0 y))
+             (GenerateOnePublicPipeDownPipeLine (MoveInsertPosition x 0 20) (nth 1 y) (nth 0 y))
+             (GeneratePublicPipePolyline x)
+          ) 
+          insPtList
+          dataList
+  )
+)
+
+(defun ProcessPublicPipeElementData (dataList /) 
+  (mapcar '(lambda (x) 
+             ; the property value of drawnum may be null
+             (if (< (strlen (nth 4 x)) 3) 
+               (ReplaceListItemByindexUtils "XXXXX" 4 x)
+               (ReplaceListItemByindexUtils (ExtractDrawNum (nth 4 x)) 4 x)
+             )
+           ) 
+    dataList
+  )
+)
+
+; logic for generate PublicPipe
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
 
