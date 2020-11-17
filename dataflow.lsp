@@ -3644,7 +3644,7 @@
   )
   (mapcar '(lambda (x y) 
               (mapcar '(lambda (xx yy) 
-                        (append xx (list (cons "numberedString" (GetInstrumentCodeNameByNumberMode yy numberMode (cdr (assoc "DRAWNUM" xx))))))
+                        (append xx (list (cons "numberedString" (GetInstrumentCodeNameByNumberMode yy numberMode (cdr (assoc "DRAWNUM" xx)) startNumberString))))
                       ) 
                 x 
                 y
@@ -3717,7 +3717,7 @@
   )
   (mapcar '(lambda (x y) 
               (mapcar '(lambda (xx yy) 
-                        (append xx (list (cons "numberedString" (GetPipeCodeNameByNumberMode yy numberMode (cdr (assoc "DRAWNUM" xx))))))
+                        (append xx (list (cons "numberedString" (GetPipeCodeNameByNumberMode yy numberMode (cdr (assoc "DRAWNUM" xx)) startNumberString))))
                       ) 
                 x 
                 y
@@ -3771,19 +3771,19 @@
   (list childrenDataList numberedList)
 )
 
-(defun GetPipeCodeNameByNumberMode (originString numberMode drawNum /) 
+(defun GetPipeCodeNameByNumberMode (originString numberMode drawNum startNumberString /) 
   (setq drawNum (RegExpReplace (ExtractDrawNum drawNum) "0(\\d)-(\\d*)" (strcat "$1" "$2") nil nil))
   (cond 
-    ((= numberMode "0") (RegExpReplace originString "([A-Za-z]+)(\\d*).*" (strcat "$1" drawNum "$2") nil nil))
-    ((= numberMode "1") originString)
+    ((= numberMode "0") (RegExpReplace originString "([A-Za-z]+)(\\d*).*" (strcat "$1" startNumberString drawNum "$2") nil nil))
+    ((= numberMode "1") (RegExpReplace originString "([A-Za-z]+)(\\d*).*" (strcat "$1" startNumberString "$2") nil nil))
   ) 
 )
 
-(defun GetInstrumentCodeNameByNumberMode (originString numberMode drawNum /) 
+(defun GetInstrumentCodeNameByNumberMode (originString numberMode drawNum startNumberString /) 
   (setq drawNum (RegExpReplace (ExtractDrawNum drawNum) "0(\\d)-(\\d*)" (strcat "$1" "$2") nil nil))
   (cond 
-    ((= numberMode "0") (strcat drawNum originString))
-    ((= numberMode "1") originString)
+    ((= numberMode "0") (strcat startNumberString drawNum originString))
+    ((= numberMode "1") (strcat startNumberString originString))
   ) 
 )
 
