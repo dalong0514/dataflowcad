@@ -3491,7 +3491,7 @@
 
 (defun enhancedNumberByBox (propertyNameList tileName / dcl_id dataType numberMode status selectedPropertyName 
                             selectedDataType ss sslen matchedList confirmList propertyValueDictList entityNameList 
-                            modifyMessageStatus modifyMsgBtnStatus numberedDataList numberedList codeNameList)
+                            modifyMessageStatus modifyMsgBtnStatus numberedDataList numberedList codeNameList startNumberString)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -3506,6 +3506,7 @@
     (mode_tile "numberMode" 2)
     (action_tile "dataType" "(setq dataType $value)")
     (action_tile "numberMode" "(setq numberMode $value)")
+    (action_tile "startNumberString" "(setq startNumberString $value)")
     ; init the default data of text
     (progn 
       (start_list "dataType" 3)
@@ -3525,9 +3526,13 @@
     (if (= nil numberMode)
       (setq numberMode "0")
     )
+    (if (= nil startNumberString)
+      (setq startNumberString "")
+    ) 
     ; setting for saving the existed value of a box
     (set_tile "dataType" dataType)
     (set_tile "numberMode" numberMode)
+    (set_tile "startNumberString" startNumberString)
     ; Display the number of selected pipes
     (if (/= sslen nil)
       (set_tile "msg" (strcat "匹配到的数量： " (rtos sslen)))
