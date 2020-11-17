@@ -2286,6 +2286,19 @@
   resultList
 )
 
+(defun InsertPublicPipeElementV2 (dataList pipeSourceDirection / lastEntityName insPt insPtList) 
+  (setq lastEntityName (entlast))
+  (setq insPt (getpoint "\n选取辅助流程组件插入点："))
+  (setq dataList (ProcessPublicPipeElementData dataList))
+  ; sort data by drawnum
+  (setq dataList (vl-sort dataList '(lambda (x y) (< (nth 4 x) (nth 4 y)))))
+  (setq insPtList (GetInsertPtList insPt (GenerateSortedNumByList dataList) 10))
+  (if (= pipeSourceDirection "0") 
+    (GeneratEntityObjectElement "PublicPipeElementS" insPtList dataList)
+    (GeneratEntityObjectElement "PublicPipeElementW" insPtList dataList)
+  )
+)
+
 (defun InsertPublicPipeElement (dataList pipeSourceDirection / lastEntityName insPt insPtList) 
   (setq lastEntityName (entlast))
   (setq insPt (getpoint "\n选取辅助流程组件插入点："))
@@ -2777,7 +2790,7 @@
         (setq matchedList (car blockDataList))
         (setq sslen (length matchedList))
         (setq entityNameList (nth 1 blockDataList))
-        (setq previewDataList (GetPropertyValueListByEntityNameList entityNameList (GetPropertyNameListStrategy "PublicPipe")))
+        (setq previewDataList (GetPropertyDictListByEntityNameList entityNameList (GetPropertyNameListStrategy "PublicPipe")))
       )
     )
     ; all select button
@@ -2788,7 +2801,7 @@
         (setq matchedList (car blockDataList))
         (setq sslen (length matchedList))
         (setq entityNameList (nth 1 blockDataList))
-        (setq previewDataList (GetPropertyValueListByEntityNameList entityNameList (GetPropertyNameListStrategy "PublicPipe")))
+        (setq previewDataList (GetPropertyDictListByEntityNameList entityNameList (GetPropertyNameListStrategy "PublicPipe")))
       )
     )
     ; view button
