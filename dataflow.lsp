@@ -2129,6 +2129,17 @@
   (princ)
 )
 
+(defun GenerateVerticallyBlockAttribute (insPt propertyName propertyValue blockLayer /)
+  (entmake 
+    (list (cons 0 "ATTRIB") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 blockLayer) (cons 100 "AcDbText") 
+          (cons 10 insPt) (cons 40 3.0) (cons 1 propertyValue) (cons 50 1.5708) (cons 41 0.7) (cons 51 0.0) (cons 7 "Standard") (cons 71 0) (cons 72 0) 
+          (cons 11 '(0.0 0.0 0.0)) (cons 210 '(0.0 0.0 1.0)) (cons 100 "AcDbAttribute") (cons 280 0) (cons 2 propertyName) 
+          (cons 70 0) (cons 73 0) (cons 74 0) (cons 280 0)
+    )
+  )
+  (princ)
+)
+
 (defun GenerateBlockHiddenAttribute (insPt propertyName propertyValue blockLayer /)
   (entmake 
     (list (cons 0 "ATTRIB") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 blockLayer) (cons 100 "AcDbText") 
@@ -2140,23 +2151,82 @@
   (princ)
 )
 
-(defun GenerateJoinDrawArrowToElement (insPt fromtoValue drawnumValue relatedIDValue/)
+(defun GenerateVerticallyBlockHiddenAttribute (insPt propertyName propertyValue blockLayer /)
+  (entmake 
+    (list (cons 0 "ATTRIB") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 blockLayer) (cons 100 "AcDbText") 
+          (cons 10 insPt) (cons 40 3.0) (cons 1 propertyValue) (cons 50 1.5708) (cons 41 0.7) (cons 51 0.0) (cons  7 "Standard") (cons 71 0) (cons 72 0) 
+          (cons 11 '(0.0 0.0 0.0)) (cons 210 '(0.0 0.0 1.0)) (cons 100 "AcDbAttribute") (cons 280 0) (cons 2 propertyName) 
+          (cons 70 1) (cons 70 1) (cons 73 0) (cons 74 0) (cons 280 0)
+    )
+  )
+  (princ)
+)
+
+(defun GenerateJoinDrawArrowToElement (insPt fromtoValue drawnumValue relatedIDValue /)
   (GenerateBlockReference insPt "JoinDrawArrowTo" "接图箭头")
   (GenerateBlockAttribute (MoveInsertPosition insPt 1 4) "FROMTO" fromtoValue "接图箭头")
   (GenerateBlockAttribute (MoveInsertPosition insPt 1 -1.5) "DRAWNUM" drawnumValue "接图箭头")
-  (GenerateBlockHiddenAttribute (MoveInsertPosition insPt 1 -7) "RELATEDID" relatedIDValue/ "接图箭头")
+  (GenerateBlockHiddenAttribute (MoveInsertPosition insPt 1 -7) "RELATEDID" relatedIDValue "接图箭头")
   (entmake 
     (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
   )
   (princ)
 )
 
-(defun GenerateJoinDrawArrowFromElement (insPt pipenumValue fromtoValue drawnumValue relatedIDValue/)
+(defun GenerateJoinDrawArrowFromElement (insPt pipenumValue fromtoValue drawnumValue relatedIDValue /)
   (GenerateBlockReference insPt "JoinDrawArrowFrom" "接图箭头")
   (GenerateBlockAttribute (MoveInsertPosition insPt 30 2) "PIPENUM" pipenumValue "接图箭头")
   (GenerateBlockAttribute (MoveInsertPosition insPt 1 4) "FROMTO" fromtoValue "接图箭头")
   (GenerateBlockAttribute (MoveInsertPosition insPt 1 -1.5) "DRAWNUM" drawnumValue "接图箭头")
-  (GenerateBlockHiddenAttribute (MoveInsertPosition insPt 1 -7) "RELATEDID" relatedIDValue/ "接图箭头")
+  (GenerateBlockHiddenAttribute (MoveInsertPosition insPt 1 -7) "RELATEDID" relatedIDValue "接图箭头")
+  (entmake 
+    (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
+  )
+  (princ)
+)
+
+(defun c:foo (/ insPt)
+  ;(GetEntityDataUtils)
+  (setq insPt (getpoint "\n选取辅助流程组件插入点："))
+  (GenerateOnePublicPipeDownPipeLine insPt "VT1105-50-2J1" "ERFD")
+)
+
+(defun GenerateOnePublicPipeDownArrow (insPt tagValue drawnumValue relatedIDValue /)
+  (GenerateBlockReference insPt "PublicPipeDownArrow" "文字")
+  (GenerateVerticallyBlockAttribute (MoveInsertPosition insPt -3.5 -10) "TAG" tagValue "文字")
+  (GenerateVerticallyBlockAttribute (MoveInsertPosition insPt 1.2 -10) "DRAWNUM" drawnumValue "文字")
+  (GenerateVerticallyBlockHiddenAttribute (MoveInsertPosition insPt 7 -10) "RELATEDID" relatedIDValue "文字")
+  (entmake 
+    (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
+  )
+  (princ)
+)
+
+(defun GenerateOnePublicPipeUpArrow (insPt tagValue drawnumValue relatedIDValue /)
+  (GenerateBlockReference insPt "PublicPipeUpArrow" "文字")
+  (GenerateVerticallyBlockAttribute (MoveInsertPosition insPt -3.5 -11.5) "TAG" tagValue "文字")
+  (GenerateVerticallyBlockAttribute (MoveInsertPosition insPt 1.2 -11.5) "DRAWNUM" drawnumValue "文字")
+  (GenerateVerticallyBlockHiddenAttribute (MoveInsertPosition insPt 7 -11.5) "RELATEDID" relatedIDValue "文字")
+  (entmake 
+    (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
+  )
+  (princ)
+)
+
+(defun GenerateOnePublicPipeUpPipeLine (insPt pipenumValue relatedIDValue /)
+  (GenerateBlockReference insPt "PublicPipeUpPipeLine" "文字")
+  (GenerateVerticallyBlockAttribute (MoveInsertPosition insPt -1 -16) "PIPENUM" pipenumValue "文字")
+  (GenerateVerticallyBlockHiddenAttribute (MoveInsertPosition insPt -5 -16) "RELATEDID" relatedIDValue "文字")
+  (entmake 
+    (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
+  )
+  (princ)
+)
+
+(defun GenerateOnePublicPipeDownPipeLine (insPt pipenumValue relatedIDValue /)
+  (GenerateBlockReference insPt "PublicPipeDownPipeLine" "文字")
+  (GenerateVerticallyBlockAttribute (MoveInsertPosition insPt -1 -16) "PIPENUM" pipenumValue "文字")
+  (GenerateVerticallyBlockHiddenAttribute (MoveInsertPosition insPt -5 -16) "RELATEDID" relatedIDValue "文字")
   (entmake 
     (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
   )
