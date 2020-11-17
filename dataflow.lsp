@@ -690,6 +690,17 @@
   )
 )
 
+(defun GetAllPublicPipePipeLineSSUtils ()
+  (setq ss (ssget "X" '((0 . "INSERT") 
+        (-4 . "<OR")
+          (2 . "PublicPipeUpPipeLine")
+          (2 . "PublicPipeDownPipeLine")
+        (-4 . "OR>")
+      )
+    )
+  )
+)
+
 (defun GetInstrumentAndPipeSSBySelectUtils ()
   (setq ss (ssget '((0 . "INSERT") 
         (-4 . "<OR")
@@ -954,6 +965,9 @@
   (if (= dataType "Equipment")
     (setq ss (GetAllEquipmentSSUtils))
   )
+  (if (= dataType "PublicPipePipeLine")
+    (setq ss (GetAllPublicPipePipeLineSSUtils))
+  )
   (if (= dataType "InstrumentL")
     (setq ss (ssget "X" '((0 . "INSERT") (2 . "InstrumentL"))))
   )
@@ -993,6 +1007,12 @@
   (if (= dataType "JoinDrawArrowFrom")
     (setq ss (ssget "X" '((0 . "INSERT") (2 . "JoinDrawArrowFrom"))))
   )  
+  (if (= dataType "PublicPipeUpArrow")
+    (setq ss (ssget "X" '((0 . "INSERT") (2 . "PublicPipeUpArrow"))))
+  )  
+  (if (= dataType "PublicPipeDownArrow")
+    (setq ss (ssget "X" '((0 . "INSERT") (2 . "PublicPipeDownArrow"))))
+  )   
   ss
 )
 
@@ -2355,7 +2375,7 @@
 ;;;-------------------------------------------------------------------------;;;
 ; logic for generate PublicPipe
 
-(defun InsertPublicPipeElement (dataList pipeSourceDirection / lastEntityName insPt insPtList) 
+(defun InsertPublicPipe (dataList pipeSourceDirection / lastEntityName insPt insPtList) 
   (setq lastEntityName (entlast))
   (setq insPt (getpoint "\n选取辅助流程组件插入点："))
   (setq dataList (ProcessPublicPipeElementData dataList))
@@ -2400,6 +2420,41 @@
            ) 
     dataList
   )
+)
+
+(defun c:UpdatePublicPipe ()
+  (UpdatePublicPipeUpArrowByDataType "PublicPipeUpArrow")
+  (UpdatePublicPipeDownArrowByDataType "PublicPipeDownArrow")
+  (UpdatePublicPipePipeLineByDataType "PublicPipePipeLine")
+  (alert "更新完成")(princ)
+)
+
+(defun UpdatePublicPipePipeLineByDataType (dataType / entityNameList relatedPipeData) 
+  (setq entityNameList 
+    (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils dataType))
+  )
+  (mapcar '(lambda (x) 
+             (setq relatedPipeData (append relatedPipeData 
+                                     (list (GetAllPropertyValueByEntityName (handent (cdr (assoc "relatedid" x)))))
+                                   ))
+           ) 
+    (GetAllPropertyValueListByEntityNameList entityNameList)
+  )
+  (UpdateJoinDrawArrowStrategy dataType entityNameList relatedPipeData)
+)
+
+(defun UpdatePublicPipeUpArrowByDataType (dataType / entityNameList relatedPipeData) 
+  (setq entityNameList 
+    (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils dataType))
+  )
+  (mapcar '(lambda (x) 
+             (setq relatedPipeData (append relatedPipeData 
+                                     (list (GetAllPropertyValueByEntityName (handent (cdr (assoc "relatedid" x)))))
+                                   ))
+           ) 
+    (GetAllPropertyValueListByEntityNameList entityNameList)
+  )
+  (UpdateJoinDrawArrowStrategy dataType entityNameList relatedPipeData)
 )
 
 ; logic for generate PublicPipe
@@ -2803,7 +2858,7 @@
     ; view button
     (if (= 4 status)
       (progn 
-        (InsertPublicPipeElement previewDataList pipeSourceDirection)
+        (InsertPublicPipe previewDataList pipeSourceDirection)
         (setq status 1)
       )
     )
