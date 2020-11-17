@@ -219,7 +219,20 @@ enhancedNumberBox : dialog {
         list = "";
         value = "";
       }
-      : spacer { height = 1; } 
+      : spacer { height = 1; }
+      : row {
+        : text {
+          key = "startNumberStringMsg";
+          label = "±àºÅÇ°×º";
+        }
+        : edit_box {
+          key = "startNumberString";
+          edit_width = 41;
+          mnemonic = "N";
+          value = "";
+        }
+      } 
+      : spacer { height = 1; }
     }
     : spacer { height = 1; } 
     : list_box { 
