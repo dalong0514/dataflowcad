@@ -3001,7 +3001,14 @@
 )
 
 ; Unit Test Compeleted
-(defun GetIncreasedNumberStringListUtils (startNumer listLength / minIncreasedNumberList maxIncreasedNumberList resultList) 
+(defun GetIncreasedNumberStringListUtils (startNumer listLength / minIncreasedNumberList maxIncreasedNumberList) 
+  (cond 
+    ((< listLength 100) (GetIncreasedNumberStringListHundredUtils startNumer listLength)) 
+    ((and (>= listLength 100) (< listLength 1000)) (GetIncreasedNumberStringListHundredUtils startNumer listLength))
+  )
+)
+
+(defun GetIncreasedNumberStringListHundredUtils (startNumer listLength / minIncreasedNumberList maxIncreasedNumberList) 
   (setq minIncreasedNumberList 
     (vl-remove-if-not '(lambda (x) (< x 10)) 
       (GetIncreasedNumberListUtils startNumer listLength)
