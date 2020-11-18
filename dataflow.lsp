@@ -3002,25 +3002,53 @@
 
 ; Unit Test Compeleted
 (defun GetIncreasedNumberStringListUtils (startNumer listLength / minIncreasedNumberList maxIncreasedNumberList) 
+  (GetIncreasedNumberStringListHundredUtils startNumer listLength)
+)
+
+(defun GetIncreasedNumberStringListUtilsV2 (startNumer listLength / minIncreasedNumberList maxIncreasedNumberList) 
   (cond 
-    ((< listLength 100) (GetIncreasedNumberStringListHundredUtils startNumer listLength)) 
-    ((and (>= listLength 100) (< listLength 1000)) (GetIncreasedNumberStringListHundredUtils startNumer listLength))
+    ((< listLength 100) 
+     (GetIncreasedNumberStringListHundredUtils startNumer listLength)) 
+    ((and (>= listLength 100) (< listLength 1000)) 
+     (GetIncreasedNumberStringListThousandUtils startNumer listLength))
   )
 )
 
-(defun GetIncreasedNumberStringListHundredUtils (startNumer listLength / minIncreasedNumberList maxIncreasedNumberList) 
-  (setq minIncreasedNumberList 
+(defun GetIncreasedNumberStringListHundredUtils (startNumer listLength / tenIncreasedNumberList hundredIncreasedNumberList) 
+  (setq tenIncreasedNumberList 
     (vl-remove-if-not '(lambda (x) (< x 10)) 
       (GetIncreasedNumberListUtils startNumer listLength)
     )
   )
-  (setq maxIncreasedNumberList 
+  (setq hundredIncreasedNumberList 
     (vl-remove-if-not '(lambda (x) (>= x 10)) 
       (GetIncreasedNumberListUtils startNumer listLength)
     )
   )
-  (append (mapcar '(lambda (x) (strcat "0" (rtos x))) minIncreasedNumberList) 
-    (mapcar '(lambda (x) (rtos x)) maxIncreasedNumberList)
+  (append (mapcar '(lambda (x) (strcat "0" (rtos x))) tenIncreasedNumberList) 
+    (mapcar '(lambda (x) (rtos x)) hundredIncreasedNumberList)
+  )
+)
+
+(defun GetIncreasedNumberStringListThousandUtils (startNumer listLength / tenIncreasedNumberList hundredIncreasedNumberList thousandIncreasedNumberList) 
+  (setq tenIncreasedNumberList 
+    (vl-remove-if-not '(lambda (x) (< x 10)) 
+      (GetIncreasedNumberListUtils startNumer listLength)
+    )
+  )
+  (setq hundredIncreasedNumberList 
+    (vl-remove-if-not '(lambda (x) (and (>= x 10) (< x 100))) 
+      (GetIncreasedNumberListUtils startNumer listLength)
+    )
+  )
+  (setq thousandIncreasedNumberList 
+    (vl-remove-if-not '(lambda (x) (>= x 100)) 
+      (GetIncreasedNumberListUtils startNumer listLength)
+    )
+  ) 
+  (append (mapcar '(lambda (x) (strcat "00" (rtos x))) tenIncreasedNumberList) 
+    (mapcar '(lambda (x) (strcat "0" (rtos x))) hundredIncreasedNumberList) 
+    (mapcar '(lambda (x) (rtos x)) thousandIncreasedNumberList)
   )
 )
 
