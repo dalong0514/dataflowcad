@@ -3774,7 +3774,7 @@
 
 (defun enhancedNumberByBox (propertyNameList tileName / dcl_id dataType numberMode status selectedPropertyName 
                             selectedDataType ss sslen matchedList confirmList propertyValueDictList entityNameList 
-                            modifyMessageStatus modifyMsgBtnStatus numberedDataList numberedList codeNameList startNumberString)
+                            modifyMessageStatus numberedDataList numberedList codeNameList startNumberString)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -3820,11 +3820,11 @@
     (if (/= sslen nil)
       (set_tile "msg" (strcat "匹配到的数量： " (rtos sslen)))
     )
-    (if (= modifyMsgBtnStatus 1)
+    (if (= modifyMessageStatus 1)
       (set_tile "modifyBtnMsg" "编号状态：已完成")
     )
     (if (= modifyMessageStatus 0)
-      (set_tile "resultMsg" "请先预览修改")
+      (set_tile "modifyBtnMsg" "请先预览修改")
     )
     (if (/= selectedDataType nil)
       (set_tile "dataType" dataType)
@@ -3857,17 +3857,18 @@
         (setq numberedDataList (GetNumberedDataListStrategy propertyValueDictList selectedDataType codeNameList numberMode startNumberString))
         (setq matchedList (GetNumberedListStrategy numberedDataList selectedDataType))
         (setq confirmList matchedList)
-        ;(princ numberedDataList)(princ)
       )
     )
     ; modify button
     (if (= 4 status)
       (progn 
-        (if (= matchedList nil)
+        (if (/= confirmList nil) 
+          (progn 
+            (UpdateNumberedData numberedDataList selectedDataType)
+            (setq modifyMessageStatus 1)
+          )
           (setq modifyMessageStatus 0)
-          (UpdateNumberedData numberedDataList selectedDataType)
         )
-        (setq modifyMsgBtnStatus 1)
       )
     )
   )
