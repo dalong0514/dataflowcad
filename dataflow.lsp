@@ -3591,9 +3591,9 @@
     (action_tile "cancel" "(done_dialog 0)")
     (action_tile "btnSelect" "(done_dialog 2)")
     (action_tile "btnAll" "(done_dialog 3)")
+    (action_tile "btnClickSelect" "(done_dialog 4)")
     (action_tile "btnPreviewModify" "(done_dialog 5)")
     (action_tile "btnModify" "(done_dialog 6)")
-    (action_tile "btnClickSelect" "(done_dialog 4)")
     (mode_tile "dataType" 2)
     (mode_tile "dataChildrenType" 2)
     (action_tile "dataType" "(setq dataType $value)")
@@ -3649,7 +3649,7 @@
       (set_tile "dataType" dataType)
     )
     (if (/= matchedList nil)
-      (progn
+      (progn 
         (start_list "matchedResult" 3)
         (mapcar '(lambda (x) (add_list x)) 
                  matchedList)
@@ -3674,6 +3674,8 @@
         (setq ss (SortSelectionSetByXYZ ss))
         (setq entityNameList (GetNumberedEntityNameList ss selectedDataType dataChildrenType))
         (setq propertyValueDictList (GetPropertyDictListByEntityNameList entityNameList (numberedPropertyNameListStrategy selectedDataType)))
+        ; filter pipe by patternValue
+        (setq propertyValueDictList (FilterPipeByPatternValue propertyValueDictList patternValue selectedDataType))
         (setq matchedList (GetNumberedPropertyValueList propertyValueDictList selectedDataType dataChildrenType))
         (setq sslen (length matchedList))
       )
@@ -3687,6 +3689,8 @@
         (setq ss (SortSelectionSetByXYZ ss))
         (setq entityNameList (GetNumberedEntityNameList ss selectedDataType dataChildrenType))
         (setq propertyValueDictList (GetPropertyDictListByEntityNameList entityNameList (numberedPropertyNameListStrategy selectedDataType)))
+        ; filter pipe by patternValue
+        (setq propertyValueDictList (FilterPipeByPatternValue propertyValueDictList patternValue selectedDataType)) 
         (setq matchedList (GetNumberedPropertyValueList propertyValueDictList selectedDataType dataChildrenType))
         (setq sslen (length matchedList))
       )
@@ -3698,6 +3702,8 @@
         (setq ss (GetBlockSSBySelectByDataTypeUtils selectedDataType))
         (setq entityNameList (GetNumberedEntityNameList ss selectedDataType dataChildrenType))
         (setq propertyValueDictList (GetPropertyDictListByEntityNameList entityNameList (numberedPropertyNameListStrategy selectedDataType)))
+        ; filter pipe by patternValue
+        (setq propertyValueDictList (FilterPipeByPatternValue propertyValueDictList patternValue selectedDataType)) 
         (setq matchedList (GetNumberedPropertyValueList propertyValueDictList selectedDataType dataChildrenType))
         (setq sslen (length matchedList))
       )
@@ -3716,6 +3722,7 @@
           (setq modifyMessageStatus 0)
           (progn 
             (setq selectedPropertyName (car (numberedPropertyNameListStrategy selectedDataType)))
+            (setq entityNameList (GetNewEntityNameList propertyValueDictList))
             (mapcar '(lambda (x y) 
                       (ModifyMultiplePropertyForOneBlockUtils x (list selectedPropertyName) (list y))
                     ) 
@@ -3730,6 +3737,29 @@
   )
   (unload_dialog dcl_id)
   (princ)
+)
+
+(defun GetNewEntityNameList (dictList /)
+  (mapcar '(lambda (x) 
+             (handent (cdr (assoc "entityhandle" x)))
+           ) 
+    dictList
+  )
+)
+
+(defun FilterPipeByPatternValue (dictList patternValue dataType /) 
+  (if (= dataType "Pipe") 
+    (setq dictList 
+      (vl-remove-if-not '(lambda (x) 
+                          (wcmatch (cdr (assoc "PIPENUM" x)) 
+                                    patternValue
+                          ) 
+                        ) 
+        dictList
+      )     
+    )
+  )
+  dictList
 )
 
 (defun GetNumberedEntityNameList (ss dataType dataChildrenType / dictList entityNameList resultList)
