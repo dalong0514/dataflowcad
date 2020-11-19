@@ -7,7 +7,7 @@
 ; basic Function
 
 (defun c:printVersionInfo (/ versionInfo)
-  (setq versionInfo "最新版本号 V1.2，更新时间：2020-11-23")
+  (setq versionInfo "最新版本号 V1.2，更新时间：2020-11-19")
   (alert versionInfo)(princ)
 )
 
