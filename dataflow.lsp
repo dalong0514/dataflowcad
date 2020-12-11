@@ -2977,7 +2977,7 @@
 
 (defun c:modifyAllBlockProperty (/ pipePropertyNameList)
   (setq pipePropertyNameList (GetPipePropertyNameList))
-  (filterAndModifyBlockPropertyByBoxV2 pipePropertyNameList "filterAndModifyPropertyBox" "Pipe")
+  (filterAndModifyBlockPropertyByBoxV2 pipePropertyNameList "filterAndModifyPropertyBox")
 )
 
 (defun c:modifyPipeProperty (/ pipePropertyNameList)
@@ -3098,17 +3098,11 @@
   )
 )
 
-(defun GetNeedToNumberPropertyName (dataType / needToNumberPropertyNameList dataTypeList)
-  (setq dataTypeList '("Pipe" "Instrument" "InstrumentP" "InstrumentL" "InstrumentSIS" "Reactor" "Pump" "Tank" "Heater" "Centrifuge" "Vacuum" "CustomEquip"))
-  (setq needToNumberPropertyNameList '("PIPENUM" "TAG" "TAG" "TAG" "TAG" "TAG" "TAG" "TAG" "TAG" "TAG" "TAG" "TAG"))
-  (GetDictValueByKeyUtils dataType dataTypeList needToNumberPropertyNameList)
-)
-
 (defun testDoubleClick (index /)
   (alert index)(princ)
 )
 
-(defun filterAndModifyBlockPropertyByBoxV2 (propertyNameList tileName dataType / dcl_id propertyName propertyValue exportDataType patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList importedList confirmList blockDataList entityNameList viewPropertyName previewDataList importedDataList exportMsgBtnStatus importMsgBtnStatus modifyMsgBtnStatus)
+(defun filterAndModifyBlockPropertyByBoxV2 (propertyNameList tileName / dcl_id exportDataType dataType propertyName propertyValue patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList importedList confirmList blockDataList entityNameList viewPropertyName previewDataList importedDataList exportMsgBtnStatus importMsgBtnStatus modifyMsgBtnStatus)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -3116,12 +3110,11 @@
     (new_dialog tileName dcl_id "" '(-1 -1))
     ; Added the actions to the Cancel and Pick Point button
     (action_tile "cancel" "(done_dialog 0)")
-    (action_tile "btnAll" "(done_dialog 3)")
+    (action_tile "btnExportData" "(done_dialog 2)")
+    (action_tile "btnImportData" "(done_dialog 3)")
     (action_tile "btnShowOriginData" "(done_dialog 4)")
     (action_tile "btnPreviewModify" "(done_dialog 5)")
     (action_tile "btnModify" "(done_dialog 6)")
-    (action_tile "btnExportData" "(done_dialog 7)")
-    (action_tile "btnImportData" "(done_dialog 8)")
     ; optional setting for the popup_list tile
     (set_tile "exportDataType" "0")
     (set_tile "viewPropertyName" "0")
