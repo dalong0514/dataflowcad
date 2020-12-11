@@ -2975,6 +2975,11 @@
 ;;;-------------------------------------------------------------------------;;;
 ; the macro for modify data
 
+(defun c:modifyAllBlockProperty (/ pipePropertyNameList)
+  (setq pipePropertyNameList (GetPipePropertyNameList))
+  (filterAndModifyBlockPropertyByBox pipePropertyNameList "filterAndModifyEquipmentPropertyBox" "Pipe")
+)
+
 (defun c:modifyPipeProperty (/ pipePropertyNameList)
   (setq pipePropertyNameList (GetPipePropertyNameList))
   (filterAndModifyBlockPropertyByBox pipePropertyNameList "filterAndModifyEquipmentPropertyBox" "Pipe")
