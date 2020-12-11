@@ -3259,6 +3259,14 @@
   (princ)
 )
 
+(defun GetTempExportedDataTypeChNameList ()
+  '("管道" "仪表" "所有设备" "反应釜" "输送泵" "储罐" "换热器" "离心机" "真空泵" "自定义设备")
+)
+
+(defun GetTempExportedDataTypeList ()
+  '("Pipe" "Instrument" "Equipment" "Reactor" "Pump" "Tank" "Heater" "Centrifuge" "Vacuum" "CustomEquip")
+)
+
 (defun filterAndModifyBlockPropertyByBox (propertyNameList tileName dataType / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList importedList confirmList blockDataList entityNameList viewPropertyName previewDataList importedDataList exportMsgBtnStatus importMsgBtnStatus modifyMsgBtnStatus)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
