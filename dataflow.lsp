@@ -3116,7 +3116,6 @@
     (new_dialog tileName dcl_id "" '(-1 -1))
     ; Added the actions to the Cancel and Pick Point button
     (action_tile "cancel" "(done_dialog 0)")
-    (action_tile "btnSelect" "(done_dialog 2)")
     (action_tile "btnAll" "(done_dialog 3)")
     (action_tile "btnShowOriginData" "(done_dialog 4)")
     (action_tile "btnPreviewModify" "(done_dialog 5)")
@@ -3169,20 +3168,9 @@
         (end_list)
       )
     )
-    ; select button
-    (if (= 2 (setq status (start_dialog)))
-      (progn 
-        (setq ss (GetBlockSSBySelectByDataTypeUtils dataType))
-        (setq selectedFilterName (nth (atoi filterPropertyName) propertyNameList))
-        (setq blockDataList (GetAPropertyListAndEntityNameListByPropertyNamePattern ss selectedFilterName patternValue))
-        (setq matchedList (car blockDataList))
-        (setq sslen (length matchedList))
-        (setq entityNameList (nth 1 blockDataList))
-        (setq previewDataList (GetPropertyValueListByEntityNameList entityNameList (GetPropertyNameListStrategy dataType)))
-      )
-    )
     ; all select button
-    (if (= 3 status)
+    ; export data button
+    (if (= 2 (setq status (start_dialog)))
       (progn 
         (setq ss (GetAllBlockSSByDataTypeUtils dataType))
         (setq selectedFilterName (nth (atoi filterPropertyName) propertyNameList))
@@ -3191,6 +3179,25 @@
         (setq sslen (length matchedList))
         (setq entityNameList (nth 1 blockDataList))
         (setq previewDataList (GetPropertyValueListByEntityNameList entityNameList (GetPropertyNameListStrategy dataType)))
+      )
+    )
+    ; import data button
+    (if (= 3 status) 
+      (progn 
+        (if (/= matchedList nil)
+          (progn 
+            (WriteDataToCSVByEntityNameListStrategy entityNameList dataType)
+            (setq exportMsgBtnStatus 1)
+          )
+        )
+      ) 
+      (progn 
+        (if (= exportMsgBtnStatus 1)
+          (progn 
+            (setq importedDataList (StrListToListListUtils (ReadDataFromCSVStrategy dataType)))
+            (setq importMsgBtnStatus 1)
+          )
+        )
       )
     )
     ; view button
@@ -3251,28 +3258,6 @@
           (ModifyPropertyValueByEntityHandleUtils previewDataList (GetPropertyNameListStrategy dataType))
         )
         (setq modifyMsgBtnStatus 1)
-      )
-    )
-    ; export data button
-    (if (= 7 status)
-      (progn 
-        (if (/= matchedList nil)
-          (progn 
-            (WriteDataToCSVByEntityNameListStrategy entityNameList dataType)
-            (setq exportMsgBtnStatus 1)
-          )
-        )
-      )
-    )
-    ; import data button
-    (if (= 8 status)
-      (progn 
-        (if (= exportMsgBtnStatus 1)
-          (progn 
-            (setq importedDataList (StrListToListListUtils (ReadDataFromCSVStrategy dataType)))
-            (setq importMsgBtnStatus 1)
-          )
-        )
       )
     )
   )
