@@ -3108,7 +3108,7 @@
   (alert index)(princ)
 )
 
-(defun filterAndModifyBlockPropertyByBoxV2 (propertyNameList tileName dataType / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList importedList confirmList blockDataList entityNameList viewPropertyName previewDataList importedDataList exportMsgBtnStatus importMsgBtnStatus modifyMsgBtnStatus)
+(defun filterAndModifyBlockPropertyByBoxV2 (propertyNameList tileName dataType / dcl_id propertyName propertyValue exportDataType patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList importedList confirmList blockDataList entityNameList viewPropertyName previewDataList importedDataList exportMsgBtnStatus importMsgBtnStatus modifyMsgBtnStatus)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -3123,9 +3123,8 @@
     (action_tile "btnModify" "(done_dialog 6)")
     (action_tile "btnExportData" "(done_dialog 7)")
     (action_tile "btnImportData" "(done_dialog 8)")
-    
     ; optional setting for the popup_list tile
-    (set_tile "filterPropertyName" "0")
+    (set_tile "exportDataType" "0")
     (set_tile "propertyName" "0")
     (set_tile "viewPropertyName" "0")
     ; the default value of input box
@@ -3134,20 +3133,20 @@
     (set_tile "propertyValue" "")
     (mode_tile "propertyName" 2)
     (mode_tile "viewPropertyName" 2)
-    (mode_tile "filterPropertyName" 2)
+    (mode_tile "exportDataType" 2)
     ;(mode_tile "matchedResult" 2)
     (action_tile "propertyName" "(setq propertyName $value)")
     (action_tile "propertyValue" "(setq propertyValue $value)")
-    (action_tile "filterPropertyName" "(setq filterPropertyName $value)")
+    (action_tile "exportDataType" "(setq exportDataType $value)")
     (action_tile "viewPropertyName" "(setq viewPropertyName $value)")
     (action_tile "patternValue" "(setq patternValue $value)")
     (action_tile "replacedSubstring" "(setq replacedSubstring $value)")
     ;(action_tile "matchedResult" "(testDoubleClick $value)")
     
     (progn
-      (start_list "filterPropertyName" 3)
+      (start_list "exportDataType" 3)
       (mapcar '(lambda (x) (add_list x)) 
-                (GetPropertyChNameListStrategy dataType))
+                '("全部数据" "管道" "仪表" "全部设备"))
       (end_list)
       (start_list "viewPropertyName" 3)
       (mapcar '(lambda (x) (add_list x)) 
@@ -3163,8 +3162,8 @@
     (if (= nil propertyName)
       (setq propertyName "0")
     )
-    (if (= nil filterPropertyName)
-      (setq filterPropertyName "0")
+    (if (= nil exportDataType)
+      (setq exportDataType "0")
     )
     (if (= nil viewPropertyName)
       (setq viewPropertyName "0")
@@ -3194,7 +3193,7 @@
     (if (/= matchedList nil)
       (progn
         ; setting for saving the existed value of a box
-        (set_tile "filterPropertyName" filterPropertyName)
+        (set_tile "exportDataType" exportDataType)
         (set_tile "propertyName" propertyName)
         (set_tile "viewPropertyName" viewPropertyName)
         (set_tile "patternValue" patternValue)

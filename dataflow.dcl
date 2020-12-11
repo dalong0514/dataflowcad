@@ -500,7 +500,7 @@ filterAndModifyPropertyBox : dialog {
     }
     : list_box { 
       height = 30;
-      key = "originData"; 
+      key = "modifiedData"; 
       list = "";
       value = "";
     }
