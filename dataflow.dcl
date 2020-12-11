@@ -481,17 +481,25 @@ filterAndModifyPropertyBox : dialog {
     key = "showOriginDataBox";
     width = 100;
     : column {
-      height = 10;
       : popup_list { 
-        label = "选择要查看的属性";
+        label = "导入导出的数据类型";
+        edit_width = 30;
+        key = "exportDataType"; 
+        list = "";
+        value = "";
+      }
+      : spacer { height = 1; } 
+      : popup_list { 
+        label = "选择确认的数据属性";
         edit_width = 30;
         key = "viewPropertyName"; 
         list = "";
         value = "";
-      }
+      } 
+      : spacer { height = 1; } 
     }
     : list_box { 
-      height = 25;
+      height = 30;
       key = "originData"; 
       list = "";
       value = "";
@@ -499,19 +507,19 @@ filterAndModifyPropertyBox : dialog {
     : spacer { height = 1; } 
     : text {
       key = "exportBtnMsg";
-      label = "导出数据状态：";
+      label = "导出临时文件状态：";
     }
     : spacer { height = 1; } 
     : text {
       key = "importBtnMsg";
-      label = "导入数据状态：";
+      label = "导入临时文件状态：";
     }
     : spacer { height = 1; } 
     : text {
       key = "modifyBtnMsg";
-      label = "写入数据状态：";
+      label = "数据写入图纸状态：";
     }
-    : spacer { height = 6; } 
+    : spacer { height = 3; } 
     : row { 
       fixed_width = true; 
       alignment = centered; 
