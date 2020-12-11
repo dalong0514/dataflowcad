@@ -477,193 +477,71 @@ filterAndModifyEquipmentPropertyBox : dialog {
 filterAndModifyPropertyBox : dialog {
   label = "设计流数据一体化V1.3———批量修改数据强化版"; 
   key = "filterModifyProperty";
-  : row {
-    : boxed_radio_column {
-      label = "匹配数据";
-      key = "filterBox";
-      width = 50;
-      : column {
-        height = 10;
-        : popup_list { 
-          label = "选择要筛选的属性";
-          edit_width = 30;
-          key = "filterPropertyName"; 
-          list = "";
-          value = "";
-        }
-        : spacer { height = 1; } 
-        : text {
-          key = "dataTypeMsg";
-        }
-        : spacer { height = 1; } 
-        : edit_box {
-          label = "通配符匹配模式";
-          edit_width = 31;
-          key = "patternValue";
-          mnemonic = "N";
-          value = "";
-        }
-        : spacer { height = 1; } 
-      }
-      : list_box { 
-        height = 25;
-        key = "matchedResult"; 
-        list = "";
-        value = "";
-        // action = true;
-      }
-      : spacer { height = 1; } 
-      : text {
-        key = "msg";
-        label = "匹配到的数量：";
-      }
-      : spacer { height = 1; } 
-      : text {
-        key = "exportBtnMsg";
-        label = "导出数据状态：";
-      }
-      : spacer { height = 3; } 
-      : row { 
-        fixed_width = true; 
-        alignment = centered; 
-        : button { 
-          key = "btnSelect"; 
-          label = "选择数据"; 
-          is_default = "true"; 
-        } 
-        : spacer { width = 1; } 
-        : button { 
-          key = "btnAll"; 
-          label = "匹配全部"; 
-          is_default = "true"; 
-        }
-        : spacer { width = 1; } 
-        : button { 
-          key = "btnExportData"; 
-          label = "导出数据"; 
-          is_default = "true"; 
-        } 
-      }
-      : spacer { height = 3; } 
-    }
-
-    : boxed_radio_column {
-      label = "原始数据";
-      key = "showOriginDataBox";
-      width = 50;
-      : column {
-        height = 10;
-        : popup_list { 
-          label = "选择要查看的属性";
-          edit_width = 30;
-          key = "viewPropertyName"; 
-          list = "";
-          value = "";
-        }
-      }
-      : list_box { 
-        height = 25;
-        key = "originData"; 
+  : boxed_radio_column {
+    key = "showOriginDataBox";
+    width = 100;
+    : column {
+      height = 10;
+      : popup_list { 
+        label = "选择要查看的属性";
+        edit_width = 30;
+        key = "viewPropertyName"; 
         list = "";
         value = "";
       }
-      : spacer { height = 1; } 
-        : text {
-          key = "importBtnMsg";
-          label = "导入数据状态：";
-        }
-      : spacer { height = 6; } 
-      : row { 
-        fixed_width = true; 
-        alignment = centered; 
-        : button { 
-          key = "btnImportData"; 
-          label = "导入数据"; 
-          is_default = "true"; 
-        } 
-        : spacer { width = 1; } 
-        : button { 
-          key = "btnShowOriginData"; 
-          label = "显示数据"; 
-          is_default = "true"; 
-          fixed_width = true; 
-        } 
-      }
-      : spacer { height = 3; } 
     }
-
-    : boxed_radio_column {
-      label = "修改后的数据";
-      key = "modifyBox";
-      width = 50;
-      : column {
-        height = 10;
-        : popup_list { 
-          label = "选择要修改的属性";
-          edit_width = 29;
-          key = "propertyName"; 
-          list = "";
-          value = "";
-        }
-        : spacer { height = 0.5; } 
-        : row {
-          : text {
-            key = "replacedSubstringMsg";
-            label = "局部字符（默认整体替换）";
-          }
-          : edit_box {
-            key = "replacedSubstring";
-            edit_width = 30;
-            mnemonic = "N";
-            value = "";
-          }
-        }
-        : spacer { height = 0.5; }
-        : row {
-          : text {
-            key = "propertyValueMsg";
-            label = "替换的新字符：";
-          }
-          : edit_box {
-            key = "propertyValue";
-            edit_width = 30;
-            mnemonic = "N";
-            value = "";
-          }
-        }
-        : spacer { height = 1; }
-      }
-      : list_box { 
-        height = 25;
-        key = "modifiedData"; 
-        list = "";
-        value = "";
-      }
-      : spacer { height = 1; } 
-      : text {
-        key = "modifyBtnMsg";
-        label = "修改CAD数据状态：";
-      }
-      : spacer { height = 6; }
-      : row { 
-        fixed_width = true; 
-        alignment = centered; 
-        : button { 
-          key = "btnPreviewModify"; 
-          label = "预览修改"; 
-          is_default = "true"; 
-        } 
-        : spacer { width = 1; } 
-        : button { 
-          key = "btnModify"; 
-          label = "确认修改"; 
-          is_default = "true"; 
-        } 
-        : spacer { width = 1; } 
-        cancel_button; 
-      }
-      : spacer { height = 3; } 
+    : list_box { 
+      height = 25;
+      key = "originData"; 
+      list = "";
+      value = "";
     }
+    : spacer { height = 1; } 
+    : text {
+      key = "exportBtnMsg";
+      label = "导出数据状态：";
+    }
+    : spacer { height = 1; } 
+    : text {
+      key = "importBtnMsg";
+      label = "导入数据状态：";
+    }
+    : spacer { height = 1; } 
+    : text {
+      key = "modifyBtnMsg";
+      label = "写入数据状态：";
+    }
+    : spacer { height = 6; } 
+    : row { 
+      fixed_width = true; 
+      alignment = centered; 
+      : button { 
+        key = "btnExportData"; 
+        label = "导出数据"; 
+        is_default = "true"; 
+      } 
+      : spacer { width = 2; }  
+      : button { 
+        key = "btnImportData"; 
+        label = "导入数据"; 
+        is_default = "true"; 
+      } 
+      : spacer { width = 2; } 
+      : button { 
+        key = "btnPreviewModify"; 
+        label = "预览修改"; 
+        is_default = "true"; 
+      } 
+      : spacer { width = 2; } 
+      : button { 
+        key = "btnModify"; 
+        label = "确认修改"; 
+        is_default = "true"; 
+      } 
+      : spacer { width = 2; } 
+      cancel_button; 
+    }
+    : spacer { height = 3; } 
   }
 }
 
