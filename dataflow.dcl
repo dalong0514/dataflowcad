@@ -483,7 +483,7 @@ filterAndModifyPropertyBox : dialog {
     : column {
       : popup_list { 
         label = "导入导出的数据类型";
-        edit_width = 30;
+        edit_width = 80;
         key = "exportDataType"; 
         list = "";
         value = "";
@@ -491,7 +491,7 @@ filterAndModifyPropertyBox : dialog {
       : spacer { height = 1; } 
       : popup_list { 
         label = "选择确认的数据属性";
-        edit_width = 30;
+        edit_width = 80;
         key = "viewPropertyName"; 
         list = "";
         value = "";
