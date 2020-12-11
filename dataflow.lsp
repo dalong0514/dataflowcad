@@ -3127,7 +3127,7 @@
     (progn
       (start_list "exportDataType" 3)
       (mapcar '(lambda (x) (add_list x)) 
-                '("全部数据" "管道" "仪表" "全部设备"))
+                (GetTempExportedDataTypeChNameList))
       (end_list)
       (start_list "viewPropertyName" 3)
       (mapcar '(lambda (x) (add_list x)) 
