@@ -972,6 +972,9 @@
   (if (= dataType "JoinDrawArrowFrom")
     (setq ss (ssget '((0 . "INSERT") (2 . "JoinDrawArrowFrom"))))
   )  
+  (if (= dataType "GsCleanAir")
+    (setq ss (ssget '((0 . "INSERT") (2 . "GsCleanAir"))))
+  )   
   ss
 )
 
@@ -1047,6 +1050,9 @@
   )  
   (if (= dataType "PublicPipeDownArrow")
     (setq ss (ssget "X" '((0 . "INSERT") (2 . "PublicPipeDownArrow"))))
+  )   
+  (if (= dataType "GsCleanAir")
+    (setq ss (ssget "X" '((0 . "INSERT") (2 . "GsCleanAir"))))
   )   
   ss
 )
