@@ -2977,7 +2977,7 @@
 
 (defun c:modifyAllBlockProperty (/ pipePropertyNameList)
   (setq pipePropertyNameList (GetPipePropertyNameList))
-  (filterAndModifyBlockPropertyByBox pipePropertyNameList "filterAndModifyEquipmentPropertyBox" "Pipe")
+  (filterAndModifyBlockPropertyByBoxV2 pipePropertyNameList "filterAndModifyPropertyBox" "Pipe")
 )
 
 (defun c:modifyPipeProperty (/ pipePropertyNameList)
