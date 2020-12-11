@@ -431,6 +431,9 @@
   (if (= dataType "CustomEquip") 
     (setq propertyNameList (GetCustomEquipPropertyNameList))
   )
+  (if (= dataType "GsCleanAir") 
+    (setq propertyNameList (GetGsCleanAirPropertyNameList))
+  ) 
   ; must give the return
   propertyNameList
 )
@@ -466,6 +469,9 @@
   (if (= dataType "CustomEquip") 
     (setq propertyChNameList (GetCustomEquipPropertyChNameList))
   )
+  (if (= dataType "GsCleanAir") 
+    (setq propertyChNameList (GetGsCleanAirPropertyChNameList))
+  ) 
   ; must give the return
   propertyChNameList
 )
