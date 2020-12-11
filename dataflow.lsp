@@ -3131,7 +3131,7 @@
     (mode_tile "exportDataType" 2)
     (action_tile "exportDataType" "(setq exportDataType $value)")
     (action_tile "viewPropertyName" "(setq viewPropertyName $value)")
-    
+    ; init the value of listbox
     (progn
       (start_list "exportDataType" 3)
       (mapcar '(lambda (x) (add_list x)) 
@@ -3139,13 +3139,8 @@
       (end_list)
       (start_list "viewPropertyName" 3)
       (mapcar '(lambda (x) (add_list x)) 
-                (GetPropertyChNameListStrategy dataType))
+                (GetPropertyChNameListStrategy "Pump"))
       (end_list)
-      (start_list "propertyName" 3)
-      (mapcar '(lambda (x) (add_list x)) 
-                (GetPropertyChNameListStrategy dataType))
-      (end_list)
-      (set_tile "dataTypeMsg" (GetDataTypeMsgStrategy dataType))
     )
     ; init the default data of text
     (if (= nil exportDataType)
