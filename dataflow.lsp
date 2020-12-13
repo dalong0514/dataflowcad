@@ -3120,7 +3120,7 @@
   (alert index)(princ)
 )
 
-(defun filterAndModifyBlockPropertyByBoxV2 (tileName / dcl_id exportDataType dataType propertyNameList propertyName propertyValue patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList importedList confirmList blockDataList entityNameList viewPropertyName previewDataList importedDataList exportMsgBtnStatus importMsgBtnStatus modifyMsgBtnStatus)
+(defun filterAndModifyBlockPropertyByBoxV2 (tileName / dcl_id exportDataType dataType importedDataList propertyNameList propertyName propertyValue patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList importedList confirmList blockDataList entityNameList viewPropertyName previewDataList exportMsgBtnStatus importMsgBtnStatus modifyMsgBtnStatus)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -3130,9 +3130,8 @@
     (action_tile "cancel" "(done_dialog 0)")
     (action_tile "btnExportData" "(done_dialog 2)")
     (action_tile "btnImportData" "(done_dialog 3)")
-    (action_tile "btnShowOriginData" "(done_dialog 4)")
-    (action_tile "btnPreviewModify" "(done_dialog 5)")
-    (action_tile "btnModify" "(done_dialog 6)")
+    (action_tile "btnPreviewModify" "(done_dialog 4)")
+    (action_tile "btnModify" "(done_dialog 5)")
     ; optional setting for the popup_list tile
     (set_tile "exportDataType" "0")
     (set_tile "viewPropertyName" "0")
@@ -3206,18 +3205,8 @@
         ) 
       )
     )
-    ; view button
-    (if (= 4 status)
-      (progn 
-        (setq selectedName (nth (atoi viewPropertyName) propertyNameList))
-        (if (/= importedDataList nil) 
-          (setq importedList (GetImportedPropertyValueByPropertyName importedDataList selectedName dataType))
-          (setq importedList (GetImportedPropertyValueByPropertyName previewDataList selectedName dataType))
-        )
-      )
-    )
     ; confirm button
-    (if (= 5 status)
+    (if (= 4 status)
       (progn 
         (setq selectedName (nth (atoi propertyName) propertyNameList))
         (if (or (/= propertyValue "") (/= replacedSubstring "")) 
@@ -3257,7 +3246,7 @@
       )
     )
     ; modify button
-    (if (= 6 status)
+    (if (= 5 status)
       (progn 
         (if (/= importedDataList nil) 
           (ModifyPropertyValueByEntityHandleUtils importedDataList (GetPropertyNameListStrategy dataType))
