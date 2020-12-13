@@ -1183,9 +1183,11 @@
 
 (defun GetEntityNameListBySSUtils (ss / entityNameList i)
   (setq i 0)
-  (repeat (sslength ss) 
-    (setq entityNameList (append entityNameList (list (ssname ss i))))
-    (setq i (+ 1 i))
+  (if (/= ss nil) 
+    (repeat (sslength ss) 
+      (setq entityNameList (append entityNameList (list (ssname ss i))))
+      (setq i (+ 1 i))
+    )
   )
   entityNameList
 )
@@ -3173,9 +3175,9 @@
         (setq dataType (GetTempExportedDataTypeByindex exportDataType))
         (setq ss (GetAllBlockSSByDataTypeUtils dataType))
         (setq entityNameList (GetEntityNameListBySSUtils ss))
-        (WriteDataToCSVByEntityNameListStrategy entityNameList dataType)
+        ;(WriteDataToCSVByEntityNameListStrategy entityNameList dataType)
         (setq exportMsgBtnStatus 1) 
-        ;(princ entityNameList)(princ)
+        (princ entityNameList)(princ)
       )
     )
     ; import data button
