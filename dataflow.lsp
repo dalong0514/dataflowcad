@@ -212,7 +212,7 @@
 )
 
 (defun GenerateSortedNumByListTest ()
-  (AssertEqual 'GenerateSortedNumByList (list '("13" "134" "456")) '(0 1 2))
+  (AssertEqual 'GenerateSortedNumByList (list '("13" "134" "456") 0) '(0 1 2))
 )
 
 (defun GetIndexforSearchMemberInListUtilsTest ()
@@ -2366,13 +2366,12 @@
   ; merge equipInfoList by equipTag
   (setq equipInfoList (vl-sort equipInfoList '(lambda (x y) (< (car x) (car y)))))
   (setq insPt (getpoint "\n选取设备位号的插入点："))
-  (setq insPtList (GetInsertPtList insPt (GenerateSortedNumByList equipInfoList) 30))
+  (setq insPtList (GetInsertPtList insPt (GenerateSortedNumByList equipInfoList 0) 30))
   (GenerateEntityObjectElement "EquipTagV2" insPtList equipInfoList)
 )
 
 ; Unit Test Completed
-(defun GenerateSortedNumByList (originList / i resultList)
-  (setq i 0)
+(defun GenerateSortedNumByList (originList i / resultList)
   (repeat (length originList) 
     (setq resultList (append resultList (list i)))
     (setq i (+ i 1))
@@ -2449,7 +2448,7 @@
   (setq dataList (ProcessPublicPipeElementData dataList))
   ; sort data by drawnum
   (setq dataList (vl-sort dataList '(lambda (x y) (< (nth 4 x) (nth 4 y)))))
-  (setq insPtList (GetInsertPtList insPt (GenerateSortedNumByList dataList) 10))
+  (setq insPtList (GetInsertPtList insPt (GenerateSortedNumByList dataList 0) 10))
   (cond 
     ((= pipeSourceDirection "0") (GenerateDownPublicPipe insPtList dataList))
     ((= pipeSourceDirection "1") (GenerateUpPublicPipe insPtList dataList))
@@ -3561,6 +3560,12 @@
   (if (= dataType "CustomEquip") 
     (progn 
       (setq propertyNameList (GetCustomEquipPropertyNameList))
+      (setq importedDataListIndex '(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19))
+    )
+  )
+  (if (= dataType "GsCleanAir") 
+    (progn 
+      (setq propertyNameList (GetGsCleanAirPropertyNameList))
       (setq importedDataListIndex '(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19))
     )
   )
