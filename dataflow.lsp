@@ -2976,8 +2976,7 @@
 ; the macro for modify data
 
 (defun c:modifyAllBlockProperty (/ pipePropertyNameList)
-  (setq pipePropertyNameList (GetPipePropertyNameList))
-  (filterAndModifyBlockPropertyByBoxV2 pipePropertyNameList "filterAndModifyPropertyBox")
+  (filterAndModifyBlockPropertyByBoxV2 "filterAndModifyPropertyBox")
 )
 
 (defun c:modifyPipeProperty (/ pipePropertyNameList)
@@ -3102,7 +3101,7 @@
   (alert index)(princ)
 )
 
-(defun filterAndModifyBlockPropertyByBoxV2 (propertyNameList tileName / dcl_id exportDataType dataType propertyName propertyValue patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList importedList confirmList blockDataList entityNameList viewPropertyName previewDataList importedDataList exportMsgBtnStatus importMsgBtnStatus modifyMsgBtnStatus)
+(defun filterAndModifyBlockPropertyByBoxV2 (tileName / dcl_id exportDataType dataType propertyNameList propertyName propertyValue patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList importedList confirmList blockDataList entityNameList viewPropertyName previewDataList importedDataList exportMsgBtnStatus importMsgBtnStatus modifyMsgBtnStatus)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -3165,18 +3164,21 @@
     ; export data button
     (if (= 2 (setq status (start_dialog)))
       (progn 
-        (setq ss (GetAllBlockSSByDataTypeUtils dataType))
-        (setq selectedFilterName (nth (atoi filterPropertyName) propertyNameList))
-        (setq blockDataList (GetAPropertyListAndEntityNameListByPropertyNamePattern ss selectedFilterName patternValue))
-        (setq matchedList (car blockDataList))
-        (setq sslen (length matchedList))
-        (setq entityNameList (nth 1 blockDataList))
-        (setq previewDataList (GetPropertyValueListByEntityNameList entityNameList (GetPropertyNameListStrategy dataType)))
+        (princ exportDataType)(princ)
       )
     )
     ; import data button
     (if (= 3 status) 
       (progn 
+        (progn 
+          (setq ss (GetAllBlockSSByDataTypeUtils dataType))
+          (setq selectedFilterName (nth (atoi filterPropertyName) propertyNameList))
+          (setq blockDataList (GetAPropertyListAndEntityNameListByPropertyNamePattern ss selectedFilterName patternValue))
+          (setq matchedList (car blockDataList))
+          (setq sslen (length matchedList))
+          (setq entityNameList (nth 1 blockDataList))
+          (setq previewDataList (GetPropertyValueListByEntityNameList entityNameList (GetPropertyNameListStrategy dataType)))
+        )
         (if (/= matchedList nil)
           (progn 
             (WriteDataToCSVByEntityNameListStrategy entityNameList dataType)
