@@ -1702,44 +1702,43 @@
 )
 
 (defun WriteDataToCSVByEntityNameListStrategy (entityNameList dataType /)
-  (if (= dataType "Pipe") 
-    (WritePipeDataToCSVByEntityNameListUtils entityNameList)
+  (cond 
+    ((= dataType "Pipe") (WritePipeDataToCSVByEntityNameListUtils entityNameList))
   )
-  (if (= dataType "Instrument") 
-    (WriteInstrumentDataToCSVByEntityNameListUtils entityNameList)
+  (cond 
+    ((= dataType "Instrument") (WriteInstrumentDataToCSVByEntityNameListUtils entityNameList))
   )
-  (if (= dataType "Reactor") 
-    (WriteReactorDataToCSVByEntityNameListUtils entityNameList)
+  (cond 
+    ((= dataType "Reactor") (WriteReactorDataToCSVByEntityNameListUtils entityNameList))
   )
-  (if (= dataType "Tank") 
-    (WriteTankDataToCSVByEntityNameListUtils entityNameList)
+  (cond 
+    ((= dataType "Tank") (WriteTankDataToCSVByEntityNameListUtils entityNameList))
   )
-  (if (= dataType "Heater") 
-    (WriteHeaterDataToCSVByEntityNameListUtils entityNameList)
+  (cond 
+    ((= dataType "Heater") (WriteHeaterDataToCSVByEntityNameListUtils entityNameList))
   )
-  (if (= dataType "Pump") 
-    (WritePumpDataToCSVByEntityNameListUtils entityNameList)
+  (cond 
+    ((= dataType "Vacuum") (WriteVacuumDataToCSVByEntityNameListUtils entityNameList))
   )
-  (if (= dataType "Vacuum") 
-    (WriteVacuumDataToCSVByEntityNameListUtils entityNameList)
+  (cond 
+    ((= dataType "Centrifuge") (WriteCentrifugeDataToCSVByEntityNameListUtils entityNameList))
   )
-  (if (= dataType "Centrifuge") 
-    (WriteCentrifugeDataToCSVByEntityNameListUtils entityNameList)
+  (cond 
+    ((= dataType "CustomEquip") (WriteCustomEquipDataToCSVByEntityNameListUtils entityNameList))
   )
-  (if (= dataType "CustomEquip") 
-    (WriteCustomEquipDataToCSVByEntityNameListUtils entityNameList)
-  )
-  (if (= dataType "Equipment") 
-    (progn 
-      (WriteReactorDataToCSVByEntityNameListUtils (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "Reactor")))
-      (WriteTankDataToCSVByEntityNameListUtils (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "Tank")))
-      (WriteHeaterDataToCSVByEntityNameListUtils (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "Heater")))
-      (WritePumpDataToCSVByEntityNameListUtils (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "Pump")))
-      (WriteVacuumDataToCSVByEntityNameListUtils (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "Vacuum")))
-      (WriteCentrifugeDataToCSVByEntityNameListUtils (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "Centrifuge")))
-      (WriteCustomEquipDataToCSVByEntityNameListUtils (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "CustomEquip")))
+  (cond 
+    ((= dataType "Equipment") 
+     (progn 
+        (WriteReactorDataToCSVByEntityNameListUtils (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "Reactor")))
+        (WriteTankDataToCSVByEntityNameListUtils (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "Tank")))
+        (WriteHeaterDataToCSVByEntityNameListUtils (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "Heater")))
+        (WritePumpDataToCSVByEntityNameListUtils (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "Pump")))
+        (WriteVacuumDataToCSVByEntityNameListUtils (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "Vacuum")))
+        (WriteCentrifugeDataToCSVByEntityNameListUtils (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "Centrifuge")))
+        (WriteCustomEquipDataToCSVByEntityNameListUtils (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "CustomEquip")))
+     )
     )
-  ) 
+  )
   (princ)
 )
 
