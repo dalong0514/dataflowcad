@@ -38,13 +38,13 @@
   (RegExpExecuteUtilsTest)
   (RegExpReplaceTest)
   (DeduplicateForListUtilsTest)
-  (GetTempExportedDataTypeListTest)
+  (GetTempExportedDataTypeByindexTest)
   (DL:PrintTestResults (DL:CountBooleans *testList*))
 )
 
-(defun GetTempExportedDataTypeListTest ()
-  (AssertEqual 'GetTempExportedDataTypeList (list "0") "Pipe")
-  (AssertEqual 'GetTempExportedDataTypeList (list "2") "Equipment")
+(defun GetTempExportedDataTypeByindexTest ()
+  (AssertEqual 'GetTempExportedDataTypeByindex (list "0") "Pipe")
+  (AssertEqual 'GetTempExportedDataTypeByindex (list "2") "Equipment")
 )
 
 (defun DeduplicateForListUtilsTest ()
@@ -3170,7 +3170,8 @@
     ; export data button
     (if (= 2 (setq status (start_dialog)))
       (progn 
-        (princ exportDataType)(princ)
+        (setq dataType (GetTempExportedDataTypeByindex exportDataType))
+        (princ dataType)(princ)
       )
     )
     ; import data button
@@ -3272,9 +3273,13 @@
 )
 
 ; unit test compeleted
-(defun GetTempExportedDataTypeList (index / result)
+(defun GetTempExportedDataTypeByindex (index / result)
   (setq result (nth (atoi index) '("Pipe" "Instrument" "Equipment" "Reactor" "Pump" "Tank" "Heater" "Centrifuge" "Vacuum" "CustomEquip")))
   result
+)
+
+(defun c:foo ()
+  (princ "dalong")
 )
 
 (defun filterAndModifyBlockPropertyByBox (propertyNameList tileName dataType / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList importedList confirmList blockDataList entityNameList viewPropertyName previewDataList importedDataList exportMsgBtnStatus importMsgBtnStatus modifyMsgBtnStatus)
