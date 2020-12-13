@@ -3168,6 +3168,9 @@
     (if (= importMsgBtnStatus 2)
       (set_tile "importBtnMsg" "导入数据状态：不能所有设备一起导入")
     ) 
+    (if (= importMsgBtnStatus 3)
+      (set_tile "importBtnMsg" "请先导入数据")
+    )  
     (if (= modifyMsgBtnStatus 1)
       (set_tile "modifyBtnMsg" "修改CAD数据状态：已完成")
     )
@@ -3221,13 +3224,12 @@
     (if (= 5 status)
       (progn 
         (if (/= importedDataList nil) 
-          (ModifyPropertyValueByEntityHandleUtils importedDataList (GetPropertyNameListStrategy dataType))
-          (ModifyPropertyValueByEntityHandleUtils previewDataList (GetPropertyNameListStrategy dataType))
+          (progn 
+            (ModifyPropertyValueByEntityHandleUtils importedDataList (GetPropertyNameListStrategy dataType))
+            (setq modifyMsgBtnStatus 1)
+          )
+          (setq importMsgBtnStatus 3)
         )
-        (setq modifyMsgBtnStatus 1)
-        
-        
- 
       )
     )
   )
