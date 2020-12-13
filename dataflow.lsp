@@ -1705,7 +1705,7 @@
   (setq fileDir "D:\\dataflowcad\\data\\gsCleanAirData.csv")
   (setq firstRow "数据ID,房间名称,房间编号,洁净等级,房间吊顶高度,房间面积,室压,房间人数,温度控制精度,湿度控制精度,职业暴露等级,电热设备功率,电热设备有无排风,电热设备有无保温,电动设备功率,电动设备效率,其他设备表面面积,其他设备表面温度,敞开水面表面面积,敞开水面表面温度,设备是否连续排风,设备排风量,是否连续排湿除味,排湿除味排风率,除尘排风粉尘量,除尘排风排风率,是否事故排风,事故通风介质,层流保护区域,层流保护面积,监控温度,监控相对湿度,监控压差,")
   ; the sort of  property must be consistency with the sort of block in CAD
-  (setq propertyNameList (GetCustomEquipPropertyNameList))
+  (setq propertyNameList (GetGsCleanAirPropertyNameList))
   (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList)
 )
 
