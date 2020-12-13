@@ -3120,7 +3120,7 @@
   (alert index)(princ)
 )
 
-(defun filterAndModifyBlockPropertyByBoxV2 (tileName / dcl_id exportDataType dataType importedDataList propertyNameList propertyName propertyValue patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList importedList confirmList blockDataList entityNameList viewPropertyName previewDataList exportMsgBtnStatus importMsgBtnStatus modifyMsgBtnStatus)
+(defun filterAndModifyBlockPropertyByBoxV2 (tileName / dcl_id exportDataType dataType importedDataList selectedName propertyNameList propertyName propertyValue patternValue replacedSubstring status selectedFilterName ss sslen matchedList importedList confirmList blockDataList entityNameList viewPropertyName previewDataList exportMsgBtnStatus importMsgBtnStatus modifyMsgBtnStatus)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -3148,7 +3148,7 @@
       (end_list)
       (start_list "viewPropertyName" 3)
       (mapcar '(lambda (x) (add_list x)) 
-                (GetPropertyChNameListStrategy "Pump"))
+                (GetPropertyChNameListStrategy dataType))
       (end_list)
     )
     ; init the default data of text
@@ -3208,41 +3208,10 @@
     ; confirm button
     (if (= 4 status)
       (progn 
-        (setq selectedName (nth (atoi propertyName) propertyNameList))
-        (if (or (/= propertyValue "") (/= replacedSubstring "")) 
-          (progn 
-            (if (= replacedSubstring "") 
-              (if (/= importedDataList nil) 
-                (progn 
-                  ; update importedDataList
-                  (setq importedDataList (ReplaceAllStrDataListByPropertyName importedDataList selectedName propertyValue dataType))
-                  (setq confirmList (GetImportedPropertyValueByPropertyName importedDataList selectedName dataType))
-                )
-                (progn 
-                  ; update previewDataList
-                  (setq previewDataList (ReplaceAllStrDataListByPropertyName previewDataList selectedName propertyValue dataType))
-                  (setq confirmList (GetImportedPropertyValueByPropertyName previewDataList selectedName dataType))
-                )
-              )
-              (if (/= importedDataList nil) 
-                (progn 
-                  ; update importedDataList
-                  (setq importedDataList (ReplaceSubStrDataListByPropertyName importedDataList selectedName propertyValue replacedSubstring dataType))
-                  (setq confirmList (GetImportedPropertyValueByPropertyName importedDataList selectedName dataType))
-                )
-                (progn 
-                  ; update previewDataList
-                  (setq previewDataList (ReplaceSubStrDataListByPropertyName previewDataList selectedName propertyValue replacedSubstring dataType))
-                  (setq confirmList (GetImportedPropertyValueByPropertyName previewDataList selectedName dataType))
-                )
-              )
-            )
-          )
-          (if (/= importedDataList nil) 
-            (setq confirmList (GetImportedPropertyValueByPropertyName importedDataList selectedName dataType))
-            (setq confirmList (GetImportedPropertyValueByPropertyName previewDataList selectedName dataType))
-          )
-        )
+        (setq dataType (GetTempExportedDataTypeByindex exportDataType))
+        (setq propertyNameList (GetPropertyNameListStrategy dataType))
+        (setq selectedName (nth (atoi viewPropertyName) propertyNameList))
+        ;(princ selectedName)(princ)
       )
     )
     ; modify button
@@ -3253,6 +3222,12 @@
           (ModifyPropertyValueByEntityHandleUtils previewDataList (GetPropertyNameListStrategy dataType))
         )
         (setq modifyMsgBtnStatus 1)
+        
+        
+        (if (/= importedDataList nil) 
+          (setq confirmList (GetImportedPropertyValueByPropertyName importedDataList selectedName dataType))
+          (setq confirmList '(""))
+        )  
       )
     )
   )
