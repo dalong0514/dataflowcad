@@ -3166,6 +3166,9 @@
     (if (= importMsgBtnStatus 1)
       (set_tile "importBtnMsg" "导入数据状态：已完成")
     )
+    (if (= importMsgBtnStatus 2)
+      (set_tile "importBtnMsg" "导入数据状态：不能所有设备一起导入")
+    ) 
     (if (= modifyMsgBtnStatus 1)
       (set_tile "modifyBtnMsg" "修改CAD数据状态：已完成")
     )
@@ -3188,14 +3191,19 @@
         (setq entityNameList (GetEntityNameListBySSUtils ss))
         (WriteDataToCSVByEntityNameListStrategy entityNameList dataType)
         (setq exportMsgBtnStatus 1) 
-        ;(princ entityNameList)(princ)
       )
     )
     ; import data button
     (if (= 3 status) 
       (progn 
-        (setq importedDataList (StrListToListListUtils (ReadDataFromCSVStrategy dataType)))
-        (setq importMsgBtnStatus 1)
+        (setq dataType (GetTempExportedDataTypeByindex exportDataType))
+        (if (/= dataType "Equipment") 
+          (progn 
+            (setq importedDataList (StrListToListListUtils (ReadDataFromCSVStrategy dataType)))
+            (setq importMsgBtnStatus 1)
+          ) 
+          (setq importMsgBtnStatus 2)
+        ) 
       )
     )
     ; view button
