@@ -1820,6 +1820,9 @@
   (if (= dataType "CustomEquip") 
     (setq fileDir "D:\\dataflowcad\\data\\customEquipData.csv")
   )
+  (if (= dataType "GsCleanAir") 
+    (setq fileDir "D:\\dataflowcad\\data\\gsCleanAirData.csv")
+  ) 
   (ReadDataFromCSVUtils fileDir)
 )
 ; Read and Write Utils
