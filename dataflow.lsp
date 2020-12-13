@@ -3194,29 +3194,8 @@
     ; import data button
     (if (= 3 status) 
       (progn 
-        (progn 
-          (setq ss (GetAllBlockSSByDataTypeUtils dataType))
-          (setq selectedFilterName (nth (atoi filterPropertyName) propertyNameList))
-          (setq blockDataList (GetAPropertyListAndEntityNameListByPropertyNamePattern ss selectedFilterName patternValue))
-          (setq matchedList (car blockDataList))
-          (setq sslen (length matchedList))
-          (setq entityNameList (nth 1 blockDataList))
-          (setq previewDataList (GetPropertyValueListByEntityNameList entityNameList (GetPropertyNameListStrategy dataType)))
-        )
-        (if (/= matchedList nil)
-          (progn 
-            (WriteDataToCSVByEntityNameListStrategy entityNameList dataType)
-            (setq exportMsgBtnStatus 1)
-          )
-        )
-      ) 
-      (progn 
-        (if (= exportMsgBtnStatus 1)
-          (progn 
-            (setq importedDataList (StrListToListListUtils (ReadDataFromCSVStrategy dataType)))
-            (setq importMsgBtnStatus 1)
-          )
-        )
+        (setq importedDataList (StrListToListListUtils (ReadDataFromCSVStrategy dataType)))
+        (setq importMsgBtnStatus 1)
       )
     )
     ; view button
