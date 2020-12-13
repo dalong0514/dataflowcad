@@ -1729,6 +1729,18 @@
   (if (= dataType "CustomEquip") 
     (WriteCustomEquipDataToCSVByEntityNameListUtils entityNameList)
   )
+  (if (= dataType "Equipment") 
+    (progn 
+      (WriteReactorDataToCSVByEntityNameListUtils (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "Reactor")))
+      (WriteTankDataToCSVByEntityNameListUtils (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "Tank")))
+      (WriteHeaterDataToCSVByEntityNameListUtils (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "Heater")))
+      (WritePumpDataToCSVByEntityNameListUtils (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "Pump")))
+      (WriteVacuumDataToCSVByEntityNameListUtils (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "Vacuum")))
+      (WriteCentrifugeDataToCSVByEntityNameListUtils (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "Centrifuge")))
+      (WriteCustomEquipDataToCSVByEntityNameListUtils (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "CustomEquip")))
+    )
+  ) 
+  (princ)
 )
 
 ;; Separates a string using a given delimiter
