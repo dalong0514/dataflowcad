@@ -3171,7 +3171,11 @@
     (if (= 2 (setq status (start_dialog)))
       (progn 
         (setq dataType (GetTempExportedDataTypeByindex exportDataType))
-        (princ dataType)(princ)
+        (setq ss (GetAllBlockSSByDataTypeUtils dataType))
+        (setq entityNameList (GetEntityNameListBySSUtils ss))
+        (WriteDataToCSVByEntityNameListStrategy entityNameList dataType)
+        (setq exportMsgBtnStatus 1) 
+        ;(princ entityNameList)(princ)
       )
     )
     ; import data button
