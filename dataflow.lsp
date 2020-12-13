@@ -3175,9 +3175,9 @@
         (setq dataType (GetTempExportedDataTypeByindex exportDataType))
         (setq ss (GetAllBlockSSByDataTypeUtils dataType))
         (setq entityNameList (GetEntityNameListBySSUtils ss))
-        ;(WriteDataToCSVByEntityNameListStrategy entityNameList dataType)
+        (WriteDataToCSVByEntityNameListStrategy entityNameList dataType)
         (setq exportMsgBtnStatus 1) 
-        (princ entityNameList)(princ)
+        ;(princ entityNameList)(princ)
       )
     )
     ; import data button
