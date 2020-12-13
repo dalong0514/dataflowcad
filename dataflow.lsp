@@ -38,7 +38,13 @@
   (RegExpExecuteUtilsTest)
   (RegExpReplaceTest)
   (DeduplicateForListUtilsTest)
+  (GetTempExportedDataTypeListTest)
   (DL:PrintTestResults (DL:CountBooleans *testList*))
+)
+
+(defun GetTempExportedDataTypeListTest ()
+  (AssertEqual 'GetTempExportedDataTypeList (list "0") "Pipe")
+  (AssertEqual 'GetTempExportedDataTypeList (list "2") "Equipment")
 )
 
 (defun DeduplicateForListUtilsTest ()
@@ -3265,8 +3271,10 @@
   '("管道" "仪表" "所有设备" "反应釜" "输送泵" "储罐" "换热器" "离心机" "真空泵" "自定义设备")
 )
 
-(defun GetTempExportedDataTypeList ()
-  '("Pipe" "Instrument" "Equipment" "Reactor" "Pump" "Tank" "Heater" "Centrifuge" "Vacuum" "CustomEquip")
+; unit test compeleted
+(defun GetTempExportedDataTypeList (index / result)
+  (setq result (nth (atoi index) '("Pipe" "Instrument" "Equipment" "Reactor" "Pump" "Tank" "Heater" "Centrifuge" "Vacuum" "CustomEquip")))
+  result
 )
 
 (defun filterAndModifyBlockPropertyByBox (propertyNameList tileName dataType / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList importedList confirmList blockDataList entityNameList viewPropertyName previewDataList importedDataList exportMsgBtnStatus importMsgBtnStatus modifyMsgBtnStatus)
