@@ -3211,7 +3211,10 @@
         (setq dataType (GetTempExportedDataTypeByindex exportDataType))
         (setq propertyNameList (GetPropertyNameListStrategy dataType))
         (setq selectedName (nth (atoi viewPropertyName) propertyNameList))
-        ;(princ selectedName)(princ)
+        (if (/= importedDataList nil) 
+          (setq confirmList (GetImportedPropertyValueByPropertyName importedDataList selectedName dataType))
+          (setq confirmList '(""))
+        ) 
       )
     )
     ; modify button
@@ -3224,10 +3227,7 @@
         (setq modifyMsgBtnStatus 1)
         
         
-        (if (/= importedDataList nil) 
-          (setq confirmList (GetImportedPropertyValueByPropertyName importedDataList selectedName dataType))
-          (setq confirmList '(""))
-        )  
+ 
       )
     )
   )
