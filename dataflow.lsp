@@ -1970,6 +1970,9 @@
   (if (= dataType "OuterPipe") 
     (ExportOuterPipeData fileName)
   )
+  (if (= dataType "GsCleanAir") 
+    (ExportGsCleanAirData fileName)
+  ) 
 )
 
 (defun GetExportDataFileDir (fileName / currentDir fileDir)
