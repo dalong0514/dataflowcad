@@ -2023,8 +2023,7 @@
 
 (defun ExportGsCleanAirData (fileName / fileDir)
   (setq fileDir (GetExportDataFileDir fileName))
-  (WriteDataListToFileUtils fileDir (ExtractGsCleanAirToJsonList)
-  )
+  (WriteDataListToFileUtils fileDir (ExtractGsCleanAirToJsonList "GsCleanAir"))
 )
 
 ; the macro for extract data
