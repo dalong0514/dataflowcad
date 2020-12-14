@@ -1902,6 +1902,7 @@
   (ExportBlockPropertyV2 dataTypeList dataTypeChNameList)
 )
 
+; ready for refactor, the key is [ss] - 2020-12-14
 (defun ExportBlockPropertyV2 (dataTypeList dataTypeChNameList / dcl_id fileName currentDir fileDir exportDataType exportMsgBtnStatus)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
