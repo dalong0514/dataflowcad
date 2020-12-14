@@ -2128,6 +2128,7 @@
     ((= dataType "Vacuum") (setq result (cons "class" "vacuum")))
     ((= dataType "Centrifuge") (setq result (cons "class" "centrifuge")))
     ((= dataType "CustomEquip") (setq result (cons "class" "custom")))
+    ((= dataType "GsCleanAir") (setq result (cons "class" "gscleanair")))
   )
   result
 )
