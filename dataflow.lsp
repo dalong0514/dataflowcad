@@ -1899,10 +1899,10 @@
 (defun c:exportBlockPropertyData (/ dataTypeList dataTypeChNameList)
   (setq dataTypeList '("Pipe" "Equipment" "Instrument" "Electric" "OuterPipe" "GsCleanAir"))
   (setq dataTypeChNameList '("管道数据" "设备数据" "仪表数据" "电气数据" "外管数据" "洁净空调数据"))
-  (ExportBlockProperty dataTypeList)
+  (ExportBlockProperty dataTypeList dataTypeChNameList)
 )
 
-(defun ExportBlockProperty (dataTypeList / dcl_id fileName currentDir fileDir exportDataType exportMsgBtnStatus)
+(defun ExportBlockProperty (dataTypeList dataTypeChNameList / dcl_id fileName currentDir fileDir exportDataType exportMsgBtnStatus)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -1916,6 +1916,12 @@
     (mode_tile "exportDataType" 2)
     (action_tile "fileName" "(setq fileName $value)")
     (action_tile "exportDataType" "(setq exportDataType $value)")
+    (progn
+      (start_list "exportDataType" 3)
+      (mapcar '(lambda (x) (add_list x)) 
+                dataTypeChNameList)
+      (end_list)
+    )
     ; init the default value list box
     (if (= nil exportDataType)
       (setq exportDataType "0")

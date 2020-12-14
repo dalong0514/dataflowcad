@@ -11,7 +11,7 @@ exportBlockPropertyDataBox : dialog {
           label = "选择要导出的数据类型";
           edit_width = 29;
           key = "exportDataType"; 
-          list = "管道数据\n设备数据\n仪表数据\n电气数据\n外管数据";
+          list = "";
           value = "";
         }
         : spacer { height = 0.5; } 
