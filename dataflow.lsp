@@ -2021,6 +2021,12 @@
   )
 )
 
+(defun ExportGsCleanAirData (fileName / fileDir)
+  (setq fileDir (GetExportDataFileDir fileName))
+  (WriteDataListToFileUtils fileDir (ExtractGsCleanAirToJsonList)
+  )
+)
+
 ; the macro for extract data
 ; Gs Field
 ;;;-------------------------------------------------------------------------;;;
