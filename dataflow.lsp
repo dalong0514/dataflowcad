@@ -1896,8 +1896,9 @@
 ; Gs Field
 ; the macro for extract data
 
-(defun c:exportBlockPropertyData (/ dataTypeList)
-  (setq dataTypeList '("Pipe" "Equipment" "Instrument" "Electric" "OuterPipe"))
+(defun c:exportBlockPropertyData (/ dataTypeList dataTypeChNameList)
+  (setq dataTypeList '("Pipe" "Equipment" "Instrument" "Electric" "OuterPipe" "GsCleanAir"))
+  (setq dataTypeChNameList '("管道数据" "设备数据" "仪表数据" "电气数据" "外管数据" "洁净空调数据"))
   (ExportBlockProperty dataTypeList)
 )
 
