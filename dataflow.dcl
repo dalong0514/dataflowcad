@@ -55,6 +55,63 @@ exportBlockPropertyDataBox : dialog {
   }
 }
 
+exportBlockPropertyDataBoxV2 : dialog {
+  label = "设计流数据一体化V1.3———导出数据"; 
+  key = "exportBlockPropertyDataV2";
+  : row {
+    : boxed_radio_column {
+      key = "exportDataTypeBoxV2";
+      width = 50;
+      : column {
+        height = 10;
+        : popup_list { 
+          label = "选择要导出的数据类型";
+          edit_width = 29;
+          key = "exportDataType"; 
+          list = "";
+          value = "";
+        }
+        : spacer { height = 0.5; } 
+        : row {
+          : text {
+            key = "fileNameMsg";
+            label = "文件名（无需扩展名）";
+          }
+          : edit_box {
+            key = "fileName";
+            edit_width = 30;
+            mnemonic = "N";
+            value = "";
+          }
+        }
+        : spacer { height = 1; }
+      }
+      : text {
+        key = "fileDirMsg";
+        label = "输出文件自动存放在 CAD 文件同一个文件夹内";
+      }
+      : spacer { height = 1; }
+      : text {
+        key = "exportBtnMsg";
+        label = "导出数据状态：";
+      }
+      : spacer { height = 6; }
+      : row { 
+        fixed_width = true; 
+        alignment = centered; 
+        : button { 
+          key = "btnExportData"; 
+          label = "导出"; 
+          is_default = "true"; 
+        } 
+        : spacer { width = 1; } 
+        cancel_button; 
+      }
+      : spacer { height = 3; } 
+    }
+  }
+}
+
 filterAndNumberBox : dialog {
   label = "设计流数据一体化V1.3———批量编号"; 
   key = "filterAndNumber";

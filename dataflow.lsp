@@ -1896,6 +1896,64 @@
 ; Gs Field
 ; the macro for extract data
 
+(defun c:exportBlockPropertyDataV2 (/ dataTypeList dataTypeChNameList)
+  (setq dataTypeList '("Pipe" "Equipment" "Instrument" "Electric" "OuterPipe" "GsCleanAir"))
+  (setq dataTypeChNameList '("管道数据" "设备数据" "仪表数据" "电气数据" "外管数据" "洁净空调数据"))
+  (ExportBlockPropertyV2 dataTypeList dataTypeChNameList)
+)
+
+(defun ExportBlockPropertyV2 (dataTypeList dataTypeChNameList / dcl_id fileName currentDir fileDir exportDataType exportMsgBtnStatus)
+  (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
+  (setq status 2)
+  (while (>= status 2)
+    ; Create the dialog box
+    (new_dialog "exportBlockPropertyDataBoxV2" dcl_id "" '(-1 -1))
+    ; Add the actions to the button
+    (action_tile "cancel" "(done_dialog 0)")
+    (action_tile "btnExportData" "(done_dialog 2)")
+    ; Set the default value
+    (mode_tile "fileName" 2)
+    (mode_tile "exportDataType" 2)
+    (action_tile "fileName" "(setq fileName $value)")
+    (action_tile "exportDataType" "(setq exportDataType $value)")
+    (progn
+      (start_list "exportDataType" 3)
+      (mapcar '(lambda (x) (add_list x)) 
+                dataTypeChNameList)
+      (end_list)
+    )
+    ; init the default value list box
+    (if (= nil exportDataType)
+      (setq exportDataType "0")
+    )
+    (if (= nil fileName)
+      (setq fileName "")
+    )
+    (if (/= exportMsgBtnStatus nil)
+      (set_tile "exportDataType" exportDataType)
+    )
+    (if (= exportMsgBtnStatus 1)
+      (set_tile "exportBtnMsg" "导出数据状态：已完成")
+    )
+    (if (= exportMsgBtnStatus 2)
+      (set_tile "exportBtnMsg" "文件名不能为空")
+    )
+    ; export data button
+    (if (= 2 (setq status (start_dialog))) 
+      (if (/= fileName "") 
+        (progn 
+          (setq dataType (nth (atoi exportDataType) dataTypeList))
+          (ExportDataByDataType fileName dataType)
+          (setq exportMsgBtnStatus 1)
+        )
+        (setq exportMsgBtnStatus 2)
+      )
+    )
+  )
+  (unload_dialog dcl_id)
+  (princ)
+)
+
 (defun c:exportBlockPropertyData (/ dataTypeList dataTypeChNameList)
   (setq dataTypeList '("Pipe" "Equipment" "Instrument" "Electric" "OuterPipe" "GsCleanAir"))
   (setq dataTypeChNameList '("管道数据" "设备数据" "仪表数据" "电气数据" "外管数据" "洁净空调数据"))
