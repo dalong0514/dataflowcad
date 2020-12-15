@@ -3820,6 +3820,7 @@
     ((= dataType "Vacuum") '("TAG" "DRAWNUM"))
     ((= dataType "CustomEquip") '("TAG" "DRAWNUM"))
     ((= dataType "Equipment") '("TAG" "DRAWNUM"))
+    ((= dataType "GsCleanAir") '("ROOM_NUM"))
   )
 )
 
