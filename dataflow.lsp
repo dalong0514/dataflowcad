@@ -4248,8 +4248,7 @@
     ((= numberMode "0") 
       (progn 
         (setq childrenDataList (car (GetGsCleanAirChildrenDataListByRoomNum propertyValueDictList dataType codeNameList)))
-        ;(setq numberedList (cadr (GetGsCleanAirChildrenDataListByRoomNum propertyValueDictList dataType codeNameList)))
-        (princ childrenDataList)(princ)
+        (setq numberedList (cadr (GetGsCleanAirChildrenDataListByRoomNum propertyValueDictList dataType codeNameList)))
       )
     )
     ((= numberMode "1") 
@@ -4274,55 +4273,29 @@
 
 (defun GetGsCleanAirChildrenDataListByRoomNum (propertyValueDictList dataType codeNameList / childrenData childrenDataList numberedList) 
   (mapcar '(lambda (roomNum) 
-            (foreach item codeNameList 
               (setq childrenData 
                 (vl-remove-if-not '(lambda (x) 
                                       ; sort data by codeName
-                                      (and 
-                                        (wcmatch (cdr (assoc (car (numberedPropertyNameListStrategy dataType)) x)) (strcat item "*")) 
-                                        (= roomNum (GetGsCleanAirCodeName (cdr (assoc "ROOM_NUM" x))))
-                                      )
+                                      (= roomNum (GetGsCleanAirCodeName (cdr (assoc "ROOM_NUM" x))))
                                   ) 
                   propertyValueDictList
                 ) 
               )
               (setq childrenDataList (append childrenDataList (list childrenData))) 
               (setq numberedList 
-                (append numberedList (list (GetNumberedListByStartAndLengthUtils item "1" (length childrenData))))
+                (append numberedList (list (GetNumberedListByStartAndLengthUtils roomNum "1" (length childrenData))))
               ) 
-            )  
            ) 
-    (GetUniqueCleanAirRoomNumList propertyValueDictList)
+    codeNameList
   )
   (list childrenDataList numberedList)
 )
 
-(defun GetUniqueCleanAirRoomNumList (propertyValueDictList / resultList) 
-  (setq resultList 
-    (mapcar '(lambda (x) 
-              (GetGsCleanAirCodeName x)
-            ) 
-      (GetValueListByOneKeyUtils propertyValueDictList "ROOM_NUM")
-    )
-  )
-  (DeduplicateForListUtils resultList)
-)
-
 (defun GetGsCleanAirChildrenDataListByByNoRoomNum (propertyValueDictList dataType codeNameList / childrenData childrenDataList numberedList) 
-  (foreach item codeNameList 
-    (setq childrenData 
-      (vl-remove-if-not '(lambda (x) 
-                           ; sort data by codeName
-                          (wcmatch (cdr (assoc (car (numberedPropertyNameListStrategy dataType)) x)) (strcat item "*"))
-                        ) 
-        propertyValueDictList
-      ) 
-    )
-    (setq childrenDataList (append childrenDataList (list childrenData))) 
-    (setq numberedList 
-      (append numberedList (list (GetNumberedListByStartAndLengthUtils item "1" (length childrenData))))
-    ) 
-  )
+  (setq childrenDataList (append childrenDataList (list propertyValueDictList))) 
+  (setq numberedList 
+    (append numberedList (list (GetNumberedListByStartAndLengthUtils "" "1" (length propertyValueDictList))))
+  ) 
   (list childrenDataList numberedList)
 )
 
