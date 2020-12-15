@@ -4675,6 +4675,10 @@
   '("洁净空调")
 )
 
+(defun GetNumberLayoutDataModeChNameList ()
+  '("按代号自动编码" "不按代号自动编号")
+)
+
 (defun numberLayoutDataByBox (dataTypeList tileName / dcl_id dataType numberMode status selectedPropertyName 
                             selectedDataType ss sslen matchedList confirmList propertyValueDictList entityNameList 
                             modifyMessageStatus numberedDataList numberedList codeNameList startNumberString)
@@ -4702,7 +4706,7 @@
       (end_list)
       (start_list "numberMode" 3)
       (mapcar '(lambda (x) (add_list x)) 
-                '("按流程图号" "不按流程图号")
+                (GetNumberLayoutDataModeChNameList)
       )
       (end_list)
     )  
