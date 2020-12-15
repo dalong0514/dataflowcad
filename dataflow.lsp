@@ -4260,7 +4260,7 @@
   )
   (mapcar '(lambda (x y) 
               (mapcar '(lambda (xx yy) 
-                        (append xx (list (cons "numberedString" (GetPipeCodeNameByNumberMode yy numberMode (cdr (assoc "ROOM_NUM" xx)) startNumberString))))
+                        (append xx (list (cons "numberedString" (GetGsCleanAirCodeNameByNumberMode yy numberMode startNumberString))))
                       ) 
                 x 
                 y
@@ -4447,6 +4447,13 @@
   (list childrenDataList numberedList)
 )
 
+(defun GetGsCleanAirCodeNameByNumberMode (originString numberMode startNumberString /) 
+  (cond 
+    ((= numberMode "0") (RegExpReplace originString "(.*[A-Za-z]+)(\\d*).*" (strcat startNumberString "$1" "$2") nil nil))
+    ((= numberMode "1") (RegExpReplace originString "(\\d*).*" (strcat startNumberString "$1") nil nil))
+  ) 
+)
+
 (defun GetPipeCodeNameByNumberMode (originString numberMode drawNum startNumberString /) 
   (setq drawNum (RegExpReplace (ExtractDrawNum drawNum) "0(\\d)-(\\d*)" (strcat "$1" "$2") nil nil))
   (cond 
@@ -4465,7 +4472,7 @@
 
 (defun GetNumberedListStrategy (numberedDataList dataType / resultList) 
   (cond 
-    ((or (= dataType "Pipe") (= dataType "Equipment"))
+    ((or (= dataType "Pipe") (= dataType "Equipment") (= dataType "GsCleanAir"))
       (GetPipeAndEquipNumberedList numberedDataList dataType)
     )
     ((= dataType "Instrument") (GetInstrumentNumberedList numberedDataList dataType))
@@ -4852,9 +4859,8 @@
       (progn 
         (setq codeNameList (GetCodeNameListStrategy propertyValueDictList selectedDataType))
         (setq numberedDataList (GetNumberedDataListStrategy propertyValueDictList selectedDataType codeNameList numberMode startNumberString))
-        ;(setq matchedList (GetNumberedListStrategy numberedDataList selectedDataType))
-        ;(setq confirmList matchedList)
-        ;(princ propertyValueDictList)(princ)
+        (setq matchedList (GetNumberedListStrategy numberedDataList selectedDataType))
+        (setq confirmList matchedList)
       )
     )
     ; modify button
