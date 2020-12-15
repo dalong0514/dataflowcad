@@ -3346,10 +3346,6 @@
   result
 )
 
-(defun c:foo ()
-  (princ "dalong")
-)
-
 (defun filterAndModifyBlockPropertyByBox (propertyNameList tileName dataType / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList importedList confirmList blockDataList entityNameList viewPropertyName previewDataList importedDataList exportMsgBtnStatus importMsgBtnStatus modifyMsgBtnStatus)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
@@ -4646,5 +4642,143 @@
 )
 
 ; Number DrawNum
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+
+
+
+
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+; Equipemnt Layout
+
+(defun c:foo ()
+  (princ "dalong")
+)
+
+(defun c:numberCleanAir (/ dataTypeList)
+  (setq dataTypeList (GetEnhancedNumberDataTypeList))
+  (enhancedNumberByBox dataTypeList "enhancedNumberBox")
+)
+
+(defun numberCleanAirByBox (propertyNameList tileName / dcl_id dataType numberMode status selectedPropertyName 
+                            selectedDataType ss sslen matchedList confirmList propertyValueDictList entityNameList 
+                            modifyMessageStatus numberedDataList numberedList codeNameList startNumberString)
+  (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
+  (setq status 2)
+  (while (>= status 2)
+    ; Create the dialog box
+    (new_dialog tileName dcl_id "" '(-1 -1))
+    ; Added the actions to the Cancel and Pick Point button
+    (action_tile "cancel" "(done_dialog 0)")
+    (action_tile "btnSelect" "(done_dialog 2)")
+    (action_tile "btnPreviewNumber" "(done_dialog 3)")
+    (action_tile "btnComfirmNumber" "(done_dialog 4)")
+    (mode_tile "dataType" 2)
+    (mode_tile "numberMode" 2)
+    (action_tile "dataType" "(setq dataType $value)")
+    (action_tile "numberMode" "(setq numberMode $value)")
+    (action_tile "startNumberString" "(setq startNumberString $value)")
+    ; init the default data of text
+    (progn 
+      (start_list "dataType" 3)
+      (mapcar '(lambda (x) (add_list x)) 
+                '("管道" "仪表" "设备")
+      )
+      (end_list)
+      (start_list "numberMode" 3)
+      (mapcar '(lambda (x) (add_list x)) 
+                '("按流程图号" "不按流程图号")
+      )
+      (end_list)
+    )  
+    (if (= nil dataType)
+      (setq dataType "0")
+    )
+    (if (= nil numberMode)
+      (setq numberMode "0")
+    )
+    (if (= nil startNumberString)
+      (setq startNumberString "")
+    ) 
+    ; setting for saving the existed value of a box
+    (set_tile "dataType" dataType)
+    (set_tile "numberMode" numberMode)
+    (set_tile "startNumberString" startNumberString)
+    ; Display the number of selected pipes
+    (if (/= sslen nil)
+      (set_tile "msg" (strcat "匹配到的数量： " (rtos sslen)))
+    )
+    (if (= modifyMessageStatus 1)
+      (set_tile "modifyBtnMsg" "编号状态：已完成")
+    )
+    (if (= modifyMessageStatus 0)
+      (set_tile "modifyBtnMsg" "请先预览修改")
+    )
+    (if (/= selectedDataType nil)
+      (set_tile "dataType" dataType)
+    )
+    (if (/= matchedList nil)
+      (progn
+        (start_list "matchedResult" 3)
+        (mapcar '(lambda (x) (add_list x)) 
+                 matchedList)
+        ;(add_list matchedList)
+        (end_list)
+      )
+    )
+    ; select button
+    (if (= 2 (setq status (start_dialog)))
+      (progn 
+        (setq selectedDataType (nth (atoi dataType) propertyNameList))
+        (setq ss (GetBlockSSBySelectByDataTypeUtils selectedDataType))
+        (setq ss (SortSelectionSetByXYZ ss))  ; sort by x cordinate
+        (setq entityNameList (GetEntityNameListBySSUtils ss))
+        (setq propertyValueDictList (GetPropertyDictListByEntityNameList entityNameList (numberedPropertyNameListStrategy selectedDataType)))
+        (setq matchedList (GetNumberedPropertyValueList propertyValueDictList selectedDataType "Instrument"))
+        (setq sslen (length matchedList))
+      )
+    )
+    ; confirm button
+    (if (= 3 status)
+      (progn 
+        (setq codeNameList (GetCodeNameListStrategy propertyValueDictList selectedDataType))
+        (setq numberedDataList (GetNumberedDataListStrategy propertyValueDictList selectedDataType codeNameList numberMode startNumberString))
+        (setq matchedList (GetNumberedListStrategy numberedDataList selectedDataType))
+        (setq confirmList matchedList)
+      )
+    )
+    ; modify button
+    (if (= 4 status)
+      (progn 
+        (if (/= confirmList nil) 
+          (progn 
+            (UpdateNumberedData numberedDataList selectedDataType)
+            (setq modifyMessageStatus 1)
+          )
+          (setq modifyMessageStatus 0)
+        )
+      )
+    )
+  )
+  (unload_dialog dcl_id)
+  (princ)
+)
+
+
+
+
+
+
+
+
+
+
+
+; Equipemnt Layout
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
