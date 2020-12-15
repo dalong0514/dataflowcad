@@ -4237,7 +4237,93 @@
     ((= dataType "Instrument") 
       (GetInstrumentChildrenDataList propertyValueDictList dataType numberMode startNumberString)
     )
+    ((= dataType "GsCleanAir") 
+      (GetGsCleanAirRoomNumDataList propertyValueDictList dataType codeNameList numberMode startNumberString)
+    )
   )
+)
+
+(defun GetGsCleanAirRoomNumDataList (propertyValueDictList dataType codeNameList numberMode startNumberString / childrenData childrenDataList numberedList) 
+  (cond 
+    ((= numberMode "0") 
+      (progn 
+        (setq childrenDataList (car (GetGsCleanAirChildrenDataListByRoomNum propertyValueDictList dataType codeNameList)))
+        ;(setq numberedList (cadr (GetGsCleanAirChildrenDataListByRoomNum propertyValueDictList dataType codeNameList)))
+        (princ childrenDataList)(princ)
+      )
+    )
+    ((= numberMode "1") 
+      (progn 
+        (setq childrenDataList (car (GetGsCleanAirChildrenDataListByByNoRoomNum propertyValueDictList dataType codeNameList)))
+        (setq numberedList (cadr (GetGsCleanAirChildrenDataListByByNoRoomNum propertyValueDictList dataType codeNameList)))
+      )
+    )
+  )
+  (mapcar '(lambda (x y) 
+              (mapcar '(lambda (xx yy) 
+                        (append xx (list (cons "numberedString" (GetPipeCodeNameByNumberMode yy numberMode (cdr (assoc "ROOM_NUM" xx)) startNumberString))))
+                      ) 
+                x 
+                y
+              )  
+           ) 
+    childrenDataList 
+    numberedList
+  ) 
+)
+
+(defun GetGsCleanAirChildrenDataListByRoomNum (propertyValueDictList dataType codeNameList / childrenData childrenDataList numberedList) 
+  (mapcar '(lambda (roomNum) 
+            (foreach item codeNameList 
+              (setq childrenData 
+                (vl-remove-if-not '(lambda (x) 
+                                      ; sort data by codeName
+                                      (and 
+                                        (wcmatch (cdr (assoc (car (numberedPropertyNameListStrategy dataType)) x)) (strcat item "*")) 
+                                        (= roomNum (GetGsCleanAirCodeName (cdr (assoc "ROOM_NUM" x))))
+                                      )
+                                  ) 
+                  propertyValueDictList
+                ) 
+              )
+              (setq childrenDataList (append childrenDataList (list childrenData))) 
+              (setq numberedList 
+                (append numberedList (list (GetNumberedListByStartAndLengthUtils item "1" (length childrenData))))
+              ) 
+            )  
+           ) 
+    (GetUniqueCleanAirRoomNumList propertyValueDictList)
+  )
+  (list childrenDataList numberedList)
+)
+
+(defun GetUniqueCleanAirRoomNumList (propertyValueDictList / resultList) 
+  (setq resultList 
+    (mapcar '(lambda (x) 
+              (GetGsCleanAirCodeName x)
+            ) 
+      (GetValueListByOneKeyUtils propertyValueDictList "ROOM_NUM")
+    )
+  )
+  (DeduplicateForListUtils resultList)
+)
+
+(defun GetGsCleanAirChildrenDataListByByNoRoomNum (propertyValueDictList dataType codeNameList / childrenData childrenDataList numberedList) 
+  (foreach item codeNameList 
+    (setq childrenData 
+      (vl-remove-if-not '(lambda (x) 
+                           ; sort data by codeName
+                          (wcmatch (cdr (assoc (car (numberedPropertyNameListStrategy dataType)) x)) (strcat item "*"))
+                        ) 
+        propertyValueDictList
+      ) 
+    )
+    (setq childrenDataList (append childrenDataList (list childrenData))) 
+    (setq numberedList 
+      (append numberedList (list (GetNumberedListByStartAndLengthUtils item "1" (length childrenData))))
+    ) 
+  )
+  (list childrenDataList numberedList)
 )
 
 (defun GetInstrumentTypeMatchList ()
@@ -4515,10 +4601,14 @@
 ; unit test compeleted
 (defun GetGsCleanAirCodeNameList (CleanAirRoomNumList /) 
   (mapcar '(lambda (x) 
-            (RegExpReplace x "(.*[A-Za-z]+)\\d*" "$1" nil nil)
+            (GetGsCleanAirCodeName x)
           ) 
     CleanAirRoomNumList
   )
+)
+
+(defun GetGsCleanAirCodeName (CleanAirRoomNum /) 
+  (RegExpReplace CleanAirRoomNum "(.*[A-Za-z]+)\\d*" "$1" nil nil)
 )
 ;;;----------------------------Enhanced Number Data------------------------;;;
 
@@ -4789,8 +4879,9 @@
       (progn 
         (setq codeNameList (GetCodeNameListStrategy propertyValueDictList selectedDataType))
         (setq numberedDataList (GetNumberedDataListStrategy propertyValueDictList selectedDataType codeNameList numberMode startNumberString))
-        (setq matchedList (GetNumberedListStrategy numberedDataList selectedDataType))
-        (setq confirmList matchedList)
+        ;(setq matchedList (GetNumberedListStrategy numberedDataList selectedDataType))
+        ;(setq confirmList matchedList)
+        ;(princ propertyValueDictList)(princ)
       )
     )
     ; modify button
@@ -4809,16 +4900,6 @@
   (unload_dialog dcl_id)
   (princ)
 )
-
-
-
-
-
-
-
-
-
-
 
 ; Equipemnt Layout
 ;;;-------------------------------------------------------------------------;;;
