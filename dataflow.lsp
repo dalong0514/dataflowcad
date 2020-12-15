@@ -39,7 +39,15 @@
   (RegExpReplaceTest)
   (DeduplicateForListUtilsTest)
   (GetTempExportedDataTypeByindexTest)
+  (GetGsCleanAirCodeNameListTest)
   (DL:PrintTestResults (DL:CountBooleans *testList*))
+)
+
+(defun GetGsCleanAirCodeNameListTest ()
+  (AssertEqual 'GetGsCleanAirCodeNameList 
+    (list '("C01" "2D01")) 
+    '("C" "2D") 
+  )
 )
 
 (defun GetTempExportedDataTypeByindexTest ()
@@ -4476,6 +4484,15 @@
       (setq resultList (GetPipeCodeNameList dataList)) 
     )
   )
+  (if (= dataType "GsCleanAir") 
+    (progn 
+      (setq propertyName (car (numberedPropertyNameListStrategy dataType)))
+      (setq dataList 
+        (GetValueListByOneKeyUtils propertyValueDictList propertyName)
+      ) 
+      (setq resultList (GetGsCleanAirCodeNameList dataList))
+    )
+  )
   (DeduplicateForListUtils resultList)
 )
 
@@ -4492,6 +4509,15 @@
             (RegExpReplace x "([A-Za-z]+).*" "$1" nil nil)
           ) 
     tagList
+  )
+)
+
+; unit test compeleted
+(defun GetGsCleanAirCodeNameList (CleanAirRoomNumList /) 
+  (mapcar '(lambda (x) 
+            (RegExpReplace x "(.*[A-Za-z]+)\\d*" "$1" nil nil)
+          ) 
+    CleanAirRoomNumList
   )
 )
 ;;;----------------------------Enhanced Number Data------------------------;;;
