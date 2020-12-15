@@ -3808,10 +3808,6 @@
   '("温度" "压力" "液位" "流量" "称重" "检测" "开关阀" "温度调节阀" "压力调节阀" "液位调节阀" "流量调节阀")
 )
 
-(defun GetEnhancedNumberDataTypeList ()
-  '("Pipe" "Instrument" "Equipment")
-)
-
 (defun numberedPropertyNameListStrategy (dataType /)
   (cond 
     ((= dataType "Pipe") '("PIPENUM" "DRAWNUM"))
@@ -4092,7 +4088,15 @@
   (enhancedNumberByBox dataTypeList "enhancedNumberBox")
 )
 
-(defun enhancedNumberByBox (propertyNameList tileName / dcl_id dataType numberMode status selectedPropertyName 
+(defun GetEnhancedNumberDataTypeList ()
+  '("Pipe" "Instrument" "Equipment")
+)
+
+(defun GetEnhancedNumberDataTypeChNameList ()
+  '("管道" "仪表" "设备")
+)
+
+(defun enhancedNumberByBox (dataTypeList tileName / dcl_id dataType numberMode status selectedPropertyName 
                             selectedDataType ss sslen matchedList confirmList propertyValueDictList entityNameList 
                             modifyMessageStatus numberedDataList numberedList codeNameList startNumberString)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
@@ -4114,7 +4118,7 @@
     (progn 
       (start_list "dataType" 3)
       (mapcar '(lambda (x) (add_list x)) 
-                '("管道" "仪表" "设备")
+                (GetEnhancedNumberDataTypeChNameList)
       )
       (end_list)
       (start_list "numberMode" 3)
@@ -4161,7 +4165,7 @@
     ; select button
     (if (= 2 (setq status (start_dialog)))
       (progn 
-        (setq selectedDataType (nth (atoi dataType) propertyNameList))
+        (setq selectedDataType (nth (atoi dataType) dataTypeList))
         (setq ss (GetBlockSSBySelectByDataTypeUtils selectedDataType))
         (setq ss (SortSelectionSetByXYZ ss))  ; sort by x cordinate
         (setq entityNameList (GetEntityNameListBySSUtils ss))
@@ -4658,12 +4662,20 @@
   (princ "dalong")
 )
 
-(defun c:numberCleanAir (/ dataTypeList)
-  (setq dataTypeList (GetEnhancedNumberDataTypeList))
-  (enhancedNumberByBox dataTypeList "enhancedNumberBox")
+(defun c:numberLayoutData (/ dataTypeList)
+  (setq dataTypeList (GetNumberLayoutDataTypeList))
+  (numberLayoutDataByBox dataTypeList "enhancedNumberBox")
 )
 
-(defun numberCleanAirByBox (propertyNameList tileName / dcl_id dataType numberMode status selectedPropertyName 
+(defun GetNumberLayoutDataTypeList ()
+  '("GsCleanAir")
+)
+
+(defun GetNumberLayoutDataTypeChNameList ()
+  '("洁净空调")
+)
+
+(defun numberLayoutDataByBox (dataTypeList tileName / dcl_id dataType numberMode status selectedPropertyName 
                             selectedDataType ss sslen matchedList confirmList propertyValueDictList entityNameList 
                             modifyMessageStatus numberedDataList numberedList codeNameList startNumberString)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
@@ -4685,7 +4697,7 @@
     (progn 
       (start_list "dataType" 3)
       (mapcar '(lambda (x) (add_list x)) 
-                '("管道" "仪表" "设备")
+                (GetNumberLayoutDataTypeChNameList)
       )
       (end_list)
       (start_list "numberMode" 3)
@@ -4732,7 +4744,7 @@
     ; select button
     (if (= 2 (setq status (start_dialog)))
       (progn 
-        (setq selectedDataType (nth (atoi dataType) propertyNameList))
+        (setq selectedDataType (nth (atoi dataType) dataTypeList))
         (setq ss (GetBlockSSBySelectByDataTypeUtils selectedDataType))
         (setq ss (SortSelectionSetByXYZ ss))  ; sort by x cordinate
         (setq entityNameList (GetEntityNameListBySSUtils ss))
