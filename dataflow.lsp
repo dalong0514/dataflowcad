@@ -3183,9 +3183,9 @@
     (new_dialog tileName dcl_id "" '(-1 -1))
     ; Added the actions to the Cancel and Pick Point button
     (action_tile "cancel" "(done_dialog 0)")
-    (action_tile "btnExportData" "(done_dialog 2)")
-    (action_tile "btnImportData" "(done_dialog 3)")
-    (action_tile "btnPreviewModify" "(done_dialog 4)")
+    (action_tile "btnSelect" "(done_dialog 2)")
+    (action_tile "btnExportData" "(done_dialog 3)")
+    (action_tile "btnImportData" "(done_dialog 4)")
     (action_tile "btnModify" "(done_dialog 5)")
     ; optional setting for the popup_list tile
     (set_tile "exportDataType" "0")

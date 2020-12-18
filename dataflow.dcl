@@ -662,6 +662,12 @@ modifyBlockPropertyBox : dialog {
       fixed_width = true; 
       alignment = centered; 
       : button { 
+        key = "btnSelect"; 
+        label = "选择数据"; 
+        is_default = "true"; 
+      } 
+      : spacer { width = 2; }  
+      : button { 
         key = "btnExportData"; 
         label = "导出数据"; 
         is_default = "true"; 
@@ -670,12 +676,6 @@ modifyBlockPropertyBox : dialog {
       : button { 
         key = "btnImportData"; 
         label = "导入数据"; 
-        is_default = "true"; 
-      } 
-      : spacer { width = 2; } 
-      : button { 
-        key = "btnPreviewModify"; 
-        label = "预览修改"; 
         is_default = "true"; 
       } 
       : spacer { width = 2; } 
