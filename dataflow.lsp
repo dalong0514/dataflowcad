@@ -1651,11 +1651,7 @@
   (setq fileDir "D:\\dataflowcad\\data\\commonData.csv")
   (setq propertyNameList (GetCommonPropertyNameListByEntityName (car entityNameList)))
   (setq firstRow (GetCSVPropertyStringByDataListUtils propertyNameList))
-  (princ firstRow)(princ)
-  ;(setq firstRow "数据ID,管道编号,工作介质,工作温度,工作压力,相态,管道起点,管道终点,流程图号,保温材料,")
-  ; the sort of  property must be consistency with the sort of block in CAD
-  
-  ;(WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList)
+  (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList)
 )
 
 (defun GetCommonPropertyNameListByEntityName (entityName / allPropertyValue)
