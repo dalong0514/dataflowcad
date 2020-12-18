@@ -4755,10 +4755,6 @@
 ;;;-------------------------------------------------------------------------;;;
 ; Equipemnt Layout
 
-(defun c:foo ()
-  (princ "dalong")
-)
-
 (defun c:numberLayoutData (/ dataTypeList)
   (setq dataTypeList (GetNumberLayoutDataTypeList))
   (numberLayoutDataByBox dataTypeList "enhancedNumberBox")
