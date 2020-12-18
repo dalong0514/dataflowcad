@@ -1249,7 +1249,7 @@
 (defun RemoveApostrForListUtils (originList /)
   ; remove "'" at the start of item to prevent being converted by excel
   (mapcar '(lambda (x) 
-             (substr x 2)
+             (StringSubstUtils "" "'" x)
            ) 
     originList
   ) 
