@@ -1637,6 +1637,26 @@
   (close filePtr)
 )
 
+(defun WriteCommonDataToCSVByEntityNameListUtils (entityNameList / fileDir allPropertyValue firstRow propertyNameList)
+  (setq fileDir "D:\\dataflowcad\\data\\commonData.csv")
+  (setq propertyNameList (GetCommonPropertyNameListByEntityName (car entityNameList)))
+  (princ propertyNameList)(princ)
+  ;(setq propertyNameList (GetPropertyDictListForOneBlockByEntityName))
+  ;(setq firstRow "数据ID,管道编号,工作介质,工作温度,工作压力,相态,管道起点,管道终点,流程图号,保温材料,")
+  ; the sort of  property must be consistency with the sort of block in CAD
+  
+  ;(WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList)
+)
+
+(defun GetCommonPropertyNameListByEntityName (entityName / allPropertyValue)
+  (setq allPropertyValue (GetAllPropertyValueByEntityName entityName))
+  (mapcar '(lambda (x) 
+             (car x)
+           )
+    allPropertyValue
+  )
+)
+
 (defun WritePipeDataToCSVByEntityNameListUtils (entityNameList / fileDir firstRow propertyNameList)
   (setq fileDir "D:\\dataflowcad\\data\\pipeData.csv")
   (setq firstRow "数据ID,管道编号,工作介质,工作温度,工作压力,相态,管道起点,管道终点,流程图号,保温材料,")
@@ -3175,6 +3195,10 @@
   (alert index)(princ)
 )
 
+(defun c:foo ()
+  (princ)
+)
+
 (defun modifyCommonBlockPropertyByBox (tileName / dcl_id status ss sslen entityNameList importedDataList selectedName propertyNameList exportMsgBtnStatus importMsgBtnStatus comfirmMsgBtnStatus modifyMsgBtnStatus)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
@@ -3217,8 +3241,7 @@
     (if (= 3 status) 
       (progn 
         (setq entityNameList (GetEntityNameListBySSUtils ss))
-        ;(WriteDataToCSVByEntityNameListStrategy entityNameList dataType)
-        (princ entityNameList)(princ)
+        (WriteCommonDataToCSVByEntityNameListUtils entityNameList)
         (setq exportMsgBtnStatus 1) 
       )
     ) 
