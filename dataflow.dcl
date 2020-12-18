@@ -632,6 +632,65 @@ filterAndModifyPropertyBox : dialog {
   }
 }
 
+modifyBlockPropertyBox : dialog {
+  label = "设计流数据一体化V1.3———批量修改通用块数据"; 
+  key = "modifyBlockProperty";
+  : boxed_radio_column {
+    key = "showOriginDataBox";
+    width = 100;
+    : text {
+      key = "selectDataNumMsg";
+      label = "选择数据块的数量：";
+    }
+    : spacer { height = 1; }  
+    : text {
+      key = "exportBtnMsg";
+      label = "导出临时文件状态：";
+    }
+    : spacer { height = 1; } 
+    : text {
+      key = "importBtnMsg";
+      label = "导入临时文件状态：";
+    }
+    : spacer { height = 1; } 
+    : text {
+      key = "modifyBtnMsg";
+      label = "数据写入图纸状态：";
+    }
+    : spacer { height = 3; } 
+    : row { 
+      fixed_width = true; 
+      alignment = centered; 
+      : button { 
+        key = "btnExportData"; 
+        label = "导出数据"; 
+        is_default = "true"; 
+      } 
+      : spacer { width = 2; }  
+      : button { 
+        key = "btnImportData"; 
+        label = "导入数据"; 
+        is_default = "true"; 
+      } 
+      : spacer { width = 2; } 
+      : button { 
+        key = "btnPreviewModify"; 
+        label = "预览修改"; 
+        is_default = "true"; 
+      } 
+      : spacer { width = 2; } 
+      : button { 
+        key = "btnModify"; 
+        label = "确认修改"; 
+        is_default = "true"; 
+      } 
+      : spacer { width = 2; } 
+      cancel_button; 
+    }
+    : spacer { height = 3; } 
+  }
+}
+
 generatePublicProcessElementBox : dialog {
   label = "设计流数据一体化V1.3———自动生成单回路辅助流程组件"; 
   key = "generatePublicProcessElement";
