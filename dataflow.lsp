@@ -1668,7 +1668,8 @@
   (setq fileDir "D:\\dataflowcad\\data\\commonData.csv")
   (setq propertyNameList (GetCommonPropertyNameListByEntityName (car entityNameList)))
   (setq firstRow (GetCSVPropertyStringByDataListUtils propertyNameList))
-  (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList "1")
+  ; note: (cdr propertyNameList) - delete the entityhandle frist
+  (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow (cdr propertyNameList) "1")
 )
 
 (defun GetCommonPropertyNameListByEntityName (entityName / allPropertyValue)
