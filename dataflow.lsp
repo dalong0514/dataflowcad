@@ -1237,10 +1237,28 @@
   csvPropertyString
 )
 
-(defun AddApostrForList (originList /)
+(defun AddApostrForListUtils (originList /)
   ; add "'" at the start of item to prevent being converted by excel
   (mapcar '(lambda (x) 
              (strcat "'" x)
+           ) 
+    originList
+  ) 
+)
+
+(defun RemoveApostrForListUtils (originList /)
+  ; remove "'" at the start of item to prevent being converted by excel
+  (mapcar '(lambda (x) 
+             (substr x 2)
+           ) 
+    originList
+  ) 
+)
+
+(defun RemoveApostrForListListUtils (originList /)
+  ; remove "'" at the start of item to prevent being converted by excel
+  (mapcar '(lambda (x) 
+             (RemoveApostrForListUtils x)
            ) 
     originList
   ) 
@@ -1263,7 +1281,7 @@
 (defun GetApostrPropertyValueListStrategy (entityName propertyNameList apostrMode /) 
   (cond 
     ((= apostrMode "0") (GetPropertyValueListForOneBlockByEntityName entityName propertyNameList))
-    ((= apostrMode "1") (AddApostrForList (GetPropertyValueListForOneBlockByEntityName entityName propertyNameList)))
+    ((= apostrMode "1") (AddApostrForListUtils (GetPropertyValueListForOneBlockByEntityName entityName propertyNameList)))
   ) 
 )
 
@@ -3275,7 +3293,8 @@
     ; import data button
     (if (= 4 status) 
       (progn 
-        (setq importedDataList (StrListToListListUtils (ReadDataFromCSVStrategy dataType)))
+        (setq importedDataList (StrListToListListUtils (ReadDataFromCSVStrategy "commonBlock")))
+        (setq importedDataList (RemoveApostrForListListUtils importedDataList))
         (setq importMsgBtnStatus 1)
       )
     )
