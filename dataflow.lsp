@@ -1246,9 +1246,9 @@
   ) 
 )
 
-(defun GetCSVPropertyStringByEntityName (entityName propertyNameList / csvPropertyString propertyValueList)
+(defun GetCSVPropertyStringByEntityName (entityName propertyNameList apostrMode / csvPropertyString propertyValueList)
   (setq csvPropertyString "")
-  (setq propertyValueList (GetPropertyValueListForOneBlockByEntityName entityName propertyNameList))
+  (setq propertyValueList (GetApostrPropertyValueListStrategy entityName propertyNameList apostrMode))
   (mapcar '(lambda (x) 
              (setq csvPropertyString (strcat csvPropertyString x ","))
            ) 
@@ -1258,6 +1258,13 @@
   ; (move to GetPropertyValueListForOneBlockByEntityName) - 20201104
   ; add "'" at the start of handle to prevent being converted by excel - 20201020
   (setq csvPropertyString (strcat "'" csvPropertyString))
+)
+
+(defun GetApostrPropertyValueListStrategy (entityName propertyNameList apostrMode /) 
+  (cond 
+    ((= apostrMode "0") (GetPropertyValueListForOneBlockByEntityName entityName propertyNameList))
+    ((= apostrMode "1") (AddApostrForList (GetPropertyValueListForOneBlockByEntityName entityName propertyNameList)))
+  ) 
 )
 
 (defun GetPropertyValueListForOneBlockByEntityName (entityName propertyNameList / allPropertyValue resultList) 
@@ -1645,11 +1652,11 @@
   (FileEncodeTransUtils fileDir "gb2312" "utf-8")
 )
 
-(defun WriteDataToCSVByEntityNameListUtils (entityNameList fileDir firstRow propertyNameList / filePtr csvPropertyStringList)
+(defun WriteDataToCSVByEntityNameListUtils (entityNameList fileDir firstRow propertyNameList apostrMode / filePtr csvPropertyStringList)
   (setq filePtr (open fileDir "w"))
   (write-line firstRow filePtr)
   (foreach item entityNameList 
-    (setq csvPropertyStringList (append csvPropertyStringList (list (GetCSVPropertyStringByEntityName item propertyNameList))))
+    (setq csvPropertyStringList (append csvPropertyStringList (list (GetCSVPropertyStringByEntityName item propertyNameList apostrMode))))
   )
   (foreach item csvPropertyStringList 
     (write-line item filePtr)
@@ -1661,7 +1668,7 @@
   (setq fileDir "D:\\dataflowcad\\data\\commonData.csv")
   (setq propertyNameList (GetCommonPropertyNameListByEntityName (car entityNameList)))
   (setq firstRow (GetCSVPropertyStringByDataListUtils propertyNameList))
-  (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList)
+  (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList "1")
 )
 
 (defun GetCommonPropertyNameListByEntityName (entityName / allPropertyValue)
@@ -1678,7 +1685,7 @@
   (setq firstRow "数据ID,管道编号,工作介质,工作温度,工作压力,相态,管道起点,管道终点,流程图号,保温材料,")
   ; the sort of  property must be consistency with the sort of block in CAD
   (setq propertyNameList (GetPipePropertyNameList))
-  (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList)
+  (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList "0")
 )
 
 (defun WriteInstrumentDataToCSVByEntityNameListUtils (entityNameList / fileDir firstRow propertyNameList)
@@ -1686,7 +1693,7 @@
   (setq firstRow "数据ID,仪表功能代号,仪表位号,工作介质,工作温度,工作压力,仪表类型,相态,所在位置材质,控制点名称,所在管道或设备,最小值,最大值,正常值,流程图号,所在位置尺寸,备注,安装方向,")
   ; the sort of  property must be consistency with the sort of block in CAD
   (setq propertyNameList (GetInstrumentPropertyNameList))
-  (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList)
+  (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList "0")
 )
 
 (defun WriteReactorDataToCSVByEntityNameListUtils (entityNameList / fileDir firstRow propertyNameList)
@@ -1694,7 +1701,7 @@
   (setq firstRow "数据ID,设备位号,设备名称,设备类型,设备体积,工作介质,工作温度,工作压力,电机功率,电机是否防爆,电机级数,反应釜转数,设备尺寸,设备材质,设备重量,设备型号,保温厚度,设备数量,流程图号,极限温度,极限压力,")
   ; the sort of  property must be consistency with the sort of block in CAD
   (setq propertyNameList (GetReactorPropertyNameList))
-  (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList)
+  (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList "0")
 )
 
 (defun WriteTankDataToCSVByEntityNameListUtils (entityNameList / fileDir firstRow propertyNameList)
@@ -1702,7 +1709,7 @@
   (setq firstRow "数据ID,设备位号,设备名称,设备类型,设备体积,工作介质,工作温度,工作压力,电机功率,电机是否防爆,电机级数,设备尺寸,设备材质,设备重量,设备型号,保温厚度,设备数量,流程图号,极限温度,极限压力,")
   ; the sort of  property must be consistency with the sort of block in CAD
   (setq propertyNameList (GetTankPropertyNameList))
-  (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList)
+  (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList "0")
 )
 
 (defun WriteHeaterDataToCSVByEntityNameListUtils (entityNameList / fileDir firstRow propertyNameList)
@@ -1710,7 +1717,7 @@
   (setq firstRow "数据ID,设备位号,设备名称,设备类型,工作介质,工作温度,工作压力,换热面积,设备尺寸,换热元件规格,设备材质,设备重量,设备型号,保温厚度,设备数量,流程图号,")
   ; the sort of  property must be consistency with the sort of block in CAD
   (setq propertyNameList (GetHeaterPropertyNameList))
-  (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList)
+  (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList "0")
 )
 
 (defun WritePumpDataToCSVByEntityNameListUtils (entityNameList / fileDir firstRow propertyNameList)
@@ -1718,7 +1725,7 @@
   (setq firstRow "数据ID,设备位号,设备名称,设备类型,工作介质,工作温度,工作压力,流量,扬程,电机功率,电机是否防爆,电机级数,设备材质,设备重量,设备数量,设备型号,流程图号,")
   ; the sort of  property must be consistency with the sort of block in CAD
   (setq propertyNameList (GetPumpPropertyNameList))
-  (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList)
+  (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList "0")
 )
 
 (defun WriteVacuumDataToCSVByEntityNameListUtils (entityNameList / fileDir firstRow propertyNameList)
@@ -1726,7 +1733,7 @@
   (setq firstRow "数据ID,设备位号,设备名称,设备类型,工作介质,工作温度,工作压力,抽气量,极限压力,电机功率,电机是否防爆,电机级数,设备尺寸,设备材质,设备重量,设备型号,设备数量,流程图号,")
   ; the sort of  property must be consistency with the sort of block in CAD
   (setq propertyNameList (GetVacuumPropertyNameList))
-  (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList)
+  (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList "0")
 )
 
 (defun WriteCentrifugeDataToCSVByEntityNameListUtils (entityNameList / fileDir firstRow propertyNameList)
@@ -1734,7 +1741,7 @@
   (setq firstRow "数据ID,设备位号,设备名称,设备类型,工作介质,工作温度,工作压力,设备体积,装料限重,转鼓直径,转鼓转速,最大分离因素,设备尺寸,电机功率,电机是否防爆,电机级数,设备材质,设备重量,设备型号,设备数量,流程图号,")
   ; the sort of  property must be consistency with the sort of block in CAD
   (setq propertyNameList (GetCentrifugePropertyNameList))
-  (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList)
+  (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList "0")
 )
 
 (defun WriteCustomEquipDataToCSVByEntityNameListUtils (entityNameList / fileDir firstRow propertyNameList)
@@ -1742,7 +1749,7 @@
   (setq firstRow "数据ID,设备位号,设备名称,设备类型,工作介质,工作温度,工作压力,设备尺寸,电机功率,电机是否防爆,电机级数,关键参数1,关键参数2,关键参数3,关键参数4,设备材质,设备重量,设备型号,保温厚度,设备数量,流程图号,")
   ; the sort of  property must be consistency with the sort of block in CAD
   (setq propertyNameList (GetCustomEquipPropertyNameList))
-  (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList)
+  (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList "0")
 )
 
 (defun WriteGsCleanAirDataToCSVByEntityNameListUtils (entityNameList / fileDir firstRow propertyNameList)
@@ -1750,7 +1757,7 @@
   (setq firstRow "数据ID,房间名称,房间编号,洁净等级,房间吊顶高度,房间面积,室压,房间人数,温度控制精度,湿度控制精度,职业暴露等级,电热设备功率,电热设备有无排风,电热设备有无保温,电动设备功率,电动设备效率,其他设备表面面积,其他设备表面温度,敞开水面表面面积,敞开水面表面温度,设备是否连续排风,设备排风量,是否连续排湿除味,排湿除味排风率,除尘排风粉尘量,除尘排风排风率,是否事故排风,事故通风介质,层流保护区域,层流保护面积,监控温度,监控相对湿度,监控压差,备注,")
   ; the sort of  property must be consistency with the sort of block in CAD
   (setq propertyNameList (GetGsCleanAirPropertyNameList))
-  (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList)
+  (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList "0")
 )
 
 (defun WriteDataToCSVByEntityNameListStrategy (entityNameList dataType /)
