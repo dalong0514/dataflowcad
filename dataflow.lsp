@@ -1875,6 +1875,9 @@
   (if (= dataType "GsCleanAir") 
     (setq fileDir "D:\\dataflowcad\\data\\gsCleanAirData.csv")
   ) 
+  (if (= dataType "commonBlock") 
+    (setq fileDir "D:\\dataflowcad\\data\\commonData.csv")
+  ) 
   (ReadDataFromCSVUtils fileDir)
 )
 ; Read and Write Utils
@@ -3272,12 +3275,8 @@
     ; import data button
     (if (= 4 status) 
       (progn 
-        (setq dataType (GetTempExportedDataTypeByindex exportDataType))
-        (progn 
-          (setq importedDataList (StrListToListListUtils (ReadDataFromCSVStrategy dataType)))
-          (setq importMsgBtnStatus 1)
-        ) 
-        (setq importMsgBtnStatus 2)
+        (setq importedDataList (StrListToListListUtils (ReadDataFromCSVStrategy dataType)))
+        (setq importMsgBtnStatus 1)
       )
     )
     ; modify button
