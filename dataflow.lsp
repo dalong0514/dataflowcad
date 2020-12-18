@@ -3175,7 +3175,7 @@
   (alert index)(princ)
 )
 
-(defun modifyCommonBlockPropertyByBox (tileName / dcl_id exportDataType viewPropertyName dataType importedDataList selectedName propertyNameList status ss confirmList entityNameList exportMsgBtnStatus importMsgBtnStatus comfirmMsgBtnStatus modifyMsgBtnStatus)
+(defun modifyCommonBlockPropertyByBox (tileName / dcl_id status ss sslen entityNameList importedDataList selectedName propertyNameList exportMsgBtnStatus importMsgBtnStatus comfirmMsgBtnStatus modifyMsgBtnStatus)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -3187,32 +3187,6 @@
     (action_tile "btnExportData" "(done_dialog 3)")
     (action_tile "btnImportData" "(done_dialog 4)")
     (action_tile "btnModify" "(done_dialog 5)")
-    ; optional setting for the popup_list tile
-    (set_tile "exportDataType" "0")
-    (set_tile "viewPropertyName" "0")
-    ; the default value of input box
-    (mode_tile "viewPropertyName" 2)
-    (mode_tile "exportDataType" 2)
-    (action_tile "exportDataType" "(setq exportDataType $value)")
-    (action_tile "viewPropertyName" "(setq viewPropertyName $value)")
-    ; init the value of listbox
-    (progn
-      (start_list "exportDataType" 3)
-      (mapcar '(lambda (x) (add_list x)) 
-                (GetTempExportedDataTypeChNameList))
-      (end_list)
-      (start_list "viewPropertyName" 3)
-      (mapcar '(lambda (x) (add_list x)) 
-                (GetPropertyChNameListStrategy dataType))
-      (end_list)
-    )
-    ; init the default data of text
-    (if (= nil exportDataType)
-      (setq exportDataType "0")
-    )
-    (if (= nil viewPropertyName)
-      (setq viewPropertyName "0")
-    )
     ; Display the number of selected pipes
     (if (= exportMsgBtnStatus 1)
       (set_tile "exportBtnMsg" "导出数据状态：已完成")
@@ -3232,54 +3206,37 @@
     (if (= modifyMsgBtnStatus 2)
       (set_tile "modifyBtnMsg" "请先预览确认一下数据，一旦写错 CAD 数据全毁！")
     ) 
-    (set_tile "exportDataType" exportDataType)
-    (set_tile "viewPropertyName" viewPropertyName) 
-    (if (/= confirmList nil)
-      (progn
-        (start_list "modifiedData" 3)
-        (mapcar '(lambda (x) (add_list x)) 
-                 confirmList)
-        (end_list)
-      )
+    (if (/= sslen nil)
+      (set_tile "selectDataNumMsg" (strcat "选择数据块的数量： " (rtos sslen)))
     )
-    ; all select button
-    ; export data button
+    ; select button
     (if (= 2 (setq status (start_dialog)))
       (progn 
-        (setq dataType (GetTempExportedDataTypeByindex exportDataType))
-        (setq ss (GetAllBlockSSByDataTypeUtils dataType))
-        (setq entityNameList (GetEntityNameListBySSUtils ss))
-        (WriteDataToCSVByEntityNameListStrategy entityNameList dataType)
-        (setq exportMsgBtnStatus 1) 
+        (setq ss (ssget '((0 . "INSERT"))))
+        (if (/= ss nil)
+          (setq sslen (sslength ss)) 
+          (setq sslen 0) 
+        )
       )
     )
-    ; import data button
+    ; export data button
     (if (= 3 status) 
       (progn 
-        (setq dataType (GetTempExportedDataTypeByindex exportDataType))
-        (if (/= dataType "Equipment") 
-          (progn 
-            (setq importedDataList (StrListToListListUtils (ReadDataFromCSVStrategy dataType)))
-            (setq importMsgBtnStatus 1)
-          ) 
-          (setq importMsgBtnStatus 2)
-        ) 
+        (setq entityNameList (GetEntityNameListBySSUtils ss))
+        ;(WriteDataToCSVByEntityNameListStrategy entityNameList dataType)
+        (princ entityNameList)(princ)
+        (setq exportMsgBtnStatus 1) 
       )
-    )
-    ; confirm button
+    ) 
+    ; import data button
     (if (= 4 status) 
-      (if (= importMsgBtnStatus 1) 
+      (progn 
+        (setq dataType (GetTempExportedDataTypeByindex exportDataType))
         (progn 
-          (setq dataType (GetTempExportedDataTypeByindex exportDataType))
-          (setq propertyNameList (GetPropertyNameListStrategy dataType))
-          (setq selectedName (nth (atoi viewPropertyName) propertyNameList))
-          (if (/= importedDataList nil) 
-            (setq confirmList (GetImportedPropertyValueByPropertyName importedDataList selectedName dataType))
-            (setq confirmList '(""))
-          ) 
-          (setq comfirmMsgBtnStatus 1)
+          (setq importedDataList (StrListToListListUtils (ReadDataFromCSVStrategy dataType)))
+          (setq importMsgBtnStatus 1)
         ) 
-        (setq importMsgBtnStatus 3)
+        (setq importMsgBtnStatus 2)
       )
     )
     ; modify button
