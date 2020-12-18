@@ -1264,6 +1264,14 @@
   ) 
 )
 
+(defun GetUpperCaseForListUtils (originList /)
+  (mapcar '(lambda (x) 
+             (strcase x)
+           ) 
+    originList
+  ) 
+)
+
 (defun GetCSVPropertyStringByEntityName (entityName propertyNameList apostrMode / csvPropertyString propertyValueList)
   (setq csvPropertyString "")
   (setq propertyValueList (GetApostrPropertyValueListStrategy entityName propertyNameList apostrMode))
@@ -3244,7 +3252,7 @@
   (princ)
 )
 
-(defun modifyCommonBlockPropertyByBox (tileName / dcl_id status ss sslen entityNameList importedDataList selectedName propertyNameList exportMsgBtnStatus importMsgBtnStatus comfirmMsgBtnStatus modifyMsgBtnStatus)
+(defun modifyCommonBlockPropertyByBox (tileName / dcl_id status ss sslen entityNameList importedDataList entityHandle propertyNameList exportMsgBtnStatus importMsgBtnStatus modifyMsgBtnStatus)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -3263,7 +3271,7 @@
     (if (= importMsgBtnStatus 1)
       (set_tile "importBtnMsg" "导入数据状态：已完成")
     )
-    (if (= importMsgBtnStatus 3)
+    (if (= importMsgBtnStatus 2)
       (set_tile "importBtnMsg" "请先导入数据！")
     )  
     (if (= modifyMsgBtnStatus 1)
@@ -3300,17 +3308,16 @@
     )
     ; modify button
     (if (= 5 status) 
-      (if (= comfirmMsgBtnStatus 1) 
-        (progn 
-          (if (/= importedDataList nil) 
-            (progn 
-              (ModifyPropertyValueByEntityHandleUtils importedDataList (GetPropertyNameListStrategy dataType))
-              (setq modifyMsgBtnStatus 1)
-            )
-            (setq importMsgBtnStatus 3)
+      (progn 
+        (if (/= importedDataList nil) 
+          (progn 
+            (setq entityHandle (car (car importedDataList)))
+            (setq propertyNameList (GetCommonPropertyNameListByEntityName (handent entityHandle)))
+            (ModifyPropertyValueByEntityHandleUtils importedDataList (GetUpperCaseForListUtils (cdr propertyNameList)))
+            (setq modifyMsgBtnStatus 1)
           )
-        ) 
-        (setq modifyMsgBtnStatus 2)
+          (setq importMsgBtnStatus 2)
+        )
       )
     )
   )
