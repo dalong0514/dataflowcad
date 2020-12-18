@@ -1237,6 +1237,15 @@
   csvPropertyString
 )
 
+(defun AddApostrForList (originList /)
+  ; add "'" at the start of item to prevent being converted by excel
+  (mapcar '(lambda (x) 
+             (strcat "'" x)
+           ) 
+    originList
+  ) 
+)
+
 (defun GetCSVPropertyStringByEntityName (entityName propertyNameList / csvPropertyString)
   (setq csvPropertyString "")
   (mapcar '(lambda (x) 
