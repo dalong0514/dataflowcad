@@ -3045,11 +3045,11 @@
 ;;;-------------------------------------------------------------------------;;;
 ; the macro for modify data
 
-(defun c:modifyCommonBlockProperty (/ pipePropertyNameList)
+(defun c:modifyCommonBlockProperty ()
   (modifyCommonBlockPropertyByBox "modifyBlockPropertyBox")
 )
 
-(defun c:modifyAllBlockProperty (/ pipePropertyNameList)
+(defun c:modifyAllBlockProperty ()
   (filterAndModifyBlockPropertyByBoxV2 "filterAndModifyPropertyBox")
 )
 
