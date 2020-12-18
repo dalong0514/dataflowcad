@@ -1227,6 +1227,16 @@
   (setq entityHandle (cdr (assoc 5 (entget entityName))))
 )
 
+(defun GetCSVPropertyStringByDataListUtils (dataList / csvPropertyString)
+  (setq csvPropertyString "")
+  (mapcar '(lambda (x) 
+             (setq csvPropertyString (strcat csvPropertyString x ","))
+           ) 
+    dataList
+  )
+  csvPropertyString
+)
+
 (defun GetCSVPropertyStringByEntityName (entityName propertyNameList / csvPropertyString)
   (setq csvPropertyString "")
   (mapcar '(lambda (x) 
@@ -1637,11 +1647,11 @@
   (close filePtr)
 )
 
-(defun WriteCommonDataToCSVByEntityNameListUtils (entityNameList / fileDir allPropertyValue firstRow propertyNameList)
+(defun WriteCommonDataToCSVByEntityNameListUtils (entityNameList / fileDir propertyNameList firstRow)
   (setq fileDir "D:\\dataflowcad\\data\\commonData.csv")
   (setq propertyNameList (GetCommonPropertyNameListByEntityName (car entityNameList)))
-  (princ propertyNameList)(princ)
-  ;(setq propertyNameList (GetPropertyDictListForOneBlockByEntityName))
+  (setq firstRow (GetCSVPropertyStringByDataListUtils propertyNameList))
+  (princ firstRow)(princ)
   ;(setq firstRow "数据ID,管道编号,工作介质,工作温度,工作压力,相态,管道起点,管道终点,流程图号,保温材料,")
   ; the sort of  property must be consistency with the sort of block in CAD
   
