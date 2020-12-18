@@ -35,9 +35,14 @@ exportBlockPropertyDataBox : dialog {
       }
       : spacer { height = 1; }
       : text {
+        key = "exportDataNumMsg";
+        label = "导出数据数量：";
+      } 
+      : spacer { height = 1; }
+      : text {
         key = "exportBtnMsg";
         label = "导出数据状态：";
-      }
+      } 
       : spacer { height = 6; }
       : row { 
         fixed_width = true; 
@@ -92,9 +97,14 @@ exportBlockPropertyDataBoxV2 : dialog {
       }
       : spacer { height = 1; }
       : text {
+        key = "exportDataNumMsg";
+        label = "导出数据数量：";
+      } 
+      : spacer { height = 1; }
+      : text {
         key = "exportBtnMsg";
         label = "导出数据状态：";
-      }
+      } 
       : spacer { height = 6; }
       : row { 
         fixed_width = true; 
