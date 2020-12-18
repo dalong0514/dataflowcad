@@ -1246,12 +1246,13 @@
   ) 
 )
 
-(defun GetCSVPropertyStringByEntityName (entityName propertyNameList / csvPropertyString)
+(defun GetCSVPropertyStringByEntityName (entityName propertyNameList / csvPropertyString propertyValueList)
   (setq csvPropertyString "")
+  (setq propertyValueList (GetPropertyValueListForOneBlockByEntityName entityName propertyNameList))
   (mapcar '(lambda (x) 
              (setq csvPropertyString (strcat csvPropertyString x ","))
            ) 
-    (GetPropertyValueListForOneBlockByEntityName entityName propertyNameList)
+    propertyValueList
   )
   ; add the handle to the start of the csvPropertyString 
   ; (move to GetPropertyValueListForOneBlockByEntityName) - 20201104
