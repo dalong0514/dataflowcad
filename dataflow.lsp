@@ -637,6 +637,10 @@
   (entget (car (entsel)))
 )
 
+(defun GetBlockNameUtils ()
+  (cdr (assoc 2 (GetEntityDataUtils)))
+)
+
 ; Returns the value of the specified DXF group code for the supplied entity name
 (defun GetDXFValueUtils (entityName DXFcode / )
   (cdr (assoc DXFcode (entget entityName)))
@@ -3249,7 +3253,7 @@
   (alert index)(princ)
 )
 
-(defun modifyCommonBlockPropertyByBox (tileName / dcl_id status ss sslen entityNameList importedDataList entityHandle propertyNameList exportMsgBtnStatus importMsgBtnStatus modifyMsgBtnStatus)
+(defun modifyCommonBlockPropertyByBox (tileName / dcl_id status ss sslen entityNameList importedDataList entityHandle propertyNameList exportMsgBtnStatus importMsgBtnStatus modifyMsgBtnStatus blockName)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -3321,7 +3325,8 @@
     ; get block type button
     (if (= 6 status) 
       (progn 
-        (princ "da")(princ)
+        (setq blockName (GetBlockNameUtils))
+        (princ blockName)(princ)
       )
     ) 
   )
