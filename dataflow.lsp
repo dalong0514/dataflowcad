@@ -3261,6 +3261,7 @@
     (action_tile "btnExportData" "(done_dialog 3)")
     (action_tile "btnImportData" "(done_dialog 4)")
     (action_tile "btnModify" "(done_dialog 5)")
+    (action_tile "btnGetBlockType" "(done_dialog 6)")
     ; Display the number of selected pipes
     (if (= exportMsgBtnStatus 1)
       (set_tile "exportBtnMsg" "导出数据状态：已完成")
@@ -3317,6 +3318,12 @@
         )
       )
     )
+    ; get block type button
+    (if (= 6 status) 
+      (progn 
+        (princ "da")(princ)
+      )
+    ) 
   )
   (setq importedList nil)
   (unload_dialog dcl_id)

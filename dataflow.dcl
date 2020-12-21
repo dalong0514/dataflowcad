@@ -637,7 +637,27 @@ modifyBlockPropertyBox : dialog {
   key = "modifyBlockProperty";
   : boxed_radio_column {
     key = "showOriginDataBox";
-    width = 100;
+    width = 90;
+    : row { 
+      fixed_width = true; 
+      alignment = centered; 
+      : button { 
+        key = "btnGetBlockType"; 
+        label = "提取数据块的类型"; 
+        is_default = "true"; 
+      } 
+    } 
+    : spacer { width = 5; } 
+    : text {
+      key = "getBlockTypeMsg";
+      label = "提取数据块的名称：";
+    }
+    : spacer { height = 1; }  
+    : text {
+      key = "getBlockTypeSpecMsg";
+      label = "（提取数据块的类型为可选操作，提取的话左下角【选择数据】只能选取到提取的数据类型）";
+    }
+    : spacer { height = 1; }   
     : text {
       key = "selectDataNumMsg";
       label = "选择数据块的数量：";
