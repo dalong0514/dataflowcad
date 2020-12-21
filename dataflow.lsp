@@ -3288,7 +3288,10 @@
     ; select button
     (if (= 2 (setq status (start_dialog)))
       (progn 
-        (setq ss (ssget '((0 . "INSERT"))))
+        (if (/= blockName nil)
+          (setq ss (ssget (list (cons 0 "INSERT") (cons 2 blockName))))
+          (setq ss (ssget '((0 . "INSERT"))))
+        ) 
         (if (/= ss nil)
           (setq sslen (sslength ss)) 
           (setq sslen 0) 
