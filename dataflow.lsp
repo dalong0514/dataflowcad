@@ -238,6 +238,9 @@
   (AssertEqual 'StringSubstUtils '("-80-" "-50-" "PL1201-50-2J1") "PL1201-80-2J1")
   (AssertEqual 'StringSubstUtils '("YC" "PL" "PL1201-50-2J1") "YC1201-50-2J1")
   (AssertEqual 'StringSubstUtils '("" "-2J1" "PL1201-50-2J1") "PL1201-50")
+  (AssertEqual 'StringSubstUtils '("" "'" "''2E10") "2E10")
+  (AssertEqual 'StringSubstUtils '("" "'" "2E10") "2E10")
+  (AssertEqual 'StringSubstUtils '("" " " "R1101 ") "R1101")
 )
 
 ; Unit Test
