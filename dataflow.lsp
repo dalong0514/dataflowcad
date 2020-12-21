@@ -3282,6 +3282,9 @@
     (if (/= sslen nil)
       (set_tile "selectDataNumMsg" (strcat "选择数据块的数量： " (rtos sslen)))
     )
+    (if (/= blockName nil)
+      (set_tile "getBlockTypeMsg" (strcat "提取数据块的名称：" blockName))
+    ) 
     ; select button
     (if (= 2 (setq status (start_dialog)))
       (progn 
@@ -3326,7 +3329,6 @@
     (if (= 6 status) 
       (progn 
         (setq blockName (GetBlockNameUtils))
-        (princ blockName)(princ)
       )
     ) 
   )
