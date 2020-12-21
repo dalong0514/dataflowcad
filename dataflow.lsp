@@ -2782,7 +2782,7 @@
 )
 
 (defun GetRelatedEquipDataByTag (tag / equipData) 
-  ; repair bug - the tag may contain space, trim the space frist
+  ; repair bug - the tag may contain space, trim the space frist - 2020.12.21
   (setq tag (StringSubstUtils "" " " tag))
   (setq equipData (GetAllPropertyValueListByEntityNameList (GetEntityNameListBySSUtils (GetAllEquipmentSSUtils))))
   (car 
