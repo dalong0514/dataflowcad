@@ -3690,12 +3690,8 @@
     ; import data button
     (if (= 8 status)
       (progn 
-        (if (= exportMsgBtnStatus 1)
-          (progn 
-            (setq importedDataList (StrListToListListUtils (ReadDataFromCSVStrategy dataType)))
-            (setq importMsgBtnStatus 1)
-          )
-        )
+        (setq importedDataList (StrListToListListUtils (ReadDataFromCSVStrategy dataType)))
+        (setq importMsgBtnStatus 1)
       )
     )
   )
