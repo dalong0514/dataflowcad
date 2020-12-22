@@ -4909,7 +4909,7 @@
 )
 
 (defun c:brushReducerInfoMacro () 
-  (BrushReducerInfoMacro)
+  (BrushReducerInfo)
 )
 
 (defun BrushPipeClassChange (/ pipeClassChangeInfo entityNameList)
@@ -4936,6 +4936,33 @@
              (strcat (cdr (assoc "fpipeclass" x)) "-" (cdr (assoc "spipeclass" x)))
            ) 
     (GetAllPropertyValueListByEntityNameList (GetEntityNameListBySSUtils (GetBlockSSBySelectByDataTypeUtils "PipeClassChange")))
+  )
+)
+
+(defun BrushReducerInfo (/ reducerInfo entityNameList)
+  (prompt "\n选择异径管块：")
+  (setq reducerInfo 
+    (car (GetReducerInfoListUtils))
+  )
+  (prompt "\n选择要刷的数据（管道、仪表）：")
+  (setq entityNameList (GetEntityNameListBySSUtils (GetBlockSSBySelectByDataTypeUtils "InstrumentAndPipe")))
+  (ModifyReducerInfoForData entityNameList reducerInfo)
+  (prompt "\n刷变管径信息完成！")(princ)
+)
+
+(defun ModifyReducerInfoForData (entityNameList reducerInfo /)
+  (mapcar '(lambda (x) 
+            (ModifyMultiplePropertyForOneBlockUtils x (list "REDUCERINFO") (list reducerInfo))
+          ) 
+    entityNameList
+  )
+)
+
+(defun GetReducerInfoListUtils () 
+  (mapcar '(lambda (x) 
+             (cdr (assoc "reducerinfo" x))
+           ) 
+    (GetAllPropertyValueListByEntityNameList (GetEntityNameListBySSUtils (GetBlockSSBySelectByDataTypeUtils "Reducer")))
   )
 )
 
