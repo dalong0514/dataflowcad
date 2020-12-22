@@ -2711,6 +2711,17 @@
   (alert "更新完成")(princ)
 )
 
+(defun GetAllPipeHandleListUtils (/ pipeData) 
+  (setq pipeData 
+    (GetAllPropertyValueListByEntityNameList (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "Pipe")))
+  ) 
+  (mapcar '(lambda (x) 
+             (cdr (assoc "entityhandle" x))
+           ) 
+    pipeData
+  )
+)
+
 (defun UpdateJoinDrawArrowByDataType (dataType / entityNameList relatedPipeData) 
   (setq entityNameList 
     (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils dataType))
