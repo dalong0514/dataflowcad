@@ -4888,6 +4888,34 @@
 
 
 
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+; PipeClassChange and PipeDiameterChange
+
+(defun c:brushPipeClassChangeMacro () 
+  (BrushPipeClassChange)
+)
+
+(defun BrushPipeClassChange (/ drawNum dataSS entityNameList)
+  (prompt "\n变管道等级块：")
+  (setq drawNum 
+    (car (GetDrawNumList (GetEntityNameListBySSUtils (GetBlockSSBySelectByDataTypeUtils "DrawLabel"))))
+  )
+  (prompt (strcat "\n所选择的图号：" drawNum))
+  (prompt "\n选择要刷的数据（管道、仪表、设备）：")
+  (setq entityNameList (GetEntityNameListBySSUtils (GetAllDataSSBySelectUtils)))
+  (ModifyDrawNumForData entityNameList drawNum)
+  (prompt "\n刷数据所在图号完成！")
+  (length entityNameList)
+)
+
+
+
+
+; PipeClassChange and PipeDiameterChange
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+
 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
