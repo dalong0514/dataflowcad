@@ -4908,6 +4908,10 @@
   (BrushPipeClassChange)
 )
 
+(defun c:brushReducerInfoMacro () 
+  (BrushReducerInfoMacro)
+)
+
 (defun BrushPipeClassChange (/ pipeClassChangeInfo entityNameList)
   (prompt "\n选择变管道等级块：")
   (setq pipeClassChangeInfo 
