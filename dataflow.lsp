@@ -4908,21 +4908,32 @@
   (BrushPipeClassChange)
 )
 
-(defun BrushPipeClassChange (/ drawNum dataSS entityNameList)
-  (prompt "\n变管道等级块：")
-  (setq drawNum 
-    (car (GetDrawNumList (GetEntityNameListBySSUtils (GetBlockSSBySelectByDataTypeUtils "DrawLabel"))))
+(defun BrushPipeClassChange (/ pipeClassChangeInfo entityNameList)
+  (prompt "\n选择变管道等级块：")
+  (setq pipeClassChangeInfo 
+    (car (GetPipeClassChangeInfoListUtils))
   )
-  (prompt (strcat "\n所选择的图号：" drawNum))
-  (prompt "\n选择要刷的数据（管道、仪表、设备）：")
-  (setq entityNameList (GetEntityNameListBySSUtils (GetAllDataSSBySelectUtils)))
-  (ModifyDrawNumForData entityNameList drawNum)
-  (prompt "\n刷数据所在图号完成！")
-  (length entityNameList)
+  (prompt "\n选择要刷的数据（管道、仪表）：")
+  (setq entityNameList (GetEntityNameListBySSUtils (GetBlockSSBySelectByDataTypeUtils "InstrumentAndPipe")))
+  (ModifyPipeClassChangeInfoForData entityNameList pipeClassChangeInfo)
+  (prompt "\n刷变管道等级完成！")(princ)
 )
 
+(defun ModifyPipeClassChangeInfoForData (entityNameList pipeClassChangeInfo /)
+  (mapcar '(lambda (x) 
+            (ModifyMultiplePropertyForOneBlockUtils x (list "PIPECLASSCHANGE") (list pipeClassChangeInfo))
+          ) 
+    entityNameList
+  )
+)
 
-
+(defun GetPipeClassChangeInfoListUtils () 
+  (mapcar '(lambda (x) 
+             (strcat (cdr (assoc "fpipeclass" x)) "-" (cdr (assoc "spipeclass" x)))
+           ) 
+    (GetAllPropertyValueListByEntityNameList (GetEntityNameListBySSUtils (GetBlockSSBySelectByDataTypeUtils "PipeClassChange")))
+  )
+)
 
 ; PipeClassChange and PipeDiameterChange
 ;;;-------------------------------------------------------------------------;;;
