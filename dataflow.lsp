@@ -2722,10 +2722,18 @@
   )
 )
 
-(defun UpdateJoinDrawArrowByDataType (dataType / entityNameList relatedPipeData) 
+(defun GetRelatedPipeDataByJoinDrawArrowData (JoinDrawArrowData allPipeHandleList /) 
+  (if (/= (member (cdr (assoc "relatedid" JoinDrawArrowData)) allPipeHandleList) nil) 
+    (GetAllPropertyValueByEntityName (handent (cdr (assoc "relatedid" JoinDrawArrowData))))
+    (alert (strcat (cdr (assoc "fromto" JoinDrawArrowData)) (cdr (assoc "drawnum" JoinDrawArrowData)) "关联的管道数据id是不存在的！"))
+  )
+)
+
+(defun UpdateJoinDrawArrowByDataType (dataType / entityNameList relatedPipeData allPipeHandleList) 
   (setq entityNameList 
     (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils dataType))
   )
+  (setq allPipeHandleList (GetAllPipeHandleListUtils))
   (mapcar '(lambda (x) 
              (setq relatedPipeData (append relatedPipeData 
                                      (list (GetAllPropertyValueByEntityName (handent (cdr (assoc "relatedid" x)))))
