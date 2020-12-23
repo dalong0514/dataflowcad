@@ -4988,13 +4988,29 @@
 
 (defun c:foo (/ sourceData)
   (setq sourceData (GetInstrumentAndPipeAndPipeClassChangeData))
-  (princ sourceData)(princ)
+  (princ (GetInstrumentAndPipeDataForBrushPipeClassChange sourceData))(princ)
 )
 
 (defun GetInstrumentAndPipeAndPipeClassChangeData ()
   (GetPropertyDictListByPropertyNameList 
     (GetEntityNameListBySSUtils (GetBlockSSBySelectByDataTypeUtils "InstrumentAndPipeAndPipeClassChange")) 
     '("FPIPECLASS" "SPIPECLASS" "PIPECLASSCHANGE")
+  )
+)
+
+(defun GetPipeClassChangeDataForBrushPipeClassChange (sourceData /) 
+  (vl-remove-if-not '(lambda (x) 
+                       (/= (cdr (assoc "FPIPECLASS" x)) nil)
+                    ) 
+    sourceData
+  )
+)
+
+(defun GetInstrumentAndPipeDataForBrushPipeClassChange (sourceData /) 
+  (vl-remove-if-not '(lambda (x) 
+                       (= (cdr (assoc "FPIPECLASS" x)) nil)
+                    ) 
+    sourceData
   )
 )
 
