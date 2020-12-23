@@ -1384,7 +1384,7 @@
   resultList
 )
 
-(defun GetPropertyDictListByEntityNameList (entityNameList propertyNameList / resultList) 
+(defun GetPropertyDictListByPropertyNameList (entityNameList propertyNameList / resultList) 
   (mapcar '(lambda (x) 
              (setq resultList (append resultList (list (GetPropertyDictListForOneBlockByPropertyNameList x propertyNameList))))
            ) 
@@ -1393,7 +1393,7 @@
   resultList
 )
 
-(defun GetAllPropertyDictListByEntityNameList (entityNameList / propertyNameList resultList) 
+(defun GetAllPropertyDictList (entityNameList / propertyNameList resultList) 
   ; entityhandle will have been added twice, delete it first
   (setq propertyNameList (cdr (GetCommonPropertyNameListByEntityName (car entityNameList))))
   (mapcar '(lambda (x) 
@@ -2319,14 +2319,14 @@
     (mapcar '(lambda (x) 
               (cdr (assoc "PIPENUM" x))
             ) 
-      (GetPropertyDictListByEntityNameList outerPipeEntityNameList outerPipePropertyNameList)
+      (GetPropertyDictListByPropertyNameList outerPipeEntityNameList outerPipePropertyNameList)
     ) 
   )
   (setq pipeList 
     (vl-remove-if-not '(lambda (x) 
                         (= (type (member (cdr (assoc "PIPENUM" x)) outerPipePipeNumList)) 'list)
                       ) 
-      (GetPropertyDictListByEntityNameList pipeEntityNameList pipePropertyNameList)
+      (GetPropertyDictListByPropertyNameList pipeEntityNameList pipePropertyNameList)
     )
   )
   (setq selectedPipeEntityNameList 
@@ -4161,7 +4161,7 @@
         ; sort by x cordinate
         (setq ss (SortSelectionSetByXYZ ss))
         (setq entityNameList (GetNumberedEntityNameList ss selectedDataType dataChildrenType))
-        (setq propertyValueDictList (GetPropertyDictListByEntityNameList entityNameList (numberedPropertyNameListStrategy selectedDataType)))
+        (setq propertyValueDictList (GetPropertyDictListByPropertyNameList entityNameList (numberedPropertyNameListStrategy selectedDataType)))
         ; filter pipe by patternValue
         (setq propertyValueDictList (FilterPipeByPatternValue propertyValueDictList patternValue selectedDataType))
         (setq matchedList (GetNumberedPropertyValueList propertyValueDictList selectedDataType dataChildrenType))
@@ -4176,7 +4176,7 @@
         ; sort by x cordinate
         (setq ss (SortSelectionSetByXYZ ss))
         (setq entityNameList (GetNumberedEntityNameList ss selectedDataType dataChildrenType))
-        (setq propertyValueDictList (GetPropertyDictListByEntityNameList entityNameList (numberedPropertyNameListStrategy selectedDataType)))
+        (setq propertyValueDictList (GetPropertyDictListByPropertyNameList entityNameList (numberedPropertyNameListStrategy selectedDataType)))
         ; filter pipe by patternValue
         (setq propertyValueDictList (FilterPipeByPatternValue propertyValueDictList patternValue selectedDataType)) 
         (setq matchedList (GetNumberedPropertyValueList propertyValueDictList selectedDataType dataChildrenType))
@@ -4189,7 +4189,7 @@
         (setq selectedDataType (nth (atoi dataType) propertyNameList))
         (setq ss (GetBlockSSBySelectByDataTypeUtils selectedDataType))
         (setq entityNameList (GetNumberedEntityNameList ss selectedDataType dataChildrenType))
-        (setq propertyValueDictList (GetPropertyDictListByEntityNameList entityNameList (numberedPropertyNameListStrategy selectedDataType)))
+        (setq propertyValueDictList (GetPropertyDictListByPropertyNameList entityNameList (numberedPropertyNameListStrategy selectedDataType)))
         ; filter pipe by patternValue
         (setq propertyValueDictList (FilterPipeByPatternValue propertyValueDictList patternValue selectedDataType)) 
         (setq matchedList (GetNumberedPropertyValueList propertyValueDictList selectedDataType dataChildrenType))
@@ -4254,7 +4254,7 @@
   (if (= dataType "Instrument") 
     (progn 
       (setq entityNameList (GetEntityNameListBySSUtils ss))
-      (setq dictList (GetPropertyDictListByEntityNameList entityNameList '("entityhandle" "FUNCTION")))
+      (setq dictList (GetPropertyDictListByPropertyNameList entityNameList '("entityhandle" "FUNCTION")))
       (setq dictList 
         (vl-remove-if-not '(lambda (x) 
                             (wcmatch (cdr (assoc "FUNCTION" x)) 
@@ -4393,7 +4393,7 @@
         (setq ss (GetBlockSSBySelectByDataTypeUtils selectedDataType))
         (setq ss (SortSelectionSetByXYZ ss))  ; sort by x cordinate
         (setq entityNameList (GetEntityNameListBySSUtils ss))
-        (setq propertyValueDictList (GetPropertyDictListByEntityNameList entityNameList (numberedPropertyNameListStrategy selectedDataType)))
+        (setq propertyValueDictList (GetPropertyDictListByPropertyNameList entityNameList (numberedPropertyNameListStrategy selectedDataType)))
         (setq matchedList (GetNumberedPropertyValueList propertyValueDictList selectedDataType "Instrument"))
         (setq sslen (length matchedList))
       )
@@ -4977,7 +4977,7 @@
 
 (defun BrushPipeClassChange (/ pipeClassChangeInfo entityNameList sourceData)
   (prompt "\n选择变管道等级块以及要刷的管道或仪表数据（变等级块只能选一个）：")
-  (setq sourceData (GetPropertyDictListByEntityNameList (GetEntityNameListBySSUtils (GetBlockSSBySelectByDataTypeUtils "InstrumentAndPipe"))))
+  (setq sourceData (GetInstrumentAndPipeAndPipeClassChangeData))
   (setq pipeClassChangeInfo (GetPipeClassChangeInfo))
   (prompt (strcat "\n提取的变等级信息：" pipeClassChangeInfo))
   (prompt "\n选择要刷的数据（管道、仪表）：")
@@ -4987,8 +4987,15 @@
 )
 
 (defun c:foo (/ sourceData)
-  (setq sourceData (GetAllPropertyDictListByEntityNameList (GetEntityNameListBySSUtils (GetBlockSSBySelectByDataTypeUtils "InstrumentAndPipe"))))
+  (setq sourceData (GetInstrumentAndPipeAndPipeClassChangeData))
   (princ sourceData)(princ)
+)
+
+(defun GetInstrumentAndPipeAndPipeClassChangeData ()
+  (GetPropertyDictListByPropertyNameList 
+    (GetEntityNameListBySSUtils (GetBlockSSBySelectByDataTypeUtils "InstrumentAndPipeAndPipeClassChange")) 
+    '("FPIPECLASS" "SPIPECLASS" "PIPECLASSCHANGE")
+  )
 )
 
 (defun GetPipeClassChangeInfo (/ propertyValueDict) 
@@ -5111,7 +5118,7 @@
         (setq ss (GetBlockSSBySelectByDataTypeUtils selectedDataType))
         (setq ss (SortSelectionSetByXYZ ss))  ; sort by x cordinate
         (setq entityNameList (GetEntityNameListBySSUtils ss))
-        (setq propertyValueDictList (GetPropertyDictListByEntityNameList entityNameList (numberedPropertyNameListStrategy selectedDataType)))
+        (setq propertyValueDictList (GetPropertyDictListByPropertyNameList entityNameList (numberedPropertyNameListStrategy selectedDataType)))
         (setq matchedList (GetNumberedPropertyValueList propertyValueDictList selectedDataType "Instrument"))
         (setq sslen (length matchedList))
       )
