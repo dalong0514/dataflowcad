@@ -1262,6 +1262,22 @@
   entityNameList
 )
 
+(defun GetEntityNameListByEntityHandleListUtils (entityHandleList /)
+  (mapcar '(lambda (x) 
+            (handent x)
+          ) 
+    entityHandleList
+  )
+)
+
+(defun GetEntityHandleListByPropertyDictListUtils (propertyDictList /)
+  (mapcar '(lambda (x) 
+            (cdr (assoc "entityhandle" x))
+          ) 
+    entityHandleList
+  )
+)
+
 (defun GetEntityNameListByXPositionSortedUtils (ss / entityNameList resultList) 
   (setq entityNameList (GetEntityNameListBySSUtils ss))
   (setq resultList 
@@ -4975,15 +4991,22 @@
   (BrushReducerInfo)
 )
 
-(defun BrushPipeClassChange (/ pipeClassChangeInfo entityNameList sourceData)
+(defun BrushPipeClassChange (/ sourceData pipeClassChangeData pipeClassChangeInfo entityNameList)
   (prompt "\n选择变管道等级块以及要刷的管道或仪表数据（变等级块只能选一个）：")
   (setq sourceData (GetInstrumentAndPipeAndPipeClassChangeData))
-  (setq pipeClassChangeInfo (GetPipeClassChangeInfo))
-  (prompt (strcat "\n提取的变等级信息：" pipeClassChangeInfo))
-  (prompt "\n选择要刷的数据（管道、仪表）：")
-  (setq entityNameList (GetEntityNameListBySSUtils (GetBlockSSBySelectByDataTypeUtils "InstrumentAndPipe")))
-  (ModifyMultiplePropertyForBlockUtils entityNameList (list "PIPECLASSCHANGE") (list pipeClassChangeInfo))
-  (prompt "\n刷变管道等级完成！")(princ)
+  (setq pipeClassChangeData (GetPipeClassChangeDataForBrushPipeClassChange))
+  (if (= (length pipeClassChangeData) 1) 
+    (progn 
+      (setq pipeClassChangeInfo (GetPipeClassChangeInfo pipeClassChangeData))
+      (setq entityNameList (GetEntityNameListBySSUtils))
+      (ModifyMultiplePropertyForBlockUtils entityNameList (list "PIPECLASSCHANGE") (list pipeClassChangeInfo))
+      (prompt "\n刷变管道等级完成！")(princ) 
+    ) 
+    (progn 
+      (alert "变等级块只能选一个！")
+      (princ)
+    )
+  )
 )
 
 (defun c:foo (/ sourceData)
@@ -5014,11 +5037,8 @@
   )
 )
 
-(defun GetPipeClassChangeInfo (/ propertyValueDict) 
-  (setq propertyValueDict 
-    (GetAllPropertyDictForOneBlock (car (entsel)))
-  )
-  (strcat (cdr (assoc "fpipeclass" propertyValueDict)) "-" (cdr (assoc "spipeclass" propertyValueDict)))
+(defun GetPipeClassChangeInfo (pipeClassChangeData /) 
+  (strcat (cdr (assoc "FPIPECLASS" pipeClassChangeData)) "-" (cdr (assoc "SPIPECLASS" pipeClassChangeData)))
 )
 
 (defun BrushReducerInfo (/ reducerInfo entityNameList)
