@@ -1320,6 +1320,11 @@
   resultList
 )
 
+(defun GetOnePropertyValueForOneBlockByPropertyName (entityName propertyName / allPropertyValue) 
+  (setq allPropertyValue (GetAllPropertyDictForOneBlock entityName))
+  (cdr (assoc (strcase propertyName T) allPropertyValue))
+)
+
 (defun GetPropertyDictListForOneBlockByPropertyNameList (entityName propertyNameList / allPropertyValue resultList) 
   (setq allPropertyValue (GetAllPropertyDictForOneBlock entityName))
   ; add the entityhandle property default
@@ -4934,20 +4939,12 @@
 (defun BrushReducerInfo (/ reducerInfo entityNameList)
   (prompt "\n选择异径管块：")
   (setq reducerInfo 
-    (car (GetReducerInfoListUtils))
+    (GetOnePropertyValueForOneBlockByPropertyName (car (entsel)) "REDUCERINFO")
   )
   (prompt "\n选择要刷的数据（管道、仪表）：")
   (setq entityNameList (GetEntityNameListBySSUtils (GetBlockSSBySelectByDataTypeUtils "InstrumentAndPipe")))
   (ModifyMultiplePropertyForBlockUtils entityNameList (list "REDUCERINFO") (list reducerInfo))
   (prompt "\n刷变管径信息完成！")(princ)
-)
-
-(defun GetReducerInfoListUtils () 
-  (mapcar '(lambda (x) 
-             (cdr (assoc "reducerinfo" x))
-           ) 
-    (GetAllPropertyValueListByEntityNameList (GetEntityNameListBySSUtils (GetBlockSSBySelectByDataTypeUtils "Reducer")))
-  )
 )
 
 ; PipeClassChange and PipeDiameterChange
