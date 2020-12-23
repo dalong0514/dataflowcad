@@ -4919,22 +4919,19 @@
 
 (defun BrushPipeClassChange (/ pipeClassChangeInfo entityNameList)
   (prompt "\n选择变管道等级块：")
-  (setq pipeClassChangeInfo 
-    (car (GetPipeClassChangeInfoListUtils))
-  )
-    (prompt (strcat "\n提取的变等级信息：" pipeClassChangeInfo))
+  (setq pipeClassChangeInfo (GetPipeClassChangeInfo))
+  (prompt (strcat "\n提取的变等级信息：" pipeClassChangeInfo))
   (prompt "\n选择要刷的数据（管道、仪表）：")
   (setq entityNameList (GetEntityNameListBySSUtils (GetBlockSSBySelectByDataTypeUtils "InstrumentAndPipe")))
   (ModifyMultiplePropertyForBlockUtils entityNameList (list "PIPECLASSCHANGE") (list pipeClassChangeInfo))
   (prompt "\n刷变管道等级完成！")(princ)
 )
 
-(defun GetPipeClassChangeInfoListUtils () 
-  (mapcar '(lambda (x) 
-             (strcat (cdr (assoc "fpipeclass" x)) "-" (cdr (assoc "spipeclass" x)))
-           ) 
-    (GetAllPropertyValueListByEntityNameList (GetEntityNameListBySSUtils (GetBlockSSBySelectByDataTypeUtils "PipeClassChange")))
+(defun GetPipeClassChangeInfo (/ propertyValueDict) 
+  (setq propertyValueDict 
+    (GetAllPropertyDictForOneBlock (car (entsel)))
   )
+  (strcat (cdr (assoc "fpipeclass" propertyValueDict)) "-" (cdr (assoc "spipeclass" propertyValueDict)))
 )
 
 (defun BrushReducerInfo (/ reducerInfo entityNameList)
