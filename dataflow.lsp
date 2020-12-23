@@ -4922,6 +4922,7 @@
   (setq pipeClassChangeInfo 
     (car (GetPipeClassChangeInfoListUtils))
   )
+    (prompt (strcat "\n提取的变等级信息：" pipeClassChangeInfo))
   (prompt "\n选择要刷的数据（管道、仪表）：")
   (setq entityNameList (GetEntityNameListBySSUtils (GetBlockSSBySelectByDataTypeUtils "InstrumentAndPipe")))
   (ModifyMultiplePropertyForBlockUtils entityNameList (list "PIPECLASSCHANGE") (list pipeClassChangeInfo))
@@ -4941,6 +4942,7 @@
   (setq reducerInfo 
     (GetOnePropertyValueForOneBlockByPropertyName (car (entsel)) "REDUCERINFO")
   )
+  (prompt (strcat "\n提取的变径信息：" reducerInfo))
   (prompt "\n选择要刷的数据（管道、仪表）：")
   (setq entityNameList (GetEntityNameListBySSUtils (GetBlockSSBySelectByDataTypeUtils "InstrumentAndPipe")))
   (ModifyMultiplePropertyForBlockUtils entityNameList (list "REDUCERINFO") (list reducerInfo))
