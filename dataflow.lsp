@@ -1309,7 +1309,7 @@
 )
 
 (defun GetPropertyValueListForOneBlockByEntityName (entityName propertyNameList / allPropertyValue resultList) 
-  (setq allPropertyValue (GetAllPropertyValueByEntityName entityName))
+  (setq allPropertyValue (GetAllPropertyDictForOneBlock entityName))
   ; add the entityhandle property default
   (setq propertyNameList (cons "entityhandle" propertyNameList))
   (mapcar '(lambda (x) 
@@ -1321,7 +1321,7 @@
 )
 
 (defun GetPropertyDictListForOneBlockByEntityName (entityName propertyNameList / allPropertyValue resultList) 
-  (setq allPropertyValue (GetAllPropertyValueByEntityName entityName))
+  (setq allPropertyValue (GetAllPropertyDictForOneBlock entityName))
   ; add the entityhandle property default
   (setq propertyNameList (cons "entityhandle" propertyNameList))
   (mapcar '(lambda (x) 
@@ -1714,7 +1714,7 @@
 )
 
 (defun GetCommonPropertyNameListByEntityName (entityName / allPropertyValue)
-  (setq allPropertyValue (GetAllPropertyValueByEntityName entityName))
+  (setq allPropertyValue (GetAllPropertyDictForOneBlock entityName))
   (mapcar '(lambda (x) 
              (car x)
            )
@@ -2628,7 +2628,7 @@
   )
   (mapcar '(lambda (x) 
              (setq relatedPipeData (append relatedPipeData 
-                                     (list (GetAllPropertyValueByEntityName (handent (cdr (assoc "relatedid" x)))))
+                                     (list (GetAllPropertyDictForOneBlock (handent (cdr (assoc "relatedid" x)))))
                                    ))
            ) 
     ; relatedid value maybe null
@@ -2647,7 +2647,7 @@
   )
   (mapcar '(lambda (x) 
              (setq relatedPipeData (append relatedPipeData 
-                                     (list (GetAllPropertyValueByEntityName (handent (cdr (assoc "relatedid" x)))))
+                                     (list (GetAllPropertyDictForOneBlock (handent (cdr (assoc "relatedid" x)))))
                                    ))
            ) 
     ; relatedid value maybe null
@@ -2737,7 +2737,7 @@
 ; repair bug - JoinDrawArrow's relatedid may be not in the allPipeHandleList - 2020.12.22
 (defun GetRelatedPipeDataByJoinDrawArrowData (JoinDrawArrowData allPipeHandleList /) 
   (if (/= (member (cdr (assoc "relatedid" JoinDrawArrowData)) allPipeHandleList) nil) 
-    (GetAllPropertyValueByEntityName (handent (cdr (assoc "relatedid" JoinDrawArrowData))))
+    (GetAllPropertyDictForOneBlock (handent (cdr (assoc "relatedid" JoinDrawArrowData))))
     (alert (strcat (cdr (assoc "fromto" JoinDrawArrowData)) "（" (cdr (assoc "drawnum" JoinDrawArrowData)) "）" "关联的管道数据id是不存在的！"))
   )
 )
@@ -2801,7 +2801,7 @@
 (defun c:GenerateJoinDrawArrow (/ pipeSS pipeData insPt entityNameList)
   (prompt "\n选择生成接图箭头的边界管道：")
   (setq pipeSS (GetPipeSSBySelectUtils))
-  (setq pipeData (GetAllPropertyValueByEntityName (car (GetEntityNameListBySSUtils pipeSS))))
+  (setq pipeData (GetAllPropertyDictForOneBlock (car (GetEntityNameListBySSUtils pipeSS))))
   (setq insPt (getpoint "\n选取接图箭头的插入点："))
   (GenerateJoinDrawArrowToElement insPt
     (strcat "去" (cdr (assoc "to" pipeData))) 
@@ -2901,7 +2901,7 @@
 )
 
 (defun GetPipenumOrTagList (dataSS /)
-  (GetAllPropertyValueByEntityName 
+  (GetAllPropertyDictForOneBlock 
     (car (GetEntityNameListBySSUtils dataSS))
   )
 )
@@ -3914,7 +3914,7 @@
   (setq selectedName (strcase selectedName T))
   (mapcar '(lambda (x) 
              (setq onePropertyValueList (append onePropertyValueList 
-                                          (list (cdr (assoc selectedName (GetAllPropertyValueByEntityName x))))
+                                          (list (cdr (assoc selectedName (GetAllPropertyDictForOneBlock x))))
                                         )
              )
            ) 
@@ -3923,7 +3923,7 @@
   onePropertyValueList
 )
 
-(defun GetAllPropertyValueByEntityName (entityName / entityData entx propertyValueList)
+(defun GetAllPropertyDictForOneBlock (entityName / entityData entx propertyValueList)
   (setq entityData (entget entityName))
   ; get the property information
   (setq entx (entget (entnext (cdr (assoc -1 entityData)))))
@@ -3940,7 +3940,7 @@
 
 (defun GetAllPropertyValueListByEntityNameList (entityNameList / resultList)
   (mapcar '(lambda (x) 
-             (setq resultList (append resultList (list (GetAllPropertyValueByEntityName x))))
+             (setq resultList (append resultList (list (GetAllPropertyDictForOneBlock x))))
            ) 
     entityNameList
   )
@@ -4863,7 +4863,7 @@
 (defun GetDrawNumList (entityNameList / drawNumList)
   (mapcar '(lambda (x) 
              (setq drawNumList 
-                (append drawNumList (list (cdr (assoc "dwgno" (GetAllPropertyValueByEntityName x)))))
+                (append drawNumList (list (cdr (assoc "dwgno" (GetAllPropertyDictForOneBlock x)))))
              )
            ) 
     entityNameList
