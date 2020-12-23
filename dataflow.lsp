@@ -10,9 +10,11 @@
   (alert "最新版本号 V1.3，更新时间：2020-12-21")(princ)
 )
 
-(defun c:syncAllDataFlowBlock ()
-  (command "._attsync" "N" "PipeArrowUp")
-  (alert "块同时完成")(princ)
+(defun c:syncAllDataFlowBlock (/ item) 
+	(foreach item (GetAllDataFlowBlockNameList) 
+    (command "._attsync" "N" item)
+  )
+  (alert "数据流相关块同时完成！")(princ)
 )
 
 ; basic Function
