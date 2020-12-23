@@ -1134,7 +1134,7 @@
                 (strcat "\"" (strcase (car x) T) "\": \"" (cdr x) "\",")
               ) 
         ; remove the first item (entityhandle)
-        (cdr (GetPropertyDictListForOneBlockByEntityName entityName propertyNameList))
+        (cdr (GetPropertyDictListForOneBlockByPropertyNameList entityName propertyNameList))
       ) 
     )
   )
@@ -1149,7 +1149,7 @@
                 (strcat "\"" (strcase (car x) T) "\": \"" (cdr x) "\",")
               ) 
         ; remove the first item (entityhandle) and add the item (class)
-        (cons classDict (cdr (GetPropertyDictListForOneBlockByEntityName entityName propertyNameList)))
+        (cons classDict (cdr (GetPropertyDictListForOneBlockByPropertyNameList entityName propertyNameList)))
       ) 
     )
   )
@@ -1320,7 +1320,7 @@
   resultList
 )
 
-(defun GetPropertyDictListForOneBlockByEntityName (entityName propertyNameList / allPropertyValue resultList) 
+(defun GetPropertyDictListForOneBlockByPropertyNameList (entityName propertyNameList / allPropertyValue resultList) 
   (setq allPropertyValue (GetAllPropertyDictForOneBlock entityName))
   ; add the entityhandle property default
   (setq propertyNameList (cons "entityhandle" propertyNameList))
@@ -1334,7 +1334,7 @@
 
 (defun GetPropertyDictListByEntityNameList (entityNameList propertyNameList / resultList) 
   (mapcar '(lambda (x) 
-             (setq resultList (append resultList (list (GetPropertyDictListForOneBlockByEntityName x propertyNameList))))
+             (setq resultList (append resultList (list (GetPropertyDictListForOneBlockByPropertyNameList x propertyNameList))))
            ) 
     entityNameList
   )
