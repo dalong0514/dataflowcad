@@ -1274,7 +1274,7 @@
   (mapcar '(lambda (x) 
             (cdr (assoc "entityhandle" x))
           ) 
-    entityHandleList
+    propertyDictList
   )
 )
 
@@ -4983,22 +4983,15 @@
 ;;;-------------------------------------------------------------------------;;;
 ; PipeClassChange and PipeDiameterChange
 
-(defun c:brushPipeClassChangeMacro () 
-  (BrushPipeClassChange)
-)
-
-(defun c:brushReducerInfoMacro () 
-  (BrushReducerInfo)
-)
-
-(defun BrushPipeClassChange (/ sourceData pipeClassChangeData pipeClassChangeInfo entityNameList)
+(defun c:brushPipeClassChangeMacro (/ sourceData pipeClassChangeData instrumentAndPipeData pipeClassChangeInfo entityNameList)
   (prompt "\n选择变管道等级块以及要刷的管道或仪表数据（变等级块只能选一个）：")
   (setq sourceData (GetInstrumentAndPipeAndPipeClassChangeData))
-  (setq pipeClassChangeData (GetPipeClassChangeDataForBrushPipeClassChange))
+  (setq pipeClassChangeData (GetPipeClassChangeDataForBrushPipeClassChange sourceData))
+  (setq instrumentAndPipeData (GetInstrumentAndPipeDataForBrushPipeClassChange sourceData))
   (if (= (length pipeClassChangeData) 1) 
     (progn 
-      (setq pipeClassChangeInfo (GetPipeClassChangeInfo pipeClassChangeData))
-      (setq entityNameList (GetEntityNameListBySSUtils))
+      (setq pipeClassChangeInfo (GetPipeClassChangeInfo (car pipeClassChangeData)))
+      (setq entityNameList (GetEntityNameListByEntityHandleListUtils (GetEntityHandleListByPropertyDictListUtils instrumentAndPipeData)))
       (ModifyMultiplePropertyForBlockUtils entityNameList (list "PIPECLASSCHANGE") (list pipeClassChangeInfo))
       (prompt "\n刷变管道等级完成！")(princ) 
     ) 
@@ -5009,15 +5002,36 @@
   )
 )
 
-(defun c:foo (/ sourceData)
-  (setq sourceData (GetInstrumentAndPipeAndPipeClassChangeData))
-  (princ (GetInstrumentAndPipeDataForBrushPipeClassChange sourceData))(princ)
+(defun c:brushReducerInfoMacro (/ sourceData ReducerData instrumentAndPipeData reducerInfo entityNameList)
+  (prompt "\n选择异径管块以及要刷的管道或仪表数据（异径管块只能选一个）：")
+  (setq sourceData (GetInstrumentAndPipeAndReducerData))
+  (setq ReducerData (GetReducerDataForBrushReducerInfo sourceData))
+  (setq instrumentAndPipeData (GetInstrumentAndPipeDataForBrushReducerInfo sourceData))
+  (if (= (length ReducerData) 1) 
+    (progn 
+      (setq reducerInfo (cdr (assoc "REDUCER" (car ReducerData))))
+      (setq entityNameList (GetEntityNameListByEntityHandleListUtils (GetEntityHandleListByPropertyDictListUtils instrumentAndPipeData)))
+      (ModifyMultiplePropertyForBlockUtils entityNameList (list "REDUCERINFO") (list reducerInfo))
+      (prompt "\n刷变管径信息完成！")(princ) 
+    ) 
+    (progn 
+      (alert "异径管块只能选一个！")
+      (princ)
+    )
+  )
 )
 
 (defun GetInstrumentAndPipeAndPipeClassChangeData ()
   (GetPropertyDictListByPropertyNameList 
     (GetEntityNameListBySSUtils (GetBlockSSBySelectByDataTypeUtils "InstrumentAndPipeAndPipeClassChange")) 
     '("FPIPECLASS" "SPIPECLASS" "PIPECLASSCHANGE")
+  )
+)
+
+(defun GetInstrumentAndPipeAndReducerData ()
+  (GetPropertyDictListByPropertyNameList 
+    (GetEntityNameListBySSUtils (GetBlockSSBySelectByDataTypeUtils "InstrumentAndPipeAndReducer")) 
+    '("REDUCER" "REDUCERINFO")
   )
 )
 
@@ -5037,20 +5051,24 @@
   )
 )
 
-(defun GetPipeClassChangeInfo (pipeClassChangeData /) 
-  (strcat (cdr (assoc "FPIPECLASS" pipeClassChangeData)) "-" (cdr (assoc "SPIPECLASS" pipeClassChangeData)))
+(defun GetReducerDataForBrushReducerInfo (sourceData /) 
+  (vl-remove-if-not '(lambda (x) 
+                       (/= (cdr (assoc "REDUCER" x)) nil)
+                    ) 
+    sourceData
+  )
 )
 
-(defun BrushReducerInfo (/ reducerInfo entityNameList)
-  (prompt "\n选择异径管块：")
-  (setq reducerInfo 
-    (GetOnePropertyValueForOneBlockByPropertyName (car (entsel)) "REDUCERINFO")
+(defun GetInstrumentAndPipeDataForBrushReducerInfo (sourceData /) 
+  (vl-remove-if-not '(lambda (x) 
+                       (= (cdr (assoc "REDUCER" x)) nil)
+                    ) 
+    sourceData
   )
-  (prompt (strcat "\n提取的变径信息：" reducerInfo))
-  (prompt "\n选择要刷的数据（管道、仪表）：")
-  (setq entityNameList (GetEntityNameListBySSUtils (GetBlockSSBySelectByDataTypeUtils "InstrumentAndPipe")))
-  (ModifyMultiplePropertyForBlockUtils entityNameList (list "REDUCERINFO") (list reducerInfo))
-  (prompt "\n刷变管径信息完成！")(princ)
+)
+
+(defun GetPipeClassChangeInfo (pipeClassChangeData /) 
+  (strcat (cdr (assoc "FPIPECLASS" pipeClassChangeData)) "-" (cdr (assoc "SPIPECLASS" pipeClassChangeData)))
 )
 
 ; PipeClassChange and PipeDiameterChange
