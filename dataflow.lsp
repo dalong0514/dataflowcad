@@ -5069,8 +5069,14 @@
   )
 )
 
-(defun GetPipeClassChangeInfo (pipeClassChangeData /) 
-  (strcat (cdr (assoc "FPIPECLASS" pipeClassChangeData)) "-" (cdr (assoc "SPIPECLASS" pipeClassChangeData)))
+(defun GetPipeClassChangeInfo (pipeClassChangeData / result) 
+  (setq result 
+    (strcat (cdr (assoc "FPIPECLASS" pipeClassChangeData)) "-" (cdr (assoc "SPIPECLASS" pipeClassChangeData)))
+  )
+  (if (= result "-") 
+    (setq result "")
+  )
+  result
 )
 
 ; PipeClassChange and PipeDiameterChange
