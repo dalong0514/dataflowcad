@@ -1296,19 +1296,19 @@
     propertyValueList
   )
   ; add the handle to the start of the csvPropertyString 
-  ; (move to GetPropertyValueListForOneBlockByEntityName) - 20201104
+  ; (move to GetPropertyValueListForOneBlockByPropertyNameList) - 20201104
   ; add "'" at the start of handle to prevent being converted by excel - 20201020
   (setq csvPropertyString (strcat "'" csvPropertyString))
 )
 
 (defun GetApostrPropertyValueListStrategy (entityName propertyNameList apostrMode /) 
   (cond 
-    ((= apostrMode "0") (GetPropertyValueListForOneBlockByEntityName entityName propertyNameList))
-    ((= apostrMode "1") (AddApostrForListUtils (GetPropertyValueListForOneBlockByEntityName entityName propertyNameList)))
+    ((= apostrMode "0") (GetPropertyValueListForOneBlockByPropertyNameList entityName propertyNameList))
+    ((= apostrMode "1") (AddApostrForListUtils (GetPropertyValueListForOneBlockByPropertyNameList entityName propertyNameList)))
   ) 
 )
 
-(defun GetPropertyValueListForOneBlockByEntityName (entityName propertyNameList / allPropertyValue resultList) 
+(defun GetPropertyValueListForOneBlockByPropertyNameList (entityName propertyNameList / allPropertyValue resultList) 
   (setq allPropertyValue (GetAllPropertyDictForOneBlock entityName))
   ; add the entityhandle property default
   (setq propertyNameList (cons "entityhandle" propertyNameList))
@@ -1343,7 +1343,7 @@
 
 (defun GetPropertyValueListByEntityNameList (entityNameList propertyNameList / resultList) 
   (mapcar '(lambda (x) 
-             (setq resultList (append resultList (list (GetPropertyValueListForOneBlockByEntityName x propertyNameList))))
+             (setq resultList (append resultList (list (GetPropertyValueListForOneBlockByPropertyNameList x propertyNameList))))
            ) 
     entityNameList
   )
