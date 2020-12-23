@@ -1357,6 +1357,17 @@
   resultList
 )
 
+(defun GetAllPropertyDictListByEntityNameList (entityNameList / propertyNameList resultList) 
+  ; entityhandle will have been added twice, delete it first
+  (setq propertyNameList (cdr (GetCommonPropertyNameListByEntityName (car entityNameList))))
+  (mapcar '(lambda (x) 
+             (setq resultList (append resultList (list (GetPropertyDictListForOneBlockByPropertyNameList x propertyNameList))))
+           ) 
+    entityNameList
+  )
+  resultList
+)
+
 (defun GetPropertyValueListByEntityNameList (entityNameList propertyNameList / resultList) 
   (mapcar '(lambda (x) 
              (setq resultList (append resultList (list (GetPropertyValueListForOneBlockByPropertyNameList x propertyNameList))))
@@ -4928,14 +4939,20 @@
   (BrushReducerInfo)
 )
 
-(defun BrushPipeClassChange (/ pipeClassChangeInfo entityNameList)
-  (prompt "\n选择变管道等级块：")
+(defun BrushPipeClassChange (/ pipeClassChangeInfo entityNameList sourceData)
+  (prompt "\n选择变管道等级块以及要刷的管道或仪表数据（变等级块只能选一个）：")
+  (setq sourceData (GetPropertyDictListByEntityNameList (GetEntityNameListBySSUtils (GetBlockSSBySelectByDataTypeUtils "InstrumentAndPipe"))))
   (setq pipeClassChangeInfo (GetPipeClassChangeInfo))
   (prompt (strcat "\n提取的变等级信息：" pipeClassChangeInfo))
   (prompt "\n选择要刷的数据（管道、仪表）：")
   (setq entityNameList (GetEntityNameListBySSUtils (GetBlockSSBySelectByDataTypeUtils "InstrumentAndPipe")))
   (ModifyMultiplePropertyForBlockUtils entityNameList (list "PIPECLASSCHANGE") (list pipeClassChangeInfo))
   (prompt "\n刷变管道等级完成！")(princ)
+)
+
+(defun c:foo (/ sourceData)
+  (setq sourceData (GetAllPropertyDictListByEntityNameList (GetEntityNameListBySSUtils (GetBlockSSBySelectByDataTypeUtils "InstrumentAndPipe"))))
+  (princ sourceData)(princ)
 )
 
 (defun GetPipeClassChangeInfo (/ propertyValueDict) 
