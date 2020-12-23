@@ -1502,7 +1502,7 @@
   (entmod (subst newValue oldValue entityData))
 )
 
-(defun ModifyPropertyByNameAndValueListUtils (entityNameList propertyNameList propertyValueList /)
+(defun ModifyMultiplePropertyForBlockUtils (entityNameList propertyNameList propertyValueList /)
   (mapcar '(lambda (x) 
             (ModifyMultiplePropertyForOneBlockUtils x 
               propertyNameList
@@ -3000,7 +3000,7 @@
 )
 
 (defun ModifyBrushedProperty (entityNameList brushedPropertyDict /) 
-  (ModifyPropertyByNameAndValueListUtils entityNameList 
+  (ModifyMultiplePropertyForBlockUtils entityNameList 
     (GetBrushedPropertyNameList brushedPropertyDict) 
     (GetBrushedPropertyValueList brushedPropertyDict)
   )
