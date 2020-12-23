@@ -378,6 +378,10 @@
 ;;;-------------------------------------------------------------------------;;;
 ; Get Constant Data
 
+(defun GetAllDataFlowBlockNameList ()
+  '("PipeArrowLeft" "PipeArrowUp" "InstrumentL" "InstrumentP" "InstrumentSIS" "Centrifuge" "CustomEquip" "Heater" "Pump" "Reactor" "Tank" "Vacuum" "OuterPipeLeft" "OuterPipeRight" "PipeClassChange" "Reducer")
+)
+
 (defun GetDataTypeMsgStrategy (dataType / dataTypeMsg)
   (if (= dataType "Pipe") 
     (setq dataTypeMsg "批量修改管道数据")
