@@ -4919,16 +4919,8 @@
   )
   (prompt "\n选择要刷的数据（管道、仪表）：")
   (setq entityNameList (GetEntityNameListBySSUtils (GetBlockSSBySelectByDataTypeUtils "InstrumentAndPipe")))
-  (ModifyPipeClassChangeInfoForData entityNameList pipeClassChangeInfo)
+  (ModifyMultiplePropertyForBlockUtils entityNameList (list "PIPECLASSCHANGE") (list pipeClassChangeInfo))
   (prompt "\n刷变管道等级完成！")(princ)
-)
-
-(defun ModifyPipeClassChangeInfoForData (entityNameList pipeClassChangeInfo /)
-  (mapcar '(lambda (x) 
-            (ModifyMultiplePropertyForOneBlockUtils x (list "PIPECLASSCHANGE") (list pipeClassChangeInfo))
-          ) 
-    entityNameList
-  )
 )
 
 (defun GetPipeClassChangeInfoListUtils () 
@@ -4946,16 +4938,8 @@
   )
   (prompt "\n选择要刷的数据（管道、仪表）：")
   (setq entityNameList (GetEntityNameListBySSUtils (GetBlockSSBySelectByDataTypeUtils "InstrumentAndPipe")))
-  (ModifyReducerInfoForData entityNameList reducerInfo)
+  (ModifyMultiplePropertyForBlockUtils entityNameList (list "REDUCERINFO") (list reducerInfo))
   (prompt "\n刷变管径信息完成！")(princ)
-)
-
-(defun ModifyReducerInfoForData (entityNameList reducerInfo /)
-  (mapcar '(lambda (x) 
-            (ModifyMultiplePropertyForOneBlockUtils x (list "REDUCERINFO") (list reducerInfo))
-          ) 
-    entityNameList
-  )
 )
 
 (defun GetReducerInfoListUtils () 
