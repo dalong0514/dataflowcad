@@ -1595,6 +1595,7 @@
 )
 
 (defun ModifyPropertyValueByEntityHandleUtils (importedDataList propertyNameList / entityNameList propertyValueList)
+  (setq importedDataList (TrimDataNotExistedInCADUtils importedDataList))
   (setq entityNameList (mapcar '(lambda (x) (handent (car x))) 
                             importedDataList
                           )
@@ -1608,6 +1609,15 @@
           ) 
     entityNameList
     propertyValueList      
+  )
+)
+
+; repair bug - data may not be in CAD - 2020-12-24
+(defun TrimDataNotExistedInCADUtils (dataList /)
+  (vl-remove-if-not '(lambda (x) 
+                      (/= (handent (car x)) nil)
+                    ) 
+    dataList
   )
 )
 
