@@ -1910,6 +1910,9 @@
     ((= dataType "Heater") (WriteHeaterDataToCSVByEntityNameListUtils entityNameList))
   )
   (cond 
+    ((= dataType "Pump") (WritePumpDataToCSVByEntityNameListUtils entityNameList))
+  )
+  (cond 
     ((= dataType "Vacuum") (WriteVacuumDataToCSVByEntityNameListUtils entityNameList))
   )
   (cond 
