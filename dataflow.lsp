@@ -5015,12 +5015,12 @@
   (setq pipeClassChangeData (GetPipeClassChangeDataForBrushPipeClassChange sourceData))
   (setq instrumentAndPipeData (GetInstrumentAndPipeDataForBrushPipeClassChange sourceData))
   (setq pipeClassChangeInfo (GetPipeClassChangeInfo (car pipeClassChangeData)))
-  (ExecuteFunctionForOneSourceDataUtils (length pipeClassChangeData) 'BrushPipeClassChange 
+  (ExecuteFunctionForOneSourceDataUtils (length pipeClassChangeData) 'BrushOnePropertyDataForInstrumentAndPipe 
     (list instrumentAndPipeData pipeClassChangeInfo "PIPECLASSCHANGE")
   )
 )
 
-(defun BrushPipeClassChange (instrumentAndPipeData ChangedInfo propertyName / entityNameList)
+(defun BrushOnePropertyDataForInstrumentAndPipe (instrumentAndPipeData ChangedInfo propertyName / entityNameList)
   (setq entityNameList (GetEntityNameListByEntityHandleListUtils (GetEntityHandleListByPropertyDictListUtils instrumentAndPipeData)))
   (ModifyMultiplePropertyForBlockUtils entityNameList (list propertyName) (list ChangedInfo))
   (alert "刷数据完成！")(princ)
