@@ -648,8 +648,9 @@
   (entget (car (entsel)))
 )
 
-(defun GetBlockNameUtils ()
-  (cdr (assoc 2 (GetEntityDataUtils)))
+(defun GetBlockNameBySelectUtils (/ entityName) 
+  (setq entityName (car (GetEntityNameListBySSUtils (ssget '((0 . "INSERT"))))))
+  (cdr (assoc 2 (entget entityName)))
 )
 
 ; Returns the value of the specified DXF group code for the supplied entity name
@@ -3468,7 +3469,7 @@
     ; get block type button
     (if (= 6 status) 
       (progn 
-        (setq blockName (GetBlockNameUtils))
+        (setq blockName (GetBlockNameBySelectUtils))
       )
     ) 
   )
