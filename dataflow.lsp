@@ -3029,6 +3029,26 @@
   result
 )
 
+(defun c:brushBlockPropertyValueByCommand (/ sourceEntityNameList sourceEntityPropertyDict sourceEntityPropertyNameList sourceEntityPropertyValueList targetEntityNameList targetEntityPropertyDict) 
+  (prompt "\n选择要提取属性的数据源（数据源只能选一个）：") 
+  (setq sourceEntityNameList (GetEntityNameListBySSUtils (ssget '((0 . "INSERT")))))
+  (setq sourceEntityPropertyDict (GetAllPropertyDictForOneBlock (car sourceEntityNameList)))
+  (setq sourceEntityPropertyNameList 
+    (mapcar '(lambda (x) (strcase (car x))) 
+      sourceEntityPropertyDict 
+    )
+  )
+  (setq sourceEntityPropertyValueList 
+    (mapcar '(lambda (x) (cdr x)) 
+      sourceEntityPropertyDict 
+    )
+  ) 
+  (prompt "\n选择要刷的数据（可批量选择）：")
+  (setq targetEntityNameList (GetEntityNameListBySSUtils (ssget '((0 . "INSERT")))))
+  (ModifyMultiplePropertyForBlockUtils targetEntityNameList sourceEntityPropertyNameList sourceEntityPropertyValueList)
+  (princ "刷数据完成！")(princ)
+)
+
 (defun c:brushBlockPropertyValue ()
   (brushBlockPropertyValueByBox "brushBlockPropertyValueBox")
 )
