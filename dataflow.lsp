@@ -5016,14 +5016,14 @@
   (setq instrumentAndPipeData (GetInstrumentAndPipeDataForBrushPipeClassChange sourceData))
   (setq pipeClassChangeInfo (GetPipeClassChangeInfo (car pipeClassChangeData)))
   (ExecuteFunctionForOneSourceDataUtils (length pipeClassChangeData) 'BrushPipeClassChange 
-    (list pipeClassChangeData instrumentAndPipeData pipeClassChangeInfo)
+    (list instrumentAndPipeData pipeClassChangeInfo "PIPECLASSCHANGE")
   )
 )
 
-(defun BrushPipeClassChange (pipeClassChangeData instrumentAndPipeData pipeClassChangeInfo / entityNameList)
+(defun BrushPipeClassChange (instrumentAndPipeData ChangedInfo propertyName / entityNameList)
   (setq entityNameList (GetEntityNameListByEntityHandleListUtils (GetEntityHandleListByPropertyDictListUtils instrumentAndPipeData)))
-  (ModifyMultiplePropertyForBlockUtils entityNameList (list "PIPECLASSCHANGE") (list pipeClassChangeInfo))
-  (prompt "\n刷变管道等级完成！")(princ)
+  (ModifyMultiplePropertyForBlockUtils entityNameList (list propertyName) (list ChangedInfo))
+  (alert "刷数据完成！")(princ)
 )
 
 (defun c:brushReducerInfoMacro (/ sourceData ReducerData instrumentAndPipeData reducerInfo entityNameList)
