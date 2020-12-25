@@ -5029,6 +5029,13 @@
   )
 )
 
+(defun BrushPipeClassChange (pipeClassChangeData instrumentAndPipeData / pipeClassChangeInfo entityNameList)
+  (setq pipeClassChangeInfo (GetPipeClassChangeInfo (car pipeClassChangeData)))
+  (setq entityNameList (GetEntityNameListByEntityHandleListUtils (GetEntityHandleListByPropertyDictListUtils instrumentAndPipeData)))
+  (ModifyMultiplePropertyForBlockUtils entityNameList (list "PIPECLASSCHANGE") (list pipeClassChangeInfo))
+  (prompt "\n刷变管道等级完成！")(princ)
+)
+
 (defun c:brushReducerInfoMacro (/ sourceData ReducerData instrumentAndPipeData reducerInfo entityNameList)
   (prompt "\n选择异径管块以及要刷的管道或仪表数据（异径管块只能选一个）：")
   (setq sourceData (GetInstrumentAndPipeAndReducerData))
