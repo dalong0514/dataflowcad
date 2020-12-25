@@ -5020,29 +5020,21 @@
   )
 )
 
-(defun BrushOnePropertyDataForInstrumentAndPipe (instrumentAndPipeData ChangedInfo propertyName / entityNameList)
-  (setq entityNameList (GetEntityNameListByEntityHandleListUtils (GetEntityHandleListByPropertyDictListUtils instrumentAndPipeData)))
-  (ModifyMultiplePropertyForBlockUtils entityNameList (list propertyName) (list ChangedInfo))
-  (alert "刷数据完成！")(princ)
-)
-
 (defun c:brushReducerInfoMacro (/ sourceData ReducerData instrumentAndPipeData reducerInfo entityNameList)
   (prompt "\n选择异径管块以及要刷的管道或仪表数据（异径管块只能选一个）：")
   (setq sourceData (GetInstrumentAndPipeAndReducerData))
   (setq ReducerData (GetReducerDataForBrushReducerInfo sourceData))
   (setq instrumentAndPipeData (GetInstrumentAndPipeDataForBrushReducerInfo sourceData))
-  (if (= (length ReducerData) 1) 
-    (progn 
-      (setq reducerInfo (cdr (assoc "REDUCER" (car ReducerData))))
-      (setq entityNameList (GetEntityNameListByEntityHandleListUtils (GetEntityHandleListByPropertyDictListUtils instrumentAndPipeData)))
-      (ModifyMultiplePropertyForBlockUtils entityNameList (list "REDUCERINFO") (list reducerInfo))
-      (prompt "\n刷变管径信息完成！")(princ) 
-    ) 
-    (progn 
-      (alert "异径管块只能选一个！")
-      (princ)
-    )
+  (setq reducerInfo (cdr (assoc "REDUCER" (car ReducerData))))
+  (ExecuteFunctionForOneSourceDataUtils (length ReducerData) 'BrushOnePropertyDataForInstrumentAndPipe 
+    (list instrumentAndPipeData reducerInfo "REDUCERINFO")
   )
+)
+
+(defun BrushOnePropertyDataForInstrumentAndPipe (instrumentAndPipeData ChangedInfo propertyName / entityNameList)
+  (setq entityNameList (GetEntityNameListByEntityHandleListUtils (GetEntityHandleListByPropertyDictListUtils instrumentAndPipeData)))
+  (ModifyMultiplePropertyForBlockUtils entityNameList (list propertyName) (list ChangedInfo))
+  (alert "刷数据完成！")(princ)
 )
 
 (defun GetInstrumentAndPipeAndPipeClassChangeData ()
