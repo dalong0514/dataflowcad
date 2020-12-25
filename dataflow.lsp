@@ -4992,7 +4992,19 @@
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
 
+(defun ExecuteFunctionForOneSourceDataUtils (dataListLength functionName argumentList /)
+  (if (= dataListLength 1)
+    (vl-catch-all-apply functionName argumentList)
+    (progn 
+      (alert "数据源只能选一个！")
+      (princ)
+    )
+  ) 
+)
 
+(defun c:foo ()
+  (ExecuteFunctionForOneSourceDataUtils 1 'dalongTest (list "wode shen"))
+)
 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
