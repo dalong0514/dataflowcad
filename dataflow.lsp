@@ -11,7 +11,7 @@
 )
 
 (defun c:syncAllDataFlowBlock (/ item) 
-	(foreach item (GetAllDataFlowBlockNameList) 
+	(foreach item (GetSyncFlowBlockNameList) 
     (command "._attsync" "N" item)
   )
   (alert "数据流相关块同时完成！")(princ)
@@ -380,8 +380,8 @@
 ;;;-------------------------------------------------------------------------;;;
 ; Get Constant Data
 
-(defun GetAllDataFlowBlockNameList ()
-  '("PipeArrowLeft" "PipeArrowUp" "InstrumentL" "InstrumentP" "InstrumentSIS" "Centrifuge" "CustomEquip" "Heater" "Pump" "Reactor" "Tank" "Vacuum" "OuterPipeLeft" "OuterPipeRight" "PipeClassChange" "Reducer")
+(defun GetSyncFlowBlockNameList ()
+  '("InstrumentL" "InstrumentP" "InstrumentSIS" "Centrifuge" "CustomEquip" "Heater" "Pump" "Reactor" "Tank" "Vacuum" "OuterPipeLeft" "OuterPipeRight" "PipeClassChange" "Reducer")
 )
 
 (defun GetDataTypeMsgStrategy (dataType / dataTypeMsg)
