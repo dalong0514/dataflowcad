@@ -1647,6 +1647,17 @@
   resultList
 )
 
+; very importance for me, convert a function to the parameter for another function - 2020-12-25
+(defun ExecuteFunctionForOneSourceDataUtils (dataListLength functionName argumentList /)
+  (if (= dataListLength 1)
+    (vl-catch-all-apply functionName argumentList)
+    (progn 
+      (alert "数据源只能选一个！")
+      (princ)
+    )
+  ) 
+)
+
 ; Utils Function 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
@@ -4992,36 +5003,24 @@
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
 
-(defun ExecuteFunctionForOneSourceDataUtils (dataListLength functionName argumentList /)
-  (if (= dataListLength 1)
-    (vl-catch-all-apply functionName argumentList)
-    (progn 
-      (alert "数据源只能选一个！")
-      (princ)
-    )
-  ) 
-)
 
-(defun c:foo ()
-  (ExecuteFunctionForOneSourceDataUtils 1 'dalongTest (list "wode shen"))
-)
 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
 ; PipeClassChange and PipeDiameterChange
 
-(defun c:brushPipeClassChangeMacro (/ sourceData pipeClassChangeData instrumentAndPipeData pipeClassChangeInfo entityNameList)
+(defun c:brushPipeClassChangeMacro (/ sourceData pipeClassChangeData instrumentAndPipeData pipeClassChangeInfo)
   (prompt "\n选择变管道等级块以及要刷的管道或仪表数据（变等级块只能选一个）：")
   (setq sourceData (GetInstrumentAndPipeAndPipeClassChangeData))
   (setq pipeClassChangeData (GetPipeClassChangeDataForBrushPipeClassChange sourceData))
   (setq instrumentAndPipeData (GetInstrumentAndPipeDataForBrushPipeClassChange sourceData))
+  (setq pipeClassChangeInfo (GetPipeClassChangeInfo (car pipeClassChangeData)))
   (ExecuteFunctionForOneSourceDataUtils (length pipeClassChangeData) 'BrushPipeClassChange 
-    (list pipeClassChangeData instrumentAndPipeData)
+    (list pipeClassChangeData instrumentAndPipeData pipeClassChangeInfo)
   )
 )
 
-(defun BrushPipeClassChange (pipeClassChangeData instrumentAndPipeData / pipeClassChangeInfo entityNameList)
-  (setq pipeClassChangeInfo (GetPipeClassChangeInfo (car pipeClassChangeData)))
+(defun BrushPipeClassChange (pipeClassChangeData instrumentAndPipeData pipeClassChangeInfo / entityNameList)
   (setq entityNameList (GetEntityNameListByEntityHandleListUtils (GetEntityHandleListByPropertyDictListUtils instrumentAndPipeData)))
   (ModifyMultiplePropertyForBlockUtils entityNameList (list "PIPECLASSCHANGE") (list pipeClassChangeInfo))
   (prompt "\n刷变管道等级完成！")(princ)
