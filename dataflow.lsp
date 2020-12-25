@@ -5015,17 +5015,8 @@
   (setq sourceData (GetInstrumentAndPipeAndPipeClassChangeData))
   (setq pipeClassChangeData (GetPipeClassChangeDataForBrushPipeClassChange sourceData))
   (setq instrumentAndPipeData (GetInstrumentAndPipeDataForBrushPipeClassChange sourceData))
-  (if (= (length pipeClassChangeData) 1) 
-    (progn 
-      (setq pipeClassChangeInfo (GetPipeClassChangeInfo (car pipeClassChangeData)))
-      (setq entityNameList (GetEntityNameListByEntityHandleListUtils (GetEntityHandleListByPropertyDictListUtils instrumentAndPipeData)))
-      (ModifyMultiplePropertyForBlockUtils entityNameList (list "PIPECLASSCHANGE") (list pipeClassChangeInfo))
-      (prompt "\n刷变管道等级完成！")(princ) 
-    ) 
-    (progn 
-      (alert "变等级块只能选一个！")
-      (princ)
-    )
+  (ExecuteFunctionForOneSourceDataUtils (length pipeClassChangeData) 'BrushPipeClassChange 
+    (list pipeClassChangeData instrumentAndPipeData)
   )
 )
 
