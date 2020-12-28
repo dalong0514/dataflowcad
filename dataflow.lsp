@@ -5055,7 +5055,7 @@
 (defun BrushOnePropertyDataForInstrumentAndPipe (instrumentAndPipeData ChangedInfo propertyName / entityNameList)
   (setq entityNameList (GetEntityNameListByEntityHandleListUtils (GetEntityHandleListByPropertyDictListUtils instrumentAndPipeData)))
   (ModifyMultiplePropertyForBlockUtils entityNameList (list propertyName) (list ChangedInfo))
-  (alert "刷数据完成！")(princ)
+  (princ "刷数据完成！")(princ)
 )
 
 (defun GetInstrumentAndPipeAndPipeClassChangeData ()
