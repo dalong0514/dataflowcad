@@ -1196,7 +1196,8 @@
   (setq jsonPropertyString 
     (apply 'strcat 
       (mapcar '(lambda (x) 
-                (strcat "\"" (strcase (car x) T) "\": \"" (cdr x) "\",")
+                 ; replace , by £¬for get the nomal csv data - 2020-12-31
+                (strcat "\"" (strcase (car x) T) "\": \"" (StringSubstUtils "£¬" "," (cdr x)) "\",")
               ) 
         ; remove the first item (entityhandle) and add the item (class)
         (cons classDict (cdr (GetPropertyDictListForOneBlockByPropertyNameList entityName propertyNameList)))
