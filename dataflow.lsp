@@ -1356,8 +1356,9 @@
 (defun GetCSVPropertyStringByEntityName (entityName propertyNameList apostrMode / csvPropertyString propertyValueList)
   (setq csvPropertyString "")
   (setq propertyValueList (GetApostrPropertyValueListStrategy entityName propertyNameList apostrMode))
+  ; replace , by £¬for get the nomal csv data - 2020-12-31
   (mapcar '(lambda (x) 
-             (setq csvPropertyString (strcat csvPropertyString x ","))
+             (setq csvPropertyString (strcat csvPropertyString (StringSubstUtils "£¬" "," x) ","))
            ) 
     propertyValueList
   )
