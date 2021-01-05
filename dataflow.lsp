@@ -5048,7 +5048,7 @@
   )
   (prompt (strcat "\n所选择的图号：" drawNum))
   (prompt "\n选择要刷的数据（管道、仪表、设备）：")
-  (setq entityNameList (GetEntityNameListBySSUtils (GetAllDataSSBySelectUtils)))
+  (setq entityNameList (GetEntityNameListBySSUtils (GetInstrumentPipeEquipSSBySelectUtils)))
   (ModifyDrawNumForData entityNameList drawNum)
   (prompt "\n刷数据所在图号完成！")
   (length entityNameList)
