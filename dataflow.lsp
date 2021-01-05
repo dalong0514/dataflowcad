@@ -1441,6 +1441,7 @@
 
 (defun GetPropertyDictListForOneBlockByPropertyNameList (entityName propertyNameList / allPropertyValue resultList) 
   (setq allPropertyValue (GetAllPropertyDictForOneBlock entityName))
+  (setq propertyNameList (FilterPropertyNameListbyActualBlock entityName propertyNameList))
   ; add the entityhandle property default
   (setq propertyNameList (cons "entityhandle" propertyNameList))
   (mapcar '(lambda (x) 
@@ -1449,6 +1450,22 @@
     propertyNameList
   )
   resultList
+)
+
+; the property of old version block may not exist on propertyNameList - 2021-01-05
+(defun FilterPropertyNameListbyActualBlock (entityName propertyNameList /)
+  (setq actualBlockPropertyNameList 
+    (mapcar '(lambda (x) 
+              (strcase x)
+            ) 
+      (GetBlockPropertyNameListByEntityName entityName)
+    )
+  )
+  (vl-remove-if-not '(lambda (x) 
+                      (/= (member x actualBlockPropertyNameList) nil) 
+                    ) 
+    propertyNameList
+  )
 )
 
 (defun GetPropertyDictListByPropertyNameList (entityNameList propertyNameList / resultList) 
