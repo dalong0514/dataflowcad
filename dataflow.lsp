@@ -1462,7 +1462,7 @@
 
 (defun GetAllPropertyDictList (entityNameList / propertyNameList resultList) 
   ; entityhandle will have been added twice, delete it first
-  (setq propertyNameList (cdr (GetCommonPropertyNameListByEntityName (car entityNameList))))
+  (setq propertyNameList (cdr (GetBlockPropertyNameListByEntityName (car entityNameList))))
   (mapcar '(lambda (x) 
              (setq resultList (append resultList (list (GetPropertyDictListForOneBlockByPropertyNameList x propertyNameList))))
            ) 
@@ -1858,13 +1858,13 @@
 
 (defun WriteCommonDataToCSVByEntityNameListUtils (entityNameList / fileDir propertyNameList firstRow)
   (setq fileDir "D:\\dataflowcad\\data\\commonData.csv")
-  (setq propertyNameList (GetCommonPropertyNameListByEntityName (car entityNameList)))
+  (setq propertyNameList (GetBlockPropertyNameListByEntityName (car entityNameList)))
   (setq firstRow (GetCSVPropertyStringByDataListUtils propertyNameList))
   ; note: (cdr propertyNameList) - delete the entityhandle frist
   (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow (cdr propertyNameList) "1")
 )
 
-(defun GetCommonPropertyNameListByEntityName (entityName / allPropertyValue)
+(defun GetBlockPropertyNameListByEntityName (entityName / allPropertyValue)
   (setq allPropertyValue (GetAllPropertyDictForOneBlock entityName))
   (mapcar '(lambda (x) 
              (car x)
@@ -3526,7 +3526,7 @@
         (if (/= importedDataList nil) 
           (progn 
             (setq entityHandle (car (car importedDataList)))
-            (setq propertyNameList (GetCommonPropertyNameListByEntityName (handent entityHandle)))
+            (setq propertyNameList (GetBlockPropertyNameListByEntityName (handent entityHandle)))
             (ModifyPropertyValueByEntityHandleUtils importedDataList (GetUpperCaseForListUtils (cdr propertyNameList)))
             (setq modifyMsgBtnStatus 1)
           )
