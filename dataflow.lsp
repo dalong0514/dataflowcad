@@ -1452,7 +1452,7 @@
   resultList
 )
 
-; the property of old version block may not exist on propertyNameList - 2021-01-05
+; the property of old version block may not exist in propertyNameList - 2021-01-05
 (defun FilterPropertyNameListbyActualBlock (entityName propertyNameList /)
   (setq actualBlockPropertyNameList 
     (mapcar '(lambda (x) 
