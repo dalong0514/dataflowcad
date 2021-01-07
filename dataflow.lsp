@@ -381,7 +381,7 @@
 ; Get Constant Data
 
 (defun GetSyncFlowBlockNameList ()
-  '("InstrumentL" "InstrumentP" "InstrumentSIS" "Centrifuge" "CustomEquip" "Heater" "Pump" "Reactor" "Tank" "Vacuum" "OuterPipeLeft" "OuterPipeRight" "JoinDrawArrowFrom" "JoinDrawArrowTo" "GsCleanAir")
+  '("InstrumentL" "InstrumentP" "InstrumentSIS" "Centrifuge" "CustomEquip" "Heater" "Pump" "Reactor" "Tank" "Vacuum" "OuterPipeLeft" "OuterPipeRight" "GsCleanAir")
 )
 
 (defun GetDataTypeMsgStrategy (dataType / dataTypeMsg)
