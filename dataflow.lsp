@@ -1451,8 +1451,8 @@
   (mapcar '(lambda (x) 
              ; fix bug - the new peoperty name may not be in the old block - 2021-01-11
              (if (/= (cdr (assoc (strcase x T) allPropertyValue)) nil) 
-               (setq resultList (append resultList (list (cdr (assoc (strcase x T) allPropertyValue)))))
-               (setq resultList (append resultList (list "")))
+               (setq resultList (append resultList (list (cons x (cdr (assoc (strcase x T) allPropertyValue))))))
+               (setq resultList (append resultList (list (cons x ""))))
              )
            ) 
     propertyNameList
