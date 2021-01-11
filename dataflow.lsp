@@ -1427,7 +1427,11 @@
   ; add the entityhandle property default
   (setq propertyNameList (cons "entityhandle" propertyNameList))
   (mapcar '(lambda (x) 
-             (setq resultList (append resultList (list (cdr (assoc (strcase x T) allPropertyValue)))))
+             ; fix bug - the new peoperty name may not be in the old block - 2021-01-11
+             (if (/= (cdr (assoc (strcase x T) allPropertyValue)) nil) 
+               (setq resultList (append resultList (list (cdr (assoc (strcase x T) allPropertyValue)))))
+               (setq resultList (append resultList (list "")))
+             )
            ) 
     propertyNameList
   )
@@ -1445,7 +1449,11 @@
   ; add the entityhandle property default
   (setq propertyNameList (cons "entityhandle" propertyNameList))
   (mapcar '(lambda (x) 
-             (setq resultList (append resultList (list (cons x (cdr (assoc (strcase x T) allPropertyValue))))))
+             ; fix bug - the new peoperty name may not be in the old block - 2021-01-11
+             (if (/= (cdr (assoc (strcase x T) allPropertyValue)) nil) 
+               (setq resultList (append resultList (list (cdr (assoc (strcase x T) allPropertyValue)))))
+               (setq resultList (append resultList (list "")))
+             )
            ) 
     propertyNameList
   )
