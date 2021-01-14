@@ -4650,8 +4650,10 @@
   (list childrenDataList numberedList)
 )
 
+; fix bug - add the SIS instrument - 2021-01-14
 (defun GetInstrumentTypeMatchList ()
-  '("T[~CV]*" "P[~CV]*" "L[~CV]*" "F[~CV]*" "W[~CV]*" "A[~CV]*" "XV*" "T[CV]*" "P[CV]*" "L[CV]*" "F[CV]*")
+  '("T[~CVZ]*" "P[~CVZ]*" "L[~CVZ]*" "F[~CVZ]*" "W[~CVZ]*" "A[~CVZ]*" "XV*" "T[CV]*" "P[CV]*" "L[CV]*" "F[CV]*" "W[CV]*" "A[CV]*"
+    "TZ[~CV]*" "PZ[~CV]*" "LZ[~CV]*" "FZ[~CV]*" "WZ[~CV]*" "AZ[~CV]*" "XZV*" "TZ[CV]*" "PZ[CV]*" "LZ[CV]*" "FZ[CV]*" "WZ[CV]*" "AZ[CV]*")
 )
 
 (defun GetInstrumentChildrenDataList (propertyValueDictList dataType numberMode startNumberString / instrumentTypeMatchList childrenData childrenDataList numberedList) 
