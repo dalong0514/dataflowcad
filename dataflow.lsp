@@ -4900,7 +4900,7 @@
       (setq dataList 
         (GetValueListByOneKeyUtils propertyValueDictList propertyName)
       ) 
-      (setq resultList (GetPipeCodeNameList dataList)) 
+      (setq resultList (GetEquipmentCodeNameList dataList)) 
     )
   )
   (if (= dataType "GsCleanAir") 
