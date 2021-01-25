@@ -4723,7 +4723,7 @@
 
 ; 2021-01-25
 (defun GetInstrumentCodeNameByEquipTag (originString equipTag startNumberString /) 
-  (strcat startNumberString equipTag originString)
+  (strcat startNumberString equipTag "-" originString)
 )
 
 (defun GetInstrumentChildrenDataListByEquipTag (propertyValueDictList dataType / instrumentTypeMatchList childrenData childrenDataList numberedList) 
