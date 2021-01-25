@@ -4701,6 +4701,21 @@
   )
 )
 
+(defun GetPipeLineEquipTagDictList ()
+  (mapcar '(lambda (x) 
+             (cons 
+               (GetPipeLineByPipeNum (cdr (assoc "pipenum" x))) 
+               (cdr (assoc "from" x))
+             )
+           )
+    (GetAllPipeDataUtils)
+  )
+)
+
+(defun c:foo ()
+  (GetPipeLineEquipTagDictList)
+)
+
 (defun GetPipeLineByPipeNum (pipeNum /)
   (RegExpReplace pipeNum "([A-Z]+\\d+)-?.*" "$1" nil nil)
 )
