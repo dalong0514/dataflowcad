@@ -48,6 +48,7 @@
   (GetTempExportedDataTypeByindexTest)
   (GetGsCleanAirCodeNameListTest)
   (IsKsLocationOnPipeTest)
+  (IsKsLocationOnEquipTest)
   (GetPipeLineByPipeNumTest)
   (DL:PrintTestResults (DL:CountBooleans *testList*))
 )
@@ -56,6 +57,13 @@
 (defun GetPipeLineByPipeNumTest () 
   (AssertEqual 'GetPipeLineByPipeNum (list "PL1101-50-2J1") "PL1101")
   (AssertEqual 'GetPipeLineByPipeNum (list "PL1102") "PL1102")
+)
+
+; 2021-01-25
+(defun IsKsLocationOnEquipTest () 
+  (AssertEqual 'IsKsLocationOnEquip (list "PL1101-50-2J1") nil)
+  (AssertEqual 'IsKsLocationOnEquip (list "R23101") T)
+  (AssertEqual 'IsKsLocationOnEquip (list "µªÆø×Ü¹Ü") nil)
 )
 
 ; 2021-01-25
@@ -5001,6 +5009,10 @@
 ; 2021-01-25
 (defun IsKsLocationOnPipe (ksLocation /) 
   (RegexpTestUtils ksLocation ".*\-[0-9]+\-[0-9][A-Z].*" nil)
+)
+
+(defun IsKsLocationOnEquip (ksLocation /) 
+  (RegexpTestUtils ksLocation "^[A-Z]+[0-9]+$" nil)
 )
 
 (defun GetCodeNameListStrategy (propertyValueDictList dataType / propertyName dataList resultList) 
