@@ -48,7 +48,14 @@
   (GetTempExportedDataTypeByindexTest)
   (GetGsCleanAirCodeNameListTest)
   (IsKsLocationOnPipeTest)
+  (GetPipeLineByPipeNumTest)
   (DL:PrintTestResults (DL:CountBooleans *testList*))
+)
+
+; 2021-01-25
+(defun GetPipeLineByPipeNumTest () 
+  (AssertEqual 'GetPipeLineByPipeNum (list "PL1101-50-2J1") "PL1101")
+  (AssertEqual 'GetPipeLineByPipeNum (list "PL1102") "PL1102")
 )
 
 ; 2021-01-25
@@ -4692,6 +4699,10 @@
       )
     ) 
   )
+)
+
+(defun GetPipeLineByPipeNum (pipeNum /)
+  (RegExpReplace pipeNum "([A-Z]+\\d+)-?.*" "$1" nil nil)
 )
 
 ; 2021-01-25
