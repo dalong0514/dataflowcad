@@ -47,7 +47,16 @@
   (DeduplicateForListUtilsTest)
   (GetTempExportedDataTypeByindexTest)
   (GetGsCleanAirCodeNameListTest)
+  (IsKsLocationOnPipeTest)
   (DL:PrintTestResults (DL:CountBooleans *testList*))
+)
+
+; 2021-01-25
+(defun IsKsLocationOnPipeTest () 
+  (AssertEqual 'IsKsLocationOnPipe (list "PL1101-50-2J1") T)
+  (AssertEqual 'IsKsLocationOnPipe (list "PL1101-50-2J1-H5") T)
+  (AssertEqual 'IsKsLocationOnPipe (list "PL1101-100-2J11") T)
+  (AssertEqual 'IsKsLocationOnPipe (list "R23101") nil)
 )
 
 (defun GetGsCleanAirCodeNameListTest ()
@@ -1769,7 +1778,7 @@
   regex
 )
 
-;; RegexpTest
+;; RegexpTestUtils
 ;; Return T if a match with the pattern is found in the string; otherwise, nil.
 ;;
 ;; Arguments
@@ -1778,11 +1787,11 @@
 ;; ignoreCase : If non nil, the search is done ignoring the case.
 ;;
 ;; Examples :
-;; (RegexpTest "fsoo bar" "Ba" nil)  ; => nil
-;; (RegexpTest "fsoo bar" "Ba" T)    ; => T
-;; (RegExpTest "42C" "[0-9]+" nil)  ; => T
+;; (RegexpTestUtils "fsoo bar" "Ba" nil)  ; => nil
+;; (RegexpTestUtils "fsoo bar" "Ba" T)    ; => T
+;; (RegexpTestUtils "42C" "[0-9]+" nil)  ; => T
 
-(defun RegexpTest (string pattern ignoreCase)
+(defun RegexpTestUtils (string pattern ignoreCase)
   (= (vlax-invoke (RegExpSet pattern ignoreCase nil) 'Test string) -1)
 )
 
@@ -4662,21 +4671,28 @@
       (progn 
         (setq childrenDataList (car (GetInstrumentChildrenDataListByDrawNum propertyValueDictList dataType)))
         (setq numberedList (cadr (GetInstrumentChildrenDataListByDrawNum propertyValueDictList dataType)))
+        (GetNumberedKsChildrenDataListByDrawNum childrenDataList numberedList numberMode startNumberString)
       )
     )
     ((= numberMode "1") 
       (progn 
         (setq childrenDataList (car (GetInstrumentChildrenDataListByNoDrawNum propertyValueDictList dataType)))
         (setq numberedList (cadr (GetInstrumentChildrenDataListByNoDrawNum propertyValueDictList dataType)))
+        (GetNumberedKsChildrenDataListByDrawNum childrenDataList numberedList numberMode startNumberString)
       )
     )
     ((= numberMode "2") 
       (progn 
         (setq childrenDataList (car (GetInstrumentChildrenDataListByEquipTag propertyValueDictList dataType)))
         (setq numberedList (cadr (GetInstrumentChildrenDataListByEquipTag propertyValueDictList dataType)))
+        (GetNumberedKsChildrenDataListByEquipTag childrenDataList numberedList startNumberString)
       )
     ) 
   )
+)
+
+; 2021-01-25
+(defun GetNumberedKsChildrenDataListByDrawNum (childrenDataList numberedList numberMode startNumberString /) 
   (mapcar '(lambda (x y) 
               (mapcar '(lambda (xx yy) 
                         (append xx (list (cons "numberedString" (GetInstrumentCodeNameByNumberMode yy numberMode (cdr (assoc "DRAWNUM" xx)) startNumberString))))
@@ -4690,6 +4706,26 @@
   ) 
 )
 
+; 2021-01-25
+(defun GetNumberedKsChildrenDataListByEquipTag (childrenDataList numberedList startNumberString /) 
+  (mapcar '(lambda (x y) 
+              (mapcar '(lambda (xx yy) 
+                        (append xx (list (cons "numberedString" (GetInstrumentCodeNameByEquipTag yy (cdr (assoc "LOCATION" xx)) startNumberString))))
+                      ) 
+                x 
+                y
+              )  
+           ) 
+    childrenDataList 
+    numberedList
+  ) 
+)
+
+; 2021-01-25
+(defun GetInstrumentCodeNameByEquipTag (originString equipTag startNumberString /) 
+  (strcat startNumberString equipTag originString)
+)
+
 (defun GetInstrumentChildrenDataListByEquipTag (propertyValueDictList dataType / instrumentTypeMatchList childrenData childrenDataList numberedList) 
   (setq instrumentTypeMatchList (GetInstrumentTypeMatchList))
   (mapcar '(lambda (drawNum) 
@@ -4699,7 +4735,7 @@
                                 ; sort data by codeName
                                 (and 
                                   (wcmatch (cdr (assoc (cadr (numberedPropertyNameListStrategy dataType)) x)) item)
-                                  (= drawNum (ExtractDrawNum (cdr (assoc "DRAWNUM" x))))
+                                  (= drawNum (cdr (assoc "LOCATION" x)))
                                 )
                             ) 
             propertyValueDictList
@@ -4711,7 +4747,7 @@
         ) 
       ) 
     ) 
-    (GetUniqueDrawNumList propertyValueDictList)
+    (GetUniqueKsLocationList propertyValueDictList)
   )
   (list childrenDataList numberedList)
 )
@@ -4852,7 +4888,6 @@
   (cond 
     ((= numberMode "0") (strcat startNumberString drawNum originString))
     ((= numberMode "1") (strcat startNumberString originString))
-    ((= numberMode "2") (strcat startNumberString drawNum originString))
   ) 
 )
 
@@ -4906,6 +4941,23 @@
     )
   )
   (DeduplicateForListUtils resultList)
+)
+
+; 2021-01-25
+(defun GetUniqueKsLocationList (propertyValueDictList / resultList) 
+  (setq resultList 
+  (vl-remove-if-not '(lambda (x) 
+                       (= (IsKsLocationOnPipe x) nil)
+                    ) 
+    (GetValueListByOneKeyUtils propertyValueDictList "LOCATION")
+  )
+  )
+  (DeduplicateForListUtils resultList)
+)
+
+; 2021-01-25
+(defun IsKsLocationOnPipe (ksLocation /) 
+  (RegexpTestUtils ksLocation ".*\-[0-9]+\-[0-9][A-Z].*" nil)
 )
 
 (defun GetCodeNameListStrategy (propertyValueDictList dataType / propertyName dataList resultList) 
