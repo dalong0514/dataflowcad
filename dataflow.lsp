@@ -4713,11 +4713,25 @@
   (mapcar '(lambda (x) 
              (cons 
                (GetPipeLineByPipeNum (cdr (assoc "pipenum" x))) 
-               (cdr (assoc "from" x))
+               (GetEquipTagLinkedPipe (cdr (assoc "from" x)) (cdr (assoc "to" x)))
              )
            )
     (GetAllPipeDataUtils)
   )
+)
+
+(defun GetEquipTagLinkedPipe (fromData toData / result)
+  (if (and (/= (IsKsLocationOnEquip fromData) nil) (= (IsKsLocationOnEquip toData) nil)) 
+    (setq result fromData)
+  )
+  (if (and (/= (IsKsLocationOnEquip toData) nil) (= (IsKsLocationOnEquip fromData) nil)) 
+    (setq result toData)
+  ) 
+  ; ready for develop for from and to both be equip - 2021-01-25
+  (if (and (/= (IsKsLocationOnEquip toData) nil) (/= (IsKsLocationOnEquip fromData) nil)) 
+    (setq result toData)
+  )  
+  result
 )
 
 (defun c:foo ()
