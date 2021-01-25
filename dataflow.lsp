@@ -4830,14 +4830,14 @@
 
 (defun GetInstrumentChildrenDataListByEquipTag (propertyValueDictList dataType / instrumentTypeMatchList childrenData childrenDataList numberedList) 
   (setq instrumentTypeMatchList (GetInstrumentTypeMatchList))
-  (mapcar '(lambda (drawNum) 
+  (mapcar '(lambda (equipTag) 
       (foreach item instrumentTypeMatchList 
         (setq childrenData 
           (vl-remove-if-not '(lambda (x) 
                                 ; sort data by codeName
                                 (and 
                                   (wcmatch (cdr (assoc (cadr (numberedPropertyNameListStrategy dataType)) x)) item)
-                                  (= drawNum (cdr (assoc "LOCATION" x)))
+                                  (= equipTag (cdr (assoc "LOCATION" x)))
                                 )
                             ) 
             propertyValueDictList
