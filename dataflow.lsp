@@ -4700,7 +4700,8 @@
     )
     ((= numberMode "2") 
       (progn 
-        ; 先重构 propertyValueDictList 数组，把所在位置全部转化为设备位号 - 2021-01-25
+        ; 重构 propertyValueDictList 数组，把所在位置全部转化为设备位号 - 2021-01-25
+        (setq propertyValueDictList (RefactorPropertyValueDictList propertyValueDictList))
         (setq childrenDataList (car (GetInstrumentChildrenDataListByEquipTag propertyValueDictList dataType)))
         (setq numberedList (cadr (GetInstrumentChildrenDataListByEquipTag propertyValueDictList dataType)))
         (GetNumberedKsChildrenDataListByEquipTag childrenDataList numberedList startNumberString)
@@ -4709,6 +4710,35 @@
   )
 )
 
+(defun RefactorPropertyValueDictList (propertyValueDictList / pipeLineEquipTagDictList ksDataOnPipe ksDataOnEquip oldValue oldValue) 
+  (setq pipeLineEquipTagDictList (GetPipeLineEquipTagDictList))
+  (setq ksDataOnPipe 
+    (vl-remove-if-not '(lambda (x) 
+                        (/= (IsKsLocationOnPipe (cdr (assoc "LOCATION" x))) nil)
+                      ) 
+      propertyValueDictList
+    )
+  )
+  (setq ksDataOnPipe 
+    (mapcar '(lambda (x) 
+               (setq oldValue (assoc "LOCATION" x))
+               (setq newValue (cons "LOCATION" (cdr (assoc (GetPipeLineByPipeNum (cdr (assoc "LOCATION" x))) pipeLineEquipTagDictList))))
+               (subst newValue oldValue x)
+            )
+      ksDataOnPipe
+    ) 
+  ) 
+  (setq ksDataOnEquip 
+    (vl-remove-if-not '(lambda (x) 
+                        (/= (IsKsLocationOnEquip (cdr (assoc "LOCATION" x))) nil)
+                      ) 
+      propertyValueDictList
+    )
+  ) 
+  (append ksDataOnEquip ksDataOnPipe)
+)
+
+; 2021-01-25
 (defun GetPipeLineEquipTagDictList ()
   (mapcar '(lambda (x) 
              (cons 
@@ -4720,6 +4750,7 @@
   )
 )
 
+; 2021-01-25
 (defun GetEquipTagLinkedPipe (fromData toData / result)
   (if (and (/= (IsKsLocationOnEquip fromData) nil) (= (IsKsLocationOnEquip toData) nil)) 
     (setq result fromData)
@@ -5012,7 +5043,7 @@
 (defun GetUniqueKsLocationList (propertyValueDictList / resultList) 
   (setq resultList 
     (vl-remove-if-not '(lambda (x) 
-                        (= (IsKsLocationOnPipe x) nil)
+                        (/= x nil)  ; the key logic
                       ) 
       (GetValueListByOneKeyUtils propertyValueDictList "LOCATION")
     )
