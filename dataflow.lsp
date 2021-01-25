@@ -4671,14 +4671,14 @@
       (progn 
         (setq childrenDataList (car (GetInstrumentChildrenDataListByDrawNum propertyValueDictList dataType)))
         (setq numberedList (cadr (GetInstrumentChildrenDataListByDrawNum propertyValueDictList dataType)))
-        (GetNumberedKsChildrenDataListByDrawNum childrenDataList numberedList numberMode startNumberString)
+        (GetNumberedKsChildrenDataListByDrawNum childrenDataList numberedList startNumberString)
       )
     )
     ((= numberMode "1") 
       (progn 
         (setq childrenDataList (car (GetInstrumentChildrenDataListByNoDrawNum propertyValueDictList dataType)))
         (setq numberedList (cadr (GetInstrumentChildrenDataListByNoDrawNum propertyValueDictList dataType)))
-        (GetNumberedKsChildrenDataListByDrawNum childrenDataList numberedList numberMode startNumberString)
+        (GetNumberedKsChildrenDataListByNoDrawNum childrenDataList numberedList startNumberString)
       )
     )
     ((= numberMode "2") 
@@ -4692,10 +4692,25 @@
 )
 
 ; 2021-01-25
-(defun GetNumberedKsChildrenDataListByDrawNum (childrenDataList numberedList numberMode startNumberString /) 
+(defun GetNumberedKsChildrenDataListByDrawNum (childrenDataList numberedList startNumberString /) 
   (mapcar '(lambda (x y) 
               (mapcar '(lambda (xx yy) 
-                        (append xx (list (cons "numberedString" (GetInstrumentCodeNameByNumberMode yy numberMode (cdr (assoc "DRAWNUM" xx)) startNumberString))))
+                        (append xx (list (cons "numberedString" (GetInstrumentCodeNameByDrawNum yy (cdr (assoc "DRAWNUM" xx)) startNumberString))))
+                      ) 
+                x 
+                y
+              )  
+           ) 
+    childrenDataList 
+    numberedList
+  ) 
+)
+
+; 2021-01-25
+(defun GetNumberedKsChildrenDataListByNoDrawNum (childrenDataList numberedList startNumberString /) 
+  (mapcar '(lambda (x y) 
+              (mapcar '(lambda (xx yy) 
+                        (append xx (list (cons "numberedString" (strcat startNumberString yy))))
                       ) 
                 x 
                 y
@@ -4719,6 +4734,11 @@
     childrenDataList 
     numberedList
   ) 
+)
+
+(defun GetInstrumentCodeNameByDrawNum (originString drawNum startNumberString /) 
+  (setq drawNum (RegExpReplace (ExtractDrawNum drawNum) "0(\\d)-(\\d*)" (strcat "$1" "$2") nil nil))
+  (strcat startNumberString drawNum originString)
 )
 
 ; 2021-01-25
@@ -4880,14 +4900,6 @@
   (cond 
     ((= numberMode "0") (RegExpReplace originString "([A-Za-z]+)(\\d*).*" (strcat "$1" startNumberString drawNum "$2") nil nil))
     ((= numberMode "1") (RegExpReplace originString "([A-Za-z]+)(\\d*).*" (strcat "$1" startNumberString "$2") nil nil))
-  ) 
-)
-
-(defun GetInstrumentCodeNameByNumberMode (originString numberMode drawNum startNumberString /) 
-  (setq drawNum (RegExpReplace (ExtractDrawNum drawNum) "0(\\d)-(\\d*)" (strcat "$1" "$2") nil nil))
-  (cond 
-    ((= numberMode "0") (strcat startNumberString drawNum originString))
-    ((= numberMode "1") (strcat startNumberString originString))
   ) 
 )
 
