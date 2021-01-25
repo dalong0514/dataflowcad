@@ -4179,7 +4179,7 @@
 (defun numberedPropertyNameListStrategy (dataType /)
   (cond 
     ((= dataType "Pipe") '("PIPENUM" "DRAWNUM"))
-    ((= dataType "Instrument") '("TAG" "FUNCTION" "DRAWNUM"))
+    ((= dataType "Instrument") '("TAG" "FUNCTION" "DRAWNUM" "LOCATION"))
     ((= dataType "Reactor") '("TAG" "DRAWNUM"))
     ((= dataType "Pump") '("TAG" "DRAWNUM"))
     ((= dataType "Tank") '("TAG" "DRAWNUM"))
@@ -4913,14 +4913,16 @@
   resultList
 )
 
+; add the "-" between functon and numbered tag
 (defun GetInstrumentNumberedList (numberedDataList dataType / resultList) 
   (foreach item numberedDataList 
     (mapcar '(lambda (x) 
               (setq resultList 
                 (append resultList 
                   (list (strcat 
-                        (cdr (assoc "FUNCTION" x)) 
-                        (GetNumberedStringforEnhancedNumber x dataType)
+                          (cdr (assoc "FUNCTION" x)) 
+                          "-"
+                          (GetNumberedStringforEnhancedNumber x dataType)
                         )
                   )
                 )
@@ -4946,11 +4948,11 @@
 ; 2021-01-25
 (defun GetUniqueKsLocationList (propertyValueDictList / resultList) 
   (setq resultList 
-  (vl-remove-if-not '(lambda (x) 
-                       (= (IsKsLocationOnPipe x) nil)
-                    ) 
-    (GetValueListByOneKeyUtils propertyValueDictList "LOCATION")
-  )
+    (vl-remove-if-not '(lambda (x) 
+                        (= (IsKsLocationOnPipe x) nil)
+                      ) 
+      (GetValueListByOneKeyUtils propertyValueDictList "LOCATION")
+    )
   )
   (DeduplicateForListUtils resultList)
 )
