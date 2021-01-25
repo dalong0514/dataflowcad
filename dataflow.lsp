@@ -4483,7 +4483,7 @@
       (end_list)
       (start_list "numberMode" 3)
       (mapcar '(lambda (x) (add_list x)) 
-                '("按流程图号" "不按流程图号")
+                '("按流程图号" "不按流程图号" "按设备位号")
       )
       (end_list)
     )  
