@@ -2912,14 +2912,16 @@
 )
 
 (defun GetAllPipeHandleListUtils (/ pipeData) 
-  (setq pipeData 
-    (GetAllPropertyValueListByEntityNameList (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "Pipe")))
-  ) 
+  (setq pipeData (GetAllPipeDataUtils)) 
   (mapcar '(lambda (x) 
              (cdr (assoc "entityhandle" x))
            ) 
     pipeData
   )
+)
+
+(defun GetAllPipeDataUtils () 
+  (GetAllPropertyValueListByEntityNameList (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "Pipe")))
 )
 
 ; repair bug - JoinDrawArrow's relatedid may be not in the allPipeHandleList - 2020.12.22
