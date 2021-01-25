@@ -4683,6 +4683,7 @@
     )
     ((= numberMode "2") 
       (progn 
+        ; 先重构 propertyValueDictList 数组，把所在位置全部转化为设备位号 - 2021-01-25
         (setq childrenDataList (car (GetInstrumentChildrenDataListByEquipTag propertyValueDictList dataType)))
         (setq numberedList (cadr (GetInstrumentChildrenDataListByEquipTag propertyValueDictList dataType)))
         (GetNumberedKsChildrenDataListByEquipTag childrenDataList numberedList startNumberString)
