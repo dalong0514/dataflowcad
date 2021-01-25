@@ -4670,6 +4670,12 @@
         (setq numberedList (cadr (GetInstrumentChildrenDataListByNoDrawNum propertyValueDictList dataType)))
       )
     )
+    ((= numberMode "2") 
+      (progn 
+        (setq childrenDataList (car (GetInstrumentChildrenDataListByEquipTag propertyValueDictList dataType)))
+        (setq numberedList (cadr (GetInstrumentChildrenDataListByEquipTag propertyValueDictList dataType)))
+      )
+    ) 
   )
   (mapcar '(lambda (x y) 
               (mapcar '(lambda (xx yy) 
@@ -4682,6 +4688,32 @@
     childrenDataList 
     numberedList
   ) 
+)
+
+(defun GetInstrumentChildrenDataListByEquipTag (propertyValueDictList dataType / instrumentTypeMatchList childrenData childrenDataList numberedList) 
+  (setq instrumentTypeMatchList (GetInstrumentTypeMatchList))
+  (mapcar '(lambda (drawNum) 
+      (foreach item instrumentTypeMatchList 
+        (setq childrenData 
+          (vl-remove-if-not '(lambda (x) 
+                                ; sort data by codeName
+                                (and 
+                                  (wcmatch (cdr (assoc (cadr (numberedPropertyNameListStrategy dataType)) x)) item)
+                                  (= drawNum (ExtractDrawNum (cdr (assoc "DRAWNUM" x))))
+                                )
+                            ) 
+            propertyValueDictList
+          ) 
+        )
+        (setq childrenDataList (append childrenDataList (list childrenData))) 
+        (setq numberedList 
+          (append numberedList (list (GetNumberedListByStartAndLengthUtils "" "1" (length childrenData))))
+        ) 
+      ) 
+    ) 
+    (GetUniqueDrawNumList propertyValueDictList)
+  )
+  (list childrenDataList numberedList)
 )
 
 (defun GetInstrumentChildrenDataListByNoDrawNum (propertyValueDictList dataType / instrumentTypeMatchList childrenData childrenDataList numberedList) 
@@ -4820,6 +4852,7 @@
   (cond 
     ((= numberMode "0") (strcat startNumberString drawNum originString))
     ((= numberMode "1") (strcat startNumberString originString))
+    ((= numberMode "2") (strcat startNumberString drawNum originString))
   ) 
 )
 
