@@ -1369,6 +1369,11 @@
   (mapcar '(lambda (x) (car x)) resultList)
 )
 
+; 2021-01-26
+(defun GetEntityPositionByEntityNameUtils (entityName /)
+  (cdr (assoc 10 (entget entityName)))
+)
+
 (defun GetEntityHandleListByEntityNameListUtils (entityNameList /) 
   (mapcar '(lambda (x) (GetEntityHandleByEntityNameUtils x)) 
     entityNameList
@@ -4763,10 +4768,6 @@
     (setq result toData)
   )  
   result
-)
-
-(defun c:foo ()
-  (GetPipeLineEquipTagDictList)
 )
 
 (defun GetPipeLineByPipeNum (pipeNum /)
