@@ -4732,7 +4732,8 @@
 )
 
 (defun RefactorPropertyValueDictList (propertyValueDictList / pipeFromAndToDictList ksDataOnPipe ksDataOnEquip oldValue oldValue) 
-  (setq pipeFromAndToDictList (GetPipeFromAndToDictList))
+  (setq pipeFromAndToDictList (GetAllPipeFromAndToDictList))
+  (setq equipPositionDictList (GetAllEquipPositionDictListUtils))
   (setq ksDataOnPipe 
     (vl-remove-if-not '(lambda (x) 
                         (/= (IsKsLocationOnPipe (cdr (assoc "LOCATION" x))) nil)
@@ -4743,7 +4744,7 @@
   (setq ksDataOnPipe 
     (mapcar '(lambda (x) 
                (setq oldValue (assoc "LOCATION" x))
-               (setq newValue (cons "LOCATION" (GetNewEquipTagLocation x pipeFromAndToDictList)))
+               (setq newValue (cons "LOCATION" (GetNewEquipTagLocation x pipeFromAndToDictList equipPositionDictList)))
                (subst newValue oldValue x)
             )
       ksDataOnPipe
@@ -4760,14 +4761,14 @@
 )
 
 ; 2021-01-26
-(defun GetNewEquipTagLocation (oneKsDataOnPipe pipeFromAndToDictList / pipeLine pipeFromToPair)
+(defun GetNewEquipTagLocation (oneKsDataOnPipe pipeFromAndToDictList equipPositionDictList / pipeLine pipeFromToPair)
   (setq pipeLine (GetPipeLineByPipeNum (cdr (assoc "LOCATION" oneKsDataOnPipe))))
   (setq pipeFromToPair (cdr (assoc pipeLine pipeFromAndToDictList)))
-  (GetEquipTagLinkedPipe (car pipeFromToPair) (cadr pipeFromToPair) oneKsDataOnPipe)
+  (GetEquipTagLinkedPipe (car pipeFromToPair) (cadr pipeFromToPair) oneKsDataOnPipe equipPositionDictList)
 )
 
 ; 2021-01-25
-(defun GetEquipTagLinkedPipe (fromData toData oneKsDataOnPipe / result)
+(defun GetEquipTagLinkedPipe (fromData toData oneKsDataOnPipe equipPositionDictList / result)
   (if (and (/= (IsKsLocationOnEquip fromData) nil) (= (IsKsLocationOnEquip toData) nil)) 
     (setq result fromData)
   )
@@ -4776,13 +4777,47 @@
   ) 
   ; ready for develop for from and to both be equip - 2021-01-25
   (if (and (/= (IsKsLocationOnEquip toData) nil) (/= (IsKsLocationOnEquip fromData) nil)) 
-    (setq result toData)
+    (setq result (GetNearestEquipForKsData fromData toData oneKsDataOnPipe equipPositionDictList))
   )  
   result
 )
 
+(defun GetNearestEquipForKsData (fromData toData oneKsDataOnPipe equipPositionDictList / firstDistance secondDistance result) 
+  (setq ksPositon (GetEntityPositionByEntityNameUtils (handent (cdr (assoc "entityhandle" oneKsDataOnPipe)))))
+  (if (and (/= (assoc fromData equipPositionDictList) nil) (/= (assoc toData equipPositionDictList) nil)) 
+    (progn 
+      (setq firstDistance 
+        (distance 
+          ksPositon 
+          (cdr (assoc fromData equipPositionDictList)) 
+        ) 
+      )
+      (setq secondDistance 
+        (distance 
+          ksPositon 
+          (cdr (assoc toData equipPositionDictList)) 
+        ) 
+      ) 
+      (if (< firstDistance secondDistance) 
+        (setq result fromData)
+        (setq result toData)
+      )
+    )
+  ) 
+  (if (and (/= (assoc fromData equipPositionDictList) nil) (= (assoc toData equipPositionDictList) nil)) 
+    (setq result fromData)
+  ) 
+  (if (and (= (assoc fromData equipPositionDictList) nil) (/= (assoc toData equipPositionDictList) nil)) 
+    (setq result toData)
+  ) 
+  (if (and (= (assoc fromData equipPositionDictList) nil) (= (assoc toData equipPositionDictList) nil)) 
+    (setq result fromData)
+  ) 
+  result
+)
+
 ; 2021-01-25
-(defun GetPipeFromAndToDictList ()
+(defun GetAllPipeFromAndToDictList ()
   (mapcar '(lambda (x) 
              (cons 
                (GetPipeLineByPipeNum (cdr (assoc "pipenum" x))) 
