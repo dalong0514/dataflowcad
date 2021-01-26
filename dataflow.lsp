@@ -57,6 +57,7 @@
 (defun GetPipeLineByPipeNumTest () 
   (AssertEqual 'GetPipeLineByPipeNum (list "PL1101-50-2J1") "PL1101")
   (AssertEqual 'GetPipeLineByPipeNum (list "PL1102") "PL1102")
+  (AssertEqual 'GetPipeLineByPipeNum (list "RWRa23108-25-2A5") "RWRa23108")
 )
 
 ; 2021-01-25
@@ -4715,8 +4716,8 @@
   )
 )
 
-(defun RefactorPropertyValueDictList (propertyValueDictList / pipeLineEquipTagDictList ksDataOnPipe ksDataOnEquip oldValue oldValue) 
-  (setq pipeLineEquipTagDictList (GetPipeLineEquipTagDictList))
+(defun RefactorPropertyValueDictList (propertyValueDictList / pipeFromAndToDictList ksDataOnPipe ksDataOnEquip oldValue oldValue) 
+  (setq pipeFromAndToDictList (GetPipeFromAndToDictList))
   (setq ksDataOnPipe 
     (vl-remove-if-not '(lambda (x) 
                         (/= (IsKsLocationOnPipe (cdr (assoc "LOCATION" x))) nil)
@@ -4727,7 +4728,7 @@
   (setq ksDataOnPipe 
     (mapcar '(lambda (x) 
                (setq oldValue (assoc "LOCATION" x))
-               (setq newValue (cons "LOCATION" (cdr (assoc (GetPipeLineByPipeNum (cdr (assoc "LOCATION" x))) pipeLineEquipTagDictList))))
+               (setq newValue (cons "LOCATION" (GetNewEquipTagLocation x pipeFromAndToDictList)))
                (subst newValue oldValue x)
             )
       ksDataOnPipe
@@ -4743,12 +4744,30 @@
   (append ksDataOnEquip ksDataOnPipe)
 )
 
+; 2021-01-26
+(defun GetNewEquipTagLocation (oneKsDataOnPipe / pipeLineEquipTagDictList)
+  (setq pipeLineEquipTagDictList (GetPipeLineEquipTagDictList oneKsDataOnPipe))
+  (cdr (assoc (GetPipeLineByPipeNum (cdr (assoc "LOCATION" oneKsDataOnPipe))) pipeLineEquipTagDictList))
+)
+
 ; 2021-01-25
-(defun GetPipeLineEquipTagDictList ()
+(defun GetPipeLineEquipTagDictList (oneKsDataOnPipe /)
   (mapcar '(lambda (x) 
              (cons 
                (GetPipeLineByPipeNum (cdr (assoc "pipenum" x))) 
                (GetEquipTagLinkedPipe (cdr (assoc "from" x)) (cdr (assoc "to" x)))
+             )
+           )
+    (GetAllPipeDataUtils)
+  )
+)
+
+; 2021-01-25
+(defun GetPipeFromAndToDictList ()
+  (mapcar '(lambda (x) 
+             (list 
+               (GetPipeLineByPipeNum (cdr (assoc "pipenum" x))) 
+               (list (cdr (assoc "from" x)) (cdr (assoc "to" x)))
              )
            )
     (GetAllPipeDataUtils)
@@ -4771,7 +4790,7 @@
 )
 
 (defun GetPipeLineByPipeNum (pipeNum /)
-  (RegExpReplace pipeNum "([A-Z]+\\d+)-?.*" "$1" nil nil)
+  (RegExpReplace pipeNum "([A-Za-z]+\\d+)-?.*" "$1" nil nil)
 )
 
 ; 2021-01-25
