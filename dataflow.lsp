@@ -1762,6 +1762,25 @@
   ) 
 )
 
+(defun GetAllPipeDataUtils () 
+  (GetAllPropertyValueListByEntityNameList (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "Pipe")))
+)
+
+(defun GetAllEquipDataUtils () 
+  (GetAllPropertyValueListByEntityNameList (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "Equipment")))
+)
+
+(defun GetAllEquipPositionDictListUtils ()
+  (mapcar '(lambda (x) 
+             (cons 
+               (cdr (assoc "tag" x)) 
+               (GetEntityPositionByEntityNameUtils (handent (cdr (assoc "entityhandle" x))))
+             )
+           ) 
+    (GetAllEquipDataUtils)
+  ) 
+)
+
 ; Utils Function 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
@@ -2939,10 +2958,6 @@
            ) 
     pipeData
   )
-)
-
-(defun GetAllPipeDataUtils () 
-  (GetAllPropertyValueListByEntityNameList (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "Pipe")))
 )
 
 ; repair bug - JoinDrawArrow's relatedid may be not in the allPipeHandleList - 2020.12.22
