@@ -4745,37 +4745,14 @@
 )
 
 ; 2021-01-26
-(defun GetNewEquipTagLocation (oneKsDataOnPipe / pipeLineEquipTagDictList)
-  (setq pipeLineEquipTagDictList (GetPipeLineEquipTagDictList oneKsDataOnPipe))
-  (cdr (assoc (GetPipeLineByPipeNum (cdr (assoc "LOCATION" oneKsDataOnPipe))) pipeLineEquipTagDictList))
+(defun GetNewEquipTagLocation (oneKsDataOnPipe pipeFromAndToDictList / pipeLine pipeFromToPair)
+  (setq pipeLine (GetPipeLineByPipeNum (cdr (assoc "LOCATION" oneKsDataOnPipe))))
+  (setq pipeFromToPair (cdr (assoc pipeLine pipeFromAndToDictList)))
+  (GetEquipTagLinkedPipe (car pipeFromToPair) (cadr pipeFromToPair) oneKsDataOnPipe)
 )
 
 ; 2021-01-25
-(defun GetPipeLineEquipTagDictList (oneKsDataOnPipe /)
-  (mapcar '(lambda (x) 
-             (cons 
-               (GetPipeLineByPipeNum (cdr (assoc "pipenum" x))) 
-               (GetEquipTagLinkedPipe (cdr (assoc "from" x)) (cdr (assoc "to" x)))
-             )
-           )
-    (GetAllPipeDataUtils)
-  )
-)
-
-; 2021-01-25
-(defun GetPipeFromAndToDictList ()
-  (mapcar '(lambda (x) 
-             (list 
-               (GetPipeLineByPipeNum (cdr (assoc "pipenum" x))) 
-               (list (cdr (assoc "from" x)) (cdr (assoc "to" x)))
-             )
-           )
-    (GetAllPipeDataUtils)
-  )
-)
-
-; 2021-01-25
-(defun GetEquipTagLinkedPipe (fromData toData / result)
+(defun GetEquipTagLinkedPipe (fromData toData oneKsDataOnPipe / result)
   (if (and (/= (IsKsLocationOnEquip fromData) nil) (= (IsKsLocationOnEquip toData) nil)) 
     (setq result fromData)
   )
@@ -4787,6 +4764,18 @@
     (setq result toData)
   )  
   result
+)
+
+; 2021-01-25
+(defun GetPipeFromAndToDictList ()
+  (mapcar '(lambda (x) 
+             (cons 
+               (GetPipeLineByPipeNum (cdr (assoc "pipenum" x))) 
+               (list (cdr (assoc "from" x)) (cdr (assoc "to" x)))
+             )
+           )
+    (GetAllPipeDataUtils)
+  )
 )
 
 (defun GetPipeLineByPipeNum (pipeNum /)
