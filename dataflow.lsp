@@ -1,4 +1,4 @@
-;冯大龙编于 2020 年
+;冯大龙编于 2020-2021 年
 (princ "\n数据流一体化开发者：冯大龙、谢雨东、华雷、曾涵卫、徐骋、郑飞宏、靳淳，版本号V-1.4")
 (vl-load-com)
 
@@ -7,7 +7,7 @@
 ; basic Function
 
 (defun c:printVersionInfo ()
-  (alert "最新版本号 V1.4，更新时间：2021-02-06\n数据流内网地址：192.168.1.38")(princ)
+  (alert "最新版本号 V1.4，更新时间：2021-02-28\n数据流内网地址：192.168.1.38")(princ)
 )
 
 (defun c:syncAllDataFlowBlock (/ item) 
