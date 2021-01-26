@@ -4705,7 +4705,7 @@
     )
     ((= numberMode "2") 
       (progn 
-        ; 重构 propertyValueDictList 数组，把所在位置全部转化为设备位号 - 2021-01-25
+        ; refactor propertyValueDictList, set all location feild to equipTag - 2021-01-25
         (setq propertyValueDictList (RefactorPropertyValueDictList propertyValueDictList))
         (setq childrenDataList (car (GetInstrumentChildrenDataListByEquipTag propertyValueDictList dataType)))
         (setq numberedList (cadr (GetInstrumentChildrenDataListByEquipTag propertyValueDictList dataType)))
