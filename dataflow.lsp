@@ -1792,6 +1792,15 @@
   ) 
 )
 
+(defun GetEquipChNameByEquipTag (equipTag / allEquipChNameDictList) 
+  (setq allEquipChNameDictList (GetAllEquipChNameDictListUtils))
+  (if (cdr (assoc equipTag allEquipChNameDictList)) 
+    (setq result (cdr (assoc equipTag allEquipChNameDictList))) 
+    (setq result "")
+  )
+  result
+)
+
 ; Utils Function 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
@@ -2971,14 +2980,6 @@
   )
 )
 
-; repair bug - JoinDrawArrow's relatedid may be not in the allPipeHandleList - 2020.12.22
-(defun GetRelatedPipeDataByJoinDrawArrowData (JoinDrawArrowData allPipeHandleList /) 
-  (if (/= (member (cdr (assoc "relatedid" JoinDrawArrowData)) allPipeHandleList) nil) 
-    (GetAllPropertyDictForOneBlock (handent (cdr (assoc "relatedid" JoinDrawArrowData))))
-    (alert (strcat (cdr (assoc "fromto" JoinDrawArrowData)) "（" (cdr (assoc "drawnum" JoinDrawArrowData)) "）" "关联的管道数据id是不存在的！"))
-  )
-)
-
 (defun UpdateJoinDrawArrowByDataType (dataType / entityNameList relatedPipeData allPipeHandleList) 
   (setq entityNameList 
     (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils dataType))
@@ -2986,18 +2987,21 @@
   (setq allPipeHandleList (GetAllPipeHandleListUtils))
   (mapcar '(lambda (x) 
              (setq relatedPipeData (append relatedPipeData 
-                                     (list (GetRelatedPipeDataByJoinDrawArrowData x allPipeHandleList))
+                                     (list (GetAllPropertyDictForOneBlock (handent (cdr (assoc "relatedid" x)))))
                                    ))
            ) 
     ; relatedid value maybe null
     (vl-remove-if-not '(lambda (x) 
-                        (/= (cdr (assoc "relatedid" x)) "")
+                        ; repair bug - JoinDrawArrow's relatedid may be not in the allPipeHandleList - 2020.12.22
+                        ; refactor at 2021-01-27
+                        (and (/= (cdr (assoc "relatedid" x)) "") (/= (member (cdr (assoc "relatedid" x)) allPipeHandleList) nil)) 
                       ) 
       (GetAllPropertyValueListByEntityNameList entityNameList)
     )
   )
   (UpdateJoinDrawArrowStrategy dataType entityNameList relatedPipeData)
 )
+;(alert (strcat (cdr (assoc "fromto" JoinDrawArrowData)) "（" (cdr (assoc "drawnum" JoinDrawArrowData)) "）" "关联的管道数据id是不存在的！"))
 
 (defun UpdateJoinDrawArrowStrategy (dataType entityNameList relatedPipeData /) 
   (cond 
@@ -3007,7 +3011,8 @@
                   (list "PIPENUM" "FROMTO" "DRAWNUM") 
                   (list 
                     (cdr (assoc "pipenum" y)) 
-                    (strcat "自" (cdr (assoc "from" y)))
+                    ; add the Equip ChName - 2021-01-27
+                    (strcat "自" (cdr (assoc "from" y)) (GetEquipChNameByEquipTag (cdr (assoc "from" y))))
                     (GetRelatedEquipDrawNum (GetRelatedEquipDataByTag (cdr (assoc "from" y))))
                   )
                 )
@@ -3023,7 +3028,7 @@
                 (ModifyMultiplePropertyForOneBlockUtils x 
                   (list "FROMTO" "DRAWNUM") 
                   (list 
-                    (strcat "去" (cdr (assoc "to" y)))
+                    (strcat "去" (cdr (assoc "to" y)) (GetEquipChNameByEquipTag (cdr (assoc "to" y))))
                     (GetRelatedEquipDrawNum (GetRelatedEquipDataByTag (cdr (assoc "to" y))))
                   )
                 )
@@ -3036,7 +3041,7 @@
 )
 
 (defun c:foo ()
-  (GetAllEquipChNameDictListUtils)
+  (GetEquipChNameByEquipTag "P551106")
 )
 
 (defun c:GenerateJoinDrawArrow (/ pipeSS pipeData insPt entityNameList)
