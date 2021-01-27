@@ -1781,6 +1781,17 @@
   ) 
 )
 
+(defun GetAllEquipChNameDictListUtils ()
+  (mapcar '(lambda (x) 
+             (cons 
+               (cdr (assoc "tag" x)) 
+               (cdr (assoc "name" x)) 
+             )
+           ) 
+    (GetAllEquipDataUtils)
+  ) 
+)
+
 ; Utils Function 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
@@ -3022,6 +3033,10 @@
       )
     )
   )
+)
+
+(defun c:foo ()
+  (GetAllEquipChNameDictListUtils)
 )
 
 (defun c:GenerateJoinDrawArrow (/ pipeSS pipeData insPt entityNameList)
