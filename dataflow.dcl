@@ -1,5 +1,5 @@
 exportBlockPropertyDataBox : dialog {
-  label = "天正设计流数据一体化V1.4———导出数据"; 
+  label = "天正设计流数据一体化V1.5———导出数据"; 
   key = "exportBlockPropertyData";
   : row {
     : boxed_radio_column {
@@ -61,7 +61,7 @@ exportBlockPropertyDataBox : dialog {
 }
 
 exportBlockPropertyDataBoxV2 : dialog {
-  label = "天正设计流数据一体化V1.4———导出数据"; 
+  label = "天正设计流数据一体化V1.5———导出数据"; 
   key = "exportBlockPropertyDataV2";
   : row {
     : boxed_radio_column {
@@ -135,7 +135,7 @@ exportBlockPropertyDataBoxV2 : dialog {
 }
 
 filterAndNumberBox : dialog {
-  label = "天正设计流数据一体化V1.4———批量编号"; 
+  label = "天正设计流数据一体化V1.5———批量编号"; 
   key = "filterAndNumber";
   : row {
     : boxed_radio_column {
@@ -276,7 +276,7 @@ filterAndNumberBox : dialog {
 }
 
 enhancedNumberBox : dialog {
-  label = "天正设计流数据一体化V1.4———加强版批量编号"; 
+  label = "天正设计流数据一体化V1.5———加强版批量编号"; 
   key = "enhancedNumberBox";
   : boxed_radio_column {
     key = "numberBox";
@@ -361,7 +361,7 @@ enhancedNumberBox : dialog {
 }
 
 filterAndModifyEquipmentPropertyBox : dialog {
-  label = "天正设计流数据一体化V1.4———批量修改数据"; 
+  label = "天正设计流数据一体化V1.5———批量修改数据"; 
   key = "filterModifyEquipmentProperty";
   : row {
     : boxed_radio_column {
@@ -554,7 +554,7 @@ filterAndModifyEquipmentPropertyBox : dialog {
 }
 
 filterAndModifyPropertyBox : dialog {
-  label = "天正设计流数据一体化V1.4———批量修改数据强化版"; 
+  label = "天正设计流数据一体化V1.5———批量修改数据强化版"; 
   key = "filterModifyProperty";
   : boxed_radio_column {
     key = "showOriginDataBox";
@@ -633,7 +633,7 @@ filterAndModifyPropertyBox : dialog {
 }
 
 modifyBlockPropertyBox : dialog {
-  label = "天正设计流数据一体化V1.4———批量修改通用块数据"; 
+  label = "天正设计流数据一体化V1.5———批量修改通用块数据"; 
   key = "modifyBlockProperty";
   : boxed_radio_column {
     key = "showOriginDataBox";
@@ -712,7 +712,7 @@ modifyBlockPropertyBox : dialog {
 }
 
 generatePublicProcessElementBox : dialog {
-  label = "天正设计流数据一体化V1.4———自动生成单回路辅助流程组件"; 
+  label = "天正设计流数据一体化V1.5———自动生成单回路辅助流程组件"; 
   key = "generatePublicProcessElement";
   : boxed_radio_column {
     key = "filterBox";
@@ -776,7 +776,7 @@ generatePublicProcessElementBox : dialog {
 }
 
 brushBlockPropertyValueBox : dialog {
-  label = "天正设计流数据一体化V1.4———刷块属性数据"; 
+  label = "天正设计流数据一体化V1.5———刷块属性数据"; 
   key = "brushBlockPropertyValue";
   : boxed_radio_column {
     key = "filterBox";
@@ -832,7 +832,7 @@ brushBlockPropertyValueBox : dialog {
 }
 
 numberDrawNumBox : dialog {
-  label = "天正设计流数据一体化V1.4———批量编图签流程图号"; 
+  label = "天正设计流数据一体化V1.5———批量编图签流程图号"; 
   key = "numberDrawNum";
   : boxed_radio_column {
     key = "modifyBox";
