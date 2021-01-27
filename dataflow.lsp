@@ -2999,9 +2999,19 @@
       (GetAllPropertyValueListByEntityNameList entityNameList)
     )
   )
+  (mapcar '(lambda (x) 
+             (prompt "\n")
+             (prompt (strcat (cdr (assoc "fromto" x)) "（" (cdr (assoc "drawnum" x)) "）" "关联的管道数据id是不存在的！"))
+           ) 
+    ; refactor at 2021-01-27
+    (vl-remove-if-not '(lambda (x) 
+                        (or (= (cdr (assoc "relatedid" x)) "") (= (member (cdr (assoc "relatedid" x)) allPipeHandleList) nil)) 
+                      ) 
+      (GetAllPropertyValueListByEntityNameList entityNameList)
+    )
+  ) 
   (UpdateJoinDrawArrowStrategy dataType entityNameList relatedPipeData)
 )
-;(alert (strcat (cdr (assoc "fromto" JoinDrawArrowData)) "（" (cdr (assoc "drawnum" JoinDrawArrowData)) "）" "关联的管道数据id是不存在的！"))
 
 (defun UpdateJoinDrawArrowStrategy (dataType entityNameList relatedPipeData /) 
   (cond 
