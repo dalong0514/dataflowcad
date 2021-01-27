@@ -7,7 +7,7 @@
 ; basic Function
 
 (defun c:printVersionInfo ()
-  (alert "最新版本号 V1.4，更新时间：2021-02-28\n数据流内网地址：192.168.1.38")(princ)
+  (alert "最新版本号 V1.4，更新时间：2021-01-27\n数据流内网地址：192.168.1.38")(princ)
 )
 
 (defun c:syncAllDataFlowBlock (/ item) 
