@@ -1380,7 +1380,7 @@
 )
 
 ; 2021-01-28
-(defun GetTextEntityContextBySelectUtils ()
+(defun GetTextEntityContentBySelectUtils ()
   (cdr (assoc 1 (entget (car (GetEntityNameListBySSUtils (GetTextSSBySelectUtils))))))
 )
 
@@ -3106,6 +3106,23 @@
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
 ; logic for brushBlockPropertyValue
+
+(defun c:brushTextEntityContent (/ textContent entityNameList)
+  (prompt "\n选择要提取的单行文字：")
+  (setq textContent (GetTextEntityContentBySelectUtils))
+  (prompt "\n选择要刷的单行文字（可批量选择）：")
+  (setq entityNameList (GetEntityNameListBySSUtils (GetTextSSBySelectUtils)))
+  (ModifyTextEntityContent entityNameList textContent)
+  (princ)
+)
+
+(defun ModifyTextEntityContent (entityNameList textContent /)
+  (mapcar '(lambda (x) 
+            (SetDXFValueByEntityDataUtils (entget x) 1 textContent)
+          ) 
+    entityNameList
+  ) 
+)
 
 (defun c:brushLocationForInstrument (/ locationData entityNameList)
   (prompt "\n选择仪表所在位置（管道或设备）：")
