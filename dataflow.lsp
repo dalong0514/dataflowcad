@@ -3110,6 +3110,7 @@
 (defun c:brushTextEntityContent (/ textContent entityNameList)
   (prompt "\n选择要提取的单行文字：")
   (setq textContent (GetTextEntityContentBySelectUtils))
+  (prompt (strcat "\n提取的文字内容：" textContent))
   (prompt "\n选择要刷的单行文字（可批量选择）：")
   (setq entityNameList (GetEntityNameListBySSUtils (GetTextSSBySelectUtils)))
   (ModifyTextEntityContent entityNameList textContent)
