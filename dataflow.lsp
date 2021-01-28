@@ -1040,6 +1040,10 @@
   )
 )
 
+(defun GetTextSSBySelectUtils ()
+  (ssget '((0 . "TEXT")))
+)
+
 (defun GetBlockSSBySelectByDataTypeUtils (dataType / ss) 
   (if (= dataType "AllDataType")
     (setq ss (GetAllDataSSBySelectUtils))
@@ -1373,6 +1377,11 @@
 ; 2021-01-26
 (defun GetEntityPositionByEntityNameUtils (entityName /)
   (cdr (assoc 10 (entget entityName)))
+)
+
+; 2021-01-28
+(defun GetTextEntityContextBySelectUtils ()
+  (cdr (assoc 1 (entget (car (GetEntityNameListBySSUtils (GetTextSSBySelectUtils))))))
 )
 
 (defun GetEntityHandleListByEntityNameListUtils (entityNameList /) 
@@ -3048,10 +3057,6 @@
       )
     )
   )
-)
-
-(defun c:foo ()
-  (GetEquipChNameByEquipTag "P551106")
 )
 
 (defun c:GenerateJoinDrawArrow (/ pipeSS pipeData insPt entityNameList)
