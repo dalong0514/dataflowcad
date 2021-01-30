@@ -2879,10 +2879,11 @@
   (alert "更新完成")(princ)
 )
 
-(defun UpdatePublicPipeLineByDataType (dataType / entityNameList relatedPipeData) 
+(defun UpdatePublicPipeLineByDataType (dataType / entityNameList relatedPipeData allPipeHandleList) 
   (setq entityNameList 
     (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils dataType))
   )
+  (setq allPipeHandleList (GetAllPipeHandleListUtils))
   (mapcar '(lambda (x) 
              (setq relatedPipeData (append relatedPipeData 
                                      (list (GetAllPropertyDictForOneBlock (handent (cdr (assoc "relatedid" x)))))
@@ -2890,26 +2891,46 @@
            ) 
     ; relatedid value maybe null
     (vl-remove-if-not '(lambda (x) 
-                        (/= (cdr (assoc "relatedid" x)) "")
+                        ; repair bug - relatedid may be not in the allPipeHandleList - 2021-01-30
+                        (and (/= (cdr (assoc "relatedid" x)) "") (/= (member (cdr (assoc "relatedid" x)) allPipeHandleList) nil)) 
                       ) 
       (GetAllPropertyValueListByEntityNameList entityNameList)
     )
   )
+  (PrintErrorLogForUpdatePublicPipe dataType entityNameList allPipeHandleList) 
   (UpdatePublicPipeStrategy dataType entityNameList relatedPipeData)
 )
 
-(defun UpdatePublicPipeArrowByDataType (dataType / entityNameList relatedPipeData) 
+(defun PrintErrorLogForUpdatePublicPipe (dataType entityNameList allPipeHandleList /)
+  (if (= dataType "PublicPipeLine") 
+    (mapcar '(lambda (x) 
+              (prompt "\n")
+              (prompt (strcat "辅助流程里的管道" (cdr (assoc "pipenum" x)) "未关联主流程对应的管道数据ID！"))
+            ) 
+      ; refactor at 2021-01-30
+      (vl-remove-if-not '(lambda (x) 
+                          (or (= (cdr (assoc "relatedid" x)) "") (= (member (cdr (assoc "relatedid" x)) allPipeHandleList) nil)) 
+                        ) 
+        (GetAllPropertyValueListByEntityNameList entityNameList)
+      )
+    ) 
+  )
+)
+
+(defun UpdatePublicPipeArrowByDataType (dataType / entityNameList relatedPipeData allPipeHandleList) 
   (setq entityNameList 
     (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils dataType))
   )
+  (setq allPipeHandleList (GetAllPipeHandleListUtils))
   (mapcar '(lambda (x) 
              (setq relatedPipeData (append relatedPipeData 
                                      (list (GetAllPropertyDictForOneBlock (handent (cdr (assoc "relatedid" x)))))
                                    ))
            ) 
-    ; relatedid value maybe null
     (vl-remove-if-not '(lambda (x) 
-                        (/= (cdr (assoc "relatedid" x)) "")
+                        ; relatedid value maybe null
+                        ; repair bug - relatedid may be not in the allPipeHandleList - 2021-01-30
+                        (and (/= (cdr (assoc "relatedid" x)) "") (/= (member (cdr (assoc "relatedid" x)) allPipeHandleList) nil)) 
                       ) 
       (GetAllPropertyValueListByEntityNameList entityNameList)
     )
