@@ -2873,13 +2873,13 @@
 )
 
 (defun c:UpdatePublicPipe ()
-  (UpdatePublicPipeArrowByDataType "PublicPipeUpArrow")
-  (UpdatePublicPipeArrowByDataType "PublicPipeDownArrow")
-  (UpdatePublicPipeLineByDataType "PublicPipeLine")
+  (UpdatePublicPipeByDataType "PublicPipeUpArrow")
+  (UpdatePublicPipeByDataType "PublicPipeDownArrow")
+  (UpdatePublicPipeByDataType "PublicPipeLine")
   (alert "更新完成")(princ)
 )
 
-(defun UpdatePublicPipeLineByDataType (dataType / entityNameList relatedPipeData allPipeHandleList) 
+(defun UpdatePublicPipeByDataType (dataType / entityNameList relatedPipeData allPipeHandleList) 
   (setq entityNameList 
     (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils dataType))
   )
@@ -2905,7 +2905,7 @@
   (if (= dataType "PublicPipeLine") 
     (mapcar '(lambda (x) 
               (prompt "\n")
-              (prompt (strcat "辅助流程里的管道" (cdr (assoc "pipenum" x)) "未关联主流程对应的管道数据ID！"))
+              (prompt (strcat "原主流程中的管道" (cdr (assoc "pipenum" x)) "属性块被同步或被删除了，无法同步数据！"))
             ) 
       ; refactor at 2021-01-30
       (vl-remove-if-not '(lambda (x) 
@@ -2915,27 +2915,6 @@
       )
     ) 
   )
-)
-
-(defun UpdatePublicPipeArrowByDataType (dataType / entityNameList relatedPipeData allPipeHandleList) 
-  (setq entityNameList 
-    (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils dataType))
-  )
-  (setq allPipeHandleList (GetAllPipeHandleListUtils))
-  (mapcar '(lambda (x) 
-             (setq relatedPipeData (append relatedPipeData 
-                                     (list (GetAllPropertyDictForOneBlock (handent (cdr (assoc "relatedid" x)))))
-                                   ))
-           ) 
-    (vl-remove-if-not '(lambda (x) 
-                        ; relatedid value maybe null
-                        ; repair bug - relatedid may be not in the allPipeHandleList - 2021-01-30
-                        (and (/= (cdr (assoc "relatedid" x)) "") (/= (member (cdr (assoc "relatedid" x)) allPipeHandleList) nil)) 
-                      ) 
-      (GetAllPropertyValueListByEntityNameList entityNameList)
-    )
-  )
-  (UpdatePublicPipeStrategy dataType entityNameList relatedPipeData)
 )
 
 (defun UpdatePublicPipeStrategy (dataType entityNameList relatedPipeData /) 
