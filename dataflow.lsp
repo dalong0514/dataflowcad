@@ -2591,6 +2591,15 @@
   )(princ)
 )
 
+; 2021-02-02
+(defun GenerateVerticallyTextByPositionAndContent (insPt textContent textLayer textHeight /)
+  (entmake (list (cons 0 "TEXT") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 textLayer) (cons 100 "AcDbText") 
+                  (cons 10 insPt) (cons 11 '(0.0 0.0 0.0)) (cons 40 textHeight) (cons 1 textContent) (cons 50 1.5708) (cons 41 0.7) (cons 51 0.0) 
+                  (cons 7 "DataFlow") (cons 71 0) (cons 72 0) (cons 73 0) (cons 210 '(0.0 0.0 1.0)) (cons 100 "AcDbText") 
+             )
+  )(princ)
+)
+
 (defun GenerateTextByPositionAndContent (insPt textContent /)
   (entmake (list (cons 0 "TEXT") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 "管道编号") (cons 100 "AcDbText") 
                   (cons 10 insPt) (cons 11 '(0.0 0.0 0.0)) (cons 40 3.0) (cons 1 textContent) (cons 50 1.5708) (cons 41 0.7) (cons 51 0.0) 
@@ -5729,10 +5738,10 @@
   (setq ss (GetFireFightVPipeSSBySelectUtils))
   (setq insPt (getpoint "拾取轴侧图中消防水管最左下角的管道点："))
   (mapcar '(lambda (x) 
-             (GenerateOneFireFightVPipe 
-               (AddPositonOffSetUtils (TranforCoordinateToPolarUtils x) insPt)
-               ""
-             )
+             (GenerateVerticallyTextByPositionAndContent 
+               (AddPositonOffSetUtils (AddPositonOffSetUtils (TranforCoordinateToPolarUtils x) insPt) '(-75 -1500 0))
+               "dalong" 
+               "DataflowFireFightVPipe" 350)
           ) 
     (GetFireFightVPipePositionList ss firstPt)
   ) 
