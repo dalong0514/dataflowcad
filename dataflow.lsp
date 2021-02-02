@@ -2564,6 +2564,14 @@
 ; Gs Field
 ; Generate Entity Object in CAD
 
+; 2021-02-02
+(defun GenerateLineByPosition (firstPt secondPt lineLayer /)
+  (entmake (list (cons 0 "LINE") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 lineLayer) (cons 100 "AcDbText") 
+                  (cons 10 firstPt) (cons 11 secondPt) (cons 210 '(0.0 0.0 1.0)) 
+             )
+  )(princ)
+)
+
 (defun GenerateTextByPositionAndContent (insPt textContent /)
   (entmake (list (cons 0 "TEXT") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 "¹ÜµÀ±àºÅ") (cons 100 "AcDbText") 
                   (cons 10 insPt) (cons 11 '(0.0 0.0 0.0)) (cons 40 3.0) (cons 1 textContent) (cons 50 1.5708) (cons 41 0.7) (cons 51 0.0) 
@@ -2749,7 +2757,7 @@
 )
 
 ; 2021-02-02
-(defun GenerateOneFireFightVPipe (insPt relatedIDValue /)
+(defun GenerateOneFireFightVPipe (insPt relatedIDValue /) 
   (GenerateBlockReference insPt "FireFightVPipe" "DataflowFireFightVPipe")
   (GenerateBlockAttributeV2 (MoveInsertPosition insPt 150 60) "PIPENUM" "XHL-2" "DataflowFireFightVPipe" 350)
   (GenerateBlockAttributeV2 (MoveInsertPosition insPt 150 -420) "PIPEDIAMETER" "DN" "DataflowFireFightVPipe" 350)
@@ -5689,9 +5697,15 @@
   ) 
 )
 
-(defun c:foo ()
-  (GetEntityDataUtils)
+(defun GenerateAllFireFightVPipe ()
+  (mapcar '(lambda (x) 
+             (GenerateLineByPosition (cdr x) (MoveInsertPosition (cdr x) 500 -1300) "DataflowFireFightVPipe")
+             (GenerateOneFireFightVPipe (MoveInsertPosition (cdr x) 500 -1300) (car x))
+          ) 
+    (GetAllFireFightingVPipeEntityHandleAndPositionList)
+  ) 
 )
+
 
 
 ; SS
