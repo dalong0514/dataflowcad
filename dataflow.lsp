@@ -5710,7 +5710,14 @@
   ) 
 )
 
+(defun TranforCoordinateToPolarUtils (insPt /)
+  (polar (list (car insPt) 0 0) 0.785398 (cadr insPt))
+)
 
+(defun c:foo (/ insPt) 
+  (setq insPt (getpoint "Ê°È¡£º"))
+  (GenerateOneFireFightVPipe (TranforCoordinateToPolarUtils insPt) "34678")
+)
 
 ; SS
 ;;;-------------------------------------------------------------------------;;;
