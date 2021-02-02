@@ -5722,9 +5722,20 @@
 )
 
 ; 2021-02-02
-(defun c:GenerateFireFightVPipe (/ insPt) 
-  (setq insPt (getpoint "拾取消防水管最左下角的管道点："))
-  (GenerateAllFireFightVPipe insPt)
+(defun c:GenerateFireFightVPipe (/ firstPt insPt ss) 
+  (princ "\n")
+  (setq firstPt (getpoint "拾取平面图中消防水管最左下角的管道点："))
+  (princ "\n拾取平面图中的消防水管：")
+  (setq ss (GetFireFightVPipeSSBySelectUtils))
+  (setq insPt (getpoint "拾取轴侧图中消防水管最左下角的管道点："))
+  (mapcar '(lambda (x) 
+             (GenerateOneFireFightVPipe 
+               (AddPositonOffSetUtils (TranforCoordinateToPolarUtils x) insPt)
+               ""
+             )
+          ) 
+    (GetFireFightVPipePositionList ss)
+  ) 
 )
 
 ; 2021-02-02
@@ -5737,33 +5748,21 @@
 )
 
 ; 2021-02-02
-(defun GetFireFightVPipePositionList () 
+(defun GetFireFightVPipePositionList (ss /) 
   (mapcar '(lambda (x) 
              (GetEntityPositionByEntityNameUtils x)
           ) 
-    (GetRawFireFightVPipeEntityNameList)
+    (GetRawFireFightVPipeEntityNameList ss)
   ) 
 )
 
 ; 2021-02-02
-(defun GetRawFireFightVPipeEntityNameList ()
+(defun GetRawFireFightVPipeEntityNameList (ss /)
   (mapcar '(lambda (x) 
              (handent (cdr (assoc "RELATEDID" x)))
           ) 
-    (GetPropertyDictListByPropertyNameList (GetEntityNameListBySSUtils (GetFireFightVPipeSSBySelectUtils)) '("RELATEDID"))
+    (GetPropertyDictListByPropertyNameList (GetEntityNameListBySSUtils ss) '("RELATEDID"))
   )  
-)
-
-; 2021-02-02
-(defun GenerateAllFireFightVPipe (insPt /)
-  (mapcar '(lambda (x) 
-             (GenerateOneFireFightVPipe 
-               (AddPositonOffSetUtils (TranforCoordinateToPolarUtils x) insPt)
-               ""
-             )
-          ) 
-    (GetFireFightVPipePositionList)
-  ) 
 )
 
 ; 2021-02-02
