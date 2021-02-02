@@ -5693,6 +5693,7 @@
 ;;;-------------------------------------------------------------------------;;;
 ; SS
 
+; 2021-02-02
 (defun GetAllFireFightingVPipeEntityHandleAndPositionList () 
   (mapcar '(lambda (x) 
              (GetEntityHandleAndPositionByEntityNameUtils x)
@@ -5701,22 +5702,57 @@
   ) 
 )
 
-(defun GenerateAllFireFightVPipe ()
+; 2021-02-02
+(defun GenerateAllFireFightVPipeText ()
   (mapcar '(lambda (x) 
-             (GenerateLineByPosition (cdr x) (MoveInsertPosition (cdr x) 500 -1300) "DataflowFireFightVPipe")
-             (GenerateOneFireFightVPipe (MoveInsertPosition (cdr x) 500 -1300) (car x))
+             (GenerateLineByPosition (cdr x) (AddPositonOffSetUtils (cdr x) '(500 -1300 0)) "DataflowFireFightVPipe")
+             (GenerateOneFireFightVPipe (AddPositonOffSetUtils (cdr x) '(500 -1300 0)) (car x))
           ) 
     (GetAllFireFightingVPipeEntityHandleAndPositionList)
   ) 
 )
 
+; 2021-02-02
+(defun GenerateAllFireFightVPipe (insPt /)
+  (mapcar '(lambda (x) 
+             (GenerateOneFireFightVPipe 
+               (AddPositonOffSetUtils (TranforCoordinateToPolarUtils (cdr x)) insPt)
+               (car x)
+             )
+          ) 
+    (GetAllFireFightingVPipeEntityHandleAndPositionList)
+  ) 
+)
+
+; 2021-02-02
+(defun AddPositonOffSetUtils (insPt moveDistance /) 
+  (mapcar '(lambda (x y) 
+             (+ x y)
+          ) 
+    insPt
+    moveDistance
+  ) 
+)
+
+; 2021-02-02
+(defun RemovePositonOffSetUtils (insPt moveDistance /) 
+  (mapcar '(lambda (x y) 
+             (- x y)
+          ) 
+    insPt
+    moveDistance
+  ) 
+)
+
+; 2021-02-02
 (defun TranforCoordinateToPolarUtils (insPt /)
   (polar (list (car insPt) 0 0) 0.785398 (cadr insPt))
 )
 
+; 2021-02-02
 (defun c:foo (/ insPt) 
-  (setq insPt (getpoint "拾取："))
-  (GenerateOneFireFightVPipe (TranforCoordinateToPolarUtils insPt) "34678")
+  (setq insPt (getpoint "拾取消防水管最左下角的管道点："))
+  (GenerateAllFireFightVPipe insPt)
 )
 
 ; SS
