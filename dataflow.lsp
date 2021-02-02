@@ -5737,23 +5737,32 @@
 )
 
 ; 2021-02-02
-(defun GetFireFightVPipeEntityHandleAndPositionList () 
+(defun GetFireFightVPipePositionList () 
   (mapcar '(lambda (x) 
-             (GetEntityHandleAndPositionByEntityNameUtils x)
+             (GetEntityPositionByEntityNameUtils x)
           ) 
-    (GetEntityNameListBySSUtils (GetRawFireFightVPipeSSBySelectUtils))
+    (GetRawFireFightVPipeEntityNameList)
   ) 
+)
+
+; 2021-02-02
+(defun GetRawFireFightVPipeEntityNameList ()
+  (mapcar '(lambda (x) 
+             (handent (cdr (assoc "RELATEDID" x)))
+          ) 
+    (GetPropertyDictListByPropertyNameList (GetEntityNameListBySSUtils (GetFireFightVPipeSSBySelectUtils)) '("RELATEDID"))
+  )  
 )
 
 ; 2021-02-02
 (defun GenerateAllFireFightVPipe (insPt /)
   (mapcar '(lambda (x) 
              (GenerateOneFireFightVPipe 
-               (AddPositonOffSetUtils (TranforCoordinateToPolarUtils (cdr x)) insPt)
-               (car x)
+               (AddPositonOffSetUtils (TranforCoordinateToPolarUtils x) insPt)
+               ""
              )
           ) 
-    (GetFireFightVPipeEntityHandleAndPositionList)
+    (GetFireFightVPipePositionList)
   ) 
 )
 
