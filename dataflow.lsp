@@ -2628,6 +2628,17 @@
   (princ)
 )
 
+(defun GenerateBlockAttributeV2 (insPt propertyName propertyValue blockLayer fontHeight /)
+  (entmake 
+    (list (cons 0 "ATTRIB") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 blockLayer) (cons 100 "AcDbText") 
+          (cons 10 insPt) (cons 40 fontHeight) (cons 1 propertyValue) (cons 50 0.0) (cons 41 0.7) (cons 51 0.0) (cons  7 "Standard") (cons 71 0) (cons 72 0) 
+          (cons 11 '(0.0 0.0 0.0)) (cons 210 '(0.0 0.0 1.0)) (cons 100 "AcDbAttribute") (cons 280 0) (cons 2 propertyName) (cons 70 0) 
+          (cons 73 0) (cons 74 0) (cons 280 0)
+    )
+  )
+  (princ)
+)
+
 (defun GenerateVerticallyBlockAttribute (insPt propertyName propertyValue blockLayer /)
   (entmake 
     (list (cons 0 "ATTRIB") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 blockLayer) (cons 100 "AcDbText") 
@@ -2643,6 +2654,17 @@
   (entmake 
     (list (cons 0 "ATTRIB") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 blockLayer) (cons 100 "AcDbText") 
           (cons 10 insPt) (cons 40 3.0) (cons 1 propertyValue) (cons 50 0.0) (cons 41 0.7) (cons 51 0.0) (cons  7 "Standard") (cons 71 0) (cons 72 0) 
+          (cons 11 '(0.0 0.0 0.0)) (cons 210 '(0.0 0.0 1.0)) (cons 100 "AcDbAttribute") (cons 280 0) (cons 2 propertyName) (cons 70 1) 
+          (cons 73 0) (cons 74 0) (cons 280 0)
+    )
+  )
+  (princ)
+)
+
+(defun GenerateBlockHiddenAttributeV2 (insPt propertyName propertyValue blockLayer fontHeight /)
+  (entmake 
+    (list (cons 0 "ATTRIB") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 blockLayer) (cons 100 "AcDbText") 
+          (cons 10 insPt) (cons 40 fontHeight) (cons 1 propertyValue) (cons 50 0.0) (cons 41 0.7) (cons 51 0.0) (cons  7 "Standard") (cons 71 0) (cons 72 0) 
           (cons 11 '(0.0 0.0 0.0)) (cons 210 '(0.0 0.0 1.0)) (cons 100 "AcDbAttribute") (cons 280 0) (cons 2 propertyName) (cons 70 1) 
           (cons 73 0) (cons 74 0) (cons 280 0)
     )
@@ -2720,6 +2742,18 @@
   (GenerateBlockReference insPt "PublicPipeDownPipeLine" "ÎÄ×Ö")
   (GenerateVerticallyBlockAttribute (MoveInsertPosition insPt -1 -16) "PIPENUM" pipenumValue "ÎÄ×Ö")
   (GenerateVerticallyBlockHiddenAttribute (MoveInsertPosition insPt -5 -16) "RELATEDID" relatedIDValue "ÎÄ×Ö")
+  (entmake 
+    (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
+  )
+  (princ)
+)
+
+; 2021-02-02
+(defun GenerateOneFireFightVPipe (insPt relatedIDValue /)
+  (GenerateBlockReference insPt "FireFightVPipe" "DataflowFireFightVPipe")
+  (GenerateBlockAttributeV2 (MoveInsertPosition insPt 150 60) "PIPENUM" "XHL-2" "DataflowFireFightVPipe" 350)
+  (GenerateBlockAttributeV2 (MoveInsertPosition insPt 150 -420) "PIPEDIAMETER" "DN" "DataflowFireFightVPipe" 350)
+  (GenerateBlockHiddenAttributeV2 (MoveInsertPosition insPt 150 -720) "RELATEDID" relatedIDValue "DataflowFireFightVPipe" 150)
   (entmake 
     (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
   )
@@ -5656,7 +5690,7 @@
 )
 
 (defun c:foo ()
-  (GetAllFireFightingVPipeEntityHandleAndPositionList)
+  (GetEntityDataUtils)
 )
 
 
