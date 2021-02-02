@@ -5734,7 +5734,7 @@
                ""
              )
           ) 
-    (GetFireFightVPipePositionList ss)
+    (GetFireFightVPipePositionList ss firstPt)
   ) 
 )
 
@@ -5748,9 +5748,10 @@
 )
 
 ; 2021-02-02
-(defun GetFireFightVPipePositionList (ss /) 
+(defun GetFireFightVPipePositionList (ss firstPt /) 
   (mapcar '(lambda (x) 
-             (GetEntityPositionByEntityNameUtils x)
+             ; must reset the left-down point to (0 0 0)
+             (RemovePositonOffSetUtils (GetEntityPositionByEntityNameUtils x) firstPt)
           ) 
     (GetRawFireFightVPipeEntityNameList ss)
   ) 
