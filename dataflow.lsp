@@ -1049,13 +1049,23 @@
 )
 
 ; 2021-02-02
-(defun GetAllFireFightVPipeSSUtils ()
+(defun GetAllRawFireFightVPipeSSUtils ()
   (setq ss (ssget "X" '((0 . "ARC") (8 . "VPIPE-消防"))))
 )
 
 ; 2021-02-02
-(defun GetFireFightVPipeSSBySelectUtils ()
+(defun GetRawFireFightVPipeSSBySelectUtils ()
   (setq ss (ssget '((0 . "ARC") (8 . "VPIPE-消防"))))
+)
+
+; 2021-02-02
+(defun GetAllFireFightVPipeSSUtils ()
+  (setq ss (ssget "X" '((0 . "INSERT") (2 . "FireFightVPipe"))))
+)
+
+; 2021-02-02
+(defun GetFireFightVPipeSSBySelectUtils ()
+  (setq ss (ssget '((0 . "INSERT") (2 . "FireFightVPipe"))))
 )
 
 (defun GetBlockSSBySelectByDataTypeUtils (dataType / ss) 
@@ -5712,11 +5722,17 @@
 )
 
 ; 2021-02-02
+(defun c:GenerateFireFightVPipe (/ insPt) 
+  (setq insPt (getpoint "拾取消防水管最左下角的管道点："))
+  (GenerateAllFireFightVPipe insPt)
+)
+
+; 2021-02-02
 (defun GetAllFireFightVPipeEntityHandleAndPositionList () 
   (mapcar '(lambda (x) 
              (GetEntityHandleAndPositionByEntityNameUtils x)
           ) 
-    (GetEntityNameListBySSUtils (GetAllFireFightVPipeSSUtils))
+    (GetEntityNameListBySSUtils (GetAllRawFireFightVPipeSSUtils))
   ) 
 )
 
@@ -5725,7 +5741,7 @@
   (mapcar '(lambda (x) 
              (GetEntityHandleAndPositionByEntityNameUtils x)
           ) 
-    (GetEntityNameListBySSUtils (GetFireFightVPipeSSBySelectUtils))
+    (GetEntityNameListBySSUtils (GetRawFireFightVPipeSSBySelectUtils))
   ) 
 )
 
@@ -5764,12 +5780,6 @@
 ; 2021-02-02
 (defun TranforCoordinateToPolarUtils (insPt /)
   (polar (list (car insPt) 0 0) 0.785398 (cadr insPt))
-)
-
-; 2021-02-02
-(defun c:foo (/ insPt) 
-  (setq insPt (getpoint "拾取消防水管最左下角的管道点："))
-  (GenerateAllFireFightVPipe insPt)
 )
 
 ; SS
