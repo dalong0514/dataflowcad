@@ -1379,6 +1379,14 @@
   (mapcar '(lambda (x) (car x)) resultList)
 )
 
+; 2021-02-202
+(defun GetEntityHandleAndPositionByEntityNameUtils (entityName /)
+  (cons 
+    (cdr (assoc 5 (entget entityName)))
+    (cdr (assoc 10 (entget entityName)))
+  )
+)
+
 ; 2021-01-26
 (defun GetEntityPositionByEntityNameUtils (entityName /)
   (cdr (assoc 10 (entget entityName)))
@@ -5639,16 +5647,16 @@
 ;;;-------------------------------------------------------------------------;;;
 ; SS
 
-(defun GetAllFireFightingVPipePositionList () 
+(defun GetAllFireFightingVPipeEntityHandleAndPositionList () 
   (mapcar '(lambda (x) 
-             (GetEntityPositionByEntityNameUtils x)
+             (GetEntityHandleAndPositionByEntityNameUtils x)
           ) 
     (GetEntityNameListBySSUtils (GetAllFireFightingVPipeSSUtils))
   ) 
 )
 
 (defun c:foo ()
-  (GetAllFireFightingVPipePositionList)
+  (GetAllFireFightingVPipeEntityHandleAndPositionList)
 )
 
 
