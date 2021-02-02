@@ -1049,8 +1049,13 @@
 )
 
 ; 2021-02-02
-(defun GetAllFireFightingVPipeSSUtils ()
+(defun GetAllFireFightVPipeSSUtils ()
   (setq ss (ssget "X" '((0 . "ARC") (8 . "VPIPE-消防"))))
+)
+
+; 2021-02-02
+(defun GetFireFightVPipeSSBySelectUtils ()
+  (setq ss (ssget '((0 . "ARC") (8 . "VPIPE-消防"))))
 )
 
 (defun GetBlockSSBySelectByDataTypeUtils (dataType / ss) 
@@ -5693,22 +5698,34 @@
 ;;;-------------------------------------------------------------------------;;;
 ; SS
 
-; 2021-02-02
-(defun GetAllFireFightingVPipeEntityHandleAndPositionList () 
-  (mapcar '(lambda (x) 
-             (GetEntityHandleAndPositionByEntityNameUtils x)
-          ) 
-    (GetEntityNameListBySSUtils (GetAllFireFightingVPipeSSUtils))
-  ) 
-)
+; Macro 
 
 ; 2021-02-02
-(defun GenerateAllFireFightVPipeText ()
+(defun c:GenerateFireFightVPipeText (/ insPt) 
   (mapcar '(lambda (x) 
              (GenerateLineByPosition (cdr x) (AddPositonOffSetUtils (cdr x) '(500 -1300 0)) "DataflowFireFightVPipe")
              (GenerateOneFireFightVPipe (AddPositonOffSetUtils (cdr x) '(500 -1300 0)) (car x))
           ) 
-    (GetAllFireFightingVPipeEntityHandleAndPositionList)
+    (GetAllFireFightVPipeEntityHandleAndPositionList)
+  ) 
+  (alert "自动生成平面消防立管标注完成！")(princ)
+)
+
+; 2021-02-02
+(defun GetAllFireFightVPipeEntityHandleAndPositionList () 
+  (mapcar '(lambda (x) 
+             (GetEntityHandleAndPositionByEntityNameUtils x)
+          ) 
+    (GetEntityNameListBySSUtils (GetAllFireFightVPipeSSUtils))
+  ) 
+)
+
+; 2021-02-02
+(defun GetFireFightVPipeEntityHandleAndPositionList () 
+  (mapcar '(lambda (x) 
+             (GetEntityHandleAndPositionByEntityNameUtils x)
+          ) 
+    (GetEntityNameListBySSUtils (GetFireFightVPipeSSBySelectUtils))
   ) 
 )
 
@@ -5720,7 +5737,7 @@
                (car x)
              )
           ) 
-    (GetAllFireFightingVPipeEntityHandleAndPositionList)
+    (GetFireFightVPipeEntityHandleAndPositionList)
   ) 
 )
 
