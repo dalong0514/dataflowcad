@@ -10,6 +10,10 @@
   (alert "最新版本号 V1.5，更新时间：2021-02-22\n数据流内网地址：192.168.1.38")(princ)
 )
 
+(defun c:printVersionInfoSS ()
+  (alert "最新版本号 V0.1，更新时间：2021-02-25\n数据流内网地址：192.168.1.38")(princ)
+)
+
 (defun c:syncAllDataFlowBlock (/ item) 
 	(foreach item (GetSyncFlowBlockNameList) 
     (command "._attsync" "N" item)
