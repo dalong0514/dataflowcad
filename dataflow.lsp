@@ -5739,7 +5739,7 @@
 (defun c:GenerateFireFightVPipeText (/ insPt) 
   (mapcar '(lambda (x) 
              (GenerateLineByPosition (cadr x) (AddPositonOffSetUtils (cadr x) '(500 -1300 0)) "DataflowFireFightPipe")
-             (GenerateOneFireFightHPipe (AddPositonOffSetUtils (cadr x) '(500 -1300 0)) "XHL-" (GetFireFightPipeDiameter x) (car x))
+             (GenerateOneFireFightHPipe (AddPositonOffSetUtils (cadr x) '(500 -1300 0)) "XHL" (GetFireFightPipeDiameter x) (car x))
           ) 
     (GetAllRawFireFightPipeDataList)
   ) 
