@@ -5743,10 +5743,10 @@
   (setq ss (GetFireFightVPipeSSBySelectUtils))
   (setq insPt (getpoint "拾取轴侧图中消防水管最左下角的管道点："))
   (mapcar '(lambda (x) 
-             (GenerateVerticallyTextByPositionAndContent 
-               (AddPositonOffSetUtils (AddPositonOffSetUtils (TranforCoordinateToPolarUtils (cdr (assoc "rawPosition" x))) insPt) '(-75 -1500 0))
-               (strcat (cdr (assoc "PIPENUM" x)) (cdr (assoc "PIPEDIAMETER" x)))
-               "DataflowFireFightPipe" 350)
+             (GenerateOneFireFightVPipe 
+               (AddPositonOffSetUtils (AddPositonOffSetUtils (TranforCoordinateToPolarUtils (cdr (assoc "rawPosition" x))) insPt) '(0 -2500 0))
+               (strcat (cdr (assoc "PIPENUM" x)) "-" (cdr (assoc "PIPEDIAMETER" x)))
+               (cdr (assoc "entityhandle" x)))
           ) 
     (GetFireFightDataList ss firstPt)
   ) 
