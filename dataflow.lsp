@@ -1049,13 +1049,17 @@
 )
 
 ; 2021-02-02
-(defun GetAllRawFireFightVPipeSSUtils ()
+(defun GetAllRawFireFightVPipeSSUtilsV1 ()
   (setq ss (ssget "X" '((0 . "ARC") (8 . "VPIPE-消防"))))
+)
+
+(defun GetAllRawFireFightVPipeSSUtils ()
+  (setq ss (ssget "X" '((0 . "TCH_PIPE") (8 . "VPIPE-消防"))))
 )
 
 ; 2021-02-02
 (defun GetRawFireFightVPipeSSBySelectUtils ()
-  (setq ss (ssget '((0 . "ARC") (8 . "VPIPE-消防"))))
+  (setq ss (ssget '((0 . "TCH_PIPE") (8 . "VPIPE-消防"))))
 )
 
 ; 2021-02-02
@@ -5735,6 +5739,10 @@
   (alert "自动生成平面消防立管标注完成！")(princ)
 )
 
+(defun c:foo ()
+  (GetAllRawFireFightPipeDataList)
+)
+
 ; 2021-02-02
 (defun c:GenerateFireFightVPipe (/ firstPt insPt ss) 
   (princ "\n")
@@ -5760,6 +5768,24 @@
           ) 
     (GetEntityNameListBySSUtils (GetAllRawFireFightVPipeSSUtils))
   ) 
+)
+
+; 2021-02-02
+(defun GetAllRawFireFightPipeDataList () 
+  (mapcar '(lambda (x) 
+             (GetFireFightPipeData x)
+          ) 
+    (GetEntityNameListBySSUtils (GetAllRawFireFightVPipeSSUtils))
+  ) 
+)
+
+; 2021-02-03
+(defun GetFireFightPipeData (entityName /)
+  (list 
+    (cdr (assoc 5 (entget entityName)))
+    (AddPositonOffSetUtils (cdr (assoc 10 (entget entityName))) '(0 200 0))
+    (cdr (assoc 140 (entget entityName)))
+  )
 )
 
 ; 2021-02-03
