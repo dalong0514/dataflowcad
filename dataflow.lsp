@@ -1147,6 +1147,9 @@
   (if (= dataType "Reducer")
     (setq ss (ssget '((0 . "INSERT") (2 . "Reducer"))))
   )  
+  (if (= dataType "FireFightVPipe")
+    (setq ss (ssget '((0 . "INSERT") (2 . "FireFightVPipe"))))
+  ) 
   ss
 )
 
@@ -2787,7 +2790,7 @@
 ; 2021-02-02
 (defun GenerateOneFireFightVPipe (insPt relatedIDValue /) 
   (GenerateBlockReference insPt "FireFightVPipe" "DataflowFireFightVPipe")
-  (GenerateBlockAttributeV2 (MoveInsertPosition insPt 150 60) "PIPENUM" "XHL-2" "DataflowFireFightVPipe" 350)
+  (GenerateBlockAttributeV2 (MoveInsertPosition insPt 150 60) "PIPENUM" "XHL" "DataflowFireFightVPipe" 350)
   (GenerateBlockAttributeV2 (MoveInsertPosition insPt 150 -420) "PIPEDIAMETER" "DN" "DataflowFireFightVPipe" 350)
   (GenerateBlockHiddenAttributeV2 (MoveInsertPosition insPt 150 -720) "RELATEDID" relatedIDValue "DataflowFireFightVPipe" 150)
   (entmake 
@@ -4363,6 +4366,7 @@
     ((= dataType "CustomEquip") '("TAG" "DRAWNUM"))
     ((= dataType "Equipment") '("TAG" "DRAWNUM"))
     ((= dataType "GsCleanAir") '("ROOM_NUM"))
+    ((= dataType "FireFightVPipe") '("PIPENUM"))  ; 2021-02-03
   )
 )
 
@@ -4771,7 +4775,7 @@
     ((= dataType "Instrument") 
       (GetInstrumentChildrenDataList propertyValueDictList dataType numberMode startNumberString)
     )
-    ((= dataType "GsCleanAir") 
+    ((or (= dataType "GsCleanAir") (= dataType "FireFightVPipe")) 
       (GetGsCleanAirRoomNumDataList propertyValueDictList dataType codeNameList numberMode startNumberString)
     )
   )
@@ -4805,12 +4809,24 @@
   ) 
 )
 
+; 2021-02-03
+(defun GetLayoutCodeNameStrategy (dataType /)
+  (cond 
+    ((= dataType "GsCleanAir") 
+      (GetGsCleanAirCodeName (cdr (assoc "ROOM_NUM" x)))
+    )
+    ((= dataType "FireFightVPipe") 
+      (GetGsCleanAirCodeName (cdr (assoc "PIPENUM" x)))
+    ) 
+  )
+)
+
 (defun GetGsCleanAirChildrenDataListByRoomNum (propertyValueDictList dataType codeNameList / childrenData childrenDataList numberedList) 
   (mapcar '(lambda (roomNum) 
               (setq childrenData 
                 (vl-remove-if-not '(lambda (x) 
                                       ; sort data by codeName
-                                      (= roomNum (GetGsCleanAirCodeName (cdr (assoc "ROOM_NUM" x))))
+                                      (= roomNum (GetLayoutCodeNameStrategy dataType))
                                   ) 
                   propertyValueDictList
                 ) 
@@ -5182,7 +5198,7 @@
 
 (defun GetNumberedListStrategy (numberedDataList dataType / resultList) 
   (cond 
-    ((or (= dataType "Pipe") (= dataType "Equipment") (= dataType "GsCleanAir"))
+    ((or (= dataType "Pipe") (= dataType "Equipment") (= dataType "GsCleanAir") (= dataType "FireFightVPipe"))
       (GetPipeAndEquipNumberedList numberedDataList dataType)
     )
     ((= dataType "Instrument") (GetInstrumentNumberedList numberedDataList dataType))
@@ -5283,7 +5299,7 @@
       (setq resultList (GetEquipmentCodeNameList dataList)) 
     )
   )
-  (if (= dataType "GsCleanAir") 
+  (if (or (= dataType "GsCleanAir") (= dataType "FireFightVPipe")) ; 2021-02-03
     (progn 
       (setq propertyName (car (numberedPropertyNameListStrategy dataType)))
       (setq dataList 
@@ -5586,11 +5602,11 @@
 )
 
 (defun GetNumberLayoutDataTypeList ()
-  '("GsCleanAir")
+  '("GsCleanAir" "FireFightVPipe")
 )
 
 (defun GetNumberLayoutDataTypeChNameList ()
-  '("洁净空调")
+  '("洁净空调" "给排水消防立管")
 )
 
 (defun GetNumberLayoutDataModeChNameList ()
