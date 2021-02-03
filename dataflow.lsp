@@ -2766,10 +2766,10 @@
 )
 
 ; 2021-02-02
-(defun GenerateOneFireFightHPipe (insPt relatedIDValue /) 
+(defun GenerateOneFireFightHPipe (insPt pipenum pipeDiameter relatedIDValue /) 
   (GenerateBlockReference insPt "FireFightHPipe" "DataflowFireFightPipe")
-  (GenerateBlockAttribute (MoveInsertPosition insPt 150 60) "PIPENUM" "XHL" "DataflowFireFightPipe" 350)
-  (GenerateBlockAttribute (MoveInsertPosition insPt 150 -420) "PIPEDIAMETER" "DN" "DataflowFireFightPipe" 350)
+  (GenerateBlockAttribute (MoveInsertPosition insPt 150 60) "PIPENUM" pipenum "DataflowFireFightPipe" 350)
+  (GenerateBlockAttribute (MoveInsertPosition insPt 150 -420) "PIPEDIAMETER" pipeDiameter "DataflowFireFightPipe" 350)
   (GenerateBlockHiddenAttribute (MoveInsertPosition insPt 150 -720) "RELATEDID" relatedIDValue "DataflowFireFightPipe" 150)
   (entmake 
     (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
@@ -5728,7 +5728,7 @@
 (defun c:GenerateFireFightVPipeText (/ insPt) 
   (mapcar '(lambda (x) 
              (GenerateLineByPosition (cdr x) (AddPositonOffSetUtils (cdr x) '(500 -1300 0)) "DataflowFireFightPipe")
-             (GenerateOneFireFightHPipe (AddPositonOffSetUtils (cdr x) '(500 -1300 0)) (car x))
+             (GenerateOneFireFightHPipe (AddPositonOffSetUtils (cdr x) '(500 -1300 0)) "XHL-" "DN" (car x))
           ) 
     (GetAllFireFightVPipeEntityHandleAndPositionList)
   ) 
@@ -5743,7 +5743,7 @@
   (setq ss (GetFireFightVPipeSSBySelectUtils))
   (setq insPt (getpoint "拾取轴侧图中消防水管最左下角的管道点："))
   (mapcar '(lambda (x) 
-             (GenerateOneFireFightVPipe 
+             (GenerateOneFireFightHPipe 
                (AddPositonOffSetUtils (AddPositonOffSetUtils (TranforCoordinateToPolarUtils (cdr (assoc "rawPosition" x))) insPt) '(0 -2500 0))
                (strcat (cdr (assoc "PIPENUM" x)) "-" (cdr (assoc "PIPEDIAMETER" x)))
                (cdr (assoc "entityhandle" x)))
