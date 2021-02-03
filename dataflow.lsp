@@ -54,7 +54,14 @@
   (IsKsLocationOnPipeTest)
   (IsKsLocationOnEquipTest)
   (GetPipeLineByPipeNumTest)
+  (RemoveDecimalForStringUtilsTest)
   (DL:PrintTestResults (DL:CountBooleans *testList*))
+)
+
+; 2021-02-03
+(defun RemoveDecimalForStringUtilsTest () 
+  (AssertEqual 'RemoveDecimalForStringUtils (list "65.00") "65")
+  (AssertEqual 'RemoveDecimalForStringUtils (list "100.0000") "100")
 )
 
 ; 2021-01-25
@@ -5739,8 +5746,13 @@
   (alert "自动生成平面消防立管标注完成！")(princ)
 )
 
+; 2021-02-03
 (defun GetFireFightPipeDiameter (dataList /)
-  (strcat "DN" (rtos (caddr dataList)))
+  (strcat "DN" (RemoveDecimalForStringUtils (rtos (caddr dataList))))
+)
+
+(defun RemoveDecimalForStringUtils (rawString /)
+  (RegExpReplace rawString "(\\d+)\..*" "$1" nil nil)
 )
 
 ; 2021-02-02
