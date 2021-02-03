@@ -1060,12 +1060,12 @@
 
 ; 2021-02-02
 (defun GetAllFireFightVPipeSSUtils ()
-  (setq ss (ssget "X" '((0 . "INSERT") (2 . "FireFightVPipe"))))
+  (setq ss (ssget "X" '((0 . "INSERT") (2 . "FireFightHPipe"))))
 )
 
 ; 2021-02-02
 (defun GetFireFightVPipeSSBySelectUtils ()
-  (setq ss (ssget '((0 . "INSERT") (2 . "FireFightVPipe"))))
+  (setq ss (ssget '((0 . "INSERT") (2 . "FireFightHPipe"))))
 )
 
 (defun GetBlockSSBySelectByDataTypeUtils (dataType / ss) 
@@ -1147,8 +1147,8 @@
   (if (= dataType "Reducer")
     (setq ss (ssget '((0 . "INSERT") (2 . "Reducer"))))
   )  
-  (if (= dataType "FireFightVPipe")
-    (setq ss (ssget '((0 . "INSERT") (2 . "FireFightVPipe"))))
+  (if (= dataType "FireFightHPipe")
+    (setq ss (ssget '((0 . "INSERT") (2 . "FireFightHPipe"))))
   ) 
   ss
 )
@@ -2656,18 +2656,7 @@
   (princ)
 )
 
-(defun GenerateBlockAttribute (insPt propertyName propertyValue blockLayer /)
-  (entmake 
-    (list (cons 0 "ATTRIB") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 blockLayer) (cons 100 "AcDbText") 
-          (cons 10 insPt) (cons 40 3.0) (cons 1 propertyValue) (cons 50 0.0) (cons 41 0.7) (cons 51 0.0) (cons  7 "Standard") (cons 71 0) (cons 72 0) 
-          (cons 11 '(0.0 0.0 0.0)) (cons 210 '(0.0 0.0 1.0)) (cons 100 "AcDbAttribute") (cons 280 0) (cons 2 propertyName) (cons 70 0) 
-          (cons 73 0) (cons 74 0) (cons 280 0)
-    )
-  )
-  (princ)
-)
-
-(defun GenerateBlockAttributeV2 (insPt propertyName propertyValue blockLayer fontHeight /)
+(defun GenerateBlockAttribute (insPt propertyName propertyValue blockLayer fontHeight /)
   (entmake 
     (list (cons 0 "ATTRIB") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 blockLayer) (cons 100 "AcDbText") 
           (cons 10 insPt) (cons 40 fontHeight) (cons 1 propertyValue) (cons 50 0.0) (cons 41 0.7) (cons 51 0.0) (cons  7 "Standard") (cons 71 0) (cons 72 0) 
@@ -2678,10 +2667,10 @@
   (princ)
 )
 
-(defun GenerateVerticallyBlockAttribute (insPt propertyName propertyValue blockLayer /)
+(defun GenerateVerticallyBlockAttribute (insPt propertyName propertyValue blockLayer fontHeight /)
   (entmake 
     (list (cons 0 "ATTRIB") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 blockLayer) (cons 100 "AcDbText") 
-          (cons 10 insPt) (cons 40 3.0) (cons 1 propertyValue) (cons 50 1.5708) (cons 41 0.7) (cons 51 0.0) (cons 7 "Standard") (cons 71 0) (cons 72 0) 
+          (cons 10 insPt) (cons 40 fontHeight) (cons 1 propertyValue) (cons 50 1.5708) (cons 41 0.7) (cons 51 0.0) (cons 7 "Standard") (cons 71 0) (cons 72 0) 
           (cons 11 '(0.0 0.0 0.0)) (cons 210 '(0.0 0.0 1.0)) (cons 100 "AcDbAttribute") (cons 280 0) (cons 2 propertyName) 
           (cons 70 0) (cons 73 0) (cons 74 0) (cons 280 0)
     )
@@ -2689,18 +2678,7 @@
   (princ)
 )
 
-(defun GenerateBlockHiddenAttribute (insPt propertyName propertyValue blockLayer /)
-  (entmake 
-    (list (cons 0 "ATTRIB") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 blockLayer) (cons 100 "AcDbText") 
-          (cons 10 insPt) (cons 40 3.0) (cons 1 propertyValue) (cons 50 0.0) (cons 41 0.7) (cons 51 0.0) (cons  7 "Standard") (cons 71 0) (cons 72 0) 
-          (cons 11 '(0.0 0.0 0.0)) (cons 210 '(0.0 0.0 1.0)) (cons 100 "AcDbAttribute") (cons 280 0) (cons 2 propertyName) (cons 70 1) 
-          (cons 73 0) (cons 74 0) (cons 280 0)
-    )
-  )
-  (princ)
-)
-
-(defun GenerateBlockHiddenAttributeV2 (insPt propertyName propertyValue blockLayer fontHeight /)
+(defun GenerateBlockHiddenAttribute (insPt propertyName propertyValue blockLayer fontHeight /)
   (entmake 
     (list (cons 0 "ATTRIB") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 blockLayer) (cons 100 "AcDbText") 
           (cons 10 insPt) (cons 40 fontHeight) (cons 1 propertyValue) (cons 50 0.0) (cons 41 0.7) (cons 51 0.0) (cons  7 "Standard") (cons 71 0) (cons 72 0) 
@@ -2724,9 +2702,9 @@
 
 (defun GenerateJoinDrawArrowToElement (insPt fromtoValue drawnumValue relatedIDValue /)
   (GenerateBlockReference insPt "JoinDrawArrowTo" "接图箭头")
-  (GenerateBlockAttribute (MoveInsertPosition insPt 1 4) "FROMTO" fromtoValue "接图箭头")
-  (GenerateBlockAttribute (MoveInsertPosition insPt 1 -1.5) "DRAWNUM" drawnumValue "接图箭头")
-  (GenerateBlockHiddenAttribute (MoveInsertPosition insPt 1 -7) "RELATEDID" relatedIDValue "接图箭头")
+  (GenerateBlockAttribute (MoveInsertPosition insPt 1 4) "FROMTO" fromtoValue "接图箭头" 3)
+  (GenerateBlockAttribute (MoveInsertPosition insPt 1 -1.5) "DRAWNUM" drawnumValue "接图箭头" 3)
+  (GenerateBlockHiddenAttribute (MoveInsertPosition insPt 1 -7) "RELATEDID" relatedIDValue "接图箭头" 3)
   (entmake 
     (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
   )
@@ -2735,10 +2713,10 @@
 
 (defun GenerateJoinDrawArrowFromElement (insPt pipenumValue fromtoValue drawnumValue relatedIDValue /)
   (GenerateBlockReference insPt "JoinDrawArrowFrom" "接图箭头")
-  (GenerateBlockAttribute (MoveInsertPosition insPt 30 2) "PIPENUM" pipenumValue "接图箭头")
-  (GenerateBlockAttribute (MoveInsertPosition insPt 1 4) "FROMTO" fromtoValue "接图箭头")
-  (GenerateBlockAttribute (MoveInsertPosition insPt 1 -1.5) "DRAWNUM" drawnumValue "接图箭头")
-  (GenerateBlockHiddenAttribute (MoveInsertPosition insPt 1 -7) "RELATEDID" relatedIDValue "接图箭头")
+  (GenerateBlockAttribute (MoveInsertPosition insPt 30 2) "PIPENUM" pipenumValue "接图箭头" 3)
+  (GenerateBlockAttribute (MoveInsertPosition insPt 1 4) "FROMTO" fromtoValue "接图箭头" 3)
+  (GenerateBlockAttribute (MoveInsertPosition insPt 1 -1.5) "DRAWNUM" drawnumValue "接图箭头" 3)
+  (GenerateBlockHiddenAttribute (MoveInsertPosition insPt 1 -7) "RELATEDID" relatedIDValue "接图箭头" 3)
   (entmake 
     (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
   )
@@ -2747,8 +2725,8 @@
 
 (defun GenerateOnePublicPipeDownArrow (insPt tagValue drawnumValue relatedIDValue /)
   (GenerateBlockReference insPt "PublicPipeDownArrow" "文字")
-  (GenerateVerticallyBlockAttribute (MoveInsertPosition insPt -3.5 -10) "TAG" tagValue "文字")
-  (GenerateVerticallyBlockAttribute (MoveInsertPosition insPt 1.2 -10) "DRAWNUM" drawnumValue "文字")
+  (GenerateVerticallyBlockAttribute (MoveInsertPosition insPt -3.5 -10) "TAG" tagValue "文字" 3)
+  (GenerateVerticallyBlockAttribute (MoveInsertPosition insPt 1.2 -10) "DRAWNUM" drawnumValue "文字" 3)
   (GenerateVerticallyBlockHiddenAttribute (MoveInsertPosition insPt 7 -10) "RELATEDID" relatedIDValue "文字")
   (entmake 
     (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
@@ -2758,8 +2736,8 @@
 
 (defun GenerateOnePublicPipeUpArrow (insPt tagValue drawnumValue relatedIDValue /)
   (GenerateBlockReference insPt "PublicPipeUpArrow" "文字")
-  (GenerateVerticallyBlockAttribute (MoveInsertPosition insPt -3.5 -11.5) "TAG" tagValue "文字")
-  (GenerateVerticallyBlockAttribute (MoveInsertPosition insPt 1.2 -11.5) "DRAWNUM" drawnumValue "文字")
+  (GenerateVerticallyBlockAttribute (MoveInsertPosition insPt -3.5 -11.5) "TAG" tagValue "文字" 3)
+  (GenerateVerticallyBlockAttribute (MoveInsertPosition insPt 1.2 -11.5) "DRAWNUM" drawnumValue "文字" 3)
   (GenerateVerticallyBlockHiddenAttribute (MoveInsertPosition insPt 7 -11.5) "RELATEDID" relatedIDValue "文字")
   (entmake 
     (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
@@ -2769,7 +2747,7 @@
 
 (defun GenerateOnePublicPipeUpPipeLine (insPt pipenumValue relatedIDValue /)
   (GenerateBlockReference insPt "PublicPipeUpPipeLine" "文字")
-  (GenerateVerticallyBlockAttribute (MoveInsertPosition insPt -1 -16) "PIPENUM" pipenumValue "文字")
+  (GenerateVerticallyBlockAttribute (MoveInsertPosition insPt -1 -16) "PIPENUM" pipenumValue "文字" 3)
   (GenerateVerticallyBlockHiddenAttribute (MoveInsertPosition insPt -5 -16) "RELATEDID" relatedIDValue "文字")
   (entmake 
     (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
@@ -2779,7 +2757,7 @@
 
 (defun GenerateOnePublicPipeDownPipeLine (insPt pipenumValue relatedIDValue /)
   (GenerateBlockReference insPt "PublicPipeDownPipeLine" "文字")
-  (GenerateVerticallyBlockAttribute (MoveInsertPosition insPt -1 -16) "PIPENUM" pipenumValue "文字")
+  (GenerateVerticallyBlockAttribute (MoveInsertPosition insPt -1 -16) "PIPENUM" pipenumValue "文字" 3)
   (GenerateVerticallyBlockHiddenAttribute (MoveInsertPosition insPt -5 -16) "RELATEDID" relatedIDValue "文字")
   (entmake 
     (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
@@ -2788,11 +2766,22 @@
 )
 
 ; 2021-02-02
-(defun GenerateOneFireFightVPipe (insPt relatedIDValue /) 
-  (GenerateBlockReference insPt "FireFightVPipe" "DataflowFireFightVPipe")
-  (GenerateBlockAttributeV2 (MoveInsertPosition insPt 150 60) "PIPENUM" "XHL" "DataflowFireFightVPipe" 350)
-  (GenerateBlockAttributeV2 (MoveInsertPosition insPt 150 -420) "PIPEDIAMETER" "DN" "DataflowFireFightVPipe" 350)
-  (GenerateBlockHiddenAttributeV2 (MoveInsertPosition insPt 150 -720) "RELATEDID" relatedIDValue "DataflowFireFightVPipe" 150)
+(defun GenerateOneFireFightHPipe (insPt relatedIDValue /) 
+  (GenerateBlockReference insPt "FireFightHPipe" "DataflowFireFightPipe")
+  (GenerateBlockAttribute (MoveInsertPosition insPt 150 60) "PIPENUM" "XHL" "DataflowFireFightPipe" 350)
+  (GenerateBlockAttribute (MoveInsertPosition insPt 150 -420) "PIPEDIAMETER" "DN" "DataflowFireFightPipe" 350)
+  (GenerateBlockHiddenAttribute (MoveInsertPosition insPt 150 -720) "RELATEDID" relatedIDValue "DataflowFireFightPipe" 150)
+  (entmake 
+    (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
+  )
+  (princ)
+)
+
+; 2021-02-03
+(defun GenerateOneFireFightVPipe (insPt pipenum relatedIDValue /) 
+  (GenerateBlockReference insPt "FireFightVPipe" "DataflowFireFightPipe")
+  (GenerateVerticallyBlockAttribute (AddPositonOffSetUtils insPt '(-60 150 0)) "PIPENUM" pipenum "DataflowFireFightPipe" 350)
+  (GenerateBlockHiddenAttribute (AddPositonOffSetUtils insPt '(200 0 0)) "RELATEDID" relatedIDValue "DataflowFireFightPipe" 150)
   (entmake 
     (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
   )
@@ -4366,7 +4355,7 @@
     ((= dataType "CustomEquip") '("TAG" "DRAWNUM"))
     ((= dataType "Equipment") '("TAG" "DRAWNUM"))
     ((= dataType "GsCleanAir") '("ROOM_NUM"))
-    ((= dataType "FireFightVPipe") '("PIPENUM"))  ; 2021-02-03
+    ((= dataType "FireFightHPipe") '("PIPENUM"))  ; 2021-02-03
   )
 )
 
@@ -4775,7 +4764,7 @@
     ((= dataType "Instrument") 
       (GetInstrumentChildrenDataList propertyValueDictList dataType numberMode startNumberString)
     )
-    ((or (= dataType "GsCleanAir") (= dataType "FireFightVPipe")) 
+    ((or (= dataType "GsCleanAir") (= dataType "FireFightHPipe")) 
       (GetGsCleanAirRoomNumDataList propertyValueDictList dataType codeNameList numberMode startNumberString)
     )
   )
@@ -4815,7 +4804,7 @@
     ((= dataType "GsCleanAir") 
       (GetGsCleanAirCodeName (cdr (assoc "ROOM_NUM" x)))
     )
-    ((= dataType "FireFightVPipe") 
+    ((= dataType "FireFightHPipe") 
       (GetGsCleanAirCodeName (cdr (assoc "PIPENUM" x)))
     ) 
   )
@@ -5198,7 +5187,7 @@
 
 (defun GetNumberedListStrategy (numberedDataList dataType / resultList) 
   (cond 
-    ((or (= dataType "Pipe") (= dataType "Equipment") (= dataType "GsCleanAir") (= dataType "FireFightVPipe"))
+    ((or (= dataType "Pipe") (= dataType "Equipment") (= dataType "GsCleanAir") (= dataType "FireFightHPipe"))
       (GetPipeAndEquipNumberedList numberedDataList dataType)
     )
     ((= dataType "Instrument") (GetInstrumentNumberedList numberedDataList dataType))
@@ -5299,7 +5288,7 @@
       (setq resultList (GetEquipmentCodeNameList dataList)) 
     )
   )
-  (if (or (= dataType "GsCleanAir") (= dataType "FireFightVPipe")) ; 2021-02-03
+  (if (or (= dataType "GsCleanAir") (= dataType "FireFightHPipe")) ; 2021-02-03
     (progn 
       (setq propertyName (car (numberedPropertyNameListStrategy dataType)))
       (setq dataList 
@@ -5602,7 +5591,7 @@
 )
 
 (defun GetNumberLayoutDataTypeList ()
-  '("GsCleanAir" "FireFightVPipe")
+  '("GsCleanAir" "FireFightHPipe")
 )
 
 (defun GetNumberLayoutDataTypeChNameList ()
@@ -5738,8 +5727,8 @@
 ; 2021-02-02
 (defun c:GenerateFireFightVPipeText (/ insPt) 
   (mapcar '(lambda (x) 
-             (GenerateLineByPosition (cdr x) (AddPositonOffSetUtils (cdr x) '(500 -1300 0)) "DataflowFireFightVPipe")
-             (GenerateOneFireFightVPipe (AddPositonOffSetUtils (cdr x) '(500 -1300 0)) (car x))
+             (GenerateLineByPosition (cdr x) (AddPositonOffSetUtils (cdr x) '(500 -1300 0)) "DataflowFireFightPipe")
+             (GenerateOneFireFightHPipe (AddPositonOffSetUtils (cdr x) '(500 -1300 0)) (car x))
           ) 
     (GetAllFireFightVPipeEntityHandleAndPositionList)
   ) 
@@ -5757,7 +5746,7 @@
              (GenerateVerticallyTextByPositionAndContent 
                (AddPositonOffSetUtils (AddPositonOffSetUtils (TranforCoordinateToPolarUtils (cdr (assoc "rawPosition" x))) insPt) '(-75 -1500 0))
                (strcat (cdr (assoc "PIPENUM" x)) (cdr (assoc "PIPEDIAMETER" x)))
-               "DataflowFireFightVPipe" 350)
+               "DataflowFireFightPipe" 350)
           ) 
     (GetFireFightDataList ss firstPt)
   ) 
