@@ -5740,7 +5740,7 @@
   (mapcar '(lambda (x) 
              (GenerateVerticallyTextByPositionAndContent 
                (AddPositonOffSetUtils (AddPositonOffSetUtils (TranforCoordinateToPolarUtils (cdr (assoc "rawPosition" x))) insPt) '(-75 -1500 0))
-               (cdr (assoc "PIPENUM" x))
+               (strcat (cdr (assoc "PIPENUM" x)) (cdr (assoc "PIPEDIAMETER" x)))
                "DataflowFireFightVPipe" 350)
           ) 
     (GetFireFightDataList ss firstPt)
