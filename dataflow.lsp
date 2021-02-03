@@ -5744,8 +5744,9 @@
   (setq insPt (getpoint "拾取轴侧图中消防水管最左下角的管道点："))
   (mapcar '(lambda (x) 
              (GenerateOneFireFightHPipe 
-               (AddPositonOffSetUtils (AddPositonOffSetUtils (TranforCoordinateToPolarUtils (cdr (assoc "rawPosition" x))) insPt) '(0 -2500 0))
-               (strcat (cdr (assoc "PIPENUM" x)) "-" (cdr (assoc "PIPEDIAMETER" x)))
+               (AddPositonOffSetUtils (AddPositonOffSetUtils (TranforCoordinateToPolarUtils (cdr (assoc "rawPosition" x))) insPt) '(0 -2000 0))
+               (cdr (assoc "PIPENUM" x))
+               (cdr (assoc "PIPEDIAMETER" x))
                (cdr (assoc "entityhandle" x)))
           ) 
     (GetFireFightDataList ss firstPt)
