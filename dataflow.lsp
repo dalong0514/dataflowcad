@@ -5739,11 +5739,11 @@
   (setq insPt (getpoint "拾取轴侧图中消防水管最左下角的管道点："))
   (mapcar '(lambda (x) 
              (GenerateVerticallyTextByPositionAndContent 
-               (AddPositonOffSetUtils (AddPositonOffSetUtils (TranforCoordinateToPolarUtils x) insPt) '(-75 -1500 0))
-               "dalong" 
+               (AddPositonOffSetUtils (AddPositonOffSetUtils (TranforCoordinateToPolarUtils (cdr (assoc "rawPosition" x))) insPt) '(-75 -1500 0))
+               (cdr (assoc "PIPENUM" x))
                "DataflowFireFightVPipe" 350)
           ) 
-    (GetFireFightVPipePositionList ss firstPt)
+    (GetFireFightDataList ss firstPt)
   ) 
 )
 
@@ -5756,22 +5756,16 @@
   ) 
 )
 
-; 2021-02-02
-(defun GetFireFightVPipePositionList (ss firstPt /) 
+; 2021-02-03
+(defun GetFireFightDataList (ss firstPt /)
   (mapcar '(lambda (x) 
              ; must reset the left-down point to (0 0 0)
-             (RemovePositonOffSetUtils (GetEntityPositionByEntityNameUtils x) firstPt)
+             (cons 
+               (cons "rawPosition" (RemovePositonOffSetUtils (GetEntityPositionByEntityNameUtils (handent (cdr (assoc "RELATEDID" x)))) firstPt))
+               x
+             )
           ) 
-    (GetRawFireFightVPipeEntityNameList ss)
-  ) 
-)
-
-; 2021-02-02
-(defun GetRawFireFightVPipeEntityNameList (ss /)
-  (mapcar '(lambda (x) 
-             (handent (cdr (assoc "RELATEDID" x)))
-          ) 
-    (GetPropertyDictListByPropertyNameList (GetEntityNameListBySSUtils ss) '("RELATEDID"))
+    (GetPropertyDictListByPropertyNameList (GetEntityNameListBySSUtils ss) '("RELATEDID" "PIPENUM" "PIPEDIAMETER"))
   )  
 )
 
