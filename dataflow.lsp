@@ -5731,16 +5731,16 @@
 ; 2021-02-02
 (defun c:GenerateFireFightVPipeText (/ insPt) 
   (mapcar '(lambda (x) 
-             (GenerateLineByPosition (cdr x) (AddPositonOffSetUtils (cdr x) '(500 -1300 0)) "DataflowFireFightPipe")
-             (GenerateOneFireFightHPipe (AddPositonOffSetUtils (cdr x) '(500 -1300 0)) "XHL-" "DN" (car x))
+             (GenerateLineByPosition (cadr x) (AddPositonOffSetUtils (cadr x) '(500 -1300 0)) "DataflowFireFightPipe")
+             (GenerateOneFireFightHPipe (AddPositonOffSetUtils (cadr x) '(500 -1300 0)) "XHL-" (GetFireFightPipeDiameter x) (car x))
           ) 
-    (GetAllFireFightVPipeEntityHandleAndPositionList)
+    (GetAllRawFireFightPipeDataList)
   ) 
   (alert "自动生成平面消防立管标注完成！")(princ)
 )
 
-(defun c:foo ()
-  (GetAllRawFireFightPipeDataList)
+(defun GetFireFightPipeDiameter (dataList /)
+  (strcat "DN" (rtos (caddr dataList)))
 )
 
 ; 2021-02-02
@@ -5783,6 +5783,7 @@
 (defun GetFireFightPipeData (entityName /)
   (list 
     (cdr (assoc 5 (entget entityName)))
+    ; the problem of tiantan ss - wrong position - 2021-01-03
     (AddPositonOffSetUtils (cdr (assoc 10 (entget entityName))) '(0 200 0))
     (cdr (assoc 140 (entget entityName)))
   )
@@ -5793,7 +5794,9 @@
   (mapcar '(lambda (x) 
              ; must reset the left-down point to (0 0 0)
              (cons 
-               (cons "rawPosition" (RemovePositonOffSetUtils (GetEntityPositionByEntityNameUtils (handent (cdr (assoc "RELATEDID" x)))) firstPt))
+               ; the problem of tiantan ss - wrong position - 2021-01-03
+               ;(cons "rawPosition" (RemovePositonOffSetUtils (GetEntityPositionByEntityNameUtils (handent (cdr (assoc "RELATEDID" x)))) firstPt))
+               (cons "rawPosition" (RemovePositonOffSetUtils (AddPositonOffSetUtils (GetEntityPositionByEntityNameUtils (handent (cdr (assoc "RELATEDID" x)))) '(0 200 0)) firstPt))
                x
              )
           ) 
