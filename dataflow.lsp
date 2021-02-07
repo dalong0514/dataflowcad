@@ -5766,17 +5766,18 @@
 )
 
 ; 2021-02-07
-(defun c:GenerateFireFightVPipe (/ firstPt ss insPt linePoint textHeight) 
+(defun c:GenerateFireFightVPipe (/ firstPt ss insPt linePoint textHeight elevation) 
   (princ "\n")
   (initget (+ 1 2 4))
-  (setq textHeight (getint "\n请设在字体高度："))
+  (setq textHeight (getint "\n请设置字体高度："))
+  (setq elevation (getstring "\n请设置自动生成的标高值："))
   (setq firstPt (getpoint "拾取平面图中消防水管最左下角的管道点："))
   (princ "\n拾取平面图中的消防水管：")
   (setq ss (GetFireFightVPipeSSBySelectUtils))
   (setq insPt (getpoint "拾取轴侧图中消防水管最左下角的管道点："))
   (mapcar '(lambda (x) 
              (setq linePoint (AddPositonOffSetUtils (AddPositonOffSetUtils (TranforCoordinateToPolarUtils (cdr (assoc "rawPosition" x))) insPt) '(0 -1000 0)))
-             (GenerateOneFireFightElevation (AddPositonOffSetUtils linePoint '(-900 -3000 0)) "+3.50" textHeight)
+             (GenerateOneFireFightElevation (AddPositonOffSetUtils linePoint '(-900 -3000 0)) elevation textHeight)
              (GenerateLineByPosition linePoint (AddPositonOffSetUtils linePoint '(500 -1300 0)) "DataflowFireFightPipe")
              (GenerateOneFireFightHPipe 
                (AddPositonOffSetUtils linePoint '(500 -1300 0))
