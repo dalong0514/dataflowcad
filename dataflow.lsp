@@ -2779,8 +2779,8 @@
 ; 2021-02-02
 (defun GenerateOneFireFightHPipe (insPt pipenum pipeDiameter relatedIDValue /) 
   (GenerateBlockReference insPt "FireFightHPipe" "DataflowFireFightPipe")
-  (GenerateBlockAttribute (MoveInsertPosition insPt 150 60) "PIPENUM" pipenum "DataflowFireFightPipe" 350)
-  (GenerateBlockAttribute (MoveInsertPosition insPt 150 -420) "PIPEDIAMETER" pipeDiameter "DataflowFireFightPipe" 350)
+  (GenerateBlockAttribute (MoveInsertPosition insPt 150 60) "PIPENUM" pipenum "0" 350)
+  (GenerateBlockAttribute (MoveInsertPosition insPt 150 -420) "PIPEDIAMETER" pipeDiameter "0" 350)
   (GenerateBlockHiddenAttribute (MoveInsertPosition insPt 150 -720) "RELATEDID" relatedIDValue "DataflowFireFightPipe" 150)
   (entmake 
     (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
@@ -2791,8 +2791,18 @@
 ; 2021-02-03
 (defun GenerateOneFireFightVPipe (insPt pipenum relatedIDValue /) 
   (GenerateBlockReference insPt "FireFightVPipe" "DataflowFireFightPipe")
-  (GenerateVerticallyBlockAttribute (AddPositonOffSetUtils insPt '(-60 150 0)) "PIPENUM" pipenum "DataflowFireFightPipe" 350)
+  (GenerateVerticallyBlockAttribute (AddPositonOffSetUtils insPt '(-60 150 0)) "PIPENUM" pipenum "0" 350)
   (GenerateBlockHiddenAttribute (AddPositonOffSetUtils insPt '(200 0 0)) "RELATEDID" relatedIDValue "DataflowFireFightPipe" 150)
+  (entmake 
+    (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
+  )
+  (princ)
+)
+
+; 2021-02-07
+(defun GenerateOneFireFightElevation (insPt elevation textHeight /) 
+  (GenerateBlockReference insPt "FireFightElevation" "DataflowFireFightElevation")
+  (GenerateBlockAttribute (AddPositonOffSetUtils insPt '(-950 300 0)) "ELEVATION" elevation "0" textHeight)
   (entmake 
     (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
   )
@@ -5755,7 +5765,7 @@
   (RegExpReplace rawString "(\\d+)\..*" "$1" nil nil)
 )
 
-; 2021-02-02
+; 2021-02-07
 (defun c:GenerateFireFightVPipe (/ firstPt ss insPt linePoint) 
   (princ "\n")
   (setq firstPt (getpoint "拾取平面图中消防水管最左下角的管道点："))
@@ -5764,6 +5774,7 @@
   (setq insPt (getpoint "拾取轴侧图中消防水管最左下角的管道点："))
   (mapcar '(lambda (x) 
              (setq linePoint (AddPositonOffSetUtils (AddPositonOffSetUtils (TranforCoordinateToPolarUtils (cdr (assoc "rawPosition" x))) insPt) '(0 -1000 0)))
+             (GenerateOneFireFightElevation (AddPositonOffSetUtils linePoint '(-900 -3000 0)) "+3.50" 350)
              (GenerateLineByPosition linePoint (AddPositonOffSetUtils linePoint '(500 -1300 0)) "DataflowFireFightPipe")
              (GenerateOneFireFightHPipe 
                (AddPositonOffSetUtils linePoint '(500 -1300 0))
