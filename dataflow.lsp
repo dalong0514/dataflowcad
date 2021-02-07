@@ -5858,9 +5858,10 @@
   (polar (list (car insPt) 0 0) 0.785398 (cadr insPt))
 )
 
+; 2021-02-07
 (defun c:GenerateFireFightPipeByBox (/ dataTypeList)
   (setq dataTypeList (GetNumberLayoutDataTypeList))
-  (labelFireFightPipeByBox dataTypeList "enhancedNumberBox")
+  (labelFireFightPipeByBox dataTypeList "labelFireFightPipeBox")
 )
 
 (defun labelFireFightPipeByBox (dataTypeList tileName / dcl_id dataType numberMode status selectedPropertyName 
@@ -5967,6 +5968,9 @@
   (princ)
 )
 
+(defun c:GetEntityData ()
+  (GetEntityDataUtils)
+)
 
 ; SS
 ;;;-------------------------------------------------------------------------;;;
