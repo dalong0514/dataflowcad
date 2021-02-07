@@ -5775,11 +5775,11 @@
   (princ "\n拾取平面图中的消防水管：")
   (setq ss (GetFireFightVPipeSSBySelectUtils))
   (setq insPt (getpoint "拾取轴侧图中消防水管最左下角的管道点："))
-  (GenerateFireFightLable firstPt ss insPt textHeight elevation)
+  (GenerateFireFightLabel firstPt ss insPt textHeight elevation)
 )
 
 ; 2021-02-07
-(defun GenerateFireFightLable (firstPt ss insPt textHeight elevation / linePoint) 
+(defun GenerateFireFightLabel (firstPt ss insPt textHeight elevation / linePoint) 
   (mapcar '(lambda (x) 
              (setq linePoint (AddPositonOffSetUtils (AddPositonOffSetUtils (TranforCoordinateToPolarUtils (cdr (assoc "rawPosition" x))) insPt) '(0 -1000 0)))
              (GenerateOneFireFightElevation (AddPositonOffSetUtils linePoint '(-900 -3000 0)) elevation textHeight)
@@ -5932,8 +5932,7 @@
     ; modify button
     (if (= 5 status)
       (progn 
-        (princ textHeight)
-        (princ elevationValue)(princ)
+        (GenerateFireFightLabel firstPt ss insPt (atoi textHeight) elevationValue)
       )
     )
   )
