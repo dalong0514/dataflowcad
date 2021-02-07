@@ -968,6 +968,11 @@ labelFireFightPipeBox : dialog {
         label = "轴侧图拾取状态：";
       } 
     }
+    : spacer { height = 1; } 
+    : text {
+      key = "infoMsg";
+      label = "状态：";
+    } 
     : spacer { height = 3; }  
     : row { 
       fixed_width = true; 
@@ -992,7 +997,7 @@ labelFireFightPipeBox : dialog {
       : spacer { width = 2; }  
       : button { 
         key = "btnComfirmNumber"; 
-        label = "确认修改"; 
+        label = "确认生成"; 
         is_default = "true"; 
       } 
       : spacer { width = 2; }
