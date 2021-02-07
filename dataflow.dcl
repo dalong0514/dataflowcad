@@ -1,5 +1,5 @@
 exportBlockPropertyDataBox : dialog {
-  label = "天正设计流数据一体化V1.5———导出数据"; 
+  label = "天正设计流数据一体化工艺V1.5———导出数据"; 
   key = "exportBlockPropertyData";
   : row {
     : boxed_radio_column {
@@ -61,7 +61,7 @@ exportBlockPropertyDataBox : dialog {
 }
 
 exportBlockPropertyDataBoxV2 : dialog {
-  label = "天正设计流数据一体化V1.5———导出数据"; 
+  label = "天正设计流数据一体化工艺V1.5———导出数据"; 
   key = "exportBlockPropertyDataV2";
   : row {
     : boxed_radio_column {
@@ -135,7 +135,7 @@ exportBlockPropertyDataBoxV2 : dialog {
 }
 
 filterAndNumberBox : dialog {
-  label = "天正设计流数据一体化V1.5———批量编号"; 
+  label = "天正设计流数据一体化工艺V1.5———批量编号"; 
   key = "filterAndNumber";
   : row {
     : boxed_radio_column {
@@ -276,7 +276,7 @@ filterAndNumberBox : dialog {
 }
 
 enhancedNumberBox : dialog {
-  label = "天正设计流数据一体化V1.5———加强版批量编号"; 
+  label = "天正设计流数据一体化工艺V1.5———加强版批量编号"; 
   key = "enhancedNumberBox";
   : boxed_radio_column {
     key = "numberBox";
@@ -361,7 +361,7 @@ enhancedNumberBox : dialog {
 }
 
 filterAndModifyEquipmentPropertyBox : dialog {
-  label = "天正设计流数据一体化V1.5———批量修改数据"; 
+  label = "天正设计流数据一体化工艺V1.5———批量修改数据"; 
   key = "filterModifyEquipmentProperty";
   : row {
     : boxed_radio_column {
@@ -554,7 +554,7 @@ filterAndModifyEquipmentPropertyBox : dialog {
 }
 
 filterAndModifyPropertyBox : dialog {
-  label = "天正设计流数据一体化V1.5———批量修改数据强化版"; 
+  label = "天正设计流数据一体化工艺V1.5———批量修改数据强化版"; 
   key = "filterModifyProperty";
   : boxed_radio_column {
     key = "showOriginDataBox";
@@ -633,7 +633,7 @@ filterAndModifyPropertyBox : dialog {
 }
 
 modifyBlockPropertyBox : dialog {
-  label = "天正设计流数据一体化V1.5———批量修改通用块数据"; 
+  label = "天正设计流数据一体化工艺V1.5———批量修改通用块数据"; 
   key = "modifyBlockProperty";
   : boxed_radio_column {
     key = "showOriginDataBox";
@@ -712,7 +712,7 @@ modifyBlockPropertyBox : dialog {
 }
 
 generatePublicProcessElementBox : dialog {
-  label = "天正设计流数据一体化V1.5———自动生成单回路辅助流程组件"; 
+  label = "天正设计流数据一体化工艺V1.5———自动生成单回路辅助流程组件"; 
   key = "generatePublicProcessElement";
   : boxed_radio_column {
     key = "filterBox";
@@ -776,7 +776,7 @@ generatePublicProcessElementBox : dialog {
 }
 
 brushBlockPropertyValueBox : dialog {
-  label = "天正设计流数据一体化V1.5———刷块属性数据"; 
+  label = "天正设计流数据一体化工艺V1.5———刷块属性数据"; 
   key = "brushBlockPropertyValue";
   : boxed_radio_column {
     key = "filterBox";
@@ -832,7 +832,7 @@ brushBlockPropertyValueBox : dialog {
 }
 
 numberDrawNumBox : dialog {
-  label = "天正设计流数据一体化V1.5———批量编图签流程图号"; 
+  label = "天正设计流数据一体化工艺V1.5———批量编图签流程图号"; 
   key = "numberDrawNum";
   : boxed_radio_column {
     key = "modifyBox";
@@ -917,3 +917,93 @@ numberDrawNumBox : dialog {
     : spacer { height = 3; } 
   }
 }
+
+// 给排水专业
+
+labelFireFightPipeBox : dialog {
+  label = "天正设计流数据一体化给排水V10.1———消防立管标注"; 
+  key = "labelFireFightPipeBox";
+  : boxed_radio_column {
+    key = "numberBox";
+    width = 80;
+    : column {
+      height = 10;
+      : popup_list { 
+        label = "数据大类";
+        key = "dataType"; 
+        edit_width = 40;
+        list = "";
+        value = "";
+      }
+      : spacer { height = 1; } 
+      : popup_list { 
+        label = "编号模式";
+        key = "numberMode"; 
+        edit_width = 40;
+        list = "";
+        value = "";
+      }
+      : spacer { height = 1; }
+      : row {
+        : text {
+          key = "startNumberStringMsg";
+          label = "编号前缀";
+        }
+        : edit_box {
+          key = "startNumberString";
+          edit_width = 41;
+          mnemonic = "N";
+          value = "";
+        }
+      } 
+      : spacer { height = 1; }
+    }
+    : spacer { height = 1; } 
+    : list_box { 
+      height = 20;
+      label = "匹配到的结果";
+      key = "matchedResult"; 
+      list = "";
+      value = "";
+    }
+    : spacer { height = 1; } 
+    : row {
+      : text {
+        key = "msg";
+        label = "匹配到的数量：";
+      }
+      : text {
+        key = "modifyBtnMsg";
+        label = "编号状态：";
+      }
+    }
+    : spacer { height = 3; }  
+    : row { 
+      fixed_width = true; 
+      alignment = centered; 
+      : button { 
+        key = "btnSelect"; 
+        label = "批量选择"; 
+        is_default = "true"; 
+      } 
+      : spacer { width = 2; } 
+      : button { 
+        key = "btnPreviewNumber"; 
+        label = "预览编号"; 
+        is_default = "true"; 
+      } 
+      : spacer { width = 2; } 
+      : button { 
+        key = "btnComfirmNumber"; 
+        label = "确认修改"; 
+        is_default = "true"; 
+      } 
+      : spacer { width = 2; }
+      cancel_button; 
+    }
+    : spacer { height = 3; } 
+  }
+}
+
+
+// 给排水专业
