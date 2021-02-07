@@ -5756,15 +5756,17 @@
 )
 
 ; 2021-02-02
-(defun c:GenerateFireFightVPipe (/ firstPt insPt ss) 
+(defun c:GenerateFireFightVPipe (/ firstPt ss insPt linePoint) 
   (princ "\n")
   (setq firstPt (getpoint "拾取平面图中消防水管最左下角的管道点："))
   (princ "\n拾取平面图中的消防水管：")
   (setq ss (GetFireFightVPipeSSBySelectUtils))
   (setq insPt (getpoint "拾取轴侧图中消防水管最左下角的管道点："))
   (mapcar '(lambda (x) 
+             (setq linePoint (AddPositonOffSetUtils (AddPositonOffSetUtils (TranforCoordinateToPolarUtils (cdr (assoc "rawPosition" x))) insPt) '(0 -1000 0)))
+             (GenerateLineByPosition linePoint (AddPositonOffSetUtils linePoint '(500 -1300 0)) "DataflowFireFightPipe")
              (GenerateOneFireFightHPipe 
-               (AddPositonOffSetUtils (AddPositonOffSetUtils (TranforCoordinateToPolarUtils (cdr (assoc "rawPosition" x))) insPt) '(0 -2000 0))
+               (AddPositonOffSetUtils linePoint '(500 -1300 0))
                (cdr (assoc "PIPENUM" x))
                (cdr (assoc "PIPEDIAMETER" x))
                (cdr (assoc "entityhandle" x)))
