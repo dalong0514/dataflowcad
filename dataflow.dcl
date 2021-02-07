@@ -921,50 +921,37 @@ numberDrawNumBox : dialog {
 // 给排水专业
 
 labelFireFightPipeBox : dialog {
-  label = "天正设计流数据一体化给排水V10.1———消防立管标注"; 
+  label = "天正设计流数据一体化给排水V0.1———消防立管标注"; 
   key = "labelFireFightPipeBox";
   : boxed_radio_column {
     key = "numberBox";
     width = 80;
     : column {
       height = 10;
-      : popup_list { 
-        label = "数据大类";
-        key = "dataType"; 
-        edit_width = 40;
-        list = "";
-        value = "";
-      }
-      : spacer { height = 1; } 
-      : popup_list { 
-        label = "编号模式";
-        key = "numberMode"; 
-        edit_width = 40;
-        list = "";
-        value = "";
-      }
-      : spacer { height = 1; }
       : row {
         : text {
-          key = "startNumberStringMsg";
-          label = "编号前缀";
+          key = "textHeightMsg";
+          label = "字体高度：";
         }
         : edit_box {
-          key = "startNumberString";
-          edit_width = 41;
+          key = "textHeight";
+          edit_width = 20;
           mnemonic = "N";
           value = "";
         }
+        : spacer { width = 30; }
+        : text {
+          key = "elevationValueMsg";
+          label = "标高设置：";
+        }
+        : edit_box {
+          key = "elevationValue";
+          edit_width = 20;
+          mnemonic = "N";
+          value = "";
+        } 
       } 
       : spacer { height = 1; }
-    }
-    : spacer { height = 1; } 
-    : list_box { 
-      height = 20;
-      label = "匹配到的结果";
-      key = "matchedResult"; 
-      list = "";
-      value = "";
     }
     : spacer { height = 1; } 
     : row {
@@ -973,9 +960,13 @@ labelFireFightPipeBox : dialog {
         label = "匹配到的数量：";
       }
       : text {
-        key = "modifyBtnMsg";
-        label = "编号状态：";
+        key = "floorDrawMsg";
+        label = "平面图拾取状态：";
       }
+      : text {
+        key = "axialDrawMsg";
+        label = "轴侧图拾取状态：";
+      } 
     }
     : spacer { height = 3; }  
     : row { 
@@ -988,11 +979,17 @@ labelFireFightPipeBox : dialog {
       } 
       : spacer { width = 2; } 
       : button { 
-        key = "btnPreviewNumber"; 
-        label = "预览编号"; 
+        key = "btnfloorDraw"; 
+        label = "拾取平面图最左下角管道点"; 
         is_default = "true"; 
       } 
       : spacer { width = 2; } 
+      : button { 
+        key = "btnAxialDraw"; 
+        label = "拾取轴侧图最左下角管道点"; 
+        is_default = "true"; 
+      } 
+      : spacer { width = 2; }  
       : button { 
         key = "btnComfirmNumber"; 
         label = "确认修改"; 
