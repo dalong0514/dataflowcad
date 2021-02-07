@@ -2776,11 +2776,11 @@
   (princ)
 )
 
-; 2021-02-02
-(defun GenerateOneFireFightHPipe (insPt pipenum pipeDiameter relatedIDValue /) 
+; refactored at 2021-02-07
+(defun GenerateOneFireFightHPipe (insPt pipenum pipeDiameter relatedIDValue textHeight /) 
   (GenerateBlockReference insPt "FireFightHPipe" "DataflowFireFightPipe")
-  (GenerateBlockAttribute (MoveInsertPosition insPt 150 60) "PIPENUM" pipenum "0" 350)
-  (GenerateBlockAttribute (MoveInsertPosition insPt 150 -420) "PIPEDIAMETER" pipeDiameter "0" 350)
+  (GenerateBlockAttribute (MoveInsertPosition insPt 150 60) "PIPENUM" pipenum "0" textHeight)
+  (GenerateBlockAttribute (MoveInsertPosition insPt 150 -420) "PIPEDIAMETER" pipeDiameter "0" textHeight)
   (GenerateBlockHiddenAttribute (MoveInsertPosition insPt 150 -720) "RELATEDID" relatedIDValue "DataflowFireFightPipe" 150)
   (entmake 
     (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
@@ -5749,7 +5749,7 @@
 (defun c:GenerateFireFightVPipeText (/ insPt) 
   (mapcar '(lambda (x) 
              (GenerateLineByPosition (cadr x) (AddPositonOffSetUtils (cadr x) '(500 -1300 0)) "DataflowFireFightPipe")
-             (GenerateOneFireFightHPipe (AddPositonOffSetUtils (cadr x) '(500 -1300 0)) "XHL" (GetFireFightPipeDiameter x) (car x))
+             (GenerateOneFireFightHPipe (AddPositonOffSetUtils (cadr x) '(500 -1300 0)) "XHL" (GetFireFightPipeDiameter x) (car x) 350)
           ) 
     (GetAllRawFireFightPipeDataList)
   ) 
@@ -5780,7 +5780,8 @@
                (AddPositonOffSetUtils linePoint '(500 -1300 0))
                (cdr (assoc "PIPENUM" x))
                (cdr (assoc "PIPEDIAMETER" x))
-               (cdr (assoc "entityhandle" x)))
+               (cdr (assoc "entityhandle" x))
+               350)
           ) 
     (GetFireFightDataList ss firstPt)
   ) 
