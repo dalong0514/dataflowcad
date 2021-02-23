@@ -5760,7 +5760,6 @@
 
 ; 2021-02-02
 (defun c:GenerateFireFightVPipeText (/ insPt) 
-
   (princ "\n请选择消火栓平面图中的消防立管：")
   (mapcar '(lambda (x) 
              (GenerateLineByPosition (cadr x) (AddPositonOffSetUtils (cadr x) '(500 -1300 0)) "DataflowFireFightPipe")
