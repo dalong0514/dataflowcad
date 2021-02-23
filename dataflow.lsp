@@ -1064,6 +1064,7 @@
   (setq ss (ssget "X" '((0 . "ARC") (8 . "VPIPE-消防"))))
 )
 
+; 2021-02-0
 (defun GetAllRawFireFightVPipeSSUtils ()
   (setq ss (ssget "X" '((0 . "TCH_PIPE") (8 . "VPIPE-消防"))))
 )
@@ -5759,11 +5760,13 @@
 
 ; 2021-02-02
 (defun c:GenerateFireFightVPipeText (/ insPt) 
+
+  (princ "\n请选择消火栓平面图中的消防立管：")
   (mapcar '(lambda (x) 
              (GenerateLineByPosition (cadr x) (AddPositonOffSetUtils (cadr x) '(500 -1300 0)) "DataflowFireFightPipe")
              (GenerateOneFireFightHPipe (AddPositonOffSetUtils (cadr x) '(500 -1300 0)) "XHL" (GetFireFightPipeDiameter x) (car x) 350)
           ) 
-    (GetAllRawFireFightPipeDataList)
+    (GetRawFireFightPipeDataListBySelect)
   ) 
   (alert "自动生成平面消防立管标注完成！")(princ)
 )
@@ -5822,6 +5825,15 @@
              (GetFireFightPipeData x)
           ) 
     (GetEntityNameListBySSUtils (GetAllRawFireFightVPipeSSUtils))
+  ) 
+)
+
+; 2021-02-23
+(defun GetRawFireFightPipeDataListBySelect () 
+  (mapcar '(lambda (x) 
+             (GetFireFightPipeData x)
+          ) 
+    (GetEntityNameListBySSUtils (GetRawFireFightVPipeSSBySelectUtils))
   ) 
 )
 
