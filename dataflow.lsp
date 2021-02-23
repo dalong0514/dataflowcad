@@ -21,6 +21,10 @@
   (alert "数据流相关块同时完成！")(princ)
 )
 
+(defun c:GetEntityData ()
+  (GetEntityDataUtils)
+)
+
 ; basic Function
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
@@ -1246,6 +1250,9 @@
   (if (= dataType "Reducer")
     (setq ss (ssget "X" '((0 . "INSERT") (2 . "Reducer"))))
   ) 
+  (if (= dataType "FireFightPipe")
+    (setq ss (ssget "X" '((0 . "INSERT") (2 . "FireFightHPipe"))))
+  )
   ss
 )
 
@@ -1823,6 +1830,11 @@
 
 (defun GetAllEquipDataUtils () 
   (GetAllPropertyValueListByEntityNameList (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "Equipment")))
+)
+
+; 2021-02-23
+(defun GetAllFireFightPipeDataUtils () 
+  (GetAllPropertyValueListByEntityNameList (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "FireFightPipe")))
 )
 
 (defun GetAllEquipPositionDictListUtils ()
@@ -5949,8 +5961,44 @@
   (princ)
 )
 
-(defun c:GetEntityData ()
-  (GetEntityDataUtils)
+(defun c:UpdateFireFightPipeLable (/ entityNameList allPipeHandleList relatedPipeData)
+  (setq entityNameList 
+    (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "FireFightPipe"))
+  )
+  (setq allPipeHandleList (GetAllFireFightPipeEntityHandle))
+  (mapcar '(lambda (x) 
+             (setq relatedPipeData (append relatedPipeData 
+                                     (list (GetAllPropertyDictForOneBlock (handent (cdr (assoc "relatedid" x)))))
+                                   ))
+           ) 
+    ; relatedid value maybe null or relatedid may be not in the allPipeHandleList
+    (vl-remove-if-not '(lambda (x) 
+                        (and (/= (cdr (assoc "relatedid" x)) "") (/= (member (cdr (assoc "relatedid" x)) allPipeHandleList) nil)) 
+                      ) 
+      (GetAllPropertyValueListByEntityNameList entityNameList)
+    )
+  ) 
+  (mapcar '(lambda (x y) 
+            (ModifyMultiplePropertyForOneBlockUtils x 
+              (list "PIPENUM" "PIPEDIAMETER") 
+              (list 
+                (cdr (assoc "pipenum" y)) 
+                (cdr (assoc "pipediameter" y)) 
+              )
+            )
+          ) 
+    entityNameList
+    relatedPipeData 
+  ) 
+  (alert "更新完成")(princ)
+)
+
+(defun GetAllFireFightPipeEntityHandle () 
+  (mapcar '(lambda (x) 
+             (cdr (assoc "entityhandle" x))
+           ) 
+    (GetAllFireFightPipeDataUtils)
+  )
 )
 
 ; SS
