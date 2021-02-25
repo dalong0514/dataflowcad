@@ -6012,6 +6012,26 @@
   )
 )
 
+(defun c:al-copy (/ util BP PT2 newobj)
+  ;get a reference to the Utilities Object :
+  (setq util (vla-get-utility 
+                    (vla-get-activedocument 
+                          (vlax-get-acad-object))))
+  ;select the object                        
+  (vla-getentity util 'theobj 'ip "\nSelect Object: ")
+  ;get the base point
+  (setq BP (vla-getpoint util nil
+          "\nSpecify base point or displacement: "))
+  ;get the displacement
+  (setq PT2 (vla-getpoint util BP
+            "\nSpecify second point of displacement: "))
+  ;copy the object
+  (setq newobj (vla-copy theobj))
+  ;move the object
+  (vla-move newobj BP PT2)
+  (princ)
+);defun
+
 ; SS
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
