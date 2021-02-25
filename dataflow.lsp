@@ -6012,25 +6012,50 @@
   )
 )
 
-(defun c:al-copy (/ util BP PT2 newobj)
-  ;get a reference to the Utilities Object :
-  (setq util (vla-get-utility 
-                    (vla-get-activedocument 
-                          (vlax-get-acad-object))))
-  ;select the object                        
-  (vla-getentity util 'theobj 'ip "\nSelect Object: ")
-  ;get the base point
-  (setq BP (vla-getpoint util nil
-          "\nSpecify base point or displacement: "))
-  ;get the displacement
-  (setq PT2 (vla-getpoint util BP
-            "\nSpecify second point of displacement: "))
-  ;copy the object
-  (setq newobj (vla-copy theobj))
-  ;move the object
-  (vla-move newobj BP PT2)
-  (princ)
-);defun
+(defun c:dalogCopy(/ acadObj doc objCollection retObjects)
+    ;; This example creates a Circle object and uses the CopyObjects
+    ;; method to make a copy of the new Circle.
+    (setq acadObj (vlax-get-acad-object))
+    (setq doc (vla-get-ActiveDocument acadObj))
+
+    ;; Load the ObjectDBX library
+    (if (= acLibImport nil)
+	       (progn
+	           (vlax-import-type-library :tlb-filename "C:\\Program Files\\Common Files\\Autodesk Shared\\axdb20enu.tlb"
+	                                     :methods-prefix "acdbm-"
+	                                     :properties-prefix "acdbp-"
+	                                     :constants-prefix "acdbc-"
+	           )
+            (setq acLibImport T)
+        )
+    )
+
+    ;; Create a reference to the ObjectDBX object
+    (setq acdbObj (vlax-create-object "ObjectDBX.AxDbDocument.20"))
+
+    ;; Open an external drawing file
+    (acdbm-open acdbObj (findfile ".\\Sample\\VBA\\Tower.dwg"))
+
+    ;; Add two circles to the drawing
+    (setq objCollection (vlax-make-safearray vlax-vbObject (cons 0 (- (vla-get-Count (vla-get-ModelSpace acdbObj)) 1)))
+	  count 0)
+
+    ;; Copy objects
+    (vlax-for eachObj (vla-get-ModelSpace acdbObj)
+        (vlax-safearray-put-element objCollection count eachObj)
+        (setq count (1+ count))
+    )
+     
+    ;; Copy object and get back a collection of the new objects (copies)
+    (setq retObjects (vla-CopyObjects acdbObj objCollection (vla-get-ModelSpace (vla-get-Database doc))))
+    
+    (vla-ZoomAll acadObj)
+    
+    (alert "Model space objects copied.")
+
+    ;; Close the in memory drawing
+    (vlax-release-object acdbObj)
+)
 
 ; SS
 ;;;-------------------------------------------------------------------------;;;
