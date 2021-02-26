@@ -6161,16 +6161,29 @@
   (ssget '((0 . "INSERT") (8 . "COLUMN")))
 )
 
+; 2021-02-26
 (defun GetJSDrawBasePosition () 
   (GetSelectedEntityDataUtils (SortSSByMinxMiny (GetJSDrawColumn)))
 )
 
-(defun GetAllDrawLabelBasePositionUtils ()
+; 2021-02-26
+(defun GetAllJSDrawLabelData () 
   (mapcar '(lambda (x) 
-             (GetEntityPositionByEntityNameUtils x)
+             (list 
+               (GetJSDrawPositionRangeUtils (GetEntityPositionByEntityNameUtils (handent (cdr (assoc "entityhandle" x)))))
+               (strcat (cdr (assoc "dwgname1" x)) (cdr (assoc "dwgname2l1" x)) (cdr (assoc "dwgname2l2" x)))
+             )
            ) 
-    (GetEntityNameListBySSUtils (GetAllDrawLabelSSUtils))
-  )
+    (GetAllPropertyValueListByEntityNameList (GetEntityNameListBySSUtils (GetAllDrawLabelSSUtils)))
+  ) 
+)
+
+(defun GetJSDrawPositionRangeUtils (position /)
+  (list (+ (car position) -126150) (+ (cadr position) 89100))
+)
+
+(defun c:foo ()
+  (GetAllJSDrawLabelData)
 )
 
 
