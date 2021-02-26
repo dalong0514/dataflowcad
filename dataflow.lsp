@@ -684,6 +684,12 @@
   (princ ent)(princ)
 )
 
+(defun GetSelectedEntityDataUtils (ss /)
+  (mapcar '(lambda (x) (entget x)) 
+    (GetEntityNameListBySSUtils ss)
+  )
+)
+
 (defun GetEntityDataUtils ()
   (entget (car (entsel)))
 )
@@ -1748,6 +1754,18 @@
   (setq oldValue (assoc DXFcode entityData))
   (setq newValue (cons DXFcode propertyValue))
   (entmod (subst newValue oldValue entityData))
+)
+
+(defun ReplaceDXFValueByEntityDataUtils (entityData DXFcodeList valueList / oldValue newValue) 
+  (mapcar '(lambda (x y) 
+            (setq oldValue (assoc x entityData))
+            (setq newValue (cons x y))
+            (setq entityData (subst newValue oldValue entityData))
+          ) 
+    DXFcodeList 
+    valueList
+  ) 
+  entityData
 )
 
 (defun ModifyMultiplePropertyForBlockUtils (entityNameList propertyNameList propertyValueList /)
@@ -6012,49 +6030,66 @@
   )
 )
 
-(defun c:dalogCopy(/ acadObj doc objCollection retObjects)
-    ;; This example creates a Circle object and uses the CopyObjects
-    ;; method to make a copy of the new Circle.
-    (setq acadObj (vlax-get-acad-object))
-    (setq doc (vla-get-ActiveDocument acadObj))
+(defun c:dalogCopy()
+  (mapcar '(lambda (x) 
+              (entmake x)
+             ; for block - AcDbBlockReference
+              (entmake 
+                (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
+              ) 
+           ) 
+    (MoveCopyEntityData)
+  )
+  ;(princ)
+)
 
-    ;; Load the ObjectDBX library
-    (if (= acLibImport nil)
-	       (progn
-	           (vlax-import-type-library :tlb-filename "C:\\Program Files\\Common Files\\Autodesk Shared\\axdb20enu.tlb"
-	                                     :methods-prefix "acdbm-"
-	                                     :properties-prefix "acdbp-"
-	                                     :constants-prefix "acdbc-"
-	           )
-            (setq acLibImport T)
-        )
-    )
+(defun c:foo ()
+  (MoveCopyEntityData)
+)
 
-    ;; Create a reference to the ObjectDBX object
-    (setq acdbObj (vlax-create-object "ObjectDBX.AxDbDocument.20"))
+(defun MoveCopyEntityData()
+  (mapcar '(lambda (x) 
+             (ReplaceDXFValueByEntityDataUtils 
+               x 
+               '(10 11)
+               (list (MoveInsertPosition (cdr (assoc 10 x)) 10000 0) 
+                     (MoveInsertPosition (cdr (assoc 11 x)) 10000 0)
+               )
+             )
+           ) 
+    (GetCopyEntityData)
+  )
+  ;(princ)
+)
 
-    ;; Open an external drawing file
-    (acdbm-open acdbObj (findfile ".\\Sample\\VBA\\Tower.dwg"))
+(defun GetCopyEntityData () 
+  (setq ss (ssget))
+  (mapcar '(lambda (x) 
+              (vl-remove-if-not '(lambda (y) 
+                                  (and (/= (car y) -1)  (/= (car y) 330) (/= (car y) 5))
+                                ) 
+                x
+              ) 
+           ) 
+    (GetSelectedEntityDataUtils ss) 
+  )
+)
 
-    ;; Add two circles to the drawing
-    (setq objCollection (vlax-make-safearray vlax-vbObject (cons 0 (- (vla-get-Count (vla-get-ModelSpace acdbObj)) 1)))
-	  count 0)
-
-    ;; Copy objects
-    (vlax-for eachObj (vla-get-ModelSpace acdbObj)
-        (vlax-safearray-put-element objCollection count eachObj)
-        (setq count (1+ count))
-    )
-     
-    ;; Copy object and get back a collection of the new objects (copies)
-    (setq retObjects (vla-CopyObjects acdbObj objCollection (vla-get-ModelSpace (vla-get-Database doc))))
-    
-    (vla-ZoomAll acadObj)
-    
-    (alert "Model space objects copied.")
-
-    ;; Close the in memory drawing
-    (vlax-release-object acdbObj)
+(defun GetCopyEntityDataV2 () 
+  (setq ss (ssget))
+  (mapcar '(lambda (x) 
+              (vl-remove-if-not '(lambda (y) 
+                                  (and (/= (car y) -1)  (/= (car y) 330) (/= (car y) 5))
+                                ) 
+                x
+              ) 
+           ) 
+    (vl-remove-if-not '(lambda (x) 
+                        (= (cdr (assoc 0 x)) "INSERT")
+                      ) 
+      (GetSelectedEntityDataUtils ss)
+    )   
+  )
 )
 
 ; SS
