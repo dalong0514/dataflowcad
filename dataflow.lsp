@@ -6030,8 +6030,28 @@
   )
 )
 
+
+
+
+
 ; 2021-02-26
-(defun c:dalogCopy()
+(defun c:setCopyEntityData() 
+  (vl-bb-set 'architectureDraw (MoveCopyEntityData))
+  (alert "建筑底部提取成功")
+)
+
+; 2021-02-26
+(defun c:migrateJSDraw()
+  (generateJSDraw (vl-bb-ref 'architectureDraw))
+)
+
+; 2021-02-26
+(defun c:moveJSDraw()
+  (generateJSDraw (MoveCopyEntityData))
+)
+
+; 2021-02-26
+(defun generateJSDraw(JSEntityData /)
   (mapcar '(lambda (x) 
               (entmake x)
              ; for block - AcDbBlockReference
@@ -6039,7 +6059,7 @@
                 (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
               ) 
            ) 
-    (MoveCopyEntityData)
+    JSEntityData
   )
   (princ)
 )
@@ -6057,8 +6077,8 @@
                   (ReplaceDXFValueByEntityDataUtils 
                     x 
                     '(10 11)
-                    (list (MoveInsertPosition (cdr (assoc 10 x)) 100000 0) 
-                          (MoveInsertPosition (cdr (assoc 11 x)) 100000 0)
+                    (list (MoveInsertPosition (cdr (assoc 10 x)) 200000 0) 
+                          (MoveInsertPosition (cdr (assoc 11 x)) 200000 0)
                     )
                   )
                )
@@ -6066,7 +6086,7 @@
                   (ReplaceDXFValueByEntityDataUtils 
                     x 
                     '(10)
-                    (list (MoveInsertPosition (cdr (assoc 10 x)) 100000 0) 
+                    (list (MoveInsertPosition (cdr (assoc 10 x)) 200000 0) 
                     )
                   )
                ) 
@@ -6078,7 +6098,7 @@
 
 ; 2021-02-26
 (defun GetCopyEntityData () 
-  (setq ss (ssget))
+  (setq ss (GetCopySS))
   (mapcar '(lambda (x) 
               (vl-remove-if-not '(lambda (y) 
                                   (and (/= (car y) -1)  (/= (car y) 330) (/= (car y) 5))
@@ -6097,6 +6117,10 @@
           (8 . "WINDOW")
           (8 . "WALL")
           (8 . "COLUMN")
+          (8 . "WALL-MOVE") 
+          (8 . "STAIR") 
+          ;(8 . "EVTR") poly line
+          ;(8 . "DIM_SYMB") 
         (-4 . "OR>")
       )
     )
