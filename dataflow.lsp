@@ -6114,13 +6114,17 @@
 (defun GetCopySS () 
   (setq ss (ssget '( 
         (-4 . "<OR")
+          (0 . "LINE")
+          (0 . "INSERT")
+        (-4 . "OR>") 
+        (-4 . "<OR")
           (8 . "WINDOW")
           (8 . "WALL")
           (8 . "COLUMN")
           (8 . "WALL-MOVE") 
           (8 . "STAIR") 
-          ;(8 . "EVTR") poly line
-          ;(8 . "DIM_SYMB") 
+          ;poly line 多段线生成太复杂，前期打散成直线 
+          (8 . "EVTR") 
         (-4 . "OR>")
       )
     )
