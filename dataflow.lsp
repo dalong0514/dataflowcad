@@ -676,14 +676,6 @@
   (vlax-release-object obj)
 )
 
-(defun ViewSelectedEntityDataUtils (/ ss ent entx)
-  (setq ss (ssget))
-  (setq ent (entget (ssname ss 0)))
-  ;(setq entx (entget (entnext (cdr (assoc -1 ent)))))
-  ;(setq entx (entget (cdr (assoc -1 ent))))
-  (princ ent)(princ)
-)
-
 (defun GetSelectedEntityDataUtils (ss /)
   (mapcar '(lambda (x) (entget x)) 
     (GetEntityNameListBySSUtils ss)
@@ -691,7 +683,8 @@
 )
 
 (defun GetEntityDataUtils ()
-  (entget (car (entsel)))
+  ;(entget (car (entsel)))
+  (car (GetSelectedEntityDataUtils (ssget)))
 )
 
 (defun GetBlockNameBySelectUtils (/ entityName) 
@@ -6173,7 +6166,7 @@
 )
 
 (defun c:foo ()
-  (GetJSDrawBasePosition)
+  (car (GetJSDrawBasePosition))
 )
 
 
