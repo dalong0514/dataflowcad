@@ -6041,7 +6041,7 @@
            ) 
     (MoveCopyEntityData)
   )
-  ;(princ)
+  (princ)
 )
 
 (defun c:foo ()
@@ -6057,8 +6057,8 @@
                   (ReplaceDXFValueByEntityDataUtils 
                     x 
                     '(10 11)
-                    (list (MoveInsertPosition (cdr (assoc 10 x)) 10000 0) 
-                          (MoveInsertPosition (cdr (assoc 11 x)) 10000 0)
+                    (list (MoveInsertPosition (cdr (assoc 10 x)) 100000 0) 
+                          (MoveInsertPosition (cdr (assoc 11 x)) 100000 0)
                     )
                   )
                )
@@ -6066,7 +6066,7 @@
                   (ReplaceDXFValueByEntityDataUtils 
                     x 
                     '(10)
-                    (list (MoveInsertPosition (cdr (assoc 10 x)) 10000 0) 
+                    (list (MoveInsertPosition (cdr (assoc 10 x)) 100000 0) 
                     )
                   )
                ) 
@@ -6074,7 +6074,6 @@
            ) 
     (GetCopyEntityData)
   )
-  ;(princ)
 )
 
 ; 2021-02-26
@@ -6089,6 +6088,19 @@
            ) 
     (GetSelectedEntityDataUtils ss) 
   )
+)
+
+; 2021-02-26
+(defun GetCopySS () 
+  (setq ss (ssget '( 
+        (-4 . "<OR")
+          (8 . "WINDOW")
+          (8 . "WALL")
+          (8 . "COLUMN")
+        (-4 . "OR>")
+      )
+    )
+  ) 
 )
 
 ; SS
