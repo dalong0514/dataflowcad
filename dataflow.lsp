@@ -6072,7 +6072,7 @@
 (defun MoveCopyEntityData()
   (mapcar '(lambda (x) 
              ; ready for refactor
-             (if (and (/= (assoc 10 x) nil) (/= (assoc 11 x) nil))
+             (if (/= (assoc 11 x) nil)
                (progn 
                   (ReplaceDXFValueByEntityDataUtils 
                     x 
