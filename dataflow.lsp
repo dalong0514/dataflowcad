@@ -6165,8 +6165,12 @@
   (GetSelectedEntityDataUtils (SortSSByMinxMiny (GetJSDrawColumn)))
 )
 
-(defun c:foo ()
-  (car (GetJSDrawBasePosition))
+(defun GetAllDrawLabelBasePositionUtils ()
+  (mapcar '(lambda (x) 
+             (GetEntityPositionByEntityNameUtils x)
+           ) 
+    (GetEntityNameListBySSUtils (GetAllDrawLabelSSUtils))
+  )
 )
 
 
