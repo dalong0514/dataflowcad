@@ -1887,6 +1887,17 @@
   result
 )
 
+; 2021-02-26
+(defun DeleteEntityBySSUtils (ss /) 
+  (mapcar '(lambda (x) 
+             (entdel x)
+             (princ)
+           ) 
+    (GetEntityNameListBySSUtils ss) 
+  ) 
+  (princ)
+)
+
 ; Utils Function 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
@@ -6035,23 +6046,23 @@
 
 
 ; 2021-02-26
-(defun c:setCopyEntityData() 
+(defun c:setCopyEntityData () 
   (vl-bb-set 'architectureDraw (MoveCopyEntityData))
   (alert "建筑底部提取成功")
 )
 
 ; 2021-02-26
-(defun c:migrateJSDraw()
+(defun c:migrateJSDraw ()
   (generateJSDraw (vl-bb-ref 'architectureDraw))
 )
 
 ; 2021-02-26
-(defun c:moveJSDraw()
+(defun c:moveJSDraw ()
   (generateJSDraw (MoveCopyEntityData))
 )
 
 ; 2021-02-26
-(defun generateJSDraw(JSEntityData /)
+(defun generateJSDraw (JSEntityData /)
   (mapcar '(lambda (x) 
               (entmake x)
              ; for block - AcDbBlockReference
@@ -6065,11 +6076,11 @@
 )
 
 (defun c:foo ()
-  (MoveCopyEntityData)
+  (DeleteJSDraw)
 )
 
 ; 2021-02-26
-(defun MoveCopyEntityData()
+(defun MoveCopyEntityData ()
   (mapcar '(lambda (x) 
              ; ready for refactor
              (if (/= (assoc 11 x) nil)
@@ -6111,7 +6122,7 @@
 )
 
 ; 2021-02-26
-(defun GetCopySS () 
+(defun GetCopySS (/ ss) 
   (setq ss (ssget '( 
         (-4 . "<OR")
           (0 . "LINE")
@@ -6129,6 +6140,11 @@
       )
     )
   ) 
+)
+
+; 2021-02-26
+(defun DeleteJSDraw () 
+  (DeleteEntityBySSUtils (GetCopySS))
 )
 
 ; SS
