@@ -6030,6 +6030,7 @@
   )
 )
 
+; 2021-02-26
 (defun c:dalogCopy()
   (mapcar '(lambda (x) 
               (entmake x)
@@ -6047,21 +6048,36 @@
   (MoveCopyEntityData)
 )
 
+; 2021-02-26
 (defun MoveCopyEntityData()
   (mapcar '(lambda (x) 
-             (ReplaceDXFValueByEntityDataUtils 
-               x 
-               '(10 11)
-               (list (MoveInsertPosition (cdr (assoc 10 x)) 10000 0) 
-                     (MoveInsertPosition (cdr (assoc 11 x)) 10000 0)
+             ; ready for refactor
+             (if (and (/= (assoc 10 x) nil) (/= (assoc 11 x) nil))
+               (progn 
+                  (ReplaceDXFValueByEntityDataUtils 
+                    x 
+                    '(10 11)
+                    (list (MoveInsertPosition (cdr (assoc 10 x)) 10000 0) 
+                          (MoveInsertPosition (cdr (assoc 11 x)) 10000 0)
+                    )
+                  )
                )
-             )
+               (progn 
+                  (ReplaceDXFValueByEntityDataUtils 
+                    x 
+                    '(10)
+                    (list (MoveInsertPosition (cdr (assoc 10 x)) 10000 0) 
+                    )
+                  )
+               ) 
+             ) 
            ) 
     (GetCopyEntityData)
   )
   ;(princ)
 )
 
+; 2021-02-26
 (defun GetCopyEntityData () 
   (setq ss (ssget))
   (mapcar '(lambda (x) 
@@ -6072,23 +6088,6 @@
               ) 
            ) 
     (GetSelectedEntityDataUtils ss) 
-  )
-)
-
-(defun GetCopyEntityDataV2 () 
-  (setq ss (ssget))
-  (mapcar '(lambda (x) 
-              (vl-remove-if-not '(lambda (y) 
-                                  (and (/= (car y) -1)  (/= (car y) 330) (/= (car y) 5))
-                                ) 
-                x
-              ) 
-           ) 
-    (vl-remove-if-not '(lambda (x) 
-                        (= (cdr (assoc 0 x)) "INSERT")
-                      ) 
-      (GetSelectedEntityDataUtils ss)
-    )   
   )
 )
 
