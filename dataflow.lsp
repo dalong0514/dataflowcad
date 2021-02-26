@@ -2326,6 +2326,26 @@
  )
 )
 
+(defun SortSSByMinxMiny (ssSelections /  lstOfSelections lstOfSublists lstSelections)
+ (if
+  (and 
+   (setq lstSelections (SelectionSetToList ssSelections))
+   (setq lstOfSublists 
+          (mapcar '(lambda (x) 
+                     (cons x (cdr (assoc 10 (entget x))))
+                   ) 
+            lstSelections
+          )
+   )
+    ; the key is -1 for y cordinate
+   (setq lstOfSublists (sortlistofsublistsbyitemX lstOfSublists 2 1))
+   (setq lstOfSublists (sortlistofsublistsbyitemX lstOfSublists 1 1))
+   (setq ssSelections  (listtoselectionset (mapcar 'car lstOfSublists)))
+  )
+  ssSelections
+ )
+)
+
 ; Sorting Select Set by XY cordinate
 ; Utils Field
 ;;;-------------------------------------------------------------------------;;;
@@ -6075,10 +6095,6 @@
   (princ)
 )
 
-(defun c:foo ()
-  (DeleteJSDraw)
-)
-
 ; 2021-02-26
 (defun MoveCopyEntityData ()
   (mapcar '(lambda (x) 
@@ -6146,6 +6162,20 @@
 (defun DeleteJSDraw () 
   (DeleteEntityBySSUtils (GetCopySS))
 )
+
+; 2021-02-26
+(defun GetJSDrawColumn () 
+  (ssget '((0 . "INSERT") (8 . "COLUMN")))
+)
+
+(defun GetJSDrawBasePosition () 
+  (GetSelectedEntityDataUtils (SortSSByMinxMiny (GetJSDrawColumn)))
+)
+
+(defun c:foo ()
+  (GetJSDrawBasePosition)
+)
+
 
 ; SS
 ;;;-------------------------------------------------------------------------;;;
