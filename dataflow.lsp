@@ -6130,6 +6130,36 @@
   )  
 )
 
+(defun c:Example_Lock()
+    ;; This example creates a new layer called "Lock".
+    ;; It then displays the status of the Lock property
+    ;; for the new layer, toggles the status of the
+    ;; Lock property, and again displays its status.
+    ;; After running this example, you can check the layer
+    ;; control on the Object Properties tool bar. It will
+    ;; show the new layer and the latest Lock status.
+    (setq acadObj (vlax-get-acad-object))
+    (setq doc (vla-get-ActiveDocument acadObj))
+
+    ;; Create the new layer
+    (setq layerObj (vla-Add (vla-get-Layers doc) "Lock"))
+    
+    ;; Display the Lock status of the new layer
+    (if (= (vla-get-Lock layerObj) :vlax-true)
+        (alert (strcat "Layer " (vla-get-Name layerObj) " is locked."))
+        (alert (strcat "Layer " (vla-get-Name layerObj) " is unlocked."))
+    )
+    
+    ;; Toggle the status of the Lock property for the layer
+    (vla-put-Lock layerObj (if (= (vla-get-Lock layerObj) :vlax-true) :vlax-false :vlax-true))
+    
+    ;; Display the Lock status of the new layer
+    (if (= (vla-get-Lock layerObj) :vlax-true)
+        (alert (strcat "Layer " (vla-get-Name layerObj) " is locked."))
+        (alert (strcat "Layer " (vla-get-Name layerObj) " is unlocked."))
+    )
+)
+
 ; GS ¡ª¡ª Equipemnt Layout
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
