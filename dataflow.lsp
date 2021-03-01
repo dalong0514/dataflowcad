@@ -2339,6 +2339,16 @@
  )
 )
 
+; 2021-02-27
+(defun SortPositionListByMinxMinyUtils (PositionList / resultList) 
+  (setq resultList 
+    (vl-sort PositionList '(lambda (x y) (< (car x) (car y))))
+  )
+  (setq resultList 
+    (vl-sort resultList '(lambda (x y) (< (cadr x) (cadr y))))
+  ) 
+)
+
 ; Sorting Select Set by XY cordinate
 ; Utils Field
 ;;;-------------------------------------------------------------------------;;;
@@ -6058,15 +6068,10 @@
 
 
 
-; 2021-02-26
-(defun c:setCopyEntityData () 
-  (vl-bb-set 'architectureDraw (MoveCopyEntityData))
-  (alert "建筑底部提取成功")
-)
-
-; 2021-02-26
-(defun c:migrateJSDraw ()
-  (generateJSDraw (vl-bb-ref 'architectureDraw))
+; 2021-02-28
+(defun c:extractJSDrawData () 
+  (vl-bb-set 'architectureDraw (list (GetJSDrawBasePositionList) (GetAllStrategyCopyEntityData)))
+  (alert "建筑底图提取成功")
 )
 
 ; 2021-02-26
@@ -6088,37 +6093,23 @@
   (princ)
 )
 
-; 2021-02-26
-(defun MoveCopyEntityData ()
-  (mapcar '(lambda (x) 
-             ; ready for refactor
-             (if (/= (assoc 11 x) nil)
-               (progn 
-                  (ReplaceDXFValueByEntityDataUtils 
-                    x 
-                    '(10 11)
-                    (list (MoveInsertPosition (cdr (assoc 10 x)) 200000 0) 
-                          (MoveInsertPosition (cdr (assoc 11 x)) 200000 0)
-                    )
-                  )
-               )
-               (progn 
-                  (ReplaceDXFValueByEntityDataUtils 
-                    x 
-                    '(10)
-                    (list (MoveInsertPosition (cdr (assoc 10 x)) 200000 0) 
-                    )
-                  )
-               ) 
-             ) 
-           ) 
-    (GetCopyEntityData)
-  )
+; 2021-02-28
+(defun MoveCopyEntityData () 
+  (MoveCopyEntityDataByBasePosition (GetCopyEntityData) '(200000 0))
 )
 
 ; 2021-02-26
 (defun GetCopyEntityData () 
-  (setq ss (GetCopySS))
+  (GetJSEntityData (GetCopySS))
+)
+
+; 2021-02-28
+(defun GetAllCopyEntityData () 
+  (GetJSEntityData (GetAllCopySS))
+)
+
+; 2021-02-28
+(defun GetJSEntityData (ss /) 
   (mapcar '(lambda (x) 
               (vl-remove-if-not '(lambda (y) 
                                   (and (/= (car y) -1)  (/= (car y) 330) (/= (car y) 5))
@@ -6131,8 +6122,8 @@
 )
 
 ; 2021-02-26
-(defun GetCopySS (/ ss) 
-  (setq ss (ssget '( 
+(defun GetCopySS () 
+    (ssget '( 
         (-4 . "<OR")
           (0 . "LINE")
           (0 . "INSERT")
@@ -6148,30 +6139,93 @@
         (-4 . "OR>")
       )
     )
-  ) 
+)
+
+; 2021-02-28
+(defun GetAllCopySS () 
+    (ssget "X" '( 
+        (-4 . "<OR")
+          (0 . "LINE")
+          (0 . "INSERT")
+        (-4 . "OR>") 
+        (-4 . "<OR")
+          (8 . "WINDOW")
+          (8 . "WALL")
+          (8 . "COLUMN")
+          (8 . "WALL-MOVE") 
+          (8 . "STAIR") 
+          ;poly line 多段线生成太复杂，前期打散成直线 
+          (8 . "EVTR") 
+        (-4 . "OR>")
+      )
+    )
 )
 
 ; 2021-02-26
-(defun DeleteJSDraw () 
-  (DeleteEntityBySSUtils (GetCopySS))
-)
-
-; 2021-02-26
-(defun GetJSDrawColumn () 
+(defun GetJSDrawColumnSS () 
   (ssget '((0 . "INSERT") (8 . "COLUMN")))
 )
 
-; 2021-02-26
-(defun GetJSDrawBasePosition () 
-  (GetSelectedEntityDataUtils (SortSSByMinxMiny (GetJSDrawColumn)))
+; 2021-02-27
+(defun GetAllJSDrawColumnSS () 
+  (ssget "X" '((0 . "INSERT") (8 . "COLUMN")))
+)
+
+; 2021-02-27
+(defun GetAllJSDrawColumnPosition () 
+  (mapcar '(lambda (x) 
+             (GetEntityPositionByEntityNameUtils x)
+           ) 
+    (GetEntityNameListBySSUtils (GetAllJSDrawColumnSS))
+  ) 
+)
+
+; 2021-02-27
+(defun GetStrategyJSDrawColumnPositionData (/ allJSDrawColumnPosition resultList) 
+  ; set a temp variable first, ss in the foreach
+  (setq allJSDrawColumnPosition (GetAllJSDrawColumnPosition))
+	(foreach item (FilterJSDrawLabelData) 
+    (mapcar '(lambda (x) 
+              (if (and 
+                    (> (car x) (car (cadr item))) 
+                    (< (car x) (+ (car (cadr item)) 126150)) 
+                    (< (cadr x) (cadr (cadr item)))
+                    (> (cadr x) (- (cadr (cadr item)) 89100))
+                  )
+                (setq resultList (append resultList (list (list (car item) x))))
+              )
+            ) 
+      allJSDrawColumnPosition
+    ) 
+  ) 
+  resultList
+)
+
+(defun GetJSDrawBasePositionList (/ allJSDrawColumnPositionData tempPositionList resultList)
+  ; set a temp variable first, ss in the foreach
+  (setq allJSDrawColumnPositionData (GetStrategyJSDrawColumnPositionData))
+	(foreach item (FilterJSDrawLabelData) 
+    (setq tempPositionList (SortPositionListByMinxMinyUtils 
+                              (mapcar '(lambda (x) (cadr x)) 
+                                (vl-remove-if-not '(lambda (x) 
+                                                    (= (car x) (car item)) 
+                                                  ) 
+                                  allJSDrawColumnPositionData
+                                ) 
+                              )  
+                       )
+    )
+    (setq resultList (append resultList (list (list (car item) (car tempPositionList)))))
+  ) 
+  (setq resultList (vl-sort resultList '(lambda (x y) (< (atof (car x)) (atof (car y))))))
 )
 
 ; 2021-02-26
 (defun GetAllJSDrawLabelData () 
   (mapcar '(lambda (x) 
              (list 
+               (StringSubstUtils "" "%%p" (strcat (cdr (assoc "dwgname1" x)) (cdr (assoc "dwgname2l1" x)) (cdr (assoc "dwgname2l2" x))))
                (GetJSDrawPositionRangeUtils (GetEntityPositionByEntityNameUtils (handent (cdr (assoc "entityhandle" x)))))
-               (strcat (cdr (assoc "dwgname1" x)) (cdr (assoc "dwgname2l1" x)) (cdr (assoc "dwgname2l2" x)))
              )
            ) 
     (GetAllPropertyValueListByEntityNameList (GetEntityNameListBySSUtils (GetAllDrawLabelSSUtils)))
@@ -6182,9 +6236,151 @@
   (list (+ (car position) -126150) (+ (cadr position) 89100))
 )
 
-(defun c:foo ()
-  (GetAllJSDrawLabelData)
+; 2021-02-27
+(defun FilterJSDrawLabelData ()
+  (mapcar '(lambda (x) 
+             (list 
+               (RegExpReplace (car x) "(\\d+\\.\\d).*" "$1" nil T)
+               (cadr x)
+             )
+           ) 
+    (vl-remove-if-not '(lambda (x) 
+                        (/= (wcmatch (car x) "*`.*") nil) 
+                      ) 
+      (GetAllJSDrawLabelData)
+    ) 
+  ) 
 )
+
+; 2021-02-28
+(defun GetAllStrategyCopyEntityData () 
+  (GetStrategyEntityData (GetAllCopyEntityData))
+)
+
+; 2021-02-28
+(defun GetStrategyCopyEntityData () 
+  (GetStrategyEntityData (GetCopyEntityData))
+)
+
+; 2021-02-27
+(defun GetStrategyEntityData (copyEntityData / resultList) 
+	(foreach item (FilterJSDrawLabelData) 
+    (mapcar '(lambda (x) 
+              (if (and 
+                    (> (cadr (assoc 10 x)) (car (cadr item))) 
+                    (< (cadr (assoc 10 x)) (+ (car (cadr item)) 126150)) 
+                    (< (caddr (assoc 10 x)) (cadr (cadr item)))
+                    (> (caddr (assoc 10 x)) (- (cadr (cadr item)) 89100))
+                  )
+                (setq resultList (append resultList (list (list (car item) x))))
+              )
+            ) 
+      copyEntityData
+    ) 
+  ) 
+  resultList
+)
+
+; 2021-02-28
+(defun MoveCopyEntityDataByBasePosition (entityData basePosition /)
+  (mapcar '(lambda (x) 
+             ; ready for refactor
+             (if (/= (assoc 11 x) nil)
+               (progn 
+                  (ReplaceDXFValueByEntityDataUtils 
+                    x 
+                    '(10 11)
+                    (list (MoveInsertPosition (cdr (assoc 10 x)) (car basePosition) (cadr basePosition)) 
+                          (MoveInsertPosition (cdr (assoc 11 x)) (car basePosition) (cadr basePosition))
+                    )
+                  )
+               )
+               (progn 
+                  (ReplaceDXFValueByEntityDataUtils 
+                    x 
+                    '(10)
+                    (list 
+                      (MoveInsertPosition (cdr (assoc 10 x)) (car basePosition) (cadr basePosition)) 
+                    )
+                  )
+               ) 
+             ) 
+           ) 
+    entityData
+  )
+)
+
+; 2021-02-28
+(defun MoveJSEntityDataToBasePosition (drawBasePositionList / strategyCopyEntityData tempDataList resultList)
+  ; set a temp variable first, ss in the foreach
+  (setq strategyCopyEntityData (GetStrategyCopyEntityData))
+	(foreach item drawBasePositionList
+    (setq tempDataList (MoveCopyEntityDataByBasePosition 
+                              (mapcar '(lambda (x) (cadr x)) 
+                                (vl-remove-if-not '(lambda (x) 
+                                                    (= (car x) (car item)) 
+                                                  ) 
+                                  strategyCopyEntityData
+                                ) 
+                              ) 
+                              (list (- 0 (car (cadr item))) (- 0 (cadr (cadr item))))
+                           )
+    )
+    (setq resultList (append resultList (list (list (car item) tempDataList))))
+  ) 
+  resultList
+)
+
+; 2021-02-28
+(defun GenerateNewJSEntityData (drawBasePositionList strategyCopyEntityData /)
+  ; set a temp variable first, ss in the foreach
+	(foreach item drawBasePositionList
+    (generateJSDraw (MoveCopyEntityDataByBasePosition 
+                      (mapcar '(lambda (x) (cadr x)) 
+                        (vl-remove-if-not '(lambda (x) 
+                                            (= (car x) (car item)) 
+                                          ) 
+                          strategyCopyEntityData
+                        ) 
+                      ) 
+                      (list (- 0 (car (cadr item))) (- 0 (cadr (cadr item))))
+                    )
+    )
+  ) 
+)
+
+; 2021-02-28
+(defun c:migrateJSDraw (/ GSDrawBasePositionList JSDrawBasePositionList newDrawBasePositionList JSDrawData resultList)
+  (if (/= (vl-bb-ref 'architectureDraw) nil) 
+    (progn 
+      (setq GSDrawBasePositionList (GetJSDrawBasePositionList))
+      (setq JSDrawBasePositionList (car (vl-bb-ref 'architectureDraw))) 
+      (setq newDrawBasePositionList (GetNewDrawBasePositionList GSDrawBasePositionList JSDrawBasePositionList))
+      (setq JSDrawData (car (cdr (vl-bb-ref 'architectureDraw)))) ; why have car? - 2021-02-28
+      (DeleteEntityBySSUtils (GetAllCopySS))
+      (GenerateNewJSEntityData newDrawBasePositionList JSDrawData)
+      (alert "建筑底图更新成功") 
+    )
+    (alert "请先提取建筑底图！") 
+  )
+)
+
+(defun GetNewDrawBasePositionList (GSDrawBasePositionList JSDrawBasePositionList /)
+  (mapcar '(lambda (x y) 
+             (list 
+               (car x) 
+               (MoveInsertPosition (cadr y) (- 0 (car (cadr x))) (- 0 (cadr (cadr x))))
+             )
+           ) 
+    GSDrawBasePositionList
+    JSDrawBasePositionList
+  )  
+)
+
+(defun c:foo (/ strategyCopyEntityData resultList) 
+  (GetJSDrawBasePositionList)
+)
+
 
 
 ; SS
