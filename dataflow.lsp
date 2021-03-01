@@ -5793,9 +5793,7 @@
 )
 
 
-(defun c:foo ()
-  (GetJSDrawBasePositionList)
-)
+
 
 
 ; 2021-02-28
@@ -6060,13 +6058,17 @@
   )
 )
 
-(defun MovePolyLineDataByBasePosition (entityData basePosition /)
-  (ReplaceDXFValueByEntityDataUtils 
-    entityData 
-    '(10)
-    (list (MoveInsertPosition (cdr (assoc 10 x)) (car basePosition) (cadr basePosition)) 
-    )
+(defun MovePolyLineDataByBasePosition (entityData basePosition / resultList)
+  (mapcar '(lambda (x) 
+             (if (= (car x) 10) 
+               (setq resultList (append resultList (list (cons 10 (MoveInsertPosition (cdr x) (car basePosition) (cadr basePosition))))))
+               (setq resultList (append resultList (list x)))
+             ) 
+             
+           ) 
+    entityData
   )
+  resultList
 )
 
 ; 2021-02-28
