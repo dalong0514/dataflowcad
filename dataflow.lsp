@@ -5793,6 +5793,10 @@
 )
 
 
+(defun c:foo ()
+  (GetJSDrawBasePositionList)
+)
+
 
 ; 2021-02-28
 (defun c:extractJSDrawData () 
@@ -5983,7 +5987,7 @@
 (defun FilterJSDrawLabelData ()
   (mapcar '(lambda (x) 
              (list 
-               (RegExpReplace (car x) "(\\d+\\.\\d).*" "$1" nil T)
+               (RegExpReplace (car x) "([^0-9]*)(\\d+\\.\\d).*" "$2" nil T)
                (cadr x)
              )
            ) 
