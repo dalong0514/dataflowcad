@@ -6033,24 +6033,8 @@
   (mapcar '(lambda (x) 
              ; ready for refactor
              (if (/= (assoc 11 x) nil) 
-               (progn 
-                  (ReplaceDXFValueByEntityDataUtils 
-                    x 
-                    '(10 11)
-                    (list (MoveInsertPosition (cdr (assoc 10 x)) (car basePosition) (cadr basePosition)) 
-                          (MoveInsertPosition (cdr (assoc 11 x)) (car basePosition) (cadr basePosition))
-                    )
-                  )
-               )
-               (progn 
-                  (ReplaceDXFValueByEntityDataUtils 
-                    x 
-                    '(10)
-                    (list 
-                      (MoveInsertPosition (cdr (assoc 10 x)) (car basePosition) (cadr basePosition)) 
-                    )
-                  )
-               ) 
+               (MoveLineDataByBasePosition x basePosition)
+               (MoveBlockDataByBasePosition x basePosition)
              ) 
            ) 
     entityData
@@ -6063,6 +6047,15 @@
     '(10 11)
     (list (MoveInsertPosition (cdr (assoc 10 x)) (car basePosition) (cadr basePosition)) 
           (MoveInsertPosition (cdr (assoc 11 x)) (car basePosition) (cadr basePosition))
+    )
+  )
+)
+
+(defun MoveBlockDataByBasePosition (entityData basePosition /)
+  (ReplaceDXFValueByEntityDataUtils 
+    entityData 
+    '(10)
+    (list (MoveInsertPosition (cdr (assoc 10 x)) (car basePosition) (cadr basePosition)) 
     )
   )
 )
