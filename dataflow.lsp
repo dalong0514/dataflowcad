@@ -5845,6 +5845,42 @@
   (alert (nth lockStatus lockStatusMsg))
 )
 
+; 2021-03-01
+(defun c:lockJSDrawLayer(/ acadObj doc lockStatus lockStatusMsg)
+  (setq acadObj (vlax-get-acad-object))
+  (setq doc (vla-get-ActiveDocument acadObj))
+  (mapcar '(lambda (x) 
+              ;; Create the new layer
+              (setq layerObj (vla-Add (vla-get-Layers doc) x))
+              ;; Display the Lock status of the new layer
+              (if (/= (vla-get-Lock layerObj) :vlax-true)
+                  ;; Toggle the status of the Lock property for the layer
+                  (vla-put-Lock layerObj (if (= (vla-get-Lock layerObj) :vlax-true) :vlax-false :vlax-true)) 
+              ) 
+           ) 
+    '("WALL-MOVE" "WINDOW" "WALL" "COLUMN" "STAIR" "EVTR" "DOOR_FIRE")
+  ) 
+  (alert "½¨Öþµ×Í¼Ëø¶¨")
+)
+
+; 2021-03-01
+(defun c:unlockJSDrawLayer(/ acadObj doc lockStatus lockStatusMsg)
+  (setq acadObj (vlax-get-acad-object))
+  (setq doc (vla-get-ActiveDocument acadObj))
+  (mapcar '(lambda (x) 
+              ;; Create the new layer
+              (setq layerObj (vla-Add (vla-get-Layers doc) x))
+              ;; Display the Lock status of the new layer
+              (if (= (vla-get-Lock layerObj) :vlax-true)
+                  ;; Toggle the status of the Lock property for the layer
+                  (vla-put-Lock layerObj (if (= (vla-get-Lock layerObj) :vlax-true) :vlax-false :vlax-true)) 
+              ) 
+           ) 
+    '("WALL-MOVE" "WINDOW" "WALL" "COLUMN" "STAIR" "EVTR" "DOOR_FIRE")
+  ) 
+  (alert "½¨Öþµ×Í¼½âËø")
+)
+
 ; 2021-02-26
 (defun generateJSDraw (JSEntityData /)
   (mapcar '(lambda (x) 
