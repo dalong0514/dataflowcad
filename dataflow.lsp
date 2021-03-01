@@ -5892,6 +5892,7 @@
         (-4 . "<OR")
           (0 . "LINE")
           (0 . "INSERT")
+          (0 . "LWPOLYLINE")
         (-4 . "OR>") 
         (-4 . "<OR")
           (8 . "WINDOW")
@@ -6032,7 +6033,12 @@
              ; ready for refactor
              (if (= (cdr (assoc 0 x)) "INSERT") 
                (MoveBlockDataByBasePosition x basePosition)
-               (MoveLineDataByBasePosition x basePosition)
+               (progn 
+                 (if (= (cdr (assoc 0 x)) "LINE") 
+                   (MoveLineDataByBasePosition x basePosition)
+                   (MovePolyLineDataByBasePosition x basePosition)
+                 )
+               )
              )  
            ) 
     entityData
