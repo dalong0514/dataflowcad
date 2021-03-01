@@ -5866,7 +5866,7 @@
   )
 )
 
-; 2021-02-26
+; 2021-03-01
 (defun GetCopySS () 
     (ssget '( 
         (-4 . "<OR")
@@ -5879,14 +5879,15 @@
           (8 . "COLUMN")
           (8 . "WALL-MOVE") 
           (8 . "STAIR") 
-          ;poly line 多段线生成太复杂，前期打散成直线 
           (8 . "EVTR") 
+          (8 . "DIM_SYMB") 
+          (8 . "DOOR_FIRE")
         (-4 . "OR>")
       )
     )
 )
 
-; 2021-02-28
+; 2021-03-01
 (defun GetAllCopySS () 
     (ssget "X" '( 
         (-4 . "<OR")
@@ -5900,8 +5901,9 @@
           (8 . "COLUMN")
           (8 . "WALL-MOVE") 
           (8 . "STAIR") 
-          ;poly line 多段线生成太复杂，前期打散成直线 
           (8 . "EVTR") 
+          (8 . "DIM_SYMB") 
+          (8 . "DOOR_FIRE")
         (-4 . "OR>")
       )
     )
