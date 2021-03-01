@@ -6060,6 +6060,15 @@
   )
 )
 
+(defun MovePolyLineDataByBasePosition (entityData basePosition /)
+  (ReplaceDXFValueByEntityDataUtils 
+    entityData 
+    '(10)
+    (list (MoveInsertPosition (cdr (assoc 10 x)) (car basePosition) (cadr basePosition)) 
+    )
+  )
+)
+
 ; 2021-02-28
 (defun MoveJSEntityDataToBasePosition (drawBasePositionList / strategyCopyEntityData tempDataList resultList)
   ; set a temp variable first, ss in the foreach
