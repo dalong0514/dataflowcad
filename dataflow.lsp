@@ -6032,10 +6032,10 @@
 (defun MoveCopyEntityDataByBasePosition (entityData basePosition /)
   (mapcar '(lambda (x) 
              ; ready for refactor
-             (if (/= (assoc 11 x) nil) 
-               (MoveLineDataByBasePosition x basePosition)
+             (if (= (cdr (assoc 0 x)) "INSERT") 
                (MoveBlockDataByBasePosition x basePosition)
-             ) 
+               (MoveLineDataByBasePosition x basePosition)
+             )  
            ) 
     entityData
   )
