@@ -5286,7 +5286,8 @@
   (setq drawNum (RegExpReplace (ExtractDrawNum drawNum) "0(\\d)-(\\d*)" (strcat "$1" "$2") nil nil))
   (cond 
     ((= numberMode "0") (RegExpReplace originString "([A-Za-z]+)(\\d*).*" (strcat "$1" startNumberString drawNum "$2") nil nil))
-    ((= numberMode "1") (RegExpReplace originString "([A-Za-z]+)(\\d*).*" (strcat "$1" startNumberString "$2") nil nil))
+    ; bug 不按流程图编，按单体号（1A3）有问题，提取逻辑做了修改 - 2021-03-02
+    ((= numberMode "1") (RegExpReplace originString "([A-Za-z]+[0-9]?[A-Za-z]+)(\\d*).*" (strcat "$1" startNumberString "$2") nil nil))
   ) 
 )
 
