@@ -6519,6 +6519,7 @@ color ¨C A numeric value (1 ¨C 255) that represents the color
 of the layer 
 Usage: (createlayer "Doors" 2) 
 |; 
+
 (defun createlayer (name color / ) 
   ; Check to see if the layer exists before creating/modifying it 
   (if (= (tblsearch "layer" name) nil) 
@@ -6526,6 +6527,11 @@ Usage: (createlayer "Doors" 2)
     (setvar "clayer" name) 
   ) 
 ) 
+
+(defun createrectangle (pt1 pt2 pt3 pt4 /)
+  (command "._line" pt1 pt2 pt3 pt4 "_c")
+)
+
 (defun c:drawplate ( / pt1 pt2 pt3 pt4) 
   ; Create or modify the layer named Plate (createlayer "Plate" 5) 
   ; Set the coordinates to draw the rectangle 
