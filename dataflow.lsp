@@ -5839,15 +5839,12 @@
 ; 2021-02-26
 (defun c:moveJSDraw ()
   (generateJSDraw (MoveCopyEntityData))
+  (CADLispMove (GetAllMoveDrawLabelSS) '(0 0 0) '(200000 0 0))
+  (CADLispCopy (GetAllCopyDrawLabelSS) '(0 0 0) '(200000 0 0)) 
   (alert "移出建筑底图成功！") 
 )
 
-(defun c:foo ()
-  (CADLispMove (GetAllMoveDrawLabelSS) '(0 0 0) '(200000 0 0))
-)
-
-
-; 2021-03-01
+; 2021-03-02
 (defun GetAllMoveDrawLabelSS () 
     (ssget "X" '( (0 . "INSERT")
         (-4 . "<OR")
@@ -5858,12 +5855,11 @@
     )
 )
 
-; 2021-03-01
+; 2021-03-02
 (defun GetAllCopyDrawLabelSS () 
     (ssget "X" '( 
         (-4 . "<OR")
           (0 . "LINE")
-          (0 . "INSERT")
           (0 . "LWPOLYLINE")
         (-4 . "OR>") 
         (-4 . "<OR")
