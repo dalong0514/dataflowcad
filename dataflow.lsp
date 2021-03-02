@@ -6508,3 +6508,33 @@
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
+
+;| 
+Createlayer function creates/modifies a layer and 
+expects two argument values. 
+Arguments: 
+name ¨C A string that represents the name of the layer to 
+create or modify 
+color ¨C A numeric value (1 ¨C 255) that represents the color 
+of the layer 
+Usage: (createlayer "Doors" 2) 
+|; 
+(defun createlayer (name color / ) 
+  ; Check to see if the layer exists before creating/modifying it 
+  (if (= (tblsearch "layer" name) nil) 
+    (command "._-layer" "_m" name "_c" color "" "") 
+    (setvar "clayer" name) 
+  ) 
+) 
+(defun c:drawplate ( / pt1 pt2 pt3 pt4) 
+  ; Create or modify the layer named Plate (createlayer "Plate" 5) 
+  ; Set the coordinates to draw the rectangle 
+  (setq pt1 '(0 0 0) ;| lower-left corner |; ) 
+  (setq pt2 '(5 0 0) ;| lower-right corner |; ) 
+  (setq pt3 '(5 2.75 0) ;| upper-right corner |; ) 
+  (setq pt4 '(0 2.75 0) ;| upper-left corner |; ) 
+  ; Draw the rectangle 
+  (createrectangle pt1 pt2 pt3 pt4) 
+  ; Display message to the user 
+  (prompt "\nRectangle drawn.") 
+)
