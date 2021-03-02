@@ -38,6 +38,10 @@
   (command "_.move" ss firstPoint "" secondPoint "")
 )
 
+(defun CADLispCopy (ss firstPoint secondPoint /)
+  (command "_.copy" ss firstPoint "" secondPoint "")
+)
+
 ; Redefining AutoCAD Commands
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
@@ -5836,6 +5840,38 @@
 (defun c:moveJSDraw ()
   (generateJSDraw (MoveCopyEntityData))
   (alert "移出建筑底图成功！") 
+)
+
+(defun c:foo ()
+  (CADLispMove (GetAllMoveDrawLabelSS) '(0 0 0) '(200000 0 0))
+)
+
+
+; 2021-03-01
+(defun GetAllMoveDrawLabelSS () 
+    (ssget "X" '( (0 . "INSERT")
+        (-4 . "<OR")
+          (8 . "titan-title")
+          (8 . "titan-title2")
+        (-4 . "OR>")
+      )
+    )
+)
+
+; 2021-03-01
+(defun GetAllCopyDrawLabelSS () 
+    (ssget "X" '( 
+        (-4 . "<OR")
+          (0 . "LINE")
+          (0 . "INSERT")
+          (0 . "LWPOLYLINE")
+        (-4 . "OR>") 
+        (-4 . "<OR")
+          (8 . "titan-title")
+          (8 . "titan-title2")
+        (-4 . "OR>")
+      )
+    )
 )
 
 ; 2021-03-01
