@@ -400,7 +400,7 @@
 ;			 10 tests passed
 ;			  0 tests failed
 ; Note: there are always four characters before each "tests"
-(defun DL:PrintTestResults ( testResults / trues falses)
+(defun DL:PrintTestResults (testResults / trues falses)
 	(setq trues (cdr (assoc "T" testResults)))
 	(setq falses (cdr (assoc "F" testResults)))
 	
@@ -439,6 +439,7 @@
 ;;;-------------------------------------------------------------------------;;;
 ; Steal AutoCAD Modules
 
+; 2021-03-03
 (defun StealAllGsLcBlocks ()
   (Steal "D:\\dataflowcad\\allBlocks\\GSLcBlocks.dwg"
     '(
@@ -446,6 +447,21 @@
     )
   ) 
 )
+
+; 2021-03-03
+(defun StealGsLcBlockByName (blockNameList /)
+  (Steal "D:\\dataflowcad\\allBlocks\\GSLcBlocks.dwg"
+    (list 
+      (list "Blocks" (list blockNameList))
+    )
+  ) 
+)
+
+(defun c:foo ()
+  (StealGsLcBlockByName "Centrifuge")
+)
+
+(tblsearch "BLOCK" "Centrifuge")
 
 ; Steal AutoCAD Modules
 ;;;-------------------------------------------------------------------------;;;
