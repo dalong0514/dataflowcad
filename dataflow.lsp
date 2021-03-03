@@ -480,13 +480,17 @@
 )
 
 ; 2021-03-03
-(defun VerifyGsLcBlockByName (blockName /)
-  (/= (tblsearch "BLOCK" blockName) nil)
+(defun VerifyGsLcBlockByName (blockName /) 
+  (if (= (tblsearch "BLOCK" blockName) nil) 
+    (StealGsLcBlockByNameList (list blockName))
+  )
 )
 
 ; 2021-03-03
-(defun VerifyGsLcLayerByName (layerName /)
-  (/= (tblsearch "LAYER" layerName) nil)
+(defun VerifyGsLcLayerByName (layerName /) 
+  (if (= (tblsearch "LAYER" layerName) nil) 
+    (StealGsLcLayerByNameList (list layerName))
+  )
 )
 
 ; Steal AutoCAD Modules
@@ -3093,8 +3097,7 @@
 ;;;-------------------------------------------------------------------------;;;
 ; logic for generate Instrument
 
-(defun GenerateInstrumentPBlock ( / insPt) 
-  (setq insPt (getpoint "\n选取辅助流程组件插入点："))
+(defun GenerateInstrumentPBlock (insPt /) 
   (GenerateBlockReference insPt "InstrumentP" "DataFlow-Instrument") 
   (GenerateLeftBlockAttribute (MoveInsertPosition insPt 8.5 4) "VERSION" "" "DataFlow-InstrumentComment" 1.5 0 1 0)
   (GenerateCenterBlockAttribute (MoveInsertPosition insPt 0 0.5) "FUNCTION" "xxxx" "0" 3 0 0 1)
@@ -3108,8 +3111,12 @@
   (princ)
 )
 
-(defun c:foo ()
-  (GenerateInstrumentPBlock)
+(defun c:foo () 
+  (setq insPt (getpoint "\n选取辅助流程组件插入点："))
+  (VerifyGsLcBlockByName "InstrumentP")
+  (VerifyGsLcLayerByName "DataFlow-Instrument")
+  (VerifyGsLcLayerByName "DataFlow-InstrumentComment")
+  (GenerateInstrumentPBlock insPt)
 )
 
 
