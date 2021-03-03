@@ -2810,10 +2810,35 @@
   (princ)
 )
 
+; directionStatus: dxfcode 50; 0 水平方向 - 1.57 垂直方向
+; hiddenStatus dxfcode 70; 0 可见 - 1 隐藏
+; moveStatus: dxfcode 280; 1 固定 - 0 可移动
+(defun GenerateCenterBlockAttribute (insPt propertyName propertyValue blockLayer textHeight directionStatus hiddenStatus moveStatus /)
+  (entmake 
+    (list (cons 0 "ATTRIB") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 blockLayer) (cons 100 "AcDbText") 
+          (cons 10 (MoveInsertPosition insPt -5.8 0)) (cons 40 textHeight) (cons 1 propertyValue) (cons 50 directionStatus) 
+          (cons 41 0.7) (cons 51 0.0) (cons 7 "DataFlow") (cons 71 0) (cons 72 1) (cons 11 insPt) (cons 210 '(0.0 0.0 1.0)) 
+          (cons 100 "AcDbAttribute") (cons 280 0) (cons 2 propertyName) (cons 70 hiddenStatus) (cons 73 0) (cons 74 0) (cons 280 moveStatus)
+    )
+  )
+  (princ)
+)
+
+(defun GenerateLeftBlockAttribute (insPt propertyName propertyValue blockLayer textHeight directionStatus hiddenStatus moveStatus /)
+  (entmake 
+    (list (cons 0 "ATTRIB") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 blockLayer) (cons 100 "AcDbText") 
+          (cons 10 insPt) (cons 40 textHeight) (cons 1 propertyValue) (cons 50 directionStatus) (cons 41 0.7) (cons 51 0.0) (cons  7 "DataFlow") (cons 71 0) (cons 72 0) 
+          (cons 11 '(0.0 0.0 0.0)) (cons 210 '(0.0 0.0 1.0)) (cons 100 "AcDbAttribute") (cons 280 0) (cons 2 propertyName) (cons 70 hiddenStatus) 
+          (cons 73 0) (cons 74 0) (cons 280 moveStatus)
+    )
+  )
+  (princ)
+)
+
 (defun GenerateBlockAttribute (insPt propertyName propertyValue blockLayer textHeight /)
   (entmake 
     (list (cons 0 "ATTRIB") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 blockLayer) (cons 100 "AcDbText") 
-          (cons 10 insPt) (cons 40 textHeight) (cons 1 propertyValue) (cons 50 0.0) (cons 41 0.7) (cons 51 0.0) (cons  7 "Standard") (cons 71 0) (cons 72 0) 
+          (cons 10 insPt) (cons 40 textHeight) (cons 1 propertyValue) (cons 50 0.0) (cons 41 0.7) (cons 51 0.0) (cons  7 "DataFlow") (cons 71 0) (cons 72 0) 
           (cons 11 '(0.0 0.0 0.0)) (cons 210 '(0.0 0.0 1.0)) (cons 100 "AcDbAttribute") (cons 280 0) (cons 2 propertyName) (cons 70 0) 
           (cons 73 0) (cons 74 0) (cons 280 0)
     )
@@ -2824,7 +2849,7 @@
 (defun GenerateVerticallyBlockAttribute (insPt propertyName propertyValue blockLayer textHeight /)
   (entmake 
     (list (cons 0 "ATTRIB") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 blockLayer) (cons 100 "AcDbText") 
-          (cons 10 insPt) (cons 40 textHeight) (cons 1 propertyValue) (cons 50 1.5708) (cons 41 0.7) (cons 51 0.0) (cons 7 "Standard") (cons 71 0) (cons 72 0) 
+          (cons 10 insPt) (cons 40 textHeight) (cons 1 propertyValue) (cons 50 1.5708) (cons 41 0.7) (cons 51 0.0) (cons 7 "DataFlow") (cons 71 0) (cons 72 0) 
           (cons 11 '(0.0 0.0 0.0)) (cons 210 '(0.0 0.0 1.0)) (cons 100 "AcDbAttribute") (cons 280 0) (cons 2 propertyName) 
           (cons 70 0) (cons 73 0) (cons 74 0) (cons 280 0)
     )
@@ -2835,7 +2860,7 @@
 (defun GenerateBlockHiddenAttribute (insPt propertyName propertyValue blockLayer textHeight /)
   (entmake 
     (list (cons 0 "ATTRIB") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 blockLayer) (cons 100 "AcDbText") 
-          (cons 10 insPt) (cons 40 textHeight) (cons 1 propertyValue) (cons 50 0.0) (cons 41 0.7) (cons 51 0.0) (cons  7 "Standard") (cons 71 0) (cons 72 0) 
+          (cons 10 insPt) (cons 40 textHeight) (cons 1 propertyValue) (cons 50 0.0) (cons 41 0.7) (cons 51 0.0) (cons 7 "DataFlow") (cons 71 0) (cons 72 0) 
           (cons 11 '(0.0 0.0 0.0)) (cons 210 '(0.0 0.0 1.0)) (cons 100 "AcDbAttribute") (cons 280 0) (cons 2 propertyName) (cons 70 1) 
           (cons 73 0) (cons 74 0) (cons 280 0)
     )
@@ -2846,7 +2871,7 @@
 (defun GenerateVerticallyBlockHiddenAttribute (insPt propertyName propertyValue blockLayer textHeight /)
   (entmake 
     (list (cons 0 "ATTRIB") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 blockLayer) (cons 100 "AcDbText") 
-          (cons 10 insPt) (cons 40 textHeight) (cons 1 propertyValue) (cons 50 1.5708) (cons 41 0.7) (cons 51 0.0) (cons  7 "Standard") (cons 71 0) (cons 72 0) 
+          (cons 10 insPt) (cons 40 textHeight) (cons 1 propertyValue) (cons 50 1.5708) (cons 41 0.7) (cons 51 0.0) (cons  7 "DataFlow") (cons 71 0) (cons 72 0) 
           (cons 11 '(0.0 0.0 0.0)) (cons 210 '(0.0 0.0 1.0)) (cons 100 "AcDbAttribute") (cons 280 0) (cons 2 propertyName) 
           (cons 70 1) (cons 70 1) (cons 73 0) (cons 74 0) (cons 280 0)
     )
@@ -3060,7 +3085,36 @@
 ;;;-------------------------------------------------------------------------;;;
 
 
+
 ;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+; Generate GsLcBlocks
+
+;;;-------------------------------------------------------------------------;;;
+; logic for generate Instrument
+
+(defun GenerateInstrumentPBlock ( / insPt) 
+  (setq insPt (getpoint "\n选取辅助流程组件插入点："))
+  (GenerateBlockReference insPt "InstrumentP" "DataFlow-Instrument") 
+  (GenerateLeftBlockAttribute (MoveInsertPosition insPt 8.5 4) "VERSION" "" "DataFlow-InstrumentComment" 1.5 0 1 0)
+  (GenerateCenterBlockAttribute (MoveInsertPosition insPt 0 0.5) "FUNCTION" "xxxx" "0" 3 0 0 1)
+  (GenerateCenterBlockAttribute (MoveInsertPosition insPt 0 -3.5) "TAG" "xxxx" "0" 3 0 0 1)
+  (GenerateLeftBlockAttribute (MoveInsertPosition insPt 6.5 2.4) "HALARM" "" "0" 3 0 0 0)
+  (GenerateLeftBlockAttribute (MoveInsertPosition insPt 6.5 -5) "LALARM" "" "0" 3 0 0 0)
+  (GenerateLeftBlockAttribute (MoveInsertPosition insPt 8.5 2) "SUBSTANCE" "" "DataFlow-InstrumentComment" 1.5 0 0 0)
+  (entmake 
+    (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
+  )
+  (princ)
+)
+
+(defun c:foo ()
+  (GenerateInstrumentPBlock)
+)
+
+
+
+
 ;;;-------------------------------------------------------------------------;;;
 ; logic for generate PublicPipe
 
@@ -3206,10 +3260,7 @@
 
 ; logic for generate PublicPipe
 ;;;-------------------------------------------------------------------------;;;
-;;;-------------------------------------------------------------------------;;;
 
-
-;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
 ; logic for generate joinDrawArrow
 
@@ -3340,7 +3391,11 @@
 
 ; logic for generate joinDrawArrow
 ;;;-------------------------------------------------------------------------;;;
+
+; Generate GsLcBlocks
 ;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+
 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
