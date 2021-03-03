@@ -3105,21 +3105,35 @@
   (GenerateLeftBlockAttribute (MoveInsertPosition insPt 6.5 2.4) "HALARM" "" "0" 3 0 0 0)
   (GenerateLeftBlockAttribute (MoveInsertPosition insPt 6.5 -5) "LALARM" "" "0" 3 0 0 0)
   (GenerateLeftBlockAttribute (MoveInsertPosition insPt 8.5 2) "SUBSTANCE" "" "DataFlow-InstrumentComment" 1.5 0 0 0)
+  (GenerateLeftBlockAttribute (MoveInsertPosition insPt 8.5 0) "TEMP" "" "DataFlow-InstrumentComment" 1.5 0 0 0)
+  (GenerateLeftBlockAttribute (MoveInsertPosition insPt 8.5 -2) "PRESSURE" "" "DataFlow-InstrumentComment" 1.5 0 0 0)
+  (GenerateLeftBlockAttribute (MoveInsertPosition insPt 8.5 -6) "SORT" "" "DataFlow-InstrumentComment" 1.5 0 0 0)
+  (GenerateLeftBlockAttribute (MoveInsertPosition insPt 8.5 -12) "PHASE" "" "DataFlow-InstrumentComment" 1.5 0 1 0)
+  (GenerateLeftBlockAttribute (MoveInsertPosition insPt 8.5 -14) "MATERIAL" "" "DataFlow-InstrumentComment" 1.5 0 1 0)
+  (GenerateLeftBlockAttribute (MoveInsertPosition insPt 8.5 -16) "NAME" "" "DataFlow-InstrumentComment" 1.5 0 1 0) 
+  (GenerateLeftBlockAttribute (MoveInsertPosition insPt 8.5 -4) "LOCATION" "" "DataFlow-InstrumentComment" 1.5 0 0 0)
+  (GenerateLeftBlockAttribute (MoveInsertPosition insPt 8.5 -18) "MIN" "" "DataFlow-InstrumentComment" 1.5 0 1 0)
+  (GenerateLeftBlockAttribute (MoveInsertPosition insPt 8.5 -20) "MAX" "" "DataFlow-InstrumentComment" 1.5 0 1 0)
+  (GenerateLeftBlockAttribute (MoveInsertPosition insPt 8.5 -22) "NOMAL" "" "DataFlow-InstrumentComment" 1.5 0 1 0)
+  (GenerateLeftBlockAttribute (MoveInsertPosition insPt 8.5 -24) "DRAWNUM" "" "DataFlow-InstrumentComment" 1.5 0 1 0)
+  (GenerateLeftBlockAttribute (MoveInsertPosition insPt 8.5 -26) "INSTALLSIZE" "" "DataFlow-InstrumentComment" 1.5 0 1 0)
+  (GenerateLeftBlockAttribute (MoveInsertPosition insPt 8.5 -28) "COMMENT" "" "DataFlow-InstrumentComment" 1.5 0 1 0)
+  (GenerateLeftBlockAttribute (MoveInsertPosition insPt 8.5 -30) "DIRECTION" "" "DataFlow-InstrumentComment" 1.5 0 1 0)
+  (GenerateLeftBlockAttribute (MoveInsertPosition insPt 8.5 -8) "PIPECLASSCHANGE" "" "DataFlow-InstrumentComment" 1.5 0 0 0)
+  (GenerateLeftBlockAttribute (MoveInsertPosition insPt 8.5 -10) "REDUCERINFO" "" "DataFlow-InstrumentComment" 1.5 0 0 0) 
   (entmake 
     (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
   )
   (princ)
 )
 
-(defun c:foo () 
+(defun c:InsertInstrumentPBlock (/ insPt) 
   (setq insPt (getpoint "\n选取辅助流程组件插入点："))
   (VerifyGsLcBlockByName "InstrumentP")
   (VerifyGsLcLayerByName "DataFlow-Instrument")
   (VerifyGsLcLayerByName "DataFlow-InstrumentComment")
   (GenerateInstrumentPBlock insPt)
 )
-
-
 
 
 ;;;-------------------------------------------------------------------------;;;
