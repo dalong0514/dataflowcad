@@ -439,9 +439,13 @@
 ;;;-------------------------------------------------------------------------;;;
 ; Steal AutoCAD Modules
 
+(defun GetGsLcModulesPath (/ result)
+  (setq result "D:\\dataflowcad\\AllBlocks\\GsLcBlocks.dwg")
+)
+
 ; 2021-03-03
 (defun StealAllGsLcBlocks ()
-  (Steal "D:\\dataflowcad\\allBlocks\\GsLcBlocks.dwg"
+  (Steal (GetGsLcModulesPath) 
     '(
       ("Blocks" ("*"))
     )
@@ -450,7 +454,7 @@
 
 ; 2021-03-03
 (defun StealAllGsLcLayers ()
-  (Steal "D:\\dataflowcad\\allBlocks\\GsLcBlocks.dwg"
+  (Steal (GetGsLcModulesPath) 
     '(
       ("Layers" ("*"))
     )
@@ -459,7 +463,7 @@
 
 ; 2021-03-03
 (defun StealGsLcBlockByNameList (blockNameList /)
-  (Steal "D:\\dataflowcad\\allBlocks\\GsLcBlocks.dwg"
+  (Steal (GetGsLcModulesPath) 
     (list 
       (list "Blocks" blockNameList)
     )
@@ -468,7 +472,7 @@
 
 ; 2021-03-03
 (defun StealGsLcLayerByNameList (layerNameList /)
-  (Steal "D:\\dataflowcad\\allBlocks\\GsLcBlocks.dwg"
+  (Steal (GetGsLcModulesPath) 
     (list 
       (list "Layers" layerNameList)
     )
