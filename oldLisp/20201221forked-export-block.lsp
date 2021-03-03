@@ -2,7 +2,7 @@
 ;;;    ATTOUT.LSP
 ;;;    Created 4/24/98 by Randy Kintzley
 ;;;    EDITED 6/22/2011 by LIWEN Email:liwen@znwl.com
-;;;    Copyright ?1999 by Autodesk, Inc.
+;;;    Copyright 1999 by Autodesk, Inc.
 ;;;
 ;;;    Your use of this software is governed by the terms and conditions of the
 ;;;    License Agreement you accepted prior to installation of this software.
