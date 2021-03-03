@@ -441,7 +441,7 @@
 
 ; 2021-03-03
 (defun StealAllGsLcBlocks ()
-  (Steal "D:\\dataflowcad\\allBlocks\\GSLcBlocks.dwg"
+  (Steal "D:\\dataflowcad\\allBlocks\\GsLcBlocks.dwg"
     '(
       ("Blocks" ("*"))
     )
@@ -449,19 +449,41 @@
 )
 
 ; 2021-03-03
-(defun StealGsLcBlockByName (blockNameList /)
-  (Steal "D:\\dataflowcad\\allBlocks\\GSLcBlocks.dwg"
-    (list 
-      (list "Blocks" (list blockNameList))
+(defun StealAllGsLcLayers ()
+  (Steal "D:\\dataflowcad\\allBlocks\\GsLcBlocks.dwg"
+    '(
+      ("Layers" ("*"))
     )
   ) 
 )
 
-(defun c:foo ()
-  (StealGsLcBlockByName "Centrifuge")
+; 2021-03-03
+(defun StealGsLcBlockByNameList (blockNameList /)
+  (Steal "D:\\dataflowcad\\allBlocks\\GsLcBlocks.dwg"
+    (list 
+      (list "Blocks" blockNameList)
+    )
+  ) 
 )
 
-(tblsearch "BLOCK" "Centrifuge")
+; 2021-03-03
+(defun StealGsLcLayerByNameList (layerNameList /)
+  (Steal "D:\\dataflowcad\\allBlocks\\GsLcBlocks.dwg"
+    (list 
+      (list "Layers" layerNameList)
+    )
+  ) 
+)
+
+; 2021-03-03
+(defun VerifyGsLcBlockByName (blockName /)
+  (/= (tblsearch "BLOCK" blockName) nil)
+)
+
+; 2021-03-03
+(defun VerifyGsLcLayerByName (layerName /)
+  (/= (tblsearch "LAYER" layerName) nil)
+)
 
 ; Steal AutoCAD Modules
 ;;;-------------------------------------------------------------------------;;;
