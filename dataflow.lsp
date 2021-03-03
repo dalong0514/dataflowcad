@@ -440,7 +440,7 @@
 ; Steal AutoCAD Modules
 
 (defun GetGsLcModulesPath (/ result)
-  (setq result "D:\\dataflowcad\\AllBlocks\\GsLcBlocks.dwg")
+  (setq result "D:\\dataflowcad\\allBlocks\\GsLcBlocks.dwg")
 )
 
 ; 2021-03-03
