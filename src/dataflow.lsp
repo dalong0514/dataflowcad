@@ -3098,7 +3098,7 @@
 ; logic for generate Instrument
 
 (defun c:InsertBlockInstrumentP (/ insPt) 
-  (setq insPt (getpoint "\n选取辅助流程组件插入点："))
+  (setq insPt (getpoint "\n选取集中仪表插入点："))
   (VerifyGsLcBlockByName "InstrumentP")
   (VerifyGsLcLayerByName "DataFlow-Instrument")
   (VerifyGsLcLayerByName "DataFlow-InstrumentComment")
@@ -3106,7 +3106,7 @@
 )
 
 (defun c:InsertBlockInstrumentL (/ insPt) 
-  (setq insPt (getpoint "\n选取辅助流程组件插入点："))
+  (setq insPt (getpoint "\n选取就地仪表插入点："))
   (VerifyGsLcBlockByName "InstrumentL")
   (VerifyGsLcLayerByName "DataFlow-Instrument")
   (VerifyGsLcLayerByName "DataFlow-InstrumentComment")
@@ -3114,7 +3114,7 @@
 )
 
 (defun c:InsertBlockInstrumentSIS (/ insPt) 
-  (setq insPt (getpoint "\n选取辅助流程组件插入点："))
+  (setq insPt (getpoint "\n选取SIS仪表插入点："))
   (VerifyGsLcBlockByName "InstrumentSIS")
   (VerifyGsLcLayerByName "DataFlow-Instrument")
   (VerifyGsLcLayerByName "DataFlow-InstrumentComment")
@@ -3155,6 +3155,32 @@
   (princ)
 )
 
+(defun c:InsertBlockPipeArrowLeft (/ insPt) 
+  (setq insPt (getpoint "\n选取水平管道插入点："))
+  (VerifyGsLcBlockByName "PipeArrowLeft")
+  (VerifyGsLcLayerByName "DataFlow-Pipe")
+  (VerifyGsLcLayerByName "DataFlow-PipeComment")
+  (GenerateBlockPipeArrowLeft insPt)
+)
+
+(defun GenerateBlockPipeArrowLeft (insPt /) 
+  (GenerateBlockReference insPt "PipeArrowLeft" "DataFlow-Pipe") 
+  (GenerateLeftBlockAttribute (MoveInsertPosition insPt -20 -1) "VERSION" "" "DataFlow-PipeComment" 1.5 0 1 0)
+  (GenerateLeftBlockAttribute (MoveInsertPosition insPt -20 2) "PIPENUM" "xxxx" "0" 3 0 0 0)
+  (GenerateLeftBlockAttribute (MoveInsertPosition insPt -20 6) "SUBSTANCE" "" "DataFlow-PipeComment" 1.5 0 0 0)
+  (GenerateLeftBlockAttribute (MoveInsertPosition insPt -10 6) "TEMP" "" "DataFlow-PipeComment" 1.5 0 0 0)
+  (GenerateLeftBlockAttribute (MoveInsertPosition insPt -6.5 6) "PRESSURE" "" "DataFlow-PipeComment" 1.5 0 0 0) 
+  (GenerateLeftBlockAttribute (MoveInsertPosition insPt -20 -5) "PHASE" "" "DataFlow-PipeComment" 1.5 0 1 0)
+  (GenerateLeftBlockAttribute (MoveInsertPosition insPt -1 6) "FROM" "" "DataFlow-PipeComment" 1.5 0 0 0)
+  (GenerateLeftBlockAttribute (MoveInsertPosition insPt 8 6) "TO" "" "DataFlow-PipeComment" 1.5 0 0 0)
+  (GenerateLeftBlockAttribute (MoveInsertPosition insPt -20 -7) "DRAWNUM" "" "DataFlow-PipeComment" 1.5 0 1 0)
+  (GenerateLeftBlockAttribute (MoveInsertPosition insPt -20 -3) "PIPECLASSCHANGE" "" "DataFlow-PipeComment" 1.5 0 0 0)
+  (GenerateLeftBlockAttribute (MoveInsertPosition insPt -12 -3) "REDUCERINFO" "" "DataFlow-PipeComment" 1.5 0 0 0) 
+  (entmake 
+    (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
+  )
+  (princ)
+)
 
 
 ;;;-------------------------------------------------------------------------;;;
