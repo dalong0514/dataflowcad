@@ -2884,10 +2884,10 @@
 )
 
 (defun GenerateJoinDrawArrowToElement (insPt fromtoValue drawnumValue relatedIDValue /)
-  (GenerateBlockReference insPt "JoinDrawArrowTo" "接图箭头")
-  (GenerateBlockAttribute (MoveInsertPosition insPt 1 4) "FROMTO" fromtoValue "接图箭头" 3)
-  (GenerateBlockAttribute (MoveInsertPosition insPt 1 -1.5) "DRAWNUM" drawnumValue "接图箭头" 3)
-  (GenerateBlockHiddenAttribute (MoveInsertPosition insPt 1 -7) "RELATEDID" relatedIDValue "接图箭头" 3)
+  (GenerateBlockReference insPt "JoinDrawArrowTo" "DataFlow-JoinDrawArrow")
+  (GenerateBlockAttribute (MoveInsertPosition insPt 1 4) "FROMTO" fromtoValue "DataFlow-JoinDrawArrow" 3)
+  (GenerateBlockAttribute (MoveInsertPosition insPt 1 -1.5) "DRAWNUM" drawnumValue "DataFlow-JoinDrawArrow" 3)
+  (GenerateBlockHiddenAttribute (MoveInsertPosition insPt 1 -7) "RELATEDID" relatedIDValue "DataFlow-JoinDrawArrow" 3)
   (entmake 
     (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
   )
@@ -2895,11 +2895,11 @@
 )
 
 (defun GenerateJoinDrawArrowFromElement (insPt pipenumValue fromtoValue drawnumValue relatedIDValue /)
-  (GenerateBlockReference insPt "JoinDrawArrowFrom" "接图箭头")
-  (GenerateBlockAttribute (MoveInsertPosition insPt 30 2) "PIPENUM" pipenumValue "接图箭头" 3)
-  (GenerateBlockAttribute (MoveInsertPosition insPt 1 4) "FROMTO" fromtoValue "接图箭头" 3)
-  (GenerateBlockAttribute (MoveInsertPosition insPt 1 -1.5) "DRAWNUM" drawnumValue "接图箭头" 3)
-  (GenerateBlockHiddenAttribute (MoveInsertPosition insPt 1 -7) "RELATEDID" relatedIDValue "接图箭头" 3)
+  (GenerateBlockReference insPt "JoinDrawArrowFrom" "DataFlow-JoinDrawArrow")
+  (GenerateBlockAttribute (MoveInsertPosition insPt 30 2) "PIPENUM" pipenumValue "DataFlow-JoinDrawArrow" 3)
+  (GenerateBlockAttribute (MoveInsertPosition insPt 1 4) "FROMTO" fromtoValue "DataFlow-JoinDrawArrow" 3)
+  (GenerateBlockAttribute (MoveInsertPosition insPt 1 -1.5) "DRAWNUM" drawnumValue "DataFlow-JoinDrawArrow" 3)
+  (GenerateBlockHiddenAttribute (MoveInsertPosition insPt 1 -7) "RELATEDID" relatedIDValue "DataFlow-JoinDrawArrow" 3)
   (entmake 
     (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
   )
@@ -3446,6 +3446,9 @@
 )
 
 (defun c:GenerateJoinDrawArrow (/ pipeSS pipeData insPt entityNameList)
+  (VerifyGsLcBlockByName "JoinDrawArrowTo")
+  (VerifyGsLcBlockByName "JoinDrawArrowFrom")
+  (VerifyGsLcLayerByName "DataFlow-JoinDrawArrow")
   (prompt "\n选择生成接图箭头的边界管道：")
   (setq pipeSS (GetPipeSSBySelectUtils))
   (setq pipeData (GetAllPropertyDictForOneBlock (car (GetEntityNameListBySSUtils pipeSS))))
