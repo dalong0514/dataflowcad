@@ -3097,8 +3097,8 @@
 ;;;-------------------------------------------------------------------------;;;
 ; logic for generate Instrument
 
-(defun GenerateBlockInstrumentP (insPt /) 
-  (GenerateBlockReference insPt "InstrumentP" "DataFlow-Instrument") 
+(defun GenerateBlockInstrumentP (insPt blockName /) 
+  (GenerateBlockReference insPt blockName "DataFlow-Instrument") 
   (GenerateLeftBlockAttribute (MoveInsertPosition insPt 8.5 4) "VERSION" "" "DataFlow-InstrumentComment" 1.5 0 1 0)
   (GenerateCenterBlockAttribute (MoveInsertPosition insPt 0 0.5) "FUNCTION" "xxxx" "0" 3 0 0 1)
   (GenerateCenterBlockAttribute (MoveInsertPosition insPt 0 -3.5) "TAG" "xxxx" "0" 3 0 0 1)
@@ -3132,9 +3132,16 @@
   (VerifyGsLcBlockByName "InstrumentP")
   (VerifyGsLcLayerByName "DataFlow-Instrument")
   (VerifyGsLcLayerByName "DataFlow-InstrumentComment")
-  (GenerateBlockInstrumentP insPt)
+  (GenerateBlockInstrumentP insPt "InstrumentP")
 )
 
+(defun c:InsertBlockInstrumentSIS (/ insPt) 
+  (setq insPt (getpoint "\n选取辅助流程组件插入点："))
+  (VerifyGsLcBlockByName "InstrumentSIS")
+  (VerifyGsLcLayerByName "DataFlow-Instrument")
+  (VerifyGsLcLayerByName "DataFlow-InstrumentComment")
+  (GenerateBlockInstrumentP insPt "InstrumentSIS")
+)
 
 ;;;-------------------------------------------------------------------------;;;
 ; logic for generate PublicPipe
