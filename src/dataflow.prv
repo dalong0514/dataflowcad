@@ -1,0 +1,15 @@
+;;; Visual LISP 生成文件 [V1.0] dataflow saved to:[D:/dataflowcad] at:[3/3/21] 
+(PRV-DEF (:target . "dataflow.VLX")
+	 (:active-x . T)
+	 (:separate-namespace)
+	 (:protected . T)
+	 (:load-file-list
+	   (:lsp "dataflow.lsp")
+	   (:lsp "stealUtils.lsp")
+	 )
+	 (:require-file-list)
+	 (:ob-directory)
+	 (:tmp-directory)
+	 (:optimization . st)
+)
+;; EOF
