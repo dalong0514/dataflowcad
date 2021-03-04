@@ -3097,13 +3097,41 @@
 ;;;-------------------------------------------------------------------------;;;
 ; logic for generate Instrument
 
+(defun c:InsertBlockInstrumentP (/ insPt) 
+  (setq insPt (getpoint "\n选取辅助流程组件插入点："))
+  (VerifyGsLcBlockByName "InstrumentP")
+  (VerifyGsLcLayerByName "DataFlow-Instrument")
+  (VerifyGsLcLayerByName "DataFlow-InstrumentComment")
+  (GenerateBlockInstrumentP insPt "InstrumentP")
+)
+
+(defun c:InsertBlockInstrumentL (/ insPt) 
+  (setq insPt (getpoint "\n选取辅助流程组件插入点："))
+  (VerifyGsLcBlockByName "InstrumentL")
+  (VerifyGsLcLayerByName "DataFlow-Instrument")
+  (VerifyGsLcLayerByName "DataFlow-InstrumentComment")
+  (GenerateBlockInstrumentP insPt "InstrumentL")
+)
+
+(defun c:InsertBlockInstrumentSIS (/ insPt) 
+  (setq insPt (getpoint "\n选取辅助流程组件插入点："))
+  (VerifyGsLcBlockByName "InstrumentSIS")
+  (VerifyGsLcLayerByName "DataFlow-Instrument")
+  (VerifyGsLcLayerByName "DataFlow-InstrumentComment")
+  (GenerateBlockInstrumentP insPt "InstrumentSIS")
+)
+
 (defun GenerateBlockInstrumentP (insPt blockName /) 
   (GenerateBlockReference insPt blockName "DataFlow-Instrument") 
   (GenerateLeftBlockAttribute (MoveInsertPosition insPt 8.5 4) "VERSION" "" "DataFlow-InstrumentComment" 1.5 0 1 0)
   (GenerateCenterBlockAttribute (MoveInsertPosition insPt 0 0.5) "FUNCTION" "xxxx" "0" 3 0 0 1)
   (GenerateCenterBlockAttribute (MoveInsertPosition insPt 0 -3.5) "TAG" "xxxx" "0" 3 0 0 1)
-  (GenerateLeftBlockAttribute (MoveInsertPosition insPt 6.5 2.4) "HALARM" "" "0" 3 0 0 0)
-  (GenerateLeftBlockAttribute (MoveInsertPosition insPt 6.5 -5) "LALARM" "" "0" 3 0 0 0)
+  (if (/= blockName "InstrumentL") 
+    (progn 
+      (GenerateLeftBlockAttribute (MoveInsertPosition insPt 6.5 2.4) "HALARM" "" "0" 3 0 0 0)
+      (GenerateLeftBlockAttribute (MoveInsertPosition insPt 6.5 -5) "LALARM" "" "0" 3 0 0 0) 
+    )
+  )
   (GenerateLeftBlockAttribute (MoveInsertPosition insPt 8.5 2) "SUBSTANCE" "" "DataFlow-InstrumentComment" 1.5 0 0 0)
   (GenerateLeftBlockAttribute (MoveInsertPosition insPt 8.5 0) "TEMP" "" "DataFlow-InstrumentComment" 1.5 0 0 0)
   (GenerateLeftBlockAttribute (MoveInsertPosition insPt 8.5 -2) "PRESSURE" "" "DataFlow-InstrumentComment" 1.5 0 0 0)
@@ -3127,21 +3155,7 @@
   (princ)
 )
 
-(defun c:InsertBlockInstrumentP (/ insPt) 
-  (setq insPt (getpoint "\n选取辅助流程组件插入点："))
-  (VerifyGsLcBlockByName "InstrumentP")
-  (VerifyGsLcLayerByName "DataFlow-Instrument")
-  (VerifyGsLcLayerByName "DataFlow-InstrumentComment")
-  (GenerateBlockInstrumentP insPt "InstrumentP")
-)
 
-(defun c:InsertBlockInstrumentSIS (/ insPt) 
-  (setq insPt (getpoint "\n选取辅助流程组件插入点："))
-  (VerifyGsLcBlockByName "InstrumentSIS")
-  (VerifyGsLcLayerByName "DataFlow-Instrument")
-  (VerifyGsLcLayerByName "DataFlow-InstrumentComment")
-  (GenerateBlockInstrumentP insPt "InstrumentSIS")
-)
 
 ;;;-------------------------------------------------------------------------;;;
 ; logic for generate PublicPipe
