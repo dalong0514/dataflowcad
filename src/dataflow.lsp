@@ -5477,7 +5477,7 @@
   )
   (mapcar '(lambda (x y) 
               (mapcar '(lambda (xx yy) 
-                        (append xx (list (cons "numberedString" (GetPipeCodeNameByNumberMode yy numberMode (cdr (assoc "DRAWNUM" xx)) startNumberString))))
+                        (append xx (list (cons "numberedString" (GetPipeCodeNameByNumberMode yy numberMode (cdr (assoc "DRAWNUM" xx)) startNumberString dataType))))
                       ) 
                 x 
                 y
@@ -5538,12 +5538,19 @@
   ) 
 )
 
-(defun GetPipeCodeNameByNumberMode (originString numberMode drawNum startNumberString /) 
+; ready for refactor - 2021-03-05
+(defun GetPipeCodeNameByNumberMode (originString numberMode drawNum startNumberString dataType /) 
   (setq drawNum (RegExpReplace (ExtractDrawNum drawNum) "0(\\d)-(\\d*)" (strcat "$1" "$2") nil nil))
   (cond 
     ((= numberMode "0") (RegExpReplace originString "([A-Za-z]+)(\\d*).*" (strcat "$1" startNumberString drawNum "$2") nil nil))
     ; bug 不按流程图编，按单体号（1A3）有问题，提取逻辑做了修改 - 2021-03-02
-    ((= numberMode "1") (RegExpReplace originString "([A-Za-z]+[0-9]?[A-Za-z]+)(\\d*).*" (strcat "$1" startNumberString "$2") nil nil))
+    ; 补充：因为该函数与处理设备位号编号共用，按之前逻辑改后，设备位号编号又不对了，目前加了分支处理 - 2021-03-05
+     ((= numberMode "1") 
+      (if (= dataType "Pipe") 
+        (RegExpReplace originString "([A-Za-z]+[0-9]?[A-Za-z]+)(\\d*).*" (strcat "$1" startNumberString "$2") nil nil)
+        (RegExpReplace originString "([A-Za-z]+)(\\d*).*" (strcat "$1" startNumberString "$2") nil nil)
+      )
+     )
   ) 
 )
 
