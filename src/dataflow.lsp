@@ -3225,6 +3225,14 @@
   (GenerateBlockGsLcReactor insPt)
 )
 
+(defun c:InsertBlockGsLcTank (/ insPt) 
+  (setq insPt (getpoint "\n选取储罐位号插入点："))
+  (VerifyGsLcBlockByName "Tank")
+  (VerifyGsLcLayerByName "DataFlow-EquipTag")
+  (VerifyGsLcLayerByName "DataFlow-EquipTagComment")
+  (GenerateBlockGsLcTank insPt)
+)
+
 (defun GenerateBlockGsLcReactor (insPt /) 
   (GenerateBlockReference insPt "Reactor" "DataFlow-EquipTag") 
   (GenerateLeftBlockAttribute (MoveInsertPosition insPt 0 5) "VERSION" "" "DataFlow-EquipTagComment" 1.5 0 1 0)
@@ -3253,6 +3261,35 @@
   )
   (princ)
 )
+
+(defun GenerateBlockGsLcTank (insPt /) 
+  (GenerateBlockReference insPt "Tank" "DataFlow-EquipTag") 
+  (GenerateLeftBlockAttribute (MoveInsertPosition insPt 0 5) "VERSION" "" "DataFlow-EquipTagComment" 1.5 0 1 0)
+  (GenerateCenterBlockAttribute (MoveInsertPosition insPt 0 1) "TAG" "V" "0" 3 0 0 1)
+  (GenerateCenterBlockAttribute (MoveInsertPosition insPt 0 -4.5) "NAME" "xxxx" "DataFlow-EquipTagComment" 3 0 0 1)
+  (GenerateLeftBlockAttribute (MoveInsertPosition insPt -4.25 -7.5) "SPECIES" "" "DataFlow-EquipTagComment" 1.5 0 0 0)
+  (GenerateLeftBlockAttribute (MoveInsertPosition insPt -4.25 -9.5) "VOLUME" "" "DataFlow-EquipTagComment" 1.5 0 0 0)
+  (GenerateLeftBlockAttribute (MoveInsertPosition insPt -4.25 -11.5) "SUBSTANCE" "" "DataFlow-EquipTagComment" 1.5 0 0 0)
+  (GenerateLeftBlockAttribute (MoveInsertPosition insPt -4.25 -13.5) "TEMP" "" "DataFlow-EquipTagComment" 1.5 0 0 0)
+  (GenerateLeftBlockAttribute (MoveInsertPosition insPt -4.25 -15.5) "PRESSURE" "" "DataFlow-EquipTagComment" 1.5 0 0 0)
+  (GenerateLeftBlockAttribute (MoveInsertPosition insPt -4.25 -19.5) "POWER" "" "DataFlow-EquipTagComment" 1.5 0 1 0)
+  (GenerateLeftBlockAttribute (MoveInsertPosition insPt -4.25 -21.5) "ANTIEXPLOSIVE" "" "DataFlow-EquipTagComment" 1.5 0 1 0)
+  (GenerateLeftBlockAttribute (MoveInsertPosition insPt -4.25 -23.5) "MOTORSERIES" "" "DataFlow-EquipTagComment" 1.5 0 1 0)
+  (GenerateLeftBlockAttribute (MoveInsertPosition insPt -4.25 -17.5) "SIZE" "" "DataFlow-EquipTagComment" 1.5 0 0 0)
+  (GenerateLeftBlockAttribute (MoveInsertPosition insPt -4.25 -25.5) "MATERIAL" "" "DataFlow-EquipTagComment" 1.5 0 1 0)
+  (GenerateLeftBlockAttribute (MoveInsertPosition insPt -4.25 -27.5) "WEIGHT" "" "DataFlow-EquipTagComment" 1.5 0 1 0)
+  (GenerateLeftBlockAttribute (MoveInsertPosition insPt -4.25 -29.5) "TYPE" "" "DataFlow-EquipTagComment" 1.5 0 1 0)
+  (GenerateLeftBlockAttribute (MoveInsertPosition insPt -4.25 -31.5) "INSULATIONTHICK" "" "DataFlow-EquipTagComment" 1.5 0 1 0)
+  (GenerateLeftBlockAttribute (MoveInsertPosition insPt -4.25 -33.5) "NUMBER" "" "DataFlow-EquipTagComment" 1.5 0 1 0)
+  (GenerateLeftBlockAttribute (MoveInsertPosition insPt -4.25 -35.5) "DRAWNUM" "" "DataFlow-EquipTagComment" 1.5 0 1 0)
+  (GenerateLeftBlockAttribute (MoveInsertPosition insPt -4.25 -37.5) "EXTEMP" "" "DataFlow-EquipTagComment" 1.5 0 1 0)
+  (GenerateLeftBlockAttribute (MoveInsertPosition insPt -4.25 -39.5) "EXPRESSURE" "" "DataFlow-EquipTagComment" 1.5 0 1 0)
+  (entmake 
+    (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
+  )
+  (princ)
+)
+
 
 
 ; logic for generate PublicPipe
