@@ -493,6 +493,16 @@
   )
 )
 
+; 2021-03-05
+(defun VerifyGsLcBlockPublicPipe () 
+  (VerifyGsLcBlockByName "PublicPipeDownPipeLine")
+  (VerifyGsLcBlockByName "PublicPipeDownArrow")
+  (VerifyGsLcBlockByName "PublicPipeUpPipeLine")
+  (VerifyGsLcBlockByName "PublicPipeUpArrow") 
+  (VerifyGsLcLayerByName "DataFlow-PublicPipe")
+  (VerifyGsLcLayerByName "DataFlow-PublicPipeLine")
+)
+
 ; Steal AutoCAD Modules
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
@@ -2786,20 +2796,14 @@
   (princ)
 )
 
-(defun GeneratePublicPipeDownArrow (insPt /)
+; 2021-03-05
+(defun GenerateVerticalPolyline (insPt blockLayer lineWidth /)
   (entmake 
-    (list (cons 0 "LWPOLYLINE") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 "PL2") (cons 62 30) (cons 370 13) (cons 100 "AcDbPolyline") 
-          (cons 90 2) (cons 70 0) (cons 38 0.0) (cons 39 0.0) (cons 10 insPt) (cons 40 0.5) (cons 41 2.0) (cons 42 0.0) (cons 91 0) 
-          (cons 10 (MoveInsertPosition insPt 0 4.75)) (cons 40 0.9) (cons 41 0.9) (cons 42 0.0) (cons 91 0) (cons 210 '(0.0 0.0 1.0))
-    ))
-  (princ)
-)
-
-(defun GeneratePublicPipeUpArrow (insPt /)
-  (entmake 
-    (list (cons 0 "LWPOLYLINE") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 "PL2") (cons 62 30) (cons 370 13) (cons 100 "AcDbPolyline") 
-          (cons 90 2) (cons 70 0) (cons 38 0.0) (cons 39 0.0) (cons 10 (MoveInsertPosition insPt 0 4.75)) (cons 40 0.5) (cons 41 2.0) (cons 42 0.0) (cons 91 0) 
-          (cons 10 insPt) (cons 40 0.9) (cons 41 0.9) (cons 42 0.0) (cons 91 0) (cons 210 '(0.0 0.0 1.0))
+    (list (cons 0 "LWPOLYLINE") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 blockLayer) (cons 62 3) (cons 100 "AcDbPolyline") 
+          (cons 90 2) (cons 70 0) (cons 43 lineWidth) (cons 38 0.0) (cons 39 0.0) 
+          (cons 10 (MoveInsertPosition insPt 0 50)) (cons 40 lineWidth) (cons 41 lineWidth) (cons 42 0.0) (cons 91 0) 
+          (cons 10 insPt) (cons 40 lineWidth) (cons 41 lineWidth) (cons 42 0.0) (cons 91 0) 
+          (cons 210 '(0.0 0.0 1.0))
     ))
   (princ)
 )
@@ -2907,10 +2911,10 @@
 )
 
 (defun GenerateOnePublicPipeDownArrow (insPt tagValue drawnumValue relatedIDValue /)
-  (GenerateBlockReference insPt "PublicPipeDownArrow" "文字")
-  (GenerateVerticallyBlockAttribute (MoveInsertPosition insPt -3.5 -10) "TAG" tagValue "文字" 3)
-  (GenerateVerticallyBlockAttribute (MoveInsertPosition insPt 1.2 -10) "DRAWNUM" drawnumValue "文字" 3)
-  (GenerateVerticallyBlockHiddenAttribute (MoveInsertPosition insPt 7 -10) "RELATEDID" relatedIDValue "文字" 3)
+  (GenerateBlockReference insPt "PublicPipeDownArrow" "DataFlow-PublicPipe")
+  (GenerateVerticallyBlockAttribute (MoveInsertPosition insPt -3.5 -10) "TAG" tagValue "0" 3)
+  (GenerateVerticallyBlockAttribute (MoveInsertPosition insPt 1.2 -10) "DRAWNUM" drawnumValue "0" 3)
+  (GenerateVerticallyBlockHiddenAttribute (MoveInsertPosition insPt 7 -10) "RELATEDID" relatedIDValue "DataFlow-PublicPipe" 3)
   (entmake 
     (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
   )
@@ -2918,10 +2922,10 @@
 )
 
 (defun GenerateOnePublicPipeUpArrow (insPt tagValue drawnumValue relatedIDValue /)
-  (GenerateBlockReference insPt "PublicPipeUpArrow" "文字")
-  (GenerateVerticallyBlockAttribute (MoveInsertPosition insPt -3.5 -11.5) "TAG" tagValue "文字" 3)
-  (GenerateVerticallyBlockAttribute (MoveInsertPosition insPt 1.2 -11.5) "DRAWNUM" drawnumValue "文字" 3)
-  (GenerateVerticallyBlockHiddenAttribute (MoveInsertPosition insPt 7 -11.5) "RELATEDID" relatedIDValue "文字" 3)
+  (GenerateBlockReference insPt "PublicPipeUpArrow" "DataFlow-PublicPipe")
+  (GenerateVerticallyBlockAttribute (MoveInsertPosition insPt -3.5 -11.5) "TAG" tagValue "0" 3)
+  (GenerateVerticallyBlockAttribute (MoveInsertPosition insPt 1.2 -11.5) "DRAWNUM" drawnumValue "0" 3)
+  (GenerateVerticallyBlockHiddenAttribute (MoveInsertPosition insPt 7 -11.5) "RELATEDID" relatedIDValue "DataFlow-PublicPipe" 3)
   (entmake 
     (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
   )
@@ -2929,9 +2933,9 @@
 )
 
 (defun GenerateOnePublicPipeUpPipeLine (insPt pipenumValue relatedIDValue /)
-  (GenerateBlockReference insPt "PublicPipeUpPipeLine" "文字")
-  (GenerateVerticallyBlockAttribute (MoveInsertPosition insPt -1 -16) "PIPENUM" pipenumValue "文字" 3)
-  (GenerateVerticallyBlockHiddenAttribute (MoveInsertPosition insPt -5 -16) "RELATEDID" relatedIDValue "文字" 3)
+  (GenerateBlockReference insPt "PublicPipeUpPipeLine" "DataFlow-PublicPipe")
+  (GenerateVerticallyBlockAttribute (MoveInsertPosition insPt -1 -16) "PIPENUM" pipenumValue "0" 3)
+  (GenerateVerticallyBlockHiddenAttribute (MoveInsertPosition insPt -5 -16) "RELATEDID" relatedIDValue "DataFlow-PublicPipe" 3)
   (entmake 
     (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
   )
@@ -2939,9 +2943,9 @@
 )
 
 (defun GenerateOnePublicPipeDownPipeLine (insPt pipenumValue relatedIDValue /)
-  (GenerateBlockReference insPt "PublicPipeDownPipeLine" "文字")
-  (GenerateVerticallyBlockAttribute (MoveInsertPosition insPt -1 -16) "PIPENUM" pipenumValue "文字" 3)
-  (GenerateVerticallyBlockHiddenAttribute (MoveInsertPosition insPt -5 -16) "RELATEDID" relatedIDValue "文字" 3)
+  (GenerateBlockReference insPt "PublicPipeDownPipeLine" "DataFlow-PublicPipe")
+  (GenerateVerticallyBlockAttribute (MoveInsertPosition insPt -1 -16) "PIPENUM" pipenumValue "0" 3)
+  (GenerateVerticallyBlockHiddenAttribute (MoveInsertPosition insPt -5 -16) "RELATEDID" relatedIDValue "DataFlow-PublicPipe" 3)
   (entmake 
     (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
   )
@@ -3215,6 +3219,7 @@
 ; logic for generate PublicPipe
 
 (defun InsertPublicPipe (dataList pipeSourceDirection / lastEntityName insPt insPtList) 
+  (VerifyGsLcBlockPublicPipe)
   (setq lastEntityName (entlast))
   (setq insPt (getpoint "\n选取辅助流程组件插入点："))
   (setq dataList (ProcessPublicPipeElementData dataList))
@@ -3231,7 +3236,7 @@
   (mapcar '(lambda (x y) 
              (GenerateOnePublicPipeUpArrow x (nth 2 y) (nth 4 y) (nth 0 y))
              (GenerateOnePublicPipeUpPipeLine (MoveInsertPosition x 0 20) (nth 1 y) (nth 0 y))
-             (GeneratePublicPipePolyline x)
+             (GenerateVerticalPolyline x "DataFlow-PublicPipeLine" 0.6)
           ) 
           insPtList
           dataList
@@ -3242,7 +3247,7 @@
   (mapcar '(lambda (x y) 
              (GenerateOnePublicPipeDownArrow x (nth 3 y) (nth 4 y) (nth 0 y))
              (GenerateOnePublicPipeDownPipeLine (MoveInsertPosition x 0 20) (nth 1 y) (nth 0 y))
-             (GeneratePublicPipePolyline x)
+             (GenerateVerticalPolyline x "DataFlow-PublicPipeLine" 0.6)
           ) 
           insPtList
           dataList
@@ -3825,7 +3830,7 @@
         (setq previewDataList (GetPropertyValueListByEntityNameList entityNameList (GetPropertyNameListStrategy "PublicPipe")))
       )
     )
-    ; view button
+    ; generate button
     (if (= 4 status)
       (progn 
         (InsertPublicPipe previewDataList pipeSourceDirection)
