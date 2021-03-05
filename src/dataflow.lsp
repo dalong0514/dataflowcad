@@ -3215,9 +3215,12 @@
   (princ)
 )
 
-;;;-------------------------------------------------------------------------;;;
-; logic for generate PublicPipe
 
+; logic for generate Equip
+
+
+
+; logic for generate PublicPipe
 (defun InsertPublicPipe (dataList pipeSourceDirection / lastEntityName insPt insPtList) 
   (VerifyGsLcBlockPublicPipe)
   (setq lastEntityName (entlast))
@@ -6032,7 +6035,11 @@
 
 
 
-
+; 2021-03-05
+(defun c:purgeJSDrawData () 
+  (DeleteEntityBySSUtils (GetAllCopySS))
+  (alert "建筑底图清理成功")
+)
 
 ; 2021-02-28
 (defun c:extractJSDrawData () 
