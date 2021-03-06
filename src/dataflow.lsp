@@ -768,6 +768,35 @@
   (vlax-release-object obj)
 )
 
+; 2021-03-05 source from [2019116AutoCAD-Platform-Customization0203.md]
+; Custom implementation of expanding variables in AutoLISP 
+; To use: 
+; 1. Define a variable with the setq function. 
+; 2. Add the variable name with % symbols on both sides of the variable name. 
+; For example, the variable named *program* would appear as %*program*% in the string. 
+; 3. Use the function on the string that contains the variable. 
+(defun InlineExpandVariableUtils (string / start_pos next_pos var2expand expand_var) 
+  (while (wcmatch string "*%*%*") 
+         (progn 
+          (setq start_pos (1+ (vl-string-search "%" string))) 
+          (setq next_pos (vl-string-search "%" string start_pos)) 
+          (setq var2expand (substr string start_pos (- (+ next_pos 2) start_pos))) 
+          (setq expand_var (vl-princ-to-string (eval (read (vl-string-trim "%" var2expand))))) 
+          (if (/= expand_var nil) 
+            (setq string (vl-string-subst expand_var var2expand string)) 
+          ) 
+         ) 
+  ) 
+  string 
+) 
+
+(defun c:foo (/ str2expand)
+	; Define a global variable and string to expand 
+	(setq *program* (getvar "PROGRAM") str2expand "PI=%PI% Program=%*program*%" ) 
+	; Execute the custom function to expand the variables defined in the string 
+	(InlineExpandVariableUtils str2expand) 
+)
+
 (defun GetSelectedEntityDataUtils (ss /)
   (mapcar '(lambda (x) (entget x)) 
     (GetEntityNameListBySSUtils ss)
