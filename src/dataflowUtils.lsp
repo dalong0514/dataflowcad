@@ -1389,14 +1389,18 @@
   (RegExpReplace rawString "(\\d+)\..*" "$1" nil nil)
 )
 
-; 2021-03-06
-(defun InsertBlockUtils (insPt blockName layerName / acadObj curDoc insertionPnt modelSpace blockRefObj)
+; 2021-03-07
+(defun InsertBlockUtils (insPt blockName layerName / acadObj curDoc insertionPnt modelSpace blockRefObj blockAttributes)
   (setq acadObj (vlax-get-acad-object))
   (setq curDoc (vla-get-activedocument acadObj)) 
   (setq insertionPnt (vlax-3d-point insPt))
   (setq modelSpace (vla-get-ModelSpace curDoc))
   (setq blockRefObj (vla-InsertBlock modelSpace insertionPnt blockName 1 1 1 0))
+  ;(vlax-dump-object blockRefObj T)
   (vlax-put-property blockRefObj 'Layer layerName)
+  (setq blockAttributes (vlax-variant-value (vla-GetAttributes blockRefObj)))
+  ;(vlax-safearray->list blockAttributes)
+  (vla-put-TextString (vlax-safearray-get-element blockAttributes 1) "JC1101-50-2J1")
   ;(vla-ZoomAll acadObj) 
   (princ)
 )
@@ -1411,7 +1415,7 @@
 )
 
 (defun c:foo ()
-  (InsertBlockUtils (list 0 0 0) "PipeArrowLeft" "DataFlow-Pipe")
+  (InsertBlockUtils '(0 0 0) "PipeArrowLeft" "DataFlow-Pipe")
 )
 
 ; Utils Function 
