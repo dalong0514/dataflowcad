@@ -1214,6 +1214,66 @@
   resultList
 )
 
+
+; Unit Test Compeleted
+(defun GetNumberedListByStartAndLengthUtils (startString startNumer listLength / numberedList)
+  (setq startNumer (atoi startNumer))
+  (setq numberedList (GetIncreasedNumberStringListUtils startNumer listLength))
+  (mapcar '(lambda (x) (strcat startString x)) numberedList)
+)
+
+; Unit Test Compeleted
+(defun GetIncreasedNumberListUtils (startNumer listLength / numberedList)
+  (repeat listLength 
+    (setq numberedList (append numberedList (list startNumer)))
+    (setq startNumer (+ startNumer 1))
+  )
+  numberedList
+)
+
+; Unit Test Compeleted
+(defun GetIncreasedNumberStringListUtils (startNumer listLength / minIncreasedNumberList maxIncreasedNumberList) 
+  (GetIncreasedNumberStringListHundredUtils startNumer listLength)
+)
+
+(defun GetIncreasedNumberStringListHundredUtils (startNumer listLength / tenIncreasedNumberList hundredIncreasedNumberList) 
+  (setq tenIncreasedNumberList 
+    (vl-remove-if-not '(lambda (x) (< x 10)) 
+      (GetIncreasedNumberListUtils startNumer listLength)
+    )
+  )
+  (setq hundredIncreasedNumberList 
+    (vl-remove-if-not '(lambda (x) (>= x 10)) 
+      (GetIncreasedNumberListUtils startNumer listLength)
+    )
+  )
+  (append (mapcar '(lambda (x) (strcat "0" (rtos x))) tenIncreasedNumberList) 
+    (mapcar '(lambda (x) (rtos x)) hundredIncreasedNumberList)
+  )
+)
+
+(defun GetIncreasedNumberStringListThousandUtils (startNumer listLength / tenIncreasedNumberList hundredIncreasedNumberList thousandIncreasedNumberList) 
+  (setq tenIncreasedNumberList 
+    (vl-remove-if-not '(lambda (x) (< x 10)) 
+      (GetIncreasedNumberListUtils startNumer listLength)
+    )
+  )
+  (setq hundredIncreasedNumberList 
+    (vl-remove-if-not '(lambda (x) (and (>= x 10) (< x 100))) 
+      (GetIncreasedNumberListUtils startNumer listLength)
+    )
+  )
+  (setq thousandIncreasedNumberList 
+    (vl-remove-if-not '(lambda (x) (>= x 100)) 
+      (GetIncreasedNumberListUtils startNumer listLength)
+    )
+  ) 
+  (append (mapcar '(lambda (x) (strcat "00" (rtos x))) tenIncreasedNumberList) 
+    (mapcar '(lambda (x) (strcat "0" (rtos x))) hundredIncreasedNumberList) 
+    (mapcar '(lambda (x) (rtos x)) thousandIncreasedNumberList)
+  )
+)
+
 ; very importance for me, convert a function to the parameter for another function - 2020-12-25
 (defun ExecuteFunctionForOneSourceDataUtils (dataListLength functionName argumentList /)
   (if (= dataListLength 1)
@@ -1267,6 +1327,25 @@
     (setq result "")
   )
   result
+)
+
+;; Separates a string using a given delimiter
+;; copy from [http://www.lee-mac.com/stringtolist.html]
+(defun StrToListUtils (strData delimiter / len resultList delimiterPosition)
+    (setq len (1+ (strlen delimiter)))
+    (while (setq delimiterPosition (vl-string-search delimiter strData))
+        (setq resultList (cons (substr strData 1 delimiterPosition) resultList)
+            strData (substr strData (+ delimiterPosition len))
+        )
+    )
+    (reverse (cons strData resultList))
+)
+
+(defun StrListToListListUtils (strList / resultList)
+  (foreach item strList 
+    (setq resultList (append resultList (list (StrToListUtils item ","))))
+  )
+  resultList
 )
 
 ; 2021-02-26
@@ -1569,5 +1648,55 @@
 )
 
 ; Redefining AutoCAD Commands
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+
+
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+; Read and Write Utils
+
+(defun WriteDataListToFileUtils (fileDir dataList / filePtr)
+  (setq filePtr (open fileDir "w"))
+  (foreach item dataList 
+    (write-line item filePtr)
+  )
+  (close filePtr)
+  (FileEncodeTransUtils fileDir "gb2312" "utf-8")
+)
+
+(defun WriteDataToCSVByEntityNameListUtils (entityNameList fileDir firstRow propertyNameList apostrMode / filePtr csvPropertyStringList)
+  (setq filePtr (open fileDir "w"))
+  (write-line firstRow filePtr)
+  (foreach item entityNameList 
+    (setq csvPropertyStringList (append csvPropertyStringList (list (GetCSVPropertyStringByEntityName item propertyNameList apostrMode))))
+  )
+  (foreach item csvPropertyStringList 
+    (write-line item filePtr)
+  )
+  (close filePtr)
+)
+
+(defun ReadDataFromCSVUtils (fileDir / filePtr i textLine resultList)
+  (setq filePtr (open fileDir "r"))
+  (if filePtr 
+    (progn 
+      (setq i 1)
+      (while (setq textLine (read-line filePtr)) 
+        (setq resultList (append resultList (list textLine)))
+        (setq i (+ 1 i))
+      )
+    )
+  )
+  (close filePtr)
+  (setq resultList (cdr resultList))
+  (RemoveFirstCharOfItemInListUtils resultList)
+)
+
+(defun RemoveFirstCharOfItemInListUtils (originList /) 
+  (mapcar '(lambda (x) (substr x 2)) originList)
+)
+
+; Read and Write Utils
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
