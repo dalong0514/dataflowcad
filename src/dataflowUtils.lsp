@@ -895,6 +895,14 @@
   ) 
 )
 
+(defun GetBlockPropertyNameListByEntityNameUtils (entityName /)
+  (mapcar '(lambda (x) 
+             (car x)
+           )
+    (GetAllPropertyDictForOneBlock entityName)
+  )
+)
+
 (defun GetPropertyValueListForOneBlockByPropertyNameList (entityName propertyNameList / allPropertyValue resultList) 
   (setq allPropertyValue (GetAllPropertyDictForOneBlock entityName))
   ; add the entityhandle property default
@@ -939,7 +947,7 @@
     (mapcar '(lambda (x) 
               (strcase x)
             ) 
-      (GetBlockPropertyNameListByEntityName entityName)
+      (GetBlockPropertyNameListByEntityNameUtils entityName)
     )
   )
   (vl-remove-if-not '(lambda (x) 
@@ -960,7 +968,7 @@
 
 (defun GetAllPropertyDictList (entityNameList / propertyNameList resultList) 
   ; entityhandle will have been added twice, delete it first
-  (setq propertyNameList (cdr (GetBlockPropertyNameListByEntityName (car entityNameList))))
+  (setq propertyNameList (cdr (GetBlockPropertyNameListByEntityNameUtils (car entityNameList))))
   (mapcar '(lambda (x) 
              (setq resultList (append resultList (list (GetPropertyDictListForOneBlockByPropertyNameList x propertyNameList))))
            ) 
@@ -1272,6 +1280,36 @@
   (princ)
 )
 
+; 2021-02-02
+(defun AddPositonOffSetUtils (insPt moveDistance /) 
+  (mapcar '(lambda (x y) 
+             (+ x y)
+          ) 
+    insPt
+    moveDistance
+  ) 
+)
+
+; 2021-02-02
+(defun RemovePositonOffSetUtils (insPt moveDistance /) 
+  (mapcar '(lambda (x y) 
+             (- x y)
+          ) 
+    insPt
+    moveDistance
+  ) 
+)
+
+; 2021-02-02
+(defun TranforCoordinateToPolarUtils (insPt /)
+  (polar (list (car insPt) 0 0) 0.785398 (cadr insPt))
+)
+
+; 2021-02-03
+(defun RemoveDecimalForStringUtils (rawString /)
+  (RegExpReplace rawString "(\\d+)\..*" "$1" nil nil)
+)
+
 ; 2021-03-06
 (defun InsertBlockUtils (/ acadObj curDoc insertionPnt modelSpace blockRefObj)
   (setq acadObj (vlax-get-acad-object))
@@ -1512,5 +1550,24 @@
 )
 
 ; Sorting Select Set by XY cordinate
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+
+
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+; Redefining AutoCAD Commands
+
+; 2021-03-02
+(defun CADLispMove (ss firstPoint secondPoint /)
+  (command "_.move" ss firstPoint "" secondPoint "")
+)
+
+; 2021-03-02
+(defun CADLispCopy (ss firstPoint secondPoint /)
+  (command "_.copy" ss firstPoint "" secondPoint "")
+)
+
+; Redefining AutoCAD Commands
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
