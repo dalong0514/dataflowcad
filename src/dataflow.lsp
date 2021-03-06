@@ -15,7 +15,7 @@
 )
 
 (defun c:syncAllDataFlowBlock (/ item) 
-	(foreach item (GetSyncFlowBlockNameList) 
+    (foreach item (GetSyncFlowBlockNameList) 
     (command "._attsync" "N" item)
   )
   (alert "数据流相关块同时完成！")(princ)
@@ -317,39 +317,39 @@
 ; Unit Test Source Code
 
 (defun AssertEqual (functionName argumentList expectedReturn / actualReturn passed)
-	(if (not (= (type argumentList) 'LIST))
-		(setq argumentList (list argumentList))
+    (if (not (= (type argumentList) 'LIST))
+        (setq argumentList (list argumentList))
   )
-	(cond
-		((equal (setq actualReturn (vl-catch-all-apply functionName argumentList))
-			  expectedReturn)
-			(princ "passed...(")
-			(setq passed T)
-			(setq actualReturn nil)
+    (cond
+        ((equal (setq actualReturn (vl-catch-all-apply functionName argumentList))
+              expectedReturn)
+            (princ "passed...(")
+            (setq passed T)
+            (setq actualReturn nil)
     )
-		(T
-			(princ "failed...(")
-			(setq passed nil)
-			(setq actualReturn 
-				(strcat (vl-princ-to-string actualReturn) " instead of ")
+        (T
+            (princ "failed...(")
+            (setq passed nil)
+            (setq actualReturn 
+                (strcat (vl-princ-to-string actualReturn) " instead of ")
       )
     )
   )
-	
-	;; continue printing result...
-	(princ (strcase (vl-symbol-name functionName) T))
-	(princ " ")
-	(princ 
-		(DL:ReplaceAllSubst 
-			"'"
-			"(QUOTE " 
-			(vl-prin1-to-string argumentList))
+    
+    ;; continue printing result...
+    (princ (strcase (vl-symbol-name functionName) T))
+    (princ " ")
+    (princ 
+        (DL:ReplaceAllSubst 
+            "'"
+            "(QUOTE " 
+            (vl-prin1-to-string argumentList))
   )
-	(princ ") returned ")
-	(if actualReturn (princ actualReturn))
-	(princ expectedReturn)
-	(princ "\n")
-	(setq *testList* (append *testList* (list passed)))
+    (princ ") returned ")
+    (if actualReturn (princ actualReturn))
+    (princ expectedReturn)
+    (princ "\n")
+    (setq *testList* (append *testList* (list passed)))
 
   (if (/= passed T) 
     (setq *failedTestList* (append *failedTestList* (list (strcat 
@@ -361,7 +361,7 @@
                                                             expectedReturn
                                                           ))))
   )
-	passed
+    passed
 )
 
 ; Changes all "pattern"s to "newSubst". Like vl-string-subst, but replaces
@@ -369,11 +369,11 @@
 ; Argument: String to alter.
 ; Return: Altered string.
 (defun DL:ReplaceAllSubst (newSubst pattern string / pattern)
-	(while (vl-string-search pattern string)
-		(setq
-			string
-			(vl-string-subst newSubst pattern string)))
-	string
+    (while (vl-string-search pattern string)
+        (setq
+            string
+            (vl-string-subst newSubst pattern string)))
+    string
 )
 
 ; Counts boolean values
@@ -381,10 +381,10 @@
 ; Output: none
 ; Return: assoc. list of the qty of T's and F's - (("T" . 10) ("F" . 0))
 (defun DL:CountBooleans ( booleanList / countList totalTList totalFList)
-	(foreach listItem booleanList
-		(if (= listItem T)
-			(setq totalTList (append totalTList (list listItem)))
-			(setq totalFList (append totalFList (list listItem))))
+    (foreach listItem booleanList
+        (if (= listItem T)
+            (setq totalTList (append totalTList (list listItem)))
+            (setq totalFList (append totalFList (list listItem))))
   )
   (setq countList (list 
                     (cons "T" (length totalTList)) 
@@ -401,25 +401,25 @@
 ;			  0 tests failed
 ; Note: there are always four characters before each "tests"
 (defun DL:PrintTestResults (testResults / trues falses)
-	(setq trues (cdr (assoc "T" testResults)))
-	(setq falses (cdr (assoc "F" testResults)))
-	
-	(if (= trues nil)
-		(setq trues 0))
-	(if (= falses nil)
-		(setq falses 0))
-	
-	(princ "\nResults:")
-	(if (= falses 0)
-		(princ " ALL PASS"))
-	(princ "\n-----------------")
-	
-	
-	; add code to count digits in numbers and add correct space before.
-	; also, choose between "test" and "tests" correctly?
-	
-	(princ "\n  ")(princ trues)(princ " tests passed")
-	(princ "\n  ")(princ falses)(princ " tests failed")
+    (setq trues (cdr (assoc "T" testResults)))
+    (setq falses (cdr (assoc "F" testResults)))
+    
+    (if (= trues nil)
+        (setq trues 0))
+    (if (= falses nil)
+        (setq falses 0))
+    
+    (princ "\nResults:")
+    (if (= falses 0)
+        (princ " ALL PASS"))
+    (princ "\n-----------------")
+    
+    
+    ; add code to count digits in numbers and add correct space before.
+    ; also, choose between "test" and "tests" correctly?
+    
+    (princ "\n  ")(princ trues)(princ " tests passed")
+    (princ "\n  ")(princ falses)(princ " tests failed")
   (setq *testList* nil)
   ; print message of failed Tests
   (princ "\n-----------------\n  ")
@@ -427,7 +427,7 @@
     (princ "failed...")(princ item)(princ "\n  ")
   )
   (setq *failedTestList* nil)
-	(princ)
+    (princ)
 )
 
 ; Unit Test Source Code
@@ -2091,19 +2091,19 @@
     (setq sublst nil)
     (vl-catch-all-apply
       '(lambda ()
-	 (vlax-for submatch (vlax-get match 'SubMatches)
-	   (if submatch
-	     (setq sublst (cons submatch sublst))
-	   )
-	 )
+     (vlax-for submatch (vlax-get match 'SubMatches)
+       (if submatch
+         (setq sublst (cons submatch sublst))
+       )
+     )
        )
     )
     (setq lst (cons (list (vlax-get match 'Value)
-			  (vlax-get match 'FirstIndex)
-			  (reverse sublst)
-		    )
-		    lst
-	      )
+              (vlax-get match 'FirstIndex)
+              (reverse sublst)
+            )
+            lst
+          )
     )
   )
   (reverse lst)
@@ -3090,21 +3090,21 @@
       (repeat (sslength ss)
         (if (/= nil (ssname ss i))
           (progn
-	          ; get the entity information of the i(th) block
+              ; get the entity information of the i(th) block
             (setq ent (entget (ssname ss i)))
-	          ; save the entity name of the i(th) block
+              ; save the entity name of the i(th) block
             (setq blk (ssname ss i))
-	          ; get the property information
+              ; get the property information
             (setq entx (entget (entnext (cdr (assoc -1 ent)))))
             (while (= "ATTRIB" (cdr (assoc 0 entx)))
               (setq value (cdr (assoc 2 entx)))
               (if (= value "TAG")
-		            (setq equipTag (append equipTag (list (cdr (assoc 1 entx)))))
+                    (setq equipTag (append equipTag (list (cdr (assoc 1 entx)))))
               )
               (if (= value "NAME")
-		            (setq equipName (append equipName (list (cdr (assoc 1 entx)))))
+                    (setq equipName (append equipName (list (cdr (assoc 1 entx)))))
               )
-	            ; get the next property information
+                ; get the next property information
               (setq entx (entget (entnext (cdr (assoc -1 entx)))))
             )
             (entupd blk)
@@ -4640,11 +4640,11 @@
       (repeat (sslength ss)
         (if (/= nil (ssname ss i))
           (progn
-	          ; get the entity information of the i(th) block
+              ; get the entity information of the i(th) block
             (setq ent (entget (ssname ss i)))
-	          ; save the entity name of the i(th) block
+              ; save the entity name of the i(th) block
             (setq blk (ssname ss i))
-	          ; get the property information
+              ; get the property information
             (setq entx (entget (entnext (cdr (assoc -1 ent)))))
             (while (= "ATTRIB" (cdr (assoc 0 entx)))
               (setq propertyName (cdr (assoc 2 entx)))
@@ -4657,7 +4657,7 @@
                   )
                 )
               )
-	            ; get the next property information
+                ; get the next property information
               (setq entx (entget (entnext (cdr (assoc -1 entx)))))
             )
             (entupd blk)
@@ -4697,7 +4697,7 @@
               (if (= propertyName "TAG")
                 (setq instrumentTagList (append instrumentTagList (list (cdr (assoc 1 entx)))))
               )
-	            ; get the next property information
+                ; get the next property information
               (setq entx (entget (entnext (cdr (assoc -1 entx)))))
             )
             (entupd blk)
@@ -6368,7 +6368,7 @@
 (defun GetStrategyJSDrawColumnPositionData (/ allJSDrawColumnPosition resultList) 
   ; set a temp variable first, ss in the foreach
   (setq allJSDrawColumnPosition (GetAllJSDrawColumnPosition))
-	(foreach item (FilterJSDrawLabelData) 
+    (foreach item (FilterJSDrawLabelData) 
     (mapcar '(lambda (x) 
               (if (and 
                     (> (car x) (car (cadr item))) 
@@ -6388,7 +6388,7 @@
 (defun GetJSDrawBasePositionList (/ allJSDrawColumnPositionData tempPositionList resultList)
   ; set a temp variable first, ss in the foreach
   (setq allJSDrawColumnPositionData (GetStrategyJSDrawColumnPositionData))
-	(foreach item (FilterJSDrawLabelData) 
+    (foreach item (FilterJSDrawLabelData) 
     (setq tempPositionList (SortPositionListByMinxMinyUtils 
                               (mapcar '(lambda (x) (cadr x)) 
                                 (vl-remove-if-not '(lambda (x) 
@@ -6448,7 +6448,7 @@
 
 ; 2021-02-27
 (defun GetStrategyEntityData (copyEntityData / resultList) 
-	(foreach item (FilterJSDrawLabelData) 
+    (foreach item (FilterJSDrawLabelData) 
     (mapcar '(lambda (x) 
               (if (and 
                     (> (cadr (assoc 10 x)) (car (cadr item))) 
@@ -6519,7 +6519,7 @@
 (defun MoveJSEntityDataToBasePosition (drawBasePositionList / strategyCopyEntityData tempDataList resultList)
   ; set a temp variable first, ss in the foreach
   (setq strategyCopyEntityData (GetStrategyCopyEntityData))
-	(foreach item drawBasePositionList
+    (foreach item drawBasePositionList
     (setq tempDataList (MoveCopyEntityDataByBasePosition 
                               (mapcar '(lambda (x) (cadr x)) 
                                 (vl-remove-if-not '(lambda (x) 
@@ -6539,7 +6539,7 @@
 ; 2021-02-28
 (defun GenerateNewJSEntityData (drawBasePositionList strategyCopyEntityData /)
   ; set a temp variable first, ss in the foreach
-	(foreach item drawBasePositionList
+    (foreach item drawBasePositionList
     (generateJSDraw (MoveCopyEntityDataByBasePosition 
                       (mapcar '(lambda (x) (cadr x)) 
                         (vl-remove-if-not '(lambda (x) 
@@ -6852,3 +6852,34 @@
 ------------------------------------------------------------------------------- 
 -------------------------------------------------------------------------------
 |; 
+
+(defun InsertBlockUtils (/ acadObj curDoc insertionPnt modelSpace blockRefObj)
+  (setq acadObj (vlax-get-acad-object))
+  (setq curDoc (vla-get-activedocument acadObj)) 
+  (setq insertionPnt (vlax-3d-point (list 0 0 0)))
+  (setq modelSpace (vla-get-ModelSpace curDoc))
+  (setq blockRefObj (vla-InsertBlock modelSpace insertionPnt "PipeArrowLeft" 1 1 1 0))
+  ;(vla-ZoomAll acadObj) 
+  (princ)
+)
+
+(defun c:ssfoo (/ curDoc blocks)
+  (setq curDoc (vla-get-activedocument (vlax-get-acad-object))) 
+  ; Gets the blocks collection 
+  (setq blocks (vla-get-blocks curDoc)) 
+  ; Creates a report header 
+  (vlax-dump-object blocks T)
+  (princ)
+)
+
+(defun c:foo (/ acadObj curDoc insertionPnt modelSpace blockRefObj)
+  (setq acadObj (vlax-get-acad-object))
+  (setq curDoc (vla-get-activedocument acadObj)) 
+  (setq insertionPnt (vlax-3d-point (list 0 0 0)))
+  (setq modelSpace (vla-get-ModelSpace curDoc))
+  (setq blockRefObj (vla-InsertBlock modelSpace insertionPnt "PipeArrowLeft" 1 1 1 0))
+  (vlax-dump-object blockRefObj T)
+  (vla-ZoomAll acadObj) 
+
+  (princ)
+)
