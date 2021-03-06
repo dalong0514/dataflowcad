@@ -1399,6 +1399,8 @@
   ;(vlax-dump-object blockRefObj T)
   (vlax-put-property blockRefObj 'Layer layerName)
   (setq blockAttributes (vlax-variant-value (vla-GetAttributes blockRefObj)))
+  ; another method get the blockAttributes
+  ;(setq blockAttributes (vlax-variant-value (vlax-invoke-method blockRefObj 'GetAttributes)))
   ;(vlax-safearray->list blockAttributes)
   (vla-put-TextString (vlax-safearray-get-element blockAttributes 1) "JC1101-50-2J1")
   ;(vla-ZoomAll acadObj) 
