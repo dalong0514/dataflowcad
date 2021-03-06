@@ -1390,12 +1390,13 @@
 )
 
 ; 2021-03-06
-(defun InsertBlockUtils (/ acadObj curDoc insertionPnt modelSpace blockRefObj)
+(defun InsertBlockUtils (insPt blockName layerName / acadObj curDoc insertionPnt modelSpace blockRefObj)
   (setq acadObj (vlax-get-acad-object))
   (setq curDoc (vla-get-activedocument acadObj)) 
-  (setq insertionPnt (vlax-3d-point (list 0 0 0)))
+  (setq insertionPnt (vlax-3d-point insPt))
   (setq modelSpace (vla-get-ModelSpace curDoc))
-  (setq blockRefObj (vla-InsertBlock modelSpace insertionPnt "PipeArrowLeft" 1 1 1 0))
+  (setq blockRefObj (vla-InsertBlock modelSpace insertionPnt blockName 1 1 1 0))
+  (vlax-put-property blockRefObj 'Layer layerName)
   ;(vla-ZoomAll acadObj) 
   (princ)
 )
@@ -1409,16 +1410,8 @@
   (princ)
 )
 
-(defun c:foo (/ acadObj curDoc insertionPnt modelSpace blockRefObj)
-  (setq acadObj (vlax-get-acad-object))
-  (setq curDoc (vla-get-activedocument acadObj)) 
-  (setq insertionPnt (vlax-3d-point (list 0 0 0)))
-  (setq modelSpace (vla-get-ModelSpace curDoc))
-  (setq blockRefObj (vla-InsertBlock modelSpace insertionPnt "PipeArrowLeft" 1 1 1 0))
-  (vlax-dump-object blockRefObj T)
-  (vla-ZoomAll acadObj) 
-
-  (princ)
+(defun c:foo ()
+  (InsertBlockUtils (list 0 0 0) "PipeArrowLeft" "DataFlow-Pipe")
 )
 
 ; Utils Function 
