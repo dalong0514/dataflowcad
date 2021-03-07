@@ -332,9 +332,20 @@
   (InsertBlockUtils insPt blockName "DataFlow-Pipe" blockPropertyDict)
 )
 
+; 2021-03-07
 (defun GetGsLcBlockPipePropertyDict ()
   (list (cons 1 "PL1101"))
 )
+
+; 2021-03-07
+(defun GetGsLcBlockPipePropertyDictV (/ equipmentAndPipeData)
+  (setq equipmentAndPipeData (GetBlockAllPropertyDictUtils (GetEntityNameListBySSUtils (GetBlockSSBySelectByDataTypeUtils "EquipmentAndPipe"))))
+)
+
+(defun c:foo ()
+  (GetBlockAllPropertyDictUtils (GetEntityNameListBySSUtils (GetBlockSSBySelectByDataTypeUtils "EquipmentAndPipe")))
+)
+
 
 ; 2021-03-07
 (defun VerifyGsLcPipeLayer () 
@@ -478,7 +489,7 @@
                         ; repair bug - relatedid may be not in the allPipeHandleList - 2021-01-30
                         (and (/= (cdr (assoc "relatedid" x)) "") (/= (member (cdr (assoc "relatedid" x)) allPipeHandleList) nil)) 
                       ) 
-      (GetAllPropertyValueListByEntityNameList entityNameList)
+      (GetBlockAllPropertyDictUtils entityNameList)
     )
   )
   (PrintErrorLogForUpdatePublicPipe dataType entityNameList allPipeHandleList) 
@@ -495,7 +506,7 @@
       (vl-remove-if-not '(lambda (x) 
                           (or (= (cdr (assoc "relatedid" x)) "") (= (member (cdr (assoc "relatedid" x)) allPipeHandleList) nil)) 
                         ) 
-        (GetAllPropertyValueListByEntityNameList entityNameList)
+        (GetBlockAllPropertyDictUtils entityNameList)
       )
     ) 
   )
@@ -586,7 +597,7 @@
                         ; refactor at 2021-01-27
                         (and (/= (cdr (assoc "relatedid" x)) "") (/= (member (cdr (assoc "relatedid" x)) allPipeHandleList) nil)) 
                       ) 
-      (GetAllPropertyValueListByEntityNameList entityNameList)
+      (GetBlockAllPropertyDictUtils entityNameList)
     )
   )
   (mapcar '(lambda (x) 
@@ -597,7 +608,7 @@
     (vl-remove-if-not '(lambda (x) 
                         (or (= (cdr (assoc "relatedid" x)) "") (= (member (cdr (assoc "relatedid" x)) allPipeHandleList) nil)) 
                       ) 
-      (GetAllPropertyValueListByEntityNameList entityNameList)
+      (GetBlockAllPropertyDictUtils entityNameList)
     )
   ) 
   (UpdateJoinDrawArrowStrategy dataType entityNameList relatedPipeData)
@@ -665,7 +676,7 @@
 (defun GetRelatedEquipDataByTag (tag / equipData) 
   ; repair bug - the tag may contain space, trim the space frist - 2020.12.21
   (setq tag (StringSubstUtils "" " " tag))
-  (setq equipData (GetAllPropertyValueListByEntityNameList (GetEntityNameListBySSUtils (GetAllEquipmentSSUtils))))
+  (setq equipData (GetBlockAllPropertyDictUtils (GetEntityNameListBySSUtils (GetAllEquipmentSSUtils))))
   (car 
     (vl-remove-if-not '(lambda (x) 
                         (= (cdr (assoc "tag" x)) tag)

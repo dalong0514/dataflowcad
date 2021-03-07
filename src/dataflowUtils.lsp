@@ -1291,16 +1291,16 @@
 )
 
 (defun GetAllPipeDataUtils () 
-  (GetAllPropertyValueListByEntityNameList (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "Pipe")))
+  (GetBlockAllPropertyDictUtils (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "Pipe")))
 )
 
 (defun GetAllEquipDataUtils () 
-  (GetAllPropertyValueListByEntityNameList (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "Equipment")))
+  (GetBlockAllPropertyDictUtils (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "Equipment")))
 )
 
 ; 2021-02-23
 (defun GetAllFireFightPipeDataUtils () 
-  (GetAllPropertyValueListByEntityNameList (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "FireFightPipe")))
+  (GetBlockAllPropertyDictUtils (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "FireFightPipe")))
 )
 
 (defun GetAllEquipPositionDictListUtils ()
@@ -1565,11 +1565,6 @@
   ) 
   ;(vla-ZoomAll acadObj) 
   (princ)
-)
-
-(defun c:foo (/ propertyDictList)
-  (setq propertyDictList (list (cons 1 "JC1101-50-2J1") (cons 2 "¼×´¼")))
-  (InsertBlockUtils '(0 0 0) "PipeArrowLeft" "DataFlow-Pipe" propertyDictList)
 )
 
 ; Generate CAD Graph Utils Function 

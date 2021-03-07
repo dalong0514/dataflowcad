@@ -1814,7 +1814,7 @@
   (cons (cons "entityhandle" (cdr (assoc 5 entityData))) propertyValueList)
 )
 
-(defun GetAllPropertyValueListByEntityNameList (entityNameList / resultList)
+(defun GetBlockAllPropertyDictUtils (entityNameList / resultList)
   (mapcar '(lambda (x) 
              (setq resultList (append resultList (list (GetAllPropertyDictForOneBlock x))))
            ) 
@@ -3487,7 +3487,7 @@
                (GetJSDrawPositionRangeUtils (GetEntityPositionByEntityNameUtils (handent (cdr (assoc "entityhandle" x)))))
              )
            ) 
-    (GetAllPropertyValueListByEntityNameList (GetEntityNameListBySSUtils (GetAllDrawLabelSSUtils)))
+    (GetBlockAllPropertyDictUtils (GetEntityNameListBySSUtils (GetAllDrawLabelSSUtils)))
   ) 
 )
 
