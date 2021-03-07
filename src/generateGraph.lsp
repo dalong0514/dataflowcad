@@ -255,11 +255,10 @@
 
 ; logic for generate Instrument
 (defun c:InsertBlockInstrumentP (/ insPt) 
+  (prompt "\n选取设备块和仪表块：")
+  (setq ss (GetBlockSSBySelectByDataTypeUtils "EquipmentAndPipe")) 
   (setq insPt (getpoint "\n选取集中仪表插入点："))
-  (VerifyGsLcBlockByName "InstrumentP")
-  (VerifyGsLcLayerByName "DataFlow-Instrument")
-  (VerifyGsLcLayerByName "DataFlow-InstrumentComment")
-  (GenerateBlockInstrumentP insPt "InstrumentP")
+  (InsertGsLcBlockInstrument insPt "InstrumentP" (GetGsLcBlockInstrumentPropertyDict ss)) 
 )
 
 (defun c:InsertBlockInstrumentL (/ insPt) 
@@ -276,6 +275,38 @@
   (VerifyGsLcLayerByName "DataFlow-Instrument")
   (VerifyGsLcLayerByName "DataFlow-InstrumentComment")
   (GenerateBlockInstrumentP insPt "InstrumentSIS")
+)
+
+; 2021-03-07
+(defun InsertGsLcBlockInstrument (insPt blockName blockPropertyDict /) 
+  (VerifyGsLcBlockByName blockName)
+  (VerifyGsLcInstrumentLayer)
+  (InsertBlockUtils insPt blockName "DataFlow-Instrument" blockPropertyDict)
+)
+
+; 2021-03-07
+(defun VerifyGsLcInstrumentLayer () 
+  (VerifyGsLcLayerByName "DataFlow-Instrument")
+  (VerifyGsLcLayerByName "DataFlow-InstrumentComment")
+)
+
+; 2021-03-07
+(defun GetGsLcBlockInstrumentPropertyDict (ss / propertyIDList sourceData equipmentData pipeData resultList)
+  (setq propertyIDList (list (cons 0 "entityhandle") (cons 2 "substance") (cons 3 "temp") (cons 4 "pressure") (cons 6 "tag")))
+  (setq sourceData (GetBlockAllPropertyDictUtils (GetEntityNameListBySSUtils ss)))
+  (setq equipmentData (FilterBlockEquipmentDataUtils sourceData))
+  (setq pipeData (FilterBlockPipeDataUtils sourceData))
+  (if (/= equipmentData nil) 
+      (mapcar '(lambda (x) 
+                (setq resultList (append resultList (list (cons (car x) (cdr (assoc (cdr x) (car equipmentData)))))))
+              ) 
+        propertyIDList
+      ) 
+  )
+  (if (/= pipeData nil) 
+    (setq resultList (append resultList (list (cons 1 (cdr (assoc "pipenum" (car pipeData)))))))
+  ) 
+  resultList
 )
 
 (defun GenerateBlockInstrumentP (insPt blockName /) 
