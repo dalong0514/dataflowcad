@@ -304,7 +304,11 @@
       ) 
   )
   (if (/= instrumentData nil) 
-    (setq resultList (append resultList (list (cons 1 (cdr (assoc "function" (car instrumentData)))))))
+    (setq resultList (append resultList (list 
+                                          (cons 1 (cdr (assoc "function" (car instrumentData))))
+                                          (cons 3 (cdr (assoc "halarm" (car instrumentData))))
+                                          (cons 4 (cdr (assoc "lalarm" (car instrumentData))))
+                                        )))
   ) 
   resultList
 )
