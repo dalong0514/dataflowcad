@@ -367,22 +367,20 @@
 
 
 ; logic for generate EquipTag
-; 2021-03-05
+; 2021-03-07 refactored
 (defun c:InsertBlockGsLcReactor (/ insPt) 
   (setq insPt (getpoint "\n选取反应釜位号插入点："))
   (VerifyGsLcBlockByName "Reactor")
-  (VerifyGsLcLayerByName "DataFlow-EquipTag")
-  (VerifyGsLcLayerByName "DataFlow-EquipTagComment")
-  (GenerateBlockGsLcReactor insPt)
+  (VerifyGsLcEquipTagLayer)
+  (InsertBlockUtils insPt "Reactor" "DataFlow-EquipTag" (list (cons 1 "R")))
 )
 
-; 2021-03-05
+; 2021-03-07 refactored
 (defun c:InsertBlockGsLcTank (/ insPt) 
   (setq insPt (getpoint "\n选取储罐位号插入点："))
   (VerifyGsLcBlockByName "Tank")
-  (VerifyGsLcLayerByName "DataFlow-EquipTag")
-  (VerifyGsLcLayerByName "DataFlow-EquipTagComment")
-  (GenerateBlockGsLcTank insPt)
+  (VerifyGsLcEquipTagLayer)
+  (InsertBlockUtils insPt "Tank" "DataFlow-EquipTag" (list (cons 1 "V")))
 )
 
 ; 2021-03-07
@@ -399,6 +397,7 @@
   (VerifyGsLcLayerByName "DataFlow-EquipTagComment")
 )
 
+; the function is abandoned - 2021-03-07
 (defun GenerateBlockGsLcReactor (insPt /) 
   (GenerateBlockReference insPt "Reactor" "DataFlow-EquipTag") 
   (GenerateLeftBlockAttribute (MoveInsertPosition insPt 0 5) "VERSION" "" "DataFlow-EquipTagComment" 1.5 0 1 0)
@@ -428,6 +427,7 @@
   (princ)
 )
 
+; the function is abandoned - 2021-03-07
 (defun GenerateBlockGsLcTank (insPt /) 
   (GenerateBlockReference insPt "Tank" "DataFlow-EquipTag") 
   (GenerateLeftBlockAttribute (MoveInsertPosition insPt 0 5) "VERSION" "" "DataFlow-EquipTagComment" 1.5 0 1 0)
