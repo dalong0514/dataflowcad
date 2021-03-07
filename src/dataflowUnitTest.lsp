@@ -208,7 +208,7 @@
 )
 
 (defun GetInsertPtListTest ()
-  (AssertEqual 'GetInsertPtList (list '(1 1 1) '(0 1 2 3 4) 10) 
+  (AssertEqual 'GetInsertPtListUtils (list '(1 1 1) '(0 1 2 3 4) 10) 
     (list '(1 1 1) '(11 1 1) '(21 1 1) '(31 1 1) '(41 1 1))
   )
 )
@@ -230,8 +230,8 @@
 )
 
 (defun ExtractDrawNumTest ()
-  (AssertEqual 'ExtractDrawNum '("S20101GS-101-04-04") "04-04")
-  (AssertEqual 'ExtractDrawNum '("") "ÎÞÍ¼ºÅ")
+  (AssertEqual 'ExtractDrawNumUtils '("S20101GS-101-04-04") "04-04")
+  (AssertEqual 'ExtractDrawNumUtils '("") "ÎÞÍ¼ºÅ")
 )
 
 (defun GetInsertPtTest () 

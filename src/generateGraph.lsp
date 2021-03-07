@@ -3,140 +3,7 @@
 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
-; Generate Entity Object in CAD
-
-; 2021-02-02
-(defun GenerateLineByPosition (firstPt secondPt lineLayer /)
-  (entmake (list (cons 0 "LINE") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 lineLayer) (cons 100 "AcDbText") 
-                  (cons 10 firstPt) (cons 11 secondPt) (cons 210 '(0.0 0.0 1.0)) 
-             )
-  )(princ)
-)
-
-; 2021-02-02
-(defun GenerateVerticallyTextByPositionAndContent (insPt textContent textLayer textHeight /)
-  (entmake (list (cons 0 "TEXT") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 textLayer) (cons 100 "AcDbText") 
-                  (cons 10 insPt) (cons 11 '(0.0 0.0 0.0)) (cons 40 textHeight) (cons 1 textContent) (cons 50 1.5708) (cons 41 0.7) (cons 51 0.0) 
-                  (cons 7 "DataFlow") (cons 71 0) (cons 72 0) (cons 73 0) (cons 210 '(0.0 0.0 1.0)) (cons 100 "AcDbText") 
-             )
-  )(princ)
-)
-
-(defun GenerateTextByPositionAndContent (insPt textContent /)
-  (entmake (list (cons 0 "TEXT") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 "管道编号") (cons 100 "AcDbText") 
-                  (cons 10 insPt) (cons 11 '(0.0 0.0 0.0)) (cons 40 3.0) (cons 1 textContent) (cons 50 1.5708) (cons 41 0.7) (cons 51 0.0) 
-                  (cons 7 "Standard") (cons 71 0) (cons 72 0) (cons 73 0) (cons 210 '(0.0 0.0 1.0)) (cons 100 "AcDbText") 
-             )
-  )(princ)
-)
-
-(defun GenerateEquipTagText (insPt textContent /)
-  (entmake (list (cons 0 "TEXT") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 "设备位号") (cons 100 "AcDbText") 
-                  (cons 10 '(0.0 0.0 0.0)) (cons 11 insPt) (cons 40 3.0) (cons 1 textContent) (cons 50 0.0) (cons 41 0.7) (cons 51 0.0) 
-                  (cons 7 "Standard") (cons 71 0) (cons 72 1) (cons 73 0) (cons 210 '(0.0 0.0 1.0)) (cons 100 "AcDbText") 
-             )
-  )(princ)
-)
-
-(defun GeneratePublicPipePolyline (insPt /)
-  (entmake 
-    (list (cons 0 "LWPOLYLINE") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 "PL2") (cons 62 3) (cons 100 "AcDbPolyline") 
-          (cons 90 2) (cons 70 0) (cons 43 0.6) (cons 38 0.0) (cons 39 0.0) (cons 10 (MoveInsertPosition insPt 0 50)) (cons 40 0.6) 
-          (cons 41 0.6) (cons 42 0.0) (cons 91 0) (cons 10 insPt) (cons 40 0.6) (cons 41 0.6) (cons 42 0.0) (cons 91 0) (cons 210 '(0.0 0.0 1.0))
-    ))
-  (princ)
-)
-
-; 2021-03-05
-(defun GenerateVerticalPolyline (insPt blockLayer lineWidth /)
-  (entmake 
-    (list (cons 0 "LWPOLYLINE") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 blockLayer) (cons 62 3) (cons 100 "AcDbPolyline") 
-          (cons 90 2) (cons 70 0) (cons 43 lineWidth) (cons 38 0.0) (cons 39 0.0) 
-          (cons 10 (MoveInsertPosition insPt 0 50)) (cons 40 lineWidth) (cons 41 lineWidth) (cons 42 0.0) (cons 91 0) 
-          (cons 10 insPt) (cons 40 lineWidth) (cons 41 lineWidth) (cons 42 0.0) (cons 91 0) 
-          (cons 210 '(0.0 0.0 1.0))
-    ))
-  (princ)
-)
-
-(defun GenerateBlockReference (insPt blockName blockLayer /) 
-  (entmake 
-    (list (cons 0 "INSERT") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 blockLayer) (cons 100 "AcDbBlockReference") 
-          (cons 66 1) (cons 2 blockName) (cons 10 insPt) (cons 41 1.0) (cons 42 1.0) (cons 43 1.0) (cons 50 0.0) (cons 70 0) (cons 71 0) 
-          (cons 44 0.0) (cons 45 0.0) (cons 210 '(0.0 0.0 1.0))
-    )
-  ) 
-  (princ)
-)
-
-; directionStatus: dxfcode 50; 0 水平方向 - 1.57 垂直方向
-; hiddenStatus dxfcode 70; 0 可见 - 1 隐藏
-; moveStatus: dxfcode 280; 1 固定 - 0 可移动
-(defun GenerateCenterBlockAttribute (insPt propertyName propertyValue blockLayer textHeight directionStatus hiddenStatus moveStatus /)
-  (entmake 
-    (list (cons 0 "ATTRIB") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 blockLayer) (cons 100 "AcDbText") 
-          (cons 10 (MoveInsertPosition insPt -5.8 0)) (cons 40 textHeight) (cons 1 propertyValue) (cons 50 directionStatus) 
-          (cons 41 0.7) (cons 51 0.0) (cons 7 "DataFlow") (cons 71 0) (cons 72 1) (cons 11 insPt) (cons 210 '(0.0 0.0 1.0)) 
-          (cons 100 "AcDbAttribute") (cons 280 0) (cons 2 propertyName) (cons 70 hiddenStatus) (cons 73 0) (cons 74 0) (cons 280 moveStatus)
-    )
-  )
-  (princ)
-)
-
-(defun GenerateLeftBlockAttribute (insPt propertyName propertyValue blockLayer textHeight directionStatus hiddenStatus moveStatus /)
-  (entmake 
-    (list (cons 0 "ATTRIB") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 blockLayer) (cons 100 "AcDbText") 
-          (cons 10 insPt) (cons 40 textHeight) (cons 1 propertyValue) (cons 50 directionStatus) (cons 41 0.7) (cons 51 0.0) (cons  7 "DataFlow") (cons 71 0) (cons 72 0) 
-          (cons 11 '(0.0 0.0 0.0)) (cons 210 '(0.0 0.0 1.0)) (cons 100 "AcDbAttribute") (cons 280 0) (cons 2 propertyName) (cons 70 hiddenStatus) 
-          (cons 73 0) (cons 74 0) (cons 280 moveStatus)
-    )
-  )
-  (princ)
-)
-
-(defun GenerateBlockAttribute (insPt propertyName propertyValue blockLayer textHeight /)
-  (entmake 
-    (list (cons 0 "ATTRIB") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 blockLayer) (cons 100 "AcDbText") 
-          (cons 10 insPt) (cons 40 textHeight) (cons 1 propertyValue) (cons 50 0.0) (cons 41 0.7) (cons 51 0.0) (cons  7 "DataFlow") (cons 71 0) (cons 72 0) 
-          (cons 11 '(0.0 0.0 0.0)) (cons 210 '(0.0 0.0 1.0)) (cons 100 "AcDbAttribute") (cons 280 0) (cons 2 propertyName) (cons 70 0) 
-          (cons 73 0) (cons 74 0) (cons 280 0)
-    )
-  )
-  (princ)
-)
-
-(defun GenerateVerticallyBlockAttribute (insPt propertyName propertyValue blockLayer textHeight /)
-  (entmake 
-    (list (cons 0 "ATTRIB") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 blockLayer) (cons 100 "AcDbText") 
-          (cons 10 insPt) (cons 40 textHeight) (cons 1 propertyValue) (cons 50 1.5708) (cons 41 0.7) (cons 51 0.0) (cons 7 "DataFlow") (cons 71 0) (cons 72 0) 
-          (cons 11 '(0.0 0.0 0.0)) (cons 210 '(0.0 0.0 1.0)) (cons 100 "AcDbAttribute") (cons 280 0) (cons 2 propertyName) 
-          (cons 70 0) (cons 73 0) (cons 74 0) (cons 280 0)
-    )
-  )
-  (princ)
-)
-
-(defun GenerateBlockHiddenAttribute (insPt propertyName propertyValue blockLayer textHeight /)
-  (entmake 
-    (list (cons 0 "ATTRIB") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 blockLayer) (cons 100 "AcDbText") 
-          (cons 10 insPt) (cons 40 textHeight) (cons 1 propertyValue) (cons 50 0.0) (cons 41 0.7) (cons 51 0.0) (cons 7 "DataFlow") (cons 71 0) (cons 72 0) 
-          (cons 11 '(0.0 0.0 0.0)) (cons 210 '(0.0 0.0 1.0)) (cons 100 "AcDbAttribute") (cons 280 0) (cons 2 propertyName) (cons 70 1) 
-          (cons 73 0) (cons 74 0) (cons 280 0)
-    )
-  )
-  (princ)
-)
-
-(defun GenerateVerticallyBlockHiddenAttribute (insPt propertyName propertyValue blockLayer textHeight /)
-  (entmake 
-    (list (cons 0 "ATTRIB") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 blockLayer) (cons 100 "AcDbText") 
-          (cons 10 insPt) (cons 40 textHeight) (cons 1 propertyValue) (cons 50 1.5708) (cons 41 0.7) (cons 51 0.0) (cons  7 "DataFlow") (cons 71 0) (cons 72 0) 
-          (cons 11 '(0.0 0.0 0.0)) (cons 210 '(0.0 0.0 1.0)) (cons 100 "AcDbAttribute") (cons 280 0) (cons 2 propertyName) 
-          (cons 70 1) (cons 70 1) (cons 73 0) (cons 74 0) (cons 280 0)
-    )
-  )
-  (princ)
-)
+; Generate GS Entity Object in CAD
 
 (defun GenerateJoinDrawArrowToElement (insPt fromtoValue drawnumValue relatedIDValue /)
   (GenerateBlockReference insPt "JoinDrawArrowTo" "DataFlow-JoinDrawArrow")
@@ -203,39 +70,6 @@
   (princ)
 )
 
-; refactored at 2021-02-07
-(defun GenerateOneFireFightHPipe (insPt pipenum pipeDiameter relatedIDValue textHeight /) 
-  (GenerateBlockReference insPt "FireFightHPipe" "DataflowFireFightPipe")
-  (GenerateBlockAttribute (MoveInsertPosition insPt 150 60) "PIPENUM" pipenum "0" textHeight)
-  (GenerateBlockAttribute (MoveInsertPosition insPt 150 -420) "PIPEDIAMETER" pipeDiameter "0" textHeight)
-  (GenerateBlockHiddenAttribute (MoveInsertPosition insPt 150 -720) "RELATEDID" relatedIDValue "DataflowFireFightPipe" 150)
-  (entmake 
-    (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
-  )
-  (princ)
-)
-
-; 2021-02-03
-(defun GenerateOneFireFightVPipe (insPt pipenum relatedIDValue /) 
-  (GenerateBlockReference insPt "FireFightVPipe" "DataflowFireFightPipe")
-  (GenerateVerticallyBlockAttribute (AddPositonOffSetUtils insPt '(-60 150 0)) "PIPENUM" pipenum "0" 350)
-  (GenerateBlockHiddenAttribute (AddPositonOffSetUtils insPt '(200 0 0)) "RELATEDID" relatedIDValue "DataflowFireFightPipe" 150)
-  (entmake 
-    (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
-  )
-  (princ)
-)
-
-; 2021-02-07
-(defun GenerateOneFireFightElevation (insPt elevation textHeight /) 
-  (GenerateBlockReference insPt "FireFightElevation" "DataflowFireFightElevation")
-  (GenerateBlockAttribute (AddPositonOffSetUtils insPt '(-950 300 0)) "ELEVATION" elevation "0" textHeight)
-  (entmake 
-    (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
-  )
-  (princ)
-)
-
 (defun GenerateOneEntityObjectElement (insPt textDataList blockName /) 
   (cond 
     ((= blockName "EquipTagV2") 
@@ -258,21 +92,13 @@
   )
 )
 
-; Unit Test Completed
-(defun ExtractDrawNum (str / result) 
-  (if (> (strlen str) 2) 
-    (setq result (substr str (- (strlen str) 4)))
-    (setq result "无图号")
-  )
-)
-
 (defun c:EquipTag (/ ss equipInfoList insPt insPtList)
   (setq ss (GetEquipmentSSBySelectUtils))
   (setq equipInfoList (GetEquipTagList ss))
   ; merge equipInfoList by equipTag
   (setq equipInfoList (vl-sort equipInfoList '(lambda (x y) (< (car x) (car y)))))
   (setq insPt (getpoint "\n选取设备位号的插入点："))
-  (setq insPtList (GetInsertPtList insPt (GenerateSortedNumByList equipInfoList 0) 30))
+  (setq insPtList (GetInsertPtListUtils insPt (GenerateSortedNumByList equipInfoList 0) 30))
   (GenerateEntityObjectElement "EquipTagV2" insPtList equipInfoList)
 )
 
@@ -299,7 +125,7 @@
 )
 
 ; Unit Test Compeleted
-(defun GetInsertPtList (insPt SortedNumByList removeDistance / resultList)
+(defun GetInsertPtListUtils (insPt SortedNumByList removeDistance / resultList)
   (mapcar '(lambda (x) (GetInsertPt insPt x removeDistance)) 
     SortedNumByList
   )
@@ -550,7 +376,7 @@
   (setq dataList (ProcessPublicPipeElementData dataList))
   ; sort data by drawnum
   (setq dataList (vl-sort dataList '(lambda (x y) (< (nth 4 x) (nth 4 y)))))
-  (setq insPtList (GetInsertPtList insPt (GenerateSortedNumByList dataList 0) 10))
+  (setq insPtList (GetInsertPtListUtils insPt (GenerateSortedNumByList dataList 0) 10))
   (cond 
     ((= pipeSourceDirection "0") (GenerateDownPublicPipe insPtList dataList))
     ((= pipeSourceDirection "1") (GenerateUpPublicPipe insPtList dataList))
@@ -584,7 +410,7 @@
              ; the property value of drawnum may be null
              (if (< (strlen (nth 4 x)) 3) 
                (ReplaceListItemByindexUtils "XXXXX" 4 x)
-               (ReplaceListItemByindexUtils (ExtractDrawNum (nth 4 x)) 4 x)
+               (ReplaceListItemByindexUtils (ExtractDrawNumUtils (nth 4 x)) 4 x)
              )
            ) 
     dataList
@@ -657,7 +483,7 @@
                   (list "TAG" "DRAWNUM") 
                   (list 
                     (cdr (assoc "from" y)) 
-                    (ExtractDrawNum (cdr (assoc "drawnum" y)))
+                    (ExtractDrawNumUtils (cdr (assoc "drawnum" y)))
                   )
                 )
               ) 
@@ -673,7 +499,7 @@
                   (list "TAG" "DRAWNUM") 
                   (list 
                     (cdr (assoc "to" y)) 
-                    (ExtractDrawNum (cdr (assoc "drawnum" y)))
+                    (ExtractDrawNumUtils (cdr (assoc "drawnum" y)))
                   )
                 )
               ) 
@@ -812,7 +638,7 @@
 
 (defun GetRelatedEquipDrawNum (equipData / result) 
   (if (/= equipData nil) 
-    (setq result (ExtractDrawNum (cdr (assoc "drawnum" equipData))))
+    (setq result (ExtractDrawNumUtils (cdr (assoc "drawnum" equipData))))
     (setq result "无此设备")
   )
   result
@@ -822,5 +648,46 @@
 ;;;-------------------------------------------------------------------------;;;
 
 ; Generate GsLcBlocks
+; Generate GS Entity Object in CAD
 ;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+
+
+;;;-------------------------------------------------------------------------;;;
+; Generate SS Object in CAD
+
+; refactored at 2021-02-07
+(defun GenerateOneFireFightHPipe (insPt pipenum pipeDiameter relatedIDValue textHeight /) 
+  (GenerateBlockReference insPt "FireFightHPipe" "DataflowFireFightPipe")
+  (GenerateBlockAttribute (MoveInsertPosition insPt 150 60) "PIPENUM" pipenum "0" textHeight)
+  (GenerateBlockAttribute (MoveInsertPosition insPt 150 -420) "PIPEDIAMETER" pipeDiameter "0" textHeight)
+  (GenerateBlockHiddenAttribute (MoveInsertPosition insPt 150 -720) "RELATEDID" relatedIDValue "DataflowFireFightPipe" 150)
+  (entmake 
+    (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
+  )
+  (princ)
+)
+
+; 2021-02-03
+(defun GenerateOneFireFightVPipe (insPt pipenum relatedIDValue /) 
+  (GenerateBlockReference insPt "FireFightVPipe" "DataflowFireFightPipe")
+  (GenerateVerticallyBlockAttribute (AddPositonOffSetUtils insPt '(-60 150 0)) "PIPENUM" pipenum "0" 350)
+  (GenerateBlockHiddenAttribute (AddPositonOffSetUtils insPt '(200 0 0)) "RELATEDID" relatedIDValue "DataflowFireFightPipe" 150)
+  (entmake 
+    (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
+  )
+  (princ)
+)
+
+; 2021-02-07
+(defun GenerateOneFireFightElevation (insPt elevation textHeight /) 
+  (GenerateBlockReference insPt "FireFightElevation" "DataflowFireFightElevation")
+  (GenerateBlockAttribute (AddPositonOffSetUtils insPt '(-950 300 0)) "ELEVATION" elevation "0" textHeight)
+  (entmake 
+    (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
+  )
+  (princ)
+)
+
+; Generate SS Object in CAD
 ;;;-------------------------------------------------------------------------;;;

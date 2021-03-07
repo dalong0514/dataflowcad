@@ -2589,7 +2589,7 @@
 )
 
 (defun GetInstrumentCodeNameByDrawNum (originString drawNum startNumberString /) 
-  (setq drawNum (RegExpReplace (ExtractDrawNum drawNum) "0(\\d)-(\\d*)" (strcat "$1" "$2") nil nil))
+  (setq drawNum (RegExpReplace (ExtractDrawNumUtils drawNum) "0(\\d)-(\\d*)" (strcat "$1" "$2") nil nil))
   (strcat startNumberString drawNum originString)
 )
 
@@ -2652,7 +2652,7 @@
                                 ; sort data by codeName
                                 (and 
                                   (wcmatch (cdr (assoc (cadr (numberedPropertyNameListStrategy dataType)) x)) item)
-                                  (= drawNum (ExtractDrawNum (cdr (assoc "DRAWNUM" x))))
+                                  (= drawNum (ExtractDrawNumUtils (cdr (assoc "DRAWNUM" x))))
                                 )
                             ) 
             propertyValueDictList
@@ -2723,7 +2723,7 @@
                                       ; sort data by codeName
                                       (and 
                                         (wcmatch (cdr (assoc (car (numberedPropertyNameListStrategy dataType)) x)) (strcat item "*")) 
-                                        (= drawNum (ExtractDrawNum (cdr (assoc "DRAWNUM" x))))
+                                        (= drawNum (ExtractDrawNumUtils (cdr (assoc "DRAWNUM" x))))
                                       )
                                   ) 
                   propertyValueDictList
@@ -2749,7 +2749,7 @@
 
 ; ready for refactor - 2021-03-05
 (defun GetPipeCodeNameByNumberMode (originString numberMode drawNum startNumberString dataType /) 
-  (setq drawNum (RegExpReplace (ExtractDrawNum drawNum) "0(\\d)-(\\d*)" (strcat "$1" "$2") nil nil))
+  (setq drawNum (RegExpReplace (ExtractDrawNumUtils drawNum) "0(\\d)-(\\d*)" (strcat "$1" "$2") nil nil))
   (cond 
     ((= numberMode "0") (RegExpReplace originString "([A-Za-z]+)(\\d*).*" (strcat "$1" startNumberString drawNum "$2") nil nil))
     ; bug 不按流程图编，按单体号（1A3）有问题，提取逻辑做了修改 - 2021-03-02
@@ -2809,7 +2809,7 @@
 (defun GetUniqueDrawNumList (propertyValueDictList / resultList) 
   (setq resultList 
     (mapcar '(lambda (x) 
-              (ExtractDrawNum x)
+              (ExtractDrawNumUtils x)
             ) 
       (GetValueListByOneKeyUtils propertyValueDictList "DRAWNUM")
     )
