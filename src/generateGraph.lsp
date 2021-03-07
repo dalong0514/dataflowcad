@@ -254,27 +254,25 @@
 
 
 ; logic for generate Instrument
-(defun c:InsertBlockInstrumentP (/ insPt) 
+(defun c:InsertBlockInstrumentP (/ ss insPt) 
   (prompt "\n选取设备块和仪表块：")
   (setq ss (GetBlockSSBySelectByDataTypeUtils "InstrumentAndEquipment")) 
   (setq insPt (getpoint "\n选取集中仪表插入点："))
-  (InsertGsLcBlockInstrument insPt "InstrumentP" (GetGsLcBlockInstrumentPropertyDict ss)) 
+  (InsertGsLcBlockInstrument insPt "InstrumentP" (GetGsLcBlockInstrumentPropertyDict ss "InstrumentP")) 
 )
 
-(defun c:InsertBlockInstrumentL (/ insPt) 
+(defun c:InsertBlockInstrumentL (/ ss insPt) 
+  (prompt "\n选取设备块和仪表块：")
+  (setq ss (GetBlockSSBySelectByDataTypeUtils "InstrumentAndEquipment"))  
   (setq insPt (getpoint "\n选取就地仪表插入点："))
-  (VerifyGsLcBlockByName "InstrumentL")
-  (VerifyGsLcLayerByName "DataFlow-Instrument")
-  (VerifyGsLcLayerByName "DataFlow-InstrumentComment")
-  (GenerateBlockInstrumentP insPt "InstrumentL")
+  (InsertGsLcBlockInstrument insPt "InstrumentL" (GetGsLcBlockInstrumentPropertyDict ss "InstrumentL")) 
 )
 
-(defun c:InsertBlockInstrumentSIS (/ insPt) 
+(defun c:InsertBlockInstrumentSIS (/ ss insPt) 
+  (prompt "\n选取设备块和仪表块：")
+  (setq ss (GetBlockSSBySelectByDataTypeUtils "InstrumentAndEquipment"))  
   (setq insPt (getpoint "\n选取SIS仪表插入点："))
-  (VerifyGsLcBlockByName "InstrumentSIS")
-  (VerifyGsLcLayerByName "DataFlow-Instrument")
-  (VerifyGsLcLayerByName "DataFlow-InstrumentComment")
-  (GenerateBlockInstrumentP insPt "InstrumentSIS")
+  (InsertGsLcBlockInstrument insPt "InstrumentSIS" (GetGsLcBlockInstrumentPropertyDict ss "InstrumentP")) 
 )
 
 ; 2021-03-07
@@ -291,8 +289,8 @@
 )
 
 ; 2021-03-07
-(defun GetGsLcBlockInstrumentPropertyDict (ss / propertyIDList sourceData equipmentData instrumentData resultList)
-  (setq propertyIDList (list (cons 0 "entityhandle") (cons 5 "substance") (cons 6 "temp") (cons 7 "pressure") (cons 10 "material") (cons 12 "tag")))
+(defun GetGsLcBlockInstrumentPropertyDict (ss dataType / propertyIDList sourceData equipmentData instrumentData resultList)
+  (setq propertyIDList (GetPropertyIDListStrategy dataType))
   (setq sourceData (GetBlockAllPropertyDictUtils (GetEntityNameListBySSUtils ss)))
   (setq equipmentData (FilterBlockEquipmentDataUtils sourceData))
   (setq instrumentData (FilterBlockInstrumentDataUtils sourceData))
@@ -304,47 +302,30 @@
       ) 
   )
   (if (/= instrumentData nil) 
-    (setq resultList (append resultList (list 
-                                          (cons 1 (cdr (assoc "function" (car instrumentData))))
-                                          (cons 3 (cdr (assoc "halarm" (car instrumentData))))
-                                          (cons 4 (cdr (assoc "lalarm" (car instrumentData))))
-                                        )))
+    (setq resultList (ExtendPropertyIDListStrategy dataType resultList instrumentData))
   ) 
   resultList
 )
 
-(defun GenerateBlockInstrumentP (insPt blockName /) 
-  (GenerateBlockReference insPt blockName "DataFlow-Instrument") 
-  (GenerateLeftBlockAttribute (MoveInsertPosition insPt 8.5 4) "VERSION" "" "DataFlow-InstrumentComment" 1.5 0 1 0)
-  (GenerateCenterBlockAttribute (MoveInsertPosition insPt 0 0.5) "FUNCTION" "xxxx" "0" 3 0 0 1)
-  (GenerateCenterBlockAttribute (MoveInsertPosition insPt 0 -3.5) "TAG" "xxxx" "0" 3 0 0 1)
-  (if (/= blockName "InstrumentL") 
-    (progn 
-      (GenerateLeftBlockAttribute (MoveInsertPosition insPt 6.5 2.4) "HALARM" "" "0" 3 0 0 0)
-      (GenerateLeftBlockAttribute (MoveInsertPosition insPt 6.5 -5) "LALARM" "" "0" 3 0 0 0) 
-    )
+(defun GetPropertyIDListStrategy (dataType /)
+  (if (= dataType "InstrumentP") 
+    (list (cons 0 "entityhandle") (cons 5 "substance") (cons 6 "temp") (cons 7 "pressure") (cons 10 "material") (cons 12 "tag"))
+    (list (cons 0 "entityhandle") (cons 3 "substance") (cons 4 "temp") (cons 5 "pressure") (cons 8 "material") (cons 10 "tag"))
   )
-  (GenerateLeftBlockAttribute (MoveInsertPosition insPt 8.5 2) "SUBSTANCE" "" "DataFlow-InstrumentComment" 1.5 0 0 0)
-  (GenerateLeftBlockAttribute (MoveInsertPosition insPt 8.5 0) "TEMP" "" "DataFlow-InstrumentComment" 1.5 0 0 0)
-  (GenerateLeftBlockAttribute (MoveInsertPosition insPt 8.5 -2) "PRESSURE" "" "DataFlow-InstrumentComment" 1.5 0 0 0)
-  (GenerateLeftBlockAttribute (MoveInsertPosition insPt 8.5 -6) "SORT" "" "DataFlow-InstrumentComment" 1.5 0 0 0)
-  (GenerateLeftBlockAttribute (MoveInsertPosition insPt 8.5 -12) "PHASE" "" "DataFlow-InstrumentComment" 1.5 0 1 0)
-  (GenerateLeftBlockAttribute (MoveInsertPosition insPt 8.5 -14) "MATERIAL" "" "DataFlow-InstrumentComment" 1.5 0 1 0)
-  (GenerateLeftBlockAttribute (MoveInsertPosition insPt 8.5 -16) "NAME" "" "DataFlow-InstrumentComment" 1.5 0 1 0) 
-  (GenerateLeftBlockAttribute (MoveInsertPosition insPt 8.5 -4) "LOCATION" "" "DataFlow-InstrumentComment" 1.5 0 0 0)
-  (GenerateLeftBlockAttribute (MoveInsertPosition insPt 8.5 -18) "MIN" "" "DataFlow-InstrumentComment" 1.5 0 1 0)
-  (GenerateLeftBlockAttribute (MoveInsertPosition insPt 8.5 -20) "MAX" "" "DataFlow-InstrumentComment" 1.5 0 1 0)
-  (GenerateLeftBlockAttribute (MoveInsertPosition insPt 8.5 -22) "NOMAL" "" "DataFlow-InstrumentComment" 1.5 0 1 0)
-  (GenerateLeftBlockAttribute (MoveInsertPosition insPt 8.5 -24) "DRAWNUM" "" "DataFlow-InstrumentComment" 1.5 0 1 0)
-  (GenerateLeftBlockAttribute (MoveInsertPosition insPt 8.5 -26) "INSTALLSIZE" "" "DataFlow-InstrumentComment" 1.5 0 1 0)
-  (GenerateLeftBlockAttribute (MoveInsertPosition insPt 8.5 -28) "COMMENT" "" "DataFlow-InstrumentComment" 1.5 0 1 0)
-  (GenerateLeftBlockAttribute (MoveInsertPosition insPt 8.5 -30) "DIRECTION" "" "DataFlow-InstrumentComment" 1.5 0 1 0)
-  (GenerateLeftBlockAttribute (MoveInsertPosition insPt 8.5 -8) "PIPECLASSCHANGE" "" "DataFlow-InstrumentComment" 1.5 0 0 0)
-  (GenerateLeftBlockAttribute (MoveInsertPosition insPt 8.5 -10) "REDUCERINFO" "" "DataFlow-InstrumentComment" 1.5 0 0 0) 
-  (entmake 
-    (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
+)
+
+(defun ExtendPropertyIDListStrategy (dataType originList instrumentData / resultList)
+  (if (= dataType "InstrumentP") 
+    (setq resultList (append originList (list 
+                                          (cons 1 (cdr (assoc "function" (car instrumentData))))
+                                          (cons 3 (cdr (assoc "halarm" (car instrumentData))))
+                                          (cons 4 (cdr (assoc "lalarm" (car instrumentData))))
+                                        ))) 
+    (setq resultList (append originList (list 
+                                          (cons 1 (cdr (assoc "function" (car instrumentData))))
+                                        )))  
   )
-  (princ)
+  resultList
 )
 
 ; logic for generate Pipe
