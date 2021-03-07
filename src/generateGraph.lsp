@@ -316,17 +316,24 @@
 ; 2021-03-07
 (defun c:InsertBlockPipeArrowLeft (/ insPt) 
   (setq insPt (getpoint "\n选取水平管道插入点："))
-  (VerifyGsLcBlockByName "PipeArrowLeft")
-  (VerifyGsLcPipeLayer)
-  (InsertBlockUtils insPt "PipeArrowLeft" "DataFlow-Pipe" (list (cons 1 "PL1101")))
+  (InsertGsLcBlockPipe insPt "PipeArrowLeft" (GetGsLcBlockPipePropertyDict))
 )
 
 ; 2021-03-07
 (defun c:InsertBlockPipeArrowUp (/ insPt) 
-  (setq insPt (getpoint "\n选取水平管道插入点："))
-  (VerifyGsLcBlockByName "PipeArrowUp")
+  (setq insPt (getpoint "\n选取垂直管道插入点："))
+  (InsertGsLcBlockPipe insPt "PipeArrowUp" (GetGsLcBlockPipePropertyDict))
+)
+
+; 2021-03-07
+(defun InsertGsLcBlockPipe (insPt blockName blockPropertyDict /) 
+  (VerifyGsLcBlockByName blockName)
   (VerifyGsLcPipeLayer)
-  (InsertBlockUtils insPt "PipeArrowUp" "DataFlow-Pipe" (list (cons 1 "PL1101")))
+  (InsertBlockUtils insPt blockName "DataFlow-Pipe" blockPropertyDict)
+)
+
+(defun GetGsLcBlockPipePropertyDict ()
+  (list (cons 1 "PL1101"))
 )
 
 ; 2021-03-07
