@@ -1539,8 +1539,8 @@
   (princ)
 )
 
-; 2021-03-07
-(defun InsertBlockUtils (insPt blockName layerName / acadObj curDoc insertionPnt modelSpace blockRefObj blockAttributes)
+; 2021-03-08
+(defun InsertBlockUtils (insPt blockName layerName propertyDictList / acadObj curDoc insertionPnt modelSpace blockRefObj blockAttributes)
   (setq acadObj (vlax-get-acad-object))
   (setq curDoc (vla-get-activedocument acadObj)) 
   (setq insertionPnt (vlax-3d-point insPt))
@@ -1552,22 +1552,19 @@
   ; another method get the blockAttributes
   ;(setq blockAttributes (vlax-variant-value (vlax-invoke-method blockRefObj 'GetAttributes)))
   ;(vlax-safearray->list blockAttributes)
-  (vla-put-TextString (vlax-safearray-get-element blockAttributes 1) "JC1101-50-2J1")
+  ; setting block property value
+  (mapcar '(lambda (x) 
+            (vla-put-TextString (vlax-safearray-get-element blockAttributes (car x)) (cdr x))
+          ) 
+    propertyDictList
+  ) 
   ;(vla-ZoomAll acadObj) 
   (princ)
 )
 
-(defun c:ssfoo (/ curDoc blocks)
-  (setq curDoc (vla-get-activedocument (vlax-get-acad-object))) 
-  ; Gets the blocks collection 
-  (setq blocks (vla-get-blocks curDoc)) 
-  ; Creates a report header 
-  (vlax-dump-object blocks T)
-  (princ)
-)
-
-(defun c:foo ()
-  (InsertBlockUtils '(0 0 0) "PipeArrowLeft" "DataFlow-Pipe")
+(defun c:foo (/ propertyDictList)
+  (setq propertyDictList (list (cons 1 "JC1101-50-2J1") (cons 2 "¼×´¼")))
+  (InsertBlockUtils '(0 0 0) "PipeArrowLeft" "DataFlow-Pipe" propertyDictList)
 )
 
 ; Generate CAD Graph Utils Function 
