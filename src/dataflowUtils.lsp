@@ -1847,3 +1847,41 @@
 ; Read and Write Utils
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
+
+
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+; Bool Function Utils
+
+(defun IsGsLcBlockPipePropertyDict (blockPropertyDict / result)
+  (if (and (/= (assoc "pipenum" blockPropertyDict) nil) (/= (assoc "from" blockPropertyDict) nil) )
+    (setq result T)
+  )
+)
+
+(defun IsGsLcBlockEquipmentPropertyDict (blockPropertyDict / result)
+  (if (and (/= (assoc "species" blockPropertyDict) nil) (/= (assoc "weight" blockPropertyDict) nil) )
+    (setq result T)
+  )
+)
+
+; Bool Function Utils
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+
+
+(defun FilterBlockEquipmentDataUtils (blockPropertyDict /)
+  (vl-remove-if-not '(lambda (x) 
+                      (IsGsLcBlockEquipmentPropertyDict x) 
+                    ) 
+    blockPropertyDict
+  ) 
+)
+
+(defun FilterBlockPipeDataUtils (blockPropertyDict /)
+  (vl-remove-if-not '(lambda (x) 
+                      (IsGsLcBlockPipePropertyDict x) 
+                    ) 
+    blockPropertyDict
+  ) 
+)
