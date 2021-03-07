@@ -392,6 +392,38 @@
 )
 
 ; 2021-03-07
+(defun c:InsertBlockGsLcHeater (/ insPt) 
+  (setq insPt (getpoint "\n选取换热器位号插入点："))
+  (VerifyGsLcBlockByName "Heater")
+  (VerifyGsLcEquipTagLayer)
+  (InsertBlockUtils insPt "Heater" "DataFlow-EquipTag" (list (cons 1 "E")))
+)
+
+; 2021-03-07
+(defun c:InsertBlockGsLcCentrifuge (/ insPt) 
+  (setq insPt (getpoint "\n选取离心机位号插入点："))
+  (VerifyGsLcBlockByName "Centrifuge")
+  (VerifyGsLcEquipTagLayer)
+  (InsertBlockUtils insPt "Centrifuge" "DataFlow-EquipTag" (list (cons 1 "M")))
+)
+
+; 2021-03-07
+(defun c:InsertBlockGsLcVacuum (/ insPt) 
+  (setq insPt (getpoint "\n选取真空泵位号插入点："))
+  (VerifyGsLcBlockByName "Vacuum")
+  (VerifyGsLcEquipTagLayer)
+  (InsertBlockUtils insPt "Vacuum" "DataFlow-EquipTag" (list (cons 1 "P")))
+)
+
+; 2021-03-07
+(defun c:InsertBlockGsLcCustomEquip (/ insPt) 
+  (setq insPt (getpoint "\n选取自定义设备位号插入点："))
+  (VerifyGsLcBlockByName "CustomEquip")
+  (VerifyGsLcEquipTagLayer)
+  (InsertBlockUtils insPt "CustomEquip" "DataFlow-EquipTag" (list (cons 1 "X")))
+)
+
+; 2021-03-07
 (defun VerifyGsLcEquipTagLayer () 
   (VerifyGsLcLayerByName "DataFlow-EquipTag")
   (VerifyGsLcLayerByName "DataFlow-EquipTagComment")
