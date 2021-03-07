@@ -256,7 +256,7 @@
 ; logic for generate Instrument
 (defun c:InsertBlockInstrumentP (/ insPt) 
   (prompt "\n选取设备块和仪表块：")
-  (setq ss (GetBlockSSBySelectByDataTypeUtils "EquipmentAndPipe")) 
+  (setq ss (GetBlockSSBySelectByDataTypeUtils "InstrumentAndEquipment")) 
   (setq insPt (getpoint "\n选取集中仪表插入点："))
   (InsertGsLcBlockInstrument insPt "InstrumentP" (GetGsLcBlockInstrumentPropertyDict ss)) 
 )
@@ -291,11 +291,11 @@
 )
 
 ; 2021-03-07
-(defun GetGsLcBlockInstrumentPropertyDict (ss / propertyIDList sourceData equipmentData pipeData resultList)
-  (setq propertyIDList (list (cons 0 "entityhandle") (cons 2 "substance") (cons 3 "temp") (cons 4 "pressure") (cons 6 "tag")))
+(defun GetGsLcBlockInstrumentPropertyDict (ss / propertyIDList sourceData equipmentData instrumentData resultList)
+  (setq propertyIDList (list (cons 0 "entityhandle") (cons 5 "substance") (cons 6 "temp") (cons 7 "pressure") (cons 10 "material") (cons 12 "tag")))
   (setq sourceData (GetBlockAllPropertyDictUtils (GetEntityNameListBySSUtils ss)))
   (setq equipmentData (FilterBlockEquipmentDataUtils sourceData))
-  (setq pipeData (FilterBlockPipeDataUtils sourceData))
+  (setq instrumentData (FilterBlockInstrumentDataUtils sourceData))
   (if (/= equipmentData nil) 
       (mapcar '(lambda (x) 
                 (setq resultList (append resultList (list (cons (car x) (cdr (assoc (cdr x) (car equipmentData)))))))
@@ -303,8 +303,8 @@
         propertyIDList
       ) 
   )
-  (if (/= pipeData nil) 
-    (setq resultList (append resultList (list (cons 1 (cdr (assoc "pipenum" (car pipeData)))))))
+  (if (/= instrumentData nil) 
+    (setq resultList (append resultList (list (cons 1 (cdr (assoc "function" (car instrumentData)))))))
   ) 
   resultList
 )
