@@ -1,5 +1,10 @@
 ;冯大龙编于 2020-2021 年
-(vl-load-com)
+(if (= *comLibraryStatus* nil) 
+  (progn 
+    (vl-load-com)
+    (setq *comLibraryStatus* T) 
+  )
+)
 
 (defun c:printVersionInfoSS ()
   (alert "最新版本号 V0.1，更新时间：2021-03-08\n数据流内网地址：192.168.1.38")(princ)
