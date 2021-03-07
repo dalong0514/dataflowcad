@@ -1853,14 +1853,20 @@
 ;;;-------------------------------------------------------------------------;;;
 ; Bool Function Utils
 
-(defun IsGsLcBlockPipePropertyDict (blockPropertyDict / result)
+(defun IsGsLcBlockPipePropertyDictUtils (blockPropertyDict / result)
   (if (and (/= (assoc "pipenum" blockPropertyDict) nil) (/= (assoc "from" blockPropertyDict) nil) )
     (setq result T)
   )
 )
 
-(defun IsGsLcBlockEquipmentPropertyDict (blockPropertyDict / result)
+(defun IsGsLcBlockEquipmentPropertyDictUtils (blockPropertyDict / result)
   (if (and (/= (assoc "species" blockPropertyDict) nil) (/= (assoc "weight" blockPropertyDict) nil) )
+    (setq result T)
+  )
+)
+
+(defun IsGsLcBlockInstrumentPropertyDictUtils (blockPropertyDict / result)
+  (if (and (/= (assoc "function" blockPropertyDict) nil) (/= (assoc "sort" blockPropertyDict) nil) )
     (setq result T)
   )
 )
@@ -1869,18 +1875,25 @@
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
 
-
-(defun FilterBlockEquipmentDataUtils (blockPropertyDict /)
+(defun FilterBlockPipeDataUtils (blockPropertyDict /)
   (vl-remove-if-not '(lambda (x) 
-                      (IsGsLcBlockEquipmentPropertyDict x) 
+                      (IsGsLcBlockPipePropertyDictUtils x) 
                     ) 
     blockPropertyDict
   ) 
 )
 
-(defun FilterBlockPipeDataUtils (blockPropertyDict /)
+(defun FilterBlockEquipmentDataUtils (blockPropertyDict /)
   (vl-remove-if-not '(lambda (x) 
-                      (IsGsLcBlockPipePropertyDict x) 
+                      (IsGsLcBlockEquipmentPropertyDictUtils x) 
+                    ) 
+    blockPropertyDict
+  ) 
+)
+
+(defun FilterBlockInstrumentDataUtils (blockPropertyDict /)
+  (vl-remove-if-not '(lambda (x) 
+                      (IsGsLcBlockInstrumentPropertyDictUtils x) 
                     ) 
     blockPropertyDict
   ) 
