@@ -313,62 +313,27 @@
 )
 
 ; logic for generate Pipe
+; 2021-03-07
 (defun c:InsertBlockPipeArrowLeft (/ insPt) 
   (setq insPt (getpoint "\n选取水平管道插入点："))
   (VerifyGsLcBlockByName "PipeArrowLeft")
-  (VerifyGsLcLayerByName "DataFlow-Pipe")
-  (VerifyGsLcLayerByName "DataFlow-PipeComment")
-  (GenerateBlockPipeArrowLeft insPt)
+  (VerifyGsLcPipeLayer)
+  (InsertBlockUtils insPt "PipeArrowLeft" "DataFlow-Pipe" (list (cons 1 "PL1101")))
 )
 
+; 2021-03-07
 (defun c:InsertBlockPipeArrowUp (/ insPt) 
   (setq insPt (getpoint "\n选取水平管道插入点："))
   (VerifyGsLcBlockByName "PipeArrowUp")
+  (VerifyGsLcPipeLayer)
+  (InsertBlockUtils insPt "PipeArrowUp" "DataFlow-Pipe" (list (cons 1 "PL1101")))
+)
+
+; 2021-03-07
+(defun VerifyGsLcPipeLayer () 
   (VerifyGsLcLayerByName "DataFlow-Pipe")
   (VerifyGsLcLayerByName "DataFlow-PipeComment")
-  (GenerateBlockPipeArrowUp insPt)
 )
-
-(defun GenerateBlockPipeArrowLeft (insPt /) 
-  (GenerateBlockReference insPt "PipeArrowLeft" "DataFlow-Pipe") 
-  (GenerateLeftBlockAttribute (MoveInsertPosition insPt -20 -1) "VERSION" "" "DataFlow-PipeComment" 1.5 0 1 0)
-  (GenerateLeftBlockAttribute (MoveInsertPosition insPt -20 2) "PIPENUM" "xxxx" "0" 3 0 0 0)
-  (GenerateLeftBlockAttribute (MoveInsertPosition insPt -20 6) "SUBSTANCE" "" "DataFlow-PipeComment" 1.5 0 0 0)
-  (GenerateLeftBlockAttribute (MoveInsertPosition insPt -10 6) "TEMP" "" "DataFlow-PipeComment" 1.5 0 0 0)
-  (GenerateLeftBlockAttribute (MoveInsertPosition insPt -6.5 6) "PRESSURE" "" "DataFlow-PipeComment" 1.5 0 0 0) 
-  (GenerateLeftBlockAttribute (MoveInsertPosition insPt -20 -5) "PHASE" "" "DataFlow-PipeComment" 1.5 0 1 0)
-  (GenerateLeftBlockAttribute (MoveInsertPosition insPt -1 6) "FROM" "" "DataFlow-PipeComment" 1.5 0 0 0)
-  (GenerateLeftBlockAttribute (MoveInsertPosition insPt 8 6) "TO" "" "DataFlow-PipeComment" 1.5 0 0 0)
-  (GenerateLeftBlockAttribute (MoveInsertPosition insPt -20 -9) "DRAWNUM" "" "DataFlow-PipeComment" 1.5 0 1 0)
-  (GenerateLeftBlockAttribute (MoveInsertPosition insPt -20 -7) "INSULATION" "" "DataFlow-PipeComment" 1.5 0 1 0)
-  (GenerateLeftBlockAttribute (MoveInsertPosition insPt -20 -3) "PIPECLASSCHANGE" "" "DataFlow-PipeComment" 1.5 0 0 0)
-  (GenerateLeftBlockAttribute (MoveInsertPosition insPt -12 -3) "REDUCERINFO" "" "DataFlow-PipeComment" 1.5 0 0 0) 
-  (entmake 
-    (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
-  )
-  (princ)
-)
-
-(defun GenerateBlockPipeArrowUp (insPt /) 
-  (GenerateBlockReference insPt "PipeArrowUp" "DataFlow-Pipe") 
-  (GenerateLeftBlockAttribute (MoveInsertPosition insPt 2 4) "VERSION" "" "DataFlow-PipeComment" 1.5 0 1 0)
-  (GenerateLeftBlockAttribute (MoveInsertPosition insPt -2 -20) "PIPENUM" "xxxx" "0" 3 1.57 0 0)
-  (GenerateLeftBlockAttribute (MoveInsertPosition insPt 2 2) "SUBSTANCE" "" "DataFlow-PipeComment" 1.5 0 0 0)
-  (GenerateLeftBlockAttribute (MoveInsertPosition insPt 2 0) "TEMP" "" "DataFlow-PipeComment" 1.5 0 0 0)
-  (GenerateLeftBlockAttribute (MoveInsertPosition insPt 2 -2) "PRESSURE" "" "DataFlow-PipeComment" 1.5 0 0 0) 
-  (GenerateLeftBlockAttribute (MoveInsertPosition insPt 2 -12) "PHASE" "" "DataFlow-PipeComment" 1.5 0 1 0)
-  (GenerateLeftBlockAttribute (MoveInsertPosition insPt 2 -4) "FROM" "" "DataFlow-PipeComment" 1.5 0 0 0)
-  (GenerateLeftBlockAttribute (MoveInsertPosition insPt 2 -6) "TO" "" "DataFlow-PipeComment" 1.5 0 0 0)
-  (GenerateLeftBlockAttribute (MoveInsertPosition insPt 2 -14) "DRAWNUM" "" "DataFlow-PipeComment" 1.5 0 1 0)
-  (GenerateLeftBlockAttribute (MoveInsertPosition insPt 2 -16) "INSULATION" "" "DataFlow-PipeComment" 1.5 0 1 0)
-  (GenerateLeftBlockAttribute (MoveInsertPosition insPt 2 -8) "PIPECLASSCHANGE" "" "DataFlow-PipeComment" 1.5 0 0 0)
-  (GenerateLeftBlockAttribute (MoveInsertPosition insPt 2 -10) "REDUCERINFO" "" "DataFlow-PipeComment" 1.5 0 0 0) 
-  (entmake 
-    (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
-  )
-  (princ)
-)
-
 
 ; logic for generate EquipTag
 ; 2021-03-07 refactored
