@@ -1,6 +1,80 @@
 ;冯大龙编于 2020-2021 年
 (vl-load-com)
 
+
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+; Steal Gs AutoCAD Modules
+
+(defun GetGsLcModulesPath (/ result)
+  (setq result "D:\\dataflowcad\\allBlocks\\GsLcBlocks.dwg")
+)
+
+; 2021-03-03
+(defun StealAllGsLcBlocks ()
+  (Steal (GetGsLcModulesPath) 
+    '(
+      ("Blocks" ("*"))
+    )
+  ) 
+)
+
+; 2021-03-03
+(defun StealAllGsLcLayers ()
+  (Steal (GetGsLcModulesPath) 
+    '(
+      ("Layers" ("*"))
+    )
+  ) 
+)
+
+; 2021-03-03
+(defun StealGsLcBlockByNameList (blockNameList /)
+  (Steal (GetGsLcModulesPath) 
+    (list 
+      (list "Blocks" blockNameList)
+    )
+  ) 
+)
+
+; 2021-03-03
+(defun StealGsLcLayerByNameList (layerNameList /)
+  (Steal (GetGsLcModulesPath) 
+    (list 
+      (list "Layers" layerNameList)
+    )
+  ) 
+)
+
+; 2021-03-03
+(defun VerifyGsLcBlockByName (blockName /) 
+  (if (= (tblsearch "BLOCK" blockName) nil) 
+    (StealGsLcBlockByNameList (list blockName))
+  )
+)
+
+; 2021-03-03
+(defun VerifyGsLcLayerByName (layerName /) 
+  (if (= (tblsearch "LAYER" layerName) nil) 
+    (StealGsLcLayerByNameList (list layerName))
+  )
+)
+
+; 2021-03-05
+(defun VerifyGsLcBlockPublicPipe () 
+  (VerifyGsLcBlockByName "PublicPipeDownPipeLine")
+  (VerifyGsLcBlockByName "PublicPipeDownArrow")
+  (VerifyGsLcBlockByName "PublicPipeUpPipeLine")
+  (VerifyGsLcBlockByName "PublicPipeUpArrow") 
+  (VerifyGsLcLayerByName "DataFlow-PublicPipe")
+  (VerifyGsLcLayerByName "DataFlow-PublicPipeLine")
+)
+
+; Steal Gs AutoCAD Modules
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+
+
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
 ; Generate GS Entity Object in CAD
@@ -293,6 +367,7 @@
 
 
 ; logic for generate EquipTag
+; 2021-03-05
 (defun c:InsertBlockGsLcReactor (/ insPt) 
   (setq insPt (getpoint "\n选取反应釜位号插入点："))
   (VerifyGsLcBlockByName "Reactor")
@@ -301,12 +376,27 @@
   (GenerateBlockGsLcReactor insPt)
 )
 
+; 2021-03-05
 (defun c:InsertBlockGsLcTank (/ insPt) 
   (setq insPt (getpoint "\n选取储罐位号插入点："))
   (VerifyGsLcBlockByName "Tank")
   (VerifyGsLcLayerByName "DataFlow-EquipTag")
   (VerifyGsLcLayerByName "DataFlow-EquipTagComment")
   (GenerateBlockGsLcTank insPt)
+)
+
+; 2021-03-07
+(defun c:InsertBlockGsLcPump (/ insPt) 
+  (setq insPt (getpoint "\n选取输送泵位号插入点："))
+  (VerifyGsLcBlockByName "Pump")
+  (VerifyGsLcEquipTagLayer)
+  (InsertBlockUtils insPt "Pump" "DataFlow-EquipTag" (list (cons 1 "P")))
+)
+
+; 2021-03-07
+(defun VerifyGsLcEquipTagLayer () 
+  (VerifyGsLcLayerByName "DataFlow-EquipTag")
+  (VerifyGsLcLayerByName "DataFlow-EquipTagComment")
 )
 
 (defun GenerateBlockGsLcReactor (insPt /) 
