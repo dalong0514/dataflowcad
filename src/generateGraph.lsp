@@ -290,7 +290,7 @@
 
 ; 2021-03-07
 (defun GetGsLcBlockInstrumentPropertyDict (ss dataType / propertyIDList sourceData equipmentData instrumentData pipeData resultList)
-  (setq propertyIDList (GetPropertyIDListStrategy dataType))
+  (setq propertyIDList (GetInstrumentPropertyIDListStrategy dataType))
   (setq sourceData (GetBlockAllPropertyDictUtils (GetEntityNameListBySSUtils ss)))
   (setq equipmentData (FilterBlockEquipmentDataUtils sourceData))
   (setq instrumentData (FilterBlockInstrumentDataUtils sourceData))
@@ -302,18 +302,34 @@
         propertyIDList
       ) 
   )
+  (if (and (= equipmentData nil) (/= pipeData nil)) 
+      (mapcar '(lambda (x) 
+                (setq resultList (append resultList (list (cons (car x) (cdr (assoc (cdr x) (car pipeData)))))))
+              ) 
+        (GetPipePropertyIDListStrategy dataType)
+      ) 
+  ) 
   (if (/= instrumentData nil) 
     (setq resultList (ExtendInstrumentPropertyIDListStrategy dataType resultList instrumentData))
   ) 
   resultList
 )
 
-(defun GetPropertyIDListStrategy (dataType /)
+(defun GetInstrumentPropertyIDListStrategy (dataType /)
   (cond 
     ((= dataType "InstrumentP") 
      (list (cons 0 "entityhandle") (cons 5 "substance") (cons 6 "temp") (cons 7 "pressure") (cons 12 "tag")))
     ((= dataType "InstrumentL") 
      (list (cons 0 "entityhandle") (cons 3 "substance") (cons 4 "temp") (cons 5 "pressure") (cons 10 "tag")))
+  ) 
+)
+  
+(defun GetPipePropertyIDListStrategy (dataType /)
+  (cond 
+    ((= dataType "InstrumentP") 
+     (list (cons 0 "entityhandle") (cons 5 "substance") (cons 6 "temp") (cons 7 "pressure") (cons 12 "pipenum")))
+    ((= dataType "InstrumentL") 
+     (list (cons 0 "entityhandle") (cons 3 "substance") (cons 4 "temp") (cons 5 "pressure") (cons 10 "pipenum")))
   ) 
 )
 
