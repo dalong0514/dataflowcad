@@ -171,6 +171,7 @@
 )
 
 (defun c:EquipTag (/ ss equipInfoList insPt insPtList)
+  (VerifyGsLcBlockByName "EquipTagV2")
   (setq ss (GetEquipmentSSBySelectUtils))
   (setq equipInfoList (GetEquipTagList ss))
   ; merge equipInfoList by equipTag
