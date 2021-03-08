@@ -450,8 +450,14 @@
 ; 2021-03-08
 (defun InsertGsLcBlockPipeClassChange (insPt blockName blockPropertyDict /) 
   (VerifyGsLcBlockByName blockName)
-  (VerifyGsLcOuterPipeLayer)
+  (VerifyGsLcValveLayer)
   (InsertBlockUtils insPt blockName "DataFlow-Valve" blockPropertyDict)
+)
+
+; 2021-03-07
+(defun VerifyGsLcValveLayer () 
+  (VerifyGsLcLayerByName "DataFlow-Valve")
+  (VerifyGsLcLayerByName "DataFlow-ValveComment")
 )
 
 ; 2021-03-08
@@ -460,6 +466,32 @@
   (if (/= pipeData nil) 
     (setq resultList (list (cons 1 (ExtractGsPipeClassUtils (GetDottedPairValueUtils "pipenum" (car pipeData)))) 
                        (cons 2 (ExtractGsPipeClassUtils (GetDottedPairValueUtils "pipenum" (cadr pipeData))))
+                     ))
+  ) 
+  resultList
+)
+
+; logic for generate Reducer
+; 2021-03-08
+(defun c:InsertBlockReducer (/ ss insPt) 
+  (prompt "\n选取包含管径信息的 2 个管道块：")
+  (setq ss (GetBlockSSBySelectByDataTypeUtils "Pipe"))
+  (setq insPt (getpoint "\n选取异径管块的插入点："))
+  (InsertGsLcBlockReducer insPt "Reducer" (GetGsLcBlockReducerPropertyDict ss))
+)
+
+; 2021-03-08
+(defun InsertGsLcBlockReducer (insPt blockName blockPropertyDict /) 
+  (VerifyGsLcBlockByName blockName)
+  (VerifyGsLcValveLayer)
+  (InsertBlockUtils insPt blockName "DataFlow-Valve" blockPropertyDict)
+)
+
+; 2021-03-08
+(defun GetGsLcBlockReducerPropertyDict (ss / pipeData resultList)
+  (setq pipeData (GetBlockAllPropertyDictUtils (GetEntityNameListBySSUtils ss)))
+  (if (/= pipeData nil) 
+    (setq resultList (list (cons 1 (ExtractGsPipeClassUtils (GetDottedPairValueUtils "pipenum" (car pipeData)))) 
                      ))
   ) 
   resultList
