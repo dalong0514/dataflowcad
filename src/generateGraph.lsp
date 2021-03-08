@@ -302,7 +302,7 @@
       ) 
   )
   (if (/= instrumentData nil) 
-    (setq resultList (ExtendPropertyIDListStrategy dataType resultList instrumentData))
+    (setq resultList (ExtendInstrumentPropertyIDListStrategy dataType resultList instrumentData))
   ) 
   resultList
 )
@@ -314,15 +314,17 @@
   )
 )
 
-(defun ExtendPropertyIDListStrategy (dataType originList instrumentData / resultList)
+(defun ExtendInstrumentPropertyIDListStrategy (dataType originList instrumentData / resultList)
   (if (= dataType "InstrumentP") 
     (setq resultList (append originList (list 
                                           (cons 1 (cdr (assoc "function" (car instrumentData))))
+                                          (cons 2 "xxxx")
                                           (cons 3 (cdr (assoc "halarm" (car instrumentData))))
                                           (cons 4 (cdr (assoc "lalarm" (car instrumentData))))
                                         ))) 
     (setq resultList (append originList (list 
                                           (cons 1 (cdr (assoc "function" (car instrumentData))))
+                                          (cons 2 "xxxx")
                                         )))  
   )
   resultList
