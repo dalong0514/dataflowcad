@@ -38,6 +38,7 @@
   (RemoveDecimalForStringUtilsTest)
   (ExtractGsPipeClassUtilsTest)
   (GetDottedPairValueUtilsTest)
+  (ExtractGsPipeDiameterUtilsTest)
   (DL:PrintTestResults (DL:CountBooleans *testList*))
 )
 
@@ -47,6 +48,12 @@
     (list (cons "substance" "methane") (cons "pipenum" "JC2101-80-2A1"))
   )
   (AssertEqual 'GetDottedPairValueUtils (list "pipenum" dataList) "JC2101-80-2A1")
+)
+
+; 2021-03-08
+(defun ExtractGsPipeDiameterUtilsTest () 
+  (AssertEqual 'ExtractGsPipeDiameterUtils (list "PL1101-50-2J1") "50")
+  (AssertEqual 'ExtractGsPipeDiameterUtils (list "JC2101-80-2A1-H5") "80")
 )
 
 ; 2021-03-08

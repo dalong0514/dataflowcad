@@ -1974,6 +1974,10 @@
   (RegExpReplace pipenum ".*-(\\d[A-Z]\\d+).*" "$1" nil nil)
 )
 
+(defun ExtractGsPipeDiameterUtils (pipenum /)
+  (RegExpReplace pipenum "(.*)-(\\d+)-(.*)" "$2" nil nil)
+)
+
 ; Extract Data Utils
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
