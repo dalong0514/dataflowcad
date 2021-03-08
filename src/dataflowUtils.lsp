@@ -68,7 +68,8 @@
   )
 )
 
-(defun GetEntityDataUtils ()
+; refactored at 2021-03-08
+(defun GetOneEntityDataUtils ()
   ;(entget (car (entsel)))
   (car (GetSelectedEntityDataUtils (ssget)))
 )

@@ -23,7 +23,7 @@
 )
 
 (defun c:GetEntityData ()
-  (GetEntityDataUtils)
+  (GetOneEntityDataUtils)
 )
 
 ; basic Function
