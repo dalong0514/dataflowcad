@@ -769,13 +769,31 @@
   ) 
 )
 
-(defun c:brushLocationForInstrument (/ locationData entityNameList)
-  (prompt "\n选择仪表所在位置（管道或设备）：")
-  (setq locationData (GetPipenumOrTag))
-  (prompt "\n选择要刷所在位置的仪表（可批量选择）：")
-  (setq entityNameList (GetEntityNameListBySSUtils (GetInstrumentSSBySelectUtils)))
+; refactored at 2021-03-08
+(defun c:brushLocationForInstrument (/ ss sourceData instrumentData locationData entityNameList) 
+  (prompt "\n选择数据集（只能包含一个仪表或管道）：")
+  (setq ss (GetBlockSSBySelectByDataTypeUtils "InstrumentAndEquipmentAndPipe"))
+  (setq sourceData (GetBlockAllPropertyDictUtils (GetEntityNameListBySSUtils ss)))
+  (setq instrumentData (FilterBlockInstrumentDataUtils sourceData))
+  (setq locationData (GetPipenumOrTag sourceData))
+  (setq entityNameList (GetEntityNameListByPropertyDictListUtils instrumentData))
   (ModifyLocatonForInstrument entityNameList locationData)
   (princ)
+)
+
+(defun GetPipenumOrTag (sourceData / equipmentData pipeData result) 
+  (setq equipmentData (FilterBlockEquipmentDataUtils sourceData))
+  (setq pipeData (FilterBlockPipeDataUtils sourceData)) 
+  (if (/= equipmentData nil) 
+    (setq result (GetDottedPairValueUtils "tag" (car equipmentData)))
+  ) 
+  (if (/= pipeData nil) 
+    (setq result (GetDottedPairValueUtils "pipenum" (car pipeData)))
+  ) 
+  (if (and (= equipmentData nil) (= pipeData nil))
+    (alert "请选择一个设备或管道")
+  ) 
+  result
 )
 
 (defun ModifyLocatonForInstrument (entityNameList locationData /)
@@ -827,23 +845,6 @@
   (GetAllPropertyDictForOneBlock 
     (car (GetEntityNameListBySSUtils dataSS))
   )
-)
-
-(defun GetPipenumOrTag (/ dataSS dataList result)
-  (setq dataSS (GetEquipmentAndPipeSSBySelectUtils))
-  (if (/= dataSS nil) 
-    (progn 
-      (setq dataList (GetPipenumOrTagList dataSS))
-      (if (/= (cdr (assoc "tag" dataList)) nil) 
-        (setq result (cdr (assoc "tag" dataList)))
-      )
-      (if (/= (cdr (assoc "pipenum" dataList)) nil) 
-        (setq result (cdr (assoc "pipenum" dataList)))
-      )
-    )
-    (setq result "")
-  )
-  result
 )
 
 (defun c:brushBlockPropertyValueByCommand (/ sourceEntityNameList sourceEntityPropertyDict sourceEntityPropertyNameList sourceEntityPropertyValueList targetEntityNameList targetEntityPropertyDict) 

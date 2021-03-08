@@ -844,6 +844,11 @@
   )
 )
 
+; 2021-03-08
+(defun GetEntityNameListByPropertyDictListUtils (propertyDictList /) 
+  (GetEntityNameListByEntityHandleListUtils (GetEntityHandleListByPropertyDictListUtils propertyDictList))
+)
+
 (defun GetEntityNameListByXPositionSortedUtils (ss / entityNameList resultList) 
   (setq entityNameList (GetEntityNameListBySSUtils ss))
   (setq resultList 
