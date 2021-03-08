@@ -399,6 +399,45 @@
   (VerifyGsLcLayerByName "DataFlow-PipeComment")
 )
 
+; logic for generate OuterPipeRight
+; 2021-03-08
+(defun c:InsertBlockOuterPipeRight (/ ss insPt) 
+  (prompt "\n选取管道块：")
+  (setq ss (GetBlockSSBySelectByDataTypeUtils "Pipe"))
+  (setq insPt (getpoint "\n选取外管块的插入点："))
+  (InsertGsLcBlockOuterPipe insPt "OuterPipeRight" (GetGsLcBlockOuterPipePropertyDict ss))
+)
+
+; 2021-03-08
+(defun c:InsertBlockOuterPipeLeft (/ ss insPt) 
+  (prompt "\n选取管道块：")
+  (setq ss (GetBlockSSBySelectByDataTypeUtils "Pipe"))
+  (setq insPt (getpoint "\n选取外管块的插入点："))
+  (InsertGsLcBlockOuterPipe insPt "OuterPipeLeft" (GetGsLcBlockOuterPipePropertyDict ss))
+)
+
+; 2021-03-08
+(defun InsertGsLcBlockOuterPipe (insPt blockName blockPropertyDict /) 
+  (VerifyGsLcBlockByName blockName)
+  (VerifyGsLcOuterPipeLayer)
+  (InsertBlockUtils insPt blockName "DataFlow-OuterPipe" blockPropertyDict)
+)
+
+; 2021-03-07
+(defun VerifyGsLcOuterPipeLayer () 
+  (VerifyGsLcLayerByName "DataFlow-OuterPipe")
+  (VerifyGsLcLayerByName "DataFlow-OuterPipeComment")
+)
+
+; 2021-03-08
+(defun GetGsLcBlockOuterPipePropertyDict (ss / pipeData resultList)
+  (setq pipeData (GetBlockAllPropertyDictUtils (GetEntityNameListBySSUtils ss)))
+  (if (/= pipeData nil) 
+    (setq resultList (append resultList (list (cons 1 (cdr (assoc "pipenum" (car pipeData)))))))
+  ) 
+  resultList
+)
+
 ; logic for generate EquipTag
 ; 2021-03-07 refactored
 (defun c:InsertBlockGsLcReactor (/ insPt) 
