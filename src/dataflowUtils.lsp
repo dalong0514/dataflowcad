@@ -68,6 +68,11 @@
   )
 )
 
+; 2021-03-08
+(defun GetDottedPairValueUtils (keyName dataList /)
+  (cdr (assoc keyName dataList))
+)
+
 ; refactored at 2021-03-08
 (defun GetOneEntityDataUtils ()
   ;(entget (car (entsel)))

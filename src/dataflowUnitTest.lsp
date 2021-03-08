@@ -37,7 +37,16 @@
   (GetPipeLineByPipeNumTest)
   (RemoveDecimalForStringUtilsTest)
   (ExtractGsPipeClassUtilsTest)
+  (GetDottedPairValueUtilsTest)
   (DL:PrintTestResults (DL:CountBooleans *testList*))
+)
+
+; 2021-03-08
+(defun GetDottedPairValueUtilsTest (/ dataList) 
+  (setq dataList 
+    (list (cons "substance" "methane") (cons "pipenum" "JC2101-80-2A1"))
+  )
+  (AssertEqual 'GetDottedPairValueUtils (list "pipenum" dataList) "JC2101-80-2A1")
 )
 
 ; 2021-03-08
