@@ -491,7 +491,11 @@
 (defun GetGsLcBlockReducerPropertyDict (ss / pipeData resultList)
   (setq pipeData (GetBlockAllPropertyDictUtils (GetEntityNameListBySSUtils ss)))
   (if (/= pipeData nil) 
-    (setq resultList (list (cons 1 (ExtractGsPipeClassUtils (GetDottedPairValueUtils "pipenum" (car pipeData)))) 
+    (setq resultList (list (cons 1 
+                              (strcat (ExtractGsPipeDiameterUtils (GetDottedPairValueUtils "pipenum" (car pipeData))) 
+                                      "x"
+                                      (ExtractGsPipeDiameterUtils (GetDottedPairValueUtils "pipenum" (cadr pipeData))))
+                           )
                      ))
   ) 
   resultList
