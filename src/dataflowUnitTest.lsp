@@ -36,7 +36,14 @@
   (IsKsLocationOnEquipTest)
   (GetPipeLineByPipeNumTest)
   (RemoveDecimalForStringUtilsTest)
+  (ExtractGsPipeClassUtilsTest)
   (DL:PrintTestResults (DL:CountBooleans *testList*))
+)
+
+; 2021-03-08
+(defun ExtractGsPipeClassUtilsTest () 
+  (AssertEqual 'ExtractGsPipeClassUtils (list "PL1101-50-2J1") "2J1")
+  (AssertEqual 'ExtractGsPipeClassUtils (list "JC2101-80-2A1-H5") "2A1")
 )
 
 ; 2021-02-03
