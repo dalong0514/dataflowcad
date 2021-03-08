@@ -438,6 +438,33 @@
   resultList
 )
 
+; logic for generate PipeClassChange
+; 2021-03-08
+(defun c:InsertBlockPipeClassChange (/ ss insPt) 
+  (prompt "\n选取包含等级号信息的 2 个管道块：")
+  (setq ss (GetBlockSSBySelectByDataTypeUtils "Pipe"))
+  (setq insPt (getpoint "\n选取变等级块的插入点："))
+  (InsertGsLcBlockPipeClassChange insPt "PipeClassChange" (GetGsLcBlockPipeClassChangePropertyDict ss))
+)
+
+; 2021-03-08
+(defun InsertGsLcBlockPipeClassChange (insPt blockName blockPropertyDict /) 
+  (VerifyGsLcBlockByName blockName)
+  (VerifyGsLcOuterPipeLayer)
+  (InsertBlockUtils insPt blockName "DataFlow-Valve" blockPropertyDict)
+)
+
+; 2021-03-08
+(defun GetGsLcBlockPipeClassChangePropertyDict (ss / pipeData resultList)
+  (setq pipeData (GetBlockAllPropertyDictUtils (GetEntityNameListBySSUtils ss)))
+  (if (/= pipeData nil) 
+    (setq resultList (list (cons 1 (cdr (assoc "pipenum" (car pipeData)))) 
+                       (cons 2 (cdr (assoc "pipenum" (cadr pipeData))))
+                     ))
+  ) 
+  resultList
+)
+
 ; logic for generate EquipTag
 ; 2021-03-07 refactored
 (defun c:InsertBlockGsLcReactor (/ insPt) 
