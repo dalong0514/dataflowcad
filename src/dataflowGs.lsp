@@ -806,15 +806,59 @@
   )
 )
 
+; refatored at 2021-03-08
 (defun c:brushStartEndForPipe (/ startData endData entityNameList)
   (prompt "\n选择管道起点（直接空格表示不修改）：")
-  (setq startData (GetPipenumOrTag))
+  (setq startData (GetPipenumOrTagForBrushPipe))
   (prompt "\n选择管道终点（直接空格表示不修改）：")
-  (setq endData (GetPipenumOrTag))
+  (setq endData (GetPipenumOrTagForBrushPipe))
   (prompt "\n选择要刷的管道（可批量选择）：")
   (setq entityNameList (GetEntityNameListBySSUtils (GetEquipmentAndPipeSSBySelectUtils)))
   (ModifyStartEndForPipes entityNameList startData endData)
   (princ)
+)
+
+; 2021-03-08
+(defun c:brushStartForPipe (/ startData entityNameList)
+  (prompt "\n选择管道起点（直接空格表示不修改）：")
+  (setq startData (GetPipenumOrTagForBrushPipe))
+  (prompt "\n选择要刷的管道（可批量选择）：")
+  (setq entityNameList (GetEntityNameListBySSUtils (GetEquipmentAndPipeSSBySelectUtils)))
+  (ModifyStartEndForPipes entityNameList startData "")
+  (princ)
+)
+
+; 2021-03-08
+(defun c:brushEndForPipe (/ endData entityNameList)
+  (prompt "\n选择管道终点（直接空格表示不修改）：")
+  (setq endData (GetPipenumOrTagForBrushPipe))
+  (prompt "\n选择要刷的管道（可批量选择）：")
+  (setq entityNameList (GetEntityNameListBySSUtils (GetEquipmentAndPipeSSBySelectUtils)))
+  (ModifyStartEndForPipes entityNameList "" endData)
+  (princ)
+)
+
+(defun GetPipenumOrTagForBrushPipe (/ dataSS dataList result)
+  (setq dataSS (GetEquipmentAndPipeSSBySelectUtils))
+  (if (/= dataSS nil) 
+    (progn 
+      (setq dataList (GetPipenumOrTagList dataSS))
+      (if (/= (cdr (assoc "tag" dataList)) nil) 
+        (setq result (cdr (assoc "tag" dataList)))
+      )
+      (if (/= (cdr (assoc "pipenum" dataList)) nil) 
+        (setq result (cdr (assoc "pipenum" dataList)))
+      )
+    )
+    (setq result "")
+  )
+  result
+)
+
+(defun GetPipenumOrTagList (dataSS /)
+  (GetAllPropertyDictForOneBlock 
+    (car (GetEntityNameListBySSUtils dataSS))
+  )
 )
 
 (defun ModifyStartEndForPipes (entityNameList startData endData /)
@@ -838,12 +882,6 @@
             ) 
       entityNameList
     )
-  )
-)
-
-(defun GetPipenumOrTagList (dataSS /)
-  (GetAllPropertyDictForOneBlock 
-    (car (GetEntityNameListBySSUtils dataSS))
   )
 )
 
