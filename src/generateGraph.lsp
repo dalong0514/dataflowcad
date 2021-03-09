@@ -89,14 +89,14 @@
 )
 
 ; 2021-03-09
-(defun StealGsBzBlockByNameList (blockName /) 
+(defun VerifyGsBzBlockByName (blockName /) 
   (if (= (tblsearch "BLOCK" blockName) nil) 
-    (StealGsLcBlockByNameList (list blockName))
+    (StealGsBzBlockByNameList (list blockName))
   )
 )
 
 ; 2021-03-09
-(defun VerifyGsLcLayerByName (layerName /) 
+(defun VerifyGsBzLayerByName (layerName /) 
   (if (= (tblsearch "LAYER" layerName) nil) 
     (StealGsBzLayerByNameList (list layerName))
   )
@@ -104,7 +104,7 @@
 
 ; 2021-03-05
 (defun VerifyGsLcBlockPublicPipe () 
-  (VerifyGsLcBlockByName "PublicPipe*")
+  (VerifyGsLcBlockByName "PublicPipe*") ; refactored at 2021-03-09
   (VerifyGsLcLayerByName "DataFlow-GsLcPublicPipe")
   (VerifyGsLcLayerByName "DataFlow-GsLcPublicPipeLine")
 )
@@ -877,11 +877,32 @@
   result
 )
 
-; logic for generate joinDrawArrow
+; Generate GsLcBlocks
+;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
 
-; Generate GsLcBlocks
-; Generate GS Entity Object in CAD
+
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+; Generate GsBzBlocks
+
+; 2021-03-09
+(defun c:InsertBlockGsBzCleanAir (/ insPt) 
+  (setq insPt (getpoint "\n选取房间块插入点："))
+  (VerifyGsBzBlockByName "GsCleanAir")
+  (VerifyGsBzCleanAirLayer)
+  (InsertBlockUtils insPt "GsCleanAir" "DataFlow-GsBzCleanAirCondition" (list (cons 2 "C01")))
+)
+
+; 2021-03-09
+(defun VerifyGsBzCleanAirLayer () 
+  (VerifyGsBzLayerByName "DataFlow-GsBzCleanAirCondition")
+  (VerifyGsBzLayerByName "DataFlow-GsBzCleanAirConditionComment")
+)
+
+
+
+; Generate GsBzBlocks
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
 
