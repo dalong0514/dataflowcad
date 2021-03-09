@@ -1366,8 +1366,17 @@
   )
 )
 
+; 2021-03-09
+(defun GetAllMarkedDataListByTypeListUtils (dataTypeList /) 
+  (mapcar '(lambda (x) 
+             (GetAllMarkedDataByTypeUtils x)
+           ) 
+    dataTypeList
+  )
+)
+
 (defun c:foo () 
-  (GetAllMarkedDataByTypeUtils "Reactor")
+  (GetAllMarkedDataListByTypeListUtils (GetGsLcEquipTypeList))
 )
 
 

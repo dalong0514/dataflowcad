@@ -158,6 +158,11 @@
   propertyChNameList
 )
 
+; 2021-03-09
+(defun GetGsLcEquipTypeList ()
+  '("Reactor" "Tank" "Heater" "Pump" "Centrifuge" "Vacuum" "CustomEquip")
+)
+
 (defun GetPipePropertyNameList ()
   '("PIPENUM" "SUBSTANCE" "TEMP" "PRESSURE" "PHASE" "FROM" "TO" "DRAWNUM" "INSULATION" "PIPECLASSCHANGE" "REDUCERINFO")
 )
