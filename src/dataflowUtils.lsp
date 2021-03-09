@@ -1375,11 +1375,12 @@
   )
 )
 
-(defun c:foo () 
+; 2021-03-09
+; for a blank dwg, result:
+; (("Reactor") ("Tank") ("Heater") ("Pump") ("Centrifuge") ("Vacuum") ("CustomEquip"))
+(defun GetAllMarkedEquipDataListByTypeListUtils () 
   (GetAllMarkedDataListByTypeListUtils (GetGsLcEquipTypeList))
 )
-
-
 
 ; 2021-02-23
 (defun GetAllFireFightPipeDataUtils () 
