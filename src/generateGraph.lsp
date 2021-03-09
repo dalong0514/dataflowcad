@@ -104,12 +104,9 @@
 
 ; 2021-03-05
 (defun VerifyGsLcBlockPublicPipe () 
-  (VerifyGsLcBlockByName "PublicPipeDownPipeLine")
-  (VerifyGsLcBlockByName "PublicPipeDownArrow")
-  (VerifyGsLcBlockByName "PublicPipeUpPipeLine")
-  (VerifyGsLcBlockByName "PublicPipeUpArrow") 
-  (VerifyGsLcLayerByName "DataFlow-PublicPipe")
-  (VerifyGsLcLayerByName "DataFlow-PublicPipeLine")
+  (VerifyGsLcBlockByName "PublicPipe*")
+  (VerifyGsLcLayerByName "DataFlow-GsLcPublicPipe")
+  (VerifyGsLcLayerByName "DataFlow-GsLcPublicPipeLine")
 )
 
 ; Steal Gs AutoCAD Modules
@@ -122,10 +119,10 @@
 ; Generate GS Entity Object in CAD
 
 (defun GenerateJoinDrawArrowToElement (insPt fromtoValue drawnumValue relatedIDValue /)
-  (GenerateBlockReference insPt "JoinDrawArrowTo" "DataFlow-JoinDrawArrow")
-  (GenerateBlockAttribute (MoveInsertPosition insPt 1 4) "FROMTO" fromtoValue "DataFlow-JoinDrawArrow" 3)
-  (GenerateBlockAttribute (MoveInsertPosition insPt 1 -1.5) "DRAWNUM" drawnumValue "DataFlow-JoinDrawArrow" 3)
-  (GenerateBlockHiddenAttribute (MoveInsertPosition insPt 1 -7) "RELATEDID" relatedIDValue "DataFlow-JoinDrawArrow" 3)
+  (GenerateBlockReference insPt "JoinDrawArrowTo" "DataFlow-GsLcJoinDrawArrow")
+  (GenerateBlockAttribute (MoveInsertPosition insPt 1 4) "FROMTO" fromtoValue "DataFlow-GsLcJoinDrawArrow" 3)
+  (GenerateBlockAttribute (MoveInsertPosition insPt 1 -1.5) "DRAWNUM" drawnumValue "DataFlow-GsLcJoinDrawArrow" 3)
+  (GenerateBlockHiddenAttribute (MoveInsertPosition insPt 1 -7) "RELATEDID" relatedIDValue "DataFlow-GsLcJoinDrawArrow" 3)
   (entmake 
     (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
   )
@@ -133,11 +130,11 @@
 )
 
 (defun GenerateJoinDrawArrowFromElement (insPt pipenumValue fromtoValue drawnumValue relatedIDValue /)
-  (GenerateBlockReference insPt "JoinDrawArrowFrom" "DataFlow-JoinDrawArrow")
-  (GenerateBlockAttribute (MoveInsertPosition insPt 30 2) "PIPENUM" pipenumValue "DataFlow-JoinDrawArrow" 3)
-  (GenerateBlockAttribute (MoveInsertPosition insPt 1 4) "FROMTO" fromtoValue "DataFlow-JoinDrawArrow" 3)
-  (GenerateBlockAttribute (MoveInsertPosition insPt 1 -1.5) "DRAWNUM" drawnumValue "DataFlow-JoinDrawArrow" 3)
-  (GenerateBlockHiddenAttribute (MoveInsertPosition insPt 1 -7) "RELATEDID" relatedIDValue "DataFlow-JoinDrawArrow" 3)
+  (GenerateBlockReference insPt "JoinDrawArrowFrom" "DataFlow-GsLcJoinDrawArrow")
+  (GenerateBlockAttribute (MoveInsertPosition insPt 30 2) "PIPENUM" pipenumValue "DataFlow-GsLcJoinDrawArrow" 3)
+  (GenerateBlockAttribute (MoveInsertPosition insPt 1 4) "FROMTO" fromtoValue "DataFlow-GsLcJoinDrawArrow" 3)
+  (GenerateBlockAttribute (MoveInsertPosition insPt 1 -1.5) "DRAWNUM" drawnumValue "DataFlow-GsLcJoinDrawArrow" 3)
+  (GenerateBlockHiddenAttribute (MoveInsertPosition insPt 1 -7) "RELATEDID" relatedIDValue "DataFlow-GsLcJoinDrawArrow" 3)
   (entmake 
     (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
   )
@@ -145,10 +142,10 @@
 )
 
 (defun GenerateOnePublicPipeDownArrow (insPt tagValue drawnumValue relatedIDValue /)
-  (GenerateBlockReference insPt "PublicPipeDownArrow" "DataFlow-PublicPipe")
+  (GenerateBlockReference insPt "PublicPipeDownArrow" "DataFlow-GsLcPublicPipe")
   (GenerateVerticallyBlockAttribute (MoveInsertPosition insPt -3.5 -10) "TAG" tagValue "0" 3)
   (GenerateVerticallyBlockAttribute (MoveInsertPosition insPt 1.2 -10) "DRAWNUM" drawnumValue "0" 3)
-  (GenerateVerticallyBlockHiddenAttribute (MoveInsertPosition insPt 7 -10) "RELATEDID" relatedIDValue "DataFlow-PublicPipe" 3)
+  (GenerateVerticallyBlockHiddenAttribute (MoveInsertPosition insPt 7 -10) "RELATEDID" relatedIDValue "DataFlow-GsLcPublicPipe" 3)
   (entmake 
     (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
   )
@@ -156,10 +153,10 @@
 )
 
 (defun GenerateOnePublicPipeUpArrow (insPt tagValue drawnumValue relatedIDValue /)
-  (GenerateBlockReference insPt "PublicPipeUpArrow" "DataFlow-PublicPipe")
+  (GenerateBlockReference insPt "PublicPipeUpArrow" "DataFlow-GsLcPublicPipe")
   (GenerateVerticallyBlockAttribute (MoveInsertPosition insPt -3.5 -11.5) "TAG" tagValue "0" 3)
   (GenerateVerticallyBlockAttribute (MoveInsertPosition insPt 1.2 -11.5) "DRAWNUM" drawnumValue "0" 3)
-  (GenerateVerticallyBlockHiddenAttribute (MoveInsertPosition insPt 7 -11.5) "RELATEDID" relatedIDValue "DataFlow-PublicPipe" 3)
+  (GenerateVerticallyBlockHiddenAttribute (MoveInsertPosition insPt 7 -11.5) "RELATEDID" relatedIDValue "DataFlow-GsLcPublicPipe" 3)
   (entmake 
     (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
   )
@@ -167,9 +164,9 @@
 )
 
 (defun GenerateOnePublicPipeUpPipeLine (insPt pipenumValue relatedIDValue /)
-  (GenerateBlockReference insPt "PublicPipeUpPipeLine" "DataFlow-PublicPipe")
+  (GenerateBlockReference insPt "PublicPipeUpPipeLine" "DataFlow-GsLcPublicPipe")
   (GenerateVerticallyBlockAttribute (MoveInsertPosition insPt -1 -16) "PIPENUM" pipenumValue "0" 3)
-  (GenerateVerticallyBlockHiddenAttribute (MoveInsertPosition insPt -5 -16) "RELATEDID" relatedIDValue "DataFlow-PublicPipe" 3)
+  (GenerateVerticallyBlockHiddenAttribute (MoveInsertPosition insPt -5 -16) "RELATEDID" relatedIDValue "DataFlow-GsLcPublicPipe" 3)
   (entmake 
     (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
   )
@@ -177,9 +174,9 @@
 )
 
 (defun GenerateOnePublicPipeDownPipeLine (insPt pipenumValue relatedIDValue /)
-  (GenerateBlockReference insPt "PublicPipeDownPipeLine" "DataFlow-PublicPipe")
+  (GenerateBlockReference insPt "PublicPipeDownPipeLine" "DataFlow-GsLcPublicPipe")
   (GenerateVerticallyBlockAttribute (MoveInsertPosition insPt -1 -16) "PIPENUM" pipenumValue "0" 3)
-  (GenerateVerticallyBlockHiddenAttribute (MoveInsertPosition insPt -5 -16) "RELATEDID" relatedIDValue "DataFlow-PublicPipe" 3)
+  (GenerateVerticallyBlockHiddenAttribute (MoveInsertPosition insPt -5 -16) "RELATEDID" relatedIDValue "DataFlow-GsLcPublicPipe" 3)
   (entmake 
     (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
   )
@@ -318,13 +315,13 @@
 (defun InsertGsLcBlockInstrument (insPt blockName blockPropertyDict /) 
   (VerifyGsLcBlockByName blockName)
   (VerifyGsLcInstrumentLayer)
-  (InsertBlockUtils insPt blockName "DataFlow-Instrument" blockPropertyDict)
+  (InsertBlockUtils insPt blockName "DataFlow-GsLcInstrument" blockPropertyDict)
 )
 
 ; 2021-03-07
 (defun VerifyGsLcInstrumentLayer () 
-  (VerifyGsLcLayerByName "DataFlow-Instrument")
-  (VerifyGsLcLayerByName "DataFlow-InstrumentComment")
+  (VerifyGsLcLayerByName "DataFlow-GsLcInstrument")
+  (VerifyGsLcLayerByName "DataFlow-GsLcInstrumentComment")
 )
 
 ; 2021-03-07
@@ -409,7 +406,7 @@
 (defun InsertGsLcBlockPipe (insPt blockName blockPropertyDict /) 
   (VerifyGsLcBlockByName blockName)
   (VerifyGsLcPipeLayer)
-  (InsertBlockUtils insPt blockName "DataFlow-Pipe" blockPropertyDict)
+  (InsertBlockUtils insPt blockName "DataFlow-GsLcPipe" blockPropertyDict)
 )
 
 ; 2021-03-07
@@ -433,8 +430,8 @@
 
 ; 2021-03-07
 (defun VerifyGsLcPipeLayer () 
-  (VerifyGsLcLayerByName "DataFlow-Pipe")
-  (VerifyGsLcLayerByName "DataFlow-PipeComment")
+  (VerifyGsLcLayerByName "DataFlow-GsLcPipe")
+  (VerifyGsLcLayerByName "DataFlow-GsLcPipeComment")
 )
 
 ; logic for generate OuterPipeRight
@@ -458,13 +455,13 @@
 (defun InsertGsLcBlockOuterPipe (insPt blockName blockPropertyDict /) 
   (VerifyGsLcBlockByName blockName)
   (VerifyGsLcOuterPipeLayer)
-  (InsertBlockUtils insPt blockName "DataFlow-OuterPipe" blockPropertyDict)
+  (InsertBlockUtils insPt blockName "DataFlow-GsLcOuterPipe" blockPropertyDict)
 )
 
 ; 2021-03-07
 (defun VerifyGsLcOuterPipeLayer () 
-  (VerifyGsLcLayerByName "DataFlow-OuterPipe")
-  (VerifyGsLcLayerByName "DataFlow-OuterPipeComment")
+  (VerifyGsLcLayerByName "DataFlow-GsLcOuterPipe")
+  (VerifyGsLcLayerByName "DataFlow-GsLcOuterPipeComment")
 )
 
 ; 2021-03-08
@@ -489,13 +486,13 @@
 (defun InsertGsLcBlockPipeClassChange (insPt blockName blockPropertyDict /) 
   (VerifyGsLcBlockByName blockName)
   (VerifyGsLcValveLayer)
-  (InsertBlockUtils insPt blockName "DataFlow-Valve" blockPropertyDict)
+  (InsertBlockUtils insPt blockName "DataFlow-GsLcValve" blockPropertyDict)
 )
 
 ; 2021-03-07
 (defun VerifyGsLcValveLayer () 
-  (VerifyGsLcLayerByName "DataFlow-Valve")
-  (VerifyGsLcLayerByName "DataFlow-ValveComment")
+  (VerifyGsLcLayerByName "DataFlow-GsLcValve")
+  (VerifyGsLcLayerByName "DataFlow-GsLcValveComment")
 )
 
 ; 2021-03-08
@@ -522,7 +519,7 @@
 (defun InsertGsLcBlockReducer (insPt blockName blockPropertyDict /) 
   (VerifyGsLcBlockByName blockName)
   (VerifyGsLcValveLayer)
-  (InsertBlockUtils insPt blockName "DataFlow-Valve" blockPropertyDict)
+  (InsertBlockUtils insPt blockName "DataFlow-GsLcValve" blockPropertyDict)
 )
 
 ; 2021-03-08
@@ -545,7 +542,7 @@
   (setq insPt (getpoint "\n选取反应釜位号插入点："))
   (VerifyGsLcBlockByName "Reactor")
   (VerifyGsLcEquipTagLayer)
-  (InsertBlockUtils insPt "Reactor" "DataFlow-EquipTag" (list (cons 1 "R")))
+  (InsertBlockUtils insPt "Reactor" "DataFlow-GsLcEquipTag" (list (cons 1 "R")))
 )
 
 ; 2021-03-07 refactored
@@ -553,7 +550,7 @@
   (setq insPt (getpoint "\n选取储罐位号插入点："))
   (VerifyGsLcBlockByName "Tank")
   (VerifyGsLcEquipTagLayer)
-  (InsertBlockUtils insPt "Tank" "DataFlow-EquipTag" (list (cons 1 "V")))
+  (InsertBlockUtils insPt "Tank" "DataFlow-GsLcEquipTag" (list (cons 1 "V")))
 )
 
 ; 2021-03-07
@@ -561,7 +558,7 @@
   (setq insPt (getpoint "\n选取输送泵位号插入点："))
   (VerifyGsLcBlockByName "Pump")
   (VerifyGsLcEquipTagLayer)
-  (InsertBlockUtils insPt "Pump" "DataFlow-EquipTag" (list (cons 1 "P")))
+  (InsertBlockUtils insPt "Pump" "DataFlow-GsLcEquipTag" (list (cons 1 "P")))
 )
 
 ; 2021-03-07
@@ -569,7 +566,7 @@
   (setq insPt (getpoint "\n选取换热器位号插入点："))
   (VerifyGsLcBlockByName "Heater")
   (VerifyGsLcEquipTagLayer)
-  (InsertBlockUtils insPt "Heater" "DataFlow-EquipTag" (list (cons 1 "E")))
+  (InsertBlockUtils insPt "Heater" "DataFlow-GsLcEquipTag" (list (cons 1 "E")))
 )
 
 ; 2021-03-07
@@ -577,7 +574,7 @@
   (setq insPt (getpoint "\n选取离心机位号插入点："))
   (VerifyGsLcBlockByName "Centrifuge")
   (VerifyGsLcEquipTagLayer)
-  (InsertBlockUtils insPt "Centrifuge" "DataFlow-EquipTag" (list (cons 1 "M")))
+  (InsertBlockUtils insPt "Centrifuge" "DataFlow-GsLcEquipTag" (list (cons 1 "M")))
 )
 
 ; 2021-03-07
@@ -585,7 +582,7 @@
   (setq insPt (getpoint "\n选取真空泵位号插入点："))
   (VerifyGsLcBlockByName "Vacuum")
   (VerifyGsLcEquipTagLayer)
-  (InsertBlockUtils insPt "Vacuum" "DataFlow-EquipTag" (list (cons 1 "P")))
+  (InsertBlockUtils insPt "Vacuum" "DataFlow-GsLcEquipTag" (list (cons 1 "P")))
 )
 
 ; 2021-03-07
@@ -593,13 +590,13 @@
   (setq insPt (getpoint "\n选取自定义设备位号插入点："))
   (VerifyGsLcBlockByName "CustomEquip")
   (VerifyGsLcEquipTagLayer)
-  (InsertBlockUtils insPt "CustomEquip" "DataFlow-EquipTag" (list (cons 1 "X")))
+  (InsertBlockUtils insPt "CustomEquip" "DataFlow-GsLcEquipTag" (list (cons 1 "X")))
 )
 
 ; 2021-03-07
 (defun VerifyGsLcEquipTagLayer () 
-  (VerifyGsLcLayerByName "DataFlow-EquipTag")
-  (VerifyGsLcLayerByName "DataFlow-EquipTagComment")
+  (VerifyGsLcLayerByName "DataFlow-GsLcEquipTag")
+  (VerifyGsLcLayerByName "DataFlow-GsLcEquipTagComment")
 )
 
 
@@ -623,7 +620,7 @@
   (mapcar '(lambda (x y) 
              (GenerateOnePublicPipeUpArrow x (nth 2 y) (nth 4 y) (nth 0 y))
              (GenerateOnePublicPipeUpPipeLine (MoveInsertPosition x 0 20) (nth 1 y) (nth 0 y))
-             (GenerateVerticalPolyline x "DataFlow-PublicPipeLine" 0.6)
+             (GenerateVerticalPolyline x "DataFlow-GsLcPublicPipeLine" 0.6)
           ) 
           insPtList
           dataList
@@ -634,7 +631,7 @@
   (mapcar '(lambda (x y) 
              (GenerateOnePublicPipeDownArrow x (nth 3 y) (nth 4 y) (nth 0 y))
              (GenerateOnePublicPipeDownPipeLine (MoveInsertPosition x 0 20) (nth 1 y) (nth 0 y))
-             (GenerateVerticalPolyline x "DataFlow-PublicPipeLine" 0.6)
+             (GenerateVerticalPolyline x "DataFlow-GsLcPublicPipeLine" 0.6)
           ) 
           insPtList
           dataList
@@ -840,7 +837,7 @@
 (defun c:GenerateJoinDrawArrow (/ pipeSS pipeData insPt entityNameList)
   (VerifyGsLcBlockByName "JoinDrawArrowTo")
   (VerifyGsLcBlockByName "JoinDrawArrowFrom")
-  (VerifyGsLcLayerByName "DataFlow-JoinDrawArrow")
+  (VerifyGsLcLayerByName "DataFlow-GsLcJoinDrawArrow")
   (prompt "\n选择生成接图箭头的边界管道：")
   (setq pipeSS (GetPipeSSBySelectUtils))
   (setq pipeData (GetAllPropertyDictForOneBlock (car (GetEntityNameListBySSUtils pipeSS))))
