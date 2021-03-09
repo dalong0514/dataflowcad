@@ -573,10 +573,10 @@
 ; Migrate Lc Data to Bz Layout
 ;;;-------------------------------------------------------------------------;;;
 
-; 2021-02-28
+; 2021-03-098
 (defun c:extractGsLcEquipData (/ lcEquipData) 
   (setq lcEquipData (GetAllMarkedEquipDataListByTypeListUtils))
-  (if (not IsGetNullGsLcEquipData) 
+  (if (not (IsGetNullGsLcEquipData lcEquipData)) 
     (progn 
       (vl-bb-set 'gsLcEquipData lcEquipData)
       (alert "工艺流程设备数据提取成功！")
@@ -586,6 +586,7 @@
   (princ)
 )
 
+; 2021-03-09
 (defun IsGetNullGsLcEquipData (lcEquipData /)
   (vl-every '(lambda (x) 
                (= (cdr x) nil)
@@ -594,19 +595,28 @@
   )
 )
 
-; 2021-02-28
-(defun c:migrateGsLcEquipData (/ lcEquipData) 
+; 2021-03-098
+(defun c:migrateGsLcEquipData (/ lcEquipData reactorData) 
   (setq lcEquipData (vl-bb-ref 'gsLcEquipData))
   (if (/= lcEquipData nil) 
     (GenerateGsBzEquipTag lcEquipData)
     (alert "请先提取流程设备数据！") 
-  ) 
+  )  
 )
 
-(defun GenerateGsBzEquipTag (lcEquipData / reactorData) 
-  (setq reactorData (GetDottedPairValueUtils "Reactor" lcEquipData))
-  (alert "流程设备数据迁移成功") 
+; 2021-03-09
+(defun GenerateGsBzEquipTag (lcEquipData / gsLcToBzEquipData reactorData) 
+  (setq gsLcToBzEquipData (GetGsLcToBzEquipData lcEquipData))
+  (setq reactorData (GetDottedPairValueUtils "GsBzReactor" gsLcToBzEquipData))
+)
 
+; 2021-03-09
+(defun GetGsLcToBzEquipData (lcEquipData /)
+  (mapcar '(lambda (x) 
+             (cons (strcat "GsBz" (car x)) (cdr x))
+           ) 
+    lcEquipData
+  ) 
 )
 
 
