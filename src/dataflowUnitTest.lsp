@@ -299,39 +299,34 @@
 ; Unit Test Source Code
 
 (defun AssertEqual (functionName argumentList expectedReturn / actualReturn passed)
-    (if (not (= (type argumentList) 'LIST))
-        (setq argumentList (list argumentList))
+  (if (not (= (type argumentList) 'LIST))
+      (setq argumentList (list argumentList))
   )
-    (cond
-        ((equal (setq actualReturn (vl-catch-all-apply functionName argumentList))
-              expectedReturn)
-            (princ "passed...(")
-            (setq passed T)
-            (setq actualReturn nil)
-    )
-        (T
-            (princ "failed...(")
-            (setq passed nil)
-            (setq actualReturn 
-                (strcat (vl-princ-to-string actualReturn) " instead of ")
-      )
-    )
+  (cond
+      ((equal (setq actualReturn (vl-catch-all-apply functionName argumentList))
+            expectedReturn)
+          (princ "passed...(")
+          (setq passed T)
+          (setq actualReturn nil))
+      (T
+        (princ "failed...(")
+        (setq passed nil)
+        (setq actualReturn 
+            (strcat (vl-princ-to-string actualReturn) " instead of ")))
   )
-    
-    ;; continue printing result...
-    (princ (strcase (vl-symbol-name functionName) T))
-    (princ " ")
-    (princ 
-        (DL:ReplaceAllSubst 
-            "'"
-            "(QUOTE " 
-            (vl-prin1-to-string argumentList))
-  )
-    (princ ") returned ")
-    (if actualReturn (princ actualReturn))
-    (princ expectedReturn)
-    (princ "\n")
-    (setq *testList* (append *testList* (list passed)))
+  ;; continue printing result...
+  (princ (strcase (vl-symbol-name functionName) T))
+  (princ " ")
+  (princ 
+      (DL:ReplaceAllSubst 
+          "'"
+          "(QUOTE " 
+          (vl-prin1-to-string argumentList)))
+  (princ ") returned ")
+  (if actualReturn (princ actualReturn))
+  (princ expectedReturn)
+  (princ "\n")
+  (setq *testList* (append *testList* (list passed)))
 
   (if (/= passed T) 
     (setq *failedTestList* (append *failedTestList* (list (strcat 
