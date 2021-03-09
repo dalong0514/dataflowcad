@@ -605,9 +605,46 @@
 )
 
 ; 2021-03-09
-(defun GenerateGsBzEquipTag (lcEquipData / gsLcToBzEquipData reactorData) 
+(defun GenerateGsBzEquipTag (lcEquipData / gsLcToBzEquipData reactorData resultData) 
   (setq gsLcToBzEquipData (GetGsLcToBzEquipData lcEquipData))
   (setq reactorData (GetDottedPairValueUtils "GsBzReactor" gsLcToBzEquipData))
+  (setq resultData (InsertGsBzEquipTag reactorData)) 
+  (MigrateGsBzEquipTagPropertyValue resultData)
+)
+
+; 2021-03-09
+(defun MigrateGsBzEquipTagPropertyValue (reactorData / blockPropertyNameList) 
+  (setq blockPropertyNameList 
+    (mapcar '(lambda (x) 
+              (strcase (car x))
+            ) 
+      (cdr (car reactorData))
+    ) 
+  ) 
+  (mapcar '(lambda (x) 
+             (ModifyMultiplePropertyForOneBlockUtils (car x) blockPropertyNameList (GetGsBzEquipBlockPropertyValueList (cdr x)))
+          ) 
+    reactorData
+  )
+)
+
+; 2021-03-09
+(defun GetGsBzEquipBlockPropertyValueList (blockData /) 
+  (mapcar '(lambda (x) 
+             (cdr x)
+          ) 
+    blockData
+  )  
+)
+
+; 2021-03-09
+(defun InsertGsBzEquipTag (reactorData /) 
+  (mapcar '(lambda (x) 
+             (InsertBlockGsBzReactor '(0 0 0))
+             (cons (entlast) (cdr x))
+          ) 
+    reactorData
+  )  
 )
 
 ; 2021-03-09
