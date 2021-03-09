@@ -10,8 +10,14 @@
 ;;;-------------------------------------------------------------------------;;;
 ; Steal Gs AutoCAD Modules
 
+; 2021-03-03
 (defun GetGsLcModulesPath (/ result)
   (setq result "D:\\dataflowcad\\allBlocks\\GsLcBlocks.dwg")
+)
+
+; 2021-03-09
+(defun GetGsBzModulesPath (/ result)
+  (setq result "D:\\dataflowcad\\allBlocks\\GsBzBlocks.dwg")
 )
 
 ; 2021-03-03
@@ -50,6 +56,24 @@
   ) 
 )
 
+; 2021-03-09
+(defun StealGsBzBlockByNameList (blockNameList /)
+  (Steal (GetGsBzModulesPath) 
+    (list 
+      (list "Blocks" blockNameList)
+    )
+  ) 
+)
+
+; 2021-03-09
+(defun StealGsBzLayerByNameList (layerNameList /)
+  (Steal (GetGsBzModulesPath) 
+    (list 
+      (list "Layers" layerNameList)
+    )
+  ) 
+)
+
 ; 2021-03-03
 (defun VerifyGsLcBlockByName (blockName /) 
   (if (= (tblsearch "BLOCK" blockName) nil) 
@@ -61,6 +85,20 @@
 (defun VerifyGsLcLayerByName (layerName /) 
   (if (= (tblsearch "LAYER" layerName) nil) 
     (StealGsLcLayerByNameList (list layerName))
+  )
+)
+
+; 2021-03-09
+(defun StealGsBzBlockByNameList (blockName /) 
+  (if (= (tblsearch "BLOCK" blockName) nil) 
+    (StealGsLcBlockByNameList (list blockName))
+  )
+)
+
+; 2021-03-09
+(defun VerifyGsLcLayerByName (layerName /) 
+  (if (= (tblsearch "LAYER" layerName) nil) 
+    (StealGsBzLayerByNameList (list layerName))
   )
 )
 
