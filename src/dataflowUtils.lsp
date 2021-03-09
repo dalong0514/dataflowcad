@@ -1359,6 +1359,19 @@
   (GetBlockAllPropertyDictUtils (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "Equipment")))
 )
 
+; 2021-03-09
+(defun GetAllMarkedDataByTypeUtils (dataType /) 
+  (cons dataType 
+        (GetBlockAllPropertyDictUtils (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils dataType)))
+  )
+)
+
+(defun c:foo () 
+  (GetAllMarkedDataByTypeUtils "Reactor")
+)
+
+
+
 ; 2021-02-23
 (defun GetAllFireFightPipeDataUtils () 
   (GetBlockAllPropertyDictUtils (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "FireFightPipe")))
