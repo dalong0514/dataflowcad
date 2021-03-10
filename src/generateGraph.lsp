@@ -925,7 +925,7 @@
 )
 
 ; 2021-03-10
-(defun InsertBlockGsBzEquipStrategy (insPt dataType /) 
+(defun InsertBlockGsBzEquipGraphStrategy (insPt dataType /) 
   (VerifyGsBzBlockByName dataType)
   (VerifyGsBzEquipLayer)
   (InsertBlockUtils insPt dataType "DataFlow-GsBzEquip" (list (cons 1 "R")))
