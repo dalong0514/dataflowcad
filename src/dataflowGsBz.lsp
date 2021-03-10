@@ -605,7 +605,7 @@
   )(princ)
 )
 
-; 2021-03-09
+; 2021-03-10
 (defun GenerateGsBzEquipTag (lcEquipData insPt / gsLcToBzEquipData itemData resultData insPt) 
   (setq gsLcToBzEquipData (GetGsLcToBzEquipData lcEquipData))
   (mapcar '(lambda (x) 
@@ -622,7 +622,7 @@
 )
 
 ; 2021-03-10
-(defun GetInsertBzEquipinsPtList (insPt equipData / resultList) 
+(defun GetInsertBzEquipinsPtList (insPt equipData / resultList insPt) 
   (mapcar '(lambda (x) 
              (setq resultList (append resultList (list insPt)))
              (setq insPt (MoveInsertPosition insPt 5000 0))
@@ -633,18 +633,18 @@
 )
 
 ; 2021-03-09
-(defun MigrateGsBzEquipTagPropertyValue (reactorData / blockPropertyNameList) 
+(defun MigrateGsBzEquipTagPropertyValue (itemData / blockPropertyNameList) 
   (setq blockPropertyNameList 
     (mapcar '(lambda (x) 
               (strcase (car x))
             ) 
-      (cdr (car reactorData))
+      (cdr (car itemData))
     ) 
   ) 
   (mapcar '(lambda (x) 
              (ModifyMultiplePropertyForOneBlockUtils (car x) blockPropertyNameList (GetGsBzEquipBlockPropertyValueList (cdr x)))
           ) 
-    reactorData
+    itemData
   )
 )
 
