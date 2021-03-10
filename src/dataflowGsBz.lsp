@@ -673,7 +673,7 @@
 ; 2021-03-10
 (defun InsertGsBzEquipGraph (itemData insPtList dataType /) 
   (mapcar '(lambda (x y) 
-             (InsertBlockGsBzEquipGraphStrategy (MoveInsertPosition y 0 3000) "GsBzTankD1600LS")
+             (InsertBlockGsBzEquipGraphStrategy (MoveInsertPosition y 0 3000) "GsBzTank5000LS")
              (cons (entlast) (cdr x))
           ) 
     itemData
