@@ -609,6 +609,8 @@
 (defun GenerateGsBzEquipTag (lcEquipData insPt / gsLcToBzEquipData reactorData resultData) 
   (setq gsLcToBzEquipData (GetGsLcToBzEquipData lcEquipData))
   (setq reactorData (GetDottedPairValueUtils "GsBzReactor" gsLcToBzEquipData))
+  ; sorted by EquipName
+  (setq reactorData (vl-sort reactorData '(lambda (x y) (< (cdr (caddr x)) (cdr (caddr y))))))
   (setq insPtList (GetInsertBzEquipinsPtList insPt reactorData))
   (setq resultData (InsertGsBzEquipTag reactorData insPtList)) 
   (MigrateGsBzEquipTagPropertyValue resultData)
