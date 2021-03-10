@@ -596,20 +596,33 @@
 )
 
 ; 2021-03-098
-(defun c:migrateGsLcEquipData (/ lcEquipData reactorData) 
+(defun c:migrateGsLcEquipData (/ insPt lcEquipData) 
+  (setq insPt (getpoint "\n选取设备模块插入点："))
   (setq lcEquipData (vl-bb-ref 'gsLcEquipData))
   (if (/= lcEquipData nil) 
-    (GenerateGsBzEquipTag lcEquipData)
+    (GenerateGsBzEquipTag lcEquipData insPt)
     (alert "请先提取流程设备数据！") 
-  )  
+  )(princ)
 )
 
 ; 2021-03-09
-(defun GenerateGsBzEquipTag (lcEquipData / gsLcToBzEquipData reactorData resultData) 
+(defun GenerateGsBzEquipTag (lcEquipData insPt / gsLcToBzEquipData reactorData resultData) 
   (setq gsLcToBzEquipData (GetGsLcToBzEquipData lcEquipData))
   (setq reactorData (GetDottedPairValueUtils "GsBzReactor" gsLcToBzEquipData))
-  (setq resultData (InsertGsBzEquipTag reactorData)) 
+  (setq insPtList (GetInsertBzEquipinsPtList insPt reactorData))
+  (setq resultData (InsertGsBzEquipTag reactorData insPtList)) 
   (MigrateGsBzEquipTagPropertyValue resultData)
+)
+
+; 2021-03-10
+(defun GetInsertBzEquipinsPtList (insPt equipData / resultList) 
+  (mapcar '(lambda (x) 
+             (setq resultList (append resultList (list insPt)))
+             (setq insPt (MoveInsertPosition insPt 5000 0))
+          ) 
+    equipData
+  ) 
+  resultList
 )
 
 ; 2021-03-09
@@ -638,12 +651,13 @@
 )
 
 ; 2021-03-09
-(defun InsertGsBzEquipTag (reactorData /) 
-  (mapcar '(lambda (x) 
-             (InsertBlockGsBzReactor '(0 0 0))
+(defun InsertGsBzEquipTag (reactorData insPtList /) 
+  (mapcar '(lambda (x y) 
+             (InsertBlockGsBzReactor y)
              (cons (entlast) (cdr x))
           ) 
     reactorData
+    insPtList
   )  
 )
 
