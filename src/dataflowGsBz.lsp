@@ -660,7 +660,7 @@
 ; 2021-03-09
 (defun InsertGsBzEquipTag (reactorData insPtList dataType /) 
   (mapcar '(lambda (x y) 
-             (InsertBlockGsBzEquipStrategy y dataType)
+             (InsertBlockGsBzEquipTagStrategy y dataType)
              (cons (entlast) (cdr x))
           ) 
     reactorData

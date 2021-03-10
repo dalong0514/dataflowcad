@@ -605,6 +605,12 @@
   (VerifyGsBzLayerByName "DataFlow-GsBzEquipTagComment")
 )
 
+; 2021-03-09
+(defun VerifyGsBzEquipLayer () 
+  (VerifyGsBzLayerByName "DataFlow-GsBzEquip")
+  (VerifyGsBzLayerByName "DataFlow-GsBzEquipComment")
+)
+
 ; logic for generate PublicPipe
 (defun InsertPublicPipe (dataList pipeSourceDirection / lastEntityName insPt insPtList) 
   (VerifyGsLcBlockPublicPipe)
@@ -912,10 +918,17 @@
 )
 
 ; 2021-03-10
-(defun InsertBlockGsBzEquipStrategy (insPt dataType /) 
+(defun InsertBlockGsBzEquipTagStrategy (insPt dataType /) 
   (VerifyGsBzBlockByName dataType)
   (VerifyGsBzEquipTagLayer)
   (InsertBlockUtils insPt dataType "DataFlow-GsBzEquipTag" (list (cons 1 "R")))
+)
+
+; 2021-03-10
+(defun InsertBlockGsBzEquipStrategy (insPt dataType /) 
+  (VerifyGsBzBlockByName dataType)
+  (VerifyGsBzEquipLayer)
+  (InsertBlockUtils insPt dataType "DataFlow-GsBzEquip" (list (cons 1 "R")))
 )
 
 ; Generate GsBzBlocks
