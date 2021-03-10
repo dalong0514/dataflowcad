@@ -158,11 +158,6 @@
   propertyChNameList
 )
 
-; 2021-03-09
-(defun GetGsLcEquipTypeList ()
-  '("Reactor" "Tank" "Heater" "Pump" "Centrifuge" "Vacuum" "CustomEquip")
-)
-
 (defun GetPipePropertyNameList ()
   '("PIPENUM" "SUBSTANCE" "TEMP" "PRESSURE" "PHASE" "FROM" "TO" "DRAWNUM" "INSULATION" "PIPECLASSCHANGE" "REDUCERINFO")
 )
@@ -263,6 +258,21 @@
   '("房间名称" "房间编号" "洁净等级" "房间吊顶高度" "房间面积" "室压" "房间人数" "温度控制精度" "湿度控制精度" "职业暴露等级" "电热设备功率" "电热设备有无排风" "电热设备有无保温" "电动设备功率" "电动设备效率" "其他设备表面面积" "其他设备表面温度" "敞开水面表面面积" "敞开水面表面温度" "设备是否连续排风" "设备排风量" "是否连续排湿除味" "排湿除味排风率" "除尘排风粉尘量" "除尘排风排风率" "是否事故排风" "事故通风介质" "层流保护区域" "层流保护面积" "监控温度" "监控相对湿度" "监控压差" "备注")
 )
 
+; 2021-03-09
+(defun GetGsLcEquipTypeList ()
+  '("Reactor" "Tank" "Heater" "Pump" "Centrifuge" "Vacuum" "CustomEquip")
+)
+
+; 2021-03-10
+(defun GetGsBzEquipPropertyNameList ()
+  '("TAG" "GSBZTYPE" "POSITIONREGION" "OPTION")
+)
+
+; 2021-03-10
+(defun GetGsBzEquipPropertyChNameList ()
+  '("设备位号" "设备类型代号" "设备所在区域" "备注")
+)
+
 ; Get Constant Data
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
@@ -360,6 +370,13 @@
   (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList "0")
 )
 
+(defun WriteGsBzEquipDataToCSVByEntityNameListUtils (entityNameList / fileDir firstRow propertyNameList)
+  (setq fileDir "D:\\dataflowcad\\data\\gsBzEuipData.csv")
+  (setq firstRow "数据ID,设备名称,设备类型代号,设备所在区域,备注,")
+  (setq propertyNameList (GetGsBzEquipPropertyNameList))
+  (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList "0")
+)
+
 (defun WriteDataToCSVByEntityNameListStrategy (entityNameList dataType /)
   (cond 
     ((= dataType "Pipe") (WritePipeDataToCSVByEntityNameListUtils entityNameList))
@@ -404,6 +421,9 @@
   (cond 
     ((= dataType "GsCleanAir") (WriteGsCleanAirDataToCSVByEntityNameListUtils entityNameList))
   ) 
+  (cond 
+    ((= dataType "GsBzEquip") (WriteGsBzEquipDataToCSVByEntityNameListUtils entityNameList))
+  )  
   (princ)
 )
 
@@ -441,6 +461,9 @@
   (if (= dataType "commonBlock") 
     (setq fileDir "D:\\dataflowcad\\data\\commonData.csv")
   ) 
+  (if (= dataType "GsBzEquip") 
+    (setq fileDir "D:\\dataflowcad\\data\\gsBzEquipData.csv")
+  )
   (ReadDataFromCSVUtils fileDir)
 )
 

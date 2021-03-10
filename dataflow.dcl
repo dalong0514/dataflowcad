@@ -1008,4 +1008,53 @@ labelFireFightPipeBox : dialog {
 }
 
 
-// 给排水专业
+// Gs Bz
+
+updateGsBzEquipGraphBox : dialog {
+  label = "天正设计流数据一体化工艺V2.0———更新布置图设备图形"; 
+  key = "updateGsBzEquipGraph";
+  : boxed_radio_column {
+    key = "showOriginDataBox";
+    width = 100;
+    : spacer { height = 1; } 
+    : text {
+      key = "exportBtnMsg";
+      label = "导出临时文件状态：";
+    }
+    : spacer { height = 1; } 
+    : text {
+      key = "importBtnMsg";
+      label = "导入临时文件状态：";
+    }
+    : spacer { height = 1; } 
+    : text {
+      key = "modifyBtnMsg";
+      label = "数据写入图纸状态：";
+    }
+    : spacer { height = 3; } 
+    : row { 
+      fixed_width = true; 
+      alignment = centered; 
+      : button { 
+        key = "btnExportData"; 
+        label = "导出数据"; 
+        is_default = "true"; 
+      } 
+      : spacer { width = 2; }  
+      : button { 
+        key = "btnImportData"; 
+        label = "导入数据"; 
+        is_default = "true"; 
+      } 
+      : spacer { width = 2; } 
+      : button { 
+        key = "btnModify"; 
+        label = "确认修改"; 
+        is_default = "true"; 
+      } 
+      : spacer { width = 2; } 
+      cancel_button; 
+    }
+    : spacer { height = 3; } 
+  }
+}

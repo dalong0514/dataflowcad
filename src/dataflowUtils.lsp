@@ -695,6 +695,9 @@
   (if (= dataType "FireFightPipe")
     (setq ss (ssget "X" '((0 . "INSERT") (2 . "FireFightHPipe"))))
   )
+  (if (= dataType "GsBzEquip")
+    (setq ss (ssget "X" '((0 . "INSERT") (2 . "GsBz*"))))
+  ) 
   ss
 )
 
