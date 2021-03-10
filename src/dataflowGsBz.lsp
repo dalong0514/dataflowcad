@@ -606,17 +606,16 @@
 )
 
 ; 2021-03-09
-(defun GenerateGsBzEquipTag (lcEquipData insPt / gsLcToBzEquipData reactorData resultData insPt) 
+(defun GenerateGsBzEquipTag (lcEquipData insPt / gsLcToBzEquipData itemData resultData insPt) 
   (setq gsLcToBzEquipData (GetGsLcToBzEquipData lcEquipData))
   (mapcar '(lambda (x) 
-              (setq reactorData (cdr x))
+              (setq itemData (cdr x))
               ; sorted by EquipName
-              (setq reactorData (vl-sort reactorData '(lambda (x y) (< (cdr (caddr x)) (cdr (caddr y))))))
-              (setq insPtList (GetInsertBzEquipinsPtList insPt reactorData))
-
-              (setq resultData (InsertGsBzEquipTag reactorData insPtList (car x))) 
+              (setq itemData (vl-sort itemData '(lambda (x y) (< (cdr (caddr x)) (cdr (caddr y))))))
+              (setq insPtList (GetInsertBzEquipinsPtList insPt itemData))
+              (setq resultData (InsertGsBzEquipTag itemData insPtList (car x))) 
               (MigrateGsBzEquipTagPropertyValue resultData) 
-              (setq insPt (MoveInsertPosition insPt 0 -8000))
+              (setq insPt (MoveInsertPosition insPt 0 -10000))
           ) 
     gsLcToBzEquipData
   )  
