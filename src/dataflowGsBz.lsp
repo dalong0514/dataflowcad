@@ -609,14 +609,15 @@
 (defun GenerateGsBzEquipTag (lcEquipData insPt / gsLcToBzEquipData itemData equipTagData equipGraphData insPt) 
   (setq gsLcToBzEquipData (GetGsLcToBzEquipData lcEquipData))
   (mapcar '(lambda (x) 
-              (setq itemData (cdr x))
-              ; sorted by EquipName
-              (setq itemData (vl-sort itemData '(lambda (x y) (< (cdr (caddr x)) (cdr (caddr y))))))
-              (setq insPtList (GetInsertBzEquipinsPtList insPt itemData))
-              (setq equipTagData (InsertGsBzEquipTag itemData insPtList (car x))) 
-              (setq equipGraphData (InsertGsBzEquipGraph itemData insPtList (car x))) 
-              (MigrateGsBzEquipTagPropertyValue equipTagData) 
-              (setq insPt (MoveInsertPosition insPt 0 -10000))
+             (setq itemData (cdr x))
+             ; sorted by EquipName
+             (setq itemData (vl-sort itemData '(lambda (x y) (< (cdr (caddr x)) (cdr (caddr y))))))
+             (setq insPtList (GetInsertBzEquipinsPtList insPt itemData))
+             (setq equipTagData (InsertGsBzEquipTag itemData insPtList (car x))) 
+             (setq equipGraphData (InsertGsBzEquipGraph itemData insPtList (car x))) 
+             (MigrateGsBzEquipTagPropertyValue equipTagData)
+             (MigrateGsBzEquipTagPropertyValue equipGraphData)
+             (setq insPt (MoveInsertPosition insPt 0 -15000))
           ) 
     gsLcToBzEquipData
   )  
@@ -672,7 +673,7 @@
 ; 2021-03-10
 (defun InsertGsBzEquipGraph (itemData insPtList dataType /) 
   (mapcar '(lambda (x y) 
-             (InsertBlockGsBzEquipGraphStrategy (MoveInsertPosition y 0 5000) "GsBzTankD1600LS")
+             (InsertBlockGsBzEquipGraphStrategy (MoveInsertPosition y 0 3000) "GsBzTankD1600LS")
              (cons (entlast) (cdr x))
           ) 
     itemData
