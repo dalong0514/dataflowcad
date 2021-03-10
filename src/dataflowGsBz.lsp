@@ -606,14 +606,20 @@
 )
 
 ; 2021-03-09
-(defun GenerateGsBzEquipTag (lcEquipData insPt / gsLcToBzEquipData reactorData resultData) 
+(defun GenerateGsBzEquipTag (lcEquipData insPt / gsLcToBzEquipData reactorData resultData insPt) 
   (setq gsLcToBzEquipData (GetGsLcToBzEquipData lcEquipData))
-  (setq reactorData (GetDottedPairValueUtils "GsBzReactor" gsLcToBzEquipData))
-  ; sorted by EquipName
-  (setq reactorData (vl-sort reactorData '(lambda (x y) (< (cdr (caddr x)) (cdr (caddr y))))))
-  (setq insPtList (GetInsertBzEquipinsPtList insPt reactorData))
-  (setq resultData (InsertGsBzEquipTag reactorData insPtList)) 
-  (MigrateGsBzEquipTagPropertyValue resultData)
+  (mapcar '(lambda (x) 
+              (setq reactorData (cdr x))
+              ; sorted by EquipName
+              (setq reactorData (vl-sort reactorData '(lambda (x y) (< (cdr (caddr x)) (cdr (caddr y))))))
+              (setq insPtList (GetInsertBzEquipinsPtList insPt reactorData))
+
+              (setq resultData (InsertGsBzEquipTag reactorData insPtList (car x))) 
+              (MigrateGsBzEquipTagPropertyValue resultData) 
+              (setq insPt (MoveInsertPosition insPt 0 -8000))
+          ) 
+    gsLcToBzEquipData
+  )  
 )
 
 ; 2021-03-10
@@ -653,9 +659,9 @@
 )
 
 ; 2021-03-09
-(defun InsertGsBzEquipTag (reactorData insPtList /) 
+(defun InsertGsBzEquipTag (reactorData insPtList dataType /) 
   (mapcar '(lambda (x y) 
-             (InsertBlockGsBzReactor y)
+             (InsertBlockGsBzEquipStrategy y dataType)
              (cons (entlast) (cdr x))
           ) 
     reactorData

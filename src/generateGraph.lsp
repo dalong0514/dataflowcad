@@ -911,6 +911,13 @@
   (InsertBlockUtils insPt "GsBzReactor" "DataFlow-GsBzEquipTag" (list (cons 1 "R")))
 )
 
+; 2021-03-10
+(defun InsertBlockGsBzEquipStrategy (insPt dataType /) 
+  (VerifyGsBzBlockByName dataType)
+  (VerifyGsBzEquipTagLayer)
+  (InsertBlockUtils insPt dataType "DataFlow-GsBzEquipTag" (list (cons 1 "R")))
+)
+
 ; Generate GsBzBlocks
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
