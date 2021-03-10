@@ -2002,10 +2002,127 @@
   (RegExpReplace pipenum ".*-(\\d[A-Z]\\d+).*" "$1" nil nil)
 )
 
+; 2021-03-08
 (defun ExtractGsPipeDiameterUtils (pipenum /)
   (RegExpReplace pipenum "(.*)-(\\d+)-(.*)" "$2" nil nil)
 )
 
 ; Extract Data Utils
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+
+
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+; Extract External File Data Utils
+
+; 2021-03-09
+; ready to develop
+(defun GetExternalDwgEntityDataUtils (/ acadObj curDoc filePath externalDoc externalModelSpace objCollection count retObjects) 
+  (setq acadObj (vlax-get-acad-object))
+  (setq curDoc (vla-get-activedocument acadObj))
+  
+  (setq filePath "D:\\dataflowcad\\allBlocks\\GsBzBlocks.dwg")
+  (setq externalDoc (GetdocumentobjectUtils filePath))
+  ;(GetVlaObjectPropertyAndMethodUtils externalDoc)
+  (setq externalModelSpace (vla-get-ModelSpace externalDoc))
+  ;(GetVlaObjectPropertyAndMethodUtils modelSpace)
+  
+  
+  (setq objCollection (vlax-make-safearray vlax-vbObject (cons 0 (- (vla-get-Count externalModelSpace) 1)))
+          count 0)
+  ;; Copy objects
+  (vlax-for eachObj externalModelSpace
+    (vlax-safearray-put-element objCollection count eachObj)
+    (setq count (1+ count))
+  )
+  ;; Copy object and get back a collection of the new objects (copies)
+  (setq retObjects (vla-CopyObjects acadObj objCollection (vla-get-ModelSpace (vla-get-Database curDoc))))
+  
+
+  (vlax-release-object externalDoc)
+)
+
+; 2021-03-09
+(defun GetExternalDwgEntityHandleListUtils (/ filePath externalDoc modelSpace resultList) 
+  (setq filePath "D:\\dataflowcad\\allBlocks\\GsBzBlocks.dwg")
+  (setq externalDoc (GetdocumentobjectUtils filePath))
+  (setq modelSpace (vla-get-ModelSpace externalDoc))
+  ;(GetVlaObjectPropertyAndMethodUtils modelSpace)
+  ;; the handle of each object found.
+  (vlax-for entry modelSpace
+    (setq resultList (append resultList (list (vla-get-Handle entry))))
+  ) 
+  (vlax-release-object externalDoc)
+  resultList
+)
+
+; 2021-03-09
+(defun GetVlaObjectPropertyAndMethodUtils (VlaObject /)
+  (vlax-dump-object VlaObject T)
+)
+
+(defun InsertBlockUtilsTTSS (insPt blockName layerName propertyDictList / acadObj curDoc insertionPnt modelSpace blockRefObj blockAttributes)
+  (setq acadObj (vlax-get-acad-object))
+  (setq curDoc (vla-get-activedocument acadObj)) 
+  (setq insertionPnt (vlax-3d-point insPt))
+  (setq modelSpace (vla-get-ModelSpace curDoc))
+  (setq blockRefObj (vla-InsertBlock modelSpace insertionPnt blockName 1 1 1 0))
+  ;(vlax-dump-object blockRefObj T)
+  (vlax-put-property blockRefObj 'Layer layerName)
+  (setq blockAttributes (vlax-variant-value (vla-GetAttributes blockRefObj)))
+  ; another method get the blockAttributes
+  ;(setq blockAttributes (vlax-variant-value (vlax-invoke-method blockRefObj 'GetAttributes)))
+  ;(vlax-safearray->list blockAttributes)
+  ; setting block property value
+  (mapcar '(lambda (x) 
+            (vla-put-TextString (vlax-safearray-get-element blockAttributes (car x)) (cdr x))
+          ) 
+    propertyDictList
+  ) 
+  ;(vla-ZoomAll acadObj) 
+  (princ)
+)
+
+; 2021-03-10
+; copy apart code from [202102StealV1-8] - LeeMac-Library
+(defun GetdocumentobjectUtils (filename / acdocs dbdoc vers)
+  (vlax-map-collection (vla-get-documents (vlax-get-acad-object))
+    (function
+      (lambda (doc)
+        (setq acdocs (cons (cons (strcase (vla-get-fullname doc)) doc) acdocs))
+      )
+    )
+  )
+  (cond
+    ((null (setq filename (findfile filename)))
+      nil
+    )
+    ((cdr (assoc (strcase filename) acdocs))
+    )
+    ((null
+      (vl-catch-all-error-p
+        (vl-catch-all-apply 'vla-open
+          (list
+            (setq dbdoc
+              (vla-getinterfaceobject (vlax-get-acad-object)
+                (if (< (setq vers (atoi (getvar 'acadver))) 16)
+                  "ObjectDBX.AxDbDocument"
+                  (strcat "ObjectDBX.AxDbDocument." (itoa vers))
+                )
+              )
+            )
+            filename
+          )
+        )
+      )
+    )
+      dbdoc
+    )
+  )
+)
+
+
+; Extract External File Data Utils
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
