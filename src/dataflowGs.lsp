@@ -371,7 +371,7 @@
 )
 
 (defun WriteGsBzEquipDataToCSVByEntityNameListUtils (entityNameList / fileDir firstRow propertyNameList)
-  (setq fileDir "D:\\dataflowcad\\data\\gsBzEuipData.csv")
+  (setq fileDir "D:\\dataflowcad\\data\\gsBzEquipData.csv")
   (setq firstRow "数据ID,设备名称,设备类型代号,设备所在区域,备注,")
   (setq propertyNameList (GetGsBzEquipPropertyNameList))
   (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList "0")
