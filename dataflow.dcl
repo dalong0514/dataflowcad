@@ -1065,6 +1065,13 @@ importGsBzEquipTagBox : dialog {
   : boxed_radio_column {
     key = "showOriginDataBox";
     width = 100;
+    : popup_list { 
+      label = "导入的设备类型";
+      edit_width = 80;
+      key = "exportDataType"; 
+      list = "";
+      value = "";
+    }
     : spacer { height = 1; } 
     : text {
       key = "importBtnMsg";

@@ -854,8 +854,6 @@
       (if (/= importedDataList nil) 
         (progn 
           (GenerateGsBzEquipTagByImport importedDataList "Reactor")
-          ;(princ importedDataList)
-          ;(ModifyPropertyValueByTagUtils importedDataList (GetGsBzEquipPropertyNameList))
           (setq modifyMsgBtnStatus 1)
         )
       )
