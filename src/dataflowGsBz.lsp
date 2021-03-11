@@ -697,9 +697,9 @@
 )
 
 ; 2021-03-10
-(defun InsertGsBzEquipGraph (itemData insPtList dataType /) 
+(defun InsertGsBzEquipGraph (itemData insPtList gsBzType /) 
   (mapcar '(lambda (x y) 
-             (InsertBlockGsBzEquipGraphStrategy (MoveInsertPosition y 0 3000) "GsBzTank5000LS")
+             (InsertBlockGsBzEquipGraphStrategy (MoveInsertPosition y 0 3000) "GsBzTank1000LS")
              (cons (entlast) (cdr x))
           ) 
     itemData
@@ -912,8 +912,11 @@
   ; sorted by EquipTag
   (setq dataList (SortEquipDataStrategy importedDataList sortedTypeResult))
   (setq insPtList (GetInsertBzEquipinsPtList insPt dataList))
-  (setq equipTagData (InsertGsBzEquipTag dataList insPtList dataType)) 
+  (setq equipTagData (InsertGsBzEquipTag dataList insPtList dataType))
+  
+  (setq equipGraphData (InsertGsBzEquipGraph dataList insPtList dataType))
   (UpdateGsBzEquipTagPropertyValue equipTagData (GetPropertyNameListStrategy dataType))
+  (UpdateGsBzEquipTagPropertyValue equipGraphData '("TAG"))
 )
 
 (defun SortEquipDataStrategy (dataList sortedType /)
@@ -926,7 +929,7 @@
 )
 
 ; 2021-03-11
-(defun UpdateGsBzEquipTagPropertyValue (itemData blockPropertyNameList / blockPropertyNameList) 
+(defun UpdateGsBzEquipTagPropertyValue (itemData blockPropertyNameList /) 
   (mapcar '(lambda (x) 
              (ModifyMultiplePropertyForOneBlockUtils (car x) blockPropertyNameList (cdr x))
           ) 
