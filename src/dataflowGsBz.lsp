@@ -689,7 +689,7 @@
 )
 
 ; 2021-03-09
-(defun UpdateGsBzEquipGraphByBox (tileName / dcl_id exportDataType viewPropertyName dataType importedDataList selectedName propertyNameList status ss confirmList entityNameList exportMsgBtnStatus importMsgBtnStatus comfirmMsgBtnStatus modifyMsgBtnStatus)
+(defun UpdateGsBzEquipGraphByBox (tileName / dcl_id exportDataType viewPropertyName dataType importedDataList status ss entityNameList exportMsgBtnStatus importMsgBtnStatus  modifyMsgBtnStatus)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -727,7 +727,7 @@
     ; import data button
     (if (= 3 status) 
       (progn 
-        (setq importedDataList (StrListToListListUtils (ReadDataFromCSVStrategy "GsBzEquip")))
+        (setq importedDataList (GetImportedGsBzEquipDataList (StrListToListListUtils (ReadDataFromCSVStrategy "GsBzEquip"))))
         (setq importMsgBtnStatus 1)
       )
     )
@@ -735,8 +735,9 @@
     (if (= 4 status) 
       (if (/= importedDataList nil) 
         (progn 
-          (ModifyPropertyValueByEntityHandleUtils importedDataList (GetGsBzEquipPropertyNameList))
-          (setq modifyMsgBtnStatus 1)
+          (princ importedDataList)
+          ;(ModifyPropertyValueByEntityHandleUtils importedDataList (GetGsBzEquipPropertyNameList))
+          ;(setq modifyMsgBtnStatus 1)
         )
       )
     )
@@ -744,6 +745,15 @@
   (setq importedList nil)
   (unload_dialog dcl_id)
   (princ)
+)
+
+; 2021-03-11
+(defun GetImportedGsBzEquipDataList (dataList /)
+  (mapcar '(lambda (x) 
+             (cdr x)
+          ) 
+    dataList
+  )  
 )
 
 ; Equipemnt Layout
