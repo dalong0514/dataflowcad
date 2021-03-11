@@ -1908,7 +1908,7 @@
   (foreach item csvPropertyStringList 
     (write-line item filePtr)
   )
-  (close filePtr)
+  (close filePtr) 
 )
 
 (defun ReadDataFromCSVUtils (fileDir / filePtr i textLine resultList)

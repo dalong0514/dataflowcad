@@ -605,9 +605,8 @@
   )(princ)
 )
 
-; 2021-03-10
-(defun GenerateGsBzEquipTag (lcEquipData insPt / gsLcToBzEquipData itemData equipTagData equipGraphData insPt) 
-  (setq gsLcToBzEquipData (GetGsLcToBzEquipData lcEquipData))
+; refactored at 2021-03-10
+(defun GenerateGsBzEquipTag (lcEquipData insPt / itemData equipTagData equipGraphData insPt) 
   (mapcar '(lambda (x) 
              (setq itemData (cdr x))
              ; sorted by EquipName
@@ -619,7 +618,7 @@
              (MigrateGsBzEquipTagPropertyValue equipGraphData)
              (setq insPt (MoveInsertPosition insPt 0 -15000))
           ) 
-    gsLcToBzEquipData
+    lcEquipData
   )  
 )
 
@@ -679,15 +678,6 @@
     itemData
     insPtList
   )  
-)
-
-; 2021-03-09
-(defun GetGsLcToBzEquipData (lcEquipData /)
-  (mapcar '(lambda (x) 
-             (cons (strcat "GsBz" (car x)) (cdr x))
-           ) 
-    lcEquipData
-  ) 
 )
 
 ;;;-------------------------------------------------------------------------;;;
