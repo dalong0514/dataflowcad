@@ -832,11 +832,11 @@
 )
 
 (defun GetsortedTypeByindex (index /)
-  (nth (atoi index) '("equipTaag" "equipVolumn"))
+  (nth (atoi index) '("equipTag" "equipVolume"))
 )
 
 ; 2021-03-11
-(defun ImportGsBzEquipTagByBox (tileName / dcl_id dataType importedDataList status exportDataType sortedType importMsgBtnStatus)
+(defun ImportGsBzEquipTagByBox (tileName / dcl_id dataType importedDataList status exportDataType sortedType sortedTypeResult importMsgBtnStatus)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -867,6 +867,9 @@
     (if (= nil exportDataType)
       (setq exportDataType "0")
     ) 
+    (if (= nil sortedType)
+      (setq sortedType "0")
+    )  
     (if (= importMsgBtnStatus 1)
       (set_tile "importBtnMsg" "导入数据状态：已完成")
     )
@@ -874,6 +877,7 @@
       (set_tile "importBtnMsg" "导入数据状态：请先导入数据")
     ) 
     (set_tile "exportDataType" exportDataType)
+    (set_tile "sortedType" sortedType)
     ; import data button
     (if (= 2 (setq status (start_dialog)))
       (progn 
@@ -889,7 +893,8 @@
       (if (/= importedDataList nil) 
         (progn 
           (setq dataType (GetImportedDataTypeByindex exportDataType))
-          (GenerateGsBzEquipTagByImport importedDataList dataType)
+          (setq sortedTypeResult (GetsortedTypeByindex sortedType))
+          (GenerateGsBzEquipTagByImport importedDataList dataType sortedTypeResult)
           (setq modifyMsgBtnStatus 1)
           (setq importMsgBtnStatus nil)
         )
@@ -901,13 +906,20 @@
 )
 
 ; 2021-03-11
-(defun GenerateGsBzEquipTagByImport (importedDataList dataType / insPt dataList insPtList equipTagData) 
+(defun GenerateGsBzEquipTagByImport (importedDataList dataType sortedTypeResult / insPt dataList insPtList equipTagData) 
   (setq insPt (getpoint "\n选取设备位号插入点："))
   ; sorted by EquipTag
-  (setq dataList (vl-sort importedDataList '(lambda (x y) (< (cadr x) (cadr y)))))
+  (setq dataList (SortEquipDataStrategy importedDataList sortedTypeResult))
   (setq insPtList (GetInsertBzEquipinsPtList insPt dataList))
   (setq equipTagData (InsertGsBzEquipTag dataList insPtList dataType)) 
   (UpdateGsBzEquipTagPropertyValue equipTagData (GetPropertyNameListStrategy dataType))
+)
+
+(defun SortEquipDataStrategy (dataList sortedType /)
+  (cond 
+    ((= sortedType "equipTag") (vl-sort importedDataList '(lambda (x y) (< (cadr x) (cadr y)))))
+    ((= sortedType "equipVolume") (vl-sort importedDataList '(lambda (x y) (> (nth 4 x) (nth 4 y)))))
+  )
 )
 
 ; 2021-03-11
