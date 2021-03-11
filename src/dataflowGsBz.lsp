@@ -15,6 +15,15 @@
   (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "GsBzEquip"))
 )
 
+; 2021-03-11
+(defun GetAllGsBzEquipTagList () 
+  (mapcar '(lambda (x) 
+             (cadr x)
+          ) 
+    (GetPropertyValueListByEntityNameList (GetAllGsBzEquipEntityNameList) '("TAG"))
+  )   
+)
+
 ; utils Function for  Equipemnt Layoutt
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
@@ -741,7 +750,8 @@
     ; import data button
     (if (= 3 status) 
       (progn 
-        (setq importedDataList (GetImportedGsBzEquipDataList (StrListToListListUtils (ReadDataFromCSVStrategy "GsBzEquip"))))
+        (setq importedDataList 
+               (GetImportedGsBzEquipDataList (StrListToListListUtils (ReadDataFromCSVStrategy "GsBzEquip"))))
         (setq importMsgBtnStatus 1)
       )
     )
@@ -750,13 +760,12 @@
       (if (/= importedDataList nil) 
         (progn 
           (princ importedDataList)
-          (ModifyPropertyValueByTagUtils importedDataList (GetGsBzEquipPropertyNameList))
+          ;(ModifyPropertyValueByTagUtils importedDataList (GetGsBzEquipPropertyNameList))
           ;(setq modifyMsgBtnStatus 1)
         )
       )
     )
   )
-  (setq importedList nil)
   (unload_dialog dcl_id)
   (princ)
 )
@@ -772,7 +781,7 @@
 
 ; 2021-03-11
 (defun ModifyPropertyValueByTagUtils (importedDataList propertyNameList / entityNameList propertyValueList)
-  (setq importedDataList (FilterListByTestMemberUtils importedDataList data))
+  (setq importedDataList (FilterListByTestMemberUtils importedDataList (GetAllGsBzEquipTagList)))
   (setq entityNameList (mapcar '(lambda (x) (handent (car x))) 
                             importedDataList
                           )
@@ -789,8 +798,67 @@
   )
 )
 
+; 2021-03-11
+; too slow, do not apply now
+(defun VerifyGsBzEquipData (importedDataList /)
+  (vl-remove-if-not '(lambda (x) 
+                      (member (car x) (GetAllGsBzEquipTagList))
+                    ) 
+    importedDataList
+  ) 
+)
 
+;;;-------------------------------------------------------------------------;;;
+; Import and Generate GsBzEquipTag
 
+; 2021-03-11
+(defun c:ImportGsBzEquipTag ()
+  (ImportGsBzEquipTagByBox "importGsBzEquipTagBox")
+)
+
+; 2021-03-11
+(defun ImportGsBzEquipTagByBox (tileName / dcl_id exportDataType viewPropertyName dataType importedDataList status ss entityNameList exportMsgBtnStatus importMsgBtnStatus  modifyMsgBtnStatus)
+  (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
+  (setq status 2)
+  (while (>= status 2)
+    ; Create the dialog box
+    (new_dialog tileName dcl_id "" '(-1 -1))
+    ; Added the actions to the Cancel and Pick Point button
+    (action_tile "cancel" "(done_dialog 0)")
+    (action_tile "btnImportData" "(done_dialog 2)")
+    (action_tile "btnModify" "(done_dialog 3)")
+    ; init the default data of text
+    (if (= importMsgBtnStatus 1)
+      (set_tile "importBtnMsg" "导入数据状态：已完成")
+    )
+    (if (= importMsgBtnStatus 2)
+      (set_tile "importBtnMsg" "导入数据状态：请先导入数据")
+    ) 
+    (if (= modifyMsgBtnStatus 1)
+      (set_tile "modifyBtnMsg" "修改CAD数据状态：已完成")
+    )
+    ; import data button
+    (if (= 2 (setq status (start_dialog)))
+      (progn 
+        (setq importedDataList 
+               (GetImportedGsBzEquipDataList (StrListToListListUtils (ReadDataFromCSVStrategy "Reactor"))))
+        (setq importMsgBtnStatus 1)
+      )
+    )
+    ; insert button
+    (if (= 3 status) 
+      (if (/= importedDataList nil) 
+        (progn 
+          (princ importedDataList)
+          ;(ModifyPropertyValueByTagUtils importedDataList (GetGsBzEquipPropertyNameList))
+          ;(setq modifyMsgBtnStatus 1)
+        )
+      )
+    )
+  )
+  (unload_dialog dcl_id)
+  (princ)
+)
 
 ; Equipemnt Layout
 ;;;-------------------------------------------------------------------------;;;
