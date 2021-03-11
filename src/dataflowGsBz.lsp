@@ -758,7 +758,7 @@
 
 ; 2021-03-11
 (defun ModifyPropertyValueByTagUtils (importedDataList propertyNameList / entityNameList propertyValueList)
-  (setq importedDataList (TrimDataNotExistedInCADUtils importedDataList))
+  (setq importedDataList (FilterListByTestMemberUtils importedDataList data))
   (setq entityNameList (mapcar '(lambda (x) (handent (car x))) 
                             importedDataList
                           )
@@ -772,15 +772,6 @@
           ) 
     entityNameList
     propertyValueList      
-  )
-)
-
-; 2021-03-11
-(defun FilterListByTestMemberUtils (dataList testList /)
-  (vl-remove-if-not '(lambda (x) 
-                      (member x testList)
-                    ) 
-    dataList
   )
 )
 

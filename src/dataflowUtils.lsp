@@ -1489,6 +1489,26 @@
   )
 )
 
+; 2021-03-11
+; Unit Test Completed
+(defun FilterListByTestMemberUtils (dataList testList /)
+  (vl-remove-if-not '(lambda (x) 
+                      (member x testList)
+                    ) 
+    dataList
+  )
+)
+
+; 2021-03-11
+; Unit Test Completed
+(defun FilterListByTestNotMemberUtils (dataList testList /)
+  (vl-remove-if-not '(lambda (x) 
+                      (not (member x testList))
+                    ) 
+    dataList
+  )
+)
+
 ; Utils Function 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
