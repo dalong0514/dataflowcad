@@ -1065,12 +1065,22 @@ importGsBzEquipTagBox : dialog {
   : boxed_radio_column {
     key = "showOriginDataBox";
     width = 100;
-    : popup_list { 
-      label = "导入的设备类型";
-      edit_width = 80;
-      key = "exportDataType"; 
-      list = "";
-      value = "";
+    : column {
+      : popup_list { 
+        label = "导入的设备类型";
+        edit_width = 80;
+        key = "exportDataType"; 
+        list = "";
+        value = "";
+      }
+      : spacer { height = 1; } 
+      : popup_list { 
+        label = "设备位号排序顺序";
+        edit_width = 80;
+        key = "sortedType"; 
+        list = "";
+        value = "";
+      } 
     }
     : spacer { height = 1; } 
     : text {

@@ -823,12 +823,20 @@
   '("反应釜" "输送泵" "储罐" "换热器" "离心机" "真空泵" "自定义设备")
 )
 
-(defun GetImportedDataTypeByindex (index / result)
+(defun GetImportedDataTypeByindex (index /)
   (nth (atoi index) '("Reactor" "Pump" "Tank" "Heater" "Centrifuge" "Vacuum" "CustomEquip"))
 )
 
+(defun GetsortedTypeChNameList ()
+  '("按设备位号" "按体积")
+)
+
+(defun GetsortedTypeByindex (index /)
+  (nth (atoi index) '("equipTaag" "equipVolumn"))
+)
+
 ; 2021-03-11
-(defun ImportGsBzEquipTagByBox (tileName / dcl_id dataType importedDataList status exportDataType importMsgBtnStatus)
+(defun ImportGsBzEquipTagByBox (tileName / dcl_id dataType importedDataList status exportDataType sortedType importMsgBtnStatus)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -839,14 +847,21 @@
     (action_tile "btnImportData" "(done_dialog 2)")
     (action_tile "btnModify" "(done_dialog 3)")
     (set_tile "exportDataType" "0")
+    (set_tile "sortedType" "0")
     ; the default value of input box
     (mode_tile "exportDataType" 2)
+    (mode_tile "sortedType" 2)
     (action_tile "exportDataType" "(setq exportDataType $value)")
+    (action_tile "sortedType" "(setq sortedType $value)")
     (progn
       (start_list "exportDataType" 3)
       (mapcar '(lambda (x) (add_list x)) 
                 (GetImportedEquipDataTypeChNameList))
       (end_list)
+      (start_list "sortedType" 3)
+      (mapcar '(lambda (x) (add_list x)) 
+                (GetsortedTypeChNameList))
+      (end_list) 
     ) 
     ; init the default data of text
     (if (= nil exportDataType)
@@ -892,7 +907,7 @@
   (setq dataList (vl-sort importedDataList '(lambda (x y) (< (cadr x) (cadr y)))))
   (setq insPtList (GetInsertBzEquipinsPtList insPt dataList))
   (setq equipTagData (InsertGsBzEquipTag dataList insPtList dataType)) 
-  (UpdateGsBzEquipTagPropertyValue equipTagData (GetReactorPropertyNameList))
+  (UpdateGsBzEquipTagPropertyValue equipTagData (GetPropertyNameListStrategy dataType))
 )
 
 ; 2021-03-11
