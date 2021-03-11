@@ -41,7 +41,14 @@
   (ExtractGsPipeDiameterUtilsTest)
   (FilterListByTestMemberUtilsTest)
   (FilterListByTestNotMemberUtilsTest)
+  (ExtractEquipVolumeNumUtilsTest)
   (DL:PrintTestResults (DL:CountBooleans *testList*))
+)
+
+; 2021-03-11
+(defun ExtractEquipVolumeNumUtilsTest () 
+  (AssertEqual 'ExtractEquipVolumeNumUtils (list "500L") 500)
+  (AssertEqual 'ExtractEquipVolumeNumUtils (list "1000") 1000)
 )
 
 ; 2021-03-11

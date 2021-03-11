@@ -2030,6 +2030,12 @@
   (RegExpReplace pipenum "(.*)-(\\d+)-(.*)" "$2" nil nil)
 )
 
+; 2021-03-11
+; @return integer
+(defun ExtractEquipVolumeNumUtils (volume /) 
+  (atoi (RegExpReplace volume "(\\d+)(.*)" "$1" nil nil))
+)
+
 ; Extract Data Utils
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;

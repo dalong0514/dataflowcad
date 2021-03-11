@@ -917,8 +917,10 @@
 
 (defun SortEquipDataStrategy (dataList sortedType /)
   (cond 
-    ((= sortedType "equipTag") (vl-sort importedDataList '(lambda (x y) (< (cadr x) (cadr y)))))
-    ((= sortedType "equipVolume") (vl-sort importedDataList '(lambda (x y) (> (nth 4 x) (nth 4 y)))))
+    ((= sortedType "equipTag") 
+     (vl-sort importedDataList '(lambda (x y) (< (cadr x) (cadr y)))))
+    ((= sortedType "equipVolume") 
+     (vl-sort importedDataList '(lambda (x y) (< (ExtractEquipVolumeNumUtils (nth 4 x)) (ExtractEquipVolumeNumUtils (nth 4 y))))))
   )
 )
 
