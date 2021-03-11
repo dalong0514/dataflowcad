@@ -39,7 +39,18 @@
   (ExtractGsPipeClassUtilsTest)
   (GetDottedPairValueUtilsTest)
   (ExtractGsPipeDiameterUtilsTest)
+  (FilterListByTestMemberUtilsTest)
   (DL:PrintTestResults (DL:CountBooleans *testList*))
+)
+
+; 2021-03-11
+(defun FilterListByTestMemberUtilsTest (/ dataList) 
+  (AssertEqual 'FilterListByTestMemberUtils 
+    (list (list "R1101" "R1102" "E1103") (list "R1101" "R1102" "V1103")) 
+    (list "R1101" "R1102"))
+  (AssertEqual 'FilterListByTestMemberUtils 
+    (list (list "R1101" "R1102" "P1102" "P1103" "E1103") (list "R1101" "R1102" "V1103" "P1102")) 
+    (list "R1101" "R1102" "P1102")) 
 )
 
 ; 2021-03-08
