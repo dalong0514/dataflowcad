@@ -1077,11 +1077,6 @@ importGsBzEquipTagBox : dialog {
       key = "importBtnMsg";
       label = "导入设备数据状态：";
     }
-    : spacer { height = 1; } 
-    : text {
-      key = "modifyBtnMsg";
-      label = "数据写入图纸状态：";
-    }
     : spacer { height = 3; } 
     : row { 
       fixed_width = true; 
@@ -1094,7 +1089,7 @@ importGsBzEquipTagBox : dialog {
       : spacer { width = 2; } 
       : button { 
         key = "btnModify"; 
-        label = "确认修改"; 
+        label = "选择位号插入点"; 
         is_default = "true"; 
       } 
       : spacer { width = 2; } 

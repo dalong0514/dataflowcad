@@ -819,8 +819,16 @@
   (ImportGsBzEquipTagByBox "importGsBzEquipTagBox")
 )
 
+(defun GetImportedEquipDataTypeChNameList ()
+  '("反应釜" "输送泵" "储罐" "换热器" "离心机" "真空泵" "自定义设备")
+)
+
+(defun GetImportedDataTypeByindex (index / result)
+  (nth (atoi index) '("Reactor" "Pump" "Tank" "Heater" "Centrifuge" "Vacuum" "CustomEquip"))
+)
+
 ; 2021-03-11
-(defun ImportGsBzEquipTagByBox (tileName / dcl_id dataType importedDataList status ss entityNameList exportMsgBtnStatus importMsgBtnStatus  modifyMsgBtnStatus)
+(defun ImportGsBzEquipTagByBox (tileName / dcl_id dataType importedDataList status exportDataType importMsgBtnStatus)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -830,20 +838,32 @@
     (action_tile "cancel" "(done_dialog 0)")
     (action_tile "btnImportData" "(done_dialog 2)")
     (action_tile "btnModify" "(done_dialog 3)")
+    (set_tile "exportDataType" "0")
+    ; the default value of input box
+    (mode_tile "exportDataType" 2)
+    (action_tile "exportDataType" "(setq exportDataType $value)")
+    (progn
+      (start_list "exportDataType" 3)
+      (mapcar '(lambda (x) (add_list x)) 
+                (GetImportedEquipDataTypeChNameList))
+      (end_list)
+    ) 
     ; init the default data of text
+    (if (= nil exportDataType)
+      (setq exportDataType "0")
+    ) 
     (if (= importMsgBtnStatus 1)
       (set_tile "importBtnMsg" "导入数据状态：已完成")
     )
     (if (= importMsgBtnStatus 2)
       (set_tile "importBtnMsg" "导入数据状态：请先导入数据")
     ) 
-    (if (= modifyMsgBtnStatus 1)
-      (set_tile "modifyBtnMsg" "修改CAD数据状态：已完成")
-    )
+    (set_tile "exportDataType" exportDataType)
     ; import data button
     (if (= 2 (setq status (start_dialog)))
       (progn 
-        (setq dataType "Reactor")
+        (setq dataType (GetImportedDataTypeByindex exportDataType))
+        (princ dataType)
         (setq importedDataList 
                (StrListToListListUtils (ReadDataFromCSVStrategy dataType)))
         (setq importMsgBtnStatus 1)
@@ -853,8 +873,10 @@
     (if (= 3 status) 
       (if (/= importedDataList nil) 
         (progn 
-          (GenerateGsBzEquipTagByImport importedDataList "Reactor")
+          (setq dataType (GetImportedDataTypeByindex exportDataType))
+          (GenerateGsBzEquipTagByImport importedDataList dataType)
           (setq modifyMsgBtnStatus 1)
+          (setq importMsgBtnStatus nil)
         )
       )
     )
