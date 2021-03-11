@@ -630,7 +630,7 @@
 )
 
 ; refactored at 2021-03-10
-(defun GenerateGsBzEquipTag (lcEquipData insPt / itemData equipTagData equipGraphData insPt) 
+(defun GenerateGsBzEquipTag (lcEquipData insPt / itemData equipTagData equipGraphData blockPropertyNameList insPt) 
   (mapcar '(lambda (x) 
              (setq itemData (cdr x))
              ; sorted by EquipName
@@ -638,8 +638,9 @@
              (setq insPtList (GetInsertBzEquipinsPtList insPt itemData))
              (setq equipTagData (InsertGsBzEquipTag itemData insPtList (car x))) 
              (setq equipGraphData (InsertGsBzEquipGraph itemData insPtList (car x))) 
-             (MigrateGsBzEquipTagPropertyValue equipTagData)
-             (MigrateGsBzEquipTagPropertyValue equipGraphData)
+             (setq blockPropertyNameList (GetGsBzEquipTagPropertyNameList itemData)) 
+             (MigrateGsBzEquipTagPropertyValue equipTagData blockPropertyNameList)
+             (MigrateGsBzEquipTagPropertyValue equipGraphData blockPropertyNameList)
              (setq insPt (MoveInsertPosition insPt 0 -15000))
           ) 
     lcEquipData
@@ -658,8 +659,7 @@
 )
 
 ; refactored at 2021-03-09
-(defun MigrateGsBzEquipTagPropertyValue (itemData / blockPropertyNameList) 
-  (setq blockPropertyNameList (GetGsBzEquipTagPropertyNameList itemData)) 
+(defun MigrateGsBzEquipTagPropertyValue (itemData blockPropertyNameList /) 
   (mapcar '(lambda (x) 
              (ModifyMultiplePropertyForOneBlockUtils (car x) blockPropertyNameList (GetGsBzEquipBlockPropertyValueList (cdr x)))
           ) 
@@ -668,7 +668,7 @@
 )
 
 ; 2021-03-09
-(defun GetGsBzEquipTagPropertyNameList (itemData / blockPropertyNameList) 
+(defun GetGsBzEquipTagPropertyNameList (itemData /) 
   (mapcar '(lambda (x) 
             (strcase (car x))
           ) 
@@ -845,7 +845,7 @@
       (progn 
         (setq dataType "Reactor")
         (setq importedDataList 
-               (GetImportedGsBzEquipDataList (StrListToListListUtils (ReadDataFromCSVStrategy dataType))))
+               (StrListToListListUtils (ReadDataFromCSVStrategy dataType)))
         (setq importMsgBtnStatus 1)
       )
     )
@@ -853,9 +853,10 @@
     (if (= 3 status) 
       (if (/= importedDataList nil) 
         (progn 
-          (princ importedDataList)
+          (GenerateGsBzEquipTagByImport importedDataList "Reactor")
+          ;(princ importedDataList)
           ;(ModifyPropertyValueByTagUtils importedDataList (GetGsBzEquipPropertyNameList))
-          ;(setq modifyMsgBtnStatus 1)
+          (setq modifyMsgBtnStatus 1)
         )
       )
     )
@@ -865,18 +866,22 @@
 )
 
 ; 2021-03-11
-(defun GenerateGsBzEquipTagByImport (importedDataList / insPt insPtList equipTagData) 
+(defun GenerateGsBzEquipTagByImport (importedDataList dataType / insPt dataList insPtList equipTagData) 
   (setq insPt (getpoint "\n选取设备位号插入点："))
   ; sorted by EquipTag
-  (setq importedDataList (vl-sort importedDataList '(lambda (x y) (< (car x) (car y)))))
+  (setq dataList (vl-sort importedDataList '(lambda (x y) (< (cadr x) (cadr y)))))
+  (setq insPtList (GetInsertBzEquipinsPtList insPt dataList))
+  (setq equipTagData (InsertGsBzEquipTag dataList insPtList dataType)) 
+  (UpdateGsBzEquipTagPropertyValue equipTagData (GetReactorPropertyNameList))
+)
+
+; 2021-03-11
+(defun UpdateGsBzEquipTagPropertyValue (itemData blockPropertyNameList / blockPropertyNameList) 
   (mapcar '(lambda (x) 
-             (setq insPtList (GetInsertBzEquipinsPtList insPt importedDataList))
-             (setq equipTagData (InsertGsBzEquipTag itemData insPtList (car x))) 
-             (MigrateGsBzEquipTagPropertyValue equipTagData)
+             (ModifyMultiplePropertyForOneBlockUtils (car x) blockPropertyNameList (cdr x))
           ) 
-    importedDataList
-  )  
-  
+    itemData
+  )
 )
 
 ; Equipemnt Layout
