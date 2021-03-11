@@ -619,7 +619,7 @@
   )
 )
 
-; 2021-03-098
+; 2021-03-09
 (defun c:migrateGsLcEquipData (/ insPt lcEquipData) 
   (setq insPt (getpoint "\n选取设备模块插入点："))
   (setq lcEquipData (vl-bb-ref 'gsLcEquipData))
@@ -657,20 +657,23 @@
   resultList
 )
 
-; 2021-03-09
+; refactored at 2021-03-09
 (defun MigrateGsBzEquipTagPropertyValue (itemData / blockPropertyNameList) 
-  (setq blockPropertyNameList 
-    (mapcar '(lambda (x) 
-              (strcase (car x))
-            ) 
-      (cdr (car itemData))
-    ) 
-  ) 
+  (setq blockPropertyNameList (GetGsBzEquipTagPropertyNameList itemData)) 
   (mapcar '(lambda (x) 
              (ModifyMultiplePropertyForOneBlockUtils (car x) blockPropertyNameList (GetGsBzEquipBlockPropertyValueList (cdr x)))
           ) 
     itemData
   )
+)
+
+; 2021-03-09
+(defun GetGsBzEquipTagPropertyNameList (itemData / blockPropertyNameList) 
+  (mapcar '(lambda (x) 
+            (strcase (car x))
+          ) 
+    (cdr (car itemData))
+  ) 
 )
 
 ; 2021-03-09
@@ -817,7 +820,7 @@
 )
 
 ; 2021-03-11
-(defun ImportGsBzEquipTagByBox (tileName / dcl_id exportDataType viewPropertyName dataType importedDataList status ss entityNameList exportMsgBtnStatus importMsgBtnStatus  modifyMsgBtnStatus)
+(defun ImportGsBzEquipTagByBox (tileName / dcl_id dataType importedDataList status ss entityNameList exportMsgBtnStatus importMsgBtnStatus  modifyMsgBtnStatus)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -840,8 +843,9 @@
     ; import data button
     (if (= 2 (setq status (start_dialog)))
       (progn 
+        (setq dataType "Reactor")
         (setq importedDataList 
-               (GetImportedGsBzEquipDataList (StrListToListListUtils (ReadDataFromCSVStrategy "Reactor"))))
+               (GetImportedGsBzEquipDataList (StrListToListListUtils (ReadDataFromCSVStrategy dataType))))
         (setq importMsgBtnStatus 1)
       )
     )
@@ -858,6 +862,21 @@
   )
   (unload_dialog dcl_id)
   (princ)
+)
+
+; 2021-03-11
+(defun GenerateGsBzEquipTagByImport (importedDataList / insPt insPtList equipTagData) 
+  (setq insPt (getpoint "\n选取设备位号插入点："))
+  ; sorted by EquipTag
+  (setq importedDataList (vl-sort importedDataList '(lambda (x y) (< (car x) (car y)))))
+  (mapcar '(lambda (x) 
+             (setq insPtList (GetInsertBzEquipinsPtList insPt importedDataList))
+             (setq equipTagData (InsertGsBzEquipTag itemData insPtList (car x))) 
+             (MigrateGsBzEquipTagPropertyValue equipTagData)
+          ) 
+    importedDataList
+  )  
+  
 )
 
 ; Equipemnt Layout

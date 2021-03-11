@@ -1068,7 +1068,7 @@ importGsBzEquipTagBox : dialog {
     : spacer { height = 1; } 
     : text {
       key = "importBtnMsg";
-      label = "导入临时文件状态：";
+      label = "导入设备数据状态：";
     }
     : spacer { height = 1; } 
     : text {
