@@ -882,6 +882,7 @@
     (if (= 2 (setq status (start_dialog)))
       (progn 
         (setq dataType (GetImportedDataTypeByindex exportDataType))
+        (setq sortedTypeResult (GetsortedTypeByindex sortedType))
         (princ dataType)
         (setq importedDataList 
                (StrListToListListUtils (ReadDataFromCSVStrategy dataType)))
