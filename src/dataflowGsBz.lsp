@@ -733,8 +733,7 @@
     ; export data button
     (if (= 2 (setq status (start_dialog)))
       (progn 
-        (setq ss (GetAllBlockSSByDataTypeUtils "GsBzEquip"))
-        (setq entityNameList (GetEntityNameListBySSUtils ss))
+        (setq entityNameList (GetAllGsBzEquipEntityNameList))
         (WriteDataToCSVByEntityNameListStrategy entityNameList "GsBzEquip")
         (setq exportMsgBtnStatus 1) 
       )
