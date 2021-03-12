@@ -259,9 +259,9 @@
 )
 
 (defun MoveInsertPositionTest ()
-  (AssertEqual 'MoveInsertPosition (list '(1 1 0) 10 20) '(11 21 0))
-  (AssertEqual 'MoveInsertPosition (list '(10 10 0) -15 -20) '(-5 -10 0))
-  (AssertEqual 'MoveInsertPosition (list '(1.5 3.6 0) -5 -2) '(-3.5 1.6 0))
+  (AssertEqual 'MoveInsertPositionUtils (list '(1 1 0) 10 20) '(11 21 0))
+  (AssertEqual 'MoveInsertPositionUtils (list '(10 10 0) -15 -20) '(-5 -10 0))
+  (AssertEqual 'MoveInsertPositionUtils (list '(1.5 3.6 0) -5 -2) '(-3.5 1.6 0))
 )
 
 (defun GetInsertPtListTest ()

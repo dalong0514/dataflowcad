@@ -12,9 +12,9 @@
 
 (defun GenerateJoinDrawArrowToElement (insPt fromtoValue drawnumValue relatedIDValue /)
   (GenerateBlockReference insPt "JoinDrawArrowTo" "0DataFlow-GsLcJoinDrawArrow")
-  (GenerateBlockAttribute (MoveInsertPosition insPt 1 4) "FROMTO" fromtoValue "0DataFlow-GsLcJoinDrawArrow" 3)
-  (GenerateBlockAttribute (MoveInsertPosition insPt 1 -1.5) "DRAWNUM" drawnumValue "0DataFlow-GsLcJoinDrawArrow" 3)
-  (GenerateBlockHiddenAttribute (MoveInsertPosition insPt 1 -7) "RELATEDID" relatedIDValue "0DataFlow-GsLcJoinDrawArrow" 3)
+  (GenerateBlockAttribute (MoveInsertPositionUtils insPt 1 4) "FROMTO" fromtoValue "0DataFlow-GsLcJoinDrawArrow" 3)
+  (GenerateBlockAttribute (MoveInsertPositionUtils insPt 1 -1.5) "DRAWNUM" drawnumValue "0DataFlow-GsLcJoinDrawArrow" 3)
+  (GenerateBlockHiddenAttribute (MoveInsertPositionUtils insPt 1 -7) "RELATEDID" relatedIDValue "0DataFlow-GsLcJoinDrawArrow" 3)
   (entmake 
     (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
   )
@@ -23,10 +23,10 @@
 
 (defun GenerateJoinDrawArrowFromElement (insPt pipenumValue fromtoValue drawnumValue relatedIDValue /)
   (GenerateBlockReference insPt "JoinDrawArrowFrom" "0DataFlow-GsLcJoinDrawArrow")
-  (GenerateBlockAttribute (MoveInsertPosition insPt 30 2) "PIPENUM" pipenumValue "0DataFlow-GsLcJoinDrawArrow" 3)
-  (GenerateBlockAttribute (MoveInsertPosition insPt 1 4) "FROMTO" fromtoValue "0DataFlow-GsLcJoinDrawArrow" 3)
-  (GenerateBlockAttribute (MoveInsertPosition insPt 1 -1.5) "DRAWNUM" drawnumValue "0DataFlow-GsLcJoinDrawArrow" 3)
-  (GenerateBlockHiddenAttribute (MoveInsertPosition insPt 1 -7) "RELATEDID" relatedIDValue "0DataFlow-GsLcJoinDrawArrow" 3)
+  (GenerateBlockAttribute (MoveInsertPositionUtils insPt 30 2) "PIPENUM" pipenumValue "0DataFlow-GsLcJoinDrawArrow" 3)
+  (GenerateBlockAttribute (MoveInsertPositionUtils insPt 1 4) "FROMTO" fromtoValue "0DataFlow-GsLcJoinDrawArrow" 3)
+  (GenerateBlockAttribute (MoveInsertPositionUtils insPt 1 -1.5) "DRAWNUM" drawnumValue "0DataFlow-GsLcJoinDrawArrow" 3)
+  (GenerateBlockHiddenAttribute (MoveInsertPositionUtils insPt 1 -7) "RELATEDID" relatedIDValue "0DataFlow-GsLcJoinDrawArrow" 3)
   (entmake 
     (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
   )
@@ -35,9 +35,9 @@
 
 (defun GenerateOnePublicPipeDownArrow (insPt tagValue drawnumValue relatedIDValue /)
   (GenerateBlockReference insPt "PublicPipeDownArrow" "0DataFlow-GsLcPublicPipe")
-  (GenerateVerticallyBlockAttribute (MoveInsertPosition insPt -3.5 -10) "TAG" tagValue "0" 3)
-  (GenerateVerticallyBlockAttribute (MoveInsertPosition insPt 1.2 -10) "DRAWNUM" drawnumValue "0" 3)
-  (GenerateVerticallyBlockHiddenAttribute (MoveInsertPosition insPt 7 -10) "RELATEDID" relatedIDValue "0DataFlow-GsLcPublicPipe" 3)
+  (GenerateVerticallyBlockAttribute (MoveInsertPositionUtils insPt -3.5 -10) "TAG" tagValue "0" 3)
+  (GenerateVerticallyBlockAttribute (MoveInsertPositionUtils insPt 1.2 -10) "DRAWNUM" drawnumValue "0" 3)
+  (GenerateVerticallyBlockHiddenAttribute (MoveInsertPositionUtils insPt 7 -10) "RELATEDID" relatedIDValue "0DataFlow-GsLcPublicPipe" 3)
   (entmake 
     (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
   )
@@ -46,9 +46,9 @@
 
 (defun GenerateOnePublicPipeUpArrow (insPt tagValue drawnumValue relatedIDValue /)
   (GenerateBlockReference insPt "PublicPipeUpArrow" "0DataFlow-GsLcPublicPipe")
-  (GenerateVerticallyBlockAttribute (MoveInsertPosition insPt -3.5 -11.5) "TAG" tagValue "0" 3)
-  (GenerateVerticallyBlockAttribute (MoveInsertPosition insPt 1.2 -11.5) "DRAWNUM" drawnumValue "0" 3)
-  (GenerateVerticallyBlockHiddenAttribute (MoveInsertPosition insPt 7 -11.5) "RELATEDID" relatedIDValue "0DataFlow-GsLcPublicPipe" 3)
+  (GenerateVerticallyBlockAttribute (MoveInsertPositionUtils insPt -3.5 -11.5) "TAG" tagValue "0" 3)
+  (GenerateVerticallyBlockAttribute (MoveInsertPositionUtils insPt 1.2 -11.5) "DRAWNUM" drawnumValue "0" 3)
+  (GenerateVerticallyBlockHiddenAttribute (MoveInsertPositionUtils insPt 7 -11.5) "RELATEDID" relatedIDValue "0DataFlow-GsLcPublicPipe" 3)
   (entmake 
     (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
   )
@@ -57,8 +57,8 @@
 
 (defun GenerateOnePublicPipeUpPipeLine (insPt pipenumValue relatedIDValue /)
   (GenerateBlockReference insPt "PublicPipeUpPipeLine" "0DataFlow-GsLcPublicPipe")
-  (GenerateVerticallyBlockAttribute (MoveInsertPosition insPt -1 -16) "PIPENUM" pipenumValue "0" 3)
-  (GenerateVerticallyBlockHiddenAttribute (MoveInsertPosition insPt -5 -16) "RELATEDID" relatedIDValue "0DataFlow-GsLcPublicPipe" 3)
+  (GenerateVerticallyBlockAttribute (MoveInsertPositionUtils insPt -1 -16) "PIPENUM" pipenumValue "0" 3)
+  (GenerateVerticallyBlockHiddenAttribute (MoveInsertPositionUtils insPt -5 -16) "RELATEDID" relatedIDValue "0DataFlow-GsLcPublicPipe" 3)
   (entmake 
     (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
   )
@@ -67,8 +67,8 @@
 
 (defun GenerateOnePublicPipeDownPipeLine (insPt pipenumValue relatedIDValue /)
   (GenerateBlockReference insPt "PublicPipeDownPipeLine" "0DataFlow-GsLcPublicPipe")
-  (GenerateVerticallyBlockAttribute (MoveInsertPosition insPt -1 -16) "PIPENUM" pipenumValue "0" 3)
-  (GenerateVerticallyBlockHiddenAttribute (MoveInsertPosition insPt -5 -16) "RELATEDID" relatedIDValue "0DataFlow-GsLcPublicPipe" 3)
+  (GenerateVerticallyBlockAttribute (MoveInsertPositionUtils insPt -1 -16) "PIPENUM" pipenumValue "0" 3)
+  (GenerateVerticallyBlockHiddenAttribute (MoveInsertPositionUtils insPt -5 -16) "RELATEDID" relatedIDValue "0DataFlow-GsLcPublicPipe" 3)
   (entmake 
     (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
   )
@@ -82,8 +82,8 @@
                     (cons 2 blockName) (cons 10 insPt) 
               )
       )
-      (GenerateEquipTagText (MoveInsertPosition insPt 0 1) (nth 0 textDataList))
-      (GenerateEquipTagText (MoveInsertPosition insPt 0 -4.5) (nth 1 textDataList))
+      (GenerateEquipTagText (MoveInsertPositionUtils insPt 0 1) (nth 0 textDataList))
+      (GenerateEquipTagText (MoveInsertPositionUtils insPt 0 -4.5) (nth 1 textDataList))
     )
   )
 )
@@ -115,13 +115,6 @@
     (setq i (+ i 1))
   )
   resultList
-)
-
-; Unit Test Compeleted
-(defun MoveInsertPosition (insPt xOffset yOffset / result)
-  (setq result (ReplaceListItemByindexUtils (+ (car insPt) xOffset) 0 insPt))
-  (setq result (ReplaceListItemByindexUtils (+ (nth 1 result) yOffset) 1 result))
-  result
 )
 
 ; get the new inserting position
@@ -522,7 +515,7 @@
 (defun GenerateUpPublicPipe (insPtList dataList /)
   (mapcar '(lambda (x y) 
              (GenerateOnePublicPipeUpArrow x (nth 2 y) (nth 4 y) (nth 0 y))
-             (GenerateOnePublicPipeUpPipeLine (MoveInsertPosition x 0 20) (nth 1 y) (nth 0 y))
+             (GenerateOnePublicPipeUpPipeLine (MoveInsertPositionUtils x 0 20) (nth 1 y) (nth 0 y))
              (GenerateVerticalPolyline x "0DataFlow-GsLcPublicPipeLine" 0.6)
           ) 
           insPtList
@@ -533,7 +526,7 @@
 (defun GenerateDownPublicPipe (insPtList dataList /)
   (mapcar '(lambda (x y) 
              (GenerateOnePublicPipeDownArrow x (nth 3 y) (nth 4 y) (nth 0 y))
-             (GenerateOnePublicPipeDownPipeLine (MoveInsertPosition x 0 20) (nth 1 y) (nth 0 y))
+             (GenerateOnePublicPipeDownPipeLine (MoveInsertPositionUtils x 0 20) (nth 1 y) (nth 0 y))
              (GenerateVerticalPolyline x "0DataFlow-GsLcPublicPipeLine" 0.6)
           ) 
           insPtList
@@ -750,7 +743,7 @@
     (GetRelatedEquipDrawNum (GetRelatedEquipDataByTag (cdr (assoc "to" pipeData))))
     (cdr (assoc "entityhandle" pipeData)) 
   )
-  (GenerateJoinDrawArrowFromElement (MoveInsertPosition insPt 20 0)
+  (GenerateJoinDrawArrowFromElement (MoveInsertPositionUtils insPt 20 0)
     (cdr (assoc "pipenum" pipeData)) 
     (strcat "вт" (cdr (assoc "from" pipeData)))
     (GetRelatedEquipDrawNum (GetRelatedEquipDataByTag (cdr (assoc "from" pipeData))))

@@ -115,14 +115,30 @@
 
 
 ;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+; Utils Functon in GenerateGraph
+
+; Unit Test Compeleted
+(defun MoveInsertPositionUtils (insPt xOffset yOffset / result)
+  (setq result (ReplaceListItemByindexUtils (+ (car insPt) xOffset) 0 insPt))
+  (setq result (ReplaceListItemByindexUtils (+ (nth 1 result) yOffset) 1 result))
+  result
+)
+
+; Utils Functon in GenerateGraph
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+
+
+;;;-------------------------------------------------------------------------;;;
 ; Generate SS Object in CAD
 
 ; refactored at 2021-02-07
 (defun GenerateOneFireFightHPipe (insPt pipenum pipeDiameter relatedIDValue textHeight /) 
   (GenerateBlockReference insPt "FireFightHPipe" "DataflowFireFightPipe")
-  (GenerateBlockAttribute (MoveInsertPosition insPt 150 60) "PIPENUM" pipenum "0" textHeight)
-  (GenerateBlockAttribute (MoveInsertPosition insPt 150 -420) "PIPEDIAMETER" pipeDiameter "0" textHeight)
-  (GenerateBlockHiddenAttribute (MoveInsertPosition insPt 150 -720) "RELATEDID" relatedIDValue "DataflowFireFightPipe" 150)
+  (GenerateBlockAttribute (MoveInsertPositionUtils insPt 150 60) "PIPENUM" pipenum "0" textHeight)
+  (GenerateBlockAttribute (MoveInsertPositionUtils insPt 150 -420) "PIPEDIAMETER" pipeDiameter "0" textHeight)
+  (GenerateBlockHiddenAttribute (MoveInsertPositionUtils insPt 150 -720) "RELATEDID" relatedIDValue "DataflowFireFightPipe" 150)
   (entmake 
     (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
   )

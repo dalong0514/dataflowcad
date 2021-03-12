@@ -548,8 +548,8 @@
   (ReplaceDXFValueByEntityDataUtils 
     entityData 
     '(10 11)
-    (list (MoveInsertPosition (cdr (assoc 10 x)) (car basePosition) (cadr basePosition)) 
-          (MoveInsertPosition (cdr (assoc 11 x)) (car basePosition) (cadr basePosition))
+    (list (MoveInsertPositionUtils (cdr (assoc 10 x)) (car basePosition) (cadr basePosition)) 
+          (MoveInsertPositionUtils (cdr (assoc 11 x)) (car basePosition) (cadr basePosition))
     )
   )
 )
@@ -558,7 +558,7 @@
   (ReplaceDXFValueByEntityDataUtils 
     entityData 
     '(10)
-    (list (MoveInsertPosition (cdr (assoc 10 x)) (car basePosition) (cadr basePosition)) 
+    (list (MoveInsertPositionUtils (cdr (assoc 10 x)) (car basePosition) (cadr basePosition)) 
     )
   )
 )
@@ -566,7 +566,7 @@
 (defun MovePolyLineDataByBasePosition (entityData basePosition / resultList)
   (mapcar '(lambda (x) 
              (if (= (car x) 10) 
-               (setq resultList (append resultList (list (cons 10 (MoveInsertPosition (cdr x) (car basePosition) (cadr basePosition))))))
+               (setq resultList (append resultList (list (cons 10 (MoveInsertPositionUtils (cdr x) (car basePosition) (cadr basePosition))))))
                (setq resultList (append resultList (list x)))
              ) 
              
@@ -619,7 +619,7 @@
   (mapcar '(lambda (x y) 
              (list 
                (car x) 
-               (MoveInsertPosition (cadr y) (- 0 (car (cadr x))) (- 0 (cadr (cadr x))))
+               (MoveInsertPositionUtils (cadr y) (- 0 (car (cadr x))) (- 0 (cadr (cadr x))))
              )
            ) 
     GSDrawBasePositionList
@@ -685,7 +685,7 @@
              (setq blockPropertyNameList (GetGsBzEquipTagPropertyNameList itemData)) 
              (MigrateGsBzEquipTagPropertyValue equipTagData blockPropertyNameList)
              (MigrateGsBzEquipTagPropertyValue equipGraphData blockPropertyNameList)
-             (setq insPt (MoveInsertPosition insPt 0 -15000))
+             (setq insPt (MoveInsertPositionUtils insPt 0 -15000))
           ) 
     lcEquipData
   )  
@@ -695,7 +695,7 @@
 (defun GetInsertBzEquipinsPtList (insPt equipData / resultList insPt) 
   (mapcar '(lambda (x) 
              (setq resultList (append resultList (list insPt)))
-             (setq insPt (MoveInsertPosition insPt 5000 0))
+             (setq insPt (MoveInsertPositionUtils insPt 5000 0))
           ) 
     equipData
   ) 
@@ -743,7 +743,7 @@
 ; 2021-03-10
 (defun InsertGsBzEquipGraph (itemData insPtList gsBzType /) 
   (mapcar '(lambda (x y) 
-             (InsertBlockGsBzEquipGraphStrategy (MoveInsertPosition y 0 3000) "GsBzTank1000LS")
+             (InsertBlockGsBzEquipGraphStrategy (MoveInsertPositionUtils y 0 3000) "GsBzTank1000LS")
              (cons (entlast) (cdr x))
           ) 
     itemData
