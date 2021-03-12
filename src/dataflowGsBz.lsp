@@ -782,7 +782,7 @@
 )
 
 (defun GetGsBzEquipBlockName (dataType / )
-  (strcat "GsBz" dataType "-" "V2000D1200LS")
+  (strcat "GsBz" dataType "-V" "2000" "D" "1200" "LS")
 )
 
 ;;;-------------------------------------------------------------------------;;;
