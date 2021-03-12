@@ -2054,6 +2054,15 @@
   (RegExpReplace volume "(\\d+)(.*)" "$1" nil nil)
 )
 
+; 2021-03-12
+(defun ProcessNullStringUtils (originString / result)
+  (if (/= originString nil) 
+    (setq result originString)
+    (setq result "")
+  )
+  result
+)
+
 ; Extract Data Utils
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;

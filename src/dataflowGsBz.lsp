@@ -782,17 +782,11 @@
 )
 
 (defun GetGsBzEquipBlockName (dataType propertyDictList / equipVolume) 
-  (setq equipVolume (GetEquipVolumeNumString propertyDictList))
+  (setq equipVolume (ExtractEquipVolumeNumStringUtils 
+                      (ProcessNullStringUtils (GetDottedPairValueUtils "volume" propertyDictList))
+                    ))
   ;(princ (strcat "\n" equipVolume))
   (strcat "GsBz" dataType "-V" equipVolume "D" "700" "LS")
-)
-
-(defun GetEquipVolumeNumString (propertyDictList /)
-  (if (/= (GetDottedPairValueUtils "volume" propertyDictList) nil) 
-    (setq result (ExtractEquipVolumeNumStringUtils (GetDottedPairValueUtils "volume" propertyDictList)))
-    (setq result "1000")
-  )
-  result
 )
 
 ;;;-------------------------------------------------------------------------;;;
