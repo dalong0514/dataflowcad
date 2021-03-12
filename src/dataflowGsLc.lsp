@@ -202,7 +202,6 @@
   (InsertBlockUtils insPt blockName "0DataFlow-GsLcInstrument" blockPropertyDict)
 )
 
-
 ; 2021-03-07
 (defun VerifyGsLcInstrumentLayer () 
   (VerifyGsLcLayerByName "0DataFlow-GsLcInstrument")

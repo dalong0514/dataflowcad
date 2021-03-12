@@ -1674,6 +1674,18 @@
   (princ)
 )
 
+; 2021-03-11
+; Isomerism function for InsertBlockUtils, need no propertyDictList
+(defun InsertBlockUtils (insPt blockName layerName / acadObj curDoc insertionPnt modelSpace blockRefObj)
+  (setq acadObj (vlax-get-acad-object))
+  (setq curDoc (vla-get-activedocument acadObj)) 
+  (setq insertionPnt (vlax-3d-point insPt))
+  (setq modelSpace (vla-get-ModelSpace curDoc))
+  (setq blockRefObj (vla-InsertBlock modelSpace insertionPnt blockName 1 1 1 0))
+  (vlax-put-property blockRefObj 'Layer layerName)
+  (princ)
+)
+
 ; Generate CAD Graph Utils Function 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
