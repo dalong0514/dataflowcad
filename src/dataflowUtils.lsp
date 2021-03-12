@@ -2044,14 +2044,22 @@
 
 ; 2021-03-11
 ; @return integer
+; unit test compeleted
 (defun ExtractEquipVolumeNumUtils (volume /) 
   (atoi (RegExpReplace volume "(\\d+)(.*)" "$1" nil nil))
 )
 
 ; 2021-03-12
 ; @return string
-(defun ExtractEquipVolumeNumStringUtils (volume /) 
+(defun ExtractEquipVolumeStringUtils (volume /) 
   (RegExpReplace volume "(\\d+)(.*)" "$1" nil nil)
+)
+
+; 2021-03-12
+; @return string
+; unit test compeleted
+(defun ExtractEquipDiameterStringUtils (equipDiameter /) 
+  (RegExpReplace equipDiameter "([^0-9]*)(\\d+)(.*)" "$2" nil nil)
 )
 
 ; 2021-03-12

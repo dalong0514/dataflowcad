@@ -42,7 +42,14 @@
   (FilterListByTestMemberUtilsTest)
   (FilterListByTestNotMemberUtilsTest)
   (ExtractEquipVolumeNumUtilsTest)
+  (ExtractEquipDiameterStringUtilsTest)
   (DL:PrintTestResults (DL:CountBooleans *testList*))
+)
+
+; 2021-03-12
+(defun ExtractEquipDiameterStringUtilsTest () 
+  (AssertEqual 'ExtractEquipDiameterStringUtils (list "¦Õ700X1000£¨H£©") "700")
+  (AssertEqual 'ExtractEquipDiameterStringUtils (list "¦Õ400x600") "400")
 )
 
 ; 2021-03-11

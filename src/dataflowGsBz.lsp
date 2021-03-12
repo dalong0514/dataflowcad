@@ -781,12 +781,16 @@
   )
 )
 
-(defun GetGsBzEquipBlockName (dataType propertyDictList / equipVolume) 
-  (setq equipVolume (ExtractEquipVolumeNumStringUtils 
+; 2021-03-12
+(defun GetGsBzEquipBlockName (dataType propertyDictList / equipVolume equipDiameter) 
+  (setq equipVolume (ExtractEquipVolumeStringUtils 
                       (ProcessNullStringUtils (GetDottedPairValueUtils "volume" propertyDictList))
                     ))
-  ;(princ (strcat "\n" equipVolume))
-  (strcat "GsBz" dataType "-V" equipVolume "D" "700" "LS")
+  (setq equipDiameter (ExtractEquipDiameterStringUtils 
+                      (ProcessNullStringUtils (GetDottedPairValueUtils "size" propertyDictList))
+                    )) 
+  ;(princ (strcat "\n" equipDiameter))
+  (strcat "GsBz" dataType "-V" equipVolume "D" equipDiameter "LS")
 )
 
 ;;;-------------------------------------------------------------------------;;;
