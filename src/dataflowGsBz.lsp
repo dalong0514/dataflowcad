@@ -63,21 +63,21 @@
 (defun InsertBlockGsBzEquipDefault (insPt /) 
   (VerifyGsBzBlockByName "GsBzEquipDefault")
   (VerifyGsBzLayerByName "0DataFlow-GsBzEquipDefault")
-  (InsertBlockUtils insPt "GsBzEquipDefault" "0DataFlow-GsBzEquipDefault" (list (cons 1 "R")))
+  (InsertBlockByNoPropertyUtils insPt "GsBzEquipDefault" "0DataFlow-GsBzEquipDefault")
 )
 
 ; 2021-03-10
 (defun InsertBlockGsBzEquipTagStrategy (insPt dataType /) 
   (VerifyGsBzBlockByName dataType)
   (VerifyGsBzEquipTagLayer)
-  (InsertBlockUtils insPt dataType "0DataFlow-GsBzEquipTag" (list (cons 1 "R")))
+  (InsertBlockByNoPropertyUtils insPt dataType "0DataFlow-GsBzEquipTag")
 )
 
 ; 2021-03-10
 (defun InsertBlockGsBzEquipGraphStrategy (insPt dataType /) 
   (VerifyGsBzBlockByName dataType)
   (VerifyGsBzEquipLayer)
-  (InsertBlockUtils insPt dataType "0DataFlow-GsBzEquip" (list (cons 1 "R")))
+  (InsertBlockByNoPropertyUtils insPt dataType "0DataFlow-GsBzEquip")
 )
 
 ; Generate GsBzBlocks
@@ -765,10 +765,10 @@
 )
 
 ; 2021-03-10
-(defun InsertGsBzEquipGraphV2 (itemData insPtList dataType / gsBzType) 
+(defun InsertGsBzEquipGraphV2 (itemData insPtList dataType / gsBzEquipBlockName) 
   (mapcar '(lambda (x y) 
-             (setq gsBzType (GetGsBzType dataType))
-             (InsertBlockGsBzEquipGraphStrategy (MoveInsertPositionUtils y 0 3000) gsBzType)
+             (setq gsBzEquipBlockName (GetGsBzEquipBlockName dataType))
+             (InsertBlockGsBzEquipGraphStrategy (MoveInsertPositionUtils y 0 3000) gsBzEquipBlockName)
              (cons (entlast) (cdr x))
           ) 
     itemData
@@ -776,7 +776,7 @@
   )  
 )
 
-(defun GetGsBzType (dataType / )
+(defun GetGsBzEquipBlockName (dataType / )
   (strcat "GsBz" "Tank" "-" "V2000D1200LS")
 )
 
