@@ -8,7 +8,7 @@
 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
-; utils Function for  Equipemnt Layoutt
+; utils Function for  Equipemnt Layout
 
 ; 2021-03-11
 (defun GetAllGsBzEquipEntityNameList () 
@@ -24,10 +24,21 @@
   )   
 )
 
-; utils Function for  Equipemnt Layoutt
-;;;-------------------------------------------------------------------------;;;
-;;;-------------------------------------------------------------------------;;;
+; 2021-03-09
+(defun VerifyGsBzEquipTagLayer () 
+  (VerifyGsBzLayerByName "0DataFlow-GsBzEquipTag")
+  (VerifyGsBzLayerByName "0DataFlow-GsBzEquipTagComment")
+)
 
+; 2021-03-09
+(defun VerifyGsBzEquipLayer () 
+  (VerifyGsBzLayerByName "0DataFlow-GsBzEquip")
+  (VerifyGsBzLayerByName "0DataFlow-GsBzEquipComment")
+)
+
+; utils Function for  Equipemnt Layout
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
 
 
 ;;;-------------------------------------------------------------------------;;;
@@ -48,11 +59,11 @@
   (VerifyGsBzLayerByName "0DataFlow-GsBzCleanAirConditionComment")
 )
 
-; 2021-03-09
-(defun InsertBlockGsBzReactor (insPt /) 
-  (VerifyGsBzBlockByName "GsBzReactor")
-  (VerifyGsBzEquipTagLayer)
-  (InsertBlockUtils insPt "GsBzReactor" "0DataFlow-GsBzEquipTag" (list (cons 1 "R")))
+; 2021-03-11
+(defun InsertBlockGsBzEquipDefault (insPt /) 
+  (VerifyGsBzBlockByName "GsBzEquipDefault")
+  (VerifyGsBzLayerByName "0DataFlow-GsBzEquipDefault")
+  (InsertBlockUtils insPt "GsBzEquipDefault" "0DataFlow-GsBzEquipDefault" (list (cons 1 "R")))
 )
 
 ; 2021-03-10

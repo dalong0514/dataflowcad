@@ -492,18 +492,6 @@
   (VerifyGsLcLayerByName "0DataFlow-GsLcEquipTagComment")
 )
 
-; 2021-03-09
-(defun VerifyGsBzEquipTagLayer () 
-  (VerifyGsBzLayerByName "0DataFlow-GsBzEquipTag")
-  (VerifyGsBzLayerByName "0DataFlow-GsBzEquipTagComment")
-)
-
-; 2021-03-09
-(defun VerifyGsBzEquipLayer () 
-  (VerifyGsBzLayerByName "0DataFlow-GsBzEquip")
-  (VerifyGsBzLayerByName "0DataFlow-GsBzEquipComment")
-)
-
 ; logic for generate PublicPipe
 (defun InsertPublicPipe (dataList pipeSourceDirection / lastEntityName insPt insPtList) 
   (VerifyGsLcBlockPublicPipe)
