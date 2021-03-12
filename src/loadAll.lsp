@@ -9,6 +9,8 @@
 (setq *dataflowLispNums* (1+ *dataflowLispNums*))
 (vl-load-all "D:\\dataflowcad\\src\\dataflowGs.lsp")
 (setq *dataflowLispNums* (1+ *dataflowLispNums*))
+(vl-load-all "D:\\dataflowcad\\src\\dataflowGsLc.lsp")
+(setq *dataflowLispNums* (1+ *dataflowLispNums*))
 (vl-load-all "D:\\dataflowcad\\src\\dataflowGsBz.lsp")
 (setq *dataflowLispNums* (1+ *dataflowLispNums*))
 (vl-load-all "D:\\dataflowcad\\src\\dataflowSs.lsp")
