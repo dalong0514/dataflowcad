@@ -119,10 +119,9 @@
 ; Utils Functon in GenerateGraph
 
 ; Unit Test Compeleted
-(defun MoveInsertPositionUtils (insPt xOffset yOffset / result)
-  (setq result (ReplaceListItemByindexUtils (+ (car insPt) xOffset) 0 insPt))
-  (setq result (ReplaceListItemByindexUtils (+ (nth 1 result) yOffset) 1 result))
-  result
+; refactored at 2021-03-12
+(defun MoveInsertPositionUtils (insPt xOffset yOffset / result) 
+  (list (+ (car insPt) xOffset) (+ (cadr insPt) yOffset) (caddr insPt))
 )
 
 ; Utils Functon in GenerateGraph
