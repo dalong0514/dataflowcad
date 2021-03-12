@@ -30,6 +30,15 @@
 )
 
 ; 2021-03-03
+(defun StealAllGsBzEquipBlocks ()
+  (Steal (GetGsBzModulesPath) 
+    '(
+      ("Blocks" ("GsBz*"))
+    )
+  ) 
+)
+
+; 2021-03-03
 (defun StealAllGsLcLayers ()
   (Steal (GetGsLcModulesPath) 
     '(

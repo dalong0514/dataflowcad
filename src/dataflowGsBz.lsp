@@ -36,6 +36,19 @@
   (VerifyGsBzLayerByName "0DataFlow-GsBzEquipComment")
 )
 
+; 2021-03-12
+(defun GetAllGsBzEquipBlockNameList (/ entityData resultList) 
+  (StealAllGsBzEquipBlocks)
+  (setq entityData (tblnext "block" T)) 
+  (while entityData 
+    (if (wcmatch (cdr (assoc 2 entityData)) "GsBz*") 
+      (setq resultList (append resultList (list (cdr (assoc 2 entityData)))))
+    )
+    (setq entityData (tblnext "block")) 
+  ) 
+  resultList
+)
+
 ; utils Function for  Equipemnt Layout
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
