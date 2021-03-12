@@ -1676,7 +1676,7 @@
 
 ; 2021-03-11
 ; Isomerism function for InsertBlockUtils, need no propertyDictList
-(defun InsertBlockUtils (insPt blockName layerName / acadObj curDoc insertionPnt modelSpace blockRefObj)
+(defun InsertBlockByNoPropertyUtils (insPt blockName layerName / acadObj curDoc insertionPnt modelSpace blockRefObj)
   (setq acadObj (vlax-get-acad-object))
   (setq curDoc (vla-get-activedocument acadObj)) 
   (setq insertionPnt (vlax-3d-point insPt))

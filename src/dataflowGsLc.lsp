@@ -300,7 +300,7 @@
 (defun InsertGsLcBlockPipe (insPt blockName /) 
   (VerifyGsLcBlockByName blockName)
   (VerifyGsLcPipeLayer)
-  (InsertBlockUtils insPt blockName "0DataFlow-GsLcPipe")
+  (InsertBlockByNoPropertyUtils insPt blockName "0DataFlow-GsLcPipe")
 )
 
 ; 2021-03-11
