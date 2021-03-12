@@ -271,44 +271,52 @@
 
 
 ; logic for generate Pipe
-; 2021-03-07
+; refactored at 2021-03-11
 (defun c:InsertBlockPipeArrowLeft (/ ss insPt) 
   (prompt "\n选取设备块和管道块：")
   (setq ss (GetBlockSSBySelectByDataTypeUtils "EquipmentAndPipe"))
   (setq insPt (getpoint "\n选取水平管道插入点："))
-  (InsertGsLcBlockPipe insPt "PipeArrowLeft" (GetGsLcBlockPipePropertyDict ss))
+  (InsertGsLcBlockPipe insPt "PipeArrowLeft")
+  (ModifyMultiplePropertyForOneBlockUtils (entlast) 
+    '("PIPENUM" "VERSION" "SUBSTANCE" "TEMP" "PRESSURE" "FROM")  
+    (GetGsLcBlockPipePropertyValueList ss)) 
+  ;(princ)
 )
 
 ; 2021-03-07
+; refactored at 2021-03-11
 (defun c:InsertBlockPipeArrowUp (/ ss insPt) 
   (prompt "\n选取设备块和管道块：")
   (setq ss (GetBlockSSBySelectByDataTypeUtils "EquipmentAndPipe")) 
   (setq insPt (getpoint "\n选取垂直管道插入点："))
-  (InsertGsLcBlockPipe insPt "PipeArrowUp" (GetGsLcBlockPipePropertyDict ss))
+  (InsertGsLcBlockPipe insPt "PipeArrowUp")
+  (ModifyMultiplePropertyForOneBlockUtils (entlast) 
+    '("PIPENUM" "VERSION" "SUBSTANCE" "TEMP" "PRESSURE" "FROM")  
+    (GetGsLcBlockPipePropertyValueList ss)) 
 )
 
 ; 2021-03-07
-(defun InsertGsLcBlockPipe (insPt blockName blockPropertyDict /) 
+; refactored at 2021-03-11
+(defun InsertGsLcBlockPipe (insPt blockName /) 
   (VerifyGsLcBlockByName blockName)
   (VerifyGsLcPipeLayer)
-  (InsertBlockUtils insPt blockName "0DataFlow-GsLcPipe" blockPropertyDict)
+  (InsertBlockUtils insPt blockName "0DataFlow-GsLcPipe")
 )
 
-; 2021-03-07
-(defun GetGsLcBlockPipePropertyDict (ss / propertyIDList sourceData equipmentData pipeData resultList)
-  (setq propertyIDList (list (cons 0 "entityhandle") (cons 2 "substance") (cons 3 "temp") (cons 4 "pressure") (cons 6 "tag")))
+; 2021-03-11
+(defun GetGsLcBlockPipePropertyValueList (ss / sourceData equipmentData pipeData resultList)
   (setq sourceData (GetBlockAllPropertyDictUtils (GetEntityNameListBySSUtils ss)))
   (setq equipmentData (FilterBlockEquipmentDataUtils sourceData))
   (setq pipeData (FilterBlockPipeDataUtils sourceData))
   (if (/= equipmentData nil) 
       (mapcar '(lambda (x) 
-                (setq resultList (append resultList (list (cons (car x) (cdr (assoc (cdr x) (car equipmentData)))))))
+                (setq resultList (append resultList (list (cdr (assoc x (car equipmentData))))))
               ) 
-        propertyIDList
+        '("entityhandle" "substance" "temp" "pressure" "tag")
       ) 
   )
   (if (/= pipeData nil) 
-    (setq resultList (append resultList (list (cons 1 (cdr (assoc "pipenum" (car pipeData)))))))
+    (setq resultList (cons (cdr (assoc "pipenum" (car pipeData))) resultList))
   ) 
   resultList
 )
