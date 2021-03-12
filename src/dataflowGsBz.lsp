@@ -993,16 +993,39 @@
 )
 
 ; 2021-03-11
-(defun GenerateGsBzEquipTagByImport (importedDataList dataType sortedTypeResult / insPt dataList insPtList equipTagData) 
+(defun GenerateGsBzEquipTagByImport (importedDataList dataType sortedTypeResult / allGsBzEquipBlockNameList insPt dataList insPtList equipTagData equipPropertyTagDictList) 
+  (setq allGsBzEquipBlockNameList (GetAllGsBzEquipBlockNameList))
+  (VerifyGsBzEquipLayer)
   (setq insPt (getpoint "\n选取设备位号插入点："))
   ; sorted by EquipTag
   (setq dataList (SortEquipDataStrategy importedDataList sortedTypeResult))
   (setq insPtList (GetInsertBzEquipinsPtList insPt dataList))
   (setq equipTagData (InsertGsBzEquipTag dataList insPtList dataType))
-  
-  (setq equipGraphData (InsertGsBzEquipGraph dataList insPtList dataType))
   (UpdateGsBzEquipTagPropertyValue equipTagData (GetPropertyNameListStrategy dataType))
-  (UpdateGsBzEquipTagPropertyValue equipGraphData '("TAG"))
+  (setq equipPropertyTagDictList (GetGsBzEquipPropertyTagDictListStrategy dataType dataList))
+  (setq equipGraphData (InsertGsBzEquipGraph equipPropertyTagDictList insPtList dataType allGsBzEquipBlockNameList))
+  (MigrateGsBzEquipTagPropertyValue equipGraphData (GetPropertyNameListStrategy dataType))
+)
+
+(defun GetGsBzEquipPropertyTagDictListStrategy (dataType dataList / resultList)
+  (setq resultList 
+    (mapcar '(lambda (x) 
+                (mapcar '(lambda (xx yy) 
+                          (cons (strcase xx T) yy)
+                        ) 
+                  (GetPropertyNameListStrategy dataType)
+                  (cdr x)
+                ) 
+            ) 
+      dataList
+    )  
+  )
+  (mapcar '(lambda (x) 
+             ; simulate the frist item
+             (cons (cons 0 "entity") x)
+          ) 
+    resultList
+  ) 
 )
 
 (defun SortEquipDataStrategy (dataList sortedType /)
