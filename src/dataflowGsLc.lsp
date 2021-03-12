@@ -1,4 +1,4 @@
-;å†¯å¤§é¾™ç¼–äºŽ 2020-2021 å¹´
+;·ë´óÁú±àÓÚ 2020-2021 Äê
 (if (= *comLibraryStatus* nil) 
   (progn 
     (vl-load-com)
@@ -8,27 +8,197 @@
 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
+; Generate GS Entity Object in CAD
+
+(defun GenerateJoinDrawArrowToElement (insPt fromtoValue drawnumValue relatedIDValue /)
+  (GenerateBlockReference insPt "JoinDrawArrowTo" "0DataFlow-GsLcJoinDrawArrow")
+  (GenerateBlockAttribute (MoveInsertPosition insPt 1 4) "FROMTO" fromtoValue "0DataFlow-GsLcJoinDrawArrow" 3)
+  (GenerateBlockAttribute (MoveInsertPosition insPt 1 -1.5) "DRAWNUM" drawnumValue "0DataFlow-GsLcJoinDrawArrow" 3)
+  (GenerateBlockHiddenAttribute (MoveInsertPosition insPt 1 -7) "RELATEDID" relatedIDValue "0DataFlow-GsLcJoinDrawArrow" 3)
+  (entmake 
+    (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
+  )
+  (princ)
+)
+
+(defun GenerateJoinDrawArrowFromElement (insPt pipenumValue fromtoValue drawnumValue relatedIDValue /)
+  (GenerateBlockReference insPt "JoinDrawArrowFrom" "0DataFlow-GsLcJoinDrawArrow")
+  (GenerateBlockAttribute (MoveInsertPosition insPt 30 2) "PIPENUM" pipenumValue "0DataFlow-GsLcJoinDrawArrow" 3)
+  (GenerateBlockAttribute (MoveInsertPosition insPt 1 4) "FROMTO" fromtoValue "0DataFlow-GsLcJoinDrawArrow" 3)
+  (GenerateBlockAttribute (MoveInsertPosition insPt 1 -1.5) "DRAWNUM" drawnumValue "0DataFlow-GsLcJoinDrawArrow" 3)
+  (GenerateBlockHiddenAttribute (MoveInsertPosition insPt 1 -7) "RELATEDID" relatedIDValue "0DataFlow-GsLcJoinDrawArrow" 3)
+  (entmake 
+    (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
+  )
+  (princ)
+)
+
+(defun GenerateOnePublicPipeDownArrow (insPt tagValue drawnumValue relatedIDValue /)
+  (GenerateBlockReference insPt "PublicPipeDownArrow" "0DataFlow-GsLcPublicPipe")
+  (GenerateVerticallyBlockAttribute (MoveInsertPosition insPt -3.5 -10) "TAG" tagValue "0" 3)
+  (GenerateVerticallyBlockAttribute (MoveInsertPosition insPt 1.2 -10) "DRAWNUM" drawnumValue "0" 3)
+  (GenerateVerticallyBlockHiddenAttribute (MoveInsertPosition insPt 7 -10) "RELATEDID" relatedIDValue "0DataFlow-GsLcPublicPipe" 3)
+  (entmake 
+    (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
+  )
+  (princ)
+)
+
+(defun GenerateOnePublicPipeUpArrow (insPt tagValue drawnumValue relatedIDValue /)
+  (GenerateBlockReference insPt "PublicPipeUpArrow" "0DataFlow-GsLcPublicPipe")
+  (GenerateVerticallyBlockAttribute (MoveInsertPosition insPt -3.5 -11.5) "TAG" tagValue "0" 3)
+  (GenerateVerticallyBlockAttribute (MoveInsertPosition insPt 1.2 -11.5) "DRAWNUM" drawnumValue "0" 3)
+  (GenerateVerticallyBlockHiddenAttribute (MoveInsertPosition insPt 7 -11.5) "RELATEDID" relatedIDValue "0DataFlow-GsLcPublicPipe" 3)
+  (entmake 
+    (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
+  )
+  (princ)
+)
+
+(defun GenerateOnePublicPipeUpPipeLine (insPt pipenumValue relatedIDValue /)
+  (GenerateBlockReference insPt "PublicPipeUpPipeLine" "0DataFlow-GsLcPublicPipe")
+  (GenerateVerticallyBlockAttribute (MoveInsertPosition insPt -1 -16) "PIPENUM" pipenumValue "0" 3)
+  (GenerateVerticallyBlockHiddenAttribute (MoveInsertPosition insPt -5 -16) "RELATEDID" relatedIDValue "0DataFlow-GsLcPublicPipe" 3)
+  (entmake 
+    (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
+  )
+  (princ)
+)
+
+(defun GenerateOnePublicPipeDownPipeLine (insPt pipenumValue relatedIDValue /)
+  (GenerateBlockReference insPt "PublicPipeDownPipeLine" "0DataFlow-GsLcPublicPipe")
+  (GenerateVerticallyBlockAttribute (MoveInsertPosition insPt -1 -16) "PIPENUM" pipenumValue "0" 3)
+  (GenerateVerticallyBlockHiddenAttribute (MoveInsertPosition insPt -5 -16) "RELATEDID" relatedIDValue "0DataFlow-GsLcPublicPipe" 3)
+  (entmake 
+    (list (cons 0 "SEQEND") (cons 100 "AcDbEntity"))
+  )
+  (princ)
+)
+
+(defun GenerateOneEntityObjectElement (insPt textDataList blockName /) 
+  (cond 
+    ((= blockName "EquipTagV2") 
+      (entmake (list (cons 0 "INSERT") (cons 100 "AcDbEntity") (cons 100 "AcDbBlockReference") 
+                    (cons 2 blockName) (cons 10 insPt) 
+              )
+      )
+      (GenerateEquipTagText (MoveInsertPosition insPt 0 1) (nth 0 textDataList))
+      (GenerateEquipTagText (MoveInsertPosition insPt 0 -4.5) (nth 1 textDataList))
+    )
+  )
+)
+
+(defun GenerateEntityObjectElement (blockName insPtList dataList /)
+  (mapcar '(lambda (x y) 
+             (GenerateOneEntityObjectElement x y blockName)
+          ) 
+          insPtList
+          dataList
+  )
+)
+
+(defun c:EquipTag (/ ss equipInfoList insPt insPtList)
+  (VerifyGsLcBlockByName "EquipTagV2")
+  (setq ss (GetEquipmentSSBySelectUtils))
+  (setq equipInfoList (GetEquipTagList ss))
+  ; merge equipInfoList by equipTag
+  (setq equipInfoList (vl-sort equipInfoList '(lambda (x y) (< (car x) (car y)))))
+  (setq insPt (getpoint "\nÑ¡È¡Éè±¸Î»ºÅµÄ²åÈëµã£º"))
+  (setq insPtList (GetInsertPtListUtils insPt (GenerateSortedNumByList equipInfoList 0) 30))
+  (GenerateEntityObjectElement "EquipTagV2" insPtList equipInfoList)
+)
+
+; Unit Test Completed
+(defun GenerateSortedNumByList (originList i / resultList)
+  (repeat (length originList) 
+    (setq resultList (append resultList (list i)))
+    (setq i (+ i 1))
+  )
+  resultList
+)
+
+; Unit Test Compeleted
+(defun MoveInsertPosition (insPt xOffset yOffset / result)
+  (setq result (ReplaceListItemByindexUtils (+ (car insPt) xOffset) 0 insPt))
+  (setq result (ReplaceListItemByindexUtils (+ (nth 1 result) yOffset) 1 result))
+  result
+)
+
+; get the new inserting position
+; Unit Test Compeleted
+(defun GetInsertPt (insPt i removeDistance /)
+  (ReplaceListItemByindexUtils (+ (car insPt) (* i removeDistance)) 0 insPt)
+)
+
+; Unit Test Compeleted
+(defun GetInsertPtListUtils (insPt SortedNumByList removeDistance / resultList)
+  (mapcar '(lambda (x) (GetInsertPt insPt x removeDistance)) 
+    SortedNumByList
+  )
+)
+
+(defun GetEquipTagList (ss / i ent blk entx value equipInfoList equipTag equipName)
+  (if (/= ss nil)
+    (progn
+      (setq i 0)
+      (repeat (sslength ss)
+        (if (/= nil (ssname ss i))
+          (progn
+              ; get the entity information of the i(th) block
+            (setq ent (entget (ssname ss i)))
+              ; save the entity name of the i(th) block
+            (setq blk (ssname ss i))
+              ; get the property information
+            (setq entx (entget (entnext (cdr (assoc -1 ent)))))
+            (while (= "ATTRIB" (cdr (assoc 0 entx)))
+              (setq value (cdr (assoc 2 entx)))
+              (if (= value "TAG")
+                    (setq equipTag (append equipTag (list (cdr (assoc 1 entx)))))
+              )
+              (if (= value "NAME")
+                    (setq equipName (append equipName (list (cdr (assoc 1 entx)))))
+              )
+                ; get the next property information
+              (setq entx (entget (entnext (cdr (assoc -1 entx)))))
+            )
+            (entupd blk)
+            (setq i (+ 1 i))
+          )
+        )
+      )
+    )
+  )
+  (setq equipInfoList (mapcar '(lambda (x y) (list x y)) equipTag equipName))
+)
+
+; Generate SS Entity Object in CAD
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+
+
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
 ; Generate GsLcBlocks
 
 ; logic for generate Instrument
 (defun c:InsertBlockInstrumentP (/ ss insPt) 
-  (prompt "\né€‰å–è®¾å¤‡å—å’Œä»ªè¡¨å—ï¼š")
+  (prompt "\nÑ¡È¡Éè±¸¿éºÍÒÇ±í¿é£º")
   (setq ss (GetBlockSSBySelectByDataTypeUtils "InstrumentAndEquipmentAndPipe")) 
-  (setq insPt (getpoint "\né€‰å–é›†ä¸­ä»ªè¡¨æ’å…¥ç‚¹ï¼š"))
+  (setq insPt (getpoint "\nÑ¡È¡¼¯ÖÐÒÇ±í²åÈëµã£º"))
   (InsertGsLcBlockInstrument insPt "InstrumentP" (GetGsLcBlockInstrumentPropertyDict ss "InstrumentP")) 
 )
 
 (defun c:InsertBlockInstrumentL (/ ss insPt) 
-  (prompt "\né€‰å–è®¾å¤‡å—å’Œä»ªè¡¨å—ï¼š")
+  (prompt "\nÑ¡È¡Éè±¸¿éºÍÒÇ±í¿é£º")
   (setq ss (GetBlockSSBySelectByDataTypeUtils "InstrumentAndEquipmentAndPipe"))  
-  (setq insPt (getpoint "\né€‰å–å°±åœ°ä»ªè¡¨æ’å…¥ç‚¹ï¼š"))
+  (setq insPt (getpoint "\nÑ¡È¡¾ÍµØÒÇ±í²åÈëµã£º"))
   (InsertGsLcBlockInstrument insPt "InstrumentL" (GetGsLcBlockInstrumentPropertyDict ss "InstrumentL")) 
 )
 
 (defun c:InsertBlockInstrumentSIS (/ ss insPt) 
-  (prompt "\né€‰å–è®¾å¤‡å—å’Œä»ªè¡¨å—ï¼š")
+  (prompt "\nÑ¡È¡Éè±¸¿éºÍÒÇ±í¿é£º")
   (setq ss (GetBlockSSBySelectByDataTypeUtils "InstrumentAndEquipmentAndPipe"))  
-  (setq insPt (getpoint "\né€‰å–SISä»ªè¡¨æ’å…¥ç‚¹ï¼š"))
+  (setq insPt (getpoint "\nÑ¡È¡SISÒÇ±í²åÈëµã£º"))
   (InsertGsLcBlockInstrument insPt "InstrumentSIS" (GetGsLcBlockInstrumentPropertyDict ss "InstrumentP")) 
 )
 
@@ -111,17 +281,17 @@
 ; logic for generate Pipe
 ; 2021-03-07
 (defun c:InsertBlockPipeArrowLeft (/ ss insPt) 
-  (prompt "\né€‰å–è®¾å¤‡å—å’Œç®¡é“å—ï¼š")
+  (prompt "\nÑ¡È¡Éè±¸¿éºÍ¹ÜµÀ¿é£º")
   (setq ss (GetBlockSSBySelectByDataTypeUtils "EquipmentAndPipe"))
-  (setq insPt (getpoint "\né€‰å–æ°´å¹³ç®¡é“æ’å…¥ç‚¹ï¼š"))
+  (setq insPt (getpoint "\nÑ¡È¡Ë®Æ½¹ÜµÀ²åÈëµã£º"))
   (InsertGsLcBlockPipe insPt "PipeArrowLeft" (GetGsLcBlockPipePropertyDict ss))
 )
 
 ; 2021-03-07
 (defun c:InsertBlockPipeArrowUp (/ ss insPt) 
-  (prompt "\né€‰å–è®¾å¤‡å—å’Œç®¡é“å—ï¼š")
+  (prompt "\nÑ¡È¡Éè±¸¿éºÍ¹ÜµÀ¿é£º")
   (setq ss (GetBlockSSBySelectByDataTypeUtils "EquipmentAndPipe")) 
-  (setq insPt (getpoint "\né€‰å–åž‚ç›´ç®¡é“æ’å…¥ç‚¹ï¼š"))
+  (setq insPt (getpoint "\nÑ¡È¡´¹Ö±¹ÜµÀ²åÈëµã£º"))
   (InsertGsLcBlockPipe insPt "PipeArrowUp" (GetGsLcBlockPipePropertyDict ss))
 )
 
@@ -160,17 +330,17 @@
 ; logic for generate OuterPipeRight
 ; 2021-03-08
 (defun c:InsertBlockOuterPipeRight (/ ss insPt) 
-  (prompt "\né€‰å–ç®¡é“å—ï¼š")
+  (prompt "\nÑ¡È¡¹ÜµÀ¿é£º")
   (setq ss (GetBlockSSBySelectByDataTypeUtils "Pipe"))
-  (setq insPt (getpoint "\né€‰å–å¤–ç®¡å—çš„æ’å…¥ç‚¹ï¼š"))
+  (setq insPt (getpoint "\nÑ¡È¡Íâ¹Ü¿éµÄ²åÈëµã£º"))
   (InsertGsLcBlockOuterPipe insPt "OuterPipeRight" (GetGsLcBlockOuterPipePropertyDict ss))
 )
 
 ; 2021-03-08
 (defun c:InsertBlockOuterPipeLeft (/ ss insPt) 
-  (prompt "\né€‰å–ç®¡é“å—ï¼š")
+  (prompt "\nÑ¡È¡¹ÜµÀ¿é£º")
   (setq ss (GetBlockSSBySelectByDataTypeUtils "Pipe"))
-  (setq insPt (getpoint "\né€‰å–å¤–ç®¡å—çš„æ’å…¥ç‚¹ï¼š"))
+  (setq insPt (getpoint "\nÑ¡È¡Íâ¹Ü¿éµÄ²åÈëµã£º"))
   (InsertGsLcBlockOuterPipe insPt "OuterPipeLeft" (GetGsLcBlockOuterPipePropertyDict ss))
 )
 
@@ -196,7 +366,423 @@
   resultList
 )
 
+; logic for generate PipeClassChange
+; 2021-03-08
+(defun c:InsertBlockPipeClassChange (/ ss insPt) 
+  (prompt "\nÑ¡È¡°üº¬µÈ¼¶ºÅÐÅÏ¢µÄ 2 ¸ö¹ÜµÀ¿é£º")
+  (setq ss (GetBlockSSBySelectByDataTypeUtils "Pipe"))
+  (setq insPt (getpoint "\nÑ¡È¡±äµÈ¼¶¿éµÄ²åÈëµã£º"))
+  (InsertGsLcBlockPipeClassChange insPt "PipeClassChange" (GetGsLcBlockPipeClassChangePropertyDict ss))
+)
 
+; 2021-03-08
+(defun InsertGsLcBlockPipeClassChange (insPt blockName blockPropertyDict /) 
+  (VerifyGsLcBlockByName blockName)
+  (VerifyGsLcValveLayer)
+  (InsertBlockUtils insPt blockName "0DataFlow-GsLcValve" blockPropertyDict)
+)
+
+; 2021-03-07
+(defun VerifyGsLcValveLayer () 
+  (VerifyGsLcLayerByName "0DataFlow-GsLcValve")
+  (VerifyGsLcLayerByName "0DataFlow-GsLcValveComment")
+)
+
+; 2021-03-08
+(defun GetGsLcBlockPipeClassChangePropertyDict (ss / pipeData resultList)
+  (setq pipeData (GetBlockAllPropertyDictUtils (GetEntityNameListBySSUtils ss)))
+  (if (/= pipeData nil) 
+    (setq resultList (list (cons 1 (ExtractGsPipeClassUtils (GetDottedPairValueUtils "pipenum" (car pipeData)))) 
+                       (cons 2 (ExtractGsPipeClassUtils (GetDottedPairValueUtils "pipenum" (cadr pipeData))))
+                     ))
+  ) 
+  resultList
+)
+
+; logic for generate Reducer
+; 2021-03-08
+(defun c:InsertBlockReducer (/ ss insPt) 
+  (prompt "\nÑ¡È¡°üº¬¹Ü¾¶ÐÅÏ¢µÄ 2 ¸ö¹ÜµÀ¿é£º")
+  (setq ss (GetBlockSSBySelectByDataTypeUtils "Pipe"))
+  (setq insPt (getpoint "\nÑ¡È¡Òì¾¶¹Ü¿éµÄ²åÈëµã£º"))
+  (InsertGsLcBlockReducer insPt "Reducer" (GetGsLcBlockReducerPropertyDict ss))
+)
+
+; 2021-03-08
+(defun InsertGsLcBlockReducer (insPt blockName blockPropertyDict /) 
+  (VerifyGsLcBlockByName blockName)
+  (VerifyGsLcValveLayer)
+  (InsertBlockUtils insPt blockName "0DataFlow-GsLcValve" blockPropertyDict)
+)
+
+; 2021-03-08
+(defun GetGsLcBlockReducerPropertyDict (ss / pipeData resultList)
+  (setq pipeData (GetBlockAllPropertyDictUtils (GetEntityNameListBySSUtils ss)))
+  (if (/= pipeData nil) 
+    (setq resultList (list (cons 1 
+                              (strcat (ExtractGsPipeDiameterUtils (GetDottedPairValueUtils "pipenum" (car pipeData))) 
+                                      "x"
+                                      (ExtractGsPipeDiameterUtils (GetDottedPairValueUtils "pipenum" (cadr pipeData))))
+                           )
+                     ))
+  ) 
+  resultList
+)
+
+; logic for generate EquipTag
+; 2021-03-07 refactored
+(defun c:InsertBlockGsLcReactor (/ insPt) 
+  (setq insPt (getpoint "\nÑ¡È¡·´Ó¦¸ªÎ»ºÅ²åÈëµã£º"))
+  (VerifyGsLcBlockByName "Reactor")
+  (VerifyGsLcEquipTagLayer)
+  (InsertBlockUtils insPt "Reactor" "0DataFlow-GsLcEquipTag" (list (cons 1 "R")))
+)
+
+; 2021-03-07 refactored
+(defun c:InsertBlockGsLcTank (/ insPt) 
+  (setq insPt (getpoint "\nÑ¡È¡´¢¹ÞÎ»ºÅ²åÈëµã£º"))
+  (VerifyGsLcBlockByName "Tank")
+  (VerifyGsLcEquipTagLayer)
+  (InsertBlockUtils insPt "Tank" "0DataFlow-GsLcEquipTag" (list (cons 1 "V")))
+)
+
+; 2021-03-07
+(defun c:InsertBlockGsLcPump (/ insPt) 
+  (setq insPt (getpoint "\nÑ¡È¡ÊäËÍ±ÃÎ»ºÅ²åÈëµã£º"))
+  (VerifyGsLcBlockByName "Pump")
+  (VerifyGsLcEquipTagLayer)
+  (InsertBlockUtils insPt "Pump" "0DataFlow-GsLcEquipTag" (list (cons 1 "P")))
+)
+
+; 2021-03-07
+(defun c:InsertBlockGsLcHeater (/ insPt) 
+  (setq insPt (getpoint "\nÑ¡È¡»»ÈÈÆ÷Î»ºÅ²åÈëµã£º"))
+  (VerifyGsLcBlockByName "Heater")
+  (VerifyGsLcEquipTagLayer)
+  (InsertBlockUtils insPt "Heater" "0DataFlow-GsLcEquipTag" (list (cons 1 "E")))
+)
+
+; 2021-03-07
+(defun c:InsertBlockGsLcCentrifuge (/ insPt) 
+  (setq insPt (getpoint "\nÑ¡È¡ÀëÐÄ»úÎ»ºÅ²åÈëµã£º"))
+  (VerifyGsLcBlockByName "Centrifuge")
+  (VerifyGsLcEquipTagLayer)
+  (InsertBlockUtils insPt "Centrifuge" "0DataFlow-GsLcEquipTag" (list (cons 1 "M")))
+)
+
+; 2021-03-07
+(defun c:InsertBlockGsLcVacuum (/ insPt) 
+  (setq insPt (getpoint "\nÑ¡È¡Õæ¿Õ±ÃÎ»ºÅ²åÈëµã£º"))
+  (VerifyGsLcBlockByName "Vacuum")
+  (VerifyGsLcEquipTagLayer)
+  (InsertBlockUtils insPt "Vacuum" "0DataFlow-GsLcEquipTag" (list (cons 1 "P")))
+)
+
+; 2021-03-07
+(defun c:InsertBlockGsLcCustomEquip (/ insPt) 
+  (setq insPt (getpoint "\nÑ¡È¡×Ô¶¨ÒåÉè±¸Î»ºÅ²åÈëµã£º"))
+  (VerifyGsLcBlockByName "CustomEquip")
+  (VerifyGsLcEquipTagLayer)
+  (InsertBlockUtils insPt "CustomEquip" "0DataFlow-GsLcEquipTag" (list (cons 1 "X")))
+)
+
+; 2021-03-07
+(defun VerifyGsLcEquipTagLayer () 
+  (VerifyGsLcLayerByName "0DataFlow-GsLcEquipTag")
+  (VerifyGsLcLayerByName "0DataFlow-GsLcEquipTagComment")
+)
+
+; 2021-03-09
+(defun VerifyGsBzEquipTagLayer () 
+  (VerifyGsBzLayerByName "0DataFlow-GsBzEquipTag")
+  (VerifyGsBzLayerByName "0DataFlow-GsBzEquipTagComment")
+)
+
+; 2021-03-09
+(defun VerifyGsBzEquipLayer () 
+  (VerifyGsBzLayerByName "0DataFlow-GsBzEquip")
+  (VerifyGsBzLayerByName "0DataFlow-GsBzEquipComment")
+)
+
+; logic for generate PublicPipe
+(defun InsertPublicPipe (dataList pipeSourceDirection / lastEntityName insPt insPtList) 
+  (VerifyGsLcBlockPublicPipe)
+  (setq lastEntityName (entlast))
+  (setq insPt (getpoint "\nÑ¡È¡¸¨ÖúÁ÷³Ì×é¼þ²åÈëµã£º"))
+  (setq dataList (ProcessPublicPipeElementData dataList))
+  ; sort data by drawnum
+  (setq dataList (vl-sort dataList '(lambda (x y) (< (nth 4 x) (nth 4 y)))))
+  (setq insPtList (GetInsertPtListUtils insPt (GenerateSortedNumByList dataList 0) 10))
+  (cond 
+    ((= pipeSourceDirection "0") (GenerateDownPublicPipe insPtList dataList))
+    ((= pipeSourceDirection "1") (GenerateUpPublicPipe insPtList dataList))
+  )
+)
+
+(defun GenerateUpPublicPipe (insPtList dataList /)
+  (mapcar '(lambda (x y) 
+             (GenerateOnePublicPipeUpArrow x (nth 2 y) (nth 4 y) (nth 0 y))
+             (GenerateOnePublicPipeUpPipeLine (MoveInsertPosition x 0 20) (nth 1 y) (nth 0 y))
+             (GenerateVerticalPolyline x "0DataFlow-GsLcPublicPipeLine" 0.6)
+          ) 
+          insPtList
+          dataList
+  )
+)
+
+(defun GenerateDownPublicPipe (insPtList dataList /)
+  (mapcar '(lambda (x y) 
+             (GenerateOnePublicPipeDownArrow x (nth 3 y) (nth 4 y) (nth 0 y))
+             (GenerateOnePublicPipeDownPipeLine (MoveInsertPosition x 0 20) (nth 1 y) (nth 0 y))
+             (GenerateVerticalPolyline x "0DataFlow-GsLcPublicPipeLine" 0.6)
+          ) 
+          insPtList
+          dataList
+  )
+)
+
+(defun ProcessPublicPipeElementData (dataList /) 
+  (mapcar '(lambda (x) 
+             ; the property value of drawnum may be null
+             (if (< (strlen (nth 4 x)) 3) 
+               (ReplaceListItemByindexUtils "XXXXX" 4 x)
+               (ReplaceListItemByindexUtils (ExtractDrawNumUtils (nth 4 x)) 4 x)
+             )
+           ) 
+    dataList
+  )
+)
+
+(defun c:UpdatePublicPipe ()
+  (UpdatePublicPipeByDataType "PublicPipeUpArrow")
+  (UpdatePublicPipeByDataType "PublicPipeDownArrow")
+  (UpdatePublicPipeByDataType "PublicPipeLine")
+  (alert "¸üÐÂÍê³É")(princ)
+)
+
+(defun UpdatePublicPipeByDataType (dataType / entityNameList relatedPipeData allPipeHandleList) 
+  (setq entityNameList 
+    (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils dataType))
+  )
+  (setq allPipeHandleList (GetAllPipeHandleListUtils))
+  (mapcar '(lambda (x) 
+             (setq relatedPipeData (append relatedPipeData 
+                                     (list (GetAllPropertyDictForOneBlock (handent (cdr (assoc "relatedid" x)))))
+                                   ))
+           ) 
+    ; relatedid value maybe null
+    (vl-remove-if-not '(lambda (x) 
+                        ; repair bug - relatedid may be not in the allPipeHandleList - 2021-01-30
+                        (and (/= (cdr (assoc "relatedid" x)) "") (/= (member (cdr (assoc "relatedid" x)) allPipeHandleList) nil)) 
+                      ) 
+      (GetBlockAllPropertyDictUtils entityNameList)
+    )
+  )
+  (PrintErrorLogForUpdatePublicPipe dataType entityNameList allPipeHandleList) 
+  (UpdatePublicPipeStrategy dataType entityNameList relatedPipeData)
+)
+
+(defun PrintErrorLogForUpdatePublicPipe (dataType entityNameList allPipeHandleList /)
+  (if (= dataType "PublicPipeLine") 
+    (mapcar '(lambda (x) 
+              (prompt "\n")
+              (prompt (strcat "Ô­Ö÷Á÷³ÌÖÐµÄ¹ÜµÀ" (cdr (assoc "pipenum" x)) "ÊôÐÔ¿é±»Í¬²½»ò±»É¾³ýÁË£¬ÎÞ·¨Í¬²½Êý¾Ý£¡"))
+            ) 
+      ; refactor at 2021-01-30
+      (vl-remove-if-not '(lambda (x) 
+                          (or (= (cdr (assoc "relatedid" x)) "") (= (member (cdr (assoc "relatedid" x)) allPipeHandleList) nil)) 
+                        ) 
+        (GetBlockAllPropertyDictUtils entityNameList)
+      )
+    ) 
+  )
+)
+
+(defun UpdatePublicPipeStrategy (dataType entityNameList relatedPipeData /) 
+  (cond 
+    ((= dataType "PublicPipeLine") 
+      (mapcar '(lambda (x y) 
+                (ModifyMultiplePropertyForOneBlockUtils x 
+                  (list "PIPENUM") 
+                  (list (cdr (assoc "pipenum" y)))
+                )
+              ) 
+        entityNameList
+        relatedPipeData 
+      )
+    )
+  )
+  (cond 
+    ((= dataType "PublicPipeUpArrow") 
+      (mapcar '(lambda (x y) 
+                (ModifyMultiplePropertyForOneBlockUtils x 
+                  (list "TAG" "DRAWNUM") 
+                  (list 
+                    (cdr (assoc "from" y)) 
+                    (ExtractDrawNumUtils (cdr (assoc "drawnum" y)))
+                  )
+                )
+              ) 
+        entityNameList
+        relatedPipeData 
+      )
+    )
+  )
+  (cond 
+    ((= dataType "PublicPipeDownArrow") 
+      (mapcar '(lambda (x y) 
+                (ModifyMultiplePropertyForOneBlockUtils x 
+                  (list "TAG" "DRAWNUM") 
+                  (list 
+                    (cdr (assoc "to" y)) 
+                    (ExtractDrawNumUtils (cdr (assoc "drawnum" y)))
+                  )
+                )
+              ) 
+        entityNameList
+        relatedPipeData 
+      )
+    )
+  )
+)
+
+; logic for generate PublicPipe
+;;;-------------------------------------------------------------------------;;;
+
+;;;-------------------------------------------------------------------------;;;
+; logic for generate joinDrawArrow
+
+(defun c:UpdateJoinDrawArrow ()
+  (UpdateJoinDrawArrowByDataType "JoinDrawArrowTo")
+  (UpdateJoinDrawArrowByDataType "JoinDrawArrowFrom")
+  (alert "¸üÐÂÍê³É")(princ)
+)
+
+(defun GetAllPipeHandleListUtils (/ pipeData) 
+  (setq pipeData (GetAllPipeDataUtils)) 
+  (mapcar '(lambda (x) 
+             (cdr (assoc "entityhandle" x))
+           ) 
+    pipeData
+  )
+)
+
+(defun UpdateJoinDrawArrowByDataType (dataType / entityNameList relatedPipeData allPipeHandleList) 
+  (setq entityNameList 
+    (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils dataType))
+  )
+  (setq allPipeHandleList (GetAllPipeHandleListUtils))
+  (mapcar '(lambda (x) 
+             (setq relatedPipeData (append relatedPipeData 
+                                     (list (GetAllPropertyDictForOneBlock (handent (cdr (assoc "relatedid" x)))))
+                                   ))
+           ) 
+    ; relatedid value maybe null
+    (vl-remove-if-not '(lambda (x) 
+                        ; repair bug - JoinDrawArrow's relatedid may be not in the allPipeHandleList - 2020.12.22
+                        ; refactor at 2021-01-27
+                        (and (/= (cdr (assoc "relatedid" x)) "") (/= (member (cdr (assoc "relatedid" x)) allPipeHandleList) nil)) 
+                      ) 
+      (GetBlockAllPropertyDictUtils entityNameList)
+    )
+  )
+  (mapcar '(lambda (x) 
+             (prompt "\n")
+             (prompt (strcat (cdr (assoc "fromto" x)) "£¨" (cdr (assoc "drawnum" x)) "£©" "¹ØÁªµÄ¹ÜµÀÊý¾ÝidÊÇ²»´æÔÚµÄ£¡"))
+           ) 
+    ; refactor at 2021-01-27
+    (vl-remove-if-not '(lambda (x) 
+                        (or (= (cdr (assoc "relatedid" x)) "") (= (member (cdr (assoc "relatedid" x)) allPipeHandleList) nil)) 
+                      ) 
+      (GetBlockAllPropertyDictUtils entityNameList)
+    )
+  ) 
+  (UpdateJoinDrawArrowStrategy dataType entityNameList relatedPipeData)
+)
+
+(defun UpdateJoinDrawArrowStrategy (dataType entityNameList relatedPipeData /) 
+  (cond 
+    ((= dataType "JoinDrawArrowFrom") 
+      (mapcar '(lambda (x y) 
+                (ModifyMultiplePropertyForOneBlockUtils x 
+                  (list "PIPENUM" "FROMTO" "DRAWNUM") 
+                  (list 
+                    (cdr (assoc "pipenum" y)) 
+                    ; add the Equip ChName - 2021-01-27
+                    (strcat "×Ô" (cdr (assoc "from" y)) (GetEquipChNameByEquipTag (cdr (assoc "from" y))))
+                    (GetRelatedEquipDrawNum (GetRelatedEquipDataByTag (cdr (assoc "from" y))))
+                  )
+                )
+              ) 
+        entityNameList
+        relatedPipeData 
+      )
+    )
+  )
+  (cond 
+    ((= dataType "JoinDrawArrowTo") 
+      (mapcar '(lambda (x y) 
+                (ModifyMultiplePropertyForOneBlockUtils x 
+                  (list "FROMTO" "DRAWNUM") 
+                  (list 
+                    (strcat "È¥" (cdr (assoc "to" y)) (GetEquipChNameByEquipTag (cdr (assoc "to" y))))
+                    (GetRelatedEquipDrawNum (GetRelatedEquipDataByTag (cdr (assoc "to" y))))
+                  )
+                )
+              ) 
+        entityNameList
+        relatedPipeData 
+      )
+    )
+  )
+)
+
+(defun c:GenerateJoinDrawArrow (/ pipeSS pipeData insPt entityNameList)
+  (VerifyGsLcBlockByName "JoinDrawArrowTo")
+  (VerifyGsLcBlockByName "JoinDrawArrowFrom")
+  (VerifyGsLcLayerByName "0DataFlow-GsLcJoinDrawArrow")
+  (prompt "\nÑ¡ÔñÉú³É½ÓÍ¼¼ýÍ·µÄ±ß½ç¹ÜµÀ£º")
+  (setq pipeSS (GetPipeSSBySelectUtils))
+  (setq pipeData (GetAllPropertyDictForOneBlock (car (GetEntityNameListBySSUtils pipeSS))))
+  (setq insPt (getpoint "\nÑ¡È¡½ÓÍ¼¼ýÍ·µÄ²åÈëµã£º"))
+  (GenerateJoinDrawArrowToElement insPt
+    (strcat "È¥" (cdr (assoc "to" pipeData))) 
+    (GetRelatedEquipDrawNum (GetRelatedEquipDataByTag (cdr (assoc "to" pipeData))))
+    (cdr (assoc "entityhandle" pipeData)) 
+  )
+  (GenerateJoinDrawArrowFromElement (MoveInsertPosition insPt 20 0)
+    (cdr (assoc "pipenum" pipeData)) 
+    (strcat "×Ô" (cdr (assoc "from" pipeData)))
+    (GetRelatedEquipDrawNum (GetRelatedEquipDataByTag (cdr (assoc "from" pipeData))))
+    (cdr (assoc "entityhandle" pipeData)) 
+  ) 
+  (princ)
+)
+
+(defun GetRelatedEquipDataByTag (tag / equipData) 
+  ; repair bug - the tag may contain space, trim the space frist - 2020.12.21
+  (setq tag (StringSubstUtils "" " " tag))
+  (setq equipData (GetBlockAllPropertyDictUtils (GetEntityNameListBySSUtils (GetAllEquipmentSSUtils))))
+  (car 
+    (vl-remove-if-not '(lambda (x) 
+                        (= (cdr (assoc "tag" x)) tag)
+                      ) 
+      equipData
+    ) 
+  )
+)
+
+(defun GetRelatedEquipDrawNum (equipData / result) 
+  (if (/= equipData nil) 
+    (setq result (ExtractDrawNumUtils (cdr (assoc "drawnum" equipData))))
+    (setq result "ÎÞ´ËÉè±¸")
+  )
+  result
+)
+
+; Generate GsLcBlocks
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
 
 
 

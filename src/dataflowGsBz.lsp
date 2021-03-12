@@ -32,6 +32,50 @@
 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
+; Generate GsBzBlocks
+
+; 2021-03-09
+(defun c:InsertBlockGsBzCleanAir (/ insPt) 
+  (setq insPt (getpoint "\n选取房间块插入点："))
+  (VerifyGsBzBlockByName "GsCleanAir")
+  (VerifyGsBzCleanAirLayer)
+  (InsertBlockUtils insPt "GsCleanAir" "0DataFlow-GsBzCleanAirCondition" (list (cons 2 "C01")))
+)
+
+; 2021-03-09
+(defun VerifyGsBzCleanAirLayer () 
+  (VerifyGsBzLayerByName "0DataFlow-GsBzCleanAirCondition")
+  (VerifyGsBzLayerByName "0DataFlow-GsBzCleanAirConditionComment")
+)
+
+; 2021-03-09
+(defun InsertBlockGsBzReactor (insPt /) 
+  (VerifyGsBzBlockByName "GsBzReactor")
+  (VerifyGsBzEquipTagLayer)
+  (InsertBlockUtils insPt "GsBzReactor" "0DataFlow-GsBzEquipTag" (list (cons 1 "R")))
+)
+
+; 2021-03-10
+(defun InsertBlockGsBzEquipTagStrategy (insPt dataType /) 
+  (VerifyGsBzBlockByName dataType)
+  (VerifyGsBzEquipTagLayer)
+  (InsertBlockUtils insPt dataType "0DataFlow-GsBzEquipTag" (list (cons 1 "R")))
+)
+
+; 2021-03-10
+(defun InsertBlockGsBzEquipGraphStrategy (insPt dataType /) 
+  (VerifyGsBzBlockByName dataType)
+  (VerifyGsBzEquipLayer)
+  (InsertBlockUtils insPt dataType "0DataFlow-GsBzEquip" (list (cons 1 "R")))
+)
+
+; Generate GsBzBlocks
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+
+
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
 ; Equipemnt Layout
 
