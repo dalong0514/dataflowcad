@@ -793,6 +793,161 @@
   (strcat "GsBz" dataType "-V" equipVolume "D" equipDiameter "LS")
 )
 
+
+;;;-------------------------------------------------------------------------;;;
+; Generate GsBzEquipTag By Import CSV
+
+; 2021-03-11
+(defun c:ImportGsBzEquipTag ()
+  (ImportGsBzEquipTagByBox "importGsBzEquipTagBox")
+)
+
+(defun GetImportedEquipDataTypeChNameList ()
+  '("反应釜" "输送泵" "储罐" "换热器" "离心机" "真空泵" "自定义设备")
+)
+
+(defun GetImportedDataTypeByindex (index /)
+  (nth (atoi index) '("Reactor" "Pump" "Tank" "Heater" "Centrifuge" "Vacuum" "CustomEquip"))
+)
+
+(defun GetsortedTypeChNameList ()
+  '("按设备位号" "按体积")
+)
+
+(defun GetsortedTypeByindex (index /)
+  (nth (atoi index) '("equipTag" "equipVolume"))
+)
+
+; 2021-03-11
+(defun ImportGsBzEquipTagByBox (tileName / dcl_id dataType importedDataList status exportDataType sortedType sortedTypeResult importMsgBtnStatus)
+  (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
+  (setq status 2)
+  (while (>= status 2)
+    ; Create the dialog box
+    (new_dialog tileName dcl_id "" '(-1 -1))
+    ; Added the actions to the Cancel and Pick Point button
+    (action_tile "cancel" "(done_dialog 0)")
+    (action_tile "btnImportData" "(done_dialog 2)")
+    (action_tile "btnModify" "(done_dialog 3)")
+    (set_tile "exportDataType" "0")
+    (set_tile "sortedType" "0")
+    ; the default value of input box
+    (mode_tile "exportDataType" 2)
+    (mode_tile "sortedType" 2)
+    (action_tile "exportDataType" "(setq exportDataType $value)")
+    (action_tile "sortedType" "(setq sortedType $value)")
+    (progn
+      (start_list "exportDataType" 3)
+      (mapcar '(lambda (x) (add_list x)) 
+                (GetImportedEquipDataTypeChNameList))
+      (end_list)
+      (start_list "sortedType" 3)
+      (mapcar '(lambda (x) (add_list x)) 
+                (GetsortedTypeChNameList))
+      (end_list) 
+    ) 
+    ; init the default data of text
+    (if (= nil exportDataType)
+      (setq exportDataType "0")
+    ) 
+    (if (= nil sortedType)
+      (setq sortedType "0")
+    )  
+    (if (= importMsgBtnStatus 1)
+      (set_tile "importBtnMsg" "导入数据状态：已完成")
+    )
+    (if (= importMsgBtnStatus 2)
+      (set_tile "importBtnMsg" "导入数据状态：请先导入数据")
+    ) 
+    (set_tile "exportDataType" exportDataType)
+    (set_tile "sortedType" sortedType)
+    ; import data button
+    (if (= 2 (setq status (start_dialog)))
+      (progn 
+        (setq dataType (GetImportedDataTypeByindex exportDataType))
+        (setq sortedTypeResult (GetsortedTypeByindex sortedType))
+        (princ dataType)
+        (setq importedDataList 
+               (StrListToListListUtils (ReadDataFromCSVStrategy dataType)))
+        (setq importMsgBtnStatus 1)
+      )
+    )
+    ; insert button
+    (if (= 3 status) 
+      (if (/= importedDataList nil) 
+        (progn 
+          (setq dataType (GetImportedDataTypeByindex exportDataType))
+          (setq sortedTypeResult (GetsortedTypeByindex sortedType))
+          (GenerateGsBzEquipTagByImport importedDataList dataType sortedTypeResult)
+          (setq modifyMsgBtnStatus 1)
+          (setq importMsgBtnStatus nil)
+        )
+      )
+    )
+  )
+  (unload_dialog dcl_id)
+  (princ)
+)
+
+; refactored at 2021-03-12
+(defun GenerateGsBzEquipTagByImport (importedDataList dataType sortedTypeResult / allGsBzEquipBlockNameList insPt dataList insPtList equipTagData equipPropertyTagDictList) 
+  (setq allGsBzEquipBlockNameList (GetAllGsBzEquipBlockNameList))
+  (VerifyGsBzEquipLayer)
+  (setq insPt (getpoint "\n选取设备位号插入点："))
+  ; sorted by EquipTag
+  (setq dataList (SortEquipDataStrategy importedDataList sortedTypeResult))
+  (setq insPtList (GetInsertBzEquipinsPtList insPt dataList))
+  (setq equipTagData (InsertGsBzEquipTag dataList insPtList dataType))
+  (UpdateGsBzEquipTagPropertyValue equipTagData (GetPropertyNameListStrategy dataType))
+  (setq equipPropertyTagDictList (GetGsBzEquipPropertyTagDictListStrategy dataType dataList))
+  (setq equipGraphData (InsertGsBzEquipGraph equipPropertyTagDictList insPtList dataType allGsBzEquipBlockNameList))
+  (MigrateGsBzEquipTagPropertyValue equipGraphData (GetPropertyNameListStrategy dataType))
+)
+
+; 2021-03-12
+(defun GetGsBzEquipPropertyTagDictListStrategy (dataType dataList / resultList)
+  (setq resultList 
+    (mapcar '(lambda (x) 
+                (mapcar '(lambda (xx yy) 
+                          (cons (strcase xx T) yy)
+                        ) 
+                  (GetPropertyNameListStrategy dataType)
+                  (cdr x)
+                ) 
+            ) 
+      dataList
+    )  
+  )
+  (mapcar '(lambda (x) 
+             ; simulate the frist item
+             (cons (cons 0 "entity") x)
+          ) 
+    resultList
+  ) 
+)
+
+(defun SortEquipDataStrategy (dataList sortedType /)
+  (cond 
+    ((= sortedType "equipTag") 
+     (vl-sort importedDataList '(lambda (x y) (< (cadr x) (cadr y)))))
+    ((= sortedType "equipVolume") 
+     (vl-sort importedDataList '(lambda (x y) (< (ExtractEquipVolumeNumUtils (nth 4 x)) (ExtractEquipVolumeNumUtils (nth 4 y))))))
+  )
+)
+
+; 2021-03-11
+(defun UpdateGsBzEquipTagPropertyValue (itemData blockPropertyNameList /) 
+  (mapcar '(lambda (x) 
+             (ModifyMultiplePropertyForOneBlockUtils (car x) blockPropertyNameList (cdr x))
+          ) 
+    itemData
+  )
+)
+
+; Generate GsBzEquipTag By Import CSV
+;;;-------------------------------------------------------------------------;;;
+
+
 ;;;-------------------------------------------------------------------------;;;
 ; Update GsBzEquipGraph
 
@@ -897,157 +1052,6 @@
   ) 
 )
 
-;;;-------------------------------------------------------------------------;;;
-; Generate GsBzEquipTag By Import CSV
-
-; 2021-03-11
-(defun c:ImportGsBzEquipTag ()
-  (ImportGsBzEquipTagByBox "importGsBzEquipTagBox")
-)
-
-(defun GetImportedEquipDataTypeChNameList ()
-  '("反应釜" "输送泵" "储罐" "换热器" "离心机" "真空泵" "自定义设备")
-)
-
-(defun GetImportedDataTypeByindex (index /)
-  (nth (atoi index) '("Reactor" "Pump" "Tank" "Heater" "Centrifuge" "Vacuum" "CustomEquip"))
-)
-
-(defun GetsortedTypeChNameList ()
-  '("按设备位号" "按体积")
-)
-
-(defun GetsortedTypeByindex (index /)
-  (nth (atoi index) '("equipTag" "equipVolume"))
-)
-
-; 2021-03-11
-(defun ImportGsBzEquipTagByBox (tileName / dcl_id dataType importedDataList status exportDataType sortedType sortedTypeResult importMsgBtnStatus)
-  (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
-  (setq status 2)
-  (while (>= status 2)
-    ; Create the dialog box
-    (new_dialog tileName dcl_id "" '(-1 -1))
-    ; Added the actions to the Cancel and Pick Point button
-    (action_tile "cancel" "(done_dialog 0)")
-    (action_tile "btnImportData" "(done_dialog 2)")
-    (action_tile "btnModify" "(done_dialog 3)")
-    (set_tile "exportDataType" "0")
-    (set_tile "sortedType" "0")
-    ; the default value of input box
-    (mode_tile "exportDataType" 2)
-    (mode_tile "sortedType" 2)
-    (action_tile "exportDataType" "(setq exportDataType $value)")
-    (action_tile "sortedType" "(setq sortedType $value)")
-    (progn
-      (start_list "exportDataType" 3)
-      (mapcar '(lambda (x) (add_list x)) 
-                (GetImportedEquipDataTypeChNameList))
-      (end_list)
-      (start_list "sortedType" 3)
-      (mapcar '(lambda (x) (add_list x)) 
-                (GetsortedTypeChNameList))
-      (end_list) 
-    ) 
-    ; init the default data of text
-    (if (= nil exportDataType)
-      (setq exportDataType "0")
-    ) 
-    (if (= nil sortedType)
-      (setq sortedType "0")
-    )  
-    (if (= importMsgBtnStatus 1)
-      (set_tile "importBtnMsg" "导入数据状态：已完成")
-    )
-    (if (= importMsgBtnStatus 2)
-      (set_tile "importBtnMsg" "导入数据状态：请先导入数据")
-    ) 
-    (set_tile "exportDataType" exportDataType)
-    (set_tile "sortedType" sortedType)
-    ; import data button
-    (if (= 2 (setq status (start_dialog)))
-      (progn 
-        (setq dataType (GetImportedDataTypeByindex exportDataType))
-        (setq sortedTypeResult (GetsortedTypeByindex sortedType))
-        (princ dataType)
-        (setq importedDataList 
-               (StrListToListListUtils (ReadDataFromCSVStrategy dataType)))
-        (setq importMsgBtnStatus 1)
-      )
-    )
-    ; insert button
-    (if (= 3 status) 
-      (if (/= importedDataList nil) 
-        (progn 
-          (setq dataType (GetImportedDataTypeByindex exportDataType))
-          (setq sortedTypeResult (GetsortedTypeByindex sortedType))
-          (GenerateGsBzEquipTagByImport importedDataList dataType sortedTypeResult)
-          (setq modifyMsgBtnStatus 1)
-          (setq importMsgBtnStatus nil)
-        )
-      )
-    )
-  )
-  (unload_dialog dcl_id)
-  (princ)
-)
-
-; 2021-03-11
-(defun GenerateGsBzEquipTagByImport (importedDataList dataType sortedTypeResult / allGsBzEquipBlockNameList insPt dataList insPtList equipTagData equipPropertyTagDictList) 
-  (setq allGsBzEquipBlockNameList (GetAllGsBzEquipBlockNameList))
-  (VerifyGsBzEquipLayer)
-  (setq insPt (getpoint "\n选取设备位号插入点："))
-  ; sorted by EquipTag
-  (setq dataList (SortEquipDataStrategy importedDataList sortedTypeResult))
-  (setq insPtList (GetInsertBzEquipinsPtList insPt dataList))
-  (setq equipTagData (InsertGsBzEquipTag dataList insPtList dataType))
-  (UpdateGsBzEquipTagPropertyValue equipTagData (GetPropertyNameListStrategy dataType))
-  (setq equipPropertyTagDictList (GetGsBzEquipPropertyTagDictListStrategy dataType dataList))
-  (setq equipGraphData (InsertGsBzEquipGraph equipPropertyTagDictList insPtList dataType allGsBzEquipBlockNameList))
-  (MigrateGsBzEquipTagPropertyValue equipGraphData (GetPropertyNameListStrategy dataType))
-)
-
-(defun GetGsBzEquipPropertyTagDictListStrategy (dataType dataList / resultList)
-  (setq resultList 
-    (mapcar '(lambda (x) 
-                (mapcar '(lambda (xx yy) 
-                          (cons (strcase xx T) yy)
-                        ) 
-                  (GetPropertyNameListStrategy dataType)
-                  (cdr x)
-                ) 
-            ) 
-      dataList
-    )  
-  )
-  (mapcar '(lambda (x) 
-             ; simulate the frist item
-             (cons (cons 0 "entity") x)
-          ) 
-    resultList
-  ) 
-)
-
-(defun SortEquipDataStrategy (dataList sortedType /)
-  (cond 
-    ((= sortedType "equipTag") 
-     (vl-sort importedDataList '(lambda (x y) (< (cadr x) (cadr y)))))
-    ((= sortedType "equipVolume") 
-     (vl-sort importedDataList '(lambda (x y) (< (ExtractEquipVolumeNumUtils (nth 4 x)) (ExtractEquipVolumeNumUtils (nth 4 y))))))
-  )
-)
-
-; 2021-03-11
-(defun UpdateGsBzEquipTagPropertyValue (itemData blockPropertyNameList /) 
-  (mapcar '(lambda (x) 
-             (ModifyMultiplePropertyForOneBlockUtils (car x) blockPropertyNameList (cdr x))
-          ) 
-    itemData
-  )
-)
-
-; Generate GsBzEquipTag By Import CSV
-;;;-------------------------------------------------------------------------;;;
 
 ; Equipemnt Layout
 ;;;-------------------------------------------------------------------------;;;
