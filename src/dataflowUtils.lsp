@@ -1544,7 +1544,7 @@
 )
 
 (defun GenerateEquipTagText (insPt textContent /)
-  (entmake (list (cons 0 "TEXT") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 "DataFlow-GsLcEquipTag") (cons 100 "AcDbText") 
+  (entmake (list (cons 0 "TEXT") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 "0DataFlow-GsLcEquipTag") (cons 100 "AcDbText") 
                   (cons 10 '(0.0 0.0 0.0)) (cons 11 insPt) (cons 40 3.0) (cons 1 textContent) (cons 50 0.0) (cons 41 0.7) (cons 51 0.0) 
                   (cons 7 "DataFlow") (cons 71 0) (cons 72 1) (cons 73 0) (cons 210 '(0.0 0.0 1.0)) (cons 100 "AcDbText") 
              )
