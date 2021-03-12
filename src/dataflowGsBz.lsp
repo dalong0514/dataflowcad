@@ -652,7 +652,7 @@
 ; Migrate Lc Data to Bz Layout
 ;;;-------------------------------------------------------------------------;;;
 
-; 2021-03-098
+; 2021-03-09
 (defun c:extractGsLcEquipData (/ lcEquipData) 
   (setq lcEquipData (GetAllMarkedEquipDataListByTypeListUtils))
   (if (not (IsGetNullGsLcEquipData lcEquipData)) 
@@ -691,8 +691,10 @@
              ; sorted by EquipName
              (setq itemData (vl-sort itemData '(lambda (x y) (< (cdr (caddr x)) (cdr (caddr y))))))
              (setq insPtList (GetInsertBzEquipinsPtList insPt itemData))
-             (setq equipTagData (InsertGsBzEquipTag itemData insPtList (car x))) 
-             (setq equipGraphData (InsertGsBzEquipGraph itemData insPtList (car x))) 
+             (setq equipTagData (InsertGsBzEquipTag itemData insPtList (car x)))
+             
+             (setq equipGraphData (InsertGsBzEquipGraphV2 itemData insPtList (car x)))
+             
              (setq blockPropertyNameList (GetGsBzEquipTagPropertyNameList itemData)) 
              (MigrateGsBzEquipTagPropertyValue equipTagData blockPropertyNameList)
              (MigrateGsBzEquipTagPropertyValue equipGraphData blockPropertyNameList)
@@ -760,6 +762,22 @@
     itemData
     insPtList
   )  
+)
+
+; 2021-03-10
+(defun InsertGsBzEquipGraphV2 (itemData insPtList dataType / gsBzType) 
+  (mapcar '(lambda (x y) 
+             (setq gsBzType (GetGsBzType dataType))
+             (InsertBlockGsBzEquipGraphStrategy (MoveInsertPositionUtils y 0 3000) gsBzType)
+             (cons (entlast) (cdr x))
+          ) 
+    itemData
+    insPtList
+  )  
+)
+
+(defun GetGsBzType (dataType / )
+  (strcat "GsBz" "Tank" "-" "V2000D1200LS")
 )
 
 ;;;-------------------------------------------------------------------------;;;
@@ -867,7 +885,7 @@
 )
 
 ;;;-------------------------------------------------------------------------;;;
-; Import and Generate GsBzEquipTag
+; Generate GsBzEquipTag By Import CSV
 
 ; 2021-03-11
 (defun c:ImportGsBzEquipTag ()
@@ -991,6 +1009,9 @@
     itemData
   )
 )
+
+; Generate GsBzEquipTag By Import CSV
+;;;-------------------------------------------------------------------------;;;
 
 ; Equipemnt Layout
 ;;;-------------------------------------------------------------------------;;;
