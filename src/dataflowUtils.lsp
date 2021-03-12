@@ -2048,6 +2048,12 @@
   (atoi (RegExpReplace volume "(\\d+)(.*)" "$1" nil nil))
 )
 
+; 2021-03-12
+; @return string
+(defun ExtractEquipVolumeNumStringUtils (volume /) 
+  (RegExpReplace volume "(\\d+)(.*)" "$1" nil nil)
+)
+
 ; Extract Data Utils
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;

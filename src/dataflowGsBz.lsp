@@ -764,7 +764,7 @@
 ; 2021-03-10
 (defun InsertGsBzEquipGraph (itemData insPtList dataType allGsBzEquipBlockNameList / gsBzEquipBlockName) 
   (mapcar '(lambda (x y) 
-             (setq gsBzEquipBlockName (GetGsBzEquipBlockName dataType))
+             (setq gsBzEquipBlockName (GetGsBzEquipBlockName dataType (cdr x)))
              (InsertBlockGsBzEquipGraphStrategy (MoveInsertPositionUtils y 0 3000) gsBzEquipBlockName allGsBzEquipBlockNameList)
              (cons (entlast) (cdr x))
           ) 
@@ -781,8 +781,18 @@
   )
 )
 
-(defun GetGsBzEquipBlockName (dataType / )
-  (strcat "GsBz" dataType "-V" "2000" "D" "1200" "LS")
+(defun GetGsBzEquipBlockName (dataType propertyDictList / equipVolume) 
+  (setq equipVolume (GetEquipVolumeNumString propertyDictList))
+  ;(princ (strcat "\n" equipVolume))
+  (strcat "GsBz" dataType "-V" equipVolume "D" "700" "LS")
+)
+
+(defun GetEquipVolumeNumString (propertyDictList /)
+  (if (/= (GetDottedPairValueUtils "volume" propertyDictList) nil) 
+    (setq result (ExtractEquipVolumeNumStringUtils (GetDottedPairValueUtils "volume" propertyDictList)))
+    (setq result "1000")
+  )
+  result
 )
 
 ;;;-------------------------------------------------------------------------;;;
