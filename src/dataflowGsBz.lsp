@@ -706,7 +706,7 @@
              (setq blockPropertyNameList (GetGsBzEquipTagPropertyNameList itemData)) 
              (MigrateGsBzEquipTagPropertyValue equipTagData blockPropertyNameList)
              (MigrateGsBzEquipTagPropertyValue equipGraphData blockPropertyNameList)
-             (setq insPt (MoveInsertPositionUtils insPt 0 -15000))
+             (setq insPt (MoveInsertPositionUtils insPt 0 -10000))
           ) 
     lcEquipData
   )  
@@ -716,7 +716,7 @@
 (defun GetInsertBzEquipinsPtList (insPt equipData / resultList insPt) 
   (mapcar '(lambda (x) 
              (setq resultList (append resultList (list insPt)))
-             (setq insPt (MoveInsertPositionUtils insPt 5000 0))
+             (setq insPt (MoveInsertPositionUtils insPt 3500 0))
           ) 
     equipData
   ) 
@@ -768,7 +768,7 @@
 (defun InsertGsBzEquipGraph (itemData insPtList dataType allGsBzEquipBlockNameList / gsBzEquipBlockName) 
   (mapcar '(lambda (x y) 
              (setq gsBzEquipBlockName (GetGsBzEquipBlockName dataType (cdr x)))
-             (InsertBlockGsBzEquipGraphStrategy (MoveInsertPositionUtils y 0 3000) gsBzEquipBlockName allGsBzEquipBlockNameList)
+             (InsertBlockGsBzEquipGraphStrategy (MoveInsertPositionUtils y 0 2500) gsBzEquipBlockName allGsBzEquipBlockNameList)
              (cons (entlast) (cdr x))
           ) 
     itemData
