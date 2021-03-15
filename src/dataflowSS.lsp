@@ -213,7 +213,7 @@
     (vl-remove-if-not '(lambda (x) 
                         (and (/= (cdr (assoc "relatedid" x)) "") (/= (member (cdr (assoc "relatedid" x)) allPipeHandleList) nil)) 
                       ) 
-      (GetBlockAllPropertyDictUtils entityNameList)
+      (GetBlockAllPropertyDictListUtils entityNameList)
     )
   ) 
   (mapcar '(lambda (x y) 

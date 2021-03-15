@@ -1355,17 +1355,17 @@
 )
 
 (defun GetAllPipeDataUtils () 
-  (GetBlockAllPropertyDictUtils (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "Pipe")))
+  (GetBlockAllPropertyDictListUtils (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "Pipe")))
 )
 
 (defun GetAllEquipDataUtils () 
-  (GetBlockAllPropertyDictUtils (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "Equipment")))
+  (GetBlockAllPropertyDictListUtils (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "Equipment")))
 )
 
 ; 2021-03-09
 (defun GetAllMarkedDataByTypeUtils (dataType /) 
   (cons dataType 
-        (GetBlockAllPropertyDictUtils (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils dataType)))
+        (GetBlockAllPropertyDictListUtils (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils dataType)))
   )
 )
 
@@ -1387,7 +1387,7 @@
 
 ; 2021-02-23
 (defun GetAllFireFightPipeDataUtils () 
-  (GetBlockAllPropertyDictUtils (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "FireFightPipe")))
+  (GetBlockAllPropertyDictListUtils (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "FireFightPipe")))
 )
 
 (defun GetAllEquipPositionDictListUtils ()

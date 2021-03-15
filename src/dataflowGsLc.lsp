@@ -211,7 +211,7 @@
 ; 2021-03-07
 (defun GetGsLcBlockInstrumentPropertyDict (ss dataType / propertyIDList sourceData equipmentData instrumentData pipeData resultList)
   (setq propertyIDList (GetInstrumentPropertyIDListStrategy dataType))
-  (setq sourceData (GetBlockAllPropertyDictUtils (GetEntityNameListBySSUtils ss)))
+  (setq sourceData (GetBlockAllPropertyDictListUtils (GetEntityNameListBySSUtils ss)))
   (setq equipmentData (FilterBlockEquipmentDataUtils sourceData))
   (setq instrumentData (FilterBlockInstrumentDataUtils sourceData))
   (setq pipeData (FilterBlockPipeDataUtils sourceData))
@@ -305,7 +305,7 @@
 
 ; 2021-03-11
 (defun GetGsLcBlockPipePropertyValueList (ss / sourceData equipmentData pipeData resultList)
-  (setq sourceData (GetBlockAllPropertyDictUtils (GetEntityNameListBySSUtils ss)))
+  (setq sourceData (GetBlockAllPropertyDictListUtils (GetEntityNameListBySSUtils ss)))
   (setq equipmentData (FilterBlockEquipmentDataUtils sourceData))
   (setq pipeData (FilterBlockPipeDataUtils sourceData))
   (if (/= equipmentData nil) 
@@ -359,7 +359,7 @@
 
 ; 2021-03-08
 (defun GetGsLcBlockOuterPipePropertyDict (ss / pipeData resultList)
-  (setq pipeData (GetBlockAllPropertyDictUtils (GetEntityNameListBySSUtils ss)))
+  (setq pipeData (GetBlockAllPropertyDictListUtils (GetEntityNameListBySSUtils ss)))
   (if (/= pipeData nil) 
     (setq resultList (append resultList (list (cons 1 (cdr (assoc "pipenum" (car pipeData)))))))
   ) 
@@ -390,7 +390,7 @@
 
 ; 2021-03-08
 (defun GetGsLcBlockPipeClassChangePropertyDict (ss / pipeData resultList)
-  (setq pipeData (GetBlockAllPropertyDictUtils (GetEntityNameListBySSUtils ss)))
+  (setq pipeData (GetBlockAllPropertyDictListUtils (GetEntityNameListBySSUtils ss)))
   (if (/= pipeData nil) 
     (setq resultList (list (cons 1 (ExtractGsPipeClassUtils (GetDottedPairValueUtils "pipenum" (car pipeData)))) 
                        (cons 2 (ExtractGsPipeClassUtils (GetDottedPairValueUtils "pipenum" (cadr pipeData))))
@@ -417,7 +417,7 @@
 
 ; 2021-03-08
 (defun GetGsLcBlockReducerPropertyDict (ss / pipeData resultList)
-  (setq pipeData (GetBlockAllPropertyDictUtils (GetEntityNameListBySSUtils ss)))
+  (setq pipeData (GetBlockAllPropertyDictListUtils (GetEntityNameListBySSUtils ss)))
   (if (/= pipeData nil) 
     (setq resultList (list (cons 1 
                               (strcat (ExtractGsPipeDiameterUtils (GetDottedPairValueUtils "pipenum" (car pipeData))) 
@@ -563,7 +563,7 @@
                         ; repair bug - relatedid may be not in the allPipeHandleList - 2021-01-30
                         (and (/= (cdr (assoc "relatedid" x)) "") (/= (member (cdr (assoc "relatedid" x)) allPipeHandleList) nil)) 
                       ) 
-      (GetBlockAllPropertyDictUtils entityNameList)
+      (GetBlockAllPropertyDictListUtils entityNameList)
     )
   )
   (PrintErrorLogForUpdatePublicPipe dataType entityNameList allPipeHandleList) 
@@ -580,7 +580,7 @@
       (vl-remove-if-not '(lambda (x) 
                           (or (= (cdr (assoc "relatedid" x)) "") (= (member (cdr (assoc "relatedid" x)) allPipeHandleList) nil)) 
                         ) 
-        (GetBlockAllPropertyDictUtils entityNameList)
+        (GetBlockAllPropertyDictListUtils entityNameList)
       )
     ) 
   )
@@ -671,7 +671,7 @@
                         ; refactor at 2021-01-27
                         (and (/= (cdr (assoc "relatedid" x)) "") (/= (member (cdr (assoc "relatedid" x)) allPipeHandleList) nil)) 
                       ) 
-      (GetBlockAllPropertyDictUtils entityNameList)
+      (GetBlockAllPropertyDictListUtils entityNameList)
     )
   )
   (mapcar '(lambda (x) 
@@ -682,7 +682,7 @@
     (vl-remove-if-not '(lambda (x) 
                         (or (= (cdr (assoc "relatedid" x)) "") (= (member (cdr (assoc "relatedid" x)) allPipeHandleList) nil)) 
                       ) 
-      (GetBlockAllPropertyDictUtils entityNameList)
+      (GetBlockAllPropertyDictListUtils entityNameList)
     )
   ) 
   (UpdateJoinDrawArrowStrategy dataType entityNameList relatedPipeData)
@@ -750,7 +750,7 @@
 (defun GetRelatedEquipDataByTag (tag / equipData) 
   ; repair bug - the tag may contain space, trim the space frist - 2020.12.21
   (setq tag (StringSubstUtils "" " " tag))
-  (setq equipData (GetBlockAllPropertyDictUtils (GetEntityNameListBySSUtils (GetAllEquipmentSSUtils))))
+  (setq equipData (GetBlockAllPropertyDictListUtils (GetEntityNameListBySSUtils (GetAllEquipmentSSUtils))))
   (car 
     (vl-remove-if-not '(lambda (x) 
                         (= (cdr (assoc "tag" x)) tag)

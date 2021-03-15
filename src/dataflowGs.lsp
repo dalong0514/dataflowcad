@@ -800,7 +800,7 @@
 (defun c:brushLocationForInstrument (/ ss sourceData instrumentData locationData entityNameList) 
   (prompt "\n选择数据集（只能包含一个仪表或管道）：")
   (setq ss (GetBlockSSBySelectByDataTypeUtils "InstrumentAndEquipmentAndPipe"))
-  (setq sourceData (GetBlockAllPropertyDictUtils (GetEntityNameListBySSUtils ss)))
+  (setq sourceData (GetBlockAllPropertyDictListUtils (GetEntityNameListBySSUtils ss)))
   (setq instrumentData (FilterBlockInstrumentDataUtils sourceData))
   (setq locationData (GetPipenumOrTag sourceData))
   (setq entityNameList (GetEntityNameListByPropertyDictListUtils instrumentData))
@@ -1880,7 +1880,7 @@
   (cons (cons "entityhandle" (cdr (assoc 5 entityData))) propertyValueList)
 )
 
-(defun GetBlockAllPropertyDictUtils (entityNameList / resultList)
+(defun GetBlockAllPropertyDictListUtils (entityNameList / resultList)
   (mapcar '(lambda (x) 
              (setq resultList (append resultList (list (GetAllPropertyDictForOneBlock x))))
            ) 

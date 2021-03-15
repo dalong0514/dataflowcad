@@ -490,7 +490,7 @@
                (GetJSDrawPositionRangeUtils (GetEntityPositionByEntityNameUtils (handent (cdr (assoc "entityhandle" x)))))
              )
            ) 
-    (GetBlockAllPropertyDictUtils (GetEntityNameListBySSUtils (GetAllDrawLabelSSUtils)))
+    (GetBlockAllPropertyDictListUtils (GetEntityNameListBySSUtils (GetAllDrawLabelSSUtils)))
   ) 
 )
 
@@ -1019,10 +1019,8 @@
     (if (= 4 status) 
       (if (/= importedDataList nil) 
         (progn 
-          (princ importedDataList)
-          
-          ;(ModifyPropertyValueByTagUtils importedDataList (GetGsBzEquipPropertyNameList))
-          ;(setq modifyMsgBtnStatus 1)
+          (ModifyPropertyValueByTagUtils importedDataList (GetGsBzEquipPropertyNameList))
+          (setq modifyMsgBtnStatus 1)
         )
       )
     )
@@ -1034,7 +1032,7 @@
 ; 2021-03-11
 (defun GetImportedGsBzEquipDataList (dataList /)
   (mapcar '(lambda (x) 
-             ; 规整成以设备位号为键的数组
+             ; 规整成以设备位号为键的数组 - 2021-03-15
              ; (F23101 GsBzCustomEquip F23101  800  1-2/A-B 备注信息)
              (cons (nth 2 x) (cdr x))
           ) 
@@ -1042,23 +1040,27 @@
   )  
 )
 
-; 2021-03-11
+; refactored at 2021-03-15
 (defun ModifyPropertyValueByTagUtils (importedDataList propertyNameList / entityNameList propertyValueList)
-  (setq importedDataList (FilterListByTestMemberUtils importedDataList (GetAllGsBzEquipTagList)))
-  (setq entityNameList (mapcar '(lambda (x) (handent (car x))) 
-                            importedDataList
-                          )
-  )
-  (setq propertyValueList (mapcar '(lambda (x) (cdr x)) 
-                            importedDataList
-                          )
-  )
-  (mapcar '(lambda (x y) 
-            (ModifyMultiplePropertyForOneBlockUtils x propertyNameList y)
+  ; filter so slow, do not filter now. ready for refactor - 2021-03-15
+  ;(setq importedDataList (FilterListByTestMemberUtils importedDataList (GetAllGsBzEquipTagList)))
+  (setq entityNameList (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "GsBzEquip")))
+  (mapcar '(lambda (x) 
+            (ModifyMultiplePropertyForOneBlockUtils x 
+              propertyNameList 
+              (GetimportedPropertyValueListByEquipTag (GetGsBzEquipTagByEntityName x) importedDataList))
           ) 
-    entityNameList
-    propertyValueList      
+    entityNameList     
   )
+)
+
+(defun GetimportedPropertyValueListByEquipTag (equipTag importedDataList /)
+  (GetDottedPairValueUtils equipTag importedDataList)
+)
+
+(defun GetGsBzEquipTagByEntityName (entityName /) 
+  ; the frist item is entityhandle, so tag is the 3th - 2021-03-15
+  (cdr (nth 2 (GetAllPropertyDictForOneBlock entityName)))
 )
 
 ; 2021-03-11
@@ -1070,7 +1072,6 @@
     importedDataList
   ) 
 )
-
 
 ; Equipemnt Layout
 ;;;-------------------------------------------------------------------------;;;
