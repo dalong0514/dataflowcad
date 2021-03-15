@@ -1018,7 +1018,7 @@
     (if (= 4 status) 
       (if (/= importedDataList nil) 
         (progn 
-          (ModifyPropertyValueByTagUtils importedDataList)
+          (UpdateGsBzEquipData importedDataList)
           (setq modifyMsgBtnStatus 1)
         )
       )
@@ -1045,11 +1045,16 @@
   )  
 )
 
-; refactored at 2021-03-15
-(defun ModifyPropertyValueByTagUtils (importedDataList / entityNameList)
+; 2021-03-15
+(defun UpdateGsBzEquipData (importedDataList / entityNameList)
   ; filter so slow, do not filter now. ready for refactor - 2021-03-15
   ;(setq importedDataList (FilterListByTestMemberUtils importedDataList (GetAllGsBzEquipTagList)))
-  (setq entityNameList (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "GsBzEquip")))
+  (setq entityNameList (GetAllGsBzEquipEntityNameList))
+  (ModifyPropertyValueByTagUtils importedDataList entityNameList)
+)
+
+; refactored at 2021-03-15
+(defun ModifyPropertyValueByTagUtils (importedDataList entityNameList /)
   (mapcar '(lambda (x) 
             (ModifyMultiplePropertyForOneBlockUtils x 
               (GetGsBzEquipPropertyNameList)
@@ -1063,9 +1068,16 @@
   (GetDottedPairValueUtils equipTag importedDataList)
 )
 
+; 2021-03-15
 (defun GetGsBzEquipTagByEntityName (entityName /) 
   ; the frist item is entityhandle, so tag is the 3th - 2021-03-15
-  (cdr (nth 2 (GetAllPropertyDictForOneBlock entityName)))
+  ;(cdr (nth 2 (GetAllPropertyDictForOneBlock entityName)))
+  (GetDottedPairValueUtils "tag" (GetAllPropertyDictForOneBlock entityName))
+)
+
+; 2021-03-15
+(defun GetGsBzEquipTypeByEntityName (entityName /) 
+  (GetDottedPairValueUtils "gsbztype" (GetAllPropertyDictForOneBlock entityName))
 )
 
 ; 2021-03-11
