@@ -1064,7 +1064,7 @@
               (GetGsBzEquipPropertyNameList)
               (GetimportedPropertyValueListByEquipTag (GetGsBzEquipTagByEntityName x) importedDataList))
           ) 
-    entityNameList     
+    (FilterEntityNameListByImportedData entityNameList importedDataList)    
   )
 )
 
@@ -1084,8 +1084,18 @@
                )
              )
           ) 
-    entityNameList     
+    (FilterEntityNameListByImportedData entityNameList importedDataList)     
   )
+)
+
+; 2021-03-15
+(defun FilterEntityNameListByImportedData (entityNameList importedDataList / importedGsBzEquipTagList)
+  (setq importedGsBzEquipTagList (GetImportedGsBzEquipTagList importedDataList))
+  (vl-remove-if-not '(lambda (x) 
+                      (member (GetGsBzEquipTagByEntityName x) importedGsBzEquipTagList)
+                    ) 
+    entityNameList
+  )  
 )
 
 ; 2021-03-15
@@ -1093,20 +1103,7 @@
   (strcat (car gsBzEquipClassAndTypeAndTag) "-" (cadr gsBzEquipClassAndTypeAndTag))
 )
 
-; 2021-03-10
-(defun ReGenerateBlockGsBzEquipGraphV2 (insPt gsBzBlockName equipTag allGsBzEquipBlockNameList /) 
-  (if (member gsBzBlockName allGsBzEquipBlockNameList) 
-    (InsertBlockUtils insPt gsBzBlockName "0DataFlow-GsBzEquip" (list (cons 0 (GetGsBzEquipTypeClass gsBzBlockName)) 
-                                                                      (cons 1 equipTag)
-                                                                      (cons 4 (GetGsBzEquipType gsBzBlockName))
-                                                                ))
-    (InsertBlockGsBzEquipDefault insPt (list (cons 0 (GetGsBzEquipTypeClass gsBzBlockName)) 
-                                             (cons 1 equipTag)
-                                       ))
-  )
-)
-
-; 2021-03-10
+; 2021-03-15
 (defun ReGenerateBlockGsBzEquipGraph (insPt gsBzBlockName equipTag allGsBzEquipBlockNameList /) 
   (if (member gsBzBlockName allGsBzEquipBlockNameList) 
     (InsertBlockUtils insPt gsBzBlockName "0DataFlow-GsBzEquip" (list (cons 0 (GetGsBzEquipTypeClass gsBzBlockName)) 
@@ -1117,6 +1114,16 @@
                                              (cons 1 equipTag)
                                        ))
   )
+)
+
+; 2021-03-15
+(defun GetImportedGsBzEquipTagList (importedDataList /) 
+  (mapcar '(lambda (x) 
+             ; have not call function GetDottedPairValueUtils, so 2th not 1th
+             (nth 2 x)
+          ) 
+    importedDataList
+  )  
 )
 
 ; 2021-03-15
