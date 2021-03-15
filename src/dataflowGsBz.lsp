@@ -1032,8 +1032,8 @@
 ; 2021-03-11
 (defun GetImportedGsBzEquipDataList (dataList /)
   (mapcar '(lambda (x) 
-             ; 规整成以设备位号为键的数组 - 2021-03-15
-             ; (F23101 GsBzCustomEquip F23101  800  1-2/A-B 备注信息)
+             ; set equipTag as the key of List - 2021-03-15
+             ; (F23101 GsBzCustomEquip F23101  800  1-2/A-B commentMsg)
              (cons (nth 2 x) (cdr x))
           ) 
     dataList
@@ -1041,7 +1041,7 @@
 )
 
 ; refactored at 2021-03-15
-(defun ModifyPropertyValueByTagUtils (importedDataList propertyNameList / entityNameList propertyValueList)
+(defun ModifyPropertyValueByTagUtils (importedDataList propertyNameList / entityNameList)
   ; filter so slow, do not filter now. ready for refactor - 2021-03-15
   ;(setq importedDataList (FilterListByTestMemberUtils importedDataList (GetAllGsBzEquipTagList)))
   (setq entityNameList (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "GsBzEquip")))
