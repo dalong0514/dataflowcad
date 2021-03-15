@@ -973,7 +973,7 @@
 )
 
 ; 2021-03-09
-(defun UpdateGsBzEquipGraphByBox (tileName / dcl_id status importedDataList entityNameList exportMsgBtnStatus importMsgBtnStatus  modifyMsgBtnStatus)
+(defun UpdateGsBzEquipGraphByBox (tileName / dcl_id status importedDataList exportMsgBtnStatus importMsgBtnStatus  modifyMsgBtnStatus)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflowGs.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -1002,8 +1002,7 @@
     ; export data button
     (if (= 2 (setq status (start_dialog)))
       (progn 
-        (setq entityNameList (GetAllGsBzEquipEntityNameList))
-        (WriteDataToCSVByEntityNameListStrategy entityNameList "GsBzEquip")
+        (WriteGsBzDataToCSV)
         (setq exportMsgBtnStatus 1) 
       )
     )
@@ -1027,6 +1026,12 @@
   )
   (unload_dialog dcl_id)
   (princ)
+)
+
+; 2021-03-15
+(defun WriteGsBzDataToCSV (/ entityNameList)
+  (setq entityNameList (GetAllGsBzEquipEntityNameList))
+  (WriteDataToCSVByEntityNameListStrategy entityNameList "GsBzEquip") 
 )
 
 ; 2021-03-11
