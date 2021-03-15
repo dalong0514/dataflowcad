@@ -67,7 +67,7 @@ updateGsBzEquipGraphBox : dialog {
     : spacer { height = 1; } 
     : text {
       key = "modifyBtnMsg";
-      label = "数据更新状态：";
+      label = "设备图形更新状态：";
     }
     : spacer { height = 3; } 
     : row { 
