@@ -1020,6 +1020,7 @@
       (if (/= importedDataList nil) 
         (progn 
           (princ importedDataList)
+          
           ;(ModifyPropertyValueByTagUtils importedDataList (GetGsBzEquipPropertyNameList))
           ;(setq modifyMsgBtnStatus 1)
         )
@@ -1033,7 +1034,9 @@
 ; 2021-03-11
 (defun GetImportedGsBzEquipDataList (dataList /)
   (mapcar '(lambda (x) 
-             (cdr x)
+             ; 规整成以设备位号为键的数组
+             ; (F23101 GsBzCustomEquip F23101  800  1-2/A-B 备注信息)
+             (cons (nth 2 x) (cdr x))
           ) 
     dataList
   )  
