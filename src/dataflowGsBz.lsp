@@ -1018,7 +1018,7 @@
     (if (= 4 status) 
       (if (/= importedDataList nil) 
         (progn 
-          (ModifyPropertyValueByTagUtils importedDataList (GetGsBzEquipPropertyNameList))
+          (ModifyPropertyValueByTagUtils importedDataList)
           (setq modifyMsgBtnStatus 1)
         )
       )
@@ -1046,13 +1046,13 @@
 )
 
 ; refactored at 2021-03-15
-(defun ModifyPropertyValueByTagUtils (importedDataList propertyNameList / entityNameList)
+(defun ModifyPropertyValueByTagUtils (importedDataList / entityNameList)
   ; filter so slow, do not filter now. ready for refactor - 2021-03-15
   ;(setq importedDataList (FilterListByTestMemberUtils importedDataList (GetAllGsBzEquipTagList)))
   (setq entityNameList (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "GsBzEquip")))
   (mapcar '(lambda (x) 
             (ModifyMultiplePropertyForOneBlockUtils x 
-              propertyNameList 
+              (GetGsBzEquipPropertyNameList)
               (GetimportedPropertyValueListByEquipTag (GetGsBzEquipTagByEntityName x) importedDataList))
           ) 
     entityNameList     
