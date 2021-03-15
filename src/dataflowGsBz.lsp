@@ -836,7 +836,7 @@
 
 ; 2021-03-11
 (defun ImportGsBzEquipTagByBox (tileName / dcl_id dataType importedDataList status exportDataType sortedType sortedTypeResult importMsgBtnStatus)
-  (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
+  (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflowGs.dcl")))
   (setq status 2)
   (while (>= status 2)
     ; Create the dialog box
@@ -974,7 +974,7 @@
 
 ; 2021-03-09
 (defun UpdateGsBzEquipGraphByBox (tileName / dcl_id status exportDataType viewPropertyName dataType importedDataList ss entityNameList exportMsgBtnStatus importMsgBtnStatus  modifyMsgBtnStatus)
-  (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
+  (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflowGs.dcl")))
   (setq status 2)
   (while (>= status 2)
     ; Create the dialog box
@@ -996,7 +996,7 @@
       (set_tile "importBtnMsg" "导入数据状态：请先导入数据")
     ) 
     (if (= modifyMsgBtnStatus 1)
-      (set_tile "modifyBtnMsg" "修改CAD数据状态：已完成")
+      (set_tile "modifyBtnMsg" "更新数据状态：已完成")
     )
     ; all select button
     ; export data button
