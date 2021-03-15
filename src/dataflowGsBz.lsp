@@ -1046,15 +1046,19 @@
 )
 
 ; 2021-03-15
+; importedDataList: (V23104 GsBzTank V23104 立式双椭圆封头 500L V500D700LS 1-2/A-B 备注信息)
 (defun UpdateGsBzEquipData (importedDataList / entityNameList)
   ; filter so slow, do not filter now. ready for refactor - 2021-03-15
   ;(setq importedDataList (FilterListByTestMemberUtils importedDataList (GetAllGsBzEquipTagList)))
   (setq entityNameList (GetAllGsBzEquipEntityNameList))
-  (ModifyPropertyValueByTagUtils importedDataList entityNameList)
+  (ReplaceAllGsBzEquipGraph importedDataList entityNameList)
+  (ModifyPropertyValueByTagUtils importedDataList)
 )
 
 ; refactored at 2021-03-15
-(defun ModifyPropertyValueByTagUtils (importedDataList entityNameList /)
+(defun ModifyPropertyValueByTagUtils (importedDataList / entityNameList) 
+  ; graph entity has been updated
+  (setq entityNameList (GetAllGsBzEquipEntityNameList))
   (mapcar '(lambda (x) 
             (ModifyMultiplePropertyForOneBlockUtils x 
               (GetGsBzEquipPropertyNameList)
@@ -1065,9 +1069,14 @@
 )
 
 ; 2021-03-15
-(defun ReplaceGsBzEquipGraph (importedDataList entityNameList /)
+(defun ReplaceAllGsBzEquipGraph (importedDataList entityNameList /)
   (mapcar '(lambda (x) 
-             (GetGsBzEquipTypeByEntityName x)
+             (if (/= (GetGsBzEquipTypeByEquipTag (GetGsBzEquipTagByEntityName x) importedDataList) 
+                   (GetGsBzEquipTypeByEntityName x)) 
+               (progn 
+                 (entdel x)
+               )
+             )
           ) 
     entityNameList     
   )
