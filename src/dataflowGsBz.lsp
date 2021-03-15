@@ -1069,12 +1069,18 @@
 )
 
 ; 2021-03-15
-(defun ReplaceAllGsBzEquipGraph (importedDataList entityNameList /)
+(defun ReplaceAllGsBzEquipGraph (importedDataList entityNameList / allGsBzEquipBlockNameList gsBzEquipClassAndTypeAndTag insPt)
+  (setq allGsBzEquipBlockNameList (GetAllGsBzEquipBlockNameList))
   (mapcar '(lambda (x) 
-             (if (/= (GetGsBzEquipTypeByEquipTag (GetGsBzEquipTagByEntityName x) importedDataList) 
-                   (GetGsBzEquipTypeByEntityName x)) 
+             (setq gsBzEquipClassAndTypeAndTag (GetGsBzEquipClassAndTypeAndTag (GetGsBzEquipTagByEntityName x) importedDataList))
+             (if (/= (cadr gsBzEquipClassAndTypeAndTag) (GetGsBzEquipTypeByEntityName x)) 
                (progn 
+                 (setq insPt (GetEntityPositionByEntityNameUtils x))
                  (entdel x)
+                 (ReGenerateBlockGsBzEquipGraph insPt 
+                   (GetGsBzEquipBlockNameByCSV gsBzEquipClassAndTypeAndTag) 
+                   (caddr gsBzEquipClassAndTypeAndTag)
+                   allGsBzEquipBlockNameList)
                )
              )
           ) 
@@ -1083,9 +1089,41 @@
 )
 
 ; 2021-03-15
-(defun GetGsBzEquipTypeByEquipTag (equipTag importedDataList /) 
-  ; gsbzType is the 5th, and maybe change - 2021-03-15
-  (nth 4 (GetDottedPairValueUtils equipTag importedDataList))
+(defun GetGsBzEquipBlockNameByCSV (gsBzEquipClassAndTypeAndTag /)
+  (strcat (car gsBzEquipClassAndTypeAndTag) "-" (cadr gsBzEquipClassAndTypeAndTag))
+)
+
+; 2021-03-10
+(defun ReGenerateBlockGsBzEquipGraphV2 (insPt gsBzBlockName equipTag allGsBzEquipBlockNameList /) 
+  (if (member gsBzBlockName allGsBzEquipBlockNameList) 
+    (InsertBlockUtils insPt gsBzBlockName "0DataFlow-GsBzEquip" (list (cons 0 (GetGsBzEquipTypeClass gsBzBlockName)) 
+                                                                      (cons 1 equipTag)
+                                                                      (cons 4 (GetGsBzEquipType gsBzBlockName))
+                                                                ))
+    (InsertBlockGsBzEquipDefault insPt (list (cons 0 (GetGsBzEquipTypeClass gsBzBlockName)) 
+                                             (cons 1 equipTag)
+                                       ))
+  )
+)
+
+; 2021-03-10
+(defun ReGenerateBlockGsBzEquipGraph (insPt gsBzBlockName equipTag allGsBzEquipBlockNameList /) 
+  (if (member gsBzBlockName allGsBzEquipBlockNameList) 
+    (InsertBlockUtils insPt gsBzBlockName "0DataFlow-GsBzEquip" (list (cons 0 (GetGsBzEquipTypeClass gsBzBlockName)) 
+                                                                      (cons 1 equipTag)
+                                                                      (cons 4 (GetGsBzEquipType gsBzBlockName))
+                                                                ))
+    (InsertBlockGsBzEquipDefault insPt (list (cons 0 (GetGsBzEquipTypeClass gsBzBlockName)) 
+                                             (cons 1 equipTag)
+                                       ))
+  )
+)
+
+; 2021-03-15
+(defun GetGsBzEquipClassAndTypeAndTag (equipTag importedDataList / matchedList) 
+  (setq matchedList (GetDottedPairValueUtils equipTag importedDataList))
+  ; class is 1th, gsbzType is the 5th, and maybe change
+  (list (car matchedList) (nth 4 matchedList) (nth 1 matchedList))
 )
 
 ; 2021-03-15
