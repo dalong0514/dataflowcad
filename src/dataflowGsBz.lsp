@@ -1064,6 +1064,22 @@
   )
 )
 
+; 2021-03-15
+(defun ReplaceGsBzEquipGraph (importedDataList entityNameList /)
+  (mapcar '(lambda (x) 
+             (GetGsBzEquipTypeByEntityName x)
+          ) 
+    entityNameList     
+  )
+)
+
+; 2021-03-15
+(defun GetGsBzEquipTypeByEquipTag (equipTag importedDataList /) 
+  ; gsbzType is the 5th, and maybe change - 2021-03-15
+  (nth 4 (GetDottedPairValueUtils equipTag importedDataList))
+)
+
+; 2021-03-15
 (defun GetimportedPropertyValueListByEquipTag (equipTag importedDataList /)
   (GetDottedPairValueUtils equipTag importedDataList)
 )
