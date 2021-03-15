@@ -87,7 +87,7 @@ updateGsBzEquipGraphBox : dialog {
       : spacer { width = 2; } 
       : button { 
         key = "btnModify"; 
-        label = "确认修改"; 
+        label = "确认更新"; 
         is_default = "true"; 
       } 
       : spacer { width = 2; } 
