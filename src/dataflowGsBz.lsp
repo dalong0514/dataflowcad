@@ -73,10 +73,10 @@
 )
 
 ; 2021-03-11
-(defun InsertBlockGsBzEquipDefault (insPt /) 
+(defun InsertBlockGsBzEquipDefault (insPt propertyDictList /) 
   (VerifyGsBzBlockByName "GsBzEquipDefault")
   (VerifyGsBzLayerByName "0DataFlow-GsBzEquipDefault")
-  (InsertBlockByNoPropertyUtils insPt "GsBzEquipDefault" "0DataFlow-GsBzEquipDefault")
+  (InsertBlockUtils insPt "GsBzEquipDefault" "0DataFlow-GsBzEquipDefault" propertyDictList)
 )
 
 ; 2021-03-10
@@ -723,10 +723,13 @@
   resultList
 )
 
-; refactored at 2021-03-09
+; refactored at 2021-03-14
+; do not migrate [version] property
 (defun MigrateGsBzEquipTagPropertyValue (itemData blockPropertyNameList /) 
   (mapcar '(lambda (x) 
-             (ModifyMultiplePropertyForOneBlockUtils (car x) blockPropertyNameList (GetGsBzEquipBlockPropertyValueList (cdr x)))
+             (ModifyMultiplePropertyForOneBlockUtils (car x) 
+               (cdr blockPropertyNameList) 
+               (cdr (GetGsBzEquipBlockPropertyValueList (cdr x))))
           ) 
     itemData
   )
@@ -776,12 +779,26 @@
 ; 2021-03-10
 (defun InsertBlockGsBzEquipGraphStrategy (insPt gsBzBlockName allGsBzEquipBlockNameList /) 
   (if (member gsBzBlockName allGsBzEquipBlockNameList) 
-    (InsertBlockByNoPropertyUtils insPt gsBzBlockName "0DataFlow-GsBzEquip")
-    (InsertBlockGsBzEquipDefault insPt)
+    (InsertBlockUtils insPt gsBzBlockName "0DataFlow-GsBzEquip" (list (cons 0 (GetGsBzEquipTypeClass gsBzBlockName)) 
+                                                                  (cons 4 (GetGsBzEquipType gsBzBlockName))
+                                                                ))
+    (InsertBlockGsBzEquipDefault insPt (list (cons 0 (GetGsBzEquipTypeClass gsBzBlockName)) ))
   )
 )
 
+; 2021-03-13
+; unit test completed
+(defun GetGsBzEquipType (gsBzBlockName /)
+  (RegExpReplace gsBzBlockName ".*-(.*)" "$1" nil nil)
+)
+
+; 2021-03-14
+(defun GetGsBzEquipTypeClass (gsBzBlockName /)
+  (RegExpReplace gsBzBlockName "(.*)-(.*)" "$1" nil nil)
+)
+
 ; 2021-03-12
+; ready for refactor to strategy
 (defun GetGsBzEquipBlockName (dataType propertyDictList / equipVolume equipDiameter) 
   (setq equipVolume (ExtractEquipVolumeStringUtils 
                       (ProcessNullStringUtils (GetDottedPairValueUtils "volume" propertyDictList))
@@ -792,7 +809,6 @@
   ;(princ (strcat "\n" equipDiameter))
   (strcat "GsBz" dataType "-V" equipVolume "D" equipDiameter "LS")
 )
-
 
 ;;;-------------------------------------------------------------------------;;;
 ; Generate GsBzEquipTag By Import CSV
@@ -957,7 +973,7 @@
 )
 
 ; 2021-03-09
-(defun UpdateGsBzEquipGraphByBox (tileName / dcl_id exportDataType viewPropertyName dataType importedDataList status ss entityNameList exportMsgBtnStatus importMsgBtnStatus  modifyMsgBtnStatus)
+(defun UpdateGsBzEquipGraphByBox (tileName / dcl_id status exportDataType viewPropertyName dataType importedDataList ss entityNameList exportMsgBtnStatus importMsgBtnStatus  modifyMsgBtnStatus)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)

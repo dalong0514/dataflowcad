@@ -43,7 +43,15 @@
   (FilterListByTestNotMemberUtilsTest)
   (ExtractEquipVolumeNumUtilsTest)
   (ExtractEquipDiameterStringUtilsTest)
+  (GetGsBzEquipTypeTest)
   (DL:PrintTestResults (DL:CountBooleans *testList*))
+)
+
+; 2021-03-13
+(defun GetGsBzEquipTypeTest () 
+  (AssertEqual 'GetGsBzEquipType (list "GsBzTank-V300D600LS") "V300D600LS")
+  (AssertEqual 'GetGsBzEquipType (list "V1000D1000LS") "V1000D1000LS")
+  (AssertEqual 'GetGsBzEquipType (list "") "")
 )
 
 ; 2021-03-12

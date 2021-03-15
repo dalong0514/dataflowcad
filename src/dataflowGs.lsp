@@ -263,9 +263,9 @@
   '("Reactor" "Tank" "Heater" "Pump" "Centrifuge" "Vacuum" "CustomEquip")
 )
 
-; 2021-03-10
+; modified at - 2021-03-14
 (defun GetGsBzEquipPropertyNameList ()
-  '("TAG" "GSBZTYPE" "POSITIONREGION" "OPTION")
+  '("VERSION" "TAG" "SPECIES" "VOLUME" "GSBZTYPE" "POSITIONREGION" "OPTION")
 )
 
 ; 2021-03-10
@@ -372,7 +372,7 @@
 
 (defun WriteGsBzEquipDataToCSVByEntityNameListUtils (entityNameList / fileDir firstRow propertyNameList)
   (setq fileDir "D:\\dataflowcad\\data\\gsBzEquipData.csv")
-  (setq firstRow "数据ID,设备名称,设备类型代号,设备所在区域,备注,")
+  (setq firstRow "数据ID,设备大类,设备名称,设备种类,设备体积,设备类型代号,设备所在区域,备注,")
   (setq propertyNameList (GetGsBzEquipPropertyNameList))
   (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList "0")
 )
