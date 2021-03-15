@@ -700,9 +700,7 @@
              (setq itemData (vl-sort itemData '(lambda (x y) (< (cdr (caddr x)) (cdr (caddr y))))))
              (setq insPtList (GetInsertBzEquipinsPtList insPt itemData))
              (setq equipTagData (InsertGsBzEquipTag itemData insPtList (car x)))
-             
              (setq equipGraphData (InsertGsBzEquipGraph itemData insPtList (car x) allGsBzEquipBlockNameList))
-             
              (setq blockPropertyNameList (GetGsBzEquipTagPropertyNameList itemData)) 
              (MigrateGsBzEquipTagPropertyValue equipTagData blockPropertyNameList)
              (MigrateGsBzEquipTagPropertyValue equipGraphData blockPropertyNameList)
@@ -917,7 +915,19 @@
   (UpdateGsBzEquipTagPropertyValue equipTagData (GetPropertyNameListStrategy dataType))
   (setq equipPropertyTagDictList (GetGsBzEquipPropertyTagDictListStrategy dataType dataList))
   (setq equipGraphData (InsertGsBzEquipGraph equipPropertyTagDictList insPtList dataType allGsBzEquipBlockNameList))
-  (MigrateGsBzEquipTagPropertyValue equipGraphData (GetPropertyNameListStrategy dataType))
+  (MigrateGsBzEquipTagPropertyValueFromCSV equipGraphData (GetPropertyNameListStrategy dataType))
+)
+
+; refactored at 2021-03-15
+; red hat - fixed bug - csv data has no property [version], so need not to remove the first item
+(defun MigrateGsBzEquipTagPropertyValueFromCSV (itemData blockPropertyNameList /) 
+  (mapcar '(lambda (x) 
+             (ModifyMultiplePropertyForOneBlockUtils (car x) 
+               blockPropertyNameList
+               (GetGsBzEquipBlockPropertyValueList (cdr x)))
+          ) 
+    itemData
+  )
 )
 
 ; 2021-03-12
