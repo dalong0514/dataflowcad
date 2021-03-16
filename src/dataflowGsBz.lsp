@@ -765,7 +765,7 @@
 ; 2021-03-10
 (defun InsertGsBzEquipGraph (itemData insPtList dataType allGsBzEquipBlockNameList / gsBzEquipBlockName) 
   (mapcar '(lambda (x y) 
-             (setq gsBzEquipBlockName (GetGsBzEquipBlockName dataType (cdr x)))
+             (setq gsBzEquipBlockName (GetGsBzEquipBlockNameStrategy dataType (cdr x)))
              (InsertBlockGsBzEquipGraphStrategy (MoveInsertPositionUtils y 0 2500) gsBzEquipBlockName allGsBzEquipBlockNameList)
              (cons (entlast) (cdr x))
           ) 
@@ -798,7 +798,7 @@
 
 ; 2021-03-12
 ; ready for refactor to strategy
-(defun GetGsBzEquipBlockName (dataType propertyDictList / equipVolume equipDiameter) 
+(defun GetGsBzEquipTankBlockName (dataType propertyDictList / equipVolume equipDiameter) 
   (setq equipVolume (ExtractEquipVolumeStringUtils 
                       (ProcessNullStringUtils (GetDottedPairValueUtils "volume" propertyDictList))
                     ))
@@ -807,6 +807,14 @@
                     )) 
   ;(princ (strcat "\n" equipDiameter))
   (strcat "GsBz" dataType "-V" equipVolume "D" equipDiameter "LS")
+)
+
+; 2021-03-16
+(defun GetGsBzEquipBlockNameStrategy (dataType propertyDictList /)
+  (cond 
+    ((= dataType "Tank") (GetGsBzEquipTankBlockName dataType propertyDictList))
+    (T (strcat "GsBz" dataType))
+  )
 )
 
 ;;;-------------------------------------------------------------------------;;;
