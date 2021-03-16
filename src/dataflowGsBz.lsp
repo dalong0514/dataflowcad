@@ -799,14 +799,21 @@
 ; 2021-03-12
 ; ready for refactor to strategy
 (defun GetGsBzEquipTankBlockName (dataType propertyDictList / equipVolume equipDiameter) 
-  (setq equipVolume (ExtractEquipVolumeStringUtils 
-                      (ProcessNullStringUtils (GetDottedPairValueUtils "volume" propertyDictList))
-                    ))
-  (setq equipDiameter (ExtractEquipDiameterStringUtils 
-                      (ProcessNullStringUtils (GetDottedPairValueUtils "size" propertyDictList))
-                    )) 
-  ;(princ (strcat "\n" equipDiameter))
+  (setq equipVolume (GetGsBzEquipVolume propertyDictList))
+  (setq equipDiameter (GetGsBzEquipDiameter propertyDictList)) 
   (strcat "GsBz" dataType "-V" equipVolume "D" equipDiameter "LS")
+)
+
+; 2021-03-16
+(defun GetGsBzEquipVolume (propertyDictList /)
+  (ExtractEquipVolumeStringUtils (ProcessNullStringUtils 
+                                   (GetDottedPairValueUtils "volume" propertyDictList)))
+)
+
+; 2021-03-16
+(defun GetGsBzEquipDiameter (propertyDictList /)
+  (ExtractEquipDiameterStringUtils (ProcessNullStringUtils 
+                                   (GetDottedPairValueUtils "size" propertyDictList)))
 )
 
 ; 2021-03-16
