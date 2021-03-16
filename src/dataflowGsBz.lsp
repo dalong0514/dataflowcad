@@ -774,12 +774,13 @@
   )  
 )
 
-; 2021-03-10
+; red hat - 2021-03-16
 (defun InsertBlockGsBzEquipGraphStrategy (insPt gsBzBlockName allGsBzEquipBlockNameList /) 
   (if (member gsBzBlockName allGsBzEquipBlockNameList) 
     (InsertBlockUtils insPt gsBzBlockName "0DataFlow-GsBzEquip" (list (cons 0 (GetGsBzEquipTypeClass gsBzBlockName)) 
                                                                   (cons 4 (GetGsBzEquipType gsBzBlockName))
                                                                 ))
+    ; if has no layer [0DataFlow-GsBzEquipDefault], do not generate graph, bug record - 2021-03-16
     (InsertBlockGsBzEquipDefault insPt (list (cons 0 (GetGsBzEquipTypeClass gsBzBlockName)) ))
   )
 )
