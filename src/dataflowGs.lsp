@@ -3153,7 +3153,7 @@
 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
-; logic for brushBlockPropertyValue
+; logic for Common Function of Little Tools
 
 (defun c:brushTextEntityContent (/ textContent entityNameList)
   (prompt "\n选择要提取的单行文字：")
@@ -3168,7 +3168,7 @@
 (defun c:deleteTextByLayer (/ textLayer)
   (prompt "\n拾取一个要删除的单行文字以获取图层信息：")
   (setq textLayer (GetEntitylayerBySelectUtils))
-  (prompt "\n选择要删除的单行文字（可批量选择）：")
+  (prompt (strcat "\n拾取到的图层名：" textLayer "\n选择要删除的单行文字（可批量选择）："))
   (DeleteEntityBySSUtils (GetTextSSByLayerBySelectUtils textLayer))
   (princ)
 )
