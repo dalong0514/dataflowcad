@@ -796,12 +796,18 @@
   (RegExpReplace gsBzBlockName "(.*)-(.*)" "$1" nil nil)
 )
 
-; 2021-03-12
-; ready for refactor to strategy
+; refactored at 2021-03-12
+; ready for refactor to strategy - completed
 (defun GetGsBzEquipTankBlockName (dataType propertyDictList / equipVolume equipDiameter) 
   (setq equipVolume (GetGsBzEquipVolume propertyDictList))
   (setq equipDiameter (GetGsBzEquipDiameter propertyDictList)) 
   (strcat "GsBz" dataType "-V" equipVolume "D" equipDiameter "LS")
+)
+
+(defun GetGsBzEquipReactorBlockName (dataType propertyDictList / equipVolume equipDiameter) 
+  (setq equipVolume (GetGsBzEquipVolume propertyDictList))
+  (setq equipDiameter (GetGsBzEquipDiameter propertyDictList)) 
+  (strcat "GsBz" dataType "-V" equipVolume "D" equipDiameter "KSB")
 )
 
 ; 2021-03-16
@@ -819,8 +825,9 @@
 ; 2021-03-16
 (defun GetGsBzEquipBlockNameStrategy (dataType propertyDictList /)
   (cond 
-    ((= dataType "Tank") (GetGsBzEquipTankBlockName dataType propertyDictList))
-    (T (strcat "GsBz" dataType))
+    ((= dataType "Tank") (GetGsBzEquipTankBlockName dataType propertyDictList)) 
+    ((= dataType "Reactor") (GetGsBzEquipReactorBlockName dataType propertyDictList)) 
+    (T (strcat "GsBz" dataType)) 
   )
 )
 
