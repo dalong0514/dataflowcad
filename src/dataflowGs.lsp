@@ -2700,7 +2700,9 @@
     (setq childrenData 
       (vl-remove-if-not '(lambda (x) 
                            ; sort data by codeName
-                          (wcmatch (cdr (assoc (car (numberedPropertyNameListStrategy dataType)) x)) (strcat item "*"))
+                           ; red hat - bug - 氮气N 会匹配到乙二醇 NEGR - 2021-03-16
+                          ;(wcmatch (cdr (assoc (car (numberedPropertyNameListStrategy dataType)) x)) (strcat item "*"))
+                           (MatchDataBycodeName (cdr (assoc (car (numberedPropertyNameListStrategy dataType)) x)) item)
                         ) 
         propertyValueDictList
       ) 
@@ -2713,6 +2715,11 @@
   (list childrenDataList numberedList)
 )
 
+; 2021-03-16
+(defun MatchDataBycodeName (pipeNum codeName /)
+  (= (GetPipeCodeByPipeNum pipeNum) codeName)
+)
+
 (defun GetPipeAndEquipChildrenDataListByDrawNum (propertyValueDictList dataType codeNameList / childrenData childrenDataList numberedList) 
   (mapcar '(lambda (drawNum) 
             (foreach item codeNameList 
@@ -2720,7 +2727,9 @@
                 (vl-remove-if-not '(lambda (x) 
                                       ; sort data by codeName
                                       (and 
-                                        (wcmatch (cdr (assoc (car (numberedPropertyNameListStrategy dataType)) x)) (strcat item "*")) 
+                                        ; red hat - bug - 氮气N 会匹配到乙二醇 NEGR - 2021-03-16
+                                        ;(wcmatch (cdr (assoc (car (numberedPropertyNameListStrategy dataType)) x)) (strcat item "*")) 
+                                        (MatchDataBycodeName (cdr (assoc (car (numberedPropertyNameListStrategy dataType)) x)) item)
                                         (= drawNum (ExtractDrawNumUtils (cdr (assoc "DRAWNUM" x))))
                                       )
                                   ) 
@@ -2878,10 +2887,15 @@
 
 (defun GetPipeCodeNameList (pipeNumList /) 
   (mapcar '(lambda (x) 
-            (RegExpReplace x "([A-Za-z]+)\\d*-.*" "$1" nil nil)
+             (GetPipeCodeByPipeNum x)
           ) 
     pipeNumList
   )
+)
+
+; 2021-03-16
+(defun GetPipeCodeByPipeNum (pipeNum /)
+  (RegExpReplace pipeNum"([A-Za-z]+)\\d*-.*" "$1" nil nil)
 )
 
 (defun GetEquipmentCodeNameList (tagList /) 
