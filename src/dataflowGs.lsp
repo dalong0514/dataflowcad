@@ -778,24 +778,6 @@
 ;;;-------------------------------------------------------------------------;;;
 ; logic for brushBlockPropertyValue
 
-(defun c:brushTextEntityContent (/ textContent entityNameList)
-  (prompt "\n选择要提取的单行文字：")
-  (setq textContent (GetTextEntityContentBySelectUtils))
-  (prompt (strcat "\n提取的文字内容：" textContent))
-  (prompt "\n选择要刷的单行文字（可批量选择）：")
-  (setq entityNameList (GetEntityNameListBySSUtils (GetTextSSBySelectUtils)))
-  (ModifyTextEntityContent entityNameList textContent)
-  (princ)
-)
-
-(defun ModifyTextEntityContent (entityNameList textContent /)
-  (mapcar '(lambda (x) 
-            (SetDXFValueByEntityDataUtils (entget x) 1 textContent)
-          ) 
-    entityNameList
-  ) 
-)
-
 ; refactored at 2021-03-08
 (defun c:brushLocationForInstrument (/ ss sourceData instrumentData locationData entityNameList) 
   (prompt "\n选择数据集（只能包含一个仪表或管道）：")
@@ -3167,6 +3149,29 @@
 ; PipeClassChange and PipeDiameterChange
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
+
+
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+; logic for brushBlockPropertyValue
+
+(defun c:brushTextEntityContent (/ textContent entityNameList)
+  (prompt "\n选择要提取的单行文字：")
+  (setq textContent (GetTextEntityContentBySelectUtils))
+  (prompt (strcat "\n提取的文字内容：" textContent))
+  (prompt "\n选择要刷的单行文字（可批量选择）：")
+  (setq entityNameList (GetEntityNameListBySSUtils (GetTextSSBySelectUtils)))
+  (ModifyTextEntityContentUtils entityNameList textContent)
+  (princ)
+)
+
+(defun c:deleteTextByLayer (/ textLayer)
+  (prompt "\n拾取一个要删除的单行文字以获取图层信息：")
+  (setq textLayer (GetEntitylayerBySelectUtils))
+  (prompt "\n选择要删除的单行文字（可批量选择）：")
+  (DeleteEntityBySSUtils (GetTextSSByLayerBySelectUtils textLayer))
+  (princ)
+)
 
 ;| 
 -------------------------------------------------------------------------------

@@ -484,8 +484,14 @@
   )
 )
 
+; 2021-03-16
 (defun GetTextSSBySelectUtils ()
   (ssget '((0 . "TEXT")))
+)
+
+; 2021-03-16
+(defun GetTextSSByLayerBySelectUtils (layerName /)
+  (setq ss (ssget (list (cons 0 "TEXT") (cons 8 layerName))))
 )
 
 ; 2021-02-02
@@ -885,6 +891,11 @@
 ; 2021-01-28
 (defun GetTextEntityContentBySelectUtils ()
   (cdr (assoc 1 (entget (car (GetEntityNameListBySSUtils (GetTextSSBySelectUtils))))))
+)
+
+; 2021-03-16
+(defun GetEntitylayerBySelectUtils ()
+  (cdr (assoc 8 (entget (car (GetEntityNameListBySSUtils (ssget))))))
 )
 
 (defun GetEntityHandleListByEntityNameListUtils (entityNameList /) 
@@ -1507,6 +1518,15 @@
                     ) 
     dataList
   )
+)
+
+; refactored at 2021-03-16
+(defun ModifyTextEntityContentUtils (entityNameList textContent /)
+  (mapcar '(lambda (x) 
+            (SetDXFValueByEntityDataUtils (entget x) 1 textContent)
+          ) 
+    entityNameList
+  ) 
 )
 
 ; Utils Function 
