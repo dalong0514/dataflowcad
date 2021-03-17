@@ -264,16 +264,28 @@
   )(princ)
 )
 
-(defun GenerateTextByPositionAndContentUtils (insPt textContent layer /)
-  (entmake (list (cons 0 "TEXT") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 layer) (cons 100 "AcDbText") 
-                  (cons 10 insPt) (cons 11 '(0.0 0.0 0.0)) (cons 40 3.0) (cons 1 textContent) (cons 50 1.5708) (cons 41 0.7) (cons 51 0.0) 
+; refactored at 2021-03-17
+; directionStatus: dxfcode 50; 0.0 Level - 1.57 Vertical
+(defun GenerateLevelLeftTextUtils (insPt textContent textLayer textHeight /)
+  (entmake (list (cons 0 "TEXT") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 textLayer) (cons 100 "AcDbText") 
+                  (cons 10 insPt) (cons 11 '(0.0 0.0 0.0)) (cons 40 textHeight) (cons 1 textContent) (cons 50 0.0) (cons 41 0.7) (cons 51 0.0) 
                   (cons 7 "DataFlow") (cons 71 0) (cons 72 0) (cons 73 0) (cons 210 '(0.0 0.0 1.0)) (cons 100 "AcDbText") 
              )
   )(princ)
 )
 
 ; 2021-03-17
-(defun GenerateCenterText (insPt textContent textLayer textHeight /)
+; directionStatus: dxfcode 50; 0.0 Level - 1.57 Vertical
+(defun GenerateVerticalLeftTextUtils (insPt textContent textLayer textHeight /)
+  (entmake (list (cons 0 "TEXT") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 textLayer) (cons 100 "AcDbText") 
+                  (cons 10 insPt) (cons 11 '(0.0 0.0 0.0)) (cons 40 textHeight) (cons 1 textContent) (cons 50 1.57) (cons 41 0.7) (cons 51 0.0) 
+                  (cons 7 "DataFlow") (cons 71 0) (cons 72 0) (cons 73 0) (cons 210 '(0.0 0.0 1.0)) (cons 100 "AcDbText") 
+             )
+  )(princ)
+)
+
+; 2021-03-17
+(defun GenerateLevelCenterTextUtils (insPt textContent textLayer textHeight /)
   (entmake (list (cons 0 "TEXT") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 textLayer) (cons 100 "AcDbText") 
                   (cons 10 '(0.0 0.0 0.0)) (cons 11 insPt) (cons 40 textHeight) (cons 1 textContent) (cons 50 0.0) (cons 41 0.7) (cons 51 0.0) 
                   (cons 7 "DataFlow") (cons 71 0) (cons 72 1) (cons 73 0) (cons 210 '(0.0 0.0 1.0)) (cons 100 "AcDbText") 
@@ -320,7 +332,7 @@
   (princ)
 )
 
-; directionStatus: dxfcode 50; 0 水平方向 - 1.57 垂直方向
+; directionStatus: dxfcode 50; 0.0 Level - 1.57 Vertical
 ; hiddenStatus dxfcode 70; 0 可见 - 1 隐藏
 ; moveStatus: dxfcode 280; 1 固定 - 0 可移动
 (defun GenerateCenterBlockAttribute (insPt propertyName propertyValue blockLayer textHeight directionStatus hiddenStatus moveStatus /)
