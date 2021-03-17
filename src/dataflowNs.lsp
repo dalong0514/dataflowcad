@@ -26,10 +26,11 @@
 )
 
 ; refactored at 2021-03-12
-(defun InsertNsEquipTextList (insPt equipDictList / insPtList equipTagData equipPropertyTagDictList) 
+(defun InsertNsEquipTextList (insPt equipDictList / textHeight insPtList) 
+  (setq textHeight 350)
   (setq insPtList (GetInsertPtListByYMoveUtils insPt (GenerateSortedNumByList equipDictList 0) -800))
   (mapcar '(lambda (x y) 
-             (InsertNsEquipListLeftTextByRow y x)
+             (InsertNsEquipListLeftTextByRow y x textHeight)
            ) 
     equipDictList
     insPtList
@@ -37,31 +38,38 @@
 )
 
 ; 2021-03-17
-(defun InsertNsEquipListLeftTextByRow (insPt rowData /) 
+(defun InsertNsEquipListLeftTextByRow (insPt rowData textHeight /) 
   (cond 
-    ((= (length rowData) 7) (InsertFristRowNsEquipList insPt rowData)) 
-    ((= (length rowData) 2) (InsertLastRowNsEquipList insPt rowData)) 
-    (T (InsertNullRowNsEquipList insPt rowData)) 
+    ((= (length rowData) 7) (InsertFristRowNsEquipList insPt rowData textHeight)) 
+    ((= (length rowData) 2) (InsertLastRowNsEquipList insPt rowData textHeight)) 
+    (T (InsertNullRowNsEquipList insPt rowData textHeight)) 
   )
 )
 
 ; 2021-03-17
-(defun InsertFristRowNsEquipList (insPt rowData /) 
-  (InsertNsEquipListCenterText insPt (nth 0 rowData) 350)
-  (InsertNsEquipListCenterText (MoveInsertPositionUtils insPt 1500 0) (nth 1 rowData) 350)
-  (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 2700 0) (nth 2 rowData) 350)
+;("1" "EH-137-0000-0001" "防爆柜式离心风机箱" "5320" "HTFC-I-12-Ex" "1" "2")
+(defun InsertFristRowNsEquipList (insPt rowData textHeight /) 
+  (InsertNsEquipListCenterText insPt (nth 0 rowData) textHeight)
+  (InsertNsEquipListCenterText (MoveInsertPositionUtils insPt 1500 0) (nth 1 rowData) textHeight)
+  (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 2700 0) (nth 2 rowData) textHeight)
+  (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 6700 0) (nth 3 rowData) textHeight)
+  (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 14700 0) (nth 4 rowData) textHeight)
+  (InsertNsEquipListCenterText (MoveInsertPositionUtils insPt 21300 0) "台" textHeight)
+  (InsertNsEquipListCenterText (MoveInsertPositionUtils insPt 22300 0) (nth 5 rowData) textHeight)
+  (InsertNsEquipListCenterText (MoveInsertPositionUtils insPt 30550 0) "订货" textHeight)
+  (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 33600 0) (nth 6 rowData) textHeight)
 )
 
 ; 2021-03-17
-(defun InsertLastRowNsEquipList (insPt rowData /) 
-  (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 2700 0) (nth 0 rowData) 350)
-  (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 33600 0) (nth 1 rowData) 350)
+(defun InsertLastRowNsEquipList (insPt rowData textHeight /) 
+  (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 2700 0) (nth 0 rowData) textHeight)
+  (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 33600 0) (nth 1 rowData) textHeight)
 )
 
 ; 2021-03-17
-(defun InsertNullRowNsEquipList (insPt rowData /) 
-  (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 2700 0) "NsEquipNull" 350)
-  (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 33600 0) "NsEquipNull" 350)
+(defun InsertNullRowNsEquipList (insPt rowData textHeight /) 
+  (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 2700 0) "NsEquipNull" textHeight)
+  (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 33600 0) "NsEquipNull" textHeight)
 )
 
 ; 2021-03-17
