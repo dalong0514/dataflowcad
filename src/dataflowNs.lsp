@@ -21,8 +21,6 @@
   
   ;(GetNsEquipDictList)
   (InsertNsEquipTextList (MoveInsertPositionUtils insPt 3000 25200) (GetNsEquipDictList))
-  ;(InsertNsEquipListLeftText insPt "ÄÚÈÝ" 350)
-  ;(InsertNsEquipFrame insPt)
 )
 
 ; refactored at 2021-03-12
