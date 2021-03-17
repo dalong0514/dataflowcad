@@ -18,20 +18,25 @@
   (VerifyNsBzLayerByName "0DataFlow-NsEquipFrame")
   (VerifyNsBzBlockByName "equiplist.2017") 
   (setq insPt (getpoint "\n拾取设备一览表插入点："))
-  
   ;(GetNsEquipDictList)
   (InsertNsEquipTextList (MoveInsertPositionUtils insPt 3000 25200) (GetNsEquipDictList))
 )
 
 ; refactored at 2021-03-12
-(defun InsertNsEquipTextList (insPt equipDictList / textHeight insPtList) 
+(defun InsertNsEquipTextList (insPt equipDictList / textInsPt textHeight insPtList) 
   (setq textHeight 350)
-  (setq insPtList (GetInsertPtListByYMoveUtils insPt (GenerateSortedNumByList equipDictList 0) -800))
-  (mapcar '(lambda (x y) 
-             (InsertNsEquipListLeftTextByRow y x textHeight)
+  (mapcar '(lambda (x) 
+              (InsertNsEquipFrame (MoveInsertPositionUtils insPt -3000 -25200))
+              (setq insPtList (GetInsertPtListByYMoveUtils insPt (GenerateSortedNumByList x 0) -800))
+              (mapcar '(lambda (xx yy) 
+                        (InsertNsEquipListLeftTextByRow yy xx textHeight)
+                      ) 
+                x
+                insPtList
+              ) 
+              (setq insPt (MoveInsertPositionUtils insPt 0 -31700))
            ) 
-    equipDictList
-    insPtList
+    (SplitListByNumUtils equipDictList 29)
   ) 
 )
 
