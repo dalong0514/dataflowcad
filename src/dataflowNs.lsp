@@ -117,15 +117,15 @@
                               )) 
              ; the 4th row
              (setq resultList (append resultList 
-                                (list (GetNsEquipOneRowList x '("rotateSpeed" "comment3")))
+                                (list (RepairNsEquipRotateSpeed (GetNsEquipOneRowList x '("rotateSpeed" "comment3"))))
                               )) 
              ; the 5th row
              (setq resultList (append resultList 
-                                (list (GetNsEquipOneRowList x '("noise" "comment4")))
+                                (list (RepairNsEquipNoise (GetNsEquipOneRowList x '("noise" "comment4"))))
                               )) 
              ; the 6th row
              (setq resultList (append resultList 
-                                (list (GetNsEquipOneRowList x '("efficiency" "comment5")))
+                                (list (RepairNsEquipEfficiency (GetNsEquipOneRowList x '("efficiency" "comment5"))))
                               )) 
              ; the last row
              (setq resultList (append resultList 
@@ -153,6 +153,18 @@
 (defun RepairNsEquipRotateSpeed (dataList /) 
   (list 
     (strcat "转速：" (car dataList) "r/min")
+    (cadr dataList))
+)
+
+(defun RepairNsEquipNoise (dataList /) 
+  (list 
+    (strcat "噪声：" (car dataList) "dB（A）")
+    (cadr dataList))
+)
+
+(defun RepairNsEquipEfficiency (dataList /) 
+  (list 
+    (strcat "能效等级：" (car dataList) " 级")
     (cadr dataList))
 )
 
