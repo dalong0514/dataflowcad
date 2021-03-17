@@ -427,7 +427,7 @@
   (princ)
 )
 
-(defun ReadDataFromCSVStrategy (dataType / fileDir)
+(defun ReadGsDataFromCSVStrategy (dataType / fileDir)
   (if (= dataType "Pipe") 
     (setq fileDir "D:\\dataflowcad\\data\\pipeData.csv")
   )
@@ -1265,7 +1265,7 @@
     ; import data button
     (if (= 4 status) 
       (progn 
-        (setq importedDataList (StrListToListListUtils (ReadDataFromCSVStrategy "commonBlock")))
+        (setq importedDataList (StrListToListListUtils (ReadGsDataFromCSVStrategy "commonBlock")))
         (setq importedDataList (RemoveApostrForListListUtils importedDataList))
         (setq importMsgBtnStatus 1)
       )
@@ -1380,7 +1380,7 @@
         (setq dataType (GetTempExportedDataTypeByindex exportDataType))
         (if (/= dataType "Equipment") 
           (progn 
-            (setq importedDataList (StrListToListListUtils (ReadDataFromCSVStrategy dataType)))
+            (setq importedDataList (StrListToListListUtils (ReadGsDataFromCSVStrategy dataType)))
             (setq importMsgBtnStatus 1)
           ) 
           (setq importMsgBtnStatus 2)
@@ -1646,7 +1646,7 @@
     ; import data button
     (if (= 8 status)
       (progn 
-        (setq importedDataList (StrListToListListUtils (ReadDataFromCSVStrategy dataType)))
+        (setq importedDataList (StrListToListListUtils (ReadGsDataFromCSVStrategy dataType)))
         (setq importMsgBtnStatus 1)
       )
     )
