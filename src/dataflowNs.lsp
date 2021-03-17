@@ -113,7 +113,7 @@
                               )) 
              ; the 3th row
              (setq resultList (append resultList 
-                                (list (GetNsEquipOneRowList x '("power" "comment2")))
+                                (list (RepairNsEquipPower (GetNsEquipOneRowList x '("power" "voltage" "comment2"))))
                               )) 
              ; the 4th row
              (setq resultList (append resultList 
@@ -144,8 +144,16 @@
   )
 )
 
-(defun RepairPower (power /)
-  (strcat "风量：" power "m3/h")
+(defun RepairNsEquipPower (dataList /) 
+  (list 
+    (strcat "功率：" (car dataList) "kW（" (cadr dataList) "V）")
+    (caddr dataList))
+)
+
+(defun RepairNsEquipRotateSpeed (dataList /) 
+  (list 
+    (strcat "转速：" (car dataList) "r/min")
+    (cadr dataList))
 )
 
 ; 2021-03-17
