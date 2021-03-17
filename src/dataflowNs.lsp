@@ -24,7 +24,7 @@
 )
 
 ; 2021-03-17
-(defun GetNsEquipDictList ()
+(defun GetOriginNsEquipDictList ()
   (mapcar '(lambda (y) 
               (mapcar '(lambda (xx yy) 
                          (cons xx yy)
@@ -35,6 +35,41 @@
            ) 
     (GetNsEquipImportedList)
   )
+)
+
+; 2021-03-17
+(defun GetNsEquipDictList (/ resultList)
+  (mapcar '(lambda (x) 
+             ; the 1th row
+             (setq resultList (append resultList 
+                                (list (GetNsEquipOneRowList x '("id" "tag" "name" "airVolume" "type" "num" "explosionProof")))
+                              ))
+             ; the 2th row
+             (setq resultList (append resultList 
+                                (list (GetNsEquipOneRowList x '("fullPressure" "comment1")))
+                              )) 
+             ; the 3th row
+             (setq resultList (append resultList 
+                                (list (GetNsEquipOneRowList x '("power" "comment2")))
+                              ))  
+             ; the last row
+             (setq resultList (append resultList 
+                                (list (list "NsEquipNull"))
+                              ))  
+           ) 
+    (GetOriginNsEquipDictList)
+  )
+  resultList
+)
+
+; 2021-03-17
+(defun GetNsEquipOneRowList (dataList propertyNameList / resultList)
+  (mapcar '(lambda (x) 
+             (setq resultList (append resultList (list (GetDottedPairValueUtils x dataList))))
+           ) 
+    propertyNameList
+  )
+  resultList
 )
 
 (defun GetNsEquipTablePropertyNameList ()
