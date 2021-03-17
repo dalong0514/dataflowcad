@@ -53,7 +53,7 @@
 ; 2021-03-17
 (defun InsertNsEquipListLeftTextByRow (insPt rowData textHeight /) 
   (cond 
-    ((or (= (length rowData) 6) (= (length rowData) 7)) (InsertFristRowNsEquipList insPt rowData textHeight)) 
+    ((or (= (length rowData) 7) (= (length rowData) 8)) (InsertFristRowNsEquipList insPt rowData textHeight)) 
     ((= (length rowData) 2) (InsertLastRowNsEquipList insPt rowData textHeight)) 
     ((= (length rowData) 1) (InsertMiddleRowNsEquipList insPt rowData textHeight)) 
     (T (InsertNullRowNsEquipList insPt rowData textHeight)) 
@@ -71,9 +71,10 @@
   (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 14700 0) (nth 4 rowData) textHeight)
   (InsertNsEquipListCenterText (MoveInsertPositionUtils insPt 21300 0) "Ì¨" textHeight)
   (InsertNsEquipListCenterText (MoveInsertPositionUtils insPt 22300 0) (nth 5 rowData) textHeight)
+  (InsertNsEquipListCenterText (MoveInsertPositionUtils insPt 24600 0) (nth 6 rowData) textHeight)
   (InsertNsEquipListCenterText (MoveInsertPositionUtils insPt 30550 0) "¶©»õ" textHeight)
-  (if (/= (nth 6 rowData) nil) 
-    (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 33600 0) (nth 6 rowData) textHeight)
+  (if (/= (nth 7 rowData) nil) 
+    (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 33600 0) (nth 7 rowData) textHeight)
     (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 33600 0) "NsEquipNull" textHeight)
   )
 )
@@ -105,7 +106,7 @@
   (mapcar '(lambda (x) 
              ; the 1th row
              (setq resultList (append resultList 
-                                (list (GetNsEquipOneRowList x '("id" "tag" "name" "airVolume" "type" "num" "explosionProof")))
+                                (list (GetNsEquipOneRowList x '("id" "tag" "name" "airVolume" "type" "num" "weight" "explosionProof")))
                               )) 
              ; the 2th row
              (setq resultList (append resultList 
