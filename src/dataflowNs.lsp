@@ -67,11 +67,12 @@
   (InsertNsEquipListCenterTextByWidth (MoveInsertPositionUtils insPt 1500 0) (nth 1 rowData) textHeight 0.4)
   (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 2700 0) (nth 2 rowData) textHeight)
   ; airVolume
-  (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 6700 0) (RepairAirVolume (nth 3 rowData)) textHeight)
+  (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 6700 0) (RepairNsEquipAirVolume (nth 3 rowData)) textHeight)
   (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 14700 0) (nth 4 rowData) textHeight)
   (InsertNsEquipListCenterText (MoveInsertPositionUtils insPt 21300 0) "台" textHeight)
   (InsertNsEquipListCenterText (MoveInsertPositionUtils insPt 22300 0) (nth 5 rowData) textHeight)
-  (InsertNsEquipListCenterText (MoveInsertPositionUtils insPt 24600 0) (nth 6 rowData) textHeight)
+  ; weight
+  (InsertNsEquipListCenterText (MoveInsertPositionUtils insPt 24600 0) (RepairNsEquipWeight (nth 6 rowData)) textHeight)
   (InsertNsEquipListCenterText (MoveInsertPositionUtils insPt 30550 0) "订货" textHeight)
   (if (/= (nth 7 rowData) nil) 
     (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 33600 0) (nth 7 rowData) textHeight)
@@ -80,8 +81,13 @@
 )
 
 ; 2021-03-17
-(defun RepairAirVolume (airVolume /)
+(defun RepairNsEquipAirVolume (airVolume /)
   (strcat "风量：" airVolume "m3/h")
+)
+
+; 2021-03-17
+(defun RepairNsEquipWeight (weight /)
+  (strcat weight "kg")
 )
 
 ; 2021-03-17
