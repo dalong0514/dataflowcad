@@ -172,5 +172,5 @@
 
 ; 2021-03-17
 (defun InsertNsEquipListLeftText (insPt textContent textHeight /) 
-  (GenerateLevelLeftTextUtils insPt textContent "0DataFlow-NsText" textHeight) 
+  (GenerateLevelLeftTextUtils insPt textContent "0DataFlow-NsText" textHeight 0.7) 
 )
