@@ -24,7 +24,8 @@
   (VerifyNsBzLayerByName "0DataFlow-NsEquipFrame")
   (VerifyNsBzBlockByName "equiplist.2017") 
   (setq insPt (getpoint "\n拾取设备一览表插入点："))
-  (InsertNsEquipFrame insPt)
+  (InsertNsEquipListCenterText insPt "内容" 350)
+  ;(InsertNsEquipFrame insPt)
 )
 
 ; 2021-03-17
@@ -32,9 +33,7 @@
   (InsertBlockByScaleUtils insPt "equiplist.2017" "0DataFlow-NsEquipFrame" (list (cons 8 "暖通")) 100)
 )
 
-(defun c:foo (/ insPt) 
-  (VerifyNsBzTextStyleByName "DataFlow")
-  (VerifyNsBzLayerByName "0DataFlow-NsText")
-  (setq insPt (getpoint "\n拾取设备一览表插入点："))
-  (GenerateCenterText insPt "内容" "0DataFlow-NsText" 350) 
+; 2021-03-17
+(defun InsertNsEquipListCenterText (insPt textContent textHeight /) 
+  (GenerateCenterText insPt textContent "0DataFlow-NsText" textHeight) 
 )
