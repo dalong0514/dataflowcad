@@ -44,7 +44,14 @@
   (ExtractEquipVolumeNumUtilsTest)
   (ExtractEquipDiameterStringUtilsTest)
   (GetGsBzEquipTypeTest)
+  (RemoveNullStringForListUtilsTest)
   (DL:PrintTestResults (DL:CountBooleans *testList*))
+)
+
+; 2021-03-17
+(defun RemoveNullStringForListUtilsTest () 
+  (AssertEqual 'RemoveNullStringForListUtils (list (list "" "260" "自定义备注测试1")) (list "260" "自定义备注测试1"))
+  (AssertEqual 'RemoveNullStringForListUtils (list (list "320" "" "自定义备注测试1")) (list "320" "自定义备注测试1"))
 )
 
 ; 2021-03-13
