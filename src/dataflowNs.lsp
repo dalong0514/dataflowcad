@@ -19,8 +19,8 @@
   (VerifyNsBzBlockByName "equiplist.2017") 
   (setq insPt (getpoint "\n拾取设备一览表插入点："))
   
-  ;(GetNsEquipDictList)
-  (InsertNsEquipTextList (MoveInsertPositionUtils insPt 3000 25200) (GetNsEquipDictList))
+  (GetNsEquipDictList)
+  ;(InsertNsEquipTextList (MoveInsertPositionUtils insPt 3000 25200) (GetNsEquipDictList))
   ;(InsertNsEquipListLeftText insPt "内容" 350)
   ;(InsertNsEquipFrame insPt)
 )
@@ -36,13 +36,17 @@
   ) 
 )
 
+(defun InsertNsEquipListLeftTextByRow ()
+  (InsertNsEquipListLeftText y (car x) 350)
+)
+
 ; 2021-03-17
 (defun GetNsEquipDictList (/ resultList)
   (mapcar '(lambda (x) 
              ; the 1th row
              (setq resultList (append resultList 
                                 (list (GetNsEquipOneRowList x '("id" "tag" "name" "airVolume" "type" "num" "explosionProof")))
-                              ))
+                              )) 
              ; the 2th row
              (setq resultList (append resultList 
                                 (list (RemoveNullStringForListUtils (GetNsEquipOneRowList x '("fullPressure" "staticPressure" "comment1"))))
@@ -50,10 +54,22 @@
              ; the 3th row
              (setq resultList (append resultList 
                                 (list (GetNsEquipOneRowList x '("power" "comment2")))
-                              ))  
+                              )) 
+             ; the 4th row
+             (setq resultList (append resultList 
+                                (list (GetNsEquipOneRowList x '("rotateSpeed" "comment3")))
+                              )) 
+             ; the 5th row
+             (setq resultList (append resultList 
+                                (list (GetNsEquipOneRowList x '("noise" "comment4")))
+                              )) 
+             ; the 6th row
+             (setq resultList (append resultList 
+                                (list (GetNsEquipOneRowList x '("efficiency" "comment5")))
+                              )) 
              ; the last row
              (setq resultList (append resultList 
-                                (list (list "NsEquipNull"))
+                                (list (list "NsEquipNull" "NsEquipNull"))
                               ))  
            ) 
     (GetOriginNsEquipDictList)
