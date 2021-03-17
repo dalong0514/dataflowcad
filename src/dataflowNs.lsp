@@ -6,16 +6,10 @@
   )
 )
 
-(defun ReadNsDataFromCSVStrategy (dataType / fileDir)
-  (if (= dataType "NsEquip") 
-    (setq fileDir "D:\\dataflowcad\\nsdata\\tempEquip.csv")
-  )
-  (ReadDataFromCSVUtils fileDir)
-)
 
-(defun GetNsEquipImportedList ()
-  (StrListToListListUtils (ReadNsDataFromCSVStrategy "NsEquip"))
-)
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+; Generate NsEquipListTable
 
 ; 2021-03-17
 (defun c:InsertNsEquipListTable (/ insPt) 
@@ -24,8 +18,44 @@
   (VerifyNsBzLayerByName "0DataFlow-NsEquipFrame")
   (VerifyNsBzBlockByName "equiplist.2017") 
   (setq insPt (getpoint "\n拾取设备一览表插入点："))
-  (InsertNsEquipListLeftText insPt "内容" 350)
+  (GetNsEquipDictList)
+  ;(InsertNsEquipListLeftText insPt "内容" 350)
   ;(InsertNsEquipFrame insPt)
+)
+
+; 2021-03-17
+(defun GetNsEquipDictList ()
+  (mapcar '(lambda (y) 
+              (mapcar '(lambda (xx yy) 
+                         (cons xx yy)
+                      ) 
+                (GetNsEquipTablePropertyNameList)
+                y
+              )
+           ) 
+    (GetNsEquipImportedList)
+  )
+)
+
+(defun GetNsEquipTablePropertyNameList ()
+  '("id" "tag" "name" "type" "airVolume" "fullPressure" "staticPressure" "power" "voltage" "rotateSpeed" "noise" "weight" "efficiency" "num" "explosionProof" "comment1" "comment2" "comment3" "comment4" "comment5")
+)
+
+(defun GetNsEquipTablePropertyChNameList ()
+  '("序号" "设备位号" "设备名称" "设备型号" "风量" "全压" "静压" "功率" "电压" "转速" "噪声" "重量" "能效等级" "数量" "防爆等级" "备注1" "备注2"  "备注3" "备注4" "备注5")
+)
+
+; 2021-03-17
+(defun ReadNsDataFromCSVStrategy (dataType / fileDir)
+  (if (= dataType "NsEquip") 
+    (setq fileDir "D:\\dataflowcad\\nsdata\\tempEquip.csv")
+  )
+  (ReadDataFromCSVUtils fileDir)
+)
+
+; 2021-03-17
+(defun GetNsEquipImportedList ()
+  (StrListToListListUtils (ReadNsDataFromCSVStrategy "NsEquip"))
 )
 
 ; 2021-03-17
