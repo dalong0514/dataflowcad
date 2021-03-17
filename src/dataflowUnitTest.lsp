@@ -280,7 +280,7 @@
 )
 
 (defun GetInsertPtListTest ()
-  (AssertEqual 'GetInsertPtListUtils (list '(1 1 1) '(0 1 2 3 4) 10) 
+  (AssertEqual 'GetInsertPtListByXMoveUtils (list '(1 1 1) '(0 1 2 3 4) 10) 
     (list '(1 1 1) '(11 1 1) '(21 1 1) '(31 1 1) '(41 1 1))
   )
 )

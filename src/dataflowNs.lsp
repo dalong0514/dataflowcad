@@ -18,23 +18,22 @@
   (VerifyNsBzLayerByName "0DataFlow-NsEquipFrame")
   (VerifyNsBzBlockByName "equiplist.2017") 
   (setq insPt (getpoint "\n拾取设备一览表插入点："))
-  (GetNsEquipDictList)
+  (InsertNsEquipTextList insPt (GetNsEquipDictList))
+  
   ;(InsertNsEquipListLeftText insPt "内容" 350)
   ;(InsertNsEquipFrame insPt)
 )
 
-; 2021-03-17
-(defun GetOriginNsEquipDictList ()
-  (mapcar '(lambda (y) 
-              (mapcar '(lambda (xx yy) 
-                         (cons xx yy)
-                      ) 
-                (GetNsEquipTablePropertyNameList)
-                y
-              )
-           ) 
-    (GetNsEquipImportedList)
-  )
+; refactored at 2021-03-12
+(defun InsertNsEquipTextList (insPt equipDictList / insPtList equipTagData equipPropertyTagDictList) 
+  (setq insPtList (GetInsertPtListByXMoveUtils insPt (GenerateSortedNumByList equipDictList 0) -800))
+  
+  
+  ;(setq equipTagData (InsertGsBzEquipTag dataList insPtList dataType))
+  ;(UpdateGsBzEquipTagPropertyValue equipTagData (GetPropertyNameListStrategy dataType))
+  ;(setq equipPropertyTagDictList (GetGsBzEquipPropertyTagDictListStrategy dataType dataList))
+  ;(setq equipGraphData (InsertGsBzEquipGraph equipPropertyTagDictList insPtList dataType allGsBzEquipBlockNameList))
+  ;(MigrateGsBzEquipTagPropertyValueFromCSV equipGraphData (GetPropertyNameListStrategy dataType))
 )
 
 ; 2021-03-17
@@ -60,6 +59,21 @@
     (GetOriginNsEquipDictList)
   )
   resultList
+)
+
+; 2021-03-17
+(defun GetOriginNsEquipDictList ()
+  (mapcar '(lambda (y) 
+              (mapcar '(lambda (xx yy) 
+                         (cons xx yy)
+                      ) 
+                (GetNsEquipTablePropertyNameList)
+                y
+              )
+           ) 
+    ; sorted by EquipTag - ready for refactor -2021-03-17
+    (GetNsEquipImportedList)
+  )
 )
 
 ; 2021-03-17

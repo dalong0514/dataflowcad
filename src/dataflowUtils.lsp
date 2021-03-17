@@ -1529,6 +1529,19 @@
   ) 
 )
 
+; get the new inserting position
+; Unit Test Compeleted
+(defun GetInsertPt (insPt i removeDistance /)
+  (ReplaceListItemByindexUtils (+ (car insPt) (* i removeDistance)) 0 insPt)
+)
+
+; Unit Test Compeleted
+(defun GetInsertPtListByXMoveUtils (insPt SortedNumByList removeDistance / resultList)
+  (mapcar '(lambda (x) (GetInsertPt insPt x removeDistance)) 
+    SortedNumByList
+  )
+)
+
 ; Utils Function 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;

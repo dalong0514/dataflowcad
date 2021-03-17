@@ -104,7 +104,7 @@
   ; merge equipInfoList by equipTag
   (setq equipInfoList (vl-sort equipInfoList '(lambda (x y) (< (car x) (car y)))))
   (setq insPt (getpoint "\n选取设备位号的插入点："))
-  (setq insPtList (GetInsertPtListUtils insPt (GenerateSortedNumByList equipInfoList 0) 30))
+  (setq insPtList (GetInsertPtListByXMoveUtils insPt (GenerateSortedNumByList equipInfoList 0) 30))
   (GenerateEntityObjectElement "EquipTagV2" insPtList equipInfoList)
 )
 
@@ -115,19 +115,6 @@
     (setq i (+ i 1))
   )
   resultList
-)
-
-; get the new inserting position
-; Unit Test Compeleted
-(defun GetInsertPt (insPt i removeDistance /)
-  (ReplaceListItemByindexUtils (+ (car insPt) (* i removeDistance)) 0 insPt)
-)
-
-; Unit Test Compeleted
-(defun GetInsertPtListUtils (insPt SortedNumByList removeDistance / resultList)
-  (mapcar '(lambda (x) (GetInsertPt insPt x removeDistance)) 
-    SortedNumByList
-  )
 )
 
 (defun GetEquipTagList (ss / i ent blk entx value equipInfoList equipTag equipName)
@@ -500,7 +487,7 @@
   (setq dataList (ProcessPublicPipeElementData dataList))
   ; sort data by drawnum
   (setq dataList (vl-sort dataList '(lambda (x y) (< (nth 4 x) (nth 4 y)))))
-  (setq insPtList (GetInsertPtListUtils insPt (GenerateSortedNumByList dataList 0) 10))
+  (setq insPtList (GetInsertPtListByXMoveUtils insPt (GenerateSortedNumByList dataList 0) 10))
   (cond 
     ((= pipeSourceDirection "0") (GenerateDownPublicPipe insPtList dataList))
     ((= pipeSourceDirection "1") (GenerateUpPublicPipe insPtList dataList))
