@@ -6,7 +6,6 @@
   )
 )
 
-
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
 ; Generate NsEquipListTable
@@ -18,8 +17,19 @@
   (VerifyNsBzLayerByName "0DataFlow-NsEquipFrame")
   (VerifyNsBzBlockByName "equiplist.2017") 
   (setq insPt (getpoint "\n拾取设备一览表插入点："))
-  ;(GetNsEquipDictList)
   (InsertNsEquipTextList (MoveInsertPositionUtils insPt 3000 25200) (GetNsEquipDictList))
+  (DeleteNsEquipNullText)
+  (princ)
+)
+
+; 2021-03-17
+(defun DeleteNsEquipNullText ()
+  (DeleteEntityBySSUtils (GetAllNsEquipNullTextSS))
+)
+
+; 2021-03-16
+(defun GetAllNsEquipNullTextSS ()
+  (ssget "X" (list (cons 0 "TEXT") (cons 1 "NsEquipNull")))
 )
 
 ; refactored at 2021-03-12
@@ -43,8 +53,9 @@
 ; 2021-03-17
 (defun InsertNsEquipListLeftTextByRow (insPt rowData textHeight /) 
   (cond 
-    ((= (length rowData) 7) (InsertFristRowNsEquipList insPt rowData textHeight)) 
+    ((or (= (length rowData) 6) (= (length rowData) 7)) (InsertFristRowNsEquipList insPt rowData textHeight)) 
     ((= (length rowData) 2) (InsertLastRowNsEquipList insPt rowData textHeight)) 
+    ((= (length rowData) 1) (InsertMiddleRowNsEquipList insPt rowData textHeight)) 
     (T (InsertNullRowNsEquipList insPt rowData textHeight)) 
   )
 )
@@ -60,13 +71,21 @@
   (InsertNsEquipListCenterText (MoveInsertPositionUtils insPt 21300 0) "台" textHeight)
   (InsertNsEquipListCenterText (MoveInsertPositionUtils insPt 22300 0) (nth 5 rowData) textHeight)
   (InsertNsEquipListCenterText (MoveInsertPositionUtils insPt 30550 0) "订货" textHeight)
-  (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 33600 0) (nth 6 rowData) textHeight)
+  (if (/= (nth 6 rowData) nil) 
+    (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 33600 0) (nth 6 rowData) textHeight)
+    (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 33600 0) "NsEquipNull" textHeight)
+  )
 )
 
 ; 2021-03-17
 (defun InsertLastRowNsEquipList (insPt rowData textHeight /) 
   (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 2700 0) (nth 0 rowData) textHeight)
   (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 33600 0) (nth 1 rowData) textHeight)
+)
+
+; 2021-03-17
+(defun InsertMiddleRowNsEquipList (insPt rowData textHeight /) 
+  (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 2700 0) (nth 0 rowData) textHeight)
 )
 
 ; 2021-03-17
