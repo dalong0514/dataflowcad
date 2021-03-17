@@ -109,7 +109,7 @@
                               )) 
              ; the 2th row
              (setq resultList (append resultList 
-                                (list (RemoveNullStringForListUtils (GetNsEquipOneRowList x '("fullPressure" "staticPressure" "comment1"))))
+                                (list (RepairFullPressure (GetNsEquipOneRowList x '("fullPressure" "staticPressure" "comment1"))))
                               )) 
              ; the 3th row
              (setq resultList (append resultList 
@@ -135,6 +135,13 @@
     (GetOriginNsEquipDictList)
   )
   resultList
+)
+
+(defun RepairFullPressure (dataList /)
+  (if (/= (car dataList) "") 
+    (list (strcat "È«Ñ¹£º" (car dataList) "Pa") (caddr dataList))
+    (list (strcat "¾²Ñ¹£º" (cadr dataList) "Pa") (caddr dataList))
+  )
 )
 
 (defun RepairPower (power /)
