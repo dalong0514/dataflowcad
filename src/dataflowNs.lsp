@@ -1,4 +1,4 @@
-;å†¯å¤§é¾™ç¼–äºŽ 2020-2021 å¹´
+;·ë´óÁú±àÓÚ 2020-2021 Äê
 (if (= *comLibraryStatus* nil) 
   (progn 
     (vl-load-com)
@@ -15,4 +15,17 @@
 
 (defun GetNsEquipImportedList ()
   (StrListToListListUtils (ReadNsDataFromCSVStrategy "NsEquip"))
+)
+
+; 2021-03-17
+(defun c:InsertNsEquipListTable (/ insPt) 
+  (setq insPt (getpoint "\nÊ°È¡Éè±¸Ò»ÀÀ±í²åÈëµã£º"))
+  (InsertNsEquipFrame insPt)
+)
+
+; 2021-03-17
+(defun InsertNsEquipFrame (insPt /) 
+  (VerifyNsBzLayerByName "0DataFlow-NsEquipFrame")
+  (VerifyNsBzBlockByName "equiplist.2017")
+  (InsertBlockUtils insPt "equiplist.2017" "0DataFlow-NsEquipFrame" (list (cons 8 "Å¯Í¨")))
 )

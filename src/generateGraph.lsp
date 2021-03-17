@@ -20,6 +20,11 @@
   (setq result "D:\\dataflowcad\\allBlocks\\GsBzBlocks.dwg")
 )
 
+; 2021-03-17
+(defun GetNsBzModulesPath (/ result)
+  (setq result "D:\\dataflowcad\\allBlocks\\NsBzBlocks.dwg")
+)
+
 ; 2021-03-03
 (defun StealAllGsLcBlocks ()
   (Steal (GetGsLcModulesPath) 
@@ -83,6 +88,24 @@
   ) 
 )
 
+; 2021-03-17
+(defun StealNsBzBlockByNameList (blockNameList /)
+  (Steal (GetNsBzModulesPath) 
+    (list 
+      (list "Blocks" blockNameList)
+    )
+  ) 
+)
+
+; 2021-03-17
+(defun StealNsBzLayerByNameList (layerNameList /)
+  (Steal (GetNsBzModulesPath) 
+    (list 
+      (list "Layers" layerNameList)
+    )
+  ) 
+)
+
 ; 2021-03-03
 (defun VerifyGsLcBlockByName (blockName /) 
   (if (= (tblsearch "BLOCK" blockName) nil) 
@@ -108,6 +131,20 @@
 (defun VerifyGsBzLayerByName (layerName /) 
   (if (= (tblsearch "LAYER" layerName) nil) 
     (StealGsBzLayerByNameList (list layerName))
+  )
+)
+
+; 2021-03-17
+(defun VerifyNsBzBlockByName (blockName /) 
+  (if (= (tblsearch "BLOCK" blockName) nil) 
+    (StealNsBzBlockByNameList (list blockName))
+  )
+)
+
+; 2021-03-17
+(defun VerifyNsBzLayerByName (layerName /) 
+  (if (= (tblsearch "LAYER" layerName) nil) 
+    (StealNsBzLayerByNameList (list layerName))
   )
 )
 
