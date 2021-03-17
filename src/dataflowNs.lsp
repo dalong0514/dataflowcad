@@ -66,7 +66,8 @@
   (InsertNsEquipListCenterText insPt (nth 0 rowData) textHeight)
   (InsertNsEquipListCenterTextByWidth (MoveInsertPositionUtils insPt 1500 0) (nth 1 rowData) textHeight 0.4)
   (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 2700 0) (nth 2 rowData) textHeight)
-  (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 6700 0) (nth 3 rowData) textHeight)
+  ; airVolume
+  (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 6700 0) (RepairAirVolume (nth 3 rowData)) textHeight)
   (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 14700 0) (nth 4 rowData) textHeight)
   (InsertNsEquipListCenterText (MoveInsertPositionUtils insPt 21300 0) "台" textHeight)
   (InsertNsEquipListCenterText (MoveInsertPositionUtils insPt 22300 0) (nth 5 rowData) textHeight)
@@ -78,19 +79,24 @@
 )
 
 ; 2021-03-17
+(defun RepairAirVolume (airVolume /)
+  (strcat "风量：" airVolume "m3/h")
+)
+
+; 2021-03-17
 (defun InsertLastRowNsEquipList (insPt rowData textHeight /) 
-  (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 2700 0) (nth 0 rowData) textHeight)
+  (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 6700 0) (nth 0 rowData) textHeight)
   (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 33600 0) (nth 1 rowData) textHeight)
 )
 
 ; 2021-03-17
 (defun InsertMiddleRowNsEquipList (insPt rowData textHeight /) 
-  (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 2700 0) (nth 0 rowData) textHeight)
+  (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 6700 0) (nth 0 rowData) textHeight)
 )
 
 ; 2021-03-17
 (defun InsertNullRowNsEquipList (insPt rowData textHeight /) 
-  (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 2700 0) "NsEquipNull" textHeight)
+  (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 6700 0) "NsEquipNull" textHeight)
   (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 33600 0) "NsEquipNull" textHeight)
 )
 
@@ -129,6 +135,10 @@
     (GetOriginNsEquipDictList)
   )
   resultList
+)
+
+(defun RepairPower (power /)
+  (strcat "风量：" power "m3/h")
 )
 
 ; 2021-03-17
