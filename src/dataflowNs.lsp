@@ -19,8 +19,8 @@
   (VerifyNsBzBlockByName "equiplist.2017") 
   (setq insPt (getpoint "\n拾取设备一览表插入点："))
   
-  (GetNsEquipDictList)
-  ;(InsertNsEquipTextList (MoveInsertPositionUtils insPt 3000 25200) (GetNsEquipDictList))
+  ;(GetNsEquipDictList)
+  (InsertNsEquipTextList (MoveInsertPositionUtils insPt 3000 25200) (GetNsEquipDictList))
   ;(InsertNsEquipListLeftText insPt "内容" 350)
   ;(InsertNsEquipFrame insPt)
 )
@@ -29,15 +29,39 @@
 (defun InsertNsEquipTextList (insPt equipDictList / insPtList equipTagData equipPropertyTagDictList) 
   (setq insPtList (GetInsertPtListByYMoveUtils insPt (GenerateSortedNumByList equipDictList 0) -800))
   (mapcar '(lambda (x y) 
-             (InsertNsEquipListLeftText y (car x) 350)
+             (InsertNsEquipListLeftTextByRow y x)
            ) 
     equipDictList
     insPtList
   ) 
 )
 
-(defun InsertNsEquipListLeftTextByRow ()
-  (InsertNsEquipListLeftText y (car x) 350)
+; 2021-03-17
+(defun InsertNsEquipListLeftTextByRow (insPt rowData /) 
+  (cond 
+    ((= (length rowData) 7) (InsertFristRowNsEquipList insPt rowData)) 
+    ((= (length rowData) 2) (InsertLastRowNsEquipList insPt rowData)) 
+    (T (InsertNullRowNsEquipList insPt rowData)) 
+  )
+)
+
+; 2021-03-17
+(defun InsertFristRowNsEquipList (insPt rowData /) 
+  (InsertNsEquipListCenterText insPt (nth 0 rowData) 350)
+  (InsertNsEquipListCenterText (MoveInsertPositionUtils insPt 1500 0) (nth 1 rowData) 350)
+  (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 2700 0) (nth 2 rowData) 350)
+)
+
+; 2021-03-17
+(defun InsertLastRowNsEquipList (insPt rowData /) 
+  (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 2700 0) (nth 0 rowData) 350)
+  (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 33600 0) (nth 1 rowData) 350)
+)
+
+; 2021-03-17
+(defun InsertNullRowNsEquipList (insPt rowData /) 
+  (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 2700 0) "NsEquipNull" 350)
+  (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 33600 0) "NsEquipNull" 350)
 )
 
 ; 2021-03-17
