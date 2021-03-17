@@ -1531,13 +1531,25 @@
 
 ; get the new inserting position
 ; Unit Test Compeleted
-(defun GetInsertPt (insPt i removeDistance /)
+(defun GetInsertPtByXMove (insPt i removeDistance /)
   (ReplaceListItemByindexUtils (+ (car insPt) (* i removeDistance)) 0 insPt)
 )
 
 ; Unit Test Compeleted
-(defun GetInsertPtListByXMoveUtils (insPt SortedNumByList removeDistance / resultList)
-  (mapcar '(lambda (x) (GetInsertPt insPt x removeDistance)) 
+(defun GetInsertPtListByXMoveUtils (insPt SortedNumByList xDistance / resultList)
+  (mapcar '(lambda (x) (GetInsertPtByXMove insPt x xDistance)) 
+    SortedNumByList
+  )
+)
+
+; 2021-03-17
+(defun GetInsertPtByYMove (insPt i removeDistance /)
+  (ReplaceListItemByindexUtils (+ (cadr insPt) (* i removeDistance)) 1 insPt)
+)
+
+; 2021-03-17
+(defun GetInsertPtListByYMoveUtils (insPt SortedNumByList yDistance / resultList)
+  (mapcar '(lambda (x) (GetInsertPtByYMove insPt x yDistance)) 
     SortedNumByList
   )
 )

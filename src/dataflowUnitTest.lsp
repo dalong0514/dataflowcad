@@ -307,7 +307,7 @@
 )
 
 (defun GetInsertPtTest () 
-  (AssertEqual 'GetInsertPt (list '(100 100 0) 1 10) '(110 100 0))
+  (AssertEqual 'GetInsertPtByXMove (list '(100 100 0) 1 10) '(110 100 0))
 )
 
 (defun GenerateSortedNumByListTest ()
