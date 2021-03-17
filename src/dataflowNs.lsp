@@ -50,7 +50,7 @@
 ;("1" "EH-137-0000-0001" "防爆柜式离心风机箱" "5320" "HTFC-I-12-Ex" "1" "2")
 (defun InsertFristRowNsEquipList (insPt rowData textHeight /) 
   (InsertNsEquipListCenterText insPt (nth 0 rowData) textHeight)
-  (InsertNsEquipListCenterText (MoveInsertPositionUtils insPt 1500 0) (nth 1 rowData) textHeight)
+  (InsertNsEquipListCenterTextByWidth (MoveInsertPositionUtils insPt 1500 0) (nth 1 rowData) textHeight 0.4)
   (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 2700 0) (nth 2 rowData) textHeight)
   (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 6700 0) (nth 3 rowData) textHeight)
   (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 14700 0) (nth 4 rowData) textHeight)
@@ -162,7 +162,12 @@
 
 ; 2021-03-17
 (defun InsertNsEquipListCenterText (insPt textContent textHeight /) 
-  (GenerateLevelCenterTextUtils insPt textContent "0DataFlow-NsText" textHeight) 
+  (GenerateLevelCenterTextUtils insPt textContent "0DataFlow-NsText" textHeight 0.7) 
+)
+
+; 2021-03-17
+(defun InsertNsEquipListCenterTextByWidth (insPt textContent textHeight textWidth /) 
+  (GenerateLevelCenterTextUtils insPt textContent "0DataFlow-NsText" textHeight textWidth) 
 )
 
 ; 2021-03-17
