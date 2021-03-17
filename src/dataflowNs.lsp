@@ -18,8 +18,9 @@
   (VerifyNsBzLayerByName "0DataFlow-NsEquipFrame")
   (VerifyNsBzBlockByName "equiplist.2017") 
   (setq insPt (getpoint "\n拾取设备一览表插入点："))
-  ;(InsertNsEquipTextList (MoveInsertPositionUtils insPt 3000 25200) (GetNsEquipDictList))
-  (GetNsEquipDictList)
+  
+  ;(GetNsEquipDictList)
+  (InsertNsEquipTextList (MoveInsertPositionUtils insPt 3000 25200) (GetNsEquipDictList))
   ;(InsertNsEquipListLeftText insPt "内容" 350)
   ;(InsertNsEquipFrame insPt)
 )
@@ -44,7 +45,7 @@
                               ))
              ; the 2th row
              (setq resultList (append resultList 
-                                (list (GetNsEquipOneRowList x '("fullPressure" "comment1")))
+                                (list (RemoveNullStringForListUtils (GetNsEquipOneRowList x '("fullPressure" "staticPressure" "comment1"))))
                               )) 
              ; the 3th row
              (setq resultList (append resultList 
