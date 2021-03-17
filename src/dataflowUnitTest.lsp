@@ -45,7 +45,15 @@
   (ExtractEquipDiameterStringUtilsTest)
   (GetGsBzEquipTypeTest)
   (RemoveNullStringForListUtilsTest)
+  (SplitListByNumUtilsTest)
   (DL:PrintTestResults (DL:CountBooleans *testList*))
+)
+
+; 2021-03-17
+(defun SplitListByNumUtilsTest () 
+  (AssertEqual 'SplitListByNumUtils 
+    (list (list "1" "260" "自定义备注测试1" "2" "360" "自定义备注测试2" "460") 3) 
+    (list (list "1" "260" "自定义备注测试1") (list "2" "360" "自定义备注测试2") (list "460")))
 )
 
 ; 2021-03-17

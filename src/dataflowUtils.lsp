@@ -1555,12 +1555,31 @@
 )
 
 ; 2021-03-17
+; Unit Test Compeleted
 (defun RemoveNullStringForListUtils (dataList /)
   (vl-remove-if-not '(lambda (x) 
                       (/= x "") 
                     ) 
     dataList
   )  
+)
+
+; 2021-03-17
+; Unit Test Compeleted
+(defun SplitListByNumUtils (dataList num / i tempList resultList) 
+  (setq i 0)
+  (repeat (length dataList) 
+    (setq tempList (append tempList (list (nth i dataList))))
+    (setq i (1+ i))
+    (if (= (rem i num) 0) 
+      (progn 
+        (setq resultList (append resultList (list tempList)))
+        (setq tempList nil) 
+      )
+    )
+  )
+  (setq resultList (append resultList (list tempList)))
+  resultList
 )
 
 ; Utils Function 
