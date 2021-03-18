@@ -5,8 +5,8 @@ importGsEquipDataBox : dialog {
     key = "showOriginDataBox";
     width = 100;
     : text {
-      key = "importTypeMsg";
-      label = "导入设备数据";
+      key = "importDataTypeMsg";
+      label = "";
       alignment = centered; 
     } 
     : spacer { height = 2; } 

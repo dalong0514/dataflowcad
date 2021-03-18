@@ -887,6 +887,10 @@
                 (GetsortedTypeChNameList))
       (end_list) 
     ) 
+    (if (= dataType "GsBzData")
+      (set_tile "importDataTypeMsg" "布置图：导入的设备位号及设备图形")
+      (set_tile "importDataTypeMsg" "流程图：导入的设备位号及设备图形")
+    ) 
     ; init the default data of text
     (if (= nil exportDataType)
       (setq exportDataType "0")
