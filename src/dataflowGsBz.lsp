@@ -923,7 +923,7 @@
         (progn 
           (setq dataType (GetImportedDataTypeByindex exportDataType))
           (setq sortedTypeResult (GetsortedTypeByindex sortedType))
-          (GenerateGsBzEquipTagByImport importedDataList dataType sortedTypeResult)
+          (GenerateGsEquipDataStrategy importedDataList dataType sortedTypeResult importDataType)
           (setq modifyMsgBtnStatus 1)
           (setq importMsgBtnStatus nil)
         )
@@ -934,11 +934,16 @@
   (princ)
 )
 
-; refactored at 2021-03-12
-(defun GenerateGsBzEquipTagByImport (importedDataList dataType sortedTypeResult / allGsBzEquipBlockNameList insPt dataList insPtList equipTagData equipPropertyTagDictList) 
-  (setq allGsBzEquipBlockNameList (GetAllGsBzEquipBlockNameList))
-  (VerifyGsBzEquipLayer)
+; refactored at 2021-03-18
+(defun GenerateGsEquipDataStrategy (importedDataList dataType sortedTypeResult importDataType / insPt) 
   (setq insPt (getpoint "\n选取设备位号插入点："))
+  (GenerateGsBzEquipDataByImport insPt importedDataList dataType sortedTypeResult)
+)
+
+; refactored at 2021-03-18
+(defun GenerateGsBzEquipDataByImport (insPt importedDataList dataType sortedTypeResult / allGsBzEquipBlockNameList insPt dataList insPtList equipTagData equipPropertyTagDictList) 
+  (VerifyGsBzEquipLayer)
+  (setq allGsBzEquipBlockNameList (GetAllGsBzEquipBlockNameList))
   ; sorted by EquipTag
   (setq dataList (SortEquipDataStrategy importedDataList sortedTypeResult))
   (setq insPtList (GetInsertBzEquipinsPtList insPt dataList))
