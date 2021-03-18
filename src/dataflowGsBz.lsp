@@ -936,6 +936,7 @@
 ; refactored at 2021-03-18
 (defun GenerateGsBzEquipDataByImport (insPt dataList dataType sortedTypeResult / allGsBzEquipBlockNameList insPtList equipTagData equipPropertyTagDictList) 
   (VerifyGsBzEquipLayer)
+  (VerifyGsBzEquipTagLayer)
   (setq allGsBzEquipBlockNameList (GetAllGsBzEquipBlockNameList))
   (setq insPtList (GetInsertPtListByXMoveUtils insPt (GenerateSortedNumByList dataList 0) 3500))
   (setq equipTagData (InsertGsBzEquipTag dataList insPtList dataType))
