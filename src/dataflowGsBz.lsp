@@ -82,7 +82,6 @@
 ; 2021-03-10
 (defun InsertBlockGsBzEquipTagStrategy (insPt dataType /) 
   (VerifyGsBzBlockByName dataType)
-  (VerifyGsBzEquipTagLayer)
   (InsertBlockByNoPropertyUtils insPt dataType "0DataFlow-GsBzEquipTag")
 )
 
@@ -927,8 +926,11 @@
 (defun GenerateGsEquipDataStrategy (importedDataList dataType sortedTypeResult importDataType / insPt dataList) 
   (setq insPt (getpoint "\n选取设备位号插入点："))
   ; sorted by EquipTag or Volume
-  (setq dataList (SortEquipDataStrategy importedDataList sortedTypeResult)) 
-  (GenerateGsBzEquipDataByImport insPt dataList dataType sortedTypeResult)
+  (setq dataList (SortEquipDataStrategy importedDataList sortedTypeResult))
+  (if (= importDataType "GsBzData") 
+    (GenerateGsBzEquipDataByImport insPt dataList dataType sortedTypeResult)
+    (GenerateGsLcEquipDataByImport insPt dataList dataType sortedTypeResult)
+  )
 )
 
 ; refactored at 2021-03-18
@@ -937,7 +939,7 @@
   (setq allGsBzEquipBlockNameList (GetAllGsBzEquipBlockNameList))
   (setq insPtList (GetInsertPtListByXMoveUtils insPt (GenerateSortedNumByList dataList 0) 3500))
   (setq equipTagData (InsertGsBzEquipTag dataList insPtList dataType))
-  (UpdateGsBzEquipTagPropertyValue equipTagData (GetPropertyNameListStrategy dataType))
+  (UpdateGsEquipTagPropertyValue equipTagData (GetPropertyNameListStrategy dataType))
   (setq equipPropertyTagDictList (GetGsBzEquipPropertyTagDictListStrategy dataType dataList))
   (setq equipGraphData (InsertGsBzEquipGraph equipPropertyTagDictList insPtList dataType allGsBzEquipBlockNameList))
   (MigrateGsBzEquipTagPropertyValueFromCSV equipGraphData (GetPropertyNameListStrategy dataType))
@@ -946,13 +948,13 @@
 ; 2021-03-18
 (defun GenerateGsLcEquipDataByImport (insPt dataList dataType sortedTypeResult / allGsBzEquipBlockNameList insPtList equipTagData equipPropertyTagDictList) 
   (VerifyGsLcEquipTagLayer)
+  (setq insPtList (GetInsertPtListByXMoveUtils insPt (GenerateSortedNumByList dataList 0) 35))
+  (setq equipTagData (InsertGsLcEquipTag dataList insPtList dataType))
+  (UpdateGsEquipTagPropertyValue equipTagData (GetPropertyNameListStrategy dataType))
   ;(setq allGsBzEquipBlockNameList (GetAllGsBzEquipBlockNameList))
-  (setq insPtList (GetInsertPtListByXMoveUtils insPt (GenerateSortedNumByList dataList 0) 3500))
-  (setq equipTagData (InsertGsBzEquipTag dataList insPtList dataType))
-  (UpdateGsBzEquipTagPropertyValue equipTagData (GetPropertyNameListStrategy dataType))
-  (setq equipPropertyTagDictList (GetGsBzEquipPropertyTagDictListStrategy dataType dataList))
-  (setq equipGraphData (InsertGsBzEquipGraph equipPropertyTagDictList insPtList dataType allGsBzEquipBlockNameList))
-  (MigrateGsBzEquipTagPropertyValueFromCSV equipGraphData (GetPropertyNameListStrategy dataType))
+  ;(setq equipPropertyTagDictList (GetGsBzEquipPropertyTagDictListStrategy dataType dataList))
+  ;(setq equipGraphData (InsertGsBzEquipGraph equipPropertyTagDictList insPtList dataType allGsBzEquipBlockNameList))
+  ;(MigrateGsBzEquipTagPropertyValueFromCSV equipGraphData (GetPropertyNameListStrategy dataType))
 )
 
 ; refactored at 2021-03-15
@@ -999,7 +1001,7 @@
 )
 
 ; 2021-03-11
-(defun UpdateGsBzEquipTagPropertyValue (itemData blockPropertyNameList /) 
+(defun UpdateGsEquipTagPropertyValue (itemData blockPropertyNameList /) 
   (mapcar '(lambda (x) 
              (ModifyMultiplePropertyForOneBlockUtils (car x) blockPropertyNameList (cdr x))
           ) 

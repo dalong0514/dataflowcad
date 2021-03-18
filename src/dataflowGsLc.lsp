@@ -778,5 +778,22 @@
   (ImportEquipDataStrategyByBox "importGsEquipDataBox" "GsLcData")
 )
 
+; 2021-03-09
+(defun InsertGsLcEquipTag (itemData insPtList dataType /) 
+  (mapcar '(lambda (x y) 
+             (InsertBlockLcBzEquipTagStrategy y dataType)
+             (cons (entlast) (cdr x))
+          ) 
+    itemData
+    insPtList
+  )  
+)
+
+; 2021-03-18
+(defun InsertBlockLcBzEquipTagStrategy (insPt dataType /) 
+  (VerifyGsLcBlockByName dataType)
+  (InsertBlockByNoPropertyUtils insPt dataType "0DataFlow-GsLcEquipTag")
+)
+
 ; Generate GsLcEquipData By Import CSV
 ;;;-------------------------------------------------------------------------;;;
