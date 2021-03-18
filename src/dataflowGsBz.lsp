@@ -832,31 +832,35 @@
 )
 
 ;;;-------------------------------------------------------------------------;;;
-; Generate GsBzEquipTag By Import CSV
+; Generate GsBzEquipData By Import CSV
 
 ; 2021-03-11
-(defun c:ImportGsBzEquipTag ()
-  (ImportGsBzEquipTagByBox "importGsBzEquipTagBox")
+(defun c:ImportGsBzEquipData ()
+  (ImportEquipDataStrategyByBox "importGsEquipDataBox" "GsBzData")
 )
 
+; 2021-03-11
 (defun GetImportedEquipDataTypeChNameList ()
   '("反应釜" "输送泵" "储罐" "换热器" "离心机" "真空泵" "自定义设备")
 )
 
+; 2021-03-11
 (defun GetImportedDataTypeByindex (index /)
   (nth (atoi index) '("Reactor" "Pump" "Tank" "Heater" "Centrifuge" "Vacuum" "CustomEquip"))
 )
 
+; 2021-03-11
 (defun GetsortedTypeChNameList ()
   '("按设备位号" "按体积")
 )
 
+; 2021-03-11
 (defun GetsortedTypeByindex (index /)
   (nth (atoi index) '("equipTag" "equipVolume"))
 )
 
 ; 2021-03-11
-(defun ImportGsBzEquipTagByBox (tileName / dcl_id dataType importedDataList status exportDataType sortedType sortedTypeResult importMsgBtnStatus)
+(defun ImportEquipDataStrategyByBox (tileName dataType / dcl_id dataType importedDataList status exportDataType sortedType sortedTypeResult importMsgBtnStatus)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflowGs.dcl")))
   (setq status 2)
   (while (>= status 2)

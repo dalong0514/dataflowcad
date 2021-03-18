@@ -1,12 +1,12 @@
-importGsBzEquipTagBox : dialog {
-  label = "天正设计流数据一体化工艺V2.0———更新布置图设备图形"; 
-  key = "importGsBzEquipTag";
+importGsEquipDataBox : dialog {
+  label = "天正设计流数据一体化工艺V2.0———导入设备位号及设备图形"; 
+  key = "importGsEquipData";
   : boxed_radio_column {
     key = "showOriginDataBox";
     width = 100;
     : column {
       : popup_list { 
-        label = "导入的设备类型";
+        label = "导入布置图的设备类型";
         edit_width = 80;
         key = "exportDataType"; 
         list = "";

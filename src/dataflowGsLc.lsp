@@ -760,4 +760,10 @@
 ;;;-------------------------------------------------------------------------;;;
 
 
+;;;-------------------------------------------------------------------------;;;
+; Generate GsLcEquipData By Import CSV
 
+; 2021-03-18
+(defun c:ImportGsLcEquipData ()
+  (ImportEquipDataStrategyByBox "importGsEquipDataBox" "GsLcData")
+)
