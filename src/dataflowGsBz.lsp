@@ -698,7 +698,7 @@
              (setq itemData (cdr x))
              ; sorted by EquipName
              (setq itemData (vl-sort itemData '(lambda (x y) (< (cdr (caddr x)) (cdr (caddr y))))))
-             (setq insPtList (GetInsertInsPtList insPt itemData))
+             (setq insPtList (GetInsertPtListByXMoveUtils insPt (GenerateSortedNumByList itemData 0) 3500))
              (setq equipTagData (InsertGsBzEquipTag itemData insPtList (car x)))
              (setq equipGraphData (InsertGsBzEquipGraph itemData insPtList (car x) allGsBzEquipBlockNameList))
              (setq blockPropertyNameList (GetGsBzEquipTagPropertyNameList itemData)) 
@@ -708,17 +708,6 @@
           ) 
     lcEquipData
   )  
-)
-
-; 2021-03-10
-(defun GetInsertInsPtList (insPt equipData / resultList insPt) 
-  (mapcar '(lambda (x) 
-             (setq resultList (append resultList (list insPt)))
-             (setq insPt (MoveInsertPositionUtils insPt 3500 0))
-          ) 
-    equipData
-  ) 
-  resultList
 )
 
 ; refactored at 2021-03-14
@@ -946,7 +935,7 @@
 (defun GenerateGsBzEquipDataByImport (insPt dataList dataType sortedTypeResult / allGsBzEquipBlockNameList insPtList equipTagData equipPropertyTagDictList) 
   (VerifyGsBzEquipLayer)
   (setq allGsBzEquipBlockNameList (GetAllGsBzEquipBlockNameList))
-  (setq insPtList (GetInsertInsPtList insPt dataList))
+  (setq insPtList (GetInsertPtListByXMoveUtils insPt (GenerateSortedNumByList dataList 0) 3500))
   (setq equipTagData (InsertGsBzEquipTag dataList insPtList dataType))
   (UpdateGsBzEquipTagPropertyValue equipTagData (GetPropertyNameListStrategy dataType))
   (setq equipPropertyTagDictList (GetGsBzEquipPropertyTagDictListStrategy dataType dataList))
@@ -958,7 +947,7 @@
 (defun GenerateGsLcEquipDataByImport (insPt dataList dataType sortedTypeResult / allGsBzEquipBlockNameList insPtList equipTagData equipPropertyTagDictList) 
   (VerifyGsLcEquipTagLayer)
   ;(setq allGsBzEquipBlockNameList (GetAllGsBzEquipBlockNameList))
-  (setq insPtList (GetInsertInsPtList insPt dataList))
+  (setq insPtList (GetInsertPtListByXMoveUtils insPt (GenerateSortedNumByList dataList 0) 3500))
   (setq equipTagData (InsertGsBzEquipTag dataList insPtList dataType))
   (UpdateGsBzEquipTagPropertyValue equipTagData (GetPropertyNameListStrategy dataType))
   (setq equipPropertyTagDictList (GetGsBzEquipPropertyTagDictListStrategy dataType dataList))
