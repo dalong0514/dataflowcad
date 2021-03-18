@@ -945,7 +945,7 @@
   (MigrateGsBzEquipTagPropertyValueFromCSV equipGraphData (GetPropertyNameListStrategy dataType))
 )
 
-; 2021-03-18
+; ready for refactoring 2021-03-18
 (defun GenerateGsLcEquipDataByImport (insPt dataList dataType sortedTypeResult / allGsBzEquipBlockNameList insPtList equipTagData equipPropertyTagDictList) 
   (VerifyGsLcEquipTagLayer)
   (setq insPtList (GetInsertPtListByXMoveUtils insPt (GenerateSortedNumByList dataList 0) 35))
