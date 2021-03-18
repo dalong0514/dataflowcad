@@ -52,17 +52,12 @@
     ; insert button
     (if (= 2 (setq status (start_dialog)))
       (progn 
-        (princ sortedType)
-        ;(GetsortedTypeByindex sortedType)
+        (InsertNsEquipListTable sortedType)
       )
     )
   )
   (unload_dialog dcl_id)
   (princ)
-)
-
-(defun c:foo ()
-  (InsertNsEquipListTable "0")
 )
 
 ; 2021-03-17
@@ -102,7 +97,7 @@
                 x
                 insPtList
               ) 
-              (setq insPt (MoveInsertPositionUtils insPt 0 -31700))
+              (setq insPt (GetNextNsEquipFrameInsPtStrategy insPt insertDirection))
               (setq num (1+ num))
            ) 
     (SplitListByNumUtils equipDictList 29)
