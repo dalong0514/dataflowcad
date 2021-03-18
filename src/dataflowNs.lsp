@@ -14,15 +14,66 @@
 ;;;-------------------------------------------------------------------------;;;
 ; Generate NsEquipListTable
 
+; 2021-03-18
+(defun c:InsertNsEquipTableByDirection ()
+  (InsertNsEquipTableByBox "importNsEquipTableBox")
+)
+
+; 2021-03-18
+(defun GetInsertDirectionChNameList ()
+  '("自上而下" "自左到右")
+)
+
+; 2021-03-18
+(defun InsertNsEquipTableByBox (tileName / dcl_id status sortedType)
+  (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflowNs.dcl")))
+  (setq status 2)
+  (while (>= status 2)
+    ; Create the dialog box
+    (new_dialog tileName dcl_id "" '(-1 -1))
+    ; Added the actions to the Cancel and Pick Point button
+    (action_tile "cancel" "(done_dialog 0)")
+    (action_tile "btnModify" "(done_dialog 2)")
+    (set_tile "sortedType" "0")
+    ; the default value of input box
+    (mode_tile "sortedType" 2)
+    (action_tile "sortedType" "(setq sortedType $value)")
+    (progn
+      (start_list "sortedType" 3)
+      (mapcar '(lambda (x) (add_list x)) 
+                (GetInsertDirectionChNameList))
+      (end_list) 
+    ) 
+    ; init the default data of text
+    (if (= nil sortedType)
+      (setq sortedType "0")
+    ) 
+    (set_tile "sortedType" sortedType)
+    ; insert button
+    (if (= 2 (setq status (start_dialog)))
+      (progn 
+        (princ sortedType)
+        ;(GetsortedTypeByindex sortedType)
+      )
+    )
+  )
+  (unload_dialog dcl_id)
+  (princ)
+)
+
+(defun c:foo ()
+  (InsertNsEquipListTable "0")
+)
+
 ; 2021-03-17
-(defun c:InsertNsEquipListTable (/ insPt) 
+(defun InsertNsEquipListTable (insertDirection / insPt) 
   (VerifyNsBzTextStyleByName "DataFlow")
   (VerifyNsBzTextStyleByName "TitleText")
   (VerifyNsBzLayerByName "0DataFlow-NsText")
   (VerifyNsBzLayerByName "0DataFlow-NsEquipFrame")
   (VerifyNsBzBlockByName "equiplist.2017") 
   (setq insPt (getpoint "\n拾取设备一览表插入点："))
-  (InsertNsEquipTextList (MoveInsertPositionUtils insPt 3000 25200) (GetNsEquipDictList))
+  (InsertNsEquipTextList (MoveInsertPositionUtils insPt 3000 25200) (GetNsEquipDictList) insertDirection)
   (DeleteNsEquipNullText)
   (princ)
 )
@@ -38,7 +89,7 @@
 )
 
 ; refactored at 2021-03-12
-(defun InsertNsEquipTextList (insPt equipDictList / textInsPt textHeight insPtList totalNum num) 
+(defun InsertNsEquipTextList (insPt equipDictList insertDirection / textInsPt textHeight insPtList totalNum num) 
   (setq textHeight 350)
   (setq totalNum (1+ (/ (length (GetNsEquipDictList)) 29)))
   (setq num 1)
@@ -55,6 +106,14 @@
               (setq num (1+ num))
            ) 
     (SplitListByNumUtils equipDictList 29)
+  ) 
+)
+
+; 2021-03-17
+(defun GetNextNsEquipFrameInsPtStrategy (insPt insertDirection /)
+  (cond 
+    ((= insertDirection "0") (MoveInsertPositionUtils insPt 0 -31700)) 
+    ((= insertDirection "1") (MoveInsertPositionUtils insPt 44000 0)) 
   ) 
 )
 
