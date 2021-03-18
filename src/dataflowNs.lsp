@@ -13,6 +13,7 @@
 ; 2021-03-17
 (defun c:InsertNsEquipListTable (/ insPt) 
   (VerifyNsBzTextStyleByName "DataFlow")
+  (VerifyNsBzTextStyleByName "TitleText")
   (VerifyNsBzLayerByName "0DataFlow-NsText")
   (VerifyNsBzLayerByName "0DataFlow-NsEquipFrame")
   (VerifyNsBzBlockByName "equiplist.2017") 
