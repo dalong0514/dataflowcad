@@ -698,7 +698,7 @@
              (setq itemData (cdr x))
              ; sorted by EquipName
              (setq itemData (vl-sort itemData '(lambda (x y) (< (cdr (caddr x)) (cdr (caddr y))))))
-             (setq insPtList (GetInsertBzEquipinsPtList insPt itemData))
+             (setq insPtList (GetInsertInsPtList insPt itemData))
              (setq equipTagData (InsertGsBzEquipTag itemData insPtList (car x)))
              (setq equipGraphData (InsertGsBzEquipGraph itemData insPtList (car x) allGsBzEquipBlockNameList))
              (setq blockPropertyNameList (GetGsBzEquipTagPropertyNameList itemData)) 
@@ -711,7 +711,7 @@
 )
 
 ; 2021-03-10
-(defun GetInsertBzEquipinsPtList (insPt equipData / resultList insPt) 
+(defun GetInsertInsPtList (insPt equipData / resultList insPt) 
   (mapcar '(lambda (x) 
              (setq resultList (append resultList (list insPt)))
              (setq insPt (MoveInsertPositionUtils insPt 3500 0))
@@ -943,10 +943,22 @@
 )
 
 ; refactored at 2021-03-18
-(defun GenerateGsBzEquipDataByImport (insPt dataList dataType sortedTypeResult / allGsBzEquipBlockNameList insPt insPtList equipTagData equipPropertyTagDictList) 
+(defun GenerateGsBzEquipDataByImport (insPt dataList dataType sortedTypeResult / allGsBzEquipBlockNameList insPtList equipTagData equipPropertyTagDictList) 
   (VerifyGsBzEquipLayer)
   (setq allGsBzEquipBlockNameList (GetAllGsBzEquipBlockNameList))
-  (setq insPtList (GetInsertBzEquipinsPtList insPt dataList))
+  (setq insPtList (GetInsertInsPtList insPt dataList))
+  (setq equipTagData (InsertGsBzEquipTag dataList insPtList dataType))
+  (UpdateGsBzEquipTagPropertyValue equipTagData (GetPropertyNameListStrategy dataType))
+  (setq equipPropertyTagDictList (GetGsBzEquipPropertyTagDictListStrategy dataType dataList))
+  (setq equipGraphData (InsertGsBzEquipGraph equipPropertyTagDictList insPtList dataType allGsBzEquipBlockNameList))
+  (MigrateGsBzEquipTagPropertyValueFromCSV equipGraphData (GetPropertyNameListStrategy dataType))
+)
+
+; 2021-03-18
+(defun GenerateGsLcEquipDataByImport (insPt dataList dataType sortedTypeResult / allGsBzEquipBlockNameList insPtList equipTagData equipPropertyTagDictList) 
+  (VerifyGsLcEquipTagLayer)
+  ;(setq allGsBzEquipBlockNameList (GetAllGsBzEquipBlockNameList))
+  (setq insPtList (GetInsertInsPtList insPt dataList))
   (setq equipTagData (InsertGsBzEquipTag dataList insPtList dataType))
   (UpdateGsBzEquipTagPropertyValue equipTagData (GetPropertyNameListStrategy dataType))
   (setq equipPropertyTagDictList (GetGsBzEquipPropertyTagDictListStrategy dataType dataList))

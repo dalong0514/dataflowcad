@@ -8,6 +8,16 @@
 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
+; utils Function for  LC
+
+; 2021-03-09
+(defun VerifyGsLcEquipTagLayer () 
+  (VerifyGsLcLayerByName "0DataFlow-GsLcEquipTag")
+  (VerifyGsLcLayerByName "0DataFlow-GsLcEquipTagComment")
+)
+
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
 ; Generate GS Entity Object in CAD
 
 (defun GenerateJoinDrawArrowToElement (insPt fromtoValue drawnumValue relatedIDValue /)
@@ -767,7 +777,6 @@
 (defun c:ImportGsLcEquipData ()
   (ImportEquipDataStrategyByBox "importGsEquipDataBox" "GsLcData")
 )
-
 
 ; Generate GsLcEquipData By Import CSV
 ;;;-------------------------------------------------------------------------;;;
