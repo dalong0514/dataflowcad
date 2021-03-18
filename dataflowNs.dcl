@@ -19,7 +19,7 @@ importNsEquipTableBox : dialog {
       alignment = centered; 
       : button { 
         key = "btnModify"; 
-        label = "选择位号插入点"; 
+        label = "选择设备表插入点"; 
         is_default = "true"; 
       } 
       : spacer { width = 2; } 
