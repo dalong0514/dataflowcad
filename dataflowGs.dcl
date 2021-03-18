@@ -4,9 +4,15 @@ importGsEquipDataBox : dialog {
   : boxed_radio_column {
     key = "showOriginDataBox";
     width = 100;
+    : text {
+      key = "importTypeMsg";
+      label = "导入设备数据";
+      alignment = centered; 
+    } 
+    : spacer { height = 2; } 
     : column {
       : popup_list { 
-        label = "导入布置图的设备类型";
+        label = "导入的设备类型";
         edit_width = 80;
         key = "exportDataType"; 
         list = "";
