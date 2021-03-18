@@ -935,17 +935,17 @@
 )
 
 ; refactored at 2021-03-18
-(defun GenerateGsEquipDataStrategy (importedDataList dataType sortedTypeResult importDataType / insPt) 
+(defun GenerateGsEquipDataStrategy (importedDataList dataType sortedTypeResult importDataType / insPt dataList) 
   (setq insPt (getpoint "\n选取设备位号插入点："))
-  (GenerateGsBzEquipDataByImport insPt importedDataList dataType sortedTypeResult)
+  ; sorted by EquipTag or Volume
+  (setq dataList (SortEquipDataStrategy importedDataList sortedTypeResult)) 
+  (GenerateGsBzEquipDataByImport insPt dataList dataType sortedTypeResult)
 )
 
 ; refactored at 2021-03-18
-(defun GenerateGsBzEquipDataByImport (insPt importedDataList dataType sortedTypeResult / allGsBzEquipBlockNameList insPt dataList insPtList equipTagData equipPropertyTagDictList) 
+(defun GenerateGsBzEquipDataByImport (insPt dataList dataType sortedTypeResult / allGsBzEquipBlockNameList insPt insPtList equipTagData equipPropertyTagDictList) 
   (VerifyGsBzEquipLayer)
   (setq allGsBzEquipBlockNameList (GetAllGsBzEquipBlockNameList))
-  ; sorted by EquipTag
-  (setq dataList (SortEquipDataStrategy importedDataList sortedTypeResult))
   (setq insPtList (GetInsertBzEquipinsPtList insPt dataList))
   (setq equipTagData (InsertGsBzEquipTag dataList insPtList dataType))
   (UpdateGsBzEquipTagPropertyValue equipTagData (GetPropertyNameListStrategy dataType))
