@@ -33,11 +33,12 @@
 )
 
 ; refactored at 2021-03-12
-(defun InsertNsEquipTextList (insPt equipDictList / textInsPt textHeight insPtList totalNum) 
+(defun InsertNsEquipTextList (insPt equipDictList / textInsPt textHeight insPtList totalNum num) 
   (setq textHeight 350)
   (setq totalNum (1+ (/ (length (GetNsEquipDictList)) 29)))
+  (setq num 1)
   (mapcar '(lambda (x) 
-              (InsertNsEquipFrame (MoveInsertPositionUtils insPt -3000 -25200) totalNum totalNum)
+              (InsertNsEquipFrame (MoveInsertPositionUtils insPt -3000 -25200) totalNum num)
               (setq insPtList (GetInsertPtListByYMoveUtils insPt (GenerateSortedNumByList x 0) -800))
               (mapcar '(lambda (xx yy) 
                         (InsertNsEquipListLeftTextByRow yy xx textHeight)
@@ -46,6 +47,7 @@
                 insPtList
               ) 
               (setq insPt (MoveInsertPositionUtils insPt 0 -31700))
+              (setq num (1+ num))
            ) 
     (SplitListByNumUtils equipDictList 29)
   ) 
