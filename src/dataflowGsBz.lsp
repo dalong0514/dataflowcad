@@ -860,7 +860,7 @@
 )
 
 ; 2021-03-11
-(defun ImportEquipDataStrategyByBox (tileName dataType / dcl_id dataType importedDataList status exportDataType sortedType sortedTypeResult importMsgBtnStatus)
+(defun ImportEquipDataStrategyByBox (tileName importDataType / dcl_id dataType importedDataList status exportDataType sortedType sortedTypeResult importMsgBtnStatus)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflowGs.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -887,7 +887,7 @@
                 (GetsortedTypeChNameList))
       (end_list) 
     ) 
-    (if (= dataType "GsBzData")
+    (if (= importDataType "GsBzData")
       (set_tile "importDataTypeMsg" "布置图：导入的设备位号及设备图形")
       (set_tile "importDataTypeMsg" "流程图：导入的设备位号及设备图形")
     ) 

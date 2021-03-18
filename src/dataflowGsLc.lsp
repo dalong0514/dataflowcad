@@ -767,3 +767,7 @@
 (defun c:ImportGsLcEquipData ()
   (ImportEquipDataStrategyByBox "importGsEquipDataBox" "GsLcData")
 )
+
+
+; Generate GsLcEquipData By Import CSV
+;;;-------------------------------------------------------------------------;;;
