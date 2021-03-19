@@ -693,6 +693,7 @@
 (defun GenerateGsBzEquipTag (lcEquipData insPt / itemData equipTagData equipGraphData blockPropertyNameList insPt allGsBzEquipBlockNameList) 
   (setq allGsBzEquipBlockNameList (GetAllGsBzEquipBlockNameList))
   (VerifyGsBzEquipLayer)
+  (VerifyGsBzEquipTagLayer)
   (mapcar '(lambda (x) 
              (setq itemData (cdr x))
              ; sorted by EquipName
