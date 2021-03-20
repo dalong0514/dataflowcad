@@ -238,6 +238,11 @@
   (list (+ (car insPt) xOffset) (+ (cadr insPt) yOffset) (caddr insPt))
 )
 
+; refactored at 2021-03-12
+(defun MoveTwoDimPositionUtils (insPt xOffset yOffset / result) 
+  (list (+ (car insPt) xOffset) (+ (cadr insPt) yOffset))
+)
+
 ; Utils Functon in GenerateGraph
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;

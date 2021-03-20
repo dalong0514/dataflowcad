@@ -249,10 +249,10 @@
 )
 
 ; 2021-02-26
-(defun c:moveJSDraw ()
-  (generateJSDraw (MoveCopyEntityData))
+(defun c:moveJSDraw () 
   (CADLispMove (GetAllMoveDrawLabelSS) '(0 0 0) '(200000 0 0))
   (CADLispCopy (GetAllCopyDrawLabelSS) '(0 0 0) '(200000 0 0)) 
+  (generateJSDraw (MoveCopyEntityData))
   (alert "移出建筑底图成功！") 
 )
 
@@ -387,6 +387,7 @@
         (-4 . "<OR")
           (0 . "LINE")
           (0 . "INSERT")
+          (0 . "LWPOLYLINE")
         (-4 . "OR>") 
         (-4 . "<OR")
           (8 . "WINDOW")
@@ -542,19 +543,15 @@
   resultList
 )
 
-; 2021-02-28
+; refactored at 2021-02-28
 (defun MoveCopyEntityDataByBasePosition (entityData basePosition /)
   (mapcar '(lambda (x) 
-             ; ready for refactor
-             (if (= (cdr (assoc 0 x)) "INSERT") 
-               (MoveBlockDataByBasePosition x basePosition)
-               (progn 
-                 (if (= (cdr (assoc 0 x)) "LINE") 
-                   (MoveLineDataByBasePosition x basePosition)
-                   (MovePolyLineDataByBasePosition x basePosition)
-                 )
-               )
-             )  
+             ; ready for refactor 
+            (cond 
+              ((= (cdr (assoc 0 x)) "INSERT") (MoveBlockDataByBasePosition x basePosition))
+              ((= (cdr (assoc 0 x)) "LINE") (MoveLineDataByBasePosition x basePosition))
+              ((= (cdr (assoc 0 x)) "LWPOLYLINE") (MovePolyLineDataByBasePosition x basePosition)) 
+            )  
            ) 
     entityData
   )
@@ -579,10 +576,13 @@
   )
 )
 
+; refactored at - 2021-03-20
+; (10 597934.0 177705.0) (40 . 0.0) (41 . 0.0) (42 . 0.0) (91 . 0) (10 595834.0 177705.0)
+; 多段线的 dxf 10 后面的数据是个 2 维数组，不能用 3 维的偏移函数来调
 (defun MovePolyLineDataByBasePosition (entityData basePosition / resultList)
   (mapcar '(lambda (x) 
              (if (= (car x) 10) 
-               (setq resultList (append resultList (list (cons 10 (MoveInsertPositionUtils (cdr x) (car basePosition) (cadr basePosition))))))
+               (setq resultList (append resultList (list (cons 10 (MoveTwoDimPositionUtils (cdr x) (car basePosition) (cadr basePosition))))))
                (setq resultList (append resultList (list x)))
              ) 
              
