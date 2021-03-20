@@ -1405,18 +1405,15 @@
     )
     ; modify button
     (if (= 5 status) 
-      (if (= comfirmMsgBtnStatus 1) 
-        (progn 
-          (if (/= importedDataList nil) 
-            (progn 
-              (ModifyPropertyValueByEntityHandleUtils importedDataList (GetPropertyNameListStrategy dataType))
-              (setq modifyMsgBtnStatus 1)
-            )
-            (setq importMsgBtnStatus 3)
+      (progn 
+        (if (/= importedDataList nil) 
+          (progn 
+            (ModifyPropertyValueByEntityHandleUtils importedDataList (GetPropertyNameListStrategy dataType))
+            (setq modifyMsgBtnStatus 1)
           )
-        ) 
-        (setq modifyMsgBtnStatus 2)
-      )
+          (setq importMsgBtnStatus 3)
+        )
+      ) 
     )
   )
   (setq importedList nil)
@@ -2209,7 +2206,7 @@
       (end_list)
       (start_list "numberMode" 3)
       (mapcar '(lambda (x) (add_list x)) 
-                '("按流程图号" "不按流程图号" "按设备位号")
+                '("按流程图号" "不按流程图号" "仪表编号按设备位号")
       )
       (end_list)
     )  
