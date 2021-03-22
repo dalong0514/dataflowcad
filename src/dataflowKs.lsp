@@ -11,6 +11,12 @@
 )
 
 ; 2021-03-22
+(defun GetKSInstallMaterialHookDictList () 
+  (UpdateKSInstallMaterialHookDictList)
+  (FilterKSInstallMaterialHook (GetAllKSInstallMaterialData)) 
+)
+
+; 2021-03-22
 (defun GetKSInstallMaterialDrawPositionList () 
   (GetAllDrawLabelPositionListUtils)
 )
@@ -24,6 +30,11 @@
            ) 
     (GetBlockAllPropertyDictListUtils (GetEntityNameListBySSUtils (GetAllKsInstallMaterialSSUtils)))
   )  
+)
+
+; 2021-03-22
+(defun GetAllKSInstallMaterialData () 
+  (GetBlockAllPropertyDictListUtils (GetEntityNameListBySSUtils (GetAllKsInstallMaterialSSUtils)))
 )
 
 ; 2021-03-22
@@ -91,12 +102,19 @@
 )
 
 ; 2021-03-22
-(defun GetKSInstallMaterialHookDictList () 
+(defun UpdateKSInstallMaterialHookDictList (/ KSInstallMaterialTextNumDictList materialNum) 
+  (setq KSInstallMaterialTextNumDictList (GetKSInstallMaterialTextNumDictList))
   (mapcar '(lambda (x) 
-             (cdr x)
+             (setq materialNum (GetDottedPairValueUtils (car x) KSInstallMaterialTextNumDictList))
+             (ModifyMultiplePropertyForOneBlockUtils 
+               (handent (GetDottedPairValueUtils "entityhandle" (cdr x)))
+               (list "MULTIPLE")
+               (list (rtos materialNum))
+             )
            ) 
     (FilterKSInstallMaterialHook (GetKSInstallMaterialDictList)) 
   ) 
+  (princ)
 )
 
 ; 2021-03-22
@@ -106,8 +124,4 @@
                     ) 
     KSInstallMaterialDictList
   ) 
-)
-
-(defun c:foo ()
-  (GetKSInstallMaterialHookDictList)
 )
