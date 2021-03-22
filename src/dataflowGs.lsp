@@ -2676,21 +2676,23 @@
 
 ; 2021-03-22
 ; fix bug 上次重构完，这个匹配逻辑管道没问题，但设备匹配不到了，这里再抽象出一个策略模式
-(defun MatchDataBycodeNameStrategy (dataType item /)
+(defun MatchDataBycodeNameStrategy (dataType propertyValueDict item /)
   (cond 
-    ((= dataType "Pipe") (MatchDataBycodeName (cdr (assoc (car (numberedPropertyNameListStrategy dataType)) x)) item))
-    ((= dataType "Equipment") (wcmatch (cdr (assoc (car (numberedPropertyNameListStrategy dataType)) x)) (strcat item "*")))
+    ((= dataType "Pipe") 
+     (MatchDataBycodeName (cdr (assoc (car (numberedPropertyNameListStrategy dataType)) propertyValueDict)) item))
+    ((= dataType "Equipment") 
+     (wcmatch (cdr (assoc (car (numberedPropertyNameListStrategy dataType)) propertyValueDict)) (strcat item "*")))
   )  
 )
 
+; refactored at 2021-03-22
 (defun GetPipeAndEquipChildrenDataListByNoDrawNum (propertyValueDictList dataType codeNameList / childrenData childrenDataList numberedList) 
   (foreach item codeNameList 
     (setq childrenData 
       (vl-remove-if-not '(lambda (x) 
                            ; sort data by codeName
-                           ; red hat - bug - 氮气N 会匹配到乙二醇 NEGR - 2021-03-16
-                          ;(wcmatch (cdr (assoc (car (numberedPropertyNameListStrategy dataType)) x)) (strcat item "*"))
-                           (MatchDataBycodeName (cdr (assoc (car (numberedPropertyNameListStrategy dataType)) x)) item)
+                           ; red hat - bug - 氮气N 会匹配到乙二醇 NEGR - 2021-03-16 - refactored at 2021-03-22
+                           (MatchDataBycodeNameStrategy dataType x item)
                         ) 
         propertyValueDictList
       ) 
@@ -2708,6 +2710,7 @@
   (= (GetPipeCodeByPipeNum pipeNum) codeName)
 )
 
+; refactored at 2021-03-22
 (defun GetPipeAndEquipChildrenDataListByDrawNum (propertyValueDictList dataType codeNameList / childrenData childrenDataList numberedList) 
   (mapcar '(lambda (drawNum) 
             (foreach item codeNameList 
@@ -2715,9 +2718,8 @@
                 (vl-remove-if-not '(lambda (x) 
                                       ; sort data by codeName
                                       (and 
-                                        ; red hat - bug - 氮气N 会匹配到乙二醇 NEGR - 2021-03-16
-                                        ;(wcmatch (cdr (assoc (car (numberedPropertyNameListStrategy dataType)) x)) (strcat item "*")) 
-                                        (MatchDataBycodeName (cdr (assoc (car (numberedPropertyNameListStrategy dataType)) x)) item)
+                                        ; red hat - bug - 氮气N 会匹配到乙二醇 NEGR - 2021-03-16 - refactored at 2021-03-22
+                                        (MatchDataBycodeNameStrategy dataType x item)
                                         (= drawNum (ExtractDrawNumUtils (cdr (assoc "DRAWNUM" x))))
                                       )
                                   ) 
