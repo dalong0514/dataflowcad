@@ -52,6 +52,24 @@
 )
 
 ; 2021-03-22
+(defun GetKSInstallMaterialTextNumDictList (/ i materialPosition resultList) 
+  (setq i 0)
+  (foreach item (GetKSInstallMaterialDrawPositionList) 
+    (mapcar '(lambda (x) 
+              (setq materialPosition (GetDottedPairValueUtils "position" x))
+              (if (IsInKSInstallMaterialDrawRegion materialPosition item)
+                (setq i (1+ i))
+              )
+            ) 
+      (GetKSInstallMaterialTextData)
+    ) 
+    (setq resultList (append resultList (list (list item i))))
+    (setq i 0)
+  ) 
+  resultList
+)
+
+; 2021-03-22
 (defun GetKSInstallMaterialTextData () 
   (mapcar '(lambda (x) 
              (cons (cons "position" (GetEntityPositionByEntityNameUtils x)) 
@@ -68,5 +86,5 @@
 )
 
 (defun c:foo ()
-  (GetKSInstallMaterialTextData)
+  (GetDottedPairValueUtils (list 7982.03 -362.45 0.0) GetKSInstallMaterialTextNumDictList)
 )
