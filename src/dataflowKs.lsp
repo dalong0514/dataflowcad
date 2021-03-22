@@ -27,19 +27,20 @@
 )
 
 ; 2021-03-22
-(defun GetKSInstallMaterialDictList (/ resultList) 
-    (foreach item (GetKSInstallMaterialData) 
+(defun GetKSInstallMaterialDictList (/ materialPosition resultList) 
+    (foreach item (GetKSInstallMaterialDrawPositionList) 
     (mapcar '(lambda (x) 
+              (setq materialPosition (GetDottedPairValueUtils"position" x))
               (if (and 
-                    (> (car x) (car (cadr item))) 
-                    (< (car x) (+ (car (cadr item)) 126150)) 
-                    (< (cadr x) (cadr (cadr item)))
-                    (> (cadr x) (- (cadr (cadr item)) 89100))
+                    (< (car materialPosition) (car item)) 
+                    (> (car materialPosition) (- (car item) 180)) 
+                    (> (cadr materialPosition) (cadr item))
+                    (< (cadr materialPosition) (+ (cadr item) 297))
                   )
-                (setq resultList (append resultList (list (list (car item) x))))
+                (setq resultList (append resultList (list (list item x))))
               )
             ) 
-      (GetKSInstallMaterialDrawPositionList)
+      (GetKSInstallMaterialData)
     ) 
   ) 
   resultList
@@ -49,5 +50,5 @@
 
 
 (defun c:foo ()
-  (GetKSInstallMaterialData)
+  (GetKSInstallMaterialDictList)
 )
