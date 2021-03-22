@@ -1582,6 +1582,15 @@
   resultList
 )
 
+; 2021-03-22
+(defun GetAllDrawLabelPositionListUtils () 
+  (mapcar '(lambda (x) 
+             (GetEntityPositionByEntityNameUtils (handent (cdr (assoc "entityhandle" x))))
+           ) 
+    (GetBlockAllPropertyDictListUtils (GetEntityNameListBySSUtils (GetAllDrawLabelSSUtils)))
+  ) 
+)
+
 ; Utils Function 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
