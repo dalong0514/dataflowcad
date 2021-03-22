@@ -107,7 +107,7 @@
   entityData
 )
 
-(defun GetAllDataSSUtils ()
+(defun GetAllDataSSUtils (/ ss)
   (setq ss (ssget "X" '((0 . "INSERT") 
         (-4 . "<OR")
           (2 . "PipeArrowLeft")
@@ -130,7 +130,7 @@
   )
 )
 
-(defun GetAllDataSSBySelectUtils ()
+(defun GetAllDataSSBySelectUtils (/ ss)
   (setq ss (ssget '((0 . "INSERT") 
         (-4 . "<OR")
           (2 . "PipeArrowLeft")
@@ -153,7 +153,7 @@
   )
 )
 
-(defun GetAllInstrumentPipeEquipSSUtils ()
+(defun GetAllInstrumentPipeEquipSSUtils (/ ss)
   (setq ss (ssget "X" '((0 . "INSERT") 
         (-4 . "<OR")
           (2 . "PipeArrowLeft")
@@ -174,7 +174,7 @@
   )
 )
 
-(defun GetInstrumentPipeEquipSSBySelectUtils ()
+(defun GetInstrumentPipeEquipSSBySelectUtils (/ ss)
   (setq ss (ssget '((0 . "INSERT") 
         (-4 . "<OR")
           (2 . "PipeArrowLeft")
@@ -195,7 +195,7 @@
   )
 )
 
-(defun GetAllInstrumentAndEquipSSUtils ()
+(defun GetAllInstrumentAndEquipSSUtils (/ ss)
   (setq ss (ssget "X" '((0 . "INSERT") 
         (-4 . "<OR")
           (2 . "InstrumentP")
@@ -214,7 +214,7 @@
   )
 )
 
-(defun GetInstrumentAndEquipSSBySelectUtils ()
+(defun GetInstrumentAndEquipSSBySelectUtils (/ ss)
   (setq ss (ssget '((0 . "INSERT") 
         (-4 . "<OR")
           (2 . "InstrumentP")
@@ -233,7 +233,7 @@
   )
 )
 
-(defun GetAllInstrumentAndPipeSSUtils ()
+(defun GetAllInstrumentAndPipeSSUtils (/ ss)
   (setq ss (ssget "X" '((0 . "INSERT") 
         (-4 . "<OR")
           (2 . "InstrumentP")
@@ -247,7 +247,7 @@
   )
 )
 
-(defun GetAllPublicPipeLineSSUtils ()
+(defun GetAllPublicPipeLineSSUtils (/ ss)
   (setq ss (ssget "X" '((0 . "INSERT") 
         (-4 . "<OR")
           (2 . "PublicPipeUpPipeLine")
@@ -258,7 +258,7 @@
   )
 )
 
-(defun GetInstrumentAndPipeSSBySelectUtils ()
+(defun GetInstrumentAndPipeSSBySelectUtils (/ ss)
   (setq ss (ssget '((0 . "INSERT") 
         (-4 . "<OR")
           (2 . "InstrumentP")
@@ -272,7 +272,7 @@
   )
 )
 
-(defun GetInstrumentAndPipeAndPipeClassChangeSSBySelectUtils ()
+(defun GetInstrumentAndPipeAndPipeClassChangeSSBySelectUtils (/ ss)
   (setq ss (ssget '((0 . "INSERT") 
         (-4 . "<OR")
           (2 . "InstrumentP")
@@ -287,7 +287,7 @@
   )
 )
 
-(defun GetInstrumentAndPipeAndReducerSSBySelectUtils ()
+(defun GetInstrumentAndPipeAndReducerSSBySelectUtils (/ ss)
   (setq ss (ssget '((0 . "INSERT") 
         (-4 . "<OR")
           (2 . "InstrumentP")
@@ -302,7 +302,7 @@
   )
 )
 
-(defun GetAllEquipmentAndPipeSSUtils ()
+(defun GetAllEquipmentAndPipeSSUtils (/ ss)
   (setq ss (ssget "X" '((0 . "INSERT") 
         (-4 . "<OR")
           (2 . "Reactor")
@@ -320,7 +320,7 @@
   )
 )
 
-(defun GetEquipmentAndPipeSSBySelectUtils ()
+(defun GetEquipmentAndPipeSSBySelectUtils (/ ss)
   (setq ss (ssget '((0 . "INSERT") 
         (-4 . "<OR")
           (2 . "Reactor")
@@ -338,7 +338,7 @@
   )
 )
 
-(defun GetAllInstrumentSSUtils ()
+(defun GetAllInstrumentSSUtils (/ ss)
   (setq ss (ssget "X" '((0 . "INSERT") 
         (-4 . "<OR")
           (2 . "InstrumentP")
@@ -350,7 +350,7 @@
   )
 )
 
-(defun GetInstrumentSSBySelectUtils ()
+(defun GetInstrumentSSBySelectUtils (/ ss)
   (setq ss (ssget '((0 . "INSERT") 
         (-4 . "<OR")
           (2 . "InstrumentP")
@@ -362,7 +362,7 @@
   )
 )
 
-(defun GetAllEquipmentSSUtils ()
+(defun GetAllEquipmentSSUtils (/ ss)
   (setq ss (ssget "X" '((0 . "INSERT") 
         (-4 . "<OR")
           (2 . "Reactor")
@@ -378,7 +378,7 @@
   )
 )
 
-(defun GetEquipmentSSBySelectUtils ()
+(defun GetEquipmentSSBySelectUtils (/ ss)
   (setq ss (ssget '((0 . "INSERT") 
         (-4 . "<OR")
           (2 . "Reactor")
@@ -394,7 +394,7 @@
   )
 )
 
-(defun GetAllPipeSSUtils ()
+(defun GetAllPipeSSUtils (/ ss)
   (setq ss (ssget "X" '((0 . "INSERT") 
         (-4 . "<OR")
           (2 . "PipeArrowLeft")
@@ -405,7 +405,7 @@
   )
 )
 
-(defun GetPipeSSBySelectUtils ()
+(defun GetPipeSSBySelectUtils (/ ss)
   (setq ss (ssget '((0 . "INSERT") 
         (-4 . "<OR")
           (2 . "PipeArrowLeft")
@@ -416,7 +416,7 @@
   )
 )
 
-(defun GetAllOuterPipeSSUtils ()
+(defun GetAllOuterPipeSSUtils (/ ss)
   (setq ss (ssget "X" '((0 . "INSERT") 
         (-4 . "<OR")
           (2 . "OuterPipeRight")
@@ -427,7 +427,7 @@
   )
 )
 
-(defun GetOuterPipeSSBySelectUtils ()
+(defun GetOuterPipeSSBySelectUtils (/ ss)
   (setq ss (ssget '((0 . "INSERT") 
         (-4 . "<OR")
           (2 . "OuterPipeRight")
@@ -438,7 +438,7 @@
   )
 )
 
-(defun GetAllJoinDrawArrowSSUtils ()
+(defun GetAllJoinDrawArrowSSUtils (/ ss)
   (setq ss (ssget "X" '((0 . "INSERT") 
         (-4 . "<OR")
           (2 . "JoinDrawArrowTo")
@@ -449,7 +449,7 @@
   )
 )
 
-(defun GetJoinDrawArrowSSBySelectUtils ()
+(defun GetJoinDrawArrowSSBySelectUtils (/ ss)
   (setq ss (ssget '((0 . "INSERT") 
         (-4 . "<OR")
           (2 . "JoinDrawArrowTo")
@@ -460,7 +460,7 @@
   )
 )
 
-(defun GetAllDrawLabelSSUtils ()
+(defun GetAllDrawLabelSSUtils (/ ss)
   (setq ss (ssget "X" '((0 . "INSERT") 
         (-4 . "<OR")
           (2 . "title.2017")
@@ -472,7 +472,7 @@
   )
 )
 
-(defun GetDrawLabelSSBySelectUtils ()
+(defun GetDrawLabelSSBySelectUtils (/ ss)
   (setq ss (ssget '((0 . "INSERT") 
         (-4 . "<OR")
           (2 . "title.2017")
@@ -482,6 +482,11 @@
       )
     )
   )
+)
+
+; 2021-03-22
+(defun GetAllKsInstallMaterialSSUtils () 
+  (ssget "X" '((0 . "INSERT") (2 . "KsInstallMaterial")))
 )
 
 ; 2021-03-16
@@ -490,33 +495,33 @@
 )
 
 ; 2021-03-16
-(defun GetTextSSByLayerBySelectUtils (layerName /)
+(defun GetTextSSByLayerBySelectUtils (layerName / ss)
   (setq ss (ssget (list (cons 0 "TEXT") (cons 8 layerName))))
 )
 
 ; 2021-02-02
 (defun GetAllRawFireFightVPipeSSUtilsV1 ()
-  (setq ss (ssget "X" '((0 . "ARC") (8 . "VPIPE-消防"))))
+  (ssget "X" '((0 . "ARC") (8 . "VPIPE-消防")))
 )
 
 ; 2021-02-0
 (defun GetAllRawFireFightVPipeSSUtils ()
-  (setq ss (ssget "X" '((0 . "TCH_PIPE") (8 . "VPIPE-消防"))))
+  (ssget "X" '((0 . "TCH_PIPE") (8 . "VPIPE-消防")))
 )
 
 ; 2021-02-02
 (defun GetRawFireFightVPipeSSBySelectUtils ()
-  (setq ss (ssget '((0 . "TCH_PIPE") (8 . "VPIPE-消防"))))
+  (ssget '((0 . "TCH_PIPE") (8 . "VPIPE-消防")))
 )
 
 ; 2021-02-02
 (defun GetAllFireFightVPipeSSUtils ()
-  (setq ss (ssget "X" '((0 . "INSERT") (2 . "FireFightHPipe"))))
+  (ssget "X" '((0 . "INSERT") (2 . "FireFightHPipe")))
 )
 
 ; 2021-02-02
 (defun GetFireFightVPipeSSBySelectUtils ()
-  (setq ss (ssget '((0 . "INSERT") (2 . "FireFightHPipe"))))
+  (ssget '((0 . "INSERT") (2 . "FireFightHPipe")))
 )
 
 (defun GetBlockSSBySelectByDataTypeUtils (dataType / ss) 
