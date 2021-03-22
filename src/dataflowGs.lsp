@@ -489,7 +489,7 @@
   (ExportBlockProperty dataTypeList dataTypeChNameList)
 )
 
-(defun ExportBlockProperty (dataTypeList dataTypeChNameList / dcl_id fileName currentDir fileDir exportDataType exportMsgBtnStatus ss sslen)
+(defun ExportBlockProperty (dataTypeList dataTypeChNameList / dcl_id status fileName currentDir fileDir exportDataType exportMsgBtnStatus ss sslen)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)

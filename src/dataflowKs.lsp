@@ -17,7 +17,7 @@
   (ExportTempDataByBox "exportTempDataBox" dataTypeList dataTypeChNameList)
 )
 
-(defun ExportTempDataByBox (tileName dataTypeList dataTypeChNameList / dcl_id fileName currentDir fileDir exportDataType exportMsgBtnStatus ss sslen)
+(defun ExportTempDataByBox (tileName dataTypeList dataTypeChNameList / dcl_id status fileName exportDataType dataType exportMsgBtnStatus ss sslen)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -25,8 +25,10 @@
     (new_dialog tileName dcl_id "" '(-1 -1))
     ; Add the actions to the button
     (action_tile "cancel" "(done_dialog 0)")
-    (action_tile "btnExportData" "(done_dialog 2)")
+    (action_tile "btnSelect" "(done_dialog 2)")
+    (action_tile "btnAllSelect" "(done_dialog 3)") 
     ; Set the default value
+    (set_tile "exportDataType" "0")
     (mode_tile "fileName" 2)
     (mode_tile "exportDataType" 2)
     (action_tile "fileName" "(setq fileName $value)")
@@ -51,7 +53,7 @@
       (set_tile "exportBtnMsg" "导出数据状态：已完成")
     )
     (if (= exportMsgBtnStatus 2)
-      (set_tile "exportBtnMsg" "文件名不能为空")
+      (set_tile "exportBtnMsg" "文件名不能为空！")
     )
     (if (/= sslen nil)
       (set_tile "exportDataNumMsg" (strcat "导出数据数量： " (rtos sslen)))
@@ -61,20 +63,52 @@
       (if (/= fileName "") 
         (progn 
           (setq dataType (nth (atoi exportDataType) dataTypeList))
-          (setq ss (GetAllBlockSSByDataTypeUtils dataType))
-          (if (/= ss nil)
-            (setq sslen (sslength ss)) 
-            (setq sslen 0) 
-          ) 
-          (ExportDataByDataType fileName dataType)
+          (setq ss (GetKsBlockSSBySelectByDataTypeUtils dataType))
+          (setq sslen (sslength ss)) 
+          (ExportKsDataByDataType ss fileName dataType)
           (setq exportMsgBtnStatus 1)
         )
         (setq exportMsgBtnStatus 2)
       )
     )
+    ; import data button
+    (if (= 3 status) 
+      (if (/= fileName "") 
+        (progn 
+          (setq dataType (nth (atoi exportDataType) dataTypeList))
+          (setq ss (GetAllBlockSSByDataTypeUtils dataType))
+          (setq sslen (sslength ss)) 
+          (ExportDataByDataType fileName dataType)
+          (setq exportMsgBtnStatus 1)
+        )
+        (setq exportMsgBtnStatus 2)
+      )
+    ) 
   )
   (unload_dialog dcl_id)
   (princ)
+)
+
+; 2021-03-22
+(defun ExportksDataByDataType (ss fileName dataType /) 
+  (if (= dataType "Pipe") 
+    (ExportPipeData fileName)
+  )
+  (if (= dataType "Equipment") 
+    (ExportEquipmentData fileName)
+  )
+  (if (= dataType "Instrument") 
+    (ExportInstrumentData fileName)
+  )
+  (if (= dataType "Electric") 
+    (ExportEquipmentData fileName)
+  )
+  (if (= dataType "OuterPipe") 
+    (ExportOuterPipeData fileName)
+  )
+  (if (= dataType "GsCleanAir") 
+    (ExportGsCleanAirData fileName)
+  ) 
 )
 
 
@@ -192,5 +226,24 @@
                       (/= (wcmatch (GetDottedPairValueUtils "standardnum" (cdr x)) "YZ*") nil) 
                     ) 
     KSInstallMaterialDictList
+  ) 
+)
+
+
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+; Utils Functon in Ks
+
+; 2021-03-22
+(defun GetKsBlockSSBySelectByDataTypeUtils (dataType /) 
+  (cond 
+    ((= dataType "InstallMaterial") (GetKsInstallMaterialSSBySelectUtils))
+  )
+)
+
+; 2021-03-22
+(defun GetAllBlockSSByDataTypeUtils (dataType / ss) 
+  (cond 
+    ((= dataType "InstallMaterial") (GetAllKsInstallMaterialSSUtils))
   ) 
 )

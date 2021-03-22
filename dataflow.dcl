@@ -121,12 +121,6 @@ exportTempDataBox : dialog {
           label = "全选导出"; 
           is_default = "true"; 
         } 
-        : spacer { width = 1; }  
-        : button { 
-          key = "btnExportData"; 
-          label = "导出"; 
-          is_default = "true"; 
-        } 
         : spacer { width = 1; } 
         cancel_button; 
       }

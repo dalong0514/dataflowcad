@@ -489,6 +489,11 @@
   (ssget "X" '((0 . "INSERT") (2 . "KsInstallMaterial")))
 )
 
+; 2021-03-22
+(defun GetKsInstallMaterialSSBySelectUtils () 
+  (ssget '((0 . "INSERT") (2 . "KsInstallMaterial")))
+)
+
 ; 2021-03-16
 (defun GetTextSSBySelectUtils ()
   (ssget '((0 . "TEXT")))
