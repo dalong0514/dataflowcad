@@ -15,6 +15,8 @@
 (setq *dataflowLispNums* (1+ *dataflowLispNums*))
 (vl-load-all "D:\\dataflowcad\\src\\dataflowNs.lsp")
 (setq *dataflowLispNums* (1+ *dataflowLispNums*))
+(vl-load-all "D:\\dataflowcad\\src\\dataflowKs.lsp")
+(setq *dataflowLispNums* (1+ *dataflowLispNums*))
 (vl-load-all "D:\\dataflowcad\\src\\dataflowSs.lsp")
 (setq *dataflowLispNums* (1+ *dataflowLispNums*))
 (princ (strcat "\n加载的 lisp 文件数量：" (vl-princ-to-string *dataflowLispNums*)))
