@@ -112,16 +112,22 @@ exportTempDataBox : dialog {
         alignment = centered; 
         : button { 
           key = "btnSelect"; 
-          label = "选取导出"; 
+          label = "选取"; 
           is_default = "true"; 
         } 
         : spacer { width = 1; } 
         : button { 
           key = "btnAllSelect"; 
-          label = "全选导出"; 
+          label = "全选"; 
           is_default = "true"; 
         } 
         : spacer { width = 1; } 
+        : button { 
+          key = "btnExportData"; 
+          label = "导出"; 
+          is_default = "true"; 
+        } 
+        : spacer { width = 1; }  
         cancel_button; 
       }
       : spacer { height = 3; } 

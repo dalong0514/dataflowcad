@@ -12,12 +12,12 @@
 
 ; 2021-03-22
 (defun c:exportKsData (/ dataTypeList dataTypeChNameList)
-  (setq dataTypeList '("InstallMaterial"))
+  (setq dataTypeList '("KsInstallMaterial"))
   (setq dataTypeChNameList '("°²×°²ÄÁÏ"))
   (ExportTempDataByBox "exportTempDataBox" dataTypeList dataTypeChNameList)
 )
 
-(defun ExportTempDataByBox (tileName dataTypeList dataTypeChNameList / dcl_id status fileName exportDataType dataType exportMsgBtnStatus ss sslen)
+(defun ExportTempDataByBox (tileName dataTypeList dataTypeChNameList / dcl_id status fileName exportDataType dataType exportMsgBtnStatus ss sslen dataList)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -27,6 +27,7 @@
     (action_tile "cancel" "(done_dialog 0)")
     (action_tile "btnSelect" "(done_dialog 2)")
     (action_tile "btnAllSelect" "(done_dialog 3)") 
+    (action_tile "btnExportData" "(done_dialog 4)") 
     ; Set the default value
     (set_tile "exportDataType" "0")
     (mode_tile "fileName" 2)
@@ -65,8 +66,7 @@
           (setq dataType (nth (atoi exportDataType) dataTypeList))
           (setq ss (GetKsBlockSSBySelectByDataTypeUtils dataType))
           (setq sslen (sslength ss)) 
-          (ExportKsDataByDataType ss fileName dataType)
-          (setq exportMsgBtnStatus 1)
+          (setq dataList (GetKsDataByDataType ss dataType))
         )
         (setq exportMsgBtnStatus 2)
       )
@@ -76,9 +76,17 @@
       (if (/= fileName "") 
         (progn 
           (setq dataType (nth (atoi exportDataType) dataTypeList))
-          (setq ss (GetAllBlockSSByDataTypeUtils dataType))
+          (setq ss (GetAllKsBlockSSByDataTypeUtils dataType))
           (setq sslen (sslength ss)) 
-          (ExportDataByDataType fileName dataType)
+          (setq dataList (GetKsDataByDataType ss dataType)) 
+        )
+        (setq exportMsgBtnStatus 2)
+      )
+    ) 
+    (if (= 4 status) 
+      (if (/= fileName "") 
+        (progn 
+          (ExportKsDataByDataType fileName dataList)
           (setq exportMsgBtnStatus 1)
         )
         (setq exportMsgBtnStatus 2)
@@ -90,28 +98,39 @@
 )
 
 ; 2021-03-22
-(defun ExportksDataByDataType (ss fileName dataType /) 
-  (if (= dataType "Pipe") 
-    (ExportPipeData fileName)
-  )
-  (if (= dataType "Equipment") 
-    (ExportEquipmentData fileName)
-  )
-  (if (= dataType "Instrument") 
-    (ExportInstrumentData fileName)
-  )
-  (if (= dataType "Electric") 
-    (ExportEquipmentData fileName)
-  )
-  (if (= dataType "OuterPipe") 
-    (ExportOuterPipeData fileName)
-  )
-  (if (= dataType "GsCleanAir") 
-    (ExportGsCleanAirData fileName)
+(defun GetKsDataByDataType (ss dataType /) 
+  (cond 
+    ((= dataType "KsInstallMaterial") (ExtractBlockPropertyToJsonListStrategy ss "KsInstallMaterial"))
   ) 
 )
 
+; 2021-03-22
+(defun ExportKsDataByDataType (fileName dataList /) 
+  (cond 
+    ((= dataType "KsInstallMaterial") (ExportInstallMaterialData fileName dataList))
+  ) 
+)
 
+; 2021-03-22
+(defun ExportInstallMaterialData (fileName dataList / fileDir)
+  (setq fileDir (GetExportDataFileDir fileName))
+  (WriteDataListToFileUtils fileDir dataList)
+)
+
+; 2021-03-22
+(defun ExtractBlockPropertyToJsonListStrategy (ss dataType / entityNameList propertyNameList classDict resultList)
+  (setq entityNameList (GetEntityNameListBySSUtils ss))
+  (setq propertyNameList (GetPropertyNameListStrategy dataType))
+  (setq classDict (GetClassDictStrategy dataType))
+  (setq resultList 
+    (mapcar '(lambda (x) 
+              (ExtractBlockPropertyToJsonStringByClassUtils x propertyNameList classDict)
+            ) 
+      entityNameList
+    )
+  )
+  (setq resultList (ModifyPropertyNameForJsonListStrategy dataType resultList))
+)
 
 ; 2021-03-22
 (defun GetKSInstallMaterialHookDictList () 
@@ -237,13 +256,13 @@
 ; 2021-03-22
 (defun GetKsBlockSSBySelectByDataTypeUtils (dataType /) 
   (cond 
-    ((= dataType "InstallMaterial") (GetKsInstallMaterialSSBySelectUtils))
+    ((= dataType "KsInstallMaterial") (GetKsInstallMaterialSSBySelectUtils))
   )
 )
 
 ; 2021-03-22
-(defun GetAllBlockSSByDataTypeUtils (dataType / ss) 
+(defun GetAllKsBlockSSByDataTypeUtils (dataType / ss) 
   (cond 
-    ((= dataType "InstallMaterial") (GetAllKsInstallMaterialSSUtils))
+    ((= dataType "KsInstallMaterial") (GetAllKsInstallMaterialSSUtils))
   ) 
 )
