@@ -90,6 +90,24 @@
   (ssget "X" '((0 . "TEXT") (1 . "*-*")))
 )
 
+; 2021-03-22
+(defun GetKSInstallMaterialHookDictList () 
+  (mapcar '(lambda (x) 
+             (cdr x)
+           ) 
+    (FilterKSInstallMaterialHook (GetKSInstallMaterialDictList)) 
+  ) 
+)
+
+; 2021-03-22
+(defun FilterKSInstallMaterialHook (KSInstallMaterialDictList /) 
+  (vl-remove-if-not '(lambda (x) 
+                      (/= (wcmatch (GetDottedPairValueUtils "standardnum" (cdr x)) "YZ*") nil) 
+                    ) 
+    KSInstallMaterialDictList
+  ) 
+)
+
 (defun c:foo ()
-  (GetKSInstallMaterialDictList)
+  (GetKSInstallMaterialHookDictList)
 )
