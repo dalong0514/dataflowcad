@@ -17,13 +17,18 @@
 
 ; 2021-03-22
 (defun GetKSInstallMaterialData () 
-  (GetBlockAllPropertyDictListUtils (GetEntityNameListBySSUtils (GetAllKsInstallMaterialSSUtils)))
+  (mapcar '(lambda (x) 
+             (cons (cons "position" (GetEntityPositionByEntityNameUtils (handent (cdr (assoc "entityhandle" x))))) 
+               x
+             )
+           ) 
+    (GetBlockAllPropertyDictListUtils (GetEntityNameListBySSUtils (GetAllKsInstallMaterialSSUtils)))
+  )  
 )
 
 ; 2021-03-22
 (defun GetKSInstallMaterialDictList (/ resultList) 
-  ; set a temp variable first, ss in the foreach
-    (foreach item (FilterJSDrawLabelData) 
+    (foreach item (GetKSInstallMaterialData) 
     (mapcar '(lambda (x) 
               (if (and 
                     (> (car x) (car (cadr item))) 
