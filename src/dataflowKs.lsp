@@ -32,7 +32,7 @@
     (mapcar '(lambda (x) 
               (setq materialPosition (GetDottedPairValueUtils "position" x))
               (if (IsInKSInstallMaterialDrawRegion materialPosition item)
-                (setq resultList (append resultList (list (list item x))))
+                (setq resultList (append resultList (list (cons (GetKSInstallMaterialKey item) x))))
               )
             ) 
       (GetKSInstallMaterialData)
@@ -91,5 +91,5 @@
 )
 
 (defun c:foo ()
-  (GetDottedPairValueUtils 7619 (GetKSInstallMaterialTextNumDictList))
+  (GetKSInstallMaterialDictList)
 )
