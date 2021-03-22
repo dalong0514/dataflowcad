@@ -11,22 +11,38 @@
 )
 
 ; 2021-03-22
-(defun GetKSInstallMaterialDrawPositionRangeUtils ()
-  (mapcar '(lambda (x) 
-             (list (+ (car x) -180) (+ (cadr x) 297))
-           ) 
-    (GetAllDrawLabelPositionListUtils)
-  ) 
+(defun GetKSInstallMaterialDrawPositionList () 
+  (GetAllDrawLabelPositionListUtils)
 )
+
+; 2021-03-22
+(defun GetKSInstallMaterialData () 
+  (GetBlockAllPropertyDictListUtils (GetEntityNameListBySSUtils (GetAllKsInstallMaterialSSUtils)))
+)
+
+; 2021-03-22
+(defun GetKSInstallMaterialDictList (/ resultList) 
+  ; set a temp variable first, ss in the foreach
+    (foreach item (FilterJSDrawLabelData) 
+    (mapcar '(lambda (x) 
+              (if (and 
+                    (> (car x) (car (cadr item))) 
+                    (< (car x) (+ (car (cadr item)) 126150)) 
+                    (< (cadr x) (cadr (cadr item)))
+                    (> (cadr x) (- (cadr (cadr item)) 89100))
+                  )
+                (setq resultList (append resultList (list (list (car item) x))))
+              )
+            ) 
+      (GetKSInstallMaterialDrawPositionList)
+    ) 
+  ) 
+  resultList
+)
+
 
 
 
 (defun c:foo ()
-  (GetAllKsInstallMaterialSSUtils)
-)
-
-
-(defun GetKsInstallMaterialDrawBasePositionList ()
-  ;(GetStrategyJSDrawColumnPositionData)
-  (GetAllJSDrawLabelData)
+  (GetKSInstallMaterialData)
 )
