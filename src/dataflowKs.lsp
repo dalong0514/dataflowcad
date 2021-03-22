@@ -51,6 +51,22 @@
   )
 )
 
+; 2021-03-22
+(defun GetKSInstallMaterialTextData () 
+  (mapcar '(lambda (x) 
+             (cons (cons "position" (GetEntityPositionByEntityNameUtils x)) 
+               (list (cons "entityname" x))
+             )
+           ) 
+    (GetEntityNameListBySSUtils (GetAllKsInstallMaterialTextSSUtils))
+  )  
+)
+
+; 2021-03-22
+(defun GetAllKsInstallMaterialTextSSUtils () 
+  (ssget "X" '((0 . "TEXT") (1 . "*-*")))
+)
+
 (defun c:foo ()
-  (GetKSInstallMaterialDictList)
+  (GetKSInstallMaterialTextData)
 )
