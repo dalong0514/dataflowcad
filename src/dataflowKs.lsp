@@ -11,6 +11,75 @@
 )
 
 ; 2021-03-22
+(defun c:exportKsData (/ dataTypeList dataTypeChNameList)
+  (setq dataTypeList '("InstallMaterial"))
+  (setq dataTypeChNameList '("安装材料"))
+  (ExportTempDataByBox "exportTempDataBox" dataTypeList dataTypeChNameList)
+)
+
+(defun ExportTempDataByBox (tileName dataTypeList dataTypeChNameList / dcl_id fileName currentDir fileDir exportDataType exportMsgBtnStatus ss sslen)
+  (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
+  (setq status 2)
+  (while (>= status 2)
+    ; Create the dialog box
+    (new_dialog tileName dcl_id "" '(-1 -1))
+    ; Add the actions to the button
+    (action_tile "cancel" "(done_dialog 0)")
+    (action_tile "btnExportData" "(done_dialog 2)")
+    ; Set the default value
+    (mode_tile "fileName" 2)
+    (mode_tile "exportDataType" 2)
+    (action_tile "fileName" "(setq fileName $value)")
+    (action_tile "exportDataType" "(setq exportDataType $value)")
+    (progn
+      (start_list "exportDataType" 3)
+      (mapcar '(lambda (x) (add_list x)) 
+                dataTypeChNameList)
+      (end_list)
+    )
+    ; init the default value list box
+    (if (= nil exportDataType)
+      (setq exportDataType "0")
+    )
+    (if (= nil fileName)
+      (setq fileName "")
+    )
+    (if (/= exportMsgBtnStatus nil)
+      (set_tile "exportDataType" exportDataType)
+    )
+    (if (= exportMsgBtnStatus 1)
+      (set_tile "exportBtnMsg" "导出数据状态：已完成")
+    )
+    (if (= exportMsgBtnStatus 2)
+      (set_tile "exportBtnMsg" "文件名不能为空")
+    )
+    (if (/= sslen nil)
+      (set_tile "exportDataNumMsg" (strcat "导出数据数量： " (rtos sslen)))
+    )
+    ; export data button
+    (if (= 2 (setq status (start_dialog))) 
+      (if (/= fileName "") 
+        (progn 
+          (setq dataType (nth (atoi exportDataType) dataTypeList))
+          (setq ss (GetAllBlockSSByDataTypeUtils dataType))
+          (if (/= ss nil)
+            (setq sslen (sslength ss)) 
+            (setq sslen 0) 
+          ) 
+          (ExportDataByDataType fileName dataType)
+          (setq exportMsgBtnStatus 1)
+        )
+        (setq exportMsgBtnStatus 2)
+      )
+    )
+  )
+  (unload_dialog dcl_id)
+  (princ)
+)
+
+
+
+; 2021-03-22
 (defun GetKSInstallMaterialHookDictList () 
   (UpdateKSInstallMaterialHookDictList)
   (FilterKSInstallMaterialHook (GetAllKSInstallMaterialData)) 

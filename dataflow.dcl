@@ -60,13 +60,14 @@ exportBlockPropertyDataBox : dialog {
   }
 }
 
-exportBlockPropertyDataBoxV2 : dialog {
+// refactored 2021-03-22
+exportTempDataBox : dialog {
   label = "天正设计流数据一体化工艺V2.0———导出数据"; 
-  key = "exportBlockPropertyDataV2";
+  key = "exportTempData";
   : row {
     : boxed_radio_column {
       key = "exportDataTypeBoxV2";
-      width = 50;
+      width = 80;
       : column {
         height = 10;
         : popup_list { 
@@ -111,13 +112,13 @@ exportBlockPropertyDataBoxV2 : dialog {
         alignment = centered; 
         : button { 
           key = "btnSelect"; 
-          label = "选取"; 
+          label = "选取导出"; 
           is_default = "true"; 
         } 
         : spacer { width = 1; } 
         : button { 
           key = "btnAllSelect"; 
-          label = "全选"; 
+          label = "全选导出"; 
           is_default = "true"; 
         } 
         : spacer { width = 1; }  
