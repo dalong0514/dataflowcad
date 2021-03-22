@@ -63,10 +63,15 @@
             ) 
       (GetKSInstallMaterialTextData)
     ) 
-    (setq resultList (append resultList (list (list item i))))
+    (setq resultList (append resultList (list (cons (GetKSInstallMaterialKey item) i))))
     (setq i 0)
   ) 
   resultList
+)
+
+; 2021-03-22
+(defun GetKSInstallMaterialKey (position /)
+  (fix (+ (car position) (cadr position)))
 )
 
 ; 2021-03-22
@@ -86,5 +91,5 @@
 )
 
 (defun c:foo ()
-  (GetDottedPairValueUtils (list 7982.03 -362.45 0.0) GetKSInstallMaterialTextNumDictList)
+  (GetDottedPairValueUtils 7619 (GetKSInstallMaterialTextNumDictList))
 )
