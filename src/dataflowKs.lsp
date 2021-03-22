@@ -12,6 +12,7 @@
 
 ; 2021-03-22
 (defun c:exportKsData (/ dataTypeList dataTypeChNameList)
+  (UpdateKSInstallMaterialHookDictList)
   (setq dataTypeList '("KsInstallMaterial"))
   (setq dataTypeChNameList '("°²×°²ÄÁÏ"))
   (ExportTempDataByBox "exportTempDataBox" dataTypeList dataTypeChNameList)
@@ -135,12 +136,6 @@
     )
   )
   (setq resultList (ModifyPropertyNameForJsonListStrategy dataType resultList))
-)
-
-; 2021-03-22
-(defun GetKSInstallMaterialHookDictList () 
-  (UpdateKSInstallMaterialHookDictList)
-  (FilterKSInstallMaterialHook (GetAllKSInstallMaterialData)) 
 )
 
 ; 2021-03-22
