@@ -2674,6 +2674,15 @@
   ) 
 )
 
+; 2021-03-22
+; fix bug 上次重构完，这个匹配逻辑管道没问题，但设备匹配不到了，这里再抽象出一个策略模式
+(defun MatchDataBycodeNameStrategy (dataType item /)
+  (cond 
+    ((= dataType "Pipe") (MatchDataBycodeName (cdr (assoc (car (numberedPropertyNameListStrategy dataType)) x)) item))
+    ((= dataType "Equipment") (wcmatch (cdr (assoc (car (numberedPropertyNameListStrategy dataType)) x)) (strcat item "*")))
+  )  
+)
+
 (defun GetPipeAndEquipChildrenDataListByNoDrawNum (propertyValueDictList dataType codeNameList / childrenData childrenDataList numberedList) 
   (foreach item codeNameList 
     (setq childrenData 
