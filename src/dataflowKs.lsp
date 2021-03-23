@@ -223,7 +223,7 @@
   (ssget "X" '((0 . "TEXT") (1 . "*-*")))
 )
 
-; 2021-03-22
+; refactored at 2021-03-23
 (defun UpdateKSInstallMaterialHookDictList (/ KSInstallMaterialTextNumDictList materialNum) 
   (setq KSInstallMaterialTextNumDictList (GetKSInstallMaterialTextNumDictList))
   (mapcar '(lambda (x) 
@@ -234,7 +234,10 @@
                (list (rtos materialNum))
              )
            ) 
-    (FilterKSInstallMaterialHook (GetKSInstallMaterialDictList)) 
+
+    ; do not need filter
+    ; (FilterKSInstallMaterialHook (GetKSInstallMaterialDictList)) 
+    (GetKSInstallMaterialDictList)
   ) 
   (princ)
 )
