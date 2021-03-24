@@ -258,27 +258,34 @@
 
 ; 2021-03-24
 (defun c:UpdateKsData ()
-  ;(UpdateBlockDataStrategyByBox "KsInstallMaterial" "filterAndModifyPropertyBox")
-  (UpdatekDataStrategyByBoxUtils "updateDataFlowDataBox")
+  (UpdatekDataStrategyByBoxUtils "updateDataFlowDataBox" "Ks")
 )
 
 ; 2021-03-24
-(defun UpdateKsInstallMaterialkData ()
-  ;(UpdateBlockDataStrategyByBox "KsInstallMaterial" "filterAndModifyPropertyBox")
-  (UpdateBlockDataStrategyByBox "updateDataFlowDataBox")
+(defun GetTempExportedDataTypeChNameListStrategy (dataClass /) 
+  (cond 
+    ((= dataClass "Ks") (GetKsTempExportedDataTypeChNameList))
+  )
 )
 
+; 2021-03-24
+(defun GetTempExportedDataTypeByindexStrategy (dataClass index /) 
+  (cond 
+    ((= dataClass "Ks") (nth (atoi index) '("KsInstallMaterial")))
+  ) 
+)
+
+; 2021-03-24
 (defun GetKsTempExportedDataTypeChNameList ()
   '("°²×°²ÄÁÏ")
 )
 
-; unit test compeleted
-(defun GetKsTempExportedDataTypeByindex (index / result)
-  (setq result (nth (atoi index) '("KsInstallMaterial")))
-  result
+; 2021-03-24
+(defun GetKsTempExportedDataTypeByindex (index /)
+  (nth (atoi index) '("KsInstallMaterial"))
 )
 
-(defun UpdatekDataStrategyByBoxUtils (tileName / dcl_id exportDataType dataType importedDataList selectedName propertyNameList status ss confirmList entityNameList exportMsgBtnStatus importMsgBtnStatus comfirmMsgBtnStatus modifyMsgBtnStatus)
+(defun UpdatekDataStrategyByBoxUtils (tileName dataClass / dcl_id exportDataType dataType importedDataList selectedName propertyNameList status ss confirmList entityNameList exportMsgBtnStatus importMsgBtnStatus comfirmMsgBtnStatus modifyMsgBtnStatus)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -298,7 +305,7 @@
     (progn
       (start_list "exportDataType" 3)
       (mapcar '(lambda (x) (add_list x)) 
-                (GetKsTempExportedDataTypeChNameList))
+                (GetTempExportedDataTypeChNameListStrategy dataClass))
       (end_list)
     )
     ; init the default data of text
@@ -326,7 +333,7 @@
     ; export data button
     (if (= 2 (setq status (start_dialog)))
       (progn 
-        (setq dataType (GetKsTempExportedDataTypeByindex exportDataType))
+        (setq dataType (GetTempExportedDataTypeByindexStrategy "Ks" exportDataType))
         (setq ss (GetAllKsBlockSSByDataTypeUtils dataType))
         (setq entityNameList (GetEntityNameListBySSUtils ss))
         (WriteDataToCSVByEntityNameListStrategy entityNameList dataType)
@@ -336,7 +343,7 @@
     ; import data button
     (if (= 3 status) 
       (progn 
-        (setq dataType (GetKsTempExportedDataTypeByindex exportDataType))
+        (setq dataType (GetTempExportedDataTypeByindexStrategy "Ks" exportDataType))
         (setq importedDataList (StrListToListListUtils (ReadKsDataFromCSVStrategy dataType)))
         (setq importMsgBtnStatus 1) 
       )
