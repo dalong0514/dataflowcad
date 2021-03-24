@@ -440,6 +440,14 @@
   (ReadDataFromCSVUtils fileDir)
 )
 
+; 2021-04-24
+(defun ReadKsDataFromCSVStrategy (dataType / fileDir)
+  (cond 
+    ((= dataType "KsInstallMaterial") (setq fileDir "D:\\dataflowcad\\lsdata\\installMaterialData.csv"))
+  )
+  (ReadDataFromCSVUtils fileDir)
+)
+
 ; Read and Write Gs Data
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;

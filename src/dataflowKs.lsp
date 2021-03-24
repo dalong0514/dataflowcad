@@ -336,8 +336,8 @@
     ; import data button
     (if (= 3 status) 
       (progn 
-        (setq dataType (GetTempExportedDataTypeByindex exportDataType))
-        (setq importedDataList (StrListToListListUtils (ReadGsDataFromCSVStrategy dataType)))
+        (setq dataType (GetKsTempExportedDataTypeByindex exportDataType))
+        (setq importedDataList (StrListToListListUtils (ReadKsDataFromCSVStrategy dataType)))
         (setq importMsgBtnStatus 1) 
       )
     )
