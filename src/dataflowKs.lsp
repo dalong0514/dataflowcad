@@ -11,8 +11,14 @@
 )
 
 ; 2021-03-22
+(defun c:updateKsInstallMaterialMultiple ()
+  (UpdateKSInstallMaterialMultipleData)
+  (alert "仪表个数更新成功！")
+)
+
+; 2021-03-22
 (defun c:exportKsData (/ dataTypeList dataTypeChNameList)
-  (UpdateKSInstallMaterialHookDictList)
+  (UpdateKSInstallMaterialMultipleData)
   (setq dataTypeList '("KsInstallMaterial"))
   (setq dataTypeChNameList '("安装材料"))
   (ExportTempDataByBox "exportTempDataBox" dataTypeList dataTypeChNameList)
@@ -224,7 +230,7 @@
 )
 
 ; refactored at 2021-03-23
-(defun UpdateKSInstallMaterialHookDictList (/ KSInstallMaterialTextNumDictList materialNum) 
+(defun UpdateKSInstallMaterialMultipleData (/ KSInstallMaterialTextNumDictList materialNum) 
   (setq KSInstallMaterialTextNumDictList (GetKSInstallMaterialTextNumDictList))
   (mapcar '(lambda (x) 
              (setq materialNum (GetDottedPairValueUtils (car x) KSInstallMaterialTextNumDictList))
@@ -234,7 +240,6 @@
                (list (rtos materialNum))
              )
            ) 
-
     ; do not need filter
     ; (FilterKSInstallMaterialHook (GetKSInstallMaterialDictList)) 
     (GetKSInstallMaterialDictList)
@@ -251,6 +256,11 @@
   ) 
 )
 
+
+; 2021-03-24
+(defun c:autoNumerKsInstall ()
+  (alert "该功能待开发！")
+)
 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
