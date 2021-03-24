@@ -337,13 +337,8 @@
     (if (= 3 status) 
       (progn 
         (setq dataType (GetTempExportedDataTypeByindex exportDataType))
-        (if (/= dataType "Equipment") 
-          (progn 
-            (setq importedDataList (StrListToListListUtils (ReadGsDataFromCSVStrategy dataType)))
-            (setq importMsgBtnStatus 1)
-          ) 
-          (setq importMsgBtnStatus 2)
-        ) 
+        (setq importedDataList (StrListToListListUtils (ReadGsDataFromCSVStrategy dataType)))
+        (setq importMsgBtnStatus 1) 
       )
     )
     ; modify button

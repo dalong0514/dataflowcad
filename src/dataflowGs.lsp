@@ -249,7 +249,12 @@
 
 ; 2021-03-22
 (defun GetKsInstallMaterialPropertyNameList ()
-  '("STANDARDNUM" "MATERIALTYPE" "SPECIFICATION" "MATERIAL" "NUM" "MULTIPLE" "COMMENT")
+  '("STANDARDNUM" "MATERIALTYPE" "SPECIFICATION" "MATERIAL" "NUM" "MULTIPLE" "KSTYPE" "COMMENT")
+)
+
+; 2021-03-24
+(defun GetCSVKsInstallMaterialPropertyNameList ()
+  '("SERIALID" "STANDARDNUM" "MATERIALTYPE" "SPECIFICATION" "MATERIAL" "NUM" "MULTIPLE" "KSTYPE" "COMMENT")
 )
 
 ; Get Constant Data
@@ -356,6 +361,15 @@
   (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList "0")
 )
 
+; 2021-03-24
+(defun WriteKsInstallMaterialDataToCSVByEntityNameListUtils (entityNameList / fileDir firstRow propertyNameList)
+  (setq fileDir "D:\\dataflowcad\\ksdata\\installMaterialData.csv")
+  (setq firstRow "数据ID,序号,图号及标准号,名称,材料规格,材质,数量,倍数,仪表类型,备注,")
+  ; the sort of  property must be consistency with the sort of block in CAD
+  (setq propertyNameList (GetCSVKsInstallMaterialPropertyNameList))
+  (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList "0")
+)
+
 ; refactored at - 2021-03-24
 (defun WriteDataToCSVByEntityNameListStrategy (entityNameList dataType /)
   (cond 
@@ -370,7 +384,7 @@
     ((= dataType "CustomEquip") (WriteCustomEquipDataToCSVByEntityNameListUtils entityNameList))
     ((= dataType "GsCleanAir") (WriteGsCleanAirDataToCSVByEntityNameListUtils entityNameList))
     ((= dataType "GsBzEquip") (WriteGsBzEquipDataToCSVByEntityNameListUtils entityNameList))
-    ((= dataType "KsInstallMaterial") (WriteGsBzEquipDataToCSVByEntityNameListUtils entityNameList))
+    ((= dataType "KsInstallMaterial") (WriteKsInstallMaterialDataToCSVByEntityNameListUtils entityNameList))
     ((= dataType "Equipment") 
      (progn 
         (WriteReactorDataToCSVByEntityNameListUtils (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "Reactor")))
