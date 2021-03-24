@@ -133,8 +133,8 @@
   (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 14700 0) (nth 4 rowData) textHeight)
   (InsertNsEquipListCenterText (MoveInsertPositionUtils insPt 21300 0) "台" textHeight)
   (InsertNsEquipListCenterText (MoveInsertPositionUtils insPt 22300 0) (nth 5 rowData) textHeight)
-  ; weight
-  (InsertNsEquipListCenterText (MoveInsertPositionUtils insPt 24600 0) (RepairNsEquipWeight (nth 6 rowData)) textHeight)
+  ; weight - refactored at 2021-03-24 remove the unit kg
+  (InsertNsEquipListCenterText (MoveInsertPositionUtils insPt 24600 0) (nth 6 rowData) textHeight)
   (InsertNsEquipListCenterText (MoveInsertPositionUtils insPt 30550 0) "订货" textHeight)
   (if (/= (nth 7 rowData) nil) 
     (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 33600 0) (nth 7 rowData) textHeight)
@@ -145,11 +145,6 @@
 ; 2021-03-17
 (defun RepairNsEquipAirVolume (airVolume /)
   (strcat "风量：" airVolume "m3/h")
-)
-
-; 2021-03-17
-(defun RepairNsEquipWeight (weight /)
-  (strcat weight "kg")
 )
 
 ; 2021-03-17
