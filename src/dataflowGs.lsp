@@ -356,35 +356,21 @@
   (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList "0")
 )
 
+; refactored at - 2021-03-24
 (defun WriteDataToCSVByEntityNameListStrategy (entityNameList dataType /)
   (cond 
     ((= dataType "Pipe") (WritePipeDataToCSVByEntityNameListUtils entityNameList))
-  )
-  (cond 
     ((= dataType "Instrument") (WriteInstrumentDataToCSVByEntityNameListUtils entityNameList))
-  )
-  (cond 
     ((= dataType "Reactor") (WriteReactorDataToCSVByEntityNameListUtils entityNameList))
-  )
-  (cond 
     ((= dataType "Tank") (WriteTankDataToCSVByEntityNameListUtils entityNameList))
-  )
-  (cond 
     ((= dataType "Heater") (WriteHeaterDataToCSVByEntityNameListUtils entityNameList))
-  )
-  (cond 
     ((= dataType "Pump") (WritePumpDataToCSVByEntityNameListUtils entityNameList))
-  )
-  (cond 
     ((= dataType "Vacuum") (WriteVacuumDataToCSVByEntityNameListUtils entityNameList))
-  )
-  (cond 
     ((= dataType "Centrifuge") (WriteCentrifugeDataToCSVByEntityNameListUtils entityNameList))
-  )
-  (cond 
     ((= dataType "CustomEquip") (WriteCustomEquipDataToCSVByEntityNameListUtils entityNameList))
-  )
-  (cond 
+    ((= dataType "GsCleanAir") (WriteGsCleanAirDataToCSVByEntityNameListUtils entityNameList))
+    ((= dataType "GsBzEquip") (WriteGsBzEquipDataToCSVByEntityNameListUtils entityNameList))
+    ((= dataType "KsInstallMaterial") (WriteGsBzEquipDataToCSVByEntityNameListUtils entityNameList))
     ((= dataType "Equipment") 
      (progn 
         (WriteReactorDataToCSVByEntityNameListUtils (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "Reactor")))
@@ -395,14 +381,8 @@
         (WriteCentrifugeDataToCSVByEntityNameListUtils (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "Centrifuge")))
         (WriteCustomEquipDataToCSVByEntityNameListUtils (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "CustomEquip")))
      )
-    )
-  )
-  (cond 
-    ((= dataType "GsCleanAir") (WriteGsCleanAirDataToCSVByEntityNameListUtils entityNameList))
+    ) 
   ) 
-  (cond 
-    ((= dataType "GsBzEquip") (WriteGsBzEquipDataToCSVByEntityNameListUtils entityNameList))
-  )  
   (princ)
 )
 
