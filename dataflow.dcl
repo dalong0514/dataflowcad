@@ -1024,22 +1024,7 @@ updateDataFlowDataBox : dialog {
         value = "";
       }
       : spacer { height = 1; } 
-      : popup_list { 
-        label = "选择确认的数据属性";
-        edit_width = 80;
-        key = "viewPropertyName"; 
-        list = "";
-        value = "";
-      } 
-      : spacer { height = 1; } 
     }
-    : list_box { 
-      height = 30;
-      key = "modifiedData"; 
-      list = "";
-      value = "";
-    }
-    : spacer { height = 1; } 
     : text {
       key = "exportBtnMsg";
       label = "导出临时文件状态：";
@@ -1067,12 +1052,6 @@ updateDataFlowDataBox : dialog {
       : button { 
         key = "btnImportData"; 
         label = "导入数据"; 
-        is_default = "true"; 
-      } 
-      : spacer { width = 2; } 
-      : button { 
-        key = "btnPreviewModify"; 
-        label = "预览修改"; 
         is_default = "true"; 
       } 
       : spacer { width = 2; } 
