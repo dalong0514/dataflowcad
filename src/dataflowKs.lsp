@@ -346,7 +346,7 @@
       (progn 
         (if (/= importedDataList nil) 
           (progn 
-            (ModifyPropertyValueByEntityHandleUtils importedDataList (GetPropertyNameListStrategy dataType))
+            (ModifyPropertyValueByEntityHandleUtils importedDataList (GetCSVPropertyNameListStrategy dataType))
             (setq modifyMsgBtnStatus 1)
           )
           (setq importMsgBtnStatus 3)

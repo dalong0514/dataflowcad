@@ -94,6 +94,15 @@
   ) 
 )
 
+; 2021-03-24
+(defun GetCSVPropertyNameListStrategy (dataType /) 
+  (cond 
+    ((= dataType "KsInstallMaterial") (GetCSVKsInstallMaterialPropertyNameList))
+    ; default List
+    (T '("TAG"))
+  ) 
+)
+
 (defun GetPropertyChNameListStrategy (dataType / propertyChNameList)
   (if (= dataType "Pipe") 
     (setq propertyChNameList (GetPipePropertyChNameList))
@@ -443,7 +452,7 @@
 ; 2021-04-24
 (defun ReadKsDataFromCSVStrategy (dataType / fileDir)
   (cond 
-    ((= dataType "KsInstallMaterial") (setq fileDir "D:\\dataflowcad\\lsdata\\installMaterialData.csv"))
+    ((= dataType "KsInstallMaterial") (setq fileDir "D:\\dataflowcad\\ksdata\\installMaterialData.csv"))
   )
   (ReadDataFromCSVUtils fileDir)
 )
