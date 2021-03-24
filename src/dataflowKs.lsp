@@ -13,7 +13,7 @@
 ; 2021-03-22
 (defun c:updateKsInstallMaterialMultiple ()
   (UpdateKSInstallMaterialMultipleData)
-  (alert "仪表个数更新成功！")
+  (alert "仪表个数更新成功！")(princ)
 )
 
 ; 2021-03-22
@@ -281,7 +281,7 @@
 ; 2021-03-24
 (defun GetTempExportedDataTypeByindexStrategy (dataClass index /) 
   (cond 
-    ((= dataClass "Ks") (nth (atoi index) '("KsInstallMaterial")))
+    ((= dataClass "Ks") (GetKsTempExportedDataTypeByindex index))
   ) 
 )
 
