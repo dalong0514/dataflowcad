@@ -2095,7 +2095,7 @@
 )
 
 ; 2021-03-25
-;; Set Dynamic Block Property Value  -  Lee Mac
+;; Set Dynamic Block Property Value
 ;; Modifies the value of a Dynamic Block property (if present)
 ;; blk - [vla] VLA Dynamic Block Reference object
 ;; prp - [str] Dynamic Block property name (case-insensitive)
@@ -2113,6 +2113,32 @@
       )
     )
     (vlax-invoke blk 'getdynamicblockproperties)
+  )
+)
+
+; 2021-03-25
+;; Get Dynamic Block Properties
+;; Returns an association list of Dynamic Block properties & values.
+;; blk - [vla] VLA Dynamic Block Reference object
+;; Returns: [lst] Association list of ((<prop> . <value>) ... )
+(defun GetDynamicBlockPropertyValueUtils (blk /)
+  (mapcar '(lambda (x) (cons (vla-get-propertyname x) (vlax-get x 'value)))
+    (vlax-invoke blk 'getdynamicblockproperties)
+  )
+)
+
+; 2021-03-25
+;; Set Dynamic Block Properties
+;; Modifies values of Dynamic Block properties using a supplied association list.
+;; blk - [vla] VLA Dynamic Block Reference object
+;; lst - [lst] Association list of ((<Property> . <Value>) ... )
+;; Returns: nil
+(defun SetDynamicBlockPropertyValueUtils (blk lst / itm)
+  (setq lst (mapcar '(lambda (x) (cons (strcase (car x)) (cdr x))) lst))
+  (foreach x (vlax-invoke blk 'getdynamicblockproperties)
+    (if (setq itm (assoc (strcase (vla-get-propertyname x)) lst))
+      (vla-put-value x (vlax-make-variant (cdr itm) (vlax-variant-type (vla-get-value x))))
+    )
   )
 )
 
