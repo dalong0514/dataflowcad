@@ -797,3 +797,31 @@
 
 ; Generate GsLcEquipData By Import CSV
 ;;;-------------------------------------------------------------------------;;;
+
+
+
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+; Test Zoom
+
+; 2021-03-25
+(defun c:foo ()
+  (InsertDynamicBlock)
+)
+
+(defun InsertDynamicBlock (/ insPt) 
+  (setq insPt (getpoint "\n选取水平管道插入点："))
+  (InsertTestDynamicBlock insPt "HGCAD动态块#管法兰.PL.PN16")
+)
+
+; 2021-03-25
+(defun InsertTestDynamicBlock (insPt blockName /) 
+  ;(VerifyGsLcBlockByName blockName)
+  (VerifyGsLcPipeLayer)
+  (InsertBlockByNoPropertyUtils insPt blockName "0DataFlow-GsLcPipe")
+  (SetDynamicBlockPropertyValueUtils (GetLastVlaObjectUtils) "DN" "PN16 DN40")
+)
+
+; Test Zoom
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
