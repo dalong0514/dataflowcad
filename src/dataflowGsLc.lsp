@@ -805,12 +805,6 @@
 ; Test Zoom
 
 ; 2021-03-25
-(defun c:foo ()
-  (InsertDynamicBlock)
-  ;(GetDynamicBlockPropertyValueUtils (GetVlaObjectBySelectUtils))
-)
-
-; 2021-03-25
 (defun InsertDynamicBlock (/ insPt) 
   (setq insPt (getpoint "\n选取水平管道插入点："))
   (InsertTestDynamicBlock insPt "HGCAD动态块#管法兰.PL.PN16")
