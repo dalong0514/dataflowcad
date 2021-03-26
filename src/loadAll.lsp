@@ -13,6 +13,8 @@
 (setq *dataflowLispNums* (1+ *dataflowLispNums*))
 (vl-load-all "D:\\dataflowcad\\src\\dataflowGsBz.lsp")
 (setq *dataflowLispNums* (1+ *dataflowLispNums*))
+(vl-load-all "D:\\dataflowcad\\src\\modulesGsLc.lsp")
+(setq *dataflowLispNums* (1+ *dataflowLispNums*))
 (vl-load-all "D:\\dataflowcad\\src\\dataflowNs.lsp")
 (setq *dataflowLispNums* (1+ *dataflowLispNums*))
 (vl-load-all "D:\\dataflowcad\\src\\dataflowKs.lsp")
