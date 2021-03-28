@@ -763,12 +763,16 @@
   (substr oldStr 1 (- (strlen oldStr) num))
 )
 
-; 2021-03-28
+; refactored at 2021-03-28
 (defun DictListToJsonStringUtils (DictList / jsonPropertyString)
   (setq jsonPropertyString 
     (apply 'strcat 
       (mapcar '(lambda (x) 
-                (strcat "\"" (strcase (car x) T) "\": \"" (cdr x) "\",")
+                 (if (IsListDataTypeUtils (cdr x)) 
+                   ; must has the , at the end - 2021-03-28
+                   (strcat "\"" (strcase (car x) T) "\": " (DictListToJsonStringUtils (cdr x)) ",")
+                   (strcat "\"" (strcase (car x) T) "\": \"" (cdr x) "\",")
+                 )
               ) 
         DictList
       ) 

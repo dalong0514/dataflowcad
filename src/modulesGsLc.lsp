@@ -1,4 +1,4 @@
-;å†¯å¤§é¾™ç¼–äºŽ 2020-2021 å¹´
+;·ë´óÁú±àÓÚ 2020-2021 Äê
 (if (= *comLibraryStatus* nil) 
   (progn 
     (vl-load-com)
@@ -52,11 +52,11 @@
   ) 
 )
 
-(defun c:updatefoo (/ xdataString)
-  ;(BindXDataToObjectUtils (CreateStringXDataUtils "{\"Tag\" : {\"subTag\" : \"subTagValue\" , \"Num\" : -123.4}, \"Num\" : -123.4}"))
+(defun c:fooupdate (/ xdataString)
   (setq xdataString 
     (DictListToJsonStringUtils 
-      (GetAllPropertyDictForOneBlock (car (GetEntityNameListBySSUtils (ssget))))
+      ;(GetAllPropertyDictForOneBlock (car (GetEntityNameListBySSUtils (ssget))))
+      (GetTestDictList)
     ) 
   )
   (UpdateXDataToObjectUtils 
@@ -65,7 +65,19 @@
   )
 )
 
-(defun c:getfoo (/ temp) 
+(defun GetTestDictList ()
+  (list (cons "tag" "V1101") 
+    (cons "name" "¼×´¼´¢¹Þ") 
+    (cons "num" "22") 
+    (cons "tagName" 
+      (list (cons "tag" "V1101") 
+        (cons "num" "22") 
+      )  
+    )
+  )
+)
+
+(defun c:fooget (/ temp) 
   (setq temp 
     (ParseJSONToListUtils (GetStringXDataByEntityNameUtils (car (GetEntityNameListBySSUtils (ssget)))))
   )
