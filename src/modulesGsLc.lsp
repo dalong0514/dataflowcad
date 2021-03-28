@@ -57,6 +57,11 @@
   ) 
 )
 
+; 2021-03-26
+(defun GetdataFlowXDataUtils () 
+  (entget (car (GetEntityNameListBySSUtils (ssget))) '("DataFlowXData"))
+)
+
 ; 2021-03-28
 (defun GetListXDataLByEntityNameUtils (entityName /) 
   (ParseJSONToListUtils (GetStringXDataByEntityNameUtils entityName))
@@ -82,10 +87,6 @@
       )  
     )
   )
-)
-
-(defun c:fooget ()
-  (GetListXDataLByEntityNameUtils (car (GetEntityNameListBySSUtils (ssget))))
 )
 
 ; Utils Function
