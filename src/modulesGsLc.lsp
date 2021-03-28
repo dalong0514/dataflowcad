@@ -31,6 +31,17 @@
 )
 
 ; 2021-03-26
+(defun UpdateXDataToObjectUtils (entityName xdataString / entityData) 
+  (setq entityData (entget entityName '("DataFlowXData")))
+  (if (/= (assoc -3 entityData) nil) 
+    (setq entityData (subst (CreateStringXDataUtils xdataString) (assoc -3 entityData) entityData)) 
+  )  
+  (entmod entityData)
+  (entupd entityName)
+  (princ)
+)
+
+; 2021-03-26
 (defun GetStringXDataByEntityNameUtils (entityName / entityData)
   (setq entityData 
     (entget entityName '("DataFlowXData")))
@@ -42,15 +53,18 @@
 )
 
 (defun c:foo ()
-  (BindXDataToObjectUtils (CreateStringXDataUtils "{\"Tag\" : {\"subTag\" : \"subTagValue\" , \"Num\" : -123.4}, \"Num\" : -123.4}"))
+  ;(BindXDataToObjectUtils (CreateStringXDataUtils "{\"Tag\" : {\"subTag\" : \"subTagValue\" , \"Num\" : -123.4}, \"Num\" : -123.4}"))
+  (UpdateXDataToObjectUtils 
+    (car (GetEntityNameListBySSUtils (ssget)))
+    "{\"Tag\":{\"subTag\":\"subTagValue\",\"Num\":-123.4,\"total\":88}, \"Num\" : -123.4}"
+  )
 )
 
 (defun c:ssfoo (/ temp) 
   (setq temp 
     (ParseJSONToListUtils (GetStringXDataByEntityNameUtils (car (GetEntityNameListBySSUtils (ssget)))))
   )
-  (GetDottedPairValueUtils "Tag" temp)
-  
+  ;(GetDottedPairValueUtils "Tag" temp)
 )
 
 ; Utils Function
