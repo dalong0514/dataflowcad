@@ -41,6 +41,18 @@
   ) 
 )
 
+(defun c:foo ()
+  (BindXDataToObjectUtils (CreateStringXDataUtils "{\"Tag\" : {\"subTag\" : \"subTagValue\" , \"Num\" : -123.4}, \"Num\" : -123.4}"))
+)
+
+(defun c:ssfoo (/ temp) 
+  (setq temp 
+    (ParseJSONToListUtils (GetStringXDataByEntityNameUtils (car (GetEntityNameListBySSUtils (ssget)))))
+  )
+  (GetDottedPairValueUtils "Tag" temp)
+  
+)
+
 ; Utils Function
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
