@@ -763,6 +763,21 @@
   (substr oldStr 1 (- (strlen oldStr) num))
 )
 
+; 2021-03-28
+(defun DictListToJsonStringUtils (DictList / jsonPropertyString)
+  (setq jsonPropertyString 
+    (apply 'strcat 
+      (mapcar '(lambda (x) 
+                (strcat "\"" (strcase (car x) T) "\": \"" (cdr x) "\",")
+              ) 
+        DictList
+      ) 
+    )
+  )
+  (setq jsonPropertyString (RemoveLastNumCharForStringUtils jsonPropertyString 1))
+  (setq jsonPropertyString (strcat "{" jsonPropertyString "}"))
+)
+
 (defun ExtractBlockPropertyToJsonStringUtils (entityName propertyNameList / jsonPropertyString)
   (setq jsonPropertyString 
     (apply 'strcat 
@@ -1912,6 +1927,20 @@
 (defun IsGsLcBlockInstrumentPropertyDictUtils (blockPropertyDict / result)
   (if (and (/= (assoc "function" blockPropertyDict) nil) (/= (assoc "sort" blockPropertyDict) nil) )
     (setq result T)
+  )
+)
+
+; 2021-03-29
+(defun IsListDataTypeUtils (data / result)
+  (if (= (type data) 'LIST) 
+    T
+  )
+)
+
+; 2021-03-29
+(defun IsStringDataTypeUtils (data / result)
+  (if (= (type data) 'STR) 
+    T
   )
 )
 

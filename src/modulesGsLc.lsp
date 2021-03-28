@@ -52,15 +52,20 @@
   ) 
 )
 
-(defun c:foo ()
+(defun c:updatefoo (/ xdataString)
   ;(BindXDataToObjectUtils (CreateStringXDataUtils "{\"Tag\" : {\"subTag\" : \"subTagValue\" , \"Num\" : -123.4}, \"Num\" : -123.4}"))
+  (setq xdataString 
+    (DictListToJsonStringUtils 
+      (GetAllPropertyDictForOneBlock (car (GetEntityNameListBySSUtils (ssget))))
+    ) 
+  )
   (UpdateXDataToObjectUtils 
     (car (GetEntityNameListBySSUtils (ssget)))
-    "{\"Tag\":{\"subTag\":\"subTagValue\",\"Num\":-123.4,\"total\":88}, \"Num\" : -123.4}"
+    xdataString
   )
 )
 
-(defun c:ssfoo (/ temp) 
+(defun c:getfoo (/ temp) 
   (setq temp 
     (ParseJSONToListUtils (GetStringXDataByEntityNameUtils (car (GetEntityNameListBySSUtils (ssget)))))
   )
