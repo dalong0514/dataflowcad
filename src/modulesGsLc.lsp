@@ -30,8 +30,8 @@
   (princ)
 )
 
-; 2021-03-26
-(defun UpdateXDataToObjectUtils (entityName xdataString / entityData) 
+; 2021-03-28
+(defun UpdateXDataByStringDataUtils (entityName xdataString / entityData) 
   (setq entityData (entget entityName '("DataFlowXData")))
   (if (/= (assoc -3 entityData) nil) 
     (setq entityData (subst (CreateStringXDataUtils xdataString) (assoc -3 entityData) entityData)) 
@@ -39,6 +39,11 @@
   (entmod entityData)
   (entupd entityName)
   (princ)
+)
+
+; 2021-03-28
+(defun UpdateXDataByDictDataUtils (entityName dictData /)
+  (UpdateXDataByStringDataUtils entityName (DictListToJsonStringUtils dictData))
 )
 
 ; 2021-03-26
@@ -52,16 +57,18 @@
   ) 
 )
 
-(defun c:fooupdate (/ xdataString)
-  (setq xdataString 
-    (DictListToJsonStringUtils 
-      ;(GetAllPropertyDictForOneBlock (car (GetEntityNameListBySSUtils (ssget))))
-      (GetTestDictList)
-    ) 
-  )
-  (UpdateXDataToObjectUtils 
+; 2021-03-28
+(defun GetListXDataLByEntityNameUtils (entityName /) 
+  (ParseJSONToListUtils (GetStringXDataByEntityNameUtils entityName))
+)
+
+
+
+(defun c:fooupdate ()
+  (UpdateXDataByDictDataUtils 
     (car (GetEntityNameListBySSUtils (ssget)))
-    xdataString
+    (GetAllPropertyDictForOneBlock (car (GetEntityNameListBySSUtils (ssget))))
+    ;(GetTestDictList)
   )
 )
 
@@ -77,11 +84,8 @@
   )
 )
 
-(defun c:fooget (/ temp) 
-  (setq temp 
-    (ParseJSONToListUtils (GetStringXDataByEntityNameUtils (car (GetEntityNameListBySSUtils (ssget)))))
-  )
-  ;(GetDottedPairValueUtils "Tag" temp)
+(defun c:fooget ()
+  (GetListXDataLByEntityNameUtils (car (GetEntityNameListBySSUtils (ssget))))
 )
 
 ; Utils Function
