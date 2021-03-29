@@ -11,7 +11,9 @@
 ;;;-------------------------------------------------------------------------;;;
 ; Utils Function
 
-
+(defun c:foo ()
+  (GetDictionaryByKeyEntryUtils (namedobjdict) "ACAD_GROUP")
+)
 
 ; Utils Function
 ;;;-------------------------------------------------------------------------;;;

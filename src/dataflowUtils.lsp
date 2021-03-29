@@ -2293,3 +2293,32 @@
 ; XData Utils Function
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
+
+
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+; Dictionary Utils Function
+
+; Custom function that returns the entity name of a specific dictionary entry 
+(defun GetDictionaryByKeyEntryUtils (dictionaryEntity dKeyEntry / entityData dKeyEntry dEntityName cnt) 
+  (setq entityData (entget dictionaryEntity)) 
+  (setq dEntityName nil) 
+  (setq cnt 0) 
+  (while (and (= dEntityName nil)(< cnt (length entityData))) 
+    (if (and (= (car (nth cnt entityData)) 3) 
+             (= (cdr (nth cnt entityData)) dKeyEntry)) 
+      (progn 
+        (setq dEntityName (cdr (nth (1+ cnt) entityData))) 
+      ) 
+    ) 
+    (setq cnt (1+ cnt)) 
+  ) 
+  dEntityName 
+)
+
+
+
+
+; Dictionary Utils Function
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
