@@ -2350,15 +2350,21 @@
 )
 
 ; 2021-03-29
+(defun BindDictDictionaryDataToObjectUtils (entityName dictData dKeyEntry /)
+  (BindStringDictionaryDataToObjectUtils 
+    entityName 
+    (DictListToJsonStringUtils dictData) 
+    dKeyEntry)
+)
+
+; 2021-03-29
 (defun BindGsStringDictionaryDataToObjectUtils (entityName stringData /) 
   (BindStringDictionaryDataToObjectUtils entityName stringData "DATAFLOW_GS")
 )
 
 ; 2021-03-29
-(defun BindGsDictDictionaryDataToObjectUtils (entityName dictData /)
-  (BindGsStringDictionaryDataToObjectUtils 
-    entityName 
-    (DictListToJsonStringUtils dictData))
+(defun BindGsDictDictionaryDataToObjectUtils (entityName dictData /) 
+  (BindDictDictionaryDataToObjectUtils entityName dictData "DATAFLOW_GS")
 )
 
 ; 2021-03-29

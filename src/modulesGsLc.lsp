@@ -11,14 +11,10 @@
 ;;;-------------------------------------------------------------------------;;;
 ; Utils Function
 
-(defun c:foo (/ stringData)
-  (setq stringData (DictListToJsonStringUtils (GetAllPropertyDictForOneBlock (car (GetEntityNameListBySSUtils (ssget))))))
-  (BindGsStringDictionaryDataToObjectUtils (car (GetEntityNameListBySSUtils (ssget))) stringData)
-)
-
-(defun c:fooget (/ entityName) 
-  (setq entityName (car (GetEntityNameListBySSUtils (ssget))))
-  (ParseJSONToListUtils (GetStringDictionaryDataByEntityNameUtils entityName "DATAFLOW_GS"))
+(defun c:foo (/ stringData) 
+  ; (car (GetEntityNameListBySSUtils (ssget)))
+  ;(GetDictionaryDataByEntityNameUtils (car (GetEntityNameListBySSUtils (ssget))))
+  (BindStringDictionaryDataToObjectUtils (car (GetEntityNameListBySSUtils (ssget))) "dalong" "DATAFLOW_NS")
 )
 
 ; Utils Function
