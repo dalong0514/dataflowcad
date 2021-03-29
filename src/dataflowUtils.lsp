@@ -2325,6 +2325,8 @@
   ; Attach the extension dictionary to the last object 
   (setq entityData (append (entget entityName) exDictionary)) 
   (entmod entityData) 
+  (entupd entityName)
+  (princ)
 )
 
 ; 2021-03-29
@@ -2332,6 +2334,58 @@
   ; Creates a new dictionary
   (setq dictionary (entmakex (list (cons 0 "DICTIONARY") (cons 100 "AcDbDictionary"))))
   (setq newdictionary (dictadd (namedobjdict) "DATAFLOW_GS" dictionary))
+)
+
+; 2021-03-29
+(defun BindStringDictionaryDataToObjectUtils (entityName stringData dKeyEntry /) 
+  (if (GetDictionaryEntityNameUtils entityName) 
+    (dictadd (GetDictionaryEntityNameUtils entityName) dKeyEntry 
+      (entmakex (list (cons 0 "XRECORD")(cons 100 "AcDbXrecord") 
+                      (cons 1 stringData))
+      )
+    ) 
+    (princ "no Dictionary!")
+  )
+  (princ)
+)
+
+; 2021-03-29
+(defun BindGsStringDictionaryDataToObjectUtils (entityName stringData /) 
+  (BindStringDictionaryDataToObjectUtils entityName stringData "DATAFLOW_GS")
+)
+
+; 2021-03-29
+(defun BindGsDictDictionaryDataToObjectUtils (entityName dictData /)
+  (BindGsStringDictionaryDataToObjectUtils 
+    entityName 
+    (DictListToJsonStringUtils dictData))
+)
+
+; 2021-03-29
+(defun GetDictionaryDataByEntityNameUtils (entityName /)
+  (entget (cdr (assoc 360 (entget entityName))))
+)
+
+; 2021-03-29
+(defun GetDictionaryDataByEntityDataUtils (entityData/)
+  (entget (cdr (assoc 360 entityData/)))
+)
+
+; 2021-03-29
+(defun GetDictionaryEntityNameUtils (entityName /)
+  (cdr (assoc 360 (entget entityName)))
+)
+
+; 2021-03-29
+(defun GetStringDictionaryDataByEntityNameUtils (entityName dKeyEntry / entityData) 
+  (setq entityData 
+    (entget (GetDictionaryByKeyEntryUtils (GetDictionaryEntityNameUtils entityName) dKeyEntry))
+  )
+  (cdr (assoc 1 entityData))
+)
+
+(defun GetGsDictDictionaryDataByEntityNameUtils (entityName /) 
+  (ParseJSONToListUtils (GetStringDictionaryDataByEntityNameUtils entityName "DATAFLOW_GS"))
 )
 
 ; Dictionary Utils Function

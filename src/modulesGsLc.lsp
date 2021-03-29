@@ -11,9 +11,14 @@
 ;;;-------------------------------------------------------------------------;;;
 ; Utils Function
 
-(defun c:foo ()
-  ;(entget (GetDictionaryByKeyEntryUtils (namedobjdict) "ACAD_GROUP"))
-  (CreateCustomDictionaryByEntityNameUtils (car (GetEntityNameListBySSUtils (ssget))))
+(defun c:foo (/ stringData)
+  (setq stringData (DictListToJsonStringUtils (GetAllPropertyDictForOneBlock (car (GetEntityNameListBySSUtils (ssget))))))
+  (BindGsStringDictionaryDataToObjectUtils (car (GetEntityNameListBySSUtils (ssget))) stringData)
+)
+
+(defun c:fooget (/ entityName) 
+  (setq entityName (car (GetEntityNameListBySSUtils (ssget))))
+  (ParseJSONToListUtils (GetStringDictionaryDataByEntityNameUtils entityName "DATAFLOW_GS"))
 )
 
 ; Utils Function
