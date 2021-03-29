@@ -2299,6 +2299,7 @@
 ;;;-------------------------------------------------------------------------;;;
 ; Dictionary Utils Function
 
+; 2021-03-29
 ; Custom function that returns the entity name of a specific dictionary entry 
 (defun GetDictionaryByKeyEntryUtils (dictionaryEntity dKeyEntry / entityData dKeyEntry dEntityName cnt) 
   (setq entityData (entget dictionaryEntity)) 
@@ -2316,8 +2317,22 @@
   dEntityName 
 )
 
+; 2021-03-29
+(defun CreateCustomDictionaryByEntityNameUtils (entityName / dictionary exDictionary)
+  ; Creates a new dictionary
+  (setq dictionary (entmakex (list (cons 0 "DICTIONARY") (cons 100 "AcDbDictionary"))))
+  (setq exDictionary (list (cons 102 "{ACAD_XDICTIONARY") (cons 360 dictionary)(cons 102 "}"))) 
+  ; Attach the extension dictionary to the last object 
+  (setq entityData (append (entget entityName) exDictionary)) 
+  (entmod entityData) 
+)
 
-
+; 2021-03-29
+(defun CreateDictionaryByEntityNameUtils (entityName / dictionary exDictionary)
+  ; Creates a new dictionary
+  (setq dictionary (entmakex (list (cons 0 "DICTIONARY") (cons 100 "AcDbDictionary"))))
+  (setq newdictionary (dictadd (namedobjdict) "DATAFLOW_GS" dictionary))
+)
 
 ; Dictionary Utils Function
 ;;;-------------------------------------------------------------------------;;;

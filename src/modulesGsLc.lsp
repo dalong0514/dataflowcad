@@ -12,7 +12,8 @@
 ; Utils Function
 
 (defun c:foo ()
-  (GetDictionaryByKeyEntryUtils (namedobjdict) "ACAD_GROUP")
+  ;(entget (GetDictionaryByKeyEntryUtils (namedobjdict) "ACAD_GROUP"))
+  (CreateCustomDictionaryByEntityNameUtils (car (GetEntityNameListBySSUtils (ssget))))
 )
 
 ; Utils Function
