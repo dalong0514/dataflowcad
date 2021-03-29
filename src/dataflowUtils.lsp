@@ -2374,7 +2374,7 @@
 
 ; 2021-03-29
 (defun GetDictionaryDataByEntityDataUtils (entityData/)
-  (entget (cdr (assoc 360 entityData/)))
+  (entget (cdr (assoc 360 entityData)))
 )
 
 ; 2021-03-29
@@ -2390,8 +2390,14 @@
   (cdr (assoc 1 entityData))
 )
 
+; 2021-03-29
+(defun GetDictDictionaryDataByEntityNameUtils (entityName dKeyEntry /) 
+  (ParseJSONToListUtils (GetStringDictionaryDataByEntityNameUtils entityName dKeyEntry))
+)
+
+; 2021-03-29
 (defun GetGsDictDictionaryDataByEntityNameUtils (entityName /) 
-  (ParseJSONToListUtils (GetStringDictionaryDataByEntityNameUtils entityName "DATAFLOW_GS"))
+  (GetDictDictionaryDataByEntityNameUtils entityName "DATAFLOW_GS")
 )
 
 ; Dictionary Utils Function
