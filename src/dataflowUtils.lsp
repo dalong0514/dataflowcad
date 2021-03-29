@@ -2301,7 +2301,7 @@
 
 ; 2021-03-29
 ; Custom function that returns the entity name of a specific dictionary entry 
-(defun GetDictionaryByKeyEntryUtils (dictionaryEntity dKeyEntry / entityData dKeyEntry dEntityName cnt) 
+(defun GetDictEntityNameByKeyEntryUtils (dictionaryEntity dKeyEntry / entityData dKeyEntry dEntityName cnt) 
   (setq entityData (entget dictionaryEntity)) 
   (setq dEntityName nil) 
   (setq cnt 0) 
@@ -2315,6 +2315,16 @@
     (setq cnt (1+ cnt)) 
   ) 
   dEntityName 
+)
+
+; 2021-03-29;
+(defun GetDictEntityDataByKeyEntryUtils (entityName dKeyEntry /) 
+  (dictsearch (GetDictionaryEntityNameUtils entityName) dKeyEntry)  
+)
+
+; 2021-03-29;
+(defun RemoveDictEntityDataByKeyEntryUtils (entityName dKeyEntry /) 
+  (dictremove (GetDictionaryEntityNameUtils entityName) dKeyEntry)  
 )
 
 ; 2021-03-29
@@ -2385,7 +2395,7 @@
 ; 2021-03-29
 (defun GetStringDictionaryDataByEntityNameUtils (entityName dKeyEntry / entityData) 
   (setq entityData 
-    (entget (GetDictionaryByKeyEntryUtils (GetDictionaryEntityNameUtils entityName) dKeyEntry))
+    (entget (GetDictEntityNameByKeyEntryUtils (GetDictionaryEntityNameUtils entityName) dKeyEntry))
   )
   (cdr (assoc 1 entityData))
 )
@@ -2398,6 +2408,36 @@
 ; 2021-03-29
 (defun GetGsDictDictionaryDataByEntityNameUtils (entityName /) 
   (GetDictDictionaryDataByEntityNameUtils entityName "DATAFLOW_GS")
+)
+
+; 2021-03-29
+(defun UpdateStringDictDataByDictEntityNameUtils (entityName stringData / entityData) 
+  
+  (setq entityData (entget entityName))
+  (if (/= (assoc 1 entityData) nil) 
+    (setq entityData (subst (cons 1 stringData) (assoc 1 entityData) entityData)) 
+  ) 
+  (entmod entityData)
+  (entupd entityName)
+  (princ)
+)
+
+; 2021-03-29
+; do not be valid, ready for refactor
+; (defun UpdateStringDictDataByDictEntityNameUtilsV1 (entityName stringData / entityData) 
+;   (setq entityData (entget entityName))
+;   (if (/= (assoc 1 entityData) nil) 
+;     (setq entityData (subst (cons 1 stringData) (assoc 1 entityData) entityData)) 
+;   ) 
+;   (entmod entityData)
+;   (entupd entityName)
+;   (princ)
+; )
+
+; 2021-03-29
+(defun UpdateStringDictDataByEntityNameUtils (entityName stringData dKeyEntry / dictEntityName) 
+  (setq dictEntityName (GetDictEntityNameByKeyEntryUtils (GetDictionaryEntityNameUtils entityName) dKeyEntry))
+  (UpdateStringDictDataByDictEntityNameUtils dictEntityName stringData)
 )
 
 ; Dictionary Utils Function

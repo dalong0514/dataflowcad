@@ -139,6 +139,7 @@
   (AssertEqual 'IsKsLocationOnEquip (list "PL1101-50-2J1") nil)
   (AssertEqual 'IsKsLocationOnEquip (list "R23101") T)
   (AssertEqual 'IsKsLocationOnEquip (list "µªÆø×Ü¹Ü") nil)
+  (AssertEqual 'IsKsLocationOnEquip (list "R23101A") T)
 )
 
 ; 2021-01-25
