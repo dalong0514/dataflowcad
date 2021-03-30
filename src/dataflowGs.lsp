@@ -2440,10 +2440,14 @@
 )
 
 ; 2021-01-26
+; refactored at 2021-03-30
 (defun GetNewEquipTagLocation (oneKsDataOnPipe pipeFromAndToDictList equipPositionDictList / pipeLine pipeFromToPair)
   (setq pipeLine (GetPipeLineByPipeNum (cdr (assoc "LOCATION" oneKsDataOnPipe))))
   (setq pipeFromToPair (cdr (assoc pipeLine pipeFromAndToDictList)))
-  (GetEquipTagLinkedPipe (car pipeFromToPair) (cadr pipeFromToPair) oneKsDataOnPipe equipPositionDictList)
+  ; red hat - pipeFromToPair may be nil, beacuse the pipeLine(instrument location is wrong)
+  (if (/= pipeFromToPair nil) 
+    (GetEquipTagLinkedPipe (car pipeFromToPair) (cadr pipeFromToPair) oneKsDataOnPipe equipPositionDictList)
+  )
 )
 
 ; 2021-01-25
