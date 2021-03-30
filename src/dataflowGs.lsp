@@ -2825,7 +2825,10 @@
 ; refactored at 2021-03-29
 ; unit test compeleted
 (defun IsKsLocationOnEquip (ksLocation /) 
-  (RegexpTestUtils ksLocation "^[A-Z]+[0-9]+[A-Z]?$" nil)
+  ; for match [04C-R1101A] - 2021-03-30
+  (or (RegexpTestUtils ksLocation "^[A-Z]+[0-9]+[A-Z]?$" nil) 
+    (RegexpTestUtils ksLocation "^[0-9]+[A-Z]+-[A-Z]+[0-9]+[A-Z]?$" nil)
+  )
 )
 
 (defun GetCodeNameListStrategy (propertyValueDictList dataType / propertyName dataList resultList) 
