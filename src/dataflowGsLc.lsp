@@ -722,6 +722,7 @@
   )
 )
 
+; refactored at 2021-03-30
 (defun c:GenerateJoinDrawArrow (/ pipeSS pipeData insPt entityNameList)
   (VerifyGsLcBlockByName "JoinDrawArrowTo")
   (VerifyGsLcBlockByName "JoinDrawArrowFrom")
@@ -730,14 +731,16 @@
   (setq pipeSS (GetPipeSSBySelectUtils))
   (setq pipeData (GetAllPropertyDictForOneBlock (car (GetEntityNameListBySSUtils pipeSS))))
   (setq insPt (getpoint "\n选取接图箭头的插入点："))
-  (GenerateJoinDrawArrowToElement insPt
-    (strcat "去" (cdr (assoc "to" pipeData))) 
+  (GenerateJoinDrawArrowToElement insPt 
+    ; add the Equip ChName - 2021-03-30
+    (strcat "去" (cdr (assoc "to" pipeData)) (GetEquipChNameByEquipTag (cdr (assoc "to" pipeData)))) 
     (GetRelatedEquipDrawNum (GetRelatedEquipDataByTag (cdr (assoc "to" pipeData))))
     (cdr (assoc "entityhandle" pipeData)) 
   )
   (GenerateJoinDrawArrowFromElement (MoveInsertPositionUtils insPt 20 0)
     (cdr (assoc "pipenum" pipeData)) 
-    (strcat "自" (cdr (assoc "from" pipeData)))
+    ; add the Equip ChName - 2021-03-30
+    (strcat "自" (cdr (assoc "from" pipeData)) (GetEquipChNameByEquipTag (cdr (assoc "from" pipeData))))
     (GetRelatedEquipDrawNum (GetRelatedEquipDataByTag (cdr (assoc "from" pipeData))))
     (cdr (assoc "entityhandle" pipeData)) 
   ) 
