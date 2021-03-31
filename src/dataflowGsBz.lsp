@@ -252,6 +252,7 @@
 (defun c:moveJSDraw () 
   (CADLispMove (GetAllMoveDrawLabelSS) '(0 0 0) '(200000 0 0))
   (CADLispCopy (GetAllCopyDrawLabelSS) '(0 0 0) '(200000 0 0)) 
+  (CADLispCopy (GetAllJSAxisSS) '(0 0 0) '(200000 0 0)) 
   (generateJSDraw (MoveCopyEntityData))
   (alert "移出建筑底图成功！") 
 )
@@ -431,6 +432,21 @@
 ; 2021-02-27
 (defun GetAllJSDrawColumnSS () 
   (ssget "X" '((0 . "INSERT") (8 . "COLUMN")))
+)
+
+; 2021-03-31
+(defun GetAllJSAxisSS () 
+    (ssget "X" '( 
+        (-4 . "<OR")
+          (0 . "DIMENSION")
+          (0 . "INSERT")
+          (0 . "LINE")
+        (-4 . "OR>") 
+        (-4 . "<OR")
+          (8 . "AXIS")
+        (-4 . "OR>")
+      )
+    )
 )
 
 ; 2021-02-27
