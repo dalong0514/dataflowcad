@@ -46,7 +46,15 @@
   (GetGsBzEquipTypeTest)
   (RemoveNullStringForListUtilsTest)
   (SplitListByNumUtilsTest)
+  (StrToListUtilsTest)
   (DL:PrintTestResults (DL:CountBooleans *testList*))
+)
+
+; 2021-04-02
+(defun StrToListUtilsTest () 
+  (AssertEqual 'StrToListUtils 
+    (list "PL1101\\PL1102\\PL1103" "\\") 
+    (list "PL1101" "PL1102" "PL1103"))  
 )
 
 ; 2021-03-17

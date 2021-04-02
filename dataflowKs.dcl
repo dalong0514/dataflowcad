@@ -1,6 +1,6 @@
 updateKsInstallMaterialBox : dialog {
   label = "天正设计流数据一体化仪表V0.1———更新仪表安装材料数据"; 
-  key = "updateKsKsInstallMaterial";
+  key = "updateKsInstallMaterial";
   : boxed_radio_column {
     key = "updateMethond";
     width = 80;

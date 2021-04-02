@@ -252,6 +252,50 @@
   resultList
 )
 
+; 2021-04-02
+(defun GetKSInstallMaterialMultiTextNumDictList (/ num materialPosition resultList) 
+  (foreach item (GetKSInstallMaterialDrawPositionList) 
+    (mapcar '(lambda (x) 
+              (setq materialPosition (GetDottedPairValueUtils "position" x))
+              (if (IsInKSInstallMaterialDrawRegion materialPosition item)
+                (setq num (GetKSInstallMaterialMultiTextNum (GetDottedPairValueUtils "entityname" x)))
+              )
+            ) 
+      (GetKSInstallMaterialMultiTextData)
+    ) 
+    (setq resultList (append resultList (list (cons (GetKSInstallMaterialKey item) num))))
+  ) 
+  resultList
+)
+
+; 2021-04-02
+(defun GetKSInstallMaterialMultiTextNum (entityName / stringData result) 
+  (setq stringData (GetKSInstallMaterialMultiTextString entityName))
+  (length (FilterKSInstallMaterialMultiText (StrToListUtils stringData "\\")))
+)
+
+; 2021-04-02
+(defun FilterKSInstallMaterialMultiText (dataList /)
+  (vl-remove-if-not '(lambda (x) 
+                       (/= (wcmatch x "*-*") nil) 
+                    ) 
+    dataList
+  ) 
+)
+
+; 2021-04-02
+(defun GetKSInstallMaterialMultiTextString (entityName / result) 
+  (setq result "")
+  (mapcar '(lambda (x) 
+              (if (or (= (car x) 1) (= (car x) 3))
+                (setq result (strcat result (cdr x)))
+              ) 
+           ) 
+    (entget entityName)
+  ) 
+  result
+)
+
 ; 2021-03-22
 (defun GetKSInstallMaterialKey (position /)
   (fix (+ (car position) (cadr position)))
@@ -268,9 +312,33 @@
   )  
 )
 
+; 2021-04-02
+(defun GetKSInstallMaterialMultiTextData () 
+  (mapcar '(lambda (x) 
+             (cons (cons "position" (GetEntityPositionByEntityNameUtils x)) 
+               (list (cons "entityname" x))
+             )
+           ) 
+    (GetEntityNameListBySSUtils (GetAllMultiTextSSUtils))
+  )  
+)
+
 ; 2021-03-22
 (defun GetAllKsInstallMaterialTextSSUtils () 
   (ssget "X" '((0 . "TEXT") (1 . "*-*")))
+)
+
+; 2021-04-02
+(defun GetAllMultiTextSSUtils () 
+  (ssget "X" '((0 . "MTEXT")))
+)
+
+; 2021-04-02
+(defun UpdateKSInstallMaterialMultipleDataStrategy (textType / KSInstallMaterialTextNumDictList materialNum) 
+  (cond 
+    ((= textType "0") (UpdateKSInstallMaterialTextNumData))
+    ((= textType "1") (UpdateKSInstallMaterialMultiTextNumData))
+  )
 )
 
 ; refactored at 2021-03-23
@@ -288,15 +356,21 @@
     ; (FilterKSInstallMaterialHook (GetKSInstallMaterialDictList)) 
     (GetKSInstallMaterialDictList)
   ) 
-  (princ)
 )
 
 ; 2021-04-02
-(defun UpdateKSInstallMaterialMultipleDataStrategy (textType / KSInstallMaterialTextNumDictList materialNum) 
-  (cond 
-    ((= textType "0") (UpdateKSInstallMaterialTextNumData))
-    ((= textType "1") (UpdateKSInstallMaterialTextNumData))
-  )
+(defun UpdateKSInstallMaterialMultiTextNumData (/ KSInstallMaterialTextNumDictList materialNum) 
+  (setq KSInstallMaterialTextNumDictList (GetKSInstallMaterialMultiTextNumDictList))
+  (mapcar '(lambda (x) 
+             (setq materialNum (GetDottedPairValueUtils (car x) KSInstallMaterialTextNumDictList))
+             (ModifyMultiplePropertyForOneBlockUtils 
+               (handent (GetDottedPairValueUtils "entityhandle" (cdr x)))
+               (list "MULTIPLE")
+               (list (rtos materialNum))
+             )
+           ) 
+    (GetKSInstallMaterialDictList)
+  ) 
 )
 
 ; 2021-03-22

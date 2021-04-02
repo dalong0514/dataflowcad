@@ -1468,6 +1468,7 @@
 
 ;; Separates a string using a given delimiter
 ;; copy from [http://www.lee-mac.com/stringtolist.html]
+; uint test compeleted
 (defun StrToListUtils (strData delimiter / len resultList delimiterPosition)
     (setq len (1+ (strlen delimiter)))
     (while (setq delimiterPosition (vl-string-search delimiter strData))
