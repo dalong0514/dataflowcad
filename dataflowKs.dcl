@@ -12,6 +12,11 @@ updateKsInstallMaterialBox : dialog {
         list = "";
         value = "";
       }
+      : spacer { height = 2; } 
+      : text {
+        key = "updateBtnMsg";
+        label = "更新数据状态：";
+      } 
     }
     : spacer { height = 3; } 
     : row { 
@@ -19,7 +24,7 @@ updateKsInstallMaterialBox : dialog {
       alignment = centered; 
       : button { 
         key = "btnModify"; 
-        label = "更新数量"; 
+        label = "更新数据"; 
         is_default = "true"; 
       } 
       : spacer { width = 2; } 

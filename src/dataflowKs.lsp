@@ -21,7 +21,7 @@
 )
 
 ; 2021-04-02
-(defun updateKsInstallMaterialByBox (tileName / dcl_id status textType)
+(defun updateKsInstallMaterialByBox (tileName / dcl_id status textType updateMsgBtnStatus)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflowKs.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -44,12 +44,15 @@
     (if (= nil textType)
       (setq textType "0")
     ) 
+    (if (= updateMsgBtnStatus 1)
+      (set_tile "updateBtnMsg" "更新数据状态：已完成")
+    ) 
     (set_tile "textType" textType)
     ; insert button
     (if (= 2 (setq status (start_dialog)))
       (progn 
         (UpdateKSInstallMaterialMultipleDataStrategy textType)
-        (alert "仪表个数更新成功！")(princ)
+        (setq updateMsgBtnStatus 1)
       )
     )
   )
