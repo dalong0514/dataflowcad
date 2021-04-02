@@ -48,7 +48,7 @@
     ; insert button
     (if (= 2 (setq status (start_dialog)))
       (progn 
-        (UpdateKSInstallMaterialMultipleData textType)
+        (UpdateKSInstallMaterialMultipleDataStrategy textType)
         (alert "仪表个数更新成功！")(princ)
       )
     )
@@ -271,7 +271,7 @@
 )
 
 ; refactored at 2021-03-23
-(defun UpdateKSInstallMaterialMultipleData (textType / KSInstallMaterialTextNumDictList materialNum) 
+(defun UpdateKSInstallMaterialTextNumData (/ KSInstallMaterialTextNumDictList materialNum) 
   (setq KSInstallMaterialTextNumDictList (GetKSInstallMaterialTextNumDictList))
   (mapcar '(lambda (x) 
              (setq materialNum (GetDottedPairValueUtils (car x) KSInstallMaterialTextNumDictList))
@@ -286,6 +286,14 @@
     (GetKSInstallMaterialDictList)
   ) 
   (princ)
+)
+
+; 2021-04-02
+(defun UpdateKSInstallMaterialMultipleDataStrategy (textType / KSInstallMaterialTextNumDictList materialNum) 
+  (cond 
+    ((= textType "0") (UpdateKSInstallMaterialTextNumData))
+    ((= textType "1") (UpdateKSInstallMaterialTextNumData))
+  )
 )
 
 ; 2021-03-22
