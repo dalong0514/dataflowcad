@@ -702,7 +702,9 @@
   (if (/= lcEquipData nil) 
     (GenerateGsBzEquipTag lcEquipData insPt)
     (alert "请先提取流程设备数据！") 
-  )(princ)
+  )
+  (PurgeAllUtils)
+  (princ)
 )
 
 ; refactored at 2021-03-10

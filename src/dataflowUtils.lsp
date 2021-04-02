@@ -136,7 +136,7 @@
 )
 
 ; Returns the value of the specified DXF group code for the supplied entity name
-(defun GetDXFValueUtils (entityName DXFcode / )
+(defun GetDXFValueUtils (entityName DXFcode /)
   (cdr (assoc DXFcode (entget entityName)))
 )
 
@@ -1629,6 +1629,14 @@
 ; 2021-03-22
 (defun GetCurrentCADFileDirUtils (/ )
   (getvar "dwgprefix")
+)
+
+; 2021-04-02
+(defun PurgeAllUtils (/ acadObj doc)
+  ;; This example removes all unused named references from the database
+  (setq acadObj (vlax-get-acad-object))
+  (setq doc (vla-get-ActiveDocument acadObj))
+  (vla-PurgeAll doc) 
 )
 
 ; Utils Function 
