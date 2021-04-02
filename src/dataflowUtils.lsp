@@ -2438,7 +2438,17 @@
   (if (GetDictionaryEntityNameUtils entityName) 
     (RemoveDictEntityDataByKeyEntryUtils entityName "DATAFLOW_GS")
   ) 
-  (BindGsDictDictionaryDataToObjectUtils entityName dictData)
+  (UpdateGsStringDictionaryDataUtils 
+    entityName 
+    (DictListToJsonStringUtils dictData)) 
+)
+
+; 2021-04-02
+(defun UpdateGsStringDictionaryDataUtils (entityName stringData / entityData) 
+  (if (GetDictionaryEntityNameUtils entityName) 
+    (RemoveDictEntityDataByKeyEntryUtils entityName "DATAFLOW_GS")
+  ) 
+  (BindGsStringDictionaryDataToObjectUtils entityName stringData)
 )
 
 ; 2021-03-29
@@ -2452,12 +2462,6 @@
 ;   (entupd entityName)
 ;   (princ)
 ; )
-
-; 2021-03-29
-(defun UpdateStringDictDataByEntityNameUtils (entityName stringData dKeyEntry / dictEntityName) 
-  (setq dictEntityName (GetDictEntityNameByKeyEntryUtils (GetDictionaryEntityNameUtils entityName) dKeyEntry))
-  (UpdateStringDictDataByDictEntityNameUtils dictEntityName stringData)
-)
 
 ; Dictionary Utils Function
 ;;;-------------------------------------------------------------------------;;;
