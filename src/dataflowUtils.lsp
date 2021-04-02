@@ -892,13 +892,13 @@
   (GetEntityNameListByEntityHandleListUtils (GetEntityHandleListByPropertyDictListUtils propertyDictList))
 )
 
-(defun GetEntityNameListByXPositionSortedUtils (ss / entityNameList resultList) 
-  (setq entityNameList (GetEntityNameListBySSUtils ss))
+; refactored at 2021-04-02
+(defun GetEntityNameListByXPositionSortedUtils (ss / resultList) 
   (setq resultList 
     (mapcar '(lambda (x) 
               (list (cdr (assoc -1 (entget x))) (car (cdr (assoc 10 (entget x)))))
             ) 
-      entityNameList
+      (GetEntityNameListBySSUtils ss)
     )
   )
   (setq resultList 
