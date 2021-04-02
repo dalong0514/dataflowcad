@@ -10,20 +10,61 @@
   (alert "仪表设计流最新版本号 V0.1，更新时间：2021-04-05\n数据流内网地址：192.168.1.38")(princ)
 )
 
-; 2021-03-22
+; 2021-04-02
 (defun c:updateKsInstallMaterialMultiple ()
-  (UpdateKSInstallMaterialMultipleData)
-  (alert "仪表个数更新成功！")(princ)
+  (updateKsInstallMaterialByBox "updateKsInstallMaterialBox")
+)
+
+; 2021-04-02
+(defun GetKsInstallMaterialTextTypeChNameList ()
+  '("单行文字" "多行文字")
+)
+
+; 2021-04-02
+(defun updateKsInstallMaterialByBox (tileName / dcl_id status textType)
+  (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflowKs.dcl")))
+  (setq status 2)
+  (while (>= status 2)
+    ; Create the dialog box
+    (new_dialog tileName dcl_id "" '(-1 -1))
+    ; Added the actions to the Cancel and Pick Point button
+    (action_tile "cancel" "(done_dialog 0)")
+    (action_tile "btnModify" "(done_dialog 2)")
+    (set_tile "textType" "0")
+    ; the default value of input box
+    (mode_tile "textType" 2)
+    (action_tile "textType" "(setq textType $value)")
+    (progn
+      (start_list "textType" 3)
+      (mapcar '(lambda (x) (add_list x)) 
+                (GetKsInstallMaterialTextTypeChNameList))
+      (end_list) 
+    ) 
+    ; init the default data of text
+    (if (= nil textType)
+      (setq textType "0")
+    ) 
+    (set_tile "textType" textType)
+    ; insert button
+    (if (= 2 (setq status (start_dialog)))
+      (progn 
+        (UpdateKSInstallMaterialMultipleData textType)
+        (alert "仪表个数更新成功！")(princ)
+      )
+    )
+  )
+  (unload_dialog dcl_id)
+  (princ)
 )
 
 ; 2021-03-22
 (defun c:exportKsData (/ dataTypeList dataTypeChNameList)
-  (UpdateKSInstallMaterialMultipleData)
   (setq dataTypeList '("KsInstallMaterial"))
   (setq dataTypeChNameList '("安装材料"))
   (ExportTempDataByBox "exportTempDataBox" dataTypeList dataTypeChNameList)
 )
 
+; 2021-03-22
 (defun ExportTempDataByBox (tileName dataTypeList dataTypeChNameList / dcl_id status fileName exportDataType dataType exportMsgBtnStatus ss sslen dataList)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
   (setq status 2)
@@ -230,7 +271,7 @@
 )
 
 ; refactored at 2021-03-23
-(defun UpdateKSInstallMaterialMultipleData (/ KSInstallMaterialTextNumDictList materialNum) 
+(defun UpdateKSInstallMaterialMultipleData (textType / KSInstallMaterialTextNumDictList materialNum) 
   (setq KSInstallMaterialTextNumDictList (GetKSInstallMaterialTextNumDictList))
   (mapcar '(lambda (x) 
              (setq materialNum (GetDottedPairValueUtils (car x) KSInstallMaterialTextNumDictList))
