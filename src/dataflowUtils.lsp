@@ -2362,7 +2362,7 @@
   (setq newdictionary (dictadd (namedobjdict) "DATAFLOW_GS" dictionary))
 )
 
-; 2021-03-29
+; refactored at 2021-04-02
 (defun BindStringDictionaryDataToObjectUtils (entityName stringData dKeyEntry /) 
   (if (GetDictionaryEntityNameUtils entityName) 
     (dictadd (GetDictionaryEntityNameUtils entityName) dKeyEntry 
@@ -2370,7 +2370,14 @@
                       (cons 1 stringData))
       )
     ) 
-    (princ "no Dictionary!")
+    (progn 
+      (CreateCustomDictionaryByEntityNameUtils entityName) 
+      (dictadd (GetDictionaryEntityNameUtils entityName) dKeyEntry 
+        (entmakex (list (cons 0 "XRECORD")(cons 100 "AcDbXrecord") 
+                        (cons 1 stringData))
+        )
+      ) 
+    )
   )
   (princ)
 )
@@ -2426,16 +2433,12 @@
   (GetDictDictionaryDataByEntityNameUtils entityName "DATAFLOW_GS")
 )
 
-; 2021-03-29
-(defun UpdateStringDictDataByDictEntityNameUtils (entityName stringData / entityData) 
-  
-  (setq entityData (entget entityName))
-  (if (/= (assoc 1 entityData) nil) 
-    (setq entityData (subst (cons 1 stringData) (assoc 1 entityData) entityData)) 
+; 2021-04-02
+(defun UpdateGsDictDictionaryDataUtils (entityName dictData / entityData) 
+  (if (GetDictionaryEntityNameUtils entityName) 
+    (RemoveDictEntityDataByKeyEntryUtils entityName "DATAFLOW_GS")
   ) 
-  (entmod entityData)
-  (entupd entityName)
-  (princ)
+  (BindGsDictDictionaryDataToObjectUtils entityName dictData)
 )
 
 ; 2021-03-29

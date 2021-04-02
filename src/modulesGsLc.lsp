@@ -11,25 +11,15 @@
 ;;;-------------------------------------------------------------------------;;;
 ; Utils Function
 
-(defun c:foo (/ entityName stringData) 
-  ; (setq stringData (DictListToJsonStringUtils (GetAllPropertyDictForOneBlock (car (GetEntityNameListBySSUtils (ssget))))))
-  (setq entityName (car (GetEntityNameListBySSUtils (ssget))))
-  ;(entget (GetDictEntityNameByKeyEntryUtils (GetDictionaryEntityNameUtils entityName) "DATAFLOW_GS"))
-  ; (UpdateStringDictDataByEntityNameUtils entityName stringData "DATAFLOW_GS")
-  ; (GetDictEntityDataByKeyEntryUtils entityName "DATAFLOW_GS")
-  (RemoveDictEntityDataByKeyEntryUtils entityName "DATAFLOW_GS")
-  
-  (entget (GetDictionaryEntityNameUtils entityName))
-)
-
-(defun c:fooget (/ entityName) 
-  (setq entityName (car (GetEntityNameListBySSUtils (ssget))))
-  (entget (GetDictEntityNameByKeyEntryUtils (GetDictionaryEntityNameUtils entityName) "DATAFLOW_GS"))
-)
-
-(defun c:ssfoo (/ entityName)
+(defun c:fooget (/ entityName)
   (setq entityName (car (GetEntityNameListBySSUtils (ssget))))
   (GetGsDictDictionaryDataByEntityNameUtils entityName)
+)
+
+(defun c:fooupdate (/ dictData entityName) 
+  (setq dictData (GetAllPropertyDictForOneBlock (car (GetEntityNameListBySSUtils (ssget)))))
+  (setq entityName (car (GetEntityNameListBySSUtils (ssget))))
+  (UpdateGsDictDictionaryDataUtils entityName dictData)
 )
 
 ; Utils Function
