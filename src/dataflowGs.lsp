@@ -2985,8 +2985,9 @@
     (if (= 2 (setq status (start_dialog)))
       (progn 
         (setq ss (GetBlockSSBySelectByDataTypeUtils "DrawLabel"))
-        ; sort by x cordinate
-        (setq entityNameList (GetEntityNameListByXPositionSortedUtils ss))
+        ; sort by x cordinate and the by y cordinate - 2021-04-02
+        (setq ss (SortSelectionSetByRowColumn ss))
+        (setq entityNameList (GetEntityNameListBySSUtils ss))
         (setq previewList (GetDrawNumList entityNameList))
         (setq sslen (length previewList))
         (setq modifyMsgBtnStatus 0)

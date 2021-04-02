@@ -1808,6 +1808,21 @@
  )
 )
 
+; 2021-04-02
+(defun SortSelectionSetByRowColumn (ssSelections /  lstOfSelections lstOfSublists lstSelections)
+ (if
+  (and 
+    (setq lstSelections (SelectionSetToList ssSelections))
+    (setq lstOfSublists (mapcar '(lambda (X)(cons X (cdr (assoc 10 (entget X))))) lstSelections))
+    (setq lstOfSublists (sortlistofsublistsbyitemX lstOfSublists 1 1))
+    ; the key is -1 for y cordinate
+    (setq lstOfSublists (sortlistofsublistsbyitemX lstOfSublists 2 -1))
+    (setq ssSelections  (listtoselectionset (mapcar 'car lstOfSublists)))
+  )
+  ssSelections
+ )
+)
+
 (defun SortSSByMinxMiny (ssSelections /  lstOfSelections lstOfSublists lstSelections)
  (if
   (and 
