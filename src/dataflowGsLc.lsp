@@ -397,22 +397,30 @@
 )
 
 ; logic for generate Ball Valve
-; 2021-03-08
-(defun c:InsertBlockBallValve (/ ss insPt) 
+; 2021-04-05
+(defun c:InsertBlockLevelBallValve (/ ss insPt) 
   (prompt "\n选取 1 个管道块")
   (setq ss (GetBlockSSBySelectByDataTypeUtils "Pipe"))
   (setq insPt (getpoint "\n选取阀门插入点："))
   (InsertGsLcBlockBallValve insPt "BallValve" (GetGsLcBlockValvePropertyDict ss) 0)
 )
 
-; 2021-03-08
+; 2021-04-05
+(defun c:InsertBlockVerticalBallValve (/ ss insPt) 
+  (prompt "\n选取 1 个管道块")
+  (setq ss (GetBlockSSBySelectByDataTypeUtils "Pipe"))
+  (setq insPt (getpoint "\n选取阀门插入点："))
+  (InsertGsLcBlockBallValve insPt "BallValve" (GetGsLcBlockValvePropertyDict ss) 1.57)
+)
+
+; 2021-04-05
 (defun InsertGsLcBlockBallValve (insPt blockName blockPropertyDict rotate /) 
   (VerifyGsLcBlockByName blockName)
   (VerifyGsLcValveLayer)
   (InsertBlockByRotateUtils insPt blockName "0DataFlow-GsLcValve" blockPropertyDict rotate)
 )
 
-; 2021-03-08
+; 2021-04-05
 (defun GetGsLcBlockValvePropertyDict (ss / pipeData resultList)
   (setq pipeData (GetBlockAllPropertyDictListUtils (GetEntityNameListBySSUtils ss)))
   (if (/= pipeData nil) 
