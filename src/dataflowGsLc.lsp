@@ -396,6 +396,32 @@
   resultList
 )
 
+; logic for generate Ball Valve
+; 2021-03-08
+(defun c:InsertBlockBallValve (/ ss insPt) 
+  (prompt "\n选取 1 个管道块")
+  (setq ss (GetBlockSSBySelectByDataTypeUtils "Pipe"))
+  (setq insPt (getpoint "\n选取阀门插入点："))
+  (InsertGsLcBlockBallValve insPt "BallValve" (GetGsLcBlockValvePropertyDict ss))
+)
+
+; 2021-03-08
+(defun InsertGsLcBlockBallValve (insPt blockName blockPropertyDict /) 
+  (VerifyGsLcBlockByName blockName)
+  (VerifyGsLcValveLayer)
+  (InsertBlockUtils insPt blockName "0DataFlow-GsLcValve" blockPropertyDict)
+)
+
+; 2021-03-08
+(defun GetGsLcBlockValvePropertyDict (ss / pipeData resultList)
+  (setq pipeData (GetBlockAllPropertyDictListUtils (GetEntityNameListBySSUtils ss)))
+  (if (/= pipeData nil) 
+    (setq resultList (list (cons 1 (GetDottedPairValueUtils "pipenum" (car pipeData)))
+                     ))
+  ) 
+  resultList
+)
+
 ; logic for generate Reducer
 ; 2021-03-08
 (defun c:InsertBlockReducer (/ ss insPt) 
