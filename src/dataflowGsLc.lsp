@@ -402,14 +402,14 @@
   (prompt "\n选取 1 个管道块")
   (setq ss (GetBlockSSBySelectByDataTypeUtils "Pipe"))
   (setq insPt (getpoint "\n选取阀门插入点："))
-  (InsertGsLcBlockBallValve insPt "BallValve" (GetGsLcBlockValvePropertyDict ss))
+  (InsertGsLcBlockBallValve insPt "BallValve" (GetGsLcBlockValvePropertyDict ss) 0)
 )
 
 ; 2021-03-08
-(defun InsertGsLcBlockBallValve (insPt blockName blockPropertyDict /) 
+(defun InsertGsLcBlockBallValve (insPt blockName blockPropertyDict rotate /) 
   (VerifyGsLcBlockByName blockName)
   (VerifyGsLcValveLayer)
-  (InsertBlockUtils insPt blockName "0DataFlow-GsLcValve" blockPropertyDict)
+  (InsertBlockByRotateUtils insPt blockName "0DataFlow-GsLcValve" blockPropertyDict rotate)
 )
 
 ; 2021-03-08
