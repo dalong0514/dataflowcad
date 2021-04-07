@@ -708,51 +708,6 @@
   )
 )
 
-; 2021-04-07
-(defun GetDataByDataTypeStrategyUtils (ss classType dataType /) 
-  (cond 
-    ((= classType "Gs") (GetGsJsonListDataByDataType ss dataType))
-    ((= classType "Ks") (GetKsJsonListDataByDataType ss dataType))
-  ) 
-)
-
-; 2021-04-07
-(defun ExportDataByDataTypeStrategyUtils (classType dataType fileName dataList /) 
-  (cond 
-    ((= classType "Ks") (ExportKsDataByDataType dataType fileName dataList))
-  ) 
-)
-
-; 2021-04-07
-(defun GetBlockSSBySelectByDataTypeStrategyUtils (classType dataType /) 
-  (cond 
-    ((= classType "Gs") (GetBlockSSBySelectByDataTypeUtils dataType))
-    ((= classType "Ks") (GetKsBlockSSBySelectByDataTypeUtils dataType))
-  )
-)
-
-; 2021-04-07
-(defun GetAllBlockSSByDataTypeStrategyUtils (classType dataType /) 
-  (cond 
-    ((= classType "Gs") (GetAllBlockSSByDataTypeUtils dataType))
-    ((= classType "Ks") (GetAllKsBlockSSByDataTypeUtils dataType))
-  ) 
-)
-
-; 2021-03-22
-(defun GetKsBlockSSBySelectByDataTypeUtils (dataType /) 
-  (cond 
-    ((= dataType "KsInstallMaterial") (GetKsInstallMaterialSSBySelectUtils))
-  )
-)
-
-; 2021-03-22
-(defun GetAllKsBlockSSByDataTypeUtils (dataType /) 
-  (cond 
-    ((= dataType "KsInstallMaterial") (GetAllKsInstallMaterialSSUtils))
-  ) 
-)
-
 (defun MergeTwoSSUtils (firstSS secondSS / i)
   (if (/= secondSS nil)
     (progn
@@ -2503,5 +2458,141 @@
 ; )
 
 ; Dictionary Utils Function
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+
+
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+; Export All Type Data Utils Function
+
+; 2021-04-07
+(defun GetDataByDataTypeStrategyUtils (ss classType dataType /) 
+  (cond 
+    ((= classType "Gs") (GetGsJsonListDataByDataType ss dataType))
+    ((= classType "Ks") (GetKsJsonListDataByDataType ss dataType))
+  ) 
+)
+
+; 2021-04-07
+(defun ExportDataByDataTypeStrategyUtils (classType dataType fileName dataList /) 
+  (cond 
+    ((= classType "Ks") (ExportKsDataByDataType dataType fileName dataList))
+  ) 
+)
+
+; 2021-04-07
+(defun GetBlockSSBySelectByDataTypeStrategyUtils (classType dataType /) 
+  (cond 
+    ((= classType "Gs") (GetBlockSSBySelectByDataTypeUtils dataType))
+    ((= classType "Ks") (GetKsBlockSSBySelectByDataTypeUtils dataType))
+  )
+)
+
+; 2021-04-07
+(defun GetAllBlockSSByDataTypeStrategyUtils (classType dataType /) 
+  (cond 
+    ((= classType "Gs") (GetAllBlockSSByDataTypeUtils dataType))
+    ((= classType "Ks") (GetAllKsBlockSSByDataTypeUtils dataType))
+  ) 
+)
+
+; 2021-03-22
+(defun GetKsBlockSSBySelectByDataTypeUtils (dataType /) 
+  (cond 
+    ((= dataType "KsInstallMaterial") (GetKsInstallMaterialSSBySelectUtils))
+  )
+)
+
+; 2021-03-22
+(defun GetAllKsBlockSSByDataTypeUtils (dataType /) 
+  (cond 
+    ((= dataType "KsInstallMaterial") (GetAllKsInstallMaterialSSUtils))
+  ) 
+)
+
+; 2021-03-22
+; refactored at 2021-04-07
+(defun ExportTempDataByBox (tileName dataTypeList dataTypeChNameList classType / dcl_id status fileName exportDataType dataType exportMsgBtnStatus ss sslen dataList)
+  (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\dcl\\" "dataflow.dcl")))
+  (setq status 2)
+  (while (>= status 2)
+    ; Create the dialog box
+    (new_dialog tileName dcl_id "" '(-1 -1))
+    ; Add the actions to the button
+    (action_tile "cancel" "(done_dialog 0)")
+    (action_tile "btnSelect" "(done_dialog 2)")
+    (action_tile "btnAllSelect" "(done_dialog 3)") 
+    (action_tile "btnExportData" "(done_dialog 4)") 
+    ; Set the default value
+    (set_tile "exportDataType" "0")
+    (mode_tile "fileName" 2)
+    (mode_tile "exportDataType" 2)
+    (action_tile "fileName" "(setq fileName $value)")
+    (action_tile "exportDataType" "(setq exportDataType $value)")
+    (progn
+      (start_list "exportDataType" 3)
+      (mapcar '(lambda (x) (add_list x)) 
+                dataTypeChNameList)
+      (end_list)
+    )
+    ; init the default value list box
+    (if (= nil exportDataType)
+      (setq exportDataType "0")
+    )
+    (if (= nil fileName)
+      (setq fileName "")
+    )
+    (if (/= exportMsgBtnStatus nil)
+      (set_tile "exportDataType" exportDataType)
+    )
+    (if (= exportMsgBtnStatus 1)
+      (set_tile "exportBtnMsg" "导出数据状态：已完成")
+    )
+    (if (= exportMsgBtnStatus 2)
+      (set_tile "exportBtnMsg" "文件名不能为空！")
+    )
+    (if (= exportMsgBtnStatus 3)
+      (set_tile "exportBtnMsg" "请先选择要导的数据！")
+    )
+    (if (/= sslen nil)
+      (set_tile "exportDataNumMsg" (strcat "导出数据数量： " (rtos sslen)))
+    )
+    (set_tile "fileName" fileName)
+    ; select button
+    (if (= 2 (setq status (start_dialog))) 
+      (progn 
+        (setq dataType (nth (atoi exportDataType) dataTypeList))
+        (setq ss (GetBlockSSBySelectByDataTypeStrategyUtils classType dataType))
+        (setq sslen (sslength ss)) 
+        (setq dataList (GetDataByDataTypeStrategyUtils ss classType dataType))
+      )
+    )
+    ; All select button
+    (if (= 3 status) 
+      (progn 
+        (setq dataType (nth (atoi exportDataType) dataTypeList))
+        (setq ss (GetAllBlockSSByDataTypeStrategyUtils classType dataType))
+        (setq sslen (sslength ss)) 
+        (setq dataList (GetDataByDataTypeStrategyUtils ss classType dataType)) 
+      )
+    ) 
+    ; export data button
+    (if (= 4 status) 
+      (cond 
+        ((= fileName "") (setq exportMsgBtnStatus 2))
+        ((= dataList nil) (setq exportMsgBtnStatus 3))
+        (T (progn 
+             (ExportDataByDataTypeStrategyUtils classType dataType fileName dataList)
+             (setq exportMsgBtnStatus 1)
+           ))
+      ) 
+    ) 
+  )
+  (unload_dialog dcl_id)
+  (princ)
+)
+
+; Export All Type Data Utils Function
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
