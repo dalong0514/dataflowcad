@@ -2780,6 +2780,7 @@
 )
 
 ; ready for refactor - 2021-03-05
+; refactored at 2021-04-07
 (defun GetPipeCodeNameByNumberMode (originString numberMode drawNum startNumberString dataType /) 
   (setq drawNum (RegExpReplace (ExtractDrawNumUtils drawNum) "0(\\d)-(\\d*)" (strcat "$1" "$2") nil nil))
   (cond 
