@@ -2788,7 +2788,8 @@
     ; 补充：因为该函数与处理设备位号编号共用，按之前逻辑改后，设备位号编号又不对了，目前加了分支处理 - 2021-03-05
      ((= numberMode "1") 
       (if (= dataType "Pipe") 
-        (RegExpReplace originString "([A-Za-z]+[0-9]?[A-Za-z]+)(\\d*).*" (strcat "$1" startNumberString "$2") nil nil)
+        ; fix bug - 管道原来的匹配模式匹配不到氮气管道 N 2021-04-07
+        (RegExpReplace originString "([A-Za-z]?[0-9]?[A-Za-z]+)(\\d*).*" (strcat "$1" startNumberString "$2") nil nil)
         (RegExpReplace originString "([A-Za-z]+)(\\d*).*" (strcat "$1" startNumberString "$2") nil nil)
       )
      )
