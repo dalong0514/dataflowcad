@@ -467,10 +467,11 @@
 ; Gs Field
 ; the macro for extract data
 
-(defun c:exportBlockPropertyDataV2 (/ dataTypeList dataTypeChNameList)
+; 2021-04-07
+(defun c:exportGsData (/ dataTypeList dataTypeChNameList)
   (setq dataTypeList '("Pipe" "Equipment" "Instrument" "Electric" "OuterPipe" "GsCleanAir"))
-  (setq dataTypeChNameList '("管道数据" "设备数据" "仪表数据" "电气数据" "外管数据" "洁净空调数据"))
-  (ExportBlockPropertyV2 dataTypeList dataTypeChNameList)  ; ready for refactor, the key is [ss] - 2020-12-14
+  (setq dataTypeChNameList '("管道数据" "设备数据" "仪表数据" "电气数据" "外管数据" "洁净空调")) 
+  (ExportTempDataByBox "exportTempDataBox" dataTypeList dataTypeChNameList "Gs")
 )
 
 (defun c:exportBlockPropertyData (/ dataTypeList dataTypeChNameList)

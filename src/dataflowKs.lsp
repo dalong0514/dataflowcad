@@ -64,11 +64,11 @@
 (defun c:exportKsData (/ dataTypeList dataTypeChNameList)
   (setq dataTypeList '("KsInstallMaterial"))
   (setq dataTypeChNameList '("安装材料"))
-  (ExportTempDataByBox "exportTempDataBox" dataTypeList dataTypeChNameList)
+  (ExportTempDataByBox "exportTempDataBox" dataTypeList dataTypeChNameList "Ks")
 )
 
 ; 2021-03-22
-(defun ExportTempDataByBox (tileName dataTypeList dataTypeChNameList / dcl_id status fileName exportDataType dataType exportMsgBtnStatus ss sslen dataList)
+(defun ExportTempDataByBox (tileName dataTypeList dataTypeChNameList classType / dcl_id status fileName exportDataType dataType exportMsgBtnStatus ss sslen dataList)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\dcl\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -114,36 +114,31 @@
       (set_tile "exportDataNumMsg" (strcat "导出数据数量： " (rtos sslen)))
     )
     (set_tile "fileName" fileName)
-    ; export data button
+    ; select button
     (if (= 2 (setq status (start_dialog))) 
-      (if (/= fileName "") 
-        (progn 
-          (setq dataType (nth (atoi exportDataType) dataTypeList))
-          (setq ss (GetKsBlockSSBySelectByDataTypeUtils dataType))
-          (setq sslen (sslength ss)) 
-          (setq dataList (GetKsDataByDataType ss dataType))
-        )
-        (setq exportMsgBtnStatus 2)
+      (progn 
+        (setq dataType (nth (atoi exportDataType) dataTypeList))
+        (setq ss (GetBlockSSBySelectByDataTypeStrategyUtils classType dataType))
+        (setq sslen (sslength ss)) 
+        (setq dataList (GetKsDataByDataType ss dataType))
       )
     )
-    ; import data button
+    ; All select button
     (if (= 3 status) 
-      (if (/= fileName "") 
-        (progn 
-          (setq dataType (nth (atoi exportDataType) dataTypeList))
-          (setq ss (GetAllKsBlockSSByDataTypeUtils dataType))
-          (setq sslen (sslength ss)) 
-          (setq dataList (GetKsDataByDataType ss dataType)) 
-        )
-        (setq exportMsgBtnStatus 2)
+      (progn 
+        (setq dataType (nth (atoi exportDataType) dataTypeList))
+        (setq ss (GetAllBlockSSByDataTypeStrategyUtils classType dataType))
+        (setq sslen (sslength ss)) 
+        (setq dataList (GetKsDataByDataType ss dataType)) 
       )
     ) 
+    ; export data button
     (if (= 4 status) 
       (cond 
         ((= fileName "") (setq exportMsgBtnStatus 2))
         ((= dataList nil) (setq exportMsgBtnStatus 3))
         (T (progn 
-             (ExportKsDataByDataType fileName dataList)
+             (ExportKsDataByDataType dataType fileName dataList)
              (setq exportMsgBtnStatus 1)
            ))
       ) 
@@ -161,7 +156,7 @@
 )
 
 ; 2021-03-22
-(defun ExportKsDataByDataType (fileName dataList /) 
+(defun ExportKsDataByDataType (dataType fileName dataList /) 
   (cond 
     ((= dataType "KsInstallMaterial") (ExportInstallMaterialData fileName dataList))
   ) 

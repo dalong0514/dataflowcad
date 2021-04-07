@@ -708,6 +708,34 @@
   )
 )
 
+; 2021-04-07
+(defun GetDataByDataTypeStrategyUtils  (ss classType dataType /) 
+  (cond 
+    ((= classType "Ks") (GetKsDataByDataType ss dataType))
+  ) 
+)
+
+; 2021-04-07
+(defun ExportDataByDataTypeStrategyUtils (classType dataType fileName dataList /) 
+  (cond 
+    ((= classType "Ks") (ExportKsDataByDataType dataType fileName dataList))
+  ) 
+)
+
+; 2021-04-07
+(defun GetBlockSSBySelectByDataTypeStrategyUtils (classType dataType /) 
+  (cond 
+    ((= classType "Ks") (GetKsBlockSSBySelectByDataTypeUtils dataType))
+  )
+)
+
+; 2021-04-07
+(defun GetAllBlockSSByDataTypeStrategyUtils (classType dataType /) 
+  (cond 
+    ((= classType "Ks") (GetAllKsBlockSSByDataTypeUtils dataType))
+  ) 
+)
+
 ; 2021-03-22
 (defun GetKsBlockSSBySelectByDataTypeUtils (dataType /) 
   (cond 
@@ -716,7 +744,7 @@
 )
 
 ; 2021-03-22
-(defun GetAllKsBlockSSByDataTypeUtils (dataType / ss) 
+(defun GetAllKsBlockSSByDataTypeUtils (dataType /) 
   (cond 
     ((= dataType "KsInstallMaterial") (GetAllKsInstallMaterialSSUtils))
   ) 
