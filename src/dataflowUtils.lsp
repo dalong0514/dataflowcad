@@ -726,6 +726,7 @@
 ; 2021-04-07
 (defun GetBlockSSBySelectByDataTypeStrategyUtils (classType dataType /) 
   (cond 
+    ((= classType "Gs") (GetBlockSSBySelectByDataTypeUtils dataType))
     ((= classType "Ks") (GetKsBlockSSBySelectByDataTypeUtils dataType))
   )
 )
@@ -733,6 +734,7 @@
 ; 2021-04-07
 (defun GetAllBlockSSByDataTypeStrategyUtils (classType dataType /) 
   (cond 
+    ((= classType "Gs") (GetAllBlockSSByDataTypeUtils dataType))
     ((= classType "Ks") (GetAllKsBlockSSByDataTypeUtils dataType))
   ) 
 )
