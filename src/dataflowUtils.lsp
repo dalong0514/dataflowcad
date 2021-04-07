@@ -712,7 +712,7 @@
 (defun GetDataByDataTypeStrategyUtils (ss classType dataType /) 
   (cond 
     ((= classType "Gs") (GetGsJsonListDataByDataType ss dataType))
-    ((= classType "Ks") (GetKsDataByDataType ss dataType))
+    ((= classType "Ks") (GetKsJsonListDataByDataType ss dataType))
   ) 
 )
 

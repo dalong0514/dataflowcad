@@ -149,9 +149,9 @@
 )
 
 ; 2021-03-22
-(defun GetKsDataByDataType (ss dataType /) 
+(defun GetKsJsonListDataByDataType (ss dataType /) 
   (cond 
-    ((= dataType "KsInstallMaterial") (ExtractBlockPropertyToJsonListStrategy ss "KsInstallMaterial"))
+    ((= dataType "KsInstallMaterial") (ExtractBlockPropertyToJsonListStrategy ss dataType))
   ) 
 )
 
