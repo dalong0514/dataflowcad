@@ -711,6 +711,7 @@
 ; 2021-04-07
 (defun GetDataByDataTypeStrategyUtils (ss classType dataType /) 
   (cond 
+    ((= classType "Gs") (GetGsJsonListDataByDataType ss dataType))
     ((= classType "Ks") (GetKsDataByDataType ss dataType))
   ) 
 )
