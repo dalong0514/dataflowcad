@@ -476,9 +476,13 @@
 
 ; 2021-04-07
 (defun GetGsJsonListDataByDataType (ss dataType /) 
-  (cond 
-    ((= dataType "Pipe") (ExtractBlockPropertyToJsonListStrategy ss dataType))
-  ) 
+  (ExtractBlockPropertyToJsonListStrategy ss dataType)
+)
+
+; 2021-04-07
+(defun ExportGsDataByDataType (dataType fileName dataList / fileDir) 
+  (setq fileDir (GetExportDataFileDir fileName))
+  (WriteDataListToFileUtils fileDir dataList)
 )
 
 (defun c:exportBlockPropertyData (/ dataTypeList dataTypeChNameList)

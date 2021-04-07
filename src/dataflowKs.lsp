@@ -68,38 +68,24 @@
 )
 
 ; 2021-03-22
+(defun GetKsBlockSSBySelectByDataTypeUtils (dataType /) 
+  (cond 
+    ((= dataType "KsInstallMaterial") (GetKsInstallMaterialSSBySelectUtils))
+  )
+)
+
+; 2021-03-22
+(defun GetAllKsBlockSSByDataTypeUtils (dataType /) 
+  (cond 
+    ((= dataType "KsInstallMaterial") (GetAllKsInstallMaterialSSUtils))
+  ) 
+)
+
+; 2021-03-22
 (defun GetKsJsonListDataByDataType (ss dataType /) 
   (cond 
     ((= dataType "KsInstallMaterial") (ExtractBlockPropertyToJsonListStrategy ss dataType))
   ) 
-)
-
-; 2021-03-22
-(defun ExportKsDataByDataType (dataType fileName dataList /) 
-  (cond 
-    ((= dataType "KsInstallMaterial") (ExportInstallMaterialData fileName dataList))
-  ) 
-)
-
-; 2021-03-22
-(defun ExportInstallMaterialData (fileName dataList / fileDir)
-  (setq fileDir (GetExportDataFileDir fileName))
-  (WriteDataListToFileUtils fileDir dataList)
-)
-
-; 2021-03-22
-(defun ExtractBlockPropertyToJsonListStrategy (ss dataType / entityNameList propertyNameList classDict resultList)
-  (setq entityNameList (GetEntityNameListBySSUtils ss))
-  (setq propertyNameList (GetPropertyNameListStrategy dataType))
-  (setq classDict (GetClassDictStrategy dataType))
-  (setq resultList 
-    (mapcar '(lambda (x) 
-              (ExtractBlockPropertyToJsonStringByClassUtils x propertyNameList classDict)
-            ) 
-      entityNameList
-    )
-  )
-  (setq resultList (ModifyPropertyNameForJsonListStrategy dataType resultList))
 )
 
 ; 2021-03-22
