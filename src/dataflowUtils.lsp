@@ -2570,6 +2570,7 @@
       (set_tile "exportDataNumMsg" (strcat "导出数据数量： " (rtos sslen)))
     )
     (set_tile "fileName" fileName)
+    (set_tile "exportDataType" exportDataType)
     ; select button
     (if (= 2 (setq status (start_dialog))) 
       (progn 
