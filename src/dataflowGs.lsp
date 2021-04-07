@@ -469,20 +469,49 @@
 
 ; 2021-04-07
 (defun c:exportGsData (/ dataTypeList dataTypeChNameList)
-  (setq dataTypeList '("Pipe" "Equipment" "Instrument" "Electric" "OuterPipe" "GsCleanAir"))
+  (setq dataTypeList '("Pipe" "Equipment" "Instrument" "Equipment" "OuterPipe" "GsCleanAir"))
   (setq dataTypeChNameList '("管道数据" "设备数据" "仪表数据" "电气数据" "外管数据" "洁净空调")) 
   (ExportTempDataByBox "exportTempDataBox" dataTypeList dataTypeChNameList "Gs")
 )
 
 ; 2021-04-07
 (defun GetGsJsonListDataByDataType (ss dataType /) 
-  (ExtractBlockPropertyToJsonListStrategy ss dataType)
+  (cond 
+    ((= dataType "Pipe") (ExtractBlockPropertyToJsonListStrategy ss "Pipe"))
+    ((= dataType "Equipment") (GetGsEquipmentJsonListData ss))
+    ((= dataType "Instrument") (GetGsInstrumentJsonListData ss))
+    ((= dataType "OuterPipe") (ExtractOuterPipeToJsonList))
+    ((= dataType "GsCleanAir") (ExtractBlockPropertyToJsonListStrategy ss "GsCleanAir"))
+    (T (ExtractBlockPropertyToJsonListStrategy ss dataType))
+  ) 
 )
 
 ; 2021-04-07
-(defun ExportGsDataByDataType (dataType fileName dataList / fileDir) 
-  (setq fileDir (GetExportDataFileDir fileName))
-  (WriteDataListToFileUtils fileDir dataList)
+(defun GetGsInstrumentJsonListData (ss /)
+  (append (ExtractBlockPropertyToJsonListStrategy ss "InstrumentP")
+          (ExtractBlockPropertyToJsonListStrategy ss "InstrumentSIS")
+          (ExtractBlockPropertyToJsonListStrategy ss "InstrumentL")
+          (ExtractBlockPropertyToJsonListStrategy ss "Pipe")
+          (ExtractBlockPropertyToJsonListStrategy ss "Reactor")
+          (ExtractBlockPropertyToJsonListStrategy ss "Tank")
+          (ExtractBlockPropertyToJsonListStrategy ss "Heater")
+          (ExtractBlockPropertyToJsonListStrategy ss "Pump")
+          (ExtractBlockPropertyToJsonListStrategy ss "Vacuum")
+          (ExtractBlockPropertyToJsonListStrategy ss "Centrifuge")
+          (ExtractBlockPropertyToJsonListStrategy ss "CustomEquip")
+        )
+)
+
+; 2021-04-07
+(defun GetGsEquipmentJsonListData (fileName / fileDir)
+  (append (ExtractBlockPropertyToJsonListStrategy ss "Reactor")
+          (ExtractBlockPropertyToJsonListStrategy ss "Tank")
+          (ExtractBlockPropertyToJsonListStrategy ss "Heater")
+          (ExtractBlockPropertyToJsonListStrategy ss "Pump")
+          (ExtractBlockPropertyToJsonListStrategy ss "Vacuum")
+          (ExtractBlockPropertyToJsonListStrategy ss "Centrifuge")
+          (ExtractBlockPropertyToJsonListStrategy ss "CustomEquip")
+        )
 )
 
 (defun c:exportBlockPropertyData (/ dataTypeList dataTypeChNameList)
