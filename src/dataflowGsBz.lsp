@@ -115,7 +115,7 @@
 (defun numberLayoutDataByBox (dataTypeList tileName / dcl_id dataType numberMode status selectedPropertyName 
                             selectedDataType ss sslen matchedList confirmList propertyValueDictList entityNameList 
                             modifyMessageStatus numberedDataList numberedList codeNameList startNumberString)
-  (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
+  (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\dcl\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
     ; Create the dialog box
@@ -868,7 +868,7 @@
 
 ; 2021-03-11
 (defun ImportEquipDataStrategyByBox (tileName importDataType / dcl_id dataType importedDataList status exportDataType sortedType sortedTypeResult importMsgBtnStatus)
-  (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflowGs.dcl")))
+  (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\dcl\\" "dataflowGs.dcl")))
   (setq status 2)
   (while (>= status 2)
     ; Create the dialog box
@@ -1043,7 +1043,7 @@
 
 ; 2021-03-09
 (defun UpdateGsBzEquipGraphByBox (tileName / dcl_id status importedDataList exportMsgBtnStatus importMsgBtnStatus  modifyMsgBtnStatus)
-  (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflowGs.dcl")))
+  (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\dcl\\" "dataflowGs.dcl")))
   (setq status 2)
   (while (>= status 2)
     ; Create the dialog box

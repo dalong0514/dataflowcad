@@ -22,7 +22,7 @@
 
 ; 2021-04-02
 (defun updateKsInstallMaterialByBox (tileName / dcl_id status textType updateMsgBtnStatus)
-  (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflowKs.dcl")))
+  (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\dcl\\" "dataflowKs.dcl")))
   (setq status 2)
   (while (>= status 2)
     ; Create the dialog box
@@ -69,7 +69,7 @@
 
 ; 2021-03-22
 (defun ExportTempDataByBox (tileName dataTypeList dataTypeChNameList / dcl_id status fileName exportDataType dataType exportMsgBtnStatus ss sslen dataList)
-  (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
+  (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\dcl\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
     ; Create the dialog box
@@ -422,7 +422,7 @@
 )
 
 (defun UpdatekDataStrategyByBoxUtils (tileName dataClass / dcl_id exportDataType dataType importedDataList selectedName propertyNameList status ss confirmList entityNameList exportMsgBtnStatus importMsgBtnStatus comfirmMsgBtnStatus modifyMsgBtnStatus)
-  (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
+  (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\dcl\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
     ; Create the dialog box

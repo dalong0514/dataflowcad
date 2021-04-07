@@ -26,7 +26,7 @@
 
 ; 2021-03-18
 (defun InsertNsEquipTableByBox (tileName / dcl_id status sortedType)
-  (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflowNs.dcl")))
+  (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\dcl\\" "dataflowNs.dcl")))
   (setq status 2)
   (while (>= status 2)
     ; Create the dialog box

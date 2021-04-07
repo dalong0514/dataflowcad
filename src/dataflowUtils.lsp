@@ -737,7 +737,7 @@
 )
 
 (defun GetCurrentDirByBoxUtils (/ dcl_id fn currentDir filename)
-  (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\" "dataflow.dcl")))
+  (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\dcl\\" "dataflow.dcl")))
   (if (not (new_dialog "dataflow" dcl_id))
     (exit)
   )
