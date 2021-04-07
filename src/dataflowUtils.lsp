@@ -709,7 +709,7 @@
 )
 
 ; 2021-04-07
-(defun GetDataByDataTypeStrategyUtils  (ss classType dataType /) 
+(defun GetDataByDataTypeStrategyUtils (ss classType dataType /) 
   (cond 
     ((= classType "Ks") (GetKsDataByDataType ss dataType))
   ) 

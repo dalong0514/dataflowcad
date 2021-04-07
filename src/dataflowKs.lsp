@@ -120,7 +120,7 @@
         (setq dataType (nth (atoi exportDataType) dataTypeList))
         (setq ss (GetBlockSSBySelectByDataTypeStrategyUtils classType dataType))
         (setq sslen (sslength ss)) 
-        (setq dataList (GetKsDataByDataType ss dataType))
+        (setq dataList (GetDataByDataTypeStrategyUtils ss classType dataType))
       )
     )
     ; All select button
@@ -129,7 +129,7 @@
         (setq dataType (nth (atoi exportDataType) dataTypeList))
         (setq ss (GetAllBlockSSByDataTypeStrategyUtils classType dataType))
         (setq sslen (sslength ss)) 
-        (setq dataList (GetKsDataByDataType ss dataType)) 
+        (setq dataList (GetDataByDataTypeStrategyUtils ss classType dataType)) 
       )
     ) 
     ; export data button
