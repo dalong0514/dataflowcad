@@ -2491,8 +2491,9 @@
 )
 
 ; 2021-03-22
-(defun ExtractBlockPropertyToJsonListStrategy (ss dataType / entityNameList propertyNameList classDict resultList)
-  (setq entityNameList (GetEntityNameListBySSUtils ss))
+(defun ExtractBlockPropertyToJsonListStrategy (ss dataType / entityNameList propertyNameList classDict resultList) 
+  ; the key is filter ss by dataType - refactored at 2021-04-07
+  (setq entityNameList (FilterEntityNameByBlockName (GetEntityNameListBySSUtils ss) dataType))
   (setq propertyNameList (GetPropertyNameListStrategy dataType))
   (setq classDict (GetClassDictStrategy dataType))
   (setq resultList 
@@ -2503,6 +2504,16 @@
     )
   )
   (setq resultList (ModifyPropertyNameForJsonListStrategy dataType resultList))
+)
+
+; 2021-04-07
+(defun FilterEntityNameByBlockName (entityNameList dataType /)
+  (vl-remove-if-not '(lambda (x) 
+                       (wcmatch (GetDottedPairValueUtils 2 (entget x)) 
+                                (strcat dataType "*"))
+                     ) 
+    entityNameList
+  ) 
 )
 
 ; 2021-03-22

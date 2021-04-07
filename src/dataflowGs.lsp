@@ -469,7 +469,7 @@
 
 ; 2021-04-07
 (defun c:exportGsData (/ dataTypeList dataTypeChNameList)
-  (setq dataTypeList '("Pipe" "Equipment" "Instrument" "Equipment" "OuterPipe" "GsCleanAir"))
+  (setq dataTypeList '("Pipe" "Equipment" "InstrumentAndEquipmentAndPipe" "Equipment" "OuterPipe" "GsCleanAir"))
   (setq dataTypeChNameList '("管道数据" "设备数据" "仪表数据" "电气数据" "外管数据" "洁净空调")) 
   (ExportTempDataByBox "exportTempDataBox" dataTypeList dataTypeChNameList "Gs")
 )
@@ -479,10 +479,9 @@
   (cond 
     ((= dataType "Pipe") (ExtractBlockPropertyToJsonListStrategy ss "Pipe"))
     ((= dataType "Equipment") (GetGsEquipmentJsonListData ss))
-    ((= dataType "Instrument") (GetGsInstrumentJsonListData ss))
+    ((= dataType "InstrumentAndEquipmentAndPipe") (GetGsInstrumentJsonListData ss))
     ((= dataType "OuterPipe") (ExtractOuterPipeToJsonList))
     ((= dataType "GsCleanAir") (ExtractBlockPropertyToJsonListStrategy ss "GsCleanAir"))
-    (T (ExtractBlockPropertyToJsonListStrategy ss dataType))
   ) 
 )
 
