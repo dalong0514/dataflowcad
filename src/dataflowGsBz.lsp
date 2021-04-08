@@ -504,15 +504,20 @@
   (mapcar '(lambda (x) 
              (list 
                (StringSubstUtils "" "%%p" (strcat (cdr (assoc "dwgname1" x)) (cdr (assoc "dwgname2l1" x)) (cdr (assoc "dwgname2l2" x))))
-               (GetJSDrawPositionRangeUtils (GetEntityPositionByEntityNameUtils (handent (cdr (assoc "entityhandle" x)))))
+               (Get15A1DrawPositionRangeUtils (GetEntityPositionByEntityNameUtils (handent (cdr (assoc "entityhandle" x)))))
              )
            ) 
     (GetBlockAllPropertyDictListUtils (GetEntityNameListBySSUtils (GetAllDrawLabelSSUtils)))
   ) 
 )
 
-(defun GetJSDrawPositionRangeUtils (position /)
+(defun Get15A1DrawPositionRangeUtils (position /)
   (list (+ (car position) -126150) (+ (cadr position) 89100))
+)
+
+; 2021-04-08
+(defun GetA1DrawPositionRangeUtils (position /)
+  (list (+ (car position) -84100) (+ (cadr position) 59400))
 )
 
 ; 2021-02-27
@@ -1229,6 +1234,13 @@
     importedDataList
   ) 
 )
+
+;;;-------------------------------------------------------------------------;;;
+; Set Location Data to GsBzGraphy
+
+
+
+
 
 ; Equipemnt Layout
 ;;;-------------------------------------------------------------------------;;;
