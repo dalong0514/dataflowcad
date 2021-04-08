@@ -1305,10 +1305,26 @@
   ) 
 )
 
+; 2021-04-08
+(defun GetAllFloorGsBzLevelAxisoTwoPointData () 
+  (mapcar '(lambda (x) 
+             (cons (car x) (GetOneFloorGsBzLevelAxisoTwoPointData (cdr x)))
+           ) 
+    (ChunkListByColumnIndexUtils (GetAllGsBzLevelAxisoData) 0)
+  ) 
+)
+
+; 2021-04-08
+(defun GetAllFloorGsBzVerticalAxisoTwoPointData () 
+  (mapcar '(lambda (x) 
+             (cons (car x) (GetOneFloorGsBzVerticalAxisoTwoPointData (cdr x)))
+           ) 
+    (ChunkListByColumnIndexUtils (GetAllGsBzVerticalAxisoData) 0)
+  ) 
+)
+
 (defun c:foo () 
-  (GetOneFloorGsBzVerticalAxisoTwoPointData 
-    (cdr (car (ChunkListByColumnIndexUtils (GetAllGsBzVerticalAxisoData) 0)))
-  )
+  (GetAllFloorGsBzLevelAxisoTwoPointData)
 )
 
 ; Equipemnt Layout
