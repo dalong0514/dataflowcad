@@ -1625,6 +1625,31 @@
   (vla-PurgeAll doc) 
 )
 
+; 2021-04-08
+(defun ChunkListByColumnIndexUtils (listData keyIndex / keyList resultList) 
+  (setq keyList 
+    (DeduplicateForListUtils 
+      (mapcar '(lambda (x) (nth keyIndex x)) listData) 
+    ) 
+  )  
+  (foreach item (GetGsBzAxisoKeyList) 
+    (setq resultList 
+           (append resultList 
+              (list 
+                (cons item 
+                  (vl-remove-if-not '(lambda (x) 
+                                      (= item (nth keyIndex x))
+                                    ) 
+                    listData
+                  ) 
+                ) 
+              )
+           )
+    )
+  )
+  resultList
+)
+
 ; Utils Function 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;

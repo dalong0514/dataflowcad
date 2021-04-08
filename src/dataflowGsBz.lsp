@@ -483,7 +483,7 @@
 (defun GetJSDrawBasePositionList (/ allJSDrawColumnPositionData tempPositionList resultList)
   ; set a temp variable first, ss in the foreach
   (setq allJSDrawColumnPositionData (GetStrategyJSDrawColumnPositionData))
-    (foreach item (FilterJSDrawLabelData) 
+  (foreach item (FilterJSDrawLabelData) 
     (setq tempPositionList (SortPositionListByMinxMinyUtils 
                               (mapcar '(lambda (x) (cadr x)) 
                                 (vl-remove-if-not '(lambda (x) 
@@ -1251,10 +1251,14 @@
 )
 
 ; 2021-04-08
+(defun GetAllGsBzAxisoData () 
+  (GetSelectedEntityDataUtils (ssget "X" '((0 . "INSERT") (2 . "_AXISO"))))
+)
+
+; 2021-04-08
 (defun GetAllGsBzLevelAxisoData () 
   (vl-remove-if-not '(lambda (x) 
                       (RegexpTestUtils (cadr x) "[0-9]+$" nil)
-                      ;  (wcmatch (cadr x) "#")
                      ) 
     (GetAllGsBzAxisoDictListData)
   ) 
@@ -1264,19 +1268,28 @@
 (defun GetAllGsBzVerticalAxisoData () 
   (vl-remove-if-not '(lambda (x) 
                       (RegexpTestUtils (cadr x) ".*[A-Z]$" nil)
-                      ;  (wcmatch (cadr x) "#")
                      ) 
     (GetAllGsBzAxisoDictListData)
   ) 
 )
 
 ; 2021-04-08
-(defun GetAllGsBzAxisoData () 
-  (GetSelectedEntityDataUtils (ssget "X" '((0 . "INSERT") (2 . "_AXISO"))))
+(defun GetOneFloorGsBzLevelAxisoTwoPointData (dataList /) 
+  (mapcar '(lambda (x y) 
+             (list (car y) 
+                   (strcat (cadr x) "-" (cadr y))
+                   (list (car (caddr x)) (car (caddr y)))
+             )
+           ) 
+    dataList
+    (cdr dataList)
+  ) 
 )
 
-(defun c:foo ()
-  (GetAllGsBzVerticalAxisoData)
+(defun c:foo () 
+  (GetOneFloorGsBzLevelAxisoTwoPointData 
+    (cdr (car (ChunkListByColumnIndexUtils (GetAllGsBzLevelAxisoData) 0)))
+  )
 )
 
 ; Equipemnt Layout
