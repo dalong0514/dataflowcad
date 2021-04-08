@@ -1257,11 +1257,14 @@
 
 ; 2021-04-08
 (defun GetAllGsBzLevelAxisoData () 
-  (vl-remove-if-not '(lambda (x) 
-                      (RegexpTestUtils (cadr x) "[0-9]+$" nil)
-                     ) 
-    (GetAllGsBzAxisoDictListData)
-  ) 
+  ; sort from min to max
+  (reverse 
+    (vl-remove-if-not '(lambda (x) 
+                        (RegexpTestUtils (cadr x) "[0-9]+$" nil)
+                      ) 
+      (GetAllGsBzAxisoDictListData)
+    )  
+  )
 )
 
 ; 2021-04-08
