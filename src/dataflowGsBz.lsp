@@ -1289,9 +1289,22 @@
   ) 
 )
 
+; 2021-04-08
+(defun GetOneFloorGsBzVerticalAxisoTwoPointData (dataList /) 
+  (mapcar '(lambda (x y) 
+             (list (car y) 
+                   (strcat (cadr x) "-" (cadr y))
+                   (list (cadr (caddr x)) (cadr (caddr y)))
+             )
+           ) 
+    dataList
+    (cdr dataList)
+  ) 
+)
+
 (defun c:foo () 
-  (GetOneFloorGsBzLevelAxisoTwoPointData 
-    (cdr (car (ChunkListByColumnIndexUtils (GetAllGsBzLevelAxisoData) 0)))
+  (GetOneFloorGsBzVerticalAxisoTwoPointData 
+    (cdr (car (ChunkListByColumnIndexUtils (GetAllGsBzVerticalAxisoData) 0)))
   )
 )
 
