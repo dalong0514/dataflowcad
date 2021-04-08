@@ -250,9 +250,9 @@
 
 ; 2021-02-26
 (defun c:moveJSDraw () 
-  (CADLispMove (GetAllMoveDrawLabelSS) '(0 0 0) '(200000 0 0))
-  (CADLispCopy (GetAllCopyDrawLabelSS) '(0 0 0) '(200000 0 0)) 
-  (CADLispCopy (GetAllJSAxisSS) '(0 0 0) '(200000 0 0)) 
+  (CADLispMove (GetAllMoveDrawLabelSS) '(0 0 0) '(400000 0 0))
+  (CADLispCopy (GetAllCopyDrawLabelSS) '(0 0 0) '(400000 0 0)) 
+  (CADLispCopy (GetAllJSAxisSS) '(0 0 0) '(400000 0 0)) 
   (generateJSDraw (MoveCopyEntityData))
   (alert "移出建筑底图成功！") 
 )
