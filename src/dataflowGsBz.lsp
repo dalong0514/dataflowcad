@@ -1239,7 +1239,7 @@
 ; Set Location Data to GsBzGraphy
 
 ; 2021-04-08
-(defun GetAllStrategyGsBzAxisoData () 
+(defun GetAllGsBzAxisoDictListData () 
   (mapcar '(lambda (x) 
              (list (car x) 
                    (GetDottedPairValueUtils "a" (GetAllPropertyDictForOneBlock (GetDottedPairValueUtils -1 (cadr x))))
@@ -1256,7 +1256,7 @@
                       (RegexpTestUtils (cadr x) "[0-9]+$" nil)
                       ;  (wcmatch (cadr x) "#")
                      ) 
-    (GetAllStrategyGsBzAxisoData)
+    (GetAllGsBzAxisoDictListData)
   ) 
 )
 
@@ -1266,7 +1266,7 @@
                       (RegexpTestUtils (cadr x) ".*[A-Z]$" nil)
                       ;  (wcmatch (cadr x) "#")
                      ) 
-    (GetAllStrategyGsBzAxisoData)
+    (GetAllGsBzAxisoDictListData)
   ) 
 )
 
