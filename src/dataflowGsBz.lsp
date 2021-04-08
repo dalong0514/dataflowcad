@@ -1238,7 +1238,26 @@
 ;;;-------------------------------------------------------------------------;;;
 ; Set Location Data to GsBzGraphy
 
+; 2021-04-08
+(defun GetAllStrategyGsBzAxisoData () 
+  (mapcar '(lambda (x) 
+             (list (car x) 
+                   (GetDottedPairValueUtils "a" (GetAllPropertyDictForOneBlock (GetDottedPairValueUtils -1 (cadr x))))
+                   (GetDottedPairValueUtils 10 (cadr x))
+             )
+           ) 
+    (GetStrategyEntityData (GetAllGsBzAxisoData))
+  ) 
+)
 
+; 2021-04-08
+(defun GetAllGsBzAxisoData () 
+  (GetSelectedEntityDataUtils (ssget "X" '((0 . "INSERT") (2 . "_AXISO"))))
+)
+
+(defun c:foo ()
+  (GetAllStrategyGsBzAxisoData)
+)
 
 
 
