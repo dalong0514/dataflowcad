@@ -356,7 +356,7 @@
 
 ; 2021-02-28
 (defun MoveCopyEntityData () 
-  (MoveCopyEntityDataByBasePosition (GetAllCopyEntityData) '(200000 0))
+  (MoveCopyEntityDataByBasePosition (GetAllCopyEntityData) '(400000 0))
 )
 
 ; 2021-02-26
@@ -419,6 +419,7 @@
           (8 . "STAIR") 
           (8 . "EVTR") 
           (8 . "DOOR_FIRE")
+          (8 . "Öù*") 
         (-4 . "OR>")
       )
     )
