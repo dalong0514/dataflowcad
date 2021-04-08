@@ -1251,15 +1251,23 @@
 )
 
 ; 2021-04-08
+(defun GetAllGsBzLevelAxisoData () 
+  (vl-remove-if-not '(lambda (x) 
+                      (RegexpTestUtils (cadr x) "[0-9]+$" nil)
+                      ;  (wcmatch (cadr x) "#")
+                     ) 
+    (GetAllStrategyGsBzAxisoData)
+  ) 
+)
+
+; 2021-04-08
 (defun GetAllGsBzAxisoData () 
   (GetSelectedEntityDataUtils (ssget "X" '((0 . "INSERT") (2 . "_AXISO"))))
 )
 
 (defun c:foo ()
-  (GetAllStrategyGsBzAxisoData)
+  (GetAllGsBzLevelAxisoData)
 )
-
-
 
 ; Equipemnt Layout
 ;;;-------------------------------------------------------------------------;;;
