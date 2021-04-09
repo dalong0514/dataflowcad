@@ -1632,7 +1632,7 @@
       (mapcar '(lambda (x) (nth keyIndex x)) listData) 
     ) 
   )  
-  (foreach item (GetGsBzAxisoKeyList) 
+  (foreach item keyList
     (setq resultList 
            (append resultList 
               (list 
