@@ -1324,7 +1324,7 @@
 )
 
 (defun c:foo ()
-  (ExecuteFunctionAfterVerifyDateUtils 'GetAllFloorGsBzLevelAxisoTwoPointData '())
+  (ExecuteFunctionAfterVerifyDateUtils 'GetAllFloorGsBzLevelAxisoTwoPointData)
 )
 
 ; Equipemnt Layout
