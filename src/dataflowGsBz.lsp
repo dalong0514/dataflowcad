@@ -1384,8 +1384,30 @@
   ) 
 )
 
+; 2021-04-09
+(defun GetAllGsBzEquipGraphyData () 
+  (GetSelectedEntityDataUtils (ssget "X" '((0 . "INSERT") (2 . "GsBz*"))))
+)
+
+; 2021-04-09
+(defun GetAllGsBzEquipGraphyDictListData () 
+  (mapcar '(lambda (x) 
+             (list (car x) 
+                   (GetDottedPairValueUtils -1 (cadr x))
+                   (GetDottedPairValueUtils 10 (cadr x))
+             )
+           ) 
+    (GetStrategyEntityData (GetAllGsBzEquipGraphyData))
+  ) 
+)
+
+; 2021-04-09
+(defun GetAllFloorGsBzEquipGraphyDictListData () 
+  (ChunkListByColumnIndexUtils (GetAllGsBzEquipGraphyDictListData) 0) 
+)
+
 (defun c:foo ()
-  (ExecuteFunctionAfterVerifyDateUtils 'GetAllFloorGsBzLevelAxisoTwoPointData '())
+  (GetAllFloorGsBzVerticalAxisoTwoPointData)
 )
 
 ; Equipemnt Layout
