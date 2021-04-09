@@ -429,8 +429,13 @@
 ; Gs Field
 ; the macro for extract data
 
-; 2021-04-07
-(defun c:exportGsData (/ dataTypeList dataTypeChNameList)
+; refactored at 2021-04-07
+(defun c:exportGsData ()
+  (ExecuteFunctionAfterVerifyDateUtils 'ExportGsDataMacro '())
+)
+
+; 2021-04-09
+(defun ExportGsDataMacro (/ dataTypeList dataTypeChNameList)
   (setq dataTypeList '("Pipe" "Equipment" "InstrumentAndEquipmentAndPipe" "Equipment" "OuterPipe" "GsCleanAir"))
   (setq dataTypeChNameList '("管道数据" "设备数据" "仪表数据" "电气数据" "外管数据" "洁净空调")) 
   (ExportTempDataByBox "exportTempDataBox" dataTypeList dataTypeChNameList "Gs")

@@ -11,6 +11,15 @@
   (setq *dataflowDate* (fix (getvar "cdate"))) 
 )
 
+; 2021-04-09
+; very importance for me, convert a function to the parameter for another function
+(defun ExecuteFunctionAfterVerifyDateUtils (functionName argumentList /)
+  (if (< *dataflowDate* 20210501)
+    (vl-catch-all-apply functionName argumentList)
+    (alert "使用时间到期，请于管理员联系！")
+  ) 
+)
+
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
 ; Utils Function 
