@@ -431,7 +431,7 @@
 
 ; refactored at 2021-04-09
 (defun c:exportGsData ()
-  (ExecuteFunctionAfterVerifyDateUtils 'ExportGsDataMacro)
+  (ExecuteFunctionAfterVerifyDateUtils 'ExportGsDataMacro '())
 )
 
 ; 2021-04-09
@@ -482,7 +482,7 @@
 
 ; refactored at 2021-04-09
 (defun c:exportBlockPropertyData ()
-  (ExecuteFunctionAfterVerifyDateUtils 'ExportBlockPropertyDataMacro)
+  (ExecuteFunctionAfterVerifyDateUtils 'ExportBlockPropertyDataMacro '())
 )
 
 ; 2021-04-09
@@ -784,7 +784,7 @@
 
 ; refactored at 2021-04-09
 (defun c:brushLocationForInstrument () 
-  (ExecuteFunctionAfterVerifyDateUtils 'BrushLocationForInstrumentMacro)
+  (ExecuteFunctionAfterVerifyDateUtils 'BrushLocationForInstrumentMacro '())
 )
 
 ; 2021-04-09
@@ -826,7 +826,7 @@
 
 ; refatored at 2021-04-09
 (defun c:brushStartEndForPipe () 
-  (ExecuteFunctionAfterVerifyDateUtils 'BrushStartEndForPipeMacro)
+  (ExecuteFunctionAfterVerifyDateUtils 'BrushStartEndForPipeMacro '())
 )
 
 ; refatored at 2021-04-09
@@ -843,7 +843,7 @@
 
 ; refatored at 2021-04-09
 (defun c:brushStartForPipe () 
-  (ExecuteFunctionAfterVerifyDateUtils 'BrushStartForPipeMacro)
+  (ExecuteFunctionAfterVerifyDateUtils 'BrushStartForPipeMacro '())
 )
 
 ; refatored at 2021-04-09
@@ -858,7 +858,7 @@
 
 ; refatored at 2021-04-09
 (defun c:brushEndForPipe () 
-  (ExecuteFunctionAfterVerifyDateUtils 'BrushEndForPipeMacro)
+  (ExecuteFunctionAfterVerifyDateUtils 'BrushEndForPipeMacro '())
 )
 
 ; refatored at 2021-04-09
