@@ -3185,7 +3185,13 @@
 ;;;-------------------------------------------------------------------------;;;
 ; PipeClassChange and PipeDiameterChange
 
-(defun c:brushPipeClassChangeMacro (/ sourceData pipeClassChangeData instrumentAndPipeData pipeClassChangeInfo)
+; refactored at 2021-04-09
+(defun c:brushPipeClassChangeMacro () 
+  (ExecuteFunctionAfterVerifyDateUtils 'BrushPipeClassChangeInfoMacro '())
+)
+
+; refactored at 2021-04-09
+(defun BrushPipeClassChangeInfoMacro (/ sourceData pipeClassChangeData instrumentAndPipeData pipeClassChangeInfo)
   (prompt "\n选择变管道等级块以及要刷的管道或仪表数据（变等级块只能选一个）：")
   (setq sourceData (GetInstrumentAndPipeAndPipeClassChangeData))
   (setq pipeClassChangeData (GetPipeClassChangeDataForBrushPipeClassChange sourceData))
@@ -3196,7 +3202,13 @@
   )
 )
 
-(defun c:brushReducerInfoMacro (/ sourceData ReducerData instrumentAndPipeData reducerInfo entityNameList)
+; refactored at 2021-04-09
+(defun c:brushReducerInfoMacro () 
+  (ExecuteFunctionAfterVerifyDateUtils 'BrushReducerChangeInfoMacro '())
+)
+
+; refactored at 2021-04-09
+(defun BrushReducerChangeInfoMacro (/ sourceData ReducerData instrumentAndPipeData reducerInfo entityNameList)
   (prompt "\n选择异径管块以及要刷的管道或仪表数据（异径管块只能选一个）：")
   (setq sourceData (GetInstrumentAndPipeAndReducerData))
   (setq ReducerData (GetReducerDataForBrushReducerInfo sourceData))
