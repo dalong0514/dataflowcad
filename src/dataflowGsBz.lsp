@@ -1445,8 +1445,8 @@
                           ; (cadr equipData)
                           (ModifyMultiplePropertyForOneBlockUtils 
                             (cadr equipData) 
-                            (list "FLOORHEIGHT" "POSITIONREGION") 
-                            (list (car equipData) (strcat (nth 1 x) "#" (nth 1 y))))
+                            (list "FLOORHEIGHT" "XPOSITION" "YPOSITION") 
+                            (list (car equipData) (nth 1 x) (nth 1 y)))
                         )
                     ) 
               oneFloorGsBzVerticalAxisoTwoPointData
