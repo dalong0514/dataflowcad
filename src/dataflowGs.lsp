@@ -210,12 +210,7 @@
 
 ; modified at - 2021-03-14
 (defun GetGsBzEquipPropertyNameList ()
-  '("VERSION" "TAG" "SPECIES" "VOLUME" "GSBZTYPE" "POSITIONREGION" "OPTION")
-)
-
-; 2021-03-10
-(defun GetGsBzEquipPropertyChNameList ()
-  '("设备位号" "设备类型代号" "设备所在区域" "备注")
+  '("VERSION" "TAG" "GSBZTYPE" "SPECIES" "VOLUME" "FLOORHEIGHT" "XPOSITION" "YPOSITION" "EMPTYWEIGHT" "STATICLOAD" "DYNAMICLOAD" "SUPPORMETHOD" "HOLEMETHOD" "BASEMETHOD" "COMMENT" "OPTION")
 )
 
 ; 2021-03-22
@@ -327,7 +322,7 @@
 
 (defun WriteGsBzEquipDataToCSVByEntityNameListUtils (entityNameList / fileDir firstRow propertyNameList)
   (setq fileDir "D:\\dataflowcad\\data\\gsBzEquipData.csv")
-  (setq firstRow "数据ID,设备大类,设备名称,设备种类,设备体积,设备类型代号,设备所在区域,备注,")
+  (setq firstRow "数据ID,设备大类,设备位号,设备类型代号,设备种类,设备体积,设备所在楼层,设备所在横向区域,设备所在纵向区域,设备空重,设备静荷载,设备动荷载,支撑方式,开孔形式,基础做法,备注,预留字段,")
   (setq propertyNameList (GetGsBzEquipPropertyNameList))
   (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList "0")
 )
