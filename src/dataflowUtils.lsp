@@ -2001,8 +2001,8 @@
 (defun IsPositionInTheRegionUtils (position firstX secondX firstY secondY /) 
   (and 
     (> (car position) firstX) 
-    (< (cadr position) secondX) 
-    (> (car position) firstY) 
+    (< (car position) secondX) 
+    (> (cadr position) firstY) 
     (< (cadr position) secondY) 
   )
 )

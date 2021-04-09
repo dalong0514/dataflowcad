@@ -1413,15 +1413,49 @@
   )
 )
 
-(defun c:foo ()
+(defun UpdateGsBzEquipGraphyPostiontData () 
+  (foreach item (GetGsBzEquipGraphyFloorsList) 
+    (mapcar '(lambda (x) 
+                (UpdateOneFloorGsBzEquipGraphyPostiontData 
+                  x
+                  (GetDottedPairValueUtils item (GetAllFloorGsBzLevelAxisoTwoPointData))
+                  (GetDottedPairValueUtils item (GetAllFloorGsBzVerticalAxisoTwoPointData))
+                )
+             ) 
+      (GetDottedPairValueUtils item (GetAllFloorGsBzEquipGraphyDictListData))
+    ) 
+  )
+)
+
+(defun GetGsBzEquipGraphyFloorsList ()
+  (mapcar '(lambda (x) (car x)) 
+    (GetAllFloorGsBzEquipGraphyDictListData)
+  )   
+)
+
+(defun UpdateOneFloorGsBzEquipGraphyPostiontData (equipData oneFloorGsBzLevelAxisoTwoPointData oneFloorGsBzVerticalAxisoTwoPointData /)
   (mapcar '(lambda (x) 
-             (nth 2 x)
-           ) 
-    (cdr (GetOneFloorGsBzEquipGraphyDictListData))
+            (mapcar '(lambda (y) 
+                        (if (IsPositionInTheRegionUtils (nth 2 equipData) (car (nth 2 x)) (cadr (nth 2 x)) (car (nth 2 y)) (cadr (nth 2 y))) 
+                          ; (strcat (nth 1 x) "#" (nth 1 y))
+                          ; (cadr equipData)
+                          (ModifyMultiplePropertyForOneBlockUtils 
+                            (cadr equipData) 
+                            (list "FLOORHEIGHT" "POSITIONREGION") 
+                            (list (car equipData) (strcat (nth 1 x) "#" (nth 1 y))))
+                        )
+                    ) 
+              oneFloorGsBzVerticalAxisoTwoPointData
+            ) 
+          ) 
+    oneFloorGsBzLevelAxisoTwoPointData
   )  
 )
 
-
+(defun c:foo () 
+  (UpdateGsBzEquipGraphyPostiontData)(princ)
+  ; (GetDottedPairValueUtils "0.0" (GetAllFloorGsBzVerticalAxisoTwoPointData))
+)
 
 ; Equipemnt Layout
 ;;;-------------------------------------------------------------------------;;;
