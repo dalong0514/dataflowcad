@@ -480,7 +480,13 @@
         )
 )
 
-(defun c:exportBlockPropertyData (/ dataTypeList dataTypeChNameList)
+; refactored at 2021-04-09
+(defun c:exportBlockPropertyData ()
+  (ExecuteFunctionAfterVerifyDateUtils 'ExportBlockPropertyDataMacro)
+)
+
+; 2021-04-09
+(defun ExportBlockPropertyDataMacro (/ dataTypeList dataTypeChNameList)
   (setq dataTypeList '("Pipe" "Equipment" "Instrument" "Electric" "OuterPipe" "GsCleanAir"))
   (setq dataTypeChNameList '("管道数据" "设备数据" "仪表数据" "电气数据" "外管数据" "洁净空调数据"))
   (ExportBlockProperty dataTypeList dataTypeChNameList)
@@ -776,8 +782,13 @@
 ;;;-------------------------------------------------------------------------;;;
 ; logic for brushBlockPropertyValue
 
-; refactored at 2021-03-08
-(defun c:brushLocationForInstrument (/ ss sourceData instrumentData locationData entityNameList) 
+; refactored at 2021-04-09
+(defun c:brushLocationForInstrument () 
+  (ExecuteFunctionAfterVerifyDateUtils 'BrushLocationForInstrumentMacro)
+)
+
+; 2021-04-09
+(defun BrushLocationForInstrumentMacro (/ ss sourceData instrumentData locationData entityNameList) 
   (prompt "\n选择数据集（只能包含一个仪表或管道）：")
   (setq ss (GetBlockSSBySelectByDataTypeUtils "InstrumentAndEquipmentAndPipe"))
   (setq sourceData (GetBlockAllPropertyDictListUtils (GetEntityNameListBySSUtils ss)))
@@ -813,8 +824,13 @@
   )
 )
 
-; refatored at 2021-03-08
-(defun c:brushStartEndForPipe (/ startData endData entityNameList)
+; refatored at 2021-04-09
+(defun c:brushStartEndForPipe () 
+  (ExecuteFunctionAfterVerifyDateUtils 'BrushStartEndForPipeMacro)
+)
+
+; refatored at 2021-04-09
+(defun BrushStartEndForPipeMacro (/ startData endData entityNameList)
   (prompt "\n选择管道起点（直接空格表示不修改）：")
   (setq startData (GetPipenumOrTagForBrushPipe))
   (prompt "\n选择管道终点（直接空格表示不修改）：")
@@ -825,8 +841,13 @@
   (princ)
 )
 
-; 2021-03-08
-(defun c:brushStartForPipe (/ startData entityNameList)
+; refatored at 2021-04-09
+(defun c:brushStartForPipe () 
+  (ExecuteFunctionAfterVerifyDateUtils 'BrushStartForPipeMacro)
+)
+
+; refatored at 2021-04-09
+(defun BrushStartForPipeMacro (/ startData entityNameList)
   (prompt "\n选择管道起点（直接空格表示不修改）：")
   (setq startData (GetPipenumOrTagForBrushPipe))
   (prompt "\n选择要刷的管道（可批量选择）：")
@@ -835,8 +856,13 @@
   (princ)
 )
 
-; 2021-03-08
-(defun c:brushEndForPipe (/ endData entityNameList)
+; refatored at 2021-04-09
+(defun c:brushEndForPipe () 
+  (ExecuteFunctionAfterVerifyDateUtils 'BrushEndForPipeMacro)
+)
+
+; refatored at 2021-04-09
+(defun BrushEndForPipeMacro (/ endData entityNameList)
   (prompt "\n选择管道终点（直接空格表示不修改）：")
   (setq endData (GetPipenumOrTagForBrushPipe))
   (prompt "\n选择要刷的管道（可批量选择）：")
