@@ -3290,7 +3290,13 @@
 ;;;-------------------------------------------------------------------------;;;
 ; logic for Common Function of Little Tools
 
-(defun c:brushTextEntityContent (/ textContent entityNameList)
+; refactored at 2021-04-09
+(defun c:brushTextEntityContent () 
+  (ExecuteFunctionAfterVerifyDateUtils 'BrushTextEntityContentMacro '())
+)
+
+; refactored at 2021-04-09
+(defun BrushTextEntityContentMacro (/ textContent entityNameList)
   (prompt "\n选择要提取的单行文字：")
   (setq textContent (GetTextEntityContentBySelectUtils))
   (prompt (strcat "\n提取的文字内容：" textContent))
@@ -3300,7 +3306,13 @@
   (princ)
 )
 
-(defun c:deleteTextByLayer (/ textLayer)
+; refactored at 2021-04-09
+(defun c:deleteTextByLayer () 
+  (ExecuteFunctionAfterVerifyDateUtils 'DeleteTextByLayerMacro '())
+)
+
+; refactored at 2021-04-09
+(defun DeleteTextByLayerMacro (/ textLayer)
   (prompt "\n拾取一个要删除的单行文字以获取图层信息：")
   (setq textLayer (GetEntitylayerBySelectUtils))
   (prompt (strcat "\n拾取到的图层名：" textLayer "\n选择要删除的单行文字（可批量选择）："))
