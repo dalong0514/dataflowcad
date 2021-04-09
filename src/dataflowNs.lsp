@@ -14,9 +14,9 @@
 ;;;-------------------------------------------------------------------------;;;
 ; Generate NsEquipListTable
 
-; 2021-03-18
+; refactored at 2021-04-09
 (defun c:InsertNsEquipTableByDirection ()
-  (InsertNsEquipTableByBox "importNsEquipTableBox")
+  (ExecuteFunctionAfterVerifyDateUtils 'InsertNsEquipTableByBox '("importNsEquipTableBox"))
 )
 
 ; 2021-03-18
