@@ -290,10 +290,14 @@
   resultList
 )
 
-
 ; logic for generate Pipe
-; refactored at 2021-03-11
-(defun c:InsertBlockPipeArrowLeft (/ ss insPt) 
+; refactored at 2021-04-09
+(defun c:InsertBlockPipeArrowLeft () 
+  (ExecuteFunctionAfterVerifyDateUtils 'InsertBlockPipeArrowLeftMacro '())
+)
+
+; refactored at 2021-04-09
+(defun InsertBlockPipeArrowLeftMacro (/ ss insPt) 
   (prompt "\n选取设备块和管道块：")
   (setq ss (GetBlockSSBySelectByDataTypeUtils "EquipmentAndPipe"))
   (setq insPt (getpoint "\n选取水平管道插入点："))
@@ -301,12 +305,15 @@
   (ModifyMultiplePropertyForOneBlockUtils (entlast) 
     '("PIPENUM" "VERSION" "SUBSTANCE" "TEMP" "PRESSURE" "FROM")  
     (GetGsLcBlockPipePropertyValueList ss)) 
-  ;(princ)
 )
 
-; 2021-03-07
-; refactored at 2021-03-11
-(defun c:InsertBlockPipeArrowUp (/ ss insPt) 
+; refactored at 2021-04-09
+(defun c:InsertBlockPipeArrowUp () 
+  (ExecuteFunctionAfterVerifyDateUtils 'InsertBlockPipeArrowUpMacro '())
+)
+
+; refactored at 2021-04-09
+(defun InsertBlockPipeArrowUpMacro (/ ss insPt) 
   (prompt "\n选取设备块和管道块：")
   (setq ss (GetBlockSSBySelectByDataTypeUtils "EquipmentAndPipe")) 
   (setq insPt (getpoint "\n选取垂直管道插入点："))
@@ -316,7 +323,6 @@
     (GetGsLcBlockPipePropertyValueList ss)) 
 )
 
-; 2021-03-07
 ; refactored at 2021-03-11
 (defun InsertGsLcBlockPipe (insPt blockName /) 
   (VerifyGsLcBlockByName blockName)
