@@ -58,8 +58,13 @@
 ;;;-------------------------------------------------------------------------;;;
 ; Generate GsBzBlocks
 
-; 2021-03-09
-(defun c:InsertBlockGsBzCleanAir (/ insPt) 
+; refactored at 2021-04-09
+(defun c:InsertBlockGsBzCleanAir () 
+  (ExecuteFunctionAfterVerifyDateUtils 'InsertBlockGsBzCleanAirMacro '())
+)
+
+; refactored at 2021-04-09
+(defun InsertBlockGsBzCleanAirMacro (/ insPt) 
   (setq insPt (getpoint "\n选取房间块插入点："))
   (VerifyGsBzBlockByName "GsCleanAir")
   (VerifyGsBzCleanAirLayer)
@@ -95,7 +100,13 @@
 ;;;-------------------------------------------------------------------------;;;
 ; Equipemnt Layout
 
-(defun c:numberLayoutData (/ dataTypeList)
+; refactored at 2021-04-09
+(defun c:numberLayoutData () 
+  (ExecuteFunctionAfterVerifyDateUtils 'NumberLayoutDataMacro '())
+)
+
+; refactored at 2021-04-09
+(defun NumberLayoutDataMacro (/ dataTypeList)
   (setq dataTypeList (GetNumberLayoutDataTypeList))
   (numberLayoutDataByBox dataTypeList "enhancedNumberBox")
 )
@@ -220,20 +231,40 @@
 ;;;-------------------------------------------------------------------------;;;
 ; migrate JS Layout Draw
 
-; 2021-03-05
+; refactored at 2021-04-09
+(defun c:numberLayoutData () 
+  (ExecuteFunctionAfterVerifyDateUtils 'NumberLayoutDataMacro '())
+)
+
+; refactored at 2021-04-09
 (defun c:purgeJSDrawData () 
+  (ExecuteFunctionAfterVerifyDateUtils 'PurgeJSDrawDataMacro '())
+)
+
+; refactored at 2021-04-09
+(defun PurgeJSDrawDataMacro () 
   (DeleteEntityBySSUtils (GetAllCopySS))
   (alert "建筑底图清理成功")
 )
 
-; 2021-02-28
+; refactored at 2021-04-09
 (defun c:extractJSDrawData () 
+  (ExecuteFunctionAfterVerifyDateUtils 'ExtractJSDrawDataMacro '())
+)
+
+; refactored at 2021-04-09
+(defun ExtractJSDrawDataMacro () 
   (vl-bb-set 'architectureDraw (list (GetJSDrawBasePositionList) (GetAllStrategyCopyEntityData)))
   (alert "建筑底图提取成功")
 )
 
-; 2021-02-28
-(defun c:migrateJSDraw (/ GSDrawBasePositionList JSDrawBasePositionList newDrawBasePositionList JSDrawData resultList)
+; refactored at 2021-04-09
+(defun c:migrateJSDraw () 
+  (ExecuteFunctionAfterVerifyDateUtils 'MigrateJSDrawMacro '())
+)
+
+; refactored at 2021-04-09
+(defun MigrateJSDrawMacro (/ GSDrawBasePositionList JSDrawBasePositionList newDrawBasePositionList JSDrawData resultList)
   (if (/= (vl-bb-ref 'architectureDraw) nil) 
     (progn 
       (setq GSDrawBasePositionList (GetJSDrawBasePositionList))
@@ -248,8 +279,13 @@
   )
 )
 
-; 2021-02-26
+; refactored at 2021-04-09
 (defun c:moveJSDraw () 
+  (ExecuteFunctionAfterVerifyDateUtils 'MoveJSDrawMacro '())
+)
+
+; refactored at 2021-04-09
+(defun MoveJSDrawMacro () 
   (CADLispMove (GetAllMoveDrawLabelSS) '(0 0 0) '(400000 0 0))
   (CADLispCopy (GetAllCopyDrawLabelSS) '(0 0 0) '(400000 0 0)) 
   (CADLispCopy (GetAllJSAxisSS) '(0 0 0) '(400000 0 0)) 
@@ -283,8 +319,13 @@
     )
 )
 
-; 2021-03-01
-(defun c:switchLayerLock(/ acadObj doc lockStatus lockStatusMsg)
+; refactored at 2021-04-09
+(defun c:switchLayerLock () 
+  (ExecuteFunctionAfterVerifyDateUtils 'SwitchLayerLockMacro '())
+)
+
+; refactored at 2021-04-09
+(defun SwitchLayerLockMacro (/ acadObj doc lockStatus lockStatusMsg)
   (setq acadObj (vlax-get-acad-object))
   (setq doc (vla-get-ActiveDocument acadObj))
   (mapcar '(lambda (x) 
@@ -304,8 +345,13 @@
   (alert (nth lockStatus lockStatusMsg))
 )
 
-; 2021-03-01
-(defun c:lockJSDrawLayer(/ acadObj doc lockStatus lockStatusMsg)
+; refactored at 2021-04-09
+(defun c:lockJSDrawLayer () 
+  (ExecuteFunctionAfterVerifyDateUtils 'LockJSDrawLayerMacro '())
+)
+
+; refactored at 2021-04-09
+(defun LockJSDrawLayerMacro (/ acadObj doc lockStatus lockStatusMsg)
   (setq acadObj (vlax-get-acad-object))
   (setq doc (vla-get-ActiveDocument acadObj))
   (mapcar '(lambda (x) 
@@ -322,8 +368,13 @@
   (alert "建筑底图锁定")
 )
 
-; 2021-03-01
-(defun c:unlockJSDrawLayer(/ acadObj doc lockStatus lockStatusMsg)
+; refactored at 2021-04-09
+(defun c:unlockJSDrawLayer () 
+  (ExecuteFunctionAfterVerifyDateUtils 'UnlockJSDrawLayerMacro '())
+)
+
+; refactored at 2021-04-09
+(defun UnlockJSDrawLayerMacro (/ acadObj doc lockStatus lockStatusMsg)
   (setq acadObj (vlax-get-acad-object))
   (setq doc (vla-get-ActiveDocument acadObj))
   (mapcar '(lambda (x) 
