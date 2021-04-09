@@ -355,16 +355,26 @@
 )
 
 ; logic for generate OuterPipeRight
-; 2021-03-08
-(defun c:InsertBlockOuterPipeRight (/ ss insPt) 
+; refactored at 2021-04-09
+(defun c:InsertBlockOuterPipeRight () 
+  (ExecuteFunctionAfterVerifyDateUtils 'InsertBlockOuterPipeRightMacro '())
+)
+
+; refactored at 2021-04-09
+(defun InsertBlockOuterPipeRightMacro (/ ss insPt) 
   (prompt "\n选取管道块：")
   (setq ss (GetBlockSSBySelectByDataTypeUtils "Pipe"))
   (setq insPt (getpoint "\n选取外管块的插入点："))
   (InsertGsLcBlockOuterPipe insPt "OuterPipeRight" (GetGsLcBlockOuterPipePropertyDict ss))
 )
 
-; 2021-03-08
-(defun c:InsertBlockOuterPipeLeft (/ ss insPt) 
+; refactored at 2021-04-09
+(defun c:InsertBlockOuterPipeLeft () 
+  (ExecuteFunctionAfterVerifyDateUtils 'InsertBlockOuterPipeLeftMacro '())
+)
+
+; refactored at 2021-04-09
+(defun InsertBlockOuterPipeLeftMacro (/ ss insPt) 
   (prompt "\n选取管道块：")
   (setq ss (GetBlockSSBySelectByDataTypeUtils "Pipe"))
   (setq insPt (getpoint "\n选取外管块的插入点："))
@@ -394,8 +404,13 @@
 )
 
 ; logic for generate PipeClassChange
-; 2021-03-08
+; refactored at 2021-04-09
 (defun c:InsertBlockPipeClassChange (/ ss insPt) 
+  (ExecuteFunctionAfterVerifyDateUtils 'InsertBlockPipeClassChangeMacro '())
+)
+
+; refactored at 2021-04-09
+(defun InsertBlockPipeClassChangeMacro (/ ss insPt) 
   (prompt "\n选取包含等级号信息的 2 个管道块：")
   (setq ss (GetBlockSSBySelectByDataTypeUtils "Pipe"))
   (setq insPt (getpoint "\n选取变等级块的插入点："))
@@ -427,16 +442,26 @@
 )
 
 ; logic for generate Ball Valve
-; 2021-04-05
-(defun c:InsertBlockLevelBallValve (/ ss insPt) 
+; refactored at 2021-04-09
+(defun c:InsertBlockLevelBallValve () 
+  (ExecuteFunctionAfterVerifyDateUtils 'InsertBlockLevelBallValveMacro '())
+)
+
+; refactored at 2021-04-09
+(defun InsertBlockLevelBallValveMacro (/ ss insPt) 
   (prompt "\n选取 1 个管道块")
   (setq ss (GetBlockSSBySelectByDataTypeUtils "Pipe"))
   (setq insPt (getpoint "\n选取阀门插入点："))
   (InsertGsLcBlockBallValve insPt "BallValve" (GetGsLcBlockValvePropertyDict ss) 0)
 )
 
-; 2021-04-05
-(defun c:InsertBlockVerticalBallValve (/ ss insPt) 
+; refactored at 2021-04-09
+(defun c:InsertBlockVerticalBallValve () 
+  (ExecuteFunctionAfterVerifyDateUtils 'InsertBlockVerticalBallValveMacro '())
+)
+
+; refactored at 2021-04-09
+(defun InsertBlockVerticalBallValveMacro (/ ss insPt) 
   (prompt "\n选取 1 个管道块")
   (setq ss (GetBlockSSBySelectByDataTypeUtils "Pipe"))
   (setq insPt (getpoint "\n选取阀门插入点："))
@@ -461,8 +486,13 @@
 )
 
 ; logic for generate Reducer
-; 2021-03-08
-(defun c:InsertBlockReducer (/ ss insPt) 
+; refactored at 2021-04-09
+(defun c:InsertBlockReducer () 
+  (ExecuteFunctionAfterVerifyDateUtils 'InsertBlockReducerMacro '())
+)
+
+; refactored at 2021-04-09
+(defun InsertBlockReducerMacro (/ ss insPt) 
   (prompt "\n选取包含管径信息的 2 个管道块：")
   (setq ss (GetBlockSSBySelectByDataTypeUtils "Pipe"))
   (setq insPt (getpoint "\n选取异径管块的插入点："))
@@ -491,56 +521,92 @@
 )
 
 ; logic for generate EquipTag
-; 2021-03-07 refactored
-(defun c:InsertBlockGsLcReactor (/ insPt) 
+; refactored at 2021-04-09
+(defun c:InsertBlockGsLcReactor () 
+  (ExecuteFunctionAfterVerifyDateUtils 'InsertBlockGsLcReactorMacro '())
+)
+
+; refactored at 2021-04-09
+(defun InsertBlockGsLcReactorMacro (/ insPt) 
   (setq insPt (getpoint "\n选取反应釜位号插入点："))
   (VerifyGsLcBlockByName "Reactor")
   (VerifyGsLcEquipTagLayer)
   (InsertBlockUtils insPt "Reactor" "0DataFlow-GsLcEquipTag" (list (cons 1 "R")))
 )
 
-; 2021-03-07 refactored
-(defun c:InsertBlockGsLcTank (/ insPt) 
+
+; refactored at 2021-04-09
+(defun c:InsertBlockGsLcTank () 
+  (ExecuteFunctionAfterVerifyDateUtils 'InsertBlockGsLcTankMacro '())
+)
+
+; refactored at 2021-04-09
+(defun InsertBlockGsLcTankMacro (/ insPt) 
   (setq insPt (getpoint "\n选取储罐位号插入点："))
   (VerifyGsLcBlockByName "Tank")
   (VerifyGsLcEquipTagLayer)
   (InsertBlockUtils insPt "Tank" "0DataFlow-GsLcEquipTag" (list (cons 1 "V")))
 )
 
-; 2021-03-07
-(defun c:InsertBlockGsLcPump (/ insPt) 
+; refactored at 2021-04-09
+(defun c:InsertBlockGsLcPump () 
+  (ExecuteFunctionAfterVerifyDateUtils 'InsertBlockGsLcPumpMacro '())
+)
+
+; refactored at 2021-04-09
+(defun InsertBlockGsLcPumpMacro (/ insPt) 
   (setq insPt (getpoint "\n选取输送泵位号插入点："))
   (VerifyGsLcBlockByName "Pump")
   (VerifyGsLcEquipTagLayer)
   (InsertBlockUtils insPt "Pump" "0DataFlow-GsLcEquipTag" (list (cons 1 "P")))
 )
 
-; 2021-03-07
-(defun c:InsertBlockGsLcHeater (/ insPt) 
+; refactored at 2021-04-09
+(defun c:InsertBlockGsLcHeater () 
+  (ExecuteFunctionAfterVerifyDateUtils 'InsertBlockGsLcHeaterMacro '())
+)
+
+; refactored at 2021-04-09
+(defun InsertBlockGsLcHeaterMacro (/ insPt) 
   (setq insPt (getpoint "\n选取换热器位号插入点："))
   (VerifyGsLcBlockByName "Heater")
   (VerifyGsLcEquipTagLayer)
   (InsertBlockUtils insPt "Heater" "0DataFlow-GsLcEquipTag" (list (cons 1 "E")))
 )
 
-; 2021-03-07
-(defun c:InsertBlockGsLcCentrifuge (/ insPt) 
+; refactored at 2021-04-09
+(defun c:InsertBlockGsLcCentrifuge () 
+  (ExecuteFunctionAfterVerifyDateUtils 'InsertBlockGsLcCentrifugeMacro '())
+)
+
+; refactored at 2021-04-09
+(defun InsertBlockGsLcCentrifugeMacro (/ insPt) 
   (setq insPt (getpoint "\n选取离心机位号插入点："))
   (VerifyGsLcBlockByName "Centrifuge")
   (VerifyGsLcEquipTagLayer)
   (InsertBlockUtils insPt "Centrifuge" "0DataFlow-GsLcEquipTag" (list (cons 1 "M")))
 )
 
-; 2021-03-07
-(defun c:InsertBlockGsLcVacuum (/ insPt) 
+; refactored at 2021-04-09
+(defun c:InsertBlockGsLcVacuum () 
+  (ExecuteFunctionAfterVerifyDateUtils 'InsertBlockGsLcVacuumMacro '())
+)
+
+; refactored at 2021-04-09
+(defun InsertBlockGsLcVacuumMacro (/ insPt) 
   (setq insPt (getpoint "\n选取真空泵位号插入点："))
   (VerifyGsLcBlockByName "Vacuum")
   (VerifyGsLcEquipTagLayer)
   (InsertBlockUtils insPt "Vacuum" "0DataFlow-GsLcEquipTag" (list (cons 1 "P")))
 )
 
-; 2021-03-07
-(defun c:InsertBlockGsLcCustomEquip (/ insPt) 
+; refactored at 2021-04-09
+(defun c:InsertBlockGsLcCustomEquip () 
+  (ExecuteFunctionAfterVerifyDateUtils 'InsertBlockGsLcCustomEquipMacro '())
+)
+
+; refactored at 2021-04-09
+(defun InsertBlockGsLcCustomEquipMacro (/ insPt) 
   (setq insPt (getpoint "\n选取自定义设备位号插入点："))
   (VerifyGsLcBlockByName "CustomEquip")
   (VerifyGsLcEquipTagLayer)
