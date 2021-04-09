@@ -1300,6 +1300,12 @@
 ;;;-------------------------------------------------------------------------;;;
 ; Set Location Data to GsBzGraphy
 
+; 2021-04-09
+(defun c:UpdateGsBzEquipGraphyPostiontData () 
+  (ExecuteFunctionAfterVerifyDateUtils 'UpdateGsBzEquipGraphyPostiontDataMacro '())
+  (alert "设备位置更新成功！")
+)
+
 ; 2021-04-08
 (defun GetAllGsBzAxisoDictListData () 
   (mapcar '(lambda (x) 
@@ -1415,7 +1421,7 @@
 )
 
 ; 2021-04-09
-(defun UpdateGsBzEquipGraphyPostiontData () 
+(defun UpdateGsBzEquipGraphyPostiontDataMacro () 
   (foreach item (GetGsBzEquipGraphyFloorsList) 
     (mapcar '(lambda (x) 
                 (UpdateOneFloorGsBzEquipGraphyPostiontData 
@@ -1454,10 +1460,6 @@
           ) 
     oneFloorGsBzLevelAxisoTwoPointData
   )  
-)
-
-(defun c:foo () 
-  (UpdateGsBzEquipGraphyPostiontData)(princ)
 )
 
 ; Equipemnt Layout
