@@ -47,7 +47,14 @@
   (RemoveNullStringForListUtilsTest)
   (SplitListByNumUtilsTest)
   (StrToListUtilsTest)
+  (IsPositionInTheRegionUtilsTest)
   (DL:PrintTestResults (DL:CountBooleans *testList*))
+)
+
+; 2021-04-09
+(defun IsPositionInTheRegionUtilsTest () 
+  (AssertEqual 'IsPositionInTheRegionUtils (list (list 0 0 0) -1 2 -3 2) T)
+  (AssertEqual 'IsPositionInTheRegionUtils (list (list 0 0 0) -1 2 1 2) nil)
 )
 
 ; 2021-04-02

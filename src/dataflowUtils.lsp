@@ -1997,6 +1997,16 @@
   )
 )
 
+; 2021-04-09
+(defun IsPositionInTheRegionUtils (position firstX secondX firstY secondY /) 
+  (and 
+    (> (car position) firstX) 
+    (< (cadr position) secondX) 
+    (> (car position) firstY) 
+    (< (cadr position) secondY) 
+  )
+)
+
 ; Bool Function Utils
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;

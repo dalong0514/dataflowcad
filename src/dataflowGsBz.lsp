@@ -1406,9 +1406,22 @@
   (ChunkListByColumnIndexUtils (GetAllGsBzEquipGraphyDictListData) 0) 
 )
 
-(defun c:foo ()
-  (GetAllFloorGsBzVerticalAxisoTwoPointData)
+; 2021-04-09
+(defun GetOneFloorGsBzEquipGraphyDictListData () 
+  (car 
+    (ChunkListByColumnIndexUtils (GetAllGsBzEquipGraphyDictListData) 0) 
+  )
 )
+
+(defun c:foo ()
+  (mapcar '(lambda (x) 
+             (nth 2 x)
+           ) 
+    (cdr (GetOneFloorGsBzEquipGraphyDictListData))
+  )  
+)
+
+
 
 ; Equipemnt Layout
 ;;;-------------------------------------------------------------------------;;;
