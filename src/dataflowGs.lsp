@@ -918,7 +918,13 @@
   )
 )
 
-(defun c:brushBlockPropertyValueByCommand (/ sourceEntityNameList sourceEntityPropertyDict sourceEntityPropertyNameList sourceEntityPropertyValueList targetEntityNameList targetEntityPropertyDict) 
+; refactored at 2021-04-09
+(defun c:brushBlockPropertyValueByCommand () 
+  (ExecuteFunctionAfterVerifyDateUtils 'BrushBlockPropertyValueByCommandMacro '())
+)
+
+; refactored at 2021-04-09
+(defun BrushBlockPropertyValueByCommandMacro (/ sourceEntityNameList sourceEntityPropertyDict sourceEntityPropertyNameList sourceEntityPropertyValueList targetEntityNameList targetEntityPropertyDict) 
   (prompt "\n选择要提取属性的数据源（数据源只能选一个）：") 
   (setq sourceEntityNameList (GetEntityNameListBySSUtils (ssget '((0 . "INSERT")))))
   (setq sourceEntityPropertyDict (GetAllPropertyDictForOneBlock (car sourceEntityNameList)))
@@ -938,8 +944,9 @@
   (princ "刷数据完成！")(princ)
 )
 
+; refactored at 2021-04-09
 (defun c:brushBlockPropertyValue ()
-  (brushBlockPropertyValueByBox "brushBlockPropertyValueBox")
+  (ExecuteFunctionAfterVerifyDateUtils 'brushBlockPropertyValueByBox '("brushBlockPropertyValueBox"))
 )
 
 (defun brushBlockPropertyValueByBox (tileName / dcl_id selectedProperty selectedPropertyIndexList selectedPropertyNameList 
