@@ -1178,55 +1178,111 @@
 ;;;-------------------------------------------------------------------------;;;
 ; the macro for modify data
 
+; refactored at 2021-04-09
 (defun c:modifyCommonBlockProperty ()
-  (modifyCommonBlockPropertyByBox "modifyBlockPropertyBox")
+  (ExecuteFunctionAfterVerifyDateUtils 'modifyCommonBlockPropertyByBox '("modifyBlockPropertyBox"))
 )
 
+; refactored at 2021-04-09
 (defun c:modifyAllBlockProperty ()
-  (filterAndModifyBlockPropertyByBoxV2 "filterAndModifyPropertyBox")
+  (ExecuteFunctionAfterVerifyDateUtils 'filterAndModifyBlockPropertyByBoxV2 '("filterAndModifyPropertyBox"))
 )
 
-(defun c:modifyPipeProperty (/ pipePropertyNameList)
+; refactored at 2021-04-09
+(defun c:modifyPipeProperty ()
+  (ExecuteFunctionAfterVerifyDateUtils 'ModifyPipePropertyMacro '())
+)
+
+; refactored at 2021-04-09
+(defun ModifyPipePropertyMacro (/ pipePropertyNameList)
   (setq pipePropertyNameList (GetPipePropertyNameList))
   (filterAndModifyBlockPropertyByBox pipePropertyNameList "filterAndModifyEquipmentPropertyBox" "Pipe")
 )
 
-(defun c:modifyKsProperty (/ instrumentPropertyNameList)
+; refactored at 2021-04-09
+(defun c:modifyKsProperty () 
+  (ExecuteFunctionAfterVerifyDateUtils 'ModifyKsPropertyMacro '())
+)
+
+; refactored at 2021-04-09
+(defun ModifyKsPropertyMacro (/ instrumentPropertyNameList)
   (setq instrumentPropertyNameList (GetInstrumentPropertyNameList))
   (filterAndModifyBlockPropertyByBox instrumentPropertyNameList "filterAndModifyEquipmentPropertyBox" "Instrument")
 )
 
-(defun c:modifyReactorProperty (/ reactorPropertyNameList dataTypeList)
+; refactored at 2021-04-09
+(defun c:modifyReactorProperty () 
+  (ExecuteFunctionAfterVerifyDateUtils 'ModifyReactorPropertyMacro '())
+)
+
+; refactored at 2021-04-09
+(defun ModifyReactorPropertyMacro (/ reactorPropertyNameList dataTypeList)
   (setq reactorPropertyNameList (GetReactorPropertyNameList))
   (filterAndModifyBlockPropertyByBox reactorPropertyNameList "filterAndModifyEquipmentPropertyBox" "Reactor")
 )
 
-(defun c:modifyTankProperty (/ tankPropertyNameList dataTypeList)
+; refactored at 2021-04-09
+(defun c:modifyTankProperty () 
+  (ExecuteFunctionAfterVerifyDateUtils 'ModifyTankPropertyMacro '())
+)
+
+; refactored at 2021-04-09
+(defun ModifyTankPropertyMacro (/ tankPropertyNameList dataTypeList)
   (setq tankPropertyNameList (GetTankPropertyNameList))
   (filterAndModifyBlockPropertyByBox tankPropertyNameList "filterAndModifyEquipmentPropertyBox" "Tank")
 )
 
-(defun c:modifyHeaterProperty (/ heaterPropertyNameList dataTypeList)
+; refactored at 2021-04-09
+(defun c:modifyHeaterProperty () 
+  (ExecuteFunctionAfterVerifyDateUtils 'ModifyHeaterPropertyMacro '())
+)
+
+; refactored at 2021-04-09
+(defun ModifyHeaterPropertyMacro (/ heaterPropertyNameList dataTypeList)
   (setq heaterPropertyNameList (GetHeaterPropertyNameList))
   (filterAndModifyBlockPropertyByBox heaterPropertyNameList "filterAndModifyEquipmentPropertyBox" "Heater")
 )
 
-(defun c:modifyPumpProperty (/ pumpPropertyNameList dataTypeList)
+; refactored at 2021-04-09
+(defun c:modifyPumpProperty () 
+  (ExecuteFunctionAfterVerifyDateUtils 'ModifyPumpPropertyMacro '())
+)
+
+; refactored at 2021-04-09
+(defun ModifyPumpPropertyMacro (/ pumpPropertyNameList dataTypeList)
   (setq pumpPropertyNameList (GetPumpPropertyNameList))
   (filterAndModifyBlockPropertyByBox pumpPropertyNameList "filterAndModifyEquipmentPropertyBox" "Pump")
 )
 
-(defun c:modifyVacuumProperty (/ vacuumPropertyNameList dataTypeList)
+; refactored at 2021-04-09
+(defun c:modifyVacuumProperty () 
+  (ExecuteFunctionAfterVerifyDateUtils 'ModifyVacuumPropertyMacro '())
+)
+
+; refactored at 2021-04-09
+(defun ModifyVacuumPropertyMacro (/ vacuumPropertyNameList dataTypeList)
   (setq vacuumPropertyNameList (GetVacuumPropertyNameList))
   (filterAndModifyBlockPropertyByBox vacuumPropertyNameList "filterAndModifyEquipmentPropertyBox" "Vacuum")
 )
 
-(defun c:modifyCentrifugeProperty (/ centrifugePropertyNameList dataTypeList)
+; refactored at 2021-04-09
+(defun c:modifyCentrifugeProperty () 
+  (ExecuteFunctionAfterVerifyDateUtils 'ModifyCentrifugePropertyMacro '())
+)
+
+; refactored at 2021-04-09
+(defun ModifyCentrifugePropertyMacro (/ centrifugePropertyNameList dataTypeList)
   (setq centrifugePropertyNameList (GetCentrifugePropertyNameList))
   (filterAndModifyBlockPropertyByBox centrifugePropertyNameList "filterAndModifyEquipmentPropertyBox" "Centrifuge")
 )
 
-(defun c:modifyCustomEquipProperty (/ customEquipPropertyNameList dataTypeList)
+; refactored at 2021-04-09
+(defun c:modifyCustomEquipProperty () 
+  (ExecuteFunctionAfterVerifyDateUtils 'ModifyCustomEquipPropertyMacro '())
+)
+
+; refactored at 2021-04-09
+(defun ModifyCustomEquipPropertyMacro (/ customEquipPropertyNameList dataTypeList)
   (setq customEquipPropertyNameList (GetCustomEquipPropertyNameList))
   (filterAndModifyBlockPropertyByBox customEquipPropertyNameList "filterAndModifyEquipmentPropertyBox" "CustomEquip")
 )

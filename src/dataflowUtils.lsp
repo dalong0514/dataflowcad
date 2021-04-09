@@ -16,7 +16,7 @@
 (defun ExecuteFunctionAfterVerifyDateUtils (functionName argumentList /)
   (if (< *dataflowDate* 20210601)
     (vl-catch-all-apply functionName argumentList)
-    (alert "使用时间到期，请于管理员联系！")
+    (alert "用户未注册，请于管理员联系！")
   ) 
 )
 
