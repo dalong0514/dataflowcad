@@ -1263,11 +1263,12 @@
   )  
 )
 
-; 2021-03-15
+; refactored at 2021-04-09
 (defun GetGsBzEquipClassAndTypeAndTag (equipTag importedDataList / matchedList) 
   (setq matchedList (GetDottedPairValueUtils equipTag importedDataList))
   ; class is 1th, gsbzType is the 5th, and maybe change
-  (list (car matchedList) (nth 4 matchedList) (nth 1 matchedList))
+  ; refactored at 2021-04-09 gsbzType is [nth 2 matchedList]
+  (list (car matchedList) (nth 2 matchedList) (nth 1 matchedList))
 )
 
 ; 2021-03-15
