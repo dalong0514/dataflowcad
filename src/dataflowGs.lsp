@@ -2011,7 +2011,14 @@
   )
 )
 
-(defun c:numberPipelineAndTag (/ dataTypeList)
+
+; refactored at 2021-04-09
+(defun c:numberPipelineAndTag () 
+  (ExecuteFunctionAfterVerifyDateUtils 'NumberPipelineAndTagMacro '())
+)
+
+; refactored at 2021-04-09
+(defun NumberPipelineAndTagMacro (/ dataTypeList)
   (setq dataTypeList (GetNumberDataTypeList))
   (numberPipelineAndTagByBox dataTypeList "filterAndNumberBox")
 )
@@ -2254,7 +2261,13 @@
 
 ;;;----------------------------Enhanced Number Data------------------------;;;
 
-(defun c:enhancedNumber (/ dataTypeList)
+; refactored at 2021-04-09
+(defun c:enhancedNumber () 
+  (ExecuteFunctionAfterVerifyDateUtils 'EnhancedNumberMacro '())
+)
+
+; refactored at 2021-04-09
+(defun EnhancedNumberMacro (/ dataTypeList)
   (setq dataTypeList (GetEnhancedNumberDataTypeList))
   (enhancedNumberByBox dataTypeList "enhancedNumberBox")
 )
@@ -3018,12 +3031,14 @@
 ;;;-------------------------------------------------------------------------;;;
 ; Number DrawNum
 
+; refactored at 2021-04-09
 (defun c:numberDrawNum () 
-  (NumberDrawNumByBox "numberDrawNumBox")
+  (ExecuteFunctionAfterVerifyDateUtils 'NumberDrawNumByBox '("numberDrawNumBox"))
 )
 
+; refactored at 2021-04-09
 (defun c:brushDataDrawNum () 
-  (BrushDrawNum)
+  (ExecuteFunctionAfterVerifyDateUtils 'BrushDrawNum '())
 )
 
 (defun NumberDrawNumByBox (tileName / dcl_id propertyValue replacedSubstring status ss sslen previewList 
