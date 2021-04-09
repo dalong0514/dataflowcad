@@ -668,7 +668,13 @@
   )
 )
 
-(defun c:UpdatePublicPipe ()
+; refactored at 2021-04-09
+(defun c:UpdatePublicPipe () 
+  (ExecuteFunctionAfterVerifyDateUtils 'UpdatePublicPipeMacro '())
+)
+
+; refactored at 2021-04-09
+(defun UpdatePublicPipeMacro ()
   (UpdatePublicPipeByDataType "PublicPipeUpArrow")
   (UpdatePublicPipeByDataType "PublicPipeDownArrow")
   (UpdatePublicPipeByDataType "PublicPipeLine")
@@ -767,7 +773,13 @@
 ;;;-------------------------------------------------------------------------;;;
 ; logic for generate joinDrawArrow
 
-(defun c:UpdateJoinDrawArrow ()
+; refactored at 2021-04-09
+(defun c:UpdateJoinDrawArrow () 
+  (ExecuteFunctionAfterVerifyDateUtils 'UpdateJoinDrawArrowMacro '())
+)
+
+; refactored at 2021-04-09
+(defun UpdateJoinDrawArrowMacro ()
   (UpdateJoinDrawArrowByDataType "JoinDrawArrowTo")
   (UpdateJoinDrawArrowByDataType "JoinDrawArrowFrom")
   (alert "更新完成")(princ)
@@ -852,8 +864,13 @@
   )
 )
 
-; refactored at 2021-03-30
-(defun c:GenerateJoinDrawArrow (/ pipeSS pipeData insPt entityNameList)
+; refactored at 2021-04-09
+(defun c:GenerateJoinDrawArrow () 
+  (ExecuteFunctionAfterVerifyDateUtils 'GenerateJoinDrawArrowMacro '())
+)
+
+; refactored at 2021-04-09
+(defun GenerateJoinDrawArrowMacro (/ pipeSS pipeData insPt entityNameList)
   (VerifyGsLcBlockByName "JoinDrawArrowTo")
   (VerifyGsLcBlockByName "JoinDrawArrowFrom")
   (VerifyGsLcLayerByName "0DataFlow-GsLcJoinDrawArrow")
@@ -906,9 +923,9 @@
 ;;;-------------------------------------------------------------------------;;;
 ; Generate GsLcEquipData By Import CSV
 
-; 2021-03-18
+; refactored at 2021-04-09
 (defun c:ImportGsLcEquipData ()
-  (ImportEquipDataStrategyByBox "importGsEquipDataBox" "GsLcData")
+  (ExecuteFunctionAfterVerifyDateUtils 'ImportEquipDataStrategyByBox '("importGsEquipDataBox" "GsLcData"))
 )
 
 ; 2021-03-09
