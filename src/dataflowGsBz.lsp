@@ -1413,6 +1413,7 @@
   )
 )
 
+; 2021-04-09
 (defun UpdateGsBzEquipGraphyPostiontData () 
   (foreach item (GetGsBzEquipGraphyFloorsList) 
     (mapcar '(lambda (x) 
@@ -1427,12 +1428,14 @@
   )
 )
 
+; 2021-04-09
 (defun GetGsBzEquipGraphyFloorsList ()
   (mapcar '(lambda (x) (car x)) 
     (GetAllFloorGsBzEquipGraphyDictListData)
   )   
 )
 
+; 2021-04-09
 (defun UpdateOneFloorGsBzEquipGraphyPostiontData (equipData oneFloorGsBzLevelAxisoTwoPointData oneFloorGsBzVerticalAxisoTwoPointData /)
   (mapcar '(lambda (x) 
             (mapcar '(lambda (y) 
@@ -1454,7 +1457,6 @@
 
 (defun c:foo () 
   (UpdateGsBzEquipGraphyPostiontData)(princ)
-  ; (GetDottedPairValueUtils "0.0" (GetAllFloorGsBzVerticalAxisoTwoPointData))
 )
 
 ; Equipemnt Layout
