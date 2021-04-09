@@ -1324,7 +1324,7 @@
 )
 
 (defun c:foo ()
-  (GetAllFloorGsBzLevelAxisoTwoPointData)
+  (type *dataflowDate*)
 )
 
 ; Equipemnt Layout
