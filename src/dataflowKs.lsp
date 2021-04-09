@@ -10,9 +10,9 @@
   (alert "仪表设计流最新版本号 V0.1，更新时间：2021-04-05\n数据流内网地址：192.168.1.38")(princ)
 )
 
-; 2021-04-02
+; refactored at 2021-04-09
 (defun c:updateKsInstallMaterialMultiple ()
-  (updateKsInstallMaterialByBox "updateKsInstallMaterialBox")
+  (ExecuteFunctionAfterVerifyDateUtils 'updateKsInstallMaterialByBox '("updateKsInstallMaterialBox"))
 )
 
 ; 2021-04-02
@@ -60,8 +60,13 @@
   (princ)
 )
 
-; 2021-03-22
-(defun c:exportKsData (/ dataTypeList dataTypeChNameList)
+; refactored at 2021-04-09
+(defun c:exportKsData () 
+  (ExecuteFunctionAfterVerifyDateUtils 'ExportKsDataMacro '())
+)
+
+; refactored at 2021-04-09
+(defun ExportKsDataMacro (/ dataTypeList dataTypeChNameList)
   (setq dataTypeList '("KsInstallMaterial"))
   (setq dataTypeChNameList '("安装材料"))
   (ExportTempDataByBox "exportTempDataBox" dataTypeList dataTypeChNameList "Ks")
@@ -292,9 +297,9 @@
 ;;;-------------------------------------------------------------------------;;;
 ; Update Data By temp CSV
 
-; 2021-03-24
+; refactored at 2021-04-09
 (defun c:UpdateKsData ()
-  (UpdatekDataStrategyByBoxUtils "updateDataFlowDataBox" "Ks")
+  (ExecuteFunctionAfterVerifyDateUtils 'UpdatekDataStrategyByBoxUtils '("updateDataFlowDataBox" "Ks"))
 )
 
 ; 2021-03-24
