@@ -730,8 +730,13 @@
 ; Migrate Lc Data to Bz Layout
 ;;;-------------------------------------------------------------------------;;;
 
-; 2021-03-09
-(defun c:extractGsLcEquipData (/ lcEquipData) 
+; refactored at 2021-04-09
+(defun c:extractGsLcEquipData () 
+  (ExecuteFunctionAfterVerifyDateUtils 'ExtractGsLcEquipDataMacro '())
+)
+
+; refactored at 2021-04-09
+(defun ExtractGsLcEquipDataMacro (/ lcEquipData) 
   (setq lcEquipData (GetAllMarkedEquipDataListByTypeListUtils))
   (if (not (IsGetNullGsLcEquipData lcEquipData)) 
     (progn 
@@ -752,8 +757,13 @@
   )
 )
 
-; 2021-03-09
-(defun c:migrateGsLcEquipData (/ insPt lcEquipData) 
+; refactored at 2021-04-09
+(defun c:migrateGsLcEquipData () 
+  (ExecuteFunctionAfterVerifyDateUtils 'MigrateGsLcEquipDataMacro '())
+)
+
+; refactored at 2021-04-09
+(defun MigrateGsLcEquipDataMacro (/ insPt lcEquipData) 
   (setq insPt (getpoint "\n选取设备模块插入点："))
   (setq lcEquipData (vl-bb-ref 'gsLcEquipData))
   (if (/= lcEquipData nil) 
@@ -898,9 +908,9 @@
 ;;;-------------------------------------------------------------------------;;;
 ; Generate GsBzEquipData By Import CSV
 
-; 2021-03-11
+; refactored at 2021-04-09
 (defun c:ImportGsBzEquipData ()
-  (ImportEquipDataStrategyByBox "importGsEquipDataBox" "GsBzData")
+  (ExecuteFunctionAfterVerifyDateUtils 'ImportEquipDataStrategyByBox '("importGsEquipDataBox" "GsBzData"))
 )
 
 ; 2021-03-11
@@ -1093,9 +1103,9 @@
 ;;;-------------------------------------------------------------------------;;;
 ; Update GsBzEquipGraph
 
-; 2021-03-10
+; refactored at 2021-04-09
 (defun c:UpdateGsBzEquipGraph ()
-  (UpdateGsBzEquipGraphByBox "updateGsBzEquipGraphBox")
+  (ExecuteFunctionAfterVerifyDateUtils 'UpdateGsBzEquipGraphByBox '("updateGsBzEquipGraphBox"))
 )
 
 ; 2021-03-09
