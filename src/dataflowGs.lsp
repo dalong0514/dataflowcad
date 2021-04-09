@@ -1082,8 +1082,9 @@
 ;;;-------------------------------------------------------------------------;;;
 ; logic for generatePublicProcessElement
 
+; refactored at 2021-04-09
 (defun c:generatePublicProcessElement ()
-  (generatePublicProcessElementByBox "generatePublicProcessElementBox" "Pipe")
+  (ExecuteFunctionAfterVerifyDateUtils 'generatePublicProcessElementByBox '("generatePublicProcessElementBox" "Pipe"))
 )
 
 (defun generatePublicProcessElementByBox (tileName dataType / dcl_id pipeSourceDirection patternValue status ss sslen matchedList blockDataList entityNameList previewDataList)
