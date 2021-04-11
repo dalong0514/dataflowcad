@@ -66,10 +66,17 @@
 )
 
 ; refactored at 2021-04-09
-(defun ExportKsDataMacro (/ dataTypeList dataTypeChNameList)
+(defun ExportKsDataMacroV1 (/ dataTypeList dataTypeChNameList)
   (setq dataTypeList '("KsInstallMaterial"))
   (setq dataTypeChNameList '("安装材料"))
   (ExportTempDataByBox "exportTempDataBox" dataTypeList dataTypeChNameList "Ks")
+)
+
+; 2021-04-11
+(defun ExportKsDataMacro (/ dataTypeList dataTypeChNameList)
+  (setq dataTypeList '("KsInstallMaterial"))
+  (setq dataTypeChNameList '("安装材料"))
+  (ExportCADDataByBox "exportCADDataBox" dataTypeList dataTypeChNameList "Ks")
 )
 
 ; 2021-03-22

@@ -135,6 +135,63 @@ exportTempDataBox : dialog {
   }
 }
 
+// 2021-04-11
+exportCADDataBox : dialog {
+  label = "天正设计流数据一体化工艺V2.0———导出CAD数据"; 
+  key = "exportCADData";
+  : row {
+    : boxed_radio_column {
+      key = "exportDataTypeBox";
+      width = 80;
+      : column {
+        height = 2;
+        : popup_list { 
+          label = "选择要导出的数据类型";
+          edit_width = 29;
+          key = "exportDataType"; 
+          list = "";
+          value = "";
+        }
+      }
+      : spacer { height = 1; }
+      : text {
+        key = "exportDataNumMsg";
+        label = "导出数据数量：";
+      } 
+      : spacer { height = 1; }
+      : text {
+        key = "exportBtnMsg";
+        label = "导出数据状态：";
+      } 
+      : spacer { height = 4; }
+      : row { 
+        fixed_width = true; 
+        alignment = centered; 
+        : button { 
+          key = "btnSelect"; 
+          label = "选取"; 
+          is_default = "true"; 
+        } 
+        : spacer { width = 1; } 
+        : button { 
+          key = "btnAllSelect"; 
+          label = "全选"; 
+          is_default = "true"; 
+        } 
+        : spacer { width = 1; } 
+        : button { 
+          key = "btnExportData"; 
+          label = "导出"; 
+          is_default = "true"; 
+        } 
+        : spacer { width = 1; }  
+        cancel_button; 
+      }
+      : spacer { height = 3; } 
+    }
+  }
+}
+
 filterAndNumberBox : dialog {
   label = "天正设计流数据一体化工艺V2.0———批量编号"; 
   key = "filterAndNumber";
