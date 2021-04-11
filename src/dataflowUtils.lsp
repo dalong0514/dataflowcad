@@ -2662,6 +2662,12 @@
 )
 
 ; 2021-04-11
+(defun ExportCADBlockDataUtils (fileName dataList / fileDir) 
+  (setq fileDir (strcat "D:\\dataflowcad\\tempdata\\" fileName ".txt"))
+  (WriteDataListToFileUtils fileDir dataList) 
+)
+
+; 2021-04-11
 (defun ExportCADDataByBox (tileName dataTypeList dataTypeChNameList classType / dcl_id status fileName exportDataType dataType exportMsgBtnStatus ss sslen dataList)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\dcl\\" "dataflow.dcl")))
   (setq status 2)
