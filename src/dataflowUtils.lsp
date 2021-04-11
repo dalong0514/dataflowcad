@@ -2694,9 +2694,6 @@
       (set_tile "exportBtnMsg" "导出数据状态：已完成")
     )
     (if (= exportMsgBtnStatus 2)
-      (set_tile "exportBtnMsg" "文件名不能为空！")
-    )
-    (if (= exportMsgBtnStatus 3)
       (set_tile "exportBtnMsg" "请先选择要导的数据！")
     )
     (if (/= sslen nil)
@@ -2726,7 +2723,7 @@
       (progn 
         (setq fileName (GetFileNameByDataTypeStrategy dataType))
         (cond 
-          ((= dataList nil) (setq exportMsgBtnStatus 3))
+          ((= dataList nil) (setq exportMsgBtnStatus 2))
           (T (progn 
               (ExportBlockDataUtils fileName dataList)
               (setq exportMsgBtnStatus 1)
