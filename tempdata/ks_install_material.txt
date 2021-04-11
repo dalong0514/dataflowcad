@@ -1,0 +1,47 @@
+﻿{"class": "ksinstallmaterial","standardnum": "Q41F-16P","materialtype": "法兰球阀","specification": "50-16 RF","material": "304","num": "1","multiple": "55","kstype": "","comment": ""}
+{"class": "ksinstallmaterial","standardnum": "GB/T6175","materialtype": "Ⅱ型六角螺母","specification": "M16","material": "30CrMo","num": "16","multiple": "55","kstype": "","comment": ""}
+{"class": "ksinstallmaterial","standardnum": "HG/T20613","materialtype": "全螺纹螺柱","specification": "M16x85","material": "35CrMo","num": "8","multiple": "55","kstype": "","comment": ""}
+{"class": "ksinstallmaterial","standardnum": "HG/T20606","materialtype": "垫片","specification": "RF-E  50-16  RSB/304","material": "增强柔性石墨板","num": "2","multiple": "55","kstype": "","comment": ""}
+{"class": "ksinstallmaterial","standardnum": "Q41F-16P","materialtype": "法兰球阀","specification": "25-16 RF","material": "304","num": "1","multiple": "21","kstype": "","comment": ""}
+{"class": "ksinstallmaterial","standardnum": "GB/T6175","materialtype": "Ⅱ型六角螺母","specification": "M12","material": "30CrMo","num": "16","multiple": "21","kstype": "","comment": ""}
+{"class": "ksinstallmaterial","standardnum": "HG/T20613","materialtype": "全螺纹螺柱","specification": "M12x75","material": "35CrMo","num": "8","multiple": "21","kstype": "","comment": ""}
+{"class": "ksinstallmaterial","standardnum": "HG/T20606","materialtype": "垫片","specification": "RF-E  25-16  RSB/304","material": "增强柔性石墨板","num": "2","multiple": "21","kstype": "","comment": ""}
+{"class": "ksinstallmaterial","standardnum": "Q41F-16P","materialtype": "法兰球阀","specification": "20-16 RF","material": "304","num": "1","multiple": "41","kstype": "","comment": ""}
+{"class": "ksinstallmaterial","standardnum": "GB/T6175","materialtype": "Ⅱ型六角螺母","specification": "M12","material": "30CrMo","num": "16","multiple": "41","kstype": "","comment": ""}
+{"class": "ksinstallmaterial","standardnum": "HG/T20613","materialtype": "全螺纹螺柱","specification": "M12x75","material": "35CrMo","num": "8","multiple": "41","kstype": "","comment": ""}
+{"class": "ksinstallmaterial","standardnum": "HG/T20606","materialtype": "垫片","specification": "RF-E  25-16  RSB/304","material": "增强柔性石墨板","num": "2","multiple": "41","kstype": "","comment": ""}
+{"class": "ksinstallmaterial","standardnum": "GB/T6175","materialtype": "Ⅱ型六角螺母","specification": "M12","material": "30CrMo","num": "8","multiple": "39","kstype": "","comment": ""}
+{"class": "ksinstallmaterial","standardnum": "HG/T20613","materialtype": "全螺纹螺柱","specification": "M12x75","material": "35CrMo","num": "4","multiple": "39","kstype": "","comment": ""}
+{"class": "ksinstallmaterial","standardnum": "HG/T20606","materialtype": "垫片","specification": "RF-E  25-16  RSB/304","material": "增强柔性石墨板","num": "1","multiple": "39","kstype": "","comment": ""}
+{"class": "ksinstallmaterial","standardnum": "GB/T14976","materialtype": "无缝钢管","specification": "%%C14x2","material": "304","num": "0.1","multiple": "19","kstype": "","comment": ""}
+{"class": "ksinstallmaterial","standardnum": "YZG5-20","materialtype": "对焊式压力表接头","specification": "PN63，M20x1.5/%%C14","material": "304","num": "1","multiple": "19","kstype": "","comment": ""}
+{"class": "ksinstallmaterial","standardnum": "","materialtype": "垫片","specification": "%%C14/8，δ=2","material": "增强柔性石墨板","num": "1","multiple": "19","kstype": "","comment": ""}
+{"class": "ksinstallmaterial","standardnum": "Q41F-16P","materialtype": "法兰球阀","specification": "25-16 RF","material": "304","num": "1","multiple": "19","kstype": "","comment": ""}
+{"class": "ksinstallmaterial","standardnum": "HG/T 20592","materialtype": "法兰盖","specification": "BL 25-16 RF","material": "304","num": "1","multiple": "19","kstype": "","comment": ""}
+{"class": "ksinstallmaterial","standardnum": "GB/T6175","materialtype": "Ⅱ型六角螺母","specification": "M12","material": "30CrMo","num": "16","multiple": "19","kstype": "","comment": ""}
+{"class": "ksinstallmaterial","standardnum": "HG/T20613","materialtype": "全螺纹螺柱","specification": "M12x75","material": "35CrMo","num": "8","multiple": "19","kstype": "","comment": ""}
+{"class": "ksinstallmaterial","standardnum": "HG/T20606","materialtype": "垫片","specification": "RF-E  25-16  RSB/304","material": "增强柔性石墨板","num": "2","multiple": "19","kstype": "","comment": ""}
+{"class": "ksinstallmaterial","standardnum": "GB/T8163","materialtype": "无缝钢管","specification": "%%C14x2","material": "20","num": "0.1","multiple": "51","kstype": "","comment": ""}
+{"class": "ksinstallmaterial","standardnum": "YZG5-20","materialtype": "对焊式压力表接头","specification": "PN63，M20x1.5/%%C14","material": "20","num": "1","multiple": "51","kstype": "","comment": ""}
+{"class": "ksinstallmaterial","standardnum": "","materialtype": "垫片","specification": "%%C14/8，δ=2","material": "增强柔性石墨板","num": "1","multiple": "51","kstype": "","comment": ""}
+{"class": "ksinstallmaterial","standardnum": "Q41F-16P","materialtype": "法兰球阀","specification": "25-16 RF","material": "20","num": "1","multiple": "51","kstype": "","comment": ""}
+{"class": "ksinstallmaterial","standardnum": "HG/T 20592","materialtype": "法兰盖","specification": "BL 25-16 RF","material": "20","num": "1","multiple": "51","kstype": "","comment": ""}
+{"class": "ksinstallmaterial","standardnum": "GB/T6175","materialtype": "Ⅱ型六角螺母","specification": "M12","material": "30CrMo","num": "16","multiple": "51","kstype": "","comment": ""}
+{"class": "ksinstallmaterial","standardnum": "HG/T20613","materialtype": "全螺纹螺柱","specification": "M12x75","material": "35CrMo","num": "8","multiple": "51","kstype": "","comment": ""}
+{"class": "ksinstallmaterial","standardnum": "HG/T20606","materialtype": "垫片","specification": "RF-E  25-16  RSB/304","material": "增强柔性石墨板","num": "2","multiple": "51","kstype": "","comment": ""}
+{"class": "ksinstallmaterial","standardnum": "GB/T6175","materialtype": "Ⅱ型六角螺母","specification": "M12","material": "30CrMo","num": "16","multiple": "1","kstype": "","comment": ""}
+{"class": "ksinstallmaterial","standardnum": "HG/T20613","materialtype": "全螺纹螺柱","specification": "M12x75","material": "35CrMo","num": "8","multiple": "1","kstype": "","comment": ""}
+{"class": "ksinstallmaterial","standardnum": "HG/T20606","materialtype": "垫片","specification": "RF-E  25-16  RSB/304","material": "增强柔性石墨板","num": "2","multiple": "1","kstype": "","comment": ""}
+{"class": "ksinstallmaterial","standardnum": "Q41F-16P","materialtype": "法兰球阀","specification": "25-16 RF","material": "304","num": "1","multiple": "1","kstype": "","comment": ""}
+{"class": "ksinstallmaterial","standardnum": "HG/T 20592","materialtype": "法兰盖","specification": "BL 25-16 RF","material": "304","num": "1","multiple": "1","kstype": "","comment": ""}
+{"class": "ksinstallmaterial","standardnum": "","materialtype": "垫片","specification": "%%C14/8，δ=2","material": "增强柔性石墨板","num": "1","multiple": "1","kstype": "","comment": ""}
+{"class": "ksinstallmaterial","standardnum": "YZF1-1","materialtype": "冷凝圈","specification": "PN63，%%C14x2","material": "304","num": "1","multiple": "1","kstype": "","comment": ""}
+{"class": "ksinstallmaterial","standardnum": "YZG5-20","materialtype": "对焊式压力表接头","specification": "PN63，M20x1.5/%%C14","material": "304","num": "1","multiple": "1","kstype": "","comment": ""}
+{"class": "ksinstallmaterial","standardnum": "Q41F-16P","materialtype": "法兰球阀","specification": "25-16 RF","material": "304","num": "1","multiple": "1","kstype": "","comment": ""}
+{"class": "ksinstallmaterial","standardnum": "HG/T 20592","materialtype": "法兰盖","specification": "BL 25-16 RF","material": "304","num": "1","multiple": "1","kstype": "","comment": ""}
+{"class": "ksinstallmaterial","standardnum": "","materialtype": "垫片","specification": "%%C14/8，δ=2","material": "增强柔性石墨板","num": "1","multiple": "1","kstype": "","comment": ""}
+{"class": "ksinstallmaterial","standardnum": "YZF1-1","materialtype": "冷凝圈","specification": "PN63，%%C14x2","material": "304","num": "1","multiple": "1","kstype": "","comment": ""}
+{"class": "ksinstallmaterial","standardnum": "YZG5-20","materialtype": "对焊式压力表接头","specification": "PN63，M20x1.5/%%C14","material": "304","num": "1","multiple": "1","kstype": "","comment": ""}
+{"class": "ksinstallmaterial","standardnum": "GB/T6175","materialtype": "Ⅱ型六角螺母","specification": "M12","material": "30CrMo","num": "16","multiple": "1","kstype": "","comment": ""}
+{"class": "ksinstallmaterial","standardnum": "HG/T20613","materialtype": "全螺纹螺柱","specification": "M12x75","material": "35CrMo","num": "8","multiple": "1","kstype": "","comment": ""}
+{"class": "ksinstallmaterial","standardnum": "HG/T20606","materialtype": "垫片","specification": "RF-E  25-16  RSB/304","material": "增强柔性石墨板","num": "2","multiple": "1","kstype": "","comment": ""}

@@ -2731,7 +2731,7 @@
         (cond 
           ((= dataList nil) (setq exportMsgBtnStatus 2))
           (T (progn 
-              (ExportBlockDataUtils fileName dataList)
+              (ExportCADBlockDataUtils fileName dataList)
               (setq exportMsgBtnStatus 1)
             ))
         )  
