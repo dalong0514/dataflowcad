@@ -912,6 +912,8 @@
 ; refactored at 2021-04-09
 (defun c:ImportGsBzEquipData ()
   (ExecuteFunctionAfterVerifyDateUtils 'ImportEquipDataStrategyByBox '("importGsEquipDataBox" "GsBzData"))
+  ; refactored at 2021-04-12
+  (PurgeAllUtils)
 )
 
 ; 2021-03-11
