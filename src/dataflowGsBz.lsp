@@ -1016,9 +1016,10 @@
   (setq insPt (getpoint "\n选取设备位号插入点："))
   ; sorted by EquipTag or Volume
   (setq dataList (SortEquipDataStrategy importedDataList sortedTypeResult))
-  (if (= importDataType "GsBzData") 
-    (GenerateGsBzEquipDataByImport insPt dataList dataType sortedTypeResult)
-    (GenerateGsLcEquipDataByImport insPt dataList dataType sortedTypeResult)
+  ; refactored at 2021-04-12
+  (cond 
+    ((= importDataType "GsBzData") (GenerateGsBzEquipDataByImport insPt dataList dataType sortedTypeResult))
+    ((= importDataType "GsLcData") (GenerateGsLcEquipDataByImport insPt dataList dataType sortedTypeResult))
   )
 )
 
