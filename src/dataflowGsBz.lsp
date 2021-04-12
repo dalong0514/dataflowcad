@@ -49,6 +49,27 @@
   resultList
 )
 
+; 2021-04-12
+(defun GetAllGsBzEquipBlockNameListStrategy (dataType / entityData resultList) 
+  (StealAllGsBzEquipBlocks)
+  (setq entityData (tblnext "block" T)) 
+  (while entityData 
+    (if (wcmatch (cdr (assoc 2 entityData)) (GetGsBzEquipBlockNamePattern dataType)) 
+      (setq resultList (append resultList (list (cdr (assoc 2 entityData)))))
+    )
+    (setq entityData (tblnext "block")) 
+  ) 
+  resultList
+)
+
+; 2021-04-12
+(defun GetGsBzEquipBlockNamePattern (dataType /) 
+  (cond 
+    ((= dataType "Reactor") "GsBzReactor*")
+    ((= dataType "Tank") "GsBzTank*")
+  )
+)
+
 ; utils Function for  Equipemnt Layout
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
