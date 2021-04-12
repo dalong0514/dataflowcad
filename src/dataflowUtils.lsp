@@ -2654,10 +2654,15 @@
   (princ)
 )
 
-; 2021-04-11
-(defun GetFileNameByDataTypeStrategy (dataType / result)
+; 2021-04-12
+(defun GetFileNameByDataTypeStrategy (dataType /)
   (cond 
-    ((= dataType "KsInstallMaterial") (setq result "KsInstallMaterial"))
+    ((= dataType "Pipe") "GsPipe")
+    ((= dataType "Equipment") "GsEquipment")
+    ((= dataType "InstrumentAndEquipmentAndPipe") "GsInstrument")
+    ((= dataType "OuterPipe") "GsOuterPipe")
+    ((= dataType "GsCleanAir") "GsCleanAir")
+    ((= dataType "KsInstallMaterial") "KsInstallMaterial")
   )  
 )
 
