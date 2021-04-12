@@ -2657,7 +2657,7 @@
 ; 2021-04-11
 (defun GetFileNameByDataTypeStrategy (dataType / result)
   (cond 
-    ((= dataType "KsInstallMaterial") (setq result "ks_install_material"))
+    ((= dataType "KsInstallMaterial") (setq result "KsInstallMaterial"))
   )  
 )
 
