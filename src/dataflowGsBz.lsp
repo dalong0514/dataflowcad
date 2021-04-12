@@ -6,6 +6,14 @@
   )
 )
 
+; 2021-04-12
+(defun c:syncCurrentDrawGsBzEquipBlock (/ item) 
+  (foreach item (GetCurrentDrawAllGsBzEquipBlockNameList)
+    (command "._attsync" "N" item)
+  )
+  (princ)
+)
+
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
 ; utils Function for  Equipemnt Layout
@@ -68,6 +76,18 @@
     ((= dataType "Reactor") "GsBzReactor*")
     ((= dataType "Tank") "GsBzTank*")
   )
+)
+
+; 2021-04-12
+(defun GetCurrentDrawAllGsBzEquipBlockNameList (/ entityData resultList) 
+  (setq entityData (tblnext "block" T)) 
+  (while entityData 
+    (if (wcmatch (cdr (assoc 2 entityData)) "GsBz*") 
+      (setq resultList (append resultList (list (cdr (assoc 2 entityData)))))
+    )
+    (setq entityData (tblnext "block")) 
+  ) 
+  resultList
 )
 
 ; utils Function for  Equipemnt Layout
