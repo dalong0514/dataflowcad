@@ -2072,6 +2072,16 @@
 ;;;-------------------------------------------------------------------------;;;
 ; Extract Data Utils
 
+; 2021-04-14
+(defun ExtractProjectNumUtils (projectInfo /)
+  (RegExpReplace projectInfo "(.*)-(.*)-(.*)-(.*).*" "$1" nil nil)
+)
+
+; 2021-04-14
+(defun ExtractMonomerNumUtils (projectInfo /)
+  (RegExpReplace projectInfo "(.*)-(.*)-(.*)-(.*).*" "$2" nil nil)
+)
+
 ; 2021-03-08
 (defun ExtractGsPipeClassUtils (pipenum /)
   (RegExpReplace pipenum ".*-(\\d[A-Z]\\d+).*" "$1" nil nil)
@@ -2768,6 +2778,26 @@
   )
   (unload_dialog dcl_id)
   (princ)
+)
+
+; 2021-04-14
+(defun GetProjectInfoUtils (/ ss allDrawLabelData)
+  ; sort by x cordinate and the by y cordinate - 2021-04-02
+  (setq ss (SortSelectionSetByRowColumn (GetAllBlockSSByDataTypeUtils "DrawLabel")))
+  (setq allDrawLabelData (GetAllPropertyDictForOneBlock (car (GetEntityNameListBySSUtils ss))))
+  (list 
+    (cons "projectNum" (GetDottedPairValueUtils "dwgno" allDrawLabelData))
+    (cons "monomerNum" (GetDottedPairValueUtils "dwgno" allDrawLabelData))
+    (cons "projectName" 
+      (strcat (GetDottedPairValueUtils "project1" allDrawLabelData) 
+              (GetDottedPairValueUtils "project2l1" allDrawLabelData) 
+              (GetDottedPairValueUtils "project2l2" allDrawLabelData)) 
+    )
+  )
+)
+
+(defun c:foo ()
+  (GetProjectInfoUtils)
 )
 
 ; Export All Type Data Utils Function

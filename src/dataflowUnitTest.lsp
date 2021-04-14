@@ -48,7 +48,19 @@
   (SplitListByNumUtilsTest)
   (StrToListUtilsTest)
   (IsPositionInTheRegionUtilsTest)
+  (ExtractProjectNumUtilsTest)
+  (ExtractMonomerNumUtilsTest)
   (DL:PrintTestResults (DL:CountBooleans *testList*))
+)
+
+; 2021-04-14
+(defun ExtractMonomerNumUtilsTest () 
+  (AssertEqual 'ExtractMonomerNumUtils (list "S20C14-23-04-01") "23")
+)
+
+; 2021-04-14
+(defun ExtractProjectNumUtilsTest () 
+  (AssertEqual 'ExtractProjectNumUtils (list "S20C14-23-04-01") "S20C14")
 )
 
 ; 2021-04-09
