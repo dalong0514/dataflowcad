@@ -256,21 +256,27 @@
   resultList
 )
 
+; refactored at 2021-04-14
 (defun GetInstrumentPropertyIDListStrategy (dataType /)
   (cond 
     ((= dataType "InstrumentP") 
-     (list (cons 0 "entityhandle") (cons 5 "substance") (cons 6 "temp") (cons 7 "pressure") (cons 12 "tag")))
+     (list (cons 0 "entityhandle") (cons 12 "tag")))
+    ;  (list (cons 0 "entityhandle") (cons 5 "substance") (cons 6 "temp") (cons 7 "pressure") (cons 12 "tag")))
     ((= dataType "InstrumentL") 
-     (list (cons 0 "entityhandle") (cons 3 "substance") (cons 4 "temp") (cons 5 "pressure") (cons 10 "tag")))
+     (list (cons 0 "entityhandle") (cons 10 "tag")))
+    ; (list (cons 0 "entityhandle") (cons 3 "substance") (cons 4 "temp") (cons 5 "pressure") (cons 10 "tag")))
   ) 
 )
-  
+
+; refactored at 2021-04-14
 (defun GetPipePropertyIDListStrategy (dataType /)
   (cond 
     ((= dataType "InstrumentP") 
-     (list (cons 0 "entityhandle") (cons 5 "substance") (cons 6 "temp") (cons 7 "pressure") (cons 12 "pipenum")))
+     (list (cons 0 "entityhandle") (cons 12 "pipenum")))
+    ; (list (cons 0 "entityhandle") (cons 5 "substance") (cons 6 "temp") (cons 7 "pressure") (cons 12 "pipenum")))
     ((= dataType "InstrumentL") 
-     (list (cons 0 "entityhandle") (cons 3 "substance") (cons 4 "temp") (cons 5 "pressure") (cons 10 "pipenum")))
+     (list (cons 0 "entityhandle") (cons 10 "pipenum")))
+    ; (list (cons 0 "entityhandle") (cons 3 "substance") (cons 4 "temp") (cons 5 "pressure") (cons 10 "pipenum")))
   ) 
 )
 
