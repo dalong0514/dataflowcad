@@ -2699,10 +2699,12 @@
   )  
 )
 
-; 2021-04-11
+; refactored 2021-04-14
 (defun ExportCADBlockDataUtils (fileName dataList / fileDir) 
   (setq fileDir (strcat "D:\\dataflowcad\\tempdata\\" fileName ".txt"))
-  (WriteDataListToFileUtils fileDir dataList) 
+  (WriteDataListToFileUtils 
+    fileDir 
+    (cons (DictListToJsonStringUtils (GetProjectInfoUtils)) dataList)) 
 )
 
 ; 2021-04-11
@@ -2782,8 +2784,7 @@
 
 ; 2021-04-14
 (defun GetProjectInfoUtils (/ ss allDrawLabelData)
-  ; sort by x cordinate and the by y cordinate - 2021-04-02
-  (setq ss (SortSelectionSetByRowColumn (GetAllBlockSSByDataTypeUtils "DrawLabel")))
+  (setq ss (SortSelectionSetByXYZ (GetAllBlockSSByDataTypeUtils "DrawLabel")))
   (setq allDrawLabelData (GetAllPropertyDictForOneBlock (car (GetEntityNameListBySSUtils ss))))
   (list 
     (cons "projectNum" (ExtractProjectNumUtils (GetDottedPairValueUtils "dwgno" allDrawLabelData)))
@@ -2794,10 +2795,6 @@
               (GetDottedPairValueUtils "project2l2" allDrawLabelData)) 
     )
   )
-)
-
-(defun c:foo ()
-  (GetProjectInfoUtils)
 )
 
 ; Export All Type Data Utils Function
