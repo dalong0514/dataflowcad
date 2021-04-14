@@ -1407,6 +1407,29 @@
   (GetBlockAllPropertyDictListUtils (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "Equipment")))
 )
 
+; 2021-03-14
+(defun GetAllPipeAndEquipDataUtils () 
+  (GetBlockAllPropertyDictListUtils (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "EquipmentAndPipe")))
+)
+
+; refacotred at 2021-03-14
+(defun GetAllPipeHandleListUtils () 
+  (mapcar '(lambda (x) 
+             (cdr (assoc "entityhandle" x))
+           ) 
+    (GetAllPipeDataUtils)
+  )
+)
+
+; 2021-04-14
+(defun GetAllPipeAndEquipHandleListUtils () 
+  (mapcar '(lambda (x) 
+             (cdr (assoc "entityhandle" x))
+           ) 
+    (GetAllPipeAndEquipDataUtils)
+  )
+)
+
 ; 2021-03-09
 (defun GetAllMarkedDataByTypeUtils (dataType /) 
   (cons dataType 

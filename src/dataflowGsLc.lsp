@@ -779,6 +779,49 @@
 ;;;-------------------------------------------------------------------------;;;
 ; logic for generate joinDrawArrow
 
+; 2021-04-14
+(defun c:UpdateInstrumentLocation () 
+  (ExecuteFunctionAfterVerifyDateUtils 'UpdateInstrumentLocationMacro '())
+)
+
+; 2021-04-14
+(defun UpdateInstrumentLocationMacro (/ entityNameList allPipeAndEquipHandleList relatedPipeData) 
+  (setq allPipeAndEquipHandleList (GetAllPipeAndEquipHandleListUtils))
+  ; must filter first
+  (setq entityNameList 
+    ; relatedid value maybe null
+    (vl-remove-if-not '(lambda (x) 
+                        ; relatedid may be not in the allHandleList
+                        (and (/= (cdr (assoc "version" (GetAllPropertyDictForOneBlock x))) "") 
+                             (/= (member (cdr (assoc "version" (GetAllPropertyDictForOneBlock x))) allPipeAndEquipHandleList) nil)) 
+                      ) 
+      (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "Instrument"))
+    )
+  ) 
+  (mapcar '(lambda (x) 
+             (setq relatedPipeData (append relatedPipeData 
+                                     (list (GetAllPropertyDictForOneBlock (handent (cdr (assoc "version" x)))))
+                                   ))
+           ) 
+    (GetBlockAllPropertyDictListUtils entityNameList)
+  ) 
+  (mapcar '(lambda (x y) 
+            (ModifyMultiplePropertyForOneBlockUtils x 
+              (list "LOCATION") 
+              (list 
+                (if (assoc "tag" y) 
+                  (GetDottedPairValueUtils "tag" y)
+                  (GetDottedPairValueUtils "pipenum" y)
+                ) 
+              )
+            )
+          ) 
+    entityNameList
+    relatedPipeData 
+  ) 
+  (alert "更新完成")(princ)
+)
+
 ; refactored at 2021-04-09
 (defun c:UpdateJoinDrawArrow () 
   (ExecuteFunctionAfterVerifyDateUtils 'UpdateJoinDrawArrowMacro '())
@@ -789,15 +832,6 @@
   (UpdateJoinDrawArrowByDataType "JoinDrawArrowTo")
   (UpdateJoinDrawArrowByDataType "JoinDrawArrowFrom")
   (alert "更新完成")(princ)
-)
-
-(defun GetAllPipeHandleListUtils (/ pipeData) 
-  (setq pipeData (GetAllPipeDataUtils)) 
-  (mapcar '(lambda (x) 
-             (cdr (assoc "entityhandle" x))
-           ) 
-    pipeData
-  )
 )
 
 (defun UpdateJoinDrawArrowByDataType (dataType / entityNameList relatedPipeData allPipeHandleList) 
