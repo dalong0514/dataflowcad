@@ -834,36 +834,39 @@
   (alert "更新完成")(princ)
 )
 
+; refactor at 2021-04-14
 (defun UpdateJoinDrawArrowByDataType (dataType / entityNameList relatedPipeData allPipeHandleList) 
-  (setq entityNameList 
-    (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils dataType))
-  )
   (setq allPipeHandleList (GetAllPipeHandleListUtils))
+  ; must filter first
+  (setq entityNameList 
+    ; relatedid value maybe null
+    (vl-remove-if-not '(lambda (x) 
+                        ; repair bug - JoinDrawArrow's relatedid may be not in the allPipeHandleList - 2020.12.22
+                        ; refactor at 2021-01-27
+                        (and (/= (cdr (assoc "relatedid" (GetAllPropertyDictForOneBlock x))) "") 
+                             (/= (member (cdr (assoc "relatedid" (GetAllPropertyDictForOneBlock x))) allPipeHandleList) nil)) 
+                      ) 
+      (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils dataType))
+    )
+  )  
   (mapcar '(lambda (x) 
              (setq relatedPipeData (append relatedPipeData 
                                      (list (GetAllPropertyDictForOneBlock (handent (cdr (assoc "relatedid" x)))))
                                    ))
            ) 
-    ; relatedid value maybe null
-    (vl-remove-if-not '(lambda (x) 
-                        ; repair bug - JoinDrawArrow's relatedid may be not in the allPipeHandleList - 2020.12.22
-                        ; refactor at 2021-01-27
-                        (and (/= (cdr (assoc "relatedid" x)) "") (/= (member (cdr (assoc "relatedid" x)) allPipeHandleList) nil)) 
-                      ) 
-      (GetBlockAllPropertyDictListUtils entityNameList)
-    )
+    (GetBlockAllPropertyDictListUtils entityNameList)
   )
-  (mapcar '(lambda (x) 
-             (prompt "\n")
-             (prompt (strcat (cdr (assoc "fromto" x)) "（" (cdr (assoc "drawnum" x)) "）" "关联的管道数据id是不存在的！"))
-           ) 
-    ; refactor at 2021-01-27
-    (vl-remove-if-not '(lambda (x) 
-                        (or (= (cdr (assoc "relatedid" x)) "") (= (member (cdr (assoc "relatedid" x)) allPipeHandleList) nil)) 
-                      ) 
-      (GetBlockAllPropertyDictListUtils entityNameList)
-    )
-  ) 
+  ; (mapcar '(lambda (x) 
+  ;            (prompt "\n")
+  ;            (prompt (strcat (cdr (assoc "fromto" x)) "（" (cdr (assoc "drawnum" x)) "）" "关联的管道数据id是不存在的！"))
+  ;          ) 
+  ;   ; refactor at 2021-01-27
+  ;   (vl-remove-if-not '(lambda (x) 
+  ;                       (or (= (cdr (assoc "relatedid" x)) "") (= (member (cdr (assoc "relatedid" x)) allPipeHandleList) nil)) 
+  ;                     ) 
+  ;     (GetBlockAllPropertyDictListUtils (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils dataType)))
+  ;   )
+  ; ) 
   (UpdateJoinDrawArrowStrategy dataType entityNameList relatedPipeData)
 )
 
