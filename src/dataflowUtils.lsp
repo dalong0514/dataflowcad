@@ -2786,8 +2786,8 @@
   (setq ss (SortSelectionSetByRowColumn (GetAllBlockSSByDataTypeUtils "DrawLabel")))
   (setq allDrawLabelData (GetAllPropertyDictForOneBlock (car (GetEntityNameListBySSUtils ss))))
   (list 
-    (cons "projectNum" (GetDottedPairValueUtils "dwgno" allDrawLabelData))
-    (cons "monomerNum" (GetDottedPairValueUtils "dwgno" allDrawLabelData))
+    (cons "projectNum" (ExtractProjectNumUtils (GetDottedPairValueUtils "dwgno" allDrawLabelData)))
+    (cons "monomerNum" (ExtractMonomerNumUtils (GetDottedPairValueUtils "dwgno" allDrawLabelData)))
     (cons "projectName" 
       (strcat (GetDottedPairValueUtils "project1" allDrawLabelData) 
               (GetDottedPairValueUtils "project2l1" allDrawLabelData) 
