@@ -731,6 +731,16 @@
   (alert "更新完成")(princ)
 )
 
+; 2021-04-14
+(defun FilterEntityNameListForUpdate (dataType relatedIDProperty allHandleList /)
+  (vl-remove-if-not '(lambda (x) 
+                      (and (/= (GetDottedPairValueUtils relatedIDProperty (GetAllPropertyDictForOneBlock x)) "") 
+                            (/= (member (GetDottedPairValueUtils relatedIDProperty (GetAllPropertyDictForOneBlock x)) allHandleList) nil)) 
+                    ) 
+    (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils dataType))
+  ) 
+)
+
 ; refactor at 2021-04-14
 (defun UpdatePublicPipeByDataType (dataType / entityNameList relatedPipeData allPipeHandleList) 
   (setq allPipeHandleList (GetAllPipeHandleListUtils))
