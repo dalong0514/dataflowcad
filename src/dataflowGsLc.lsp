@@ -731,25 +731,29 @@
   (alert "更新完成")(princ)
 )
 
+; refactor at 2021-04-14
 (defun UpdatePublicPipeByDataType (dataType / entityNameList relatedPipeData allPipeHandleList) 
-  (setq entityNameList 
-    (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils dataType))
-  )
   (setq allPipeHandleList (GetAllPipeHandleListUtils))
+  ; must filter first
+  (setq entityNameList 
+    ; relatedid value maybe null
+    (vl-remove-if-not '(lambda (x) 
+                        ; repair bug - JoinDrawArrow's relatedid may be not in the allPipeHandleList - 2020.12.22
+                        ; refactor at 2021-01-27
+                        (and (/= (cdr (assoc "relatedid" (GetAllPropertyDictForOneBlock x))) "") 
+                             (/= (member (cdr (assoc "relatedid" (GetAllPropertyDictForOneBlock x))) allPipeHandleList) nil)) 
+                      ) 
+      (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils dataType))
+    )
+  )  
   (mapcar '(lambda (x) 
              (setq relatedPipeData (append relatedPipeData 
                                      (list (GetAllPropertyDictForOneBlock (handent (cdr (assoc "relatedid" x)))))
                                    ))
            ) 
-    ; relatedid value maybe null
-    (vl-remove-if-not '(lambda (x) 
-                        ; repair bug - relatedid may be not in the allPipeHandleList - 2021-01-30
-                        (and (/= (cdr (assoc "relatedid" x)) "") (/= (member (cdr (assoc "relatedid" x)) allPipeHandleList) nil)) 
-                      ) 
-      (GetBlockAllPropertyDictListUtils entityNameList)
-    )
+    (GetBlockAllPropertyDictListUtils entityNameList)
   )
-  (PrintErrorLogForUpdatePublicPipe dataType entityNameList allPipeHandleList) 
+  ; (PrintErrorLogForUpdatePublicPipe dataType (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils dataType)) allPipeHandleList) 
   (UpdatePublicPipeStrategy dataType entityNameList relatedPipeData)
 )
 
