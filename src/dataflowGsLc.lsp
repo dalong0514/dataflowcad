@@ -850,14 +850,9 @@
   ; must filter first
   (setq entityNameList 
     ; relatedid value maybe null
-    (vl-remove-if-not '(lambda (x) 
-                        ; repair bug - JoinDrawArrow's relatedid may be not in the allPipeHandleList - 2020.12.22
-                        ; refactor at 2021-01-27
-                        (and (/= (cdr (assoc "relatedid" (GetAllPropertyDictForOneBlock x))) "") 
-                             (/= (member (cdr (assoc "relatedid" (GetAllPropertyDictForOneBlock x))) allPipeHandleList) nil)) 
-                      ) 
-      (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils dataType))
-    )
+    ; repair bug - JoinDrawArrow's relatedid may be not in the allPipeHandleList - 2020.12.22
+    ; refactor at 2021-01-27 
+    (FilterEntityNameListForUpdate dataType "relatedid" allPipeHandleList)
   )  
   (mapcar '(lambda (x) 
              (setq relatedPipeData (append relatedPipeData 
