@@ -603,6 +603,7 @@
   ) 
 )
 
+; 2021-04-08
 (defun Get15A1DrawPositionRangeUtils (position /)
   (list (+ (car position) -126150) (+ (cadr position) 89100))
 )

@@ -3178,6 +3178,97 @@
   )
 )
 
+; 2021-04-15
+(defun c:UpdateDrawGsLcDrawNumData () 
+  (ExecuteFunctionAfterVerifyDateUtils 'UpdateDrawGsLcDrawNumDataMacro '())
+)
+
+; 2021-04-15
+(defun UpdateDrawGsLcDrawNumDataMacro () 
+  (foreach item (GetGsLcDrawNumList) 
+    (mapcar '(lambda (x) 
+                (UpdateOneDrawGsLcDrawNumData x)
+             ) 
+      (GetDottedPairValueUtils item (GetAllGsLcDrawNumDictListData))
+    ) 
+  )
+  (alert "图号信息更新成功！")
+)
+
+; 2021-04-15
+(defun UpdateOneDrawGsLcDrawNumData (entityData /)
+  (ModifyMultiplePropertyForOneBlockUtils 
+    (cadr entityData) 
+    (list "DRAWNUM") 
+    (list (car entityData))
+  )
+)
+
+; 2021-04-15
+(defun GetAllGsLcDrawLabelDataUtils () 
+  (mapcar '(lambda (x) 
+             (list 
+               (GetDottedPairValueUtils "dwgno" x)
+               (GetGsLcA1DrawPositionRangeUtils (GetEntityPositionByEntityNameUtils (handent (cdr (assoc "entityhandle" x)))))
+             )
+           ) 
+    (GetBlockAllPropertyDictListUtils (GetEntityNameListBySSUtils (GetAllDrawLabelSSUtils)))
+  ) 
+)
+
+; 2021-04-15
+(defun GetGsLcA1DrawPositionRangeUtils (position /)
+  (list (+ (car position) -841) (+ (cadr position) 594))
+)
+
+; 2021-04-15
+(defun GetGsLcDrawNumList ()
+  (mapcar '(lambda (x) (car x)) 
+    (GetAllGsLcDrawLabelDataUtils)
+  )   
+)
+
+; 2021-04-15
+(defun GetAllGsLcDrawNumDictListData () 
+  (ChunkListByColumnIndexUtils (GetAllGsLcDictListData) 0) 
+)
+
+; 2021-04-15
+(defun GetAllGsLcDictListData () 
+  (mapcar '(lambda (x) 
+             (list (car x) 
+                   (GetDottedPairValueUtils -1 (cadr x))
+                   (GetDottedPairValueUtils 10 (cadr x))
+             )
+           ) 
+    (GetGsLcStrategyEntityData (GetAllInstrumentPipeEquipData))
+  ) 
+)
+
+; 2021-04-15
+(defun GetAllInstrumentPipeEquipData () 
+  (GetSelectedEntityDataUtils (GetAllInstrumentPipeEquipSSUtils))
+)
+
+; 2021-04-15
+(defun GetGsLcStrategyEntityData (entityData / resultList) 
+  (foreach item (GetAllGsLcDrawLabelDataUtils) 
+    (mapcar '(lambda (x) 
+              (if (and 
+                    (> (cadr (assoc 10 x)) (car (cadr item))) 
+                    (< (cadr (assoc 10 x)) (+ (car (cadr item)) 841)) 
+                    (< (caddr (assoc 10 x)) (cadr (cadr item)))
+                    (> (caddr (assoc 10 x)) (- (cadr (cadr item)) 594))
+                  )
+                (setq resultList (append resultList (list (list (car item) x))))
+              )
+            ) 
+      entityData
+    ) 
+  ) 
+  resultList
+)
+
 ; Number DrawNum
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
