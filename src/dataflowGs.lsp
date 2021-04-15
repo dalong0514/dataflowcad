@@ -3192,7 +3192,7 @@
       (GetDottedPairValueUtils item (GetAllGsLcDrawNumDictListData))
     ) 
   )
-  (alert "图号信息更新成功！")
+  (alert "流程图数据图号更新成功！")
 )
 
 ; 2021-04-15
