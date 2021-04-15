@@ -2643,7 +2643,7 @@
     ((= dataType "Pipe") "GsPipe")
     ((= dataType "Equipment") "GsEquipment")
     ((= dataType "InstrumentAndEquipmentAndPipe") "GsInstrument")
-    ((= dataType "Electric") "Electric")
+    ((= dataType "Electric") "GsElectric")
     ((= dataType "OuterPipe") "GsOuterPipe")
     ((= dataType "GsCleanAir") "GsCleanAir")
     ((= dataType "KsInstallMaterial") "KsInstallMaterial")
