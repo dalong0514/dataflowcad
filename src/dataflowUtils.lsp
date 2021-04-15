@@ -2702,6 +2702,8 @@
 ; refactored 2021-04-14
 (defun ExportCADBlockDataUtils (fileName dataList / fileDir) 
   (setq fileDir (strcat "D:\\dataflowcad\\tempdata\\" fileName ".txt"))
+  ; refactored 2021-04-15 - file is opening because electron read file, delete the file first
+  (vl-file-delete fileDir)
   (WriteDataListToFileUtils 
     fileDir 
     (cons (DictListToJsonStringUtils (GetProjectInfoUtils)) dataList)) 
