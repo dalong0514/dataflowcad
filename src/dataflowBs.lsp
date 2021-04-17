@@ -36,13 +36,28 @@
 (defun InsertBsTankGCT (/ insPt) 
   (VerifyBsBlockLayerText)
   (setq insPt (getpoint "\n拾取设备一览表插入点："))
-  (InsertBsGCTDataHeader insPt)
+  (InsertBsGCTRequirement insPt "Tank")
   (princ)
 )
 
 ; 2021-04-17
-(defun InsertBsGCTDataHeader (insPt /) 
-  (InsertBlockUtils insPt "BsGCTDataHeader" "0DataFlow-BsGCT" (list (cons 0 "Tank")))
+(defun InsertBsGCTDataHeader (insPt dataType /) 
+  (InsertBlockUtils insPt "BsGCTDataHeader" "0DataFlow-BsGCT" (list (cons 0 dataType)))
+)
+
+; 2021-04-17
+(defun InsertBsGCTDesignParam (insPt dataType /) 
+  (InsertBlockUtils insPt "BsGCTDesignParam" "0DataFlow-BsGCT" (list (cons 0 dataType)))
+)
+
+; 2021-04-17
+(defun InsertBsGCTDesignStandard (insPt dataType /) 
+  (InsertBlockUtils insPt "BsGCTDesignStandard" "0DataFlow-BsGCT" (list (cons 0 dataType)))
+)
+
+; 2021-04-17
+(defun InsertBsGCTRequirement (insPt dataType /) 
+  (InsertBlockUtils insPt "BsGCTRequirement" "0DataFlow-BsGCT" (list (cons 0 dataType)))
 )
 
 (defun c:foo ()
