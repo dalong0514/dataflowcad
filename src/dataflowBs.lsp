@@ -44,7 +44,6 @@
   (princ)
 )
 
-
 ; 2021-04-17
 (defun InsertBsGCTDrawFrame (insPt dataType /) 
   (InsertBlockByNoPropertyUtils insPt "BsGCTDrawFrame" "0DataFlow-BsFrame")
@@ -75,9 +74,31 @@
 )
 
 (defun c:foo ()
-  (InsertBsGCTStrategy "Tank")
+  ; (InsertBsGCTStrategy "Tank")
+  (GetBsImportedListFromCSVStrategy "BsGCTTankPressureElement")
 )
 
+; 2021-04-17
+(defun GetOriginBsDictList ()
+  (mapcar '(lambda (y) 
+              (mapcar '(lambda (xx yy) 
+                         (cons xx yy)
+                      ) 
+                (GetNsEquipTablePropertyNameList)
+                y
+              )
+           ) 
+    (GetBsImportedListFromCSVStrategy "BsGCTTankPressureElement")
+  )
+)
+
+; 2021-04-17
+(defun GetBsImportedListFromCSVStrategy (dataType / fileDir)
+  (cond 
+    ((= dataType "BsGCTTankPressureElement") (setq fileDir "D:\\dataflowcad\\bsdata\\tankPressureElement.csv"))
+  ) 
+  (StrListToListListUtils (ReadFullDataFromCSVUtils fileDir))
+)
 
 ; Generate BsGCT
 ;;;-------------------------------------------------------------------------;;;

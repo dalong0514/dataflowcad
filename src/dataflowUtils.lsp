@@ -1934,6 +1934,22 @@
   (mapcar '(lambda (x) (substr x 2)) originList)
 )
 
+; 2021-04-17
+(defun ReadFullDataFromCSVUtils (fileDir / filePtr i textLine resultList)
+  (setq filePtr (open fileDir "r"))
+  (if filePtr 
+    (progn 
+      (setq i 1)
+      (while (setq textLine (read-line filePtr)) 
+        (setq resultList (append resultList (list textLine)))
+        (setq i (+ 1 i))
+      )
+    )
+  )
+  (close filePtr)
+  resultList
+)
+
 ; Read and Write Utils
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
