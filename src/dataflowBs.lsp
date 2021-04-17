@@ -33,14 +33,16 @@
 )
 
 ; 2021-04-17
-(defun InsertBsTankGCT (/ insPt) 
+(defun InsertBsTankGCT (/ insPt tankPressureElementList) 
   (VerifyBsBlockLayerText)
+  (setq tankPressureElementList (GetBsGCTTankPressureElementList))
   (setq insPt (getpoint "\n拾取设备一览表插入点："))
   (InsertBsGCTDrawFrame insPt "Tank")
   (InsertBsGCTDataHeader (MoveInsertPositionUtils insPt -900 2870) "Tank")
   (InsertBsGCTDesignParam (MoveInsertPositionUtils insPt -900 2820) "Tank")
   (InsertBsGCTDesignStandard (MoveInsertPositionUtils insPt -450 2820) "Tank")
   (InsertBsGCTRequirement (MoveInsertPositionUtils insPt -450 2620) "Tank")
+  (InsertBsGCTPressureElement (MoveInsertPositionUtils insPt -900 1980) "Tank" tankPressureElementList)
   (princ)
 )
 
@@ -73,9 +75,34 @@
   (InsertBlockUtils insPt "BsGCTRequirement" "0DataFlow-BsGCT" (list (cons 0 dataType)))
 )
 
+; 2021-04-17
+(defun InsertBsGCTPressureElement (insPt dataType tankPressureElementList / i) 
+  (InsertBlockUtils insPt "BsGCTPressureElement" "0DataFlow-BsGCT" (list (cons 0 dataType)))
+  (InsertBsGCTPressureElementRow (MoveInsertPositionUtils insPt 0 -80) dataType tankPressureElementList)
+)
+
+; 2021-04-17
+(defun InsertBsGCTPressureElementRow (insPt dataType tankPressureElementList / i) 
+  (setq i 0)
+  (repeat (length (GetBsGCTTankPressureElementList))
+    (InsertBlockUtils (MoveInsertPositionUtils insPt 0 (* -40 i)) "BsGCTPressureElementRow" "0DataFlow-BsGCT" (list (cons 0 dataType)))
+    (InsertBsGCTPressureElementRowText (MoveInsertPositionUtils insPt 0 (* -40 i)) (nth i tankPressureElementList))
+    (setq i (1+ i))
+  ) 
+)
+
+; 2021-03-17
+(defun InsertBsGCTPressureElementRowText (insPt textList /) 
+  (GenerateLevelCenterTextUtils (MoveInsertPositionUtils insPt 62.5 -32) (nth 0 textList) "0DataFlow-BsText" 20 0.7) 
+  (GenerateLevelCenterTextUtils (MoveInsertPositionUtils insPt 175 -32) (nth 1 textList) "0DataFlow-BsText" 20 0.7) 
+  (GenerateLevelCenterTextUtils (MoveInsertPositionUtils insPt 337.5 -32) (nth 2 textList) "0DataFlow-BsText" 20 0.7) 
+  (GenerateLevelCenterTextUtils (MoveInsertPositionUtils insPt 575 -32) (nth 3 textList) "0DataFlow-BsText" 20 0.7) 
+  (GenerateLevelCenterTextUtils (MoveInsertPositionUtils insPt 800 -32) (nth 4 textList) "0DataFlow-BsText" 20 0.7) 
+)
+
 (defun c:foo ()
-  ; (InsertBsGCTStrategy "Tank")
-  (GetBsGCTTankPressureElementDictList)
+  (InsertBsGCTStrategy "Tank")
+  ; (GetBsGCTTankPressureElementDictList)
 )
 
 ; 2021-04-17
@@ -90,6 +117,11 @@
            ) 
     (cdr (GetBsImportedListFromCSVStrategy "BsGCTTankPressureElement"))
   ) 
+)
+
+; 2021-04-17
+(defun GetBsGCTTankPressureElementList ()
+  (cdr (GetBsImportedListFromCSVStrategy "BsGCTTankPressureElement"))
 )
 
 ; 2021-04-17
