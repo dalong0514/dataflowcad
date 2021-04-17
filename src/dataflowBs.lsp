@@ -36,8 +36,13 @@
 (defun InsertBsTankGCT (/ insPt) 
   (VerifyBsBlockLayerText)
   (setq insPt (getpoint "\n拾取设备一览表插入点："))
-  (InsertBsGCTRequirement insPt "Tank")
+  (InsertBsGCTDrawFrame insPt "Tank")
   (princ)
+)
+
+; 2021-04-17
+(defun InsertBsGCTDrawFrame (insPt dataType /) 
+  (InsertBlockByNoPropertyUtils insPt "BsGCTDrawFrame" "0DataFlow-BsFrame")
 )
 
 ; 2021-04-17
