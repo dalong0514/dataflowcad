@@ -37,12 +37,21 @@
   (VerifyBsBlockLayerText)
   (setq insPt (getpoint "\n拾取设备一览表插入点："))
   (InsertBsGCTDrawFrame insPt "Tank")
+  (InsertBsGCTDataHeader (MoveInsertPositionUtils insPt -900 2870) "Tank")
+  (InsertBsGCTDesignParam (MoveInsertPositionUtils insPt -900 2820) "Tank")
+  (InsertBsGCTDesignStandard (MoveInsertPositionUtils insPt -450 2820) "Tank")
+  (InsertBsGCTRequirement (MoveInsertPositionUtils insPt -450 2620) "Tank")
   (princ)
 )
+
 
 ; 2021-04-17
 (defun InsertBsGCTDrawFrame (insPt dataType /) 
   (InsertBlockByNoPropertyUtils insPt "BsGCTDrawFrame" "0DataFlow-BsFrame")
+  (InsertBlockByScaleUtils insPt "title.equip.2017" "0DataFlow-BsFrame" (list (cons 4 "工程图") (cons 15 "设备") (cons 16 "1:5")) 5)
+  (InsertBlockByScaleUtils (MoveInsertPositionUtils insPt 0 230) "revisions.2017" "0DataFlow-BsFrame" (list (cons 2 "1")) 5)
+  (InsertBlockByScaleUtils (MoveInsertPositionUtils insPt 0 355) "intercheck.2017" "0DataFlow-BsFrame" (list (cons 2 "1")) 5)
+  (InsertBlockByNoPropertyByScaleUtils (MoveInsertPositionUtils insPt 0 540) "stamp2.2017" "0DataFlow-BsFrame" 5)
 )
 
 ; 2021-04-17

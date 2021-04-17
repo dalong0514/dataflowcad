@@ -302,6 +302,17 @@
   (princ)
 )
 
+; 2021-04-17
+(defun InsertBlockByNoPropertyByScaleUtils (insPt blockName layerName scale / acadObj curDoc insertionPnt modelSpace blockRefObj blockAttributes)
+  (setq acadObj (vlax-get-acad-object))
+  (setq curDoc (vla-get-activedocument acadObj)) 
+  (setq insertionPnt (vlax-3d-point insPt))
+  (setq modelSpace (vla-get-ModelSpace curDoc))
+  (setq blockRefObj (vla-InsertBlock modelSpace insertionPnt blockName scale scale scale 0))
+  (vlax-put-property blockRefObj 'Layer layerName)
+  (princ)
+)
+
 ; Unit Test Compeleted
 ; refactored at 2021-03-12
 (defun MoveInsertPositionUtils (insPt xOffset yOffset / result) 
