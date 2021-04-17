@@ -36,6 +36,7 @@
 (defun InsertBsTankGCT (/ insPt tankPressureElementList) 
   (VerifyBsBlockLayerText)
   (setq tankPressureElementList (GetBsGCTTankPressureElementList))
+  (setq tankOtherRequestList (GetBsGCTTankOtherRequestList))
   (setq insPt (getpoint "\n拾取设备一览表插入点："))
   (InsertBsGCTDrawFrame insPt "Tank")
   (InsertBsGCTDataHeader (MoveInsertPositionUtils insPt -900 2870) "Tank")
@@ -43,6 +44,7 @@
   (InsertBsGCTDesignStandard (MoveInsertPositionUtils insPt -450 2820) "Tank")
   (InsertBsGCTRequirement (MoveInsertPositionUtils insPt -450 2620) "Tank")
   (InsertBsGCTPressureElement (MoveInsertPositionUtils insPt -900 1980) "Tank" tankPressureElementList)
+  (InsertBsGCTOtherRequest (MoveInsertPositionUtils insPt -900 (- 1900 (* 40 (length tankPressureElementList)))) "Tank" tankOtherRequestList)
   (princ)
 )
 
@@ -84,7 +86,7 @@
 ; 2021-04-17
 (defun InsertBsGCTPressureElementRow (insPt dataType tankPressureElementList / i) 
   (setq i 0)
-  (repeat (length (GetBsGCTTankPressureElementList))
+  (repeat (length tankPressureElementList)
     (InsertBlockUtils (MoveInsertPositionUtils insPt 0 (* -40 i)) "BsGCTPressureElementRow" "0DataFlow-BsGCT" (list (cons 0 dataType)))
     (InsertBsGCTPressureElementRowText (MoveInsertPositionUtils insPt 0 (* -40 i)) (nth i tankPressureElementList))
     (setq i (1+ i))
@@ -100,9 +102,24 @@
   (GenerateLevelCenterTextUtils (MoveInsertPositionUtils insPt 800 -32) (nth 4 textList) "0DataFlow-BsText" 20 0.7) 
 )
 
+; 2021-04-17
+(defun InsertBsGCTOtherRequest (insPt dataType tankOtherRequestList / i) 
+  (InsertBlockUtils insPt "BsGCTOtherRequest" "0DataFlow-BsGCT" (list (cons 0 dataType)))
+  (InsertBsGCTTankOtherRequestText (MoveInsertPositionUtils insPt 40 -65) dataType tankOtherRequestList)
+)
+
+; 2021-04-17
+(defun InsertBsGCTTankOtherRequestText (insPt dataType tankOtherRequestList / i) 
+  (setq i 0)
+  (repeat (length tankOtherRequestList)
+    (GenerateLevelLeftTextUtils (MoveInsertPositionUtils insPt 0 (* -30 i)) (nth i tankOtherRequestList) "0DataFlow-BsText" 20 0.7) 
+    (setq i (1+ i))
+  ) 
+)
+
 (defun c:foo ()
   (InsertBsGCTStrategy "Tank")
-  ; (GetBsGCTTankPressureElementDictList)
+  ; (GetBsGCTTankOtherRequestList)
 )
 
 ; 2021-04-17
@@ -125,9 +142,17 @@
 )
 
 ; 2021-04-17
+(defun GetBsGCTTankOtherRequestList ()
+  (mapcar '(lambda (x) (car x)) 
+    (cdr (GetBsImportedListFromCSVStrategy "BsGCTTankOtherRequest"))
+  )
+)
+
+; 2021-04-17
 (defun GetBsImportedListFromCSVStrategy (dataType / fileDir)
   (cond 
     ((= dataType "BsGCTTankPressureElement") (setq fileDir "D:\\dataflowcad\\bsdata\\tankPressureElement.csv"))
+    ((= dataType "BsGCTTankOtherRequest") (setq fileDir "D:\\dataflowcad\\bsdata\\tankOtherRequest.csv"))
   ) 
   (StrListToListListUtils (ReadFullDataFromCSVUtils fileDir))
 )
