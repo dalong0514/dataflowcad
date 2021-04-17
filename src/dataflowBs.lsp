@@ -45,6 +45,7 @@
   (InsertBsGCTRequirement (MoveInsertPositionUtils insPt -450 2620) "Tank")
   (InsertBsGCTPressureElement (MoveInsertPositionUtils insPt -900 1980) "Tank" tankPressureElementList)
   (InsertBsGCTOtherRequest (MoveInsertPositionUtils insPt -900 (- 1900 (* 40 (length tankPressureElementList)))) "Tank" tankOtherRequestList)
+  (InsertBsGCTNozzleTable (MoveInsertPositionUtils insPt -1800 2870) "Tank" tankPressureElementList)
   (princ)
 )
 
@@ -115,6 +116,31 @@
     (GenerateLevelLeftTextUtils (MoveInsertPositionUtils insPt 0 (* -30 i)) (nth i tankOtherRequestList) "0DataFlow-BsText" 20 0.7) 
     (setq i (1+ i))
   ) 
+)
+
+; 2021-04-17
+(defun InsertBsGCTNozzleTable (insPt dataType tankPressureElementList / i) 
+  (InsertBlockUtils insPt "BsGCTNozzleTableHeader" "0DataFlow-BsGCT" (list (cons 0 dataType)))
+  (InsertBsGCTNozzleTableRow (MoveInsertPositionUtils insPt 0 -130) dataType tankPressureElementList)
+)
+
+; 2021-04-17
+(defun InsertBsGCTNozzleTableRow (insPt dataType tankPressureElementList / i) 
+  (setq i 0)
+  (repeat (length tankPressureElementList)
+    (InsertBlockUtils (MoveInsertPositionUtils insPt 0 (* -40 i)) "BsGCTNozzleTableRow" "0DataFlow-BsGCT" (list (cons 0 dataType)))
+    (InsertBsGCTNozzleTableRowText (MoveInsertPositionUtils insPt 0 (* -40 i)) (nth i tankPressureElementList))
+    (setq i (1+ i))
+  ) 
+)
+
+; 2021-03-17
+(defun InsertBsGCTNozzleTableRowText (insPt textList /) 
+  (GenerateLevelCenterTextUtils (MoveInsertPositionUtils insPt 38.1 -32) (nth 0 textList) "0DataFlow-BsText" 20 0.7) 
+  (GenerateLevelCenterTextUtils (MoveInsertPositionUtils insPt 126.2 -32) (nth 1 textList) "0DataFlow-BsText" 20 0.7) 
+  (GenerateLevelCenterTextUtils (MoveInsertPositionUtils insPt 326.2 -32) (nth 2 textList) "0DataFlow-BsText" 20 0.6) 
+  (GenerateLevelCenterTextUtils (MoveInsertPositionUtils insPt 513.7 -32) (nth 3 textList) "0DataFlow-BsText" 20 0.7) 
+  (GenerateLevelLeftTextUtils (MoveInsertPositionUtils insPt 566.2 -32) (nth 4 textList) "0DataFlow-BsText" 20 0.6) 
 )
 
 (defun c:foo ()
