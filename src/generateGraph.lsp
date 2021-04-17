@@ -25,6 +25,11 @@
   (setq result "D:\\dataflowcad\\allBlocks\\NsBzBlocks.dwg")
 )
 
+; 2021-03-17
+(defun GetBsModulesPath (/ result)
+  (setq result "D:\\dataflowcad\\allBlocks\\BsGCTBlocks.dwg")
+)
+
 ; 2021-03-03
 (defun StealAllGsLcBlocks ()
   (Steal (GetGsLcModulesPath) 
@@ -115,6 +120,33 @@
   ) 
 )
 
+; 2021-04-17
+(defun StealBsBlockByNameList (blockNameList /)
+  (Steal (GetBsModulesPath) 
+    (list 
+      (list "Blocks" blockNameList)
+    )
+  ) 
+)
+
+; 2021-04-17
+(defun StealBsLayerByNameList (layerNameList /)
+  (Steal (GetBsModulesPath) 
+    (list 
+      (list "Layers" layerNameList)
+    )
+  ) 
+)
+
+; 2021-04-17
+(defun StealBsTextStyleByNameList (textStyleNameList /)
+  (Steal (GetBsModulesPath) 
+    (list 
+      (list "Text Styles" textStyleNameList)
+    )
+  ) 
+)
+
 ; 2021-03-03
 (defun VerifyGsLcBlockByName (blockName /) 
   (if (= (tblsearch "BLOCK" blockName) nil) 
@@ -164,7 +196,28 @@
   )
 )
 
-; 2021-03-05
+; 2021-03-17
+(defun VerifyBsBlockByName (blockName /) 
+  (if (= (tblsearch "BLOCK" blockName) nil) 
+    (StealBsBlockByNameList (list blockName))
+  )
+)
+
+; 2021-04-17
+(defun VerifyBsLayerByName (layerName /) 
+  (if (= (tblsearch "LAYER" layerName) nil) 
+    (StealBsLayerByNameList (list layerName))
+  )
+)
+
+; 2021-04-17
+(defun VerifyBsTextStyleByName (textStyleName /) 
+  (if (= (tblsearch "STYLE" textStyleName) nil) 
+    (StealBsTextStyleByNameList (list textStyleName))
+  )
+)
+
+; 2021-04-05
 (defun VerifyGsLcBlockPublicPipe () 
   (VerifyGsLcBlockByName "PublicPipe*") ; refactored at 2021-03-09
   (VerifyGsLcLayerByName "0DataFlow-GsLcPublicPipe")
