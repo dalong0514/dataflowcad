@@ -75,21 +75,21 @@
 
 (defun c:foo ()
   ; (InsertBsGCTStrategy "Tank")
-  (GetBsImportedListFromCSVStrategy "BsGCTTankPressureElement")
+  (GetBsGCTTankPressureElementDictList)
 )
 
 ; 2021-04-17
-(defun GetOriginBsDictList ()
+(defun GetBsGCTTankPressureElementDictList ()
   (mapcar '(lambda (y) 
               (mapcar '(lambda (xx yy) 
                          (cons xx yy)
                       ) 
-                (GetNsEquipTablePropertyNameList)
+                (car (GetBsImportedListFromCSVStrategy "BsGCTTankPressureElement"))
                 y
               )
            ) 
-    (GetBsImportedListFromCSVStrategy "BsGCTTankPressureElement")
-  )
+    (cdr (GetBsImportedListFromCSVStrategy "BsGCTTankPressureElement"))
+  ) 
 )
 
 ; 2021-04-17
