@@ -679,7 +679,7 @@
 
 ; 2021-04-18
 (defun GetLineEntitySSBySelectUtils () 
-  (ssget '((0 . "INSERT")))
+  (ssget '((0 . "LINE")))
 )
 
 ; refactored at 2021-04-18 - rename function name
@@ -736,6 +736,7 @@
 )
 
 ; refactored at 2021-03-28
+; the item of DictList must be string - 2021-04-18
 (defun DictListToJsonStringUtils (DictList / jsonPropertyString)
   (setq jsonPropertyString 
     (apply 'strcat 

@@ -49,7 +49,7 @@
   (InsertBsGCTPressureElement (MoveInsertPositionUtils insPt -900 1980) "Tank" tankPressureElementList)
   (InsertBsGCTOtherRequest (MoveInsertPositionUtils insPt -900 (- 1900 (* 40 (length tankPressureElementList)))) "Tank" tankOtherRequestList)
   (InsertBsGCTNozzleTable (MoveInsertPositionUtils insPt -1800 2870) "Tank" tankPressureElementList)
-  (InsertBsTankGCTGraphy (MoveInsertPositionUtils insPt -2915 1435) barrelRadius barrelHalfHeight)
+  (InsertBsGCTTankGraphy (MoveInsertPositionUtils insPt -2915 1600) barrelRadius barrelHalfHeight 8)
   (princ)
 )
 
@@ -160,18 +160,22 @@
 )
 
 ; 2021-04-18
-(defun InsertBsTankGCTGraphy (insPt barrelRadius barrelHalfHeight /) 
+(defun InsertBsGCTTankGraphy (insPt barrelRadius barrelHalfHeight thickNess /) 
   (VerifyBsBlockLayerText)
-  (GenerateDoubleLineEllipseHeadUtils (MoveInsertPositionUtils insPt 0 barrelHalfHeight) barrelRadius "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" 1 8)
-  (GenerateDoubleLineBarrelUtils insPt barrelRadius barrelHalfHeight "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" 8)
-  (GenerateDoubleLineEllipseHeadUtils (MoveInsertPositionUtils insPt 0 (- 0 barrelHalfHeight)) barrelRadius "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" -1 8)
+  (GenerateDoubleLineEllipseHeadUtils (MoveInsertPositionUtils insPt 0 barrelHalfHeight) barrelRadius "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" 1 thickNess)
+  (GenerateDoubleLineBarrelUtils insPt barrelRadius barrelHalfHeight "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" thickNess)
+  (GenerateDoubleLineEllipseHeadUtils (MoveInsertPositionUtils insPt 0 (- 0 barrelHalfHeight)) barrelRadius "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" -1 thickNess)
+  (InsertBsGCTSupportLeg (MoveInsertPositionUtils insPt (+ barrelRadius thickNess) (- 0 (- barrelHalfHeight 25))) "Tank")
   (princ)
 )
 
-(defun c:foo (/ insPt)
-  (InsertBsGCTStrategy "Tank")
-  ; (GetBsGCTTankOtherRequestList)
-  ; (setq insPt (getpoint "\n拾取设备一览表插入点："))
+; 2021-04-18
+(defun InsertBsGCTSupportLeg (insPt dataType /) 
+  (InsertBlockUtils insPt "BsGCTSupportLeg-A2" "0DataFlow-BsThickLine" (list (cons 0 dataType)))
+  ; (SetDynamicBlockPropertyValueUtils 
+  ;   (GetLastVlaObjectUtils) 
+  ;   (list (cons "LEG_HEIGHT" "1000"))
+  ; ) 
 )
 
 ; 2021-04-17
@@ -207,6 +211,12 @@
     ((= dataType "BsGCTTankOtherRequest") (setq fileDir "D:\\dataflowcad\\bsdata\\tankOtherRequest.csv"))
   ) 
   (StrListToListListUtils (ReadFullDataFromCSVUtils fileDir))
+)
+
+(defun c:foo (/ insPt)
+  (InsertBsGCTStrategy "Tank")
+  ; (GetBsGCTTankOtherRequestList)
+  ; (setq insPt (getpoint "\n拾取设备一览表插入点："))
 )
 
 ; Generate BsGCT
