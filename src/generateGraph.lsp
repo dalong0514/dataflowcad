@@ -498,6 +498,19 @@
 )
 
 ; 2021-04-18
+; dxf color (cons 62 3) - green
+(defun GeneratePolyLineUtils (firstPt secondPt entityLayer lineWidth /)
+  (entmake 
+    (list (cons 0 "LWPOLYLINE") (cons 100 "AcDbEntity") (cons 67 0) (cons 8 entityLayer) (cons 100 "AcDbPolyline") 
+          (cons 90 2) (cons 70 0) (cons 43 lineWidth) (cons 38 0.0) (cons 39 0.0) 
+          (cons 10 firstPt) (cons 40 lineWidth) (cons 41 lineWidth) (cons 42 0.0) (cons 91 0) 
+          (cons 10 secondPt) (cons 40 lineWidth) (cons 41 lineWidth) (cons 42 0.0) (cons 91 0) 
+          (cons 210 '(0.0 0.0 1.0))
+    ))
+  (princ)
+)
+
+; 2021-04-18
 ; directionStatus: dxfcode 210: 1 up, -1 down
 ; ratio dxf 40: Ratio of minor axis to major axis
 (defun GenerateEllipseUtils (insPt entityLayer ellipseDiameter directionStatus ratio /)
