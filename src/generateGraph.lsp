@@ -334,14 +334,6 @@
 ; Generate CAD Graph Utils Function 
 
 ; 2021-02-02
-(defun GenerateLineByPosition (firstPt secondPt lineLayer /)
-  (entmake (list (cons 0 "LINE") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 lineLayer) (cons 100 "AcDbText") 
-                  (cons 10 firstPt) (cons 11 secondPt) (cons 210 '(0.0 0.0 1.0)) 
-             )
-  )(princ)
-)
-
-; 2021-02-02
 (defun GenerateVerticallyTextByPositionAndContent (insPt textContent textLayer textHeight /)
   (entmake (list (cons 0 "TEXT") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 textLayer) (cons 100 "AcDbText") 
                   (cons 10 insPt) (cons 11 '(0.0 0.0 0.0)) (cons 40 textHeight) (cons 1 textContent) (cons 50 1.5708) (cons 41 0.7) (cons 51 0.0) 
@@ -394,18 +386,6 @@
     (list (cons 0 "LWPOLYLINE") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 "PL2") (cons 62 3) (cons 100 "AcDbPolyline") 
           (cons 90 2) (cons 70 0) (cons 43 0.6) (cons 38 0.0) (cons 39 0.0) (cons 10 (MoveInsertPositionUtils insPt 0 50)) (cons 40 0.6) 
           (cons 41 0.6) (cons 42 0.0) (cons 91 0) (cons 10 insPt) (cons 40 0.6) (cons 41 0.6) (cons 42 0.0) (cons 91 0) (cons 210 '(0.0 0.0 1.0))
-    ))
-  (princ)
-)
-
-; 2021-03-05
-(defun GenerateVerticalPolyline (insPt blockLayer lineWidth /)
-  (entmake 
-    (list (cons 0 "LWPOLYLINE") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 blockLayer) (cons 62 3) (cons 100 "AcDbPolyline") 
-          (cons 90 2) (cons 70 0) (cons 43 lineWidth) (cons 38 0.0) (cons 39 0.0) 
-          (cons 10 (MoveInsertPositionUtils insPt 0 50)) (cons 40 lineWidth) (cons 41 lineWidth) (cons 42 0.0) (cons 91 0) 
-          (cons 10 insPt) (cons 40 lineWidth) (cons 41 lineWidth) (cons 42 0.0) (cons 91 0) 
-          (cons 210 '(0.0 0.0 1.0))
     ))
   (princ)
 )
@@ -488,6 +468,86 @@
   )
   (princ)
 )
+
+; refactored 2021-04-18
+(defun GenerateLineUtils (firstPt secondPt entityLayer /)
+  (entmake (list (cons 0 "LINE") (cons 100 "AcDbEntity") (cons 67 0) (cons 8 entityLayer) (cons 100 "AcDbText") 
+                  (cons 10 firstPt) (cons 11 secondPt) (cons 210 '(0.0 0.0 1.0)) 
+             )
+  )(princ)
+)
+
+; 2021-04-18
+(defun GenerateLineByLineScaleUtils (firstPt secondPt entityLayer lineScale /)
+  (entmake (list (cons 0 "LINE") (cons 100 "AcDbEntity") (cons 67 0) (cons 8 entityLayer) (cons 48 lineScale) 
+                 (cons 100 "AcDbText") (cons 10 firstPt) (cons 11 secondPt) (cons 210 '(0.0 0.0 1.0)) 
+             )
+  )(princ)
+)
+
+; 2021-03-05
+(defun GenerateVerticalPolyline (insPt blockLayer lineWidth /)
+  (entmake 
+    (list (cons 0 "LWPOLYLINE") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 blockLayer) (cons 62 3) (cons 100 "AcDbPolyline") 
+          (cons 90 2) (cons 70 0) (cons 43 lineWidth) (cons 38 0.0) (cons 39 0.0) 
+          (cons 10 (MoveInsertPositionUtils insPt 0 50)) (cons 40 lineWidth) (cons 41 lineWidth) (cons 42 0.0) (cons 91 0) 
+          (cons 10 insPt) (cons 40 lineWidth) (cons 41 lineWidth) (cons 42 0.0) (cons 91 0) 
+          (cons 210 '(0.0 0.0 1.0))
+    ))
+  (princ)
+)
+
+; 2021-04-18
+; directionStatus: dxfcode 210: 1 up, -1 down
+(defun GenerateEllipseUtils (insPt entityLayer ellipseDiameter directionStatus /)
+  (entmake 
+    (list (cons 0 "ELLIPSE") (cons 100 "AcDbEntity") (cons 67 0) (cons 8 entityLayer) (cons 100 "AcDbEllipse") 
+          (cons 10 insPt) (cons 11 (list ellipseDiameter 0 0)) (cons 210 (list 0 0 directionStatus)) (cons 40 0.5) (cons 41 0.0) (cons 42 3.14159) 
+    )
+  )
+  (princ)
+)
+
+; 2021-04-18
+; directionStatus: dxfcode 210: 1 up, -1 down
+(defun GenerateEllipseHeadUtils (insPt barrelRadius entityLayer centerLineLayer directionStatus /)
+  (GenerateEllipseUtils insPt entityLayer barrelRadius directionStatus)
+  (GenerateEllipseHeadLevelLineUtils insPt barrelRadius entityLayer centerLineLayer directionStatus)
+  (GenerateEllipseHeadVerticalLineUtils insPt barrelRadius entityLayer directionStatus)
+  (princ)
+)
+
+; 2021-04-18
+(defun GenerateEllipseHeadLevelLineUtils (insPt barrelRadius entityLayer centerLineLayer directionStatus /)
+  (GenerateLineByLineScaleUtils 
+    (MoveInsertPositionUtils insPt (- 0 barrelRadius) 0) 
+    (MoveInsertPositionUtils insPt (+ 0 barrelRadius) 0)
+    centerLineLayer
+    6
+  )
+  (GenerateLineUtils 
+    (MoveInsertPositionUtils insPt (- 0 barrelRadius) (* -25 directionStatus)) 
+    (MoveInsertPositionUtils insPt (+ 0 barrelRadius) (* -25 directionStatus))
+    entityLayer
+  ) 
+  (princ)
+)
+
+; 2021-04-18
+(defun GenerateEllipseHeadVerticalLineUtils (insPt barrelRadius entityLayer directionStatus /)
+  (GenerateLineUtils 
+    (MoveInsertPositionUtils insPt (- 0 barrelRadius) 0) 
+    (MoveInsertPositionUtils insPt (- 0 barrelRadius) (* -25 directionStatus))
+    entityLayer
+  )
+  (GenerateLineUtils 
+    (MoveInsertPositionUtils insPt (+ 0 barrelRadius) 0) 
+    (MoveInsertPositionUtils insPt (+ 0 barrelRadius) (* -25 directionStatus))
+    entityLayer
+  ) 
+  (princ)
+)
+
 
 ; Generate CAD Graph Utils Function 
 ;;;-------------------------------------------------------------------------;;;

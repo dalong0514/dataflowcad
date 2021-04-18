@@ -18,7 +18,7 @@
 (defun c:GenerateFireFightVPipeText (/ insPt) 
   (princ "\n请选择消火栓平面图中的消防立管：")
   (mapcar '(lambda (x) 
-             (GenerateLineByPosition (cadr x) (AddPositonOffSetUtils (cadr x) '(500 -1300 0)) "DataflowFireFightPipe")
+             (GenerateLineUtils (cadr x) (AddPositonOffSetUtils (cadr x) '(500 -1300 0)) "DataflowFireFightPipe")
              (GenerateOneFireFightHPipe (AddPositonOffSetUtils (cadr x) '(500 -1300 0)) "XHL" (GetFireFightPipeDiameter x) (car x) 350)
           ) 
     (GetRawFireFightPipeDataListBySelect)
@@ -49,7 +49,7 @@
   (mapcar '(lambda (x) 
              (setq linePoint (AddPositonOffSetUtils (AddPositonOffSetUtils (TranforCoordinateToPolarUtils (cdr (assoc "rawPosition" x))) insPt) '(0 -1000 0)))
              (GenerateOneFireFightElevation (AddPositonOffSetUtils linePoint '(-900 -3000 0)) elevation textHeight)
-             (GenerateLineByPosition linePoint (AddPositonOffSetUtils linePoint '(500 -1300 0)) "DataflowFireFightPipe")
+             (GenerateLineUtils linePoint (AddPositonOffSetUtils linePoint '(500 -1300 0)) "DataflowFireFightPipe")
              (GenerateOneFireFightHPipe 
                (AddPositonOffSetUtils linePoint '(500 -1300 0))
                (cdr (assoc "PIPENUM" x))

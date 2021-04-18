@@ -21,6 +21,9 @@
   (VerifyBsLayerByName "0DataFlow-BsText")
   (VerifyBsLayerByName "0DataFlow-BsGCT")
   (VerifyBsLayerByName "0DataFlow-BsFrame")
+  (VerifyBsLayerByName "0DataFlow-BsThickLine")
+  (VerifyBsLayerByName "0DataFlow-BsCenterLine")
+  (VerifyBsLayerByName "0DataFlow-BsDottedLine")
   (VerifyBsBlockByName "BsGCT*")
   (VerifyBsBlockByName "*\.2017")
 )
@@ -143,9 +146,18 @@
   (GenerateLevelLeftTextUtils (MoveInsertPositionUtils insPt 566.2 -32) (nth 4 textList) "0DataFlow-BsText" 20 0.6) 
 )
 
+; 2021-04-18
+(defun InsertBsTankGCTGraphy (/ insPt) 
+  (VerifyBsBlockLayerText)
+  (setq insPt (getpoint "\n拾取设备一览表插入点："))
+  (GenerateEllipseHeadUtils insPt 300 "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" 1)
+  (princ)
+)
+
 (defun c:foo ()
-  (InsertBsGCTStrategy "Tank")
+  ; (InsertBsGCTStrategy "Tank")
   ; (GetBsGCTTankOtherRequestList)
+  (InsertBsTankGCTGraphy)
 )
 
 ; 2021-04-17
