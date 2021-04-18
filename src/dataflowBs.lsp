@@ -96,6 +96,10 @@
     (InsertBsGCTPressureElementRowText (MoveInsertPositionUtils insPt 0 (* -40 i)) (nth i tankPressureElementList))
     (setq i (1+ i))
   ) 
+  (GeneratePolyLineUtils 
+    insPt
+    (MoveInsertPositionUtils insPt 0 (- 0 (* 40 (length tankPressureElementList)))) 
+    "0DataFlow-BsGCT" 3.6)  
 )
 
 ; 2021-03-17
@@ -141,7 +145,7 @@
     (MoveInsertPositionUtils insPt 900 (- 0 (* 40 (length tankPressureElementList)))) 
     "0DataFlow-BsGCT" 3.6)
   (GeneratePolyLineUtils 
-    (MoveInsertPositionUtils insPt 0 130) 
+    insPt
     (MoveInsertPositionUtils insPt 0 (- 0 (* 40 (length tankPressureElementList)))) 
     "0DataFlow-BsGCT" 3.6) 
 )
