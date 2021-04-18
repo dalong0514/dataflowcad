@@ -510,10 +510,21 @@
 
 ; 2021-04-18
 ; directionStatus: dxfcode 210: 1 up, -1 down
-(defun GenerateEllipseHeadUtils (insPt barrelRadius entityLayer centerLineLayer directionStatus /)
+(defun GenerateSingleLineEllipseHeadUtils (insPt barrelRadius entityLayer centerLineLayer directionStatus /)
   (GenerateEllipseUtils insPt entityLayer barrelRadius directionStatus)
-  (GenerateEllipseHeadLevelLineUtils insPt barrelRadius entityLayer centerLineLayer directionStatus)
   (GenerateEllipseHeadVerticalLineUtils insPt barrelRadius entityLayer directionStatus)
+  (GenerateEllipseHeadLevelLineUtils insPt barrelRadius entityLayer centerLineLayer directionStatus)
+  (princ)
+)
+
+; 2021-04-18
+; directionStatus: dxfcode 210: 1 up, -1 down
+(defun GenerateDoubleLineEllipseHeadUtils (insPt barrelRadius entityLayer centerLineLayer directionStatus thickNess /)
+  (GenerateEllipseUtils insPt entityLayer barrelRadius directionStatus)
+  (GenerateEllipseUtils insPt entityLayer (+ barrelRadius thickNess) directionStatus)
+  (GenerateEllipseHeadVerticalLineUtils insPt barrelRadius entityLayer directionStatus)
+  (GenerateEllipseHeadVerticalLineUtils insPt (+ barrelRadius thickNess) entityLayer directionStatus)
+  (GenerateEllipseHeadLevelLineUtils insPt (+ barrelRadius thickNess) entityLayer centerLineLayer directionStatus)
   (princ)
 )
 
