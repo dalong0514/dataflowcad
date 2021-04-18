@@ -31,12 +31,12 @@
 ; 2021-04-17
 (defun InsertBsGCTStrategy (dataType /) 
   (cond 
-    ((= dataType "Tank") (InsertBsTankGCT))
+    ((= dataType "Tank") (InsertBsTankGCT 350 500))
   )
 )
 
 ; 2021-04-17
-(defun InsertBsTankGCT (/ insPt tankPressureElementList) 
+(defun InsertBsTankGCT (barrelRadius barrelHalfHeight / insPt tankPressureElementList) 
   (VerifyBsBlockLayerText)
   (setq tankPressureElementList (GetBsGCTTankPressureElementList))
   (setq tankOtherRequestList (GetBsGCTTankOtherRequestList))
@@ -49,6 +49,7 @@
   (InsertBsGCTPressureElement (MoveInsertPositionUtils insPt -900 1980) "Tank" tankPressureElementList)
   (InsertBsGCTOtherRequest (MoveInsertPositionUtils insPt -900 (- 1900 (* 40 (length tankPressureElementList)))) "Tank" tankOtherRequestList)
   (InsertBsGCTNozzleTable (MoveInsertPositionUtils insPt -1800 2870) "Tank" tankPressureElementList)
+  (InsertBsTankGCTGraphy (MoveInsertPositionUtils insPt -2915 1435) barrelRadius barrelHalfHeight)
   (princ)
 )
 
@@ -147,17 +148,18 @@
 )
 
 ; 2021-04-18
-(defun InsertBsTankGCTGraphy (/ insPt) 
+(defun InsertBsTankGCTGraphy (insPt barrelRadius barrelHalfHeight /) 
   (VerifyBsBlockLayerText)
-  (setq insPt (getpoint "\n拾取设备一览表插入点："))
-  (GenerateDoubleLineEllipseHeadUtils insPt 350 "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" 1 8)
+  (GenerateDoubleLineEllipseHeadUtils (MoveInsertPositionUtils insPt 0 barrelHalfHeight) barrelRadius "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" 1 8)
+  (GenerateDoubleLineBarrelUtils insPt barrelRadius barrelHalfHeight "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" 8)
+  (GenerateDoubleLineEllipseHeadUtils (MoveInsertPositionUtils insPt 0 (- 0 barrelHalfHeight)) barrelRadius "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" -1 8)
   (princ)
 )
 
-(defun c:foo ()
-  ; (InsertBsGCTStrategy "Tank")
+(defun c:foo (/ insPt)
+  (InsertBsGCTStrategy "Tank")
   ; (GetBsGCTTankOtherRequestList)
-  (InsertBsTankGCTGraphy)
+  ; (setq insPt (getpoint "\n拾取设备一览表插入点："))
 )
 
 ; 2021-04-17

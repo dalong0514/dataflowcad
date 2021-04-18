@@ -561,6 +561,57 @@
   (princ)
 )
 
+; 2021-04-18
+(defun GenerateSingleLineBarrelUtils (insPt barrelRadius barrelHalfHeight entityLayer centerLineLayer /)
+  (GenerateLineByLineScaleUtils 
+    (MoveInsertPositionUtils insPt 0 (+ barrelHalfHeight (/ barrelRadius 2))) 
+    (MoveInsertPositionUtils insPt 0 (- 0 barrelHalfHeight (/ barrelRadius 2)))
+    centerLineLayer
+    6
+  ) 
+  (GenerateLineUtils 
+    (MoveInsertPositionUtils insPt (- 0 barrelRadius) barrelHalfHeight) 
+    (MoveInsertPositionUtils insPt (- 0 barrelRadius) (- 0 barrelHalfHeight))
+    entityLayer
+  ) 
+  (GenerateLineUtils 
+    (MoveInsertPositionUtils insPt barrelRadius barrelHalfHeight) 
+    (MoveInsertPositionUtils insPt barrelRadius (- 0 barrelHalfHeight))
+    entityLayer
+  ) 
+  (princ)
+)
+
+; 2021-04-18
+(defun GenerateDoubleLineBarrelUtils (insPt barrelRadius barrelHalfHeight entityLayer centerLineLayer thickNess /)
+  (GenerateLineByLineScaleUtils 
+    (MoveInsertPositionUtils insPt 0 (+ barrelHalfHeight (/ barrelRadius 2) thickNess)) 
+    (MoveInsertPositionUtils insPt 0 (- 0 barrelHalfHeight (/ barrelRadius 2) thickNess))
+    centerLineLayer
+    6
+  ) 
+  (GenerateLineUtils 
+    (MoveInsertPositionUtils insPt (- 0 barrelRadius) barrelHalfHeight) 
+    (MoveInsertPositionUtils insPt (- 0 barrelRadius) (- 0 barrelHalfHeight))
+    entityLayer
+  ) 
+  (GenerateLineUtils 
+    (MoveInsertPositionUtils insPt barrelRadius barrelHalfHeight) 
+    (MoveInsertPositionUtils insPt barrelRadius (- 0 barrelHalfHeight))
+    entityLayer
+  ) 
+  (GenerateLineUtils 
+    (MoveInsertPositionUtils insPt (- 0 barrelRadius thickNess) barrelHalfHeight) 
+    (MoveInsertPositionUtils insPt (- 0 barrelRadius thickNess) (- 0 barrelHalfHeight))
+    entityLayer
+  ) 
+  (GenerateLineUtils 
+    (MoveInsertPositionUtils insPt (+ barrelRadius thickNess) barrelHalfHeight) 
+    (MoveInsertPositionUtils insPt (+ barrelRadius thickNess) (- 0 barrelHalfHeight))
+    entityLayer
+  )  
+  (princ)
+)
 
 ; Generate CAD Graph Utils Function 
 ;;;-------------------------------------------------------------------------;;;
