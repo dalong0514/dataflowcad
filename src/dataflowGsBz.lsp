@@ -284,7 +284,7 @@
 
 ; refactored at 2021-04-09
 (defun PurgeJSDrawDataMacro () 
-  (DeleteEntityBySSUtils (GetAllCopySS))
+  (DeleteEntityBySSUtils (GetAllJSDrawCopySS))
   (alert "建筑底图清理成功")
 )
 
@@ -312,7 +312,7 @@
       (setq JSDrawBasePositionList (car (vl-bb-ref 'architectureDraw))) 
       (setq newDrawBasePositionList (GetNewDrawBasePositionList GSDrawBasePositionList JSDrawBasePositionList))
       (setq JSDrawData (car (cdr (vl-bb-ref 'architectureDraw)))) ; why have car? - 2021-02-28
-      (DeleteEntityBySSUtils (GetAllCopySS))
+      (DeleteEntityBySSUtils (GetAllJSDrawCopySS))
       (GenerateNewJSEntityData newDrawBasePositionList JSDrawData)
       (alert "建筑底图更新成功") 
     )
@@ -453,29 +453,16 @@
 
 ; 2021-02-26
 (defun GetCopyEntityData () 
-  (GetJSEntityData (GetCopySS))
+  (ClearEntityDataForCopyUtils (GetJSDrawCopySS))
 )
 
 ; 2021-02-28
 (defun GetAllCopyEntityData () 
-  (GetJSEntityData (GetAllCopySS))
-)
-
-; 2021-02-28
-(defun GetJSEntityData (ss /) 
-  (mapcar '(lambda (x) 
-              (vl-remove-if-not '(lambda (y) 
-                                  (and (/= (car y) -1)  (/= (car y) 330) (/= (car y) 5))
-                                ) 
-                x
-              ) 
-           ) 
-    (GetSelectedEntityDataUtils ss) 
-  )
+  (ClearEntityDataForCopyUtils (GetAllJSDrawCopySS))
 )
 
 ; 2021-03-01
-(defun GetCopySS () 
+(defun GetJSDrawCopySS () 
     (ssget '( 
         (-4 . "<OR")
           (0 . "LINE")
@@ -496,7 +483,7 @@
 )
 
 ; 2021-03-01
-(defun GetAllCopySS () 
+(defun GetAllJSDrawCopySS () 
     (ssget "X" '( 
         (-4 . "<OR")
           (0 . "LINE")

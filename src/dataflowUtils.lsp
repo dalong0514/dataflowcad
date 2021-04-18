@@ -677,6 +677,24 @@
   )
 )
 
+; 2021-04-18
+(defun GetLineEntitySSBySelectUtils () 
+  (ssget '((0 . "INSERT")))
+)
+
+; refactored at 2021-04-18 - rename function name
+(defun ClearEntityDataForCopyUtils (ss /) 
+  (mapcar '(lambda (x) 
+              (vl-remove-if-not '(lambda (y) 
+                                  (and (/= (car y) -1)  (/= (car y) 330) (/= (car y) 5))
+                                ) 
+                x
+              ) 
+           ) 
+    (GetSelectedEntityDataUtils ss) 
+  )
+)
+
 (defun MergeTwoSSUtils (firstSS secondSS / i)
   (if (/= secondSS nil)
     (progn
@@ -702,7 +720,6 @@
   (action_tile "filename" "(setq filename $value)")
   (setq status (start_dialog))
   (unload_dialog dcl_id)
-  
   (if (= status 1)
     (progn 
       (setq fn filename)
