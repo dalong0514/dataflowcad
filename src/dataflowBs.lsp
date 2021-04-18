@@ -150,7 +150,7 @@
 (defun InsertBsTankGCTGraphy (/ insPt) 
   (VerifyBsBlockLayerText)
   (setq insPt (getpoint "\n拾取设备一览表插入点："))
-  (GenerateDoubleLineEllipseHeadUtils insPt 300 "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" -1 8)
+  (GenerateDoubleLineEllipseHeadUtils insPt 350 "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" 1 8)
   (princ)
 )
 

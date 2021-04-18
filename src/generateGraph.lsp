@@ -499,10 +499,11 @@
 
 ; 2021-04-18
 ; directionStatus: dxfcode 210: 1 up, -1 down
-(defun GenerateEllipseUtils (insPt entityLayer ellipseDiameter directionStatus /)
+; ratio dxf 40: Ratio of minor axis to major axis
+(defun GenerateEllipseUtils (insPt entityLayer ellipseDiameter directionStatus ratio /)
   (entmake 
     (list (cons 0 "ELLIPSE") (cons 100 "AcDbEntity") (cons 67 0) (cons 8 entityLayer) (cons 100 "AcDbEllipse") 
-          (cons 10 insPt) (cons 11 (list ellipseDiameter 0 0)) (cons 210 (list 0 0 directionStatus)) (cons 40 0.5) (cons 41 0.0) (cons 42 3.14159) 
+          (cons 10 insPt) (cons 11 (list ellipseDiameter 0 0)) (cons 210 (list 0 0 directionStatus)) (cons 40 ratio) (cons 41 0.0) (cons 42 3.14159) 
     )
   )
   (princ)
@@ -511,7 +512,7 @@
 ; 2021-04-18
 ; directionStatus: dxfcode 210: 1 up, -1 down
 (defun GenerateSingleLineEllipseHeadUtils (insPt barrelRadius entityLayer centerLineLayer directionStatus /)
-  (GenerateEllipseUtils insPt entityLayer barrelRadius directionStatus)
+  (GenerateEllipseUtils insPt entityLayer barrelRadius directionStatus 0.5)
   (GenerateEllipseHeadVerticalLineUtils insPt barrelRadius entityLayer directionStatus)
   (GenerateEllipseHeadLevelLineUtils insPt barrelRadius entityLayer centerLineLayer directionStatus)
   (princ)
@@ -520,8 +521,9 @@
 ; 2021-04-18
 ; directionStatus: dxfcode 210: 1 up, -1 down
 (defun GenerateDoubleLineEllipseHeadUtils (insPt barrelRadius entityLayer centerLineLayer directionStatus thickNess /)
-  (GenerateEllipseUtils insPt entityLayer barrelRadius directionStatus)
-  (GenerateEllipseUtils insPt entityLayer (+ barrelRadius thickNess) directionStatus)
+  (GenerateEllipseUtils insPt entityLayer barrelRadius directionStatus 0.5)
+  ; ratio dxf 40: Ratio of minor axis to major axis
+  (GenerateEllipseUtils insPt entityLayer (+ barrelRadius thickNess) directionStatus (/ (float (+ (/ barrelRadius 2) thickNess)) (+ barrelRadius thickNess)))
   (GenerateEllipseHeadVerticalLineUtils insPt barrelRadius entityLayer directionStatus)
   (GenerateEllipseHeadVerticalLineUtils insPt (+ barrelRadius thickNess) entityLayer directionStatus)
   (GenerateEllipseHeadLevelLineUtils insPt (+ barrelRadius thickNess) entityLayer centerLineLayer directionStatus)
