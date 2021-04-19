@@ -277,8 +277,22 @@
   (InsertAlignedDimensionUtils firstInsPt secondInsPt textInsPt "0DataFlow-BsDimension" "DataFlow-BsGCT" textOverrideContent)
 )
 
+; 2021-04-19
+(defun ReadBsDataFromCSVStrategy (dataType / fileDir)
+  (if (= dataType "BsGCT") 
+    (setq fileDir "D:\\dataflowcad\\bsdata\\bsGCT.csv")
+  )
+  (ReadDataFromCSVUtils fileDir)
+)
+
+; 2021-04-19
+(defun GetBsGCTImportedList ()
+  (StrListToListListUtils (ReadBsDataFromCSVStrategy "BsGCT"))
+)
+
 (defun c:foo (/ insPt)
-  (InsertBsGCTStrategy "Tank")
+  ; (InsertBsGCTStrategy "Tank")
+  (GetBsGCTImportedList)
 )
 
 ; Generate BsGCT
