@@ -677,6 +677,26 @@
   (/ (sqrt (- (expt lengthRadius 2) (expt xValue 2))) 2)
 )
 
+; 2021-04-19
+(defun GetXDistanceForTwoPoint (firstInsPt secondInsPt /) 
+  (abs (- (car firstInsPt) (car firstInsPt)))
+)
+
+; 2021-04-19
+(defun GetXHalfDistanceForTwoPoint (firstInsPt secondInsPt /) 
+  (/ (GetXDistanceForTwoPoint firstInsPt secondInsPt))
+)
+
+; 2021-04-19
+(defun GetYDistanceForTwoPoint (firstInsPt secondInsPt /) 
+  (abs (- (cadr firstInsPt) (cadr firstInsPt)))
+)
+
+; 2021-04-19
+(defun GetYHalfDistanceForTwoPoint (firstInsPt secondInsPt /) 
+  (/ (GetYDistanceForTwoPoint firstInsPt secondInsPt))
+)
+
 ; Calculate CAD Graph Utils Function 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;

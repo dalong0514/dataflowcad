@@ -187,12 +187,17 @@
 )
 
 ; 2021-04-19
-(defun InsertBsGCTTankNozzleDimension (insPt barrelRadius thickNess /) 
+(defun InsertBsGCTTankNozzleDimension (insPt leftNozzleinsPt rightNozzleinsPt /) 
   (InsertBsGCTDimension 
-    (MoveInsertPositionUtils insPt (- 0 barrelRadius) 0) 
-    (MoveInsertPositionUtils insPt barrelRadius 0) 
-    (MoveInsertPositionUtils insPt 0 50) 
-    "%%c<>")
+    (MoveInsertPositionUtils leftNozzleinsPt 0 150) 
+    (MoveInsertPositionUtils (list (car insPt) (cadr leftNozzleinsPt) 0) 0 150) 
+    (MoveInsertPositionUtils insPt (- 0 (GetXHalfDistanceForTwoPoint insPt leftNozzleinsPt)) 200) 
+    "")
+  (InsertBsGCTDimension 
+    (MoveInsertPositionUtils (list (car insPt) (cadr rightNozzleinsPt) 0) 0 150) 
+    (MoveInsertPositionUtils rightNozzleinsPt 0 150) 
+    (MoveInsertPositionUtils insPt (- 0 (GetXHalfDistanceForTwoPoint insPt rightNozzleinsPt)) 200) 
+    "") 
 )
 
 ; 2021-04-19
@@ -203,6 +208,7 @@
   (setq rightNozzleinsPt (MoveInsertPositionUtils insPt (- barrelRadius nozzleOffset thickNess) yOffset))
   (InsertBlockUtils leftNozzleinsPt "BsGCTNozzle" "0DataFlow-BsThickLine" (list (cons 0 dataType)))
   (InsertBlockUtils rightNozzleinsPt "BsGCTNozzle" "0DataFlow-BsThickLine" (list (cons 0 dataType)))
+  (InsertBsGCTTankNozzleDimension insPt leftNozzleinsPt rightNozzleinsPt)
 )
 
 ; 2021-04-19
