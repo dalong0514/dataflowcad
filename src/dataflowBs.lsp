@@ -290,9 +290,31 @@
   (StrListToListListUtils (ReadBsDataFromCSVStrategy "BsGCT"))
 )
 
+; 2021-04-19
+(defun GetBsGCTDesignData () 
+  (mapcar '(lambda (x) (cdr x)) 
+    (vl-remove-if-not '(lambda (x) 
+                        (= (car x) "design") 
+                      ) 
+      (GetBsGCTImportedList)
+    ) 
+  )  
+)
+
+; 2021-04-19
+(defun GetBsGCTNozzleData () 
+  (mapcar '(lambda (x) (cdr x)) 
+    (vl-remove-if-not '(lambda (x) 
+                        (= (car x) "nozzle") 
+                      ) 
+      (GetBsGCTImportedList)
+    )  
+  ) 
+)
+
 (defun c:foo (/ insPt)
   ; (InsertBsGCTStrategy "Tank")
-  (GetBsGCTImportedList)
+  (GetBsGCTDesignData)
 )
 
 ; Generate BsGCT
