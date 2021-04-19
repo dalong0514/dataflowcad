@@ -15,15 +15,10 @@
 ; Generate BsGCT
 
 ; 2021-04-17
-(defun VerifyBsBlockLayerText ()
+(defun VerifyBsGCTBlockLayerText ()
   (VerifyBsTextStyleByName "DataFlow")
   (VerifyBsTextStyleByName "TitleText")
-  (VerifyBsLayerByName "0DataFlow-BsText")
-  (VerifyBsLayerByName "0DataFlow-BsGCT")
-  (VerifyBsLayerByName "0DataFlow-BsFrame")
-  (VerifyBsLayerByName "0DataFlow-BsThickLine")
-  (VerifyBsLayerByName "0DataFlow-BsCenterLine")
-  (VerifyBsLayerByName "0DataFlow-BsDottedLine")
+  (VerifyBsLayerByName "0DataFlow*")
   (VerifyBsBlockByName "BsGCT*")
   (VerifyBsBlockByName "*\.2017")
 )
@@ -37,7 +32,7 @@
 
 ; 2021-04-17
 (defun InsertBsTankGCT (barrelRadius barrelHalfHeight / insPt tankPressureElementList) 
-  (VerifyBsBlockLayerText)
+  (VerifyBsGCTBlockLayerText)
   (setq tankPressureElementList (GetBsGCTTankPressureElementList))
   (setq tankOtherRequestList (GetBsGCTTankOtherRequestList))
   (setq insPt (getpoint "\n拾取设备一览表插入点："))
@@ -161,7 +156,6 @@
 
 ; 2021-04-18
 (defun InsertBsGCTTankGraphy (insPt barrelRadius barrelHalfHeight thickNess /) 
-  (VerifyBsBlockLayerText)
   (GenerateDoubleLineEllipseHeadUtils (MoveInsertPositionUtils insPt 0 barrelHalfHeight) barrelRadius "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" 1 thickNess)
   (GenerateDoubleLineBarrelUtils insPt barrelRadius barrelHalfHeight "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" thickNess)
   (GenerateDoubleLineEllipseHeadUtils (MoveInsertPositionUtils insPt 0 (- 0 barrelHalfHeight)) barrelRadius "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" -1 thickNess)
@@ -214,9 +208,10 @@
 )
 
 (defun c:foo (/ insPt)
-  (InsertBsGCTStrategy "Tank")
+  ; (InsertBsGCTStrategy "Tank")
   ; (GetBsGCTTankOtherRequestList)
   ; (setq insPt (getpoint "\n拾取设备一览表插入点："))
+  (VerifyBsGCTBlockLayerText)
 )
 
 ; Generate BsGCT
