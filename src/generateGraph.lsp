@@ -147,6 +147,15 @@
   ) 
 )
 
+; 2021-04-17
+(defun StealBsDimensionStyleByNameList (dimensionStyleNameList /)
+  (Steal (GetBsModulesPath) 
+    (list 
+      (list "Dimension Styles" dimensionStyleNameList)
+    )
+  ) 
+)
+
 ; 2021-03-03
 (defun VerifyGsLcBlockByName (blockName /) 
   (if (= (tblsearch "BLOCK" blockName) nil) 
@@ -214,6 +223,13 @@
 (defun VerifyBsTextStyleByName (textStyleName /) 
   (if (= (tblsearch "STYLE" textStyleName) nil) 
     (StealBsTextStyleByNameList (list textStyleName))
+  )
+)
+
+; 2021-04-19
+(defun VerifyBsDimensionStyleByName (dimensionStyleName /) 
+  (if (= (tblsearch "DIMSTYLE" dimensionStyleName) nil) 
+    (StealBsDimensionStyleByNameList (list dimensionStyleName))
   )
 )
 

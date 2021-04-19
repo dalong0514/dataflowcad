@@ -19,6 +19,7 @@
   (VerifyBsTextStyleByName "DataFlow")
   (VerifyBsTextStyleByName "TitleText")
   (VerifyBsLayerByName "0DataFlow*")
+  (VerifyBsDimensionStyleByName "DataFlow*")
   (VerifyBsBlockByName "BsGCT*")
   (VerifyBsBlockByName "*\.2017")
 )
