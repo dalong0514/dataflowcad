@@ -208,11 +208,16 @@
   (StrListToListListUtils (ReadFullDataFromCSVUtils fileDir))
 )
 
+; 2021-04-19
+(defun InsertBsGCTDimension (firstInsPt secondInsPt textInsPt /)
+  (InsertAlignedDimensionUtils firstInsPt secondInsPt textInsPt "0DataFlow-BsDimension" "DataFlow-BsGCT")
+)
+
 (defun c:foo (/ insPt)
   ; (InsertBsGCTStrategy "Tank")
   ; (GetBsGCTTankOtherRequestList)
   ; (setq insPt (getpoint "\n拾取设备一览表插入点："))
-  (InsertAlignedDimensionUtils '(0 0 0) '(1000 0 0) '(500 200 0) "0DataFlow-BsGCT" "DataFlow-BsGCT")
+  (InsertBsGCTDimension '(0 0 0) '(1000 0 0) '(500 200 0))
 )
 
 ; Generate BsGCT
