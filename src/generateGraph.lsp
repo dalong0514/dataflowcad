@@ -341,7 +341,7 @@
 )
 
 ; 2021-04-19
-(defun InsertAlignedDimensionUtils (firstInsPt secondInsPt textInsPt layerName dimensionStyleName / 
+(defun InsertAlignedDimensionUtils (firstInsPt secondInsPt textInsPt layerName dimensionStyleName textOverrideContent / 
                                     acadObj curDoc first3DInsPt second3DInsPt text3DInsPt modelSpace dimObj)
   (setq acadObj (vlax-get-acad-object))
   (setq curDoc (vla-get-activedocument acadObj)) 
@@ -354,6 +354,7 @@
   (setq dimObj (vla-AddDimAligned modelSpace first3DInsPt second3DInsPt text3DInsPt))
   (vlax-put-property dimObj 'Layer layerName)
   (vlax-put-property dimObj 'StyleName dimensionStyleName)
+  (vlax-put-property dimObj 'TextOverride textOverrideContent)
   ; (GetVlaObjectPropertyAndMethodUtils dimObj)
   (princ)
 )
