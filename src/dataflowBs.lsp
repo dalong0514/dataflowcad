@@ -45,7 +45,7 @@
   (InsertBsGCTPressureElement (MoveInsertPositionUtils insPt -900 1980) "Tank" tankPressureElementList)
   (InsertBsGCTOtherRequest (MoveInsertPositionUtils insPt -900 (- 1900 (* 40 (length tankPressureElementList)))) "Tank" tankOtherRequestList)
   (InsertBsGCTNozzleTable (MoveInsertPositionUtils insPt -1800 2870) "Tank" tankPressureElementList)
-  (InsertBsGCTTankGraphy (MoveInsertPositionUtils insPt -2915 1600) barrelRadius barrelHalfHeight 8)
+  (InsertBsGCTTankGraphy (MoveInsertPositionUtils insPt -2915 1600) barrelRadius barrelHalfHeight 8 "Tank")
   (princ)
 )
 
@@ -156,12 +156,28 @@
 )
 
 ; 2021-04-18
-(defun InsertBsGCTTankGraphy (insPt barrelRadius barrelHalfHeight thickNess /) 
+(defun InsertBsGCTTankGraphy (insPt barrelRadius barrelHalfHeight thickNess dataType /) 
+  ; the head height is 25
+  (setq barrelHalfHeight (+ barrelHalfHeight 25)) 
   (GenerateDoubleLineEllipseHeadUtils (MoveInsertPositionUtils insPt 0 barrelHalfHeight) barrelRadius "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" 1 thickNess)
+  (GenerateUpEllipseHeadNozzle (MoveInsertPositionUtils insPt 0 (+ barrelHalfHeight (/ barrelRadius 2) thickNess)) dataType)
   (GenerateDoubleLineBarrelUtils insPt barrelRadius barrelHalfHeight "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" thickNess)
   (GenerateDoubleLineEllipseHeadUtils (MoveInsertPositionUtils insPt 0 (- 0 barrelHalfHeight)) barrelRadius "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" -1 thickNess)
-  (InsertBsGCTSupportLeg (MoveInsertPositionUtils insPt (+ barrelRadius thickNess) (- 0 (- barrelHalfHeight 25))) "Tank")
+  (GenerateDownllipseHeadNozzle (MoveInsertPositionUtils insPt 0 (- 0 barrelHalfHeight (/ barrelRadius 2) thickNess)) dataType)
+  (InsertBsGCTSupportLeg (MoveInsertPositionUtils insPt (+ barrelRadius thickNess) (- 0 (- barrelHalfHeight 25))) dataType)
   (princ)
+)
+
+; 2021-04-19
+(defun GenerateUpEllipseHeadNozzle (insPt dataType /) 
+  (InsertBlockUtils insPt "BsGCTNozzle" "0DataFlow-BsThickLine" (list (cons 0 dataType)))
+  (InsertBlockUtils (MoveInsertPositionUtils insPt (- 0 (- barrelRadius 100)) 0) "BsGCTNozzle" "0DataFlow-BsThickLine" (list (cons 0 dataType)))
+  (InsertBlockUtils (MoveInsertPositionUtils insPt (- barrelRadius 100) 0) "BsGCTNozzle" "0DataFlow-BsThickLine" (list (cons 0 dataType)))
+)
+
+; 2021-04-19
+(defun GenerateDownllipseHeadNozzle (insPt dataType /) 
+  (InsertBlockByRotateUtils insPt "BsGCTNozzle" "0DataFlow-BsThickLine" (list (cons 0 dataType)) PI)
 )
 
 ; 2021-04-18
@@ -214,10 +230,10 @@
 )
 
 (defun c:foo (/ insPt)
-  ; (InsertBsGCTStrategy "Tank")
+  (InsertBsGCTStrategy "Tank")
   ; (GetBsGCTTankOtherRequestList)
   ; (setq insPt (getpoint "\n拾取设备一览表插入点："))
-  (InsertBsGCTDimension '(0 0 0) '(1000 0 0) '(500 200 0) "R<>")
+  ; (InsertBsGCTDimension '(0 0 0) '(1000 0 0) '(500 200 0) "R<>")
 )
 
 ; Generate BsGCT

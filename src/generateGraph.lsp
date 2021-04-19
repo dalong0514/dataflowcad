@@ -290,6 +290,7 @@
 )
 
 ; 2021-04-05
+; level is 0, vertical is 1.57
 (defun InsertBlockByRotateUtils (insPt blockName layerName propertyDictList rotate / acadObj curDoc insertionPnt modelSpace blockRefObj blockAttributes)
   (setq acadObj (vlax-get-acad-object))
   (setq curDoc (vla-get-activedocument acadObj)) 
@@ -631,7 +632,7 @@
 )
 
 ; 2021-04-18
-(defun GenerateDoubleLineBarrelUtils (insPt barrelRadius barrelHalfHeight entityLayer centerLineLayer thickNess /)
+(defun GenerateDoubleLineBarrelUtils (insPt barrelRadius barrelHalfHeight entityLayer centerLineLayer thickNess /) 
   (GenerateLineByLineScaleUtils 
     (MoveInsertPositionUtils insPt 0 (+ barrelHalfHeight (/ barrelRadius 2) thickNess)) 
     (MoveInsertPositionUtils insPt 0 (- 0 barrelHalfHeight (/ barrelRadius 2) thickNess))
