@@ -340,6 +340,24 @@
   (list (+ (car insPt) xOffset) (+ (cadr insPt) yOffset))
 )
 
+; 2021-04-19
+(defun InsertAlignedDimensionUtils (firstInsPt secondInsPt textInsPt layerName dimensionStyleName / 
+                                    acadObj curDoc first3DInsPt second3DInsPt text3DInsPt modelSpace dimObj)
+  (setq acadObj (vlax-get-acad-object))
+  (setq curDoc (vla-get-activedocument acadObj)) 
+  (setq first3DInsPt (vlax-3d-point firstInsPt) 
+        second3DInsPt (vlax-3d-point secondInsPt)
+        text3DInsPt (vlax-3d-point textInsPt)
+  )
+  (setq modelSpace (vla-get-ModelSpace curDoc))
+  ;; Create an aligned dimension object in model space
+  (setq dimObj (vla-AddDimAligned modelSpace first3DInsPt second3DInsPt text3DInsPt))
+  (vlax-put-property dimObj 'Layer layerName)
+  (vlax-put-property dimObj 'StyleName dimensionStyleName)
+  ; (GetVlaObjectPropertyAndMethodUtils dimObj)
+  (princ)
+)
+
 ; Utils Functon in GenerateGraph
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;

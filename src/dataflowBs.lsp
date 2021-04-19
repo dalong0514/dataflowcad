@@ -212,7 +212,7 @@
   ; (InsertBsGCTStrategy "Tank")
   ; (GetBsGCTTankOtherRequestList)
   ; (setq insPt (getpoint "\n拾取设备一览表插入点："))
-  (VerifyBsGCTBlockLayerText)
+  (InsertAlignedDimensionUtils '(0 0 0) '(1000 0 0) '(500 200 0) "0DataFlow-BsGCT" "DataFlow-BsGCT")
 )
 
 ; Generate BsGCT
