@@ -156,25 +156,25 @@
 )
 
 ; 2021-04-18
-(defun InsertBsGCTTankGraphy (insPt barrelRadius barrelHalfHeight thickNess dataType / barrelHalfHeight nozzleOffset) 
+(defun InsertBsGCTTankGraphy (insPt barrelRadius barrelHalfHeight thickNess dataType / newBarrelHalfHeight nozzleOffset) 
   ; the head height is 25
-  (setq barrelHalfHeight (+ barrelHalfHeight 25)) 
+  (setq newBarrelHalfHeight (+ barrelHalfHeight 25)) 
   (setq nozzleOffset 100)
-  (GenerateDoubleLineEllipseHeadUtils (MoveInsertPositionUtils insPt 0 barrelHalfHeight) barrelRadius "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" 1 thickNess)
-  (GenerateUpEllipseHeadNozzle (MoveInsertPositionUtils insPt 0 (+ barrelHalfHeight (/ barrelRadius 2) thickNess)) (+ barrelRadius thickNess) dataType nozzleOffset thickNess)
-  (GenerateDoubleLineBarrelUtils insPt barrelRadius barrelHalfHeight "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" thickNess)
-  (GenerateDoubleLineEllipseHeadUtils (MoveInsertPositionUtils insPt 0 (- 0 barrelHalfHeight)) barrelRadius "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" -1 thickNess)
-  (GenerateDownllipseHeadNozzle (MoveInsertPositionUtils insPt 0 (- 0 barrelHalfHeight (/ barrelRadius 2) thickNess)) dataType)
-  (InsertBsGCTSupportLeg (MoveInsertPositionUtils insPt (+ barrelRadius thickNess) (- 0 (- barrelHalfHeight 25))) dataType)
-  (InsertBsGCTTankBarrelDimension insPt barrelRadius thickNess)
+  (GenerateDoubleLineEllipseHeadUtils (MoveInsertPositionUtils insPt 0 newBarrelHalfHeight) barrelRadius "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" 1 thickNess)
+  (GenerateUpEllipseHeadNozzle (MoveInsertPositionUtils insPt 0 (+ newBarrelHalfHeight (/ barrelRadius 2) thickNess)) (+ barrelRadius thickNess) dataType nozzleOffset thickNess)
+  (GenerateDoubleLineBarrelUtils insPt barrelRadius newBarrelHalfHeight "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" thickNess)
+  (GenerateDoubleLineEllipseHeadUtils (MoveInsertPositionUtils insPt 0 (- 0 newBarrelHalfHeight)) barrelRadius "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" -1 thickNess)
+  (GenerateDownllipseHeadNozzle (MoveInsertPositionUtils insPt 0 (- 0 newBarrelHalfHeight (/ barrelRadius 2) thickNess)) dataType)
+  (InsertBsGCTSupportLeg (MoveInsertPositionUtils insPt (+ barrelRadius thickNess) (- 0 (- newBarrelHalfHeight 25))) dataType)
+  (InsertBsGCTTankBarrelDimension insPt barrelRadius barrelHalfHeight thickNess)
   (princ)
 )
 
 ; 2021-04-19
-(defun InsertBsGCTTankBarrelDimension (insPt barrelRadius thickNess /) 
+(defun InsertBsGCTTankBarrelDimension (insPt barrelRadius barrelHalfHeight thickNess /) 
   ; Barrel diameter
   (InsertBsGCTDimension 
-    (MoveInsertPositionUtils insPt (- 0 barrelRadius) 0) 
+    (MoveInsertPositionUtils insPt (GetNegativeNumberUtils barrelRadius) 0) 
     (MoveInsertPositionUtils insPt barrelRadius 0) 
     (MoveInsertPositionUtils insPt 0 50) 
     "%%c<>")
@@ -184,6 +184,18 @@
     (MoveInsertPositionUtils insPt (+ barrelRadius thickNess) 0) 
     (MoveInsertPositionUtils insPt (+ barrelRadius thickNess 50) 50) 
     "") 
+  ; vertical barrel
+  (InsertBsGCTDimension 
+    (MoveInsertPositionUtils insPt barrelRadius barrelHalfHeight) 
+    (MoveInsertPositionUtils insPt barrelRadius (GetNegativeNumberUtils barrelHalfHeight))  
+    (MoveInsertPositionUtils insPt (+ barrelRadius 200) 0) 
+    "") 
+  ; vertical head
+  (InsertBsGCTDimension 
+    (MoveInsertPositionUtils insPt 0 barrelHalfHeight) 
+    (MoveInsertPositionUtils insPt 0 (+ barrelHalfHeight (/ barrelRadius 2) 25 thickNess))  
+    (MoveInsertPositionUtils insPt (+ barrelRadius 200) 0) 
+    "")  
 )
 
 ; 2021-04-19
@@ -192,12 +204,12 @@
     (MoveInsertPositionUtils leftNozzleinsPt 0 150) 
     (MoveInsertPositionUtils (list (car insPt) (cadr leftNozzleinsPt) 0) 0 150) 
     (MoveInsertPositionUtils insPt (- 0 (GetXHalfDistanceForTwoPoint insPt leftNozzleinsPt)) 200) 
-    "")
+    "R<>")
   (InsertBsGCTDimension 
     (MoveInsertPositionUtils (list (car insPt) (cadr rightNozzleinsPt) 0) 0 150) 
     (MoveInsertPositionUtils rightNozzleinsPt 0 150) 
     (MoveInsertPositionUtils insPt (- 0 (GetXHalfDistanceForTwoPoint insPt rightNozzleinsPt)) 200) 
-    "") 
+    "R<>") 
 )
 
 ; 2021-04-19
