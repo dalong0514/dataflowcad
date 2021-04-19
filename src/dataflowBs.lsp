@@ -166,7 +166,33 @@
   (GenerateDoubleLineEllipseHeadUtils (MoveInsertPositionUtils insPt 0 (- 0 barrelHalfHeight)) barrelRadius "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" -1 thickNess)
   (GenerateDownllipseHeadNozzle (MoveInsertPositionUtils insPt 0 (- 0 barrelHalfHeight (/ barrelRadius 2) thickNess)) dataType)
   (InsertBsGCTSupportLeg (MoveInsertPositionUtils insPt (+ barrelRadius thickNess) (- 0 (- barrelHalfHeight 25))) dataType)
+  (InsertBsGCTTankBarrelDimension insPt barrelRadius thickNess)
   (princ)
+)
+
+; 2021-04-19
+(defun InsertBsGCTTankBarrelDimension (insPt barrelRadius thickNess /) 
+  ; Barrel diameter
+  (InsertBsGCTDimension 
+    (MoveInsertPositionUtils insPt (- 0 barrelRadius) 0) 
+    (MoveInsertPositionUtils insPt barrelRadius 0) 
+    (MoveInsertPositionUtils insPt 0 50) 
+    "%%c<>")
+  ; thickness
+  (InsertBsGCTDimension 
+    (MoveInsertPositionUtils insPt barrelRadius 0) 
+    (MoveInsertPositionUtils insPt (+ barrelRadius thickNess) 0) 
+    (MoveInsertPositionUtils insPt (+ barrelRadius thickNess 50) 50) 
+    "") 
+)
+
+; 2021-04-19
+(defun InsertBsGCTTankNozzleDimension (insPt barrelRadius thickNess /) 
+  (InsertBsGCTDimension 
+    (MoveInsertPositionUtils insPt (- 0 barrelRadius) 0) 
+    (MoveInsertPositionUtils insPt barrelRadius 0) 
+    (MoveInsertPositionUtils insPt 0 50) 
+    "%%c<>")
 )
 
 ; 2021-04-19
@@ -175,11 +201,6 @@
   (InsertBlockUtils insPt "BsGCTNozzle" "0DataFlow-BsThickLine" (list (cons 0 dataType)))
   (InsertBlockUtils (MoveInsertPositionUtils insPt (- 0 (- barrelRadius nozzleOffset thickNess)) yOffset) "BsGCTNozzle" "0DataFlow-BsThickLine" (list (cons 0 dataType)))
   (InsertBlockUtils (MoveInsertPositionUtils insPt (- barrelRadius nozzleOffset thickNess) yOffset) "BsGCTNozzle" "0DataFlow-BsThickLine" (list (cons 0 dataType)))
-)
-
-; 2021-04-19
-(defun GetYByXForEllipseUtils (lengthRadius xValue /) 
-  (/ (sqrt (- (expt lengthRadius 2) (expt xValue 2))) 2)
 )
 
 ; 2021-04-19
