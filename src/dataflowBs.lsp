@@ -321,21 +321,17 @@
 )
 
 ; 2021-04-17
-(defun InsertBsGCTStrategy (dataType designData /) 
-  (cond 
-    ((= dataType "Tank") (InsertOneBsTankGCT designData))
-  )
-)
+; (defun InsertBsGCTStrategy (dataType designData /) 
+;   (cond 
+;     ((= dataType "Tank") (InsertOneBsTankGCT designData))
+;   )
+; )
 
 ; 2021-04-17
-(defun InsertOneBsTankGCT (oneTankData / insPt bsGCTType barrelRadius barrelHalfHeight tankPressureElementList) 
-  (VerifyBsGCTBlockLayerText)
+(defun InsertOneBsTankGCT (insPt oneTankData tankPressureElementList tankOtherRequestList / bsGCTType barrelRadius barrelHalfHeight) 
   (setq bsGCTType (GetDottedPairValueUtils "BSGCT_TYPE" oneTankData))
   (setq barrelRadius (GetHalfNumberUtils (atoi (GetDottedPairValueUtils "BarrelRadius" oneTankData))))
   (setq barrelHalfHeight (GetHalfNumberUtils (atoi (GetDottedPairValueUtils "BarrelHeight" oneTankData))))
-  (setq tankPressureElementList (GetBsGCTTankPressureElementList))
-  (setq tankOtherRequestList (GetBsGCTTankOtherRequestList))
-  (setq insPt (getpoint "\n拾取设备一览表插入点："))
   (InsertBsGCTDrawFrame insPt bsGCTType)
   (InsertBsGCTDataHeader (MoveInsertPositionUtils insPt -900 2870) bsGCTType)
   (InsertBsGCTDesignParam (MoveInsertPositionUtils insPt -900 2820) bsGCTType)
@@ -349,24 +345,41 @@
 )
 
 ; 2021-04-17
-(defun InsertAllBsGCTTank (oneTankData / insPt barrelRadius barrelHalfHeight tankPressureElementList) 
+(defun InsertAllBsGCTTank (/ insPt totalNum) 
   (VerifyBsGCTBlockLayerText)
   (setq insPt (getpoint "\n拾取设备一览表插入点："))
-  (InsertBsGCTDrawFrame insPt "Tank")
-  (InsertBsGCTDataHeader (MoveInsertPositionUtils insPt -900 2870) "Tank")
-  (InsertBsGCTDesignParam (MoveInsertPositionUtils insPt -900 2820) "Tank")
-  (InsertBsGCTDesignStandard (MoveInsertPositionUtils insPt -450 2820) "Tank")
-  (InsertBsGCTRequirement (MoveInsertPositionUtils insPt -450 2620) "Tank")
-  (InsertBsGCTPressureElement (MoveInsertPositionUtils insPt -900 1980) "Tank" tankPressureElementList)
-  (InsertBsGCTOtherRequest (MoveInsertPositionUtils insPt -900 (- 1900 (* 40 (length tankPressureElementList)))) "Tank" tankOtherRequestList)
-  (InsertBsGCTNozzleTable (MoveInsertPositionUtils insPt -1800 2870) "Tank" tankPressureElementList)
-  (InsertBsGCTTankGraphy (MoveInsertPositionUtils insPt -2915 1600) barrelRadius barrelHalfHeight 8 "Tank")
+  (setq tankPressureElementList (GetBsGCTTankPressureElementList))
+  (setq tankOtherRequestList (GetBsGCTTankOtherRequestList)) 
+  (InsertOneBsTankGCT 
+    insPt 
+    (car (GetBsGCTTankDictData)) 
+    tankPressureElementList 
+    tankOtherRequestList)
+  
+  
+  ; (setq totalNum (1+ (/ (length (GetNsEquipDictList)) 29)))
+  ; (setq num 1)
+  ; (mapcar '(lambda (x) 
+  ;             (InsertNsEquipFrame (MoveInsertPositionUtils insPt -3000 -25200) totalNum num)
+  ;             (setq insPtList (GetInsertPtListByYMoveUtils insPt (GenerateSortedNumByList x 0) -800))
+  ;             (mapcar '(lambda (xx yy) 
+  ;                       (InsertNsEquipListLeftTextByRow yy xx textHeight)
+  ;                     ) 
+  ;               x
+  ;               insPtList
+  ;             ) 
+  ;             (setq insPt (GetNextNsEquipFrameInsPtStrategy insPt insertDirection))
+  ;             (setq num (1+ num))
+  ;          ) 
+  ;   (SplitListByNumUtils equipDictList 29)
+  ; )  
+  
 )
 
 (defun c:foo (/ insPt)
   ; (InsertBsGCTStrategy "Tank" "")
-  (InsertOneBsTankGCT (car (GetBsGCTTankDictData)))
   ; (GetBsGCTTankDictData)
+  (InsertAllBsGCTTank)
 )
 
 ; Generate BsGCT
