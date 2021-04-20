@@ -300,16 +300,16 @@
 )
 
 ; 2021-04-19
-(defun GetBsGCTTankData () 
+(defun GetBsGCTTankData (bsGCTImportedList /) 
   (vl-remove-if-not '(lambda (x) 
                       (= (car x) "Tank") 
                     ) 
-    (GetBsGCTImportedList)
+    bsGCTImportedList
   ) 
 )
 
 ; 2021-04-19
-(defun GetBsGCTTankDictData () 
+(defun GetBsGCTTankDictData (bsGCTImportedList /) 
   (mapcar '(lambda (y) 
               (mapcar '(lambda (xx yy) 
                          (cons xx yy)
@@ -318,7 +318,7 @@
                 y
               )
            ) 
-    (GetBsGCTTankData)
+    (GetBsGCTTankData bsGCTImportedList)
   )
 )
 
@@ -358,6 +358,50 @@
   ) 
 )
 
+; 2021-04-20
+(defun GetBsGCTTankStandardData (bsGCTImportedList /) 
+  (mapcar '(lambda (x) (cadr x)) 
+    (vl-remove-if-not '(lambda (x) 
+                        (= (car x) "Tank-Standard") 
+                      ) 
+      bsGCTImportedList
+    )  
+  ) 
+)
+
+; 2021-04-20
+(defun GetBsGCTTankHeadStyleData (bsGCTImportedList /) 
+  (mapcar '(lambda (x) (cadr x)) 
+    (vl-remove-if-not '(lambda (x) 
+                        (= (car x) "Tank-HeadStyle") 
+                      ) 
+      bsGCTImportedList
+    )  
+  ) 
+)
+
+; 2021-04-20
+(defun GetBsGCTTankHeadMaterialData (bsGCTImportedList /) 
+  (mapcar '(lambda (x) (cadr x)) 
+    (vl-remove-if-not '(lambda (x) 
+                        (= (car x) "Tank-HeadMaterial") 
+                      ) 
+      bsGCTImportedList
+    )  
+  ) 
+)
+
+; 2021-04-20
+(defun GetBsGCTTankOtherRequestData (bsGCTImportedList /) 
+  (mapcar '(lambda (x) (cadr x)) 
+    (vl-remove-if-not '(lambda (x) 
+                        (= (car x) "Tank-OtherRequest") 
+                      ) 
+      bsGCTImportedList
+    )  
+  ) 
+)
+
 ; 2021-04-17
 ; (defun InsertBsGCTStrategy (dataType designData /) 
 ;   (cond 
@@ -385,12 +429,13 @@
 )
 
 ; 2021-04-17
-(defun InsertAllBsGCTTank (/ insPt allBsGCTTankDictData tankPressureElementList tankOtherRequestList totalNum insPtList) 
+(defun InsertAllBsGCTTank (/ insPt bsGCTImportedList allBsGCTTankDictData tankPressureElementList tankOtherRequestList totalNum insPtList) 
   (VerifyBsGCTBlockLayerText)
   (setq insPt (getpoint "\n拾取设备一览表插入点："))
-  (setq allBsGCTTankDictData (GetBsGCTTankDictData))
+  (setq bsGCTImportedList (GetBsGCTImportedList))
+  (setq allBsGCTTankDictData (GetBsGCTTankDictData bsGCTImportedList))
   (setq tankPressureElementList (GetBsGCTTankPressureElementList))
-  (setq tankOtherRequestList (GetBsGCTTankOtherRequestList)) 
+  (setq tankOtherRequestList (GetBsGCTTankOtherRequestData bsGCTImportedList)) 
   (setq insPtList (GetInsertPtListByXMoveUtils insPt (GenerateSortedNumByList allBsGCTTankDictData 0) 5200))
   (mapcar '(lambda (x y) 
             (InsertOneBsTankGCT x y tankPressureElementList tankOtherRequestList) 
@@ -403,8 +448,8 @@
 
 (defun c:foo (/ insPt)
   (InsertAllBsGCTTank)
+  ; (GetBsGCTTankHeadMaterialData (GetBsGCTImportedList))
   ; (GetBsGCTTankNozzleDictData)
-  ; (GetOneBsGCTTankNozzleDictData "V5501")
 )
 
 ; Generate BsGCT
