@@ -328,12 +328,29 @@
 )
 
 ; 2021-04-17
-(defun InsertOneBsTankGCT (oneTankData / insPt barrelRadius barrelHalfHeight tankPressureElementList) 
+(defun InsertOneBsTankGCT (oneTankData / insPt bsGCTType barrelRadius barrelHalfHeight tankPressureElementList) 
   (VerifyBsGCTBlockLayerText)
+  (setq bsGCTType "Tank")
   (setq barrelRadius 350)
   (setq barrelHalfHeight 500)
   (setq tankPressureElementList (GetBsGCTTankPressureElementList))
   (setq tankOtherRequestList (GetBsGCTTankOtherRequestList))
+  (setq insPt (getpoint "\n拾取设备一览表插入点："))
+  (InsertBsGCTDrawFrame insPt bsGCTType)
+  (InsertBsGCTDataHeader (MoveInsertPositionUtils insPt -900 2870) bsGCTType)
+  (InsertBsGCTDesignParam (MoveInsertPositionUtils insPt -900 2820) bsGCTType)
+  (InsertBsGCTDesignStandard (MoveInsertPositionUtils insPt -450 2820) bsGCTType)
+  (InsertBsGCTRequirement (MoveInsertPositionUtils insPt -450 2620) bsGCTType)
+  (InsertBsGCTPressureElement (MoveInsertPositionUtils insPt -900 1980) bsGCTType tankPressureElementList)
+  (InsertBsGCTOtherRequest (MoveInsertPositionUtils insPt -900 (- 1900 (* 40 (length tankPressureElementList)))) bsGCTType tankOtherRequestList)
+  (InsertBsGCTNozzleTable (MoveInsertPositionUtils insPt -1800 2870) bsGCTType tankPressureElementList)
+  (InsertBsGCTTankGraphy (MoveInsertPositionUtils insPt -2915 1600) barrelRadius barrelHalfHeight 8 bsGCTType)
+  (princ)
+)
+
+; 2021-04-17
+(defun InsertAllBsGCTTank (oneTankData / insPt barrelRadius barrelHalfHeight tankPressureElementList) 
+  (VerifyBsGCTBlockLayerText)
   (setq insPt (getpoint "\n拾取设备一览表插入点："))
   (InsertBsGCTDrawFrame insPt "Tank")
   (InsertBsGCTDataHeader (MoveInsertPositionUtils insPt -900 2870) "Tank")
@@ -344,13 +361,12 @@
   (InsertBsGCTOtherRequest (MoveInsertPositionUtils insPt -900 (- 1900 (* 40 (length tankPressureElementList)))) "Tank" tankOtherRequestList)
   (InsertBsGCTNozzleTable (MoveInsertPositionUtils insPt -1800 2870) "Tank" tankPressureElementList)
   (InsertBsGCTTankGraphy (MoveInsertPositionUtils insPt -2915 1600) barrelRadius barrelHalfHeight 8 "Tank")
-  (princ)
 )
 
 (defun c:foo (/ insPt)
   ; (InsertBsGCTStrategy "Tank" "")
-  ; (InsertOneBsTankGCT (car (GetTankBsGCTDesignData)))
-  (GetBsGCTTankDictData)
+  (InsertOneBsTankGCT (car (GetBsGCTTankDictData)))
+  ; (GetBsGCTTankDictData)
 )
 
 ; Generate BsGCT
