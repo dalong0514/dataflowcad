@@ -103,26 +103,33 @@
 )
 
 ; 2021-04-17
-(defun InsertBsGCTNozzleTable (insPt dataType tankPressureElementList / i) 
+(defun InsertBsGCTNozzleTable (insPt dataType oneTankData / oneBsGCTTankNozzleDictData) 
+  (setq oneBsGCTTankNozzleDictData (GetOneBsGCTTankNozzleDictData (GetDottedPairValueUtils "TAG" oneTankData)))
   (InsertBlockUtils insPt "BsGCTNozzleTableHeader" "0DataFlow-BsGCT" (list (cons 0 dataType)))
-  (InsertBsGCTNozzleTableRow (MoveInsertPositionUtils insPt 0 -130) dataType tankPressureElementList)
+  (if (/= oneBsGCTTankNozzleDictData nil) 
+    (InsertBsGCTNozzleTableRow (MoveInsertPositionUtils insPt 0 -130) dataType oneBsGCTTankNozzleDictData)
+  )
 )
 
 ; 2021-04-17
-(defun InsertBsGCTNozzleTableRow (insPt dataType tankPressureElementList / i) 
+(defun InsertBsGCTNozzleTableRow (insPt dataType oneBsGCTTankNozzleDictData / i) 
   (setq i 0)
-  (repeat (length tankPressureElementList)
+  (repeat (length oneBsGCTTankNozzleDictData)
     (InsertBlockUtils (MoveInsertPositionUtils insPt 0 (* -40 i)) "BsGCTNozzleTableRow" "0DataFlow-BsGCT" (list (cons 0 dataType)))
+    (ModifyMultiplePropertyForOneBlockUtils (entlast) 
+      (mapcar '(lambda (x) (car x)) (nth i oneBsGCTTankNozzleDictData))
+      (mapcar '(lambda (x) (cdr x)) (nth i oneBsGCTTankNozzleDictData))
+    ) 
     ; (InsertBsGCTNozzleTableRowText (MoveInsertPositionUtils insPt 0 (* -40 i)) (nth i tankPressureElementList))
     (setq i (1+ i))
   ) 
   (GeneratePolyLineUtils 
-    (MoveInsertPositionUtils insPt 0 (- 0 (* 40 (length tankPressureElementList)))) 
-    (MoveInsertPositionUtils insPt 900 (- 0 (* 40 (length tankPressureElementList)))) 
+    (MoveInsertPositionUtils insPt 0 (- 0 (* 40 (length oneBsGCTTankNozzleDictData)))) 
+    (MoveInsertPositionUtils insPt 900 (- 0 (* 40 (length oneBsGCTTankNozzleDictData)))) 
     "0DataFlow-BsGCT" 3.6)
   (GeneratePolyLineUtils 
     insPt
-    (MoveInsertPositionUtils insPt 0 (- 0 (* 40 (length tankPressureElementList)))) 
+    (MoveInsertPositionUtils insPt 0 (- 0 (* 40 (length oneBsGCTTankNozzleDictData)))) 
     "0DataFlow-BsGCT" 3.6) 
 )
 
@@ -346,6 +353,17 @@
   ) 
 )
 
+; 2021-04-20
+(defun GetOneBsGCTTankNozzleDictData (tankTag /) 
+  (mapcar '(lambda (x) (cdr x)) 
+    (vl-remove-if-not '(lambda (x) 
+                        (= (GetDottedPairValueUtils "TAG" x) tankTag) 
+                      ) 
+      (GetBsGCTTankNozzleDictData)
+    )  
+  ) 
+)
+
 ; 2021-04-17
 ; (defun InsertBsGCTStrategy (dataType designData /) 
 ;   (cond 
@@ -366,7 +384,7 @@
   (InsertBsGCTRequirement (MoveInsertPositionUtils insPt -450 2620) bsGCTType)
   (InsertBsGCTPressureElement (MoveInsertPositionUtils insPt -900 1980) bsGCTType tankPressureElementList)
   (InsertBsGCTOtherRequest (MoveInsertPositionUtils insPt -900 (- 1900 (* 40 (length tankPressureElementList)))) bsGCTType tankOtherRequestList)
-  (InsertBsGCTNozzleTable (MoveInsertPositionUtils insPt -1800 2870) bsGCTType tankPressureElementList)
+  (InsertBsGCTNozzleTable (MoveInsertPositionUtils insPt -1800 2870) bsGCTType oneTankData)
   (InsertBsGCTTankGraphy (MoveInsertPositionUtils insPt -2915 1600) barrelRadius barrelHalfHeight 8 bsGCTType)
   (princ)
 )
@@ -391,6 +409,7 @@
 (defun c:foo (/ insPt)
   (InsertAllBsGCTTank)
   ; (GetBsGCTTankNozzleDictData)
+  ; (GetOneBsGCTTankNozzleDictData "V5501")
 )
 
 ; Generate BsGCT
