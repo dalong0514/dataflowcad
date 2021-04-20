@@ -291,10 +291,12 @@
 )
 
 ; 2021-04-19
-(defun GetBsGCTDesignData () 
-  (mapcar '(lambda (x) (cdr x)) 
+(defun GetTankBsGCTDesignData () 
+  (mapcar '(lambda (x) 
+             (cons (cadr x) (list x))
+           ) 
     (vl-remove-if-not '(lambda (x) 
-                        (= (car x) "design") 
+                        (= (car x) "tank") 
                       ) 
       (GetBsGCTImportedList)
     ) 
@@ -314,7 +316,7 @@
 
 (defun c:foo (/ insPt)
   ; (InsertBsGCTStrategy "Tank")
-  (GetBsGCTDesignData)
+  (GetBsGCTNozzleData)
 )
 
 ; Generate BsGCT
