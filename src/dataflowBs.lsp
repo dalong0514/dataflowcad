@@ -358,12 +358,12 @@
     insPtList
     allBsGCTTankDictData 
   ) 
+  (princ)
 )
 
 (defun c:foo (/ insPt)
-  ; (InsertBsGCTStrategy "Tank" "")
-  ; (GetBsGCTTankDictData)
-  (InsertAllBsGCTTank)
+  (car (GetBsGCTTankDictData))
+  ; (InsertAllBsGCTTank)
 )
 
 ; Generate BsGCT

@@ -50,7 +50,15 @@
   (IsPositionInTheRegionUtilsTest)
   (ExtractProjectNumUtilsTest)
   (ExtractMonomerNumUtilsTest)
+  (SplitListByIndexUtilsTest)
   (DL:PrintTestResults (DL:CountBooleans *testList*))
+)
+
+; 2021-04-20
+(defun SplitListByIndexUtilsTest () 
+  (AssertEqual 'SplitListByIndexUtils 
+    (list 2 (list "1" "260" "自定义备注测试1" "2" "360" "自定义备注测试2" "460")) 
+    (list (list "1" "260" "自定义备注测试1") (list "2" "360" "自定义备注测试2" "460")))
 )
 
 ; 2021-04-14

@@ -1624,6 +1624,22 @@
   resultList
 )
 
+; 2021-04-20
+; Copied from Lee Mac
+; Unit Test Compeleted
+(defun SplitListByItemUtils (x originList / r)
+   (setq originList 
+      (vl-member-if '(lambda (y) (setq r (cons y r)) (equal x y)) originList)
+   )
+   (list (reverse (cdr r)) originList)
+)
+
+; 2021-04-20
+; Unit Test Compeleted
+(defun SplitListByIndexUtils (index originList /) 
+   (SplitListByItemUtils (nth (1+ index) originList) originList)
+)
+
 ; 2021-03-22
 (defun GetAllDrawLabelPositionListUtils () 
   (mapcar '(lambda (x) 
