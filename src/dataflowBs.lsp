@@ -330,9 +330,9 @@
 ; 2021-04-17
 (defun InsertOneBsTankGCT (oneTankData / insPt bsGCTType barrelRadius barrelHalfHeight tankPressureElementList) 
   (VerifyBsGCTBlockLayerText)
-  (setq bsGCTType "Tank")
-  (setq barrelRadius 350)
-  (setq barrelHalfHeight 500)
+  (setq bsGCTType (GetDottedPairValueUtils "BSGCT_TYPE" oneTankData))
+  (setq barrelRadius (GetHalfNumberUtils (atoi (GetDottedPairValueUtils "BarrelRadius" oneTankData))))
+  (setq barrelHalfHeight (GetHalfNumberUtils (atoi (GetDottedPairValueUtils "BarrelHeight" oneTankData))))
   (setq tankPressureElementList (GetBsGCTTankPressureElementList))
   (setq tankOtherRequestList (GetBsGCTTankOtherRequestList))
   (setq insPt (getpoint "\n拾取设备一览表插入点："))
