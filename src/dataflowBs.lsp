@@ -362,7 +362,9 @@
 )
 
 (defun c:foo (/ insPt)
-  (car (GetBsGCTTankDictData))
+  
+  (cadr (SplitListListByIndexUtils 4 (car (GetBsGCTTankDictData))))
+  ; (car (GetBsGCTTankDictData))
   ; (InsertAllBsGCTTank)
 )
 

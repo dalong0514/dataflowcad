@@ -1637,7 +1637,25 @@
 ; 2021-04-20
 ; Unit Test Compeleted
 (defun SplitListByIndexUtils (index originList /) 
-   (SplitListByItemUtils (nth (1+ index) originList) originList)
+   (SplitListByItemUtils (nth index originList) originList)
+)
+
+; 2021-04-20
+; Copied from Lee Mac
+; Unit Test Compeleted
+(defun SplitListListByItemUtils (x originList / r) 
+  ; ready for refactor
+   (setq originList 
+      (vl-member-if '(lambda (y) (setq r (cons y r)) (equal (car x) (car y))) 
+                     originList)
+   )
+   (list (reverse (cdr r)) originList)
+)
+
+; 2021-04-20
+; Unit Test Compeleted
+(defun SplitListListByIndexUtils (index originList /) 
+   (SplitListListByItemUtils (nth index originList) originList)
 )
 
 ; 2021-03-22

@@ -51,14 +51,22 @@
   (ExtractProjectNumUtilsTest)
   (ExtractMonomerNumUtilsTest)
   (SplitListByIndexUtilsTest)
+  (SplitListListByIndexUtilsTest)
   (DL:PrintTestResults (DL:CountBooleans *testList*))
+)
+
+; 2021-04-20
+(defun SplitListListByIndexUtilsTest () 
+  (AssertEqual 'SplitListListByIndexUtils 
+    (list 1 (list (list "1" "260") (list "自定义备注测试1" "2") (list "360" "自定义备注测试2"))) 
+    (list (list (list "1" "260")) (list (list "自定义备注测试1" "2") (list "360" "自定义备注测试2"))))
 )
 
 ; 2021-04-20
 (defun SplitListByIndexUtilsTest () 
   (AssertEqual 'SplitListByIndexUtils 
     (list 2 (list "1" "260" "自定义备注测试1" "2" "360" "自定义备注测试2" "460")) 
-    (list (list "1" "260" "自定义备注测试1") (list "2" "360" "自定义备注测试2" "460")))
+    (list (list "1" "260") (list "自定义备注测试1" "2" "360" "自定义备注测试2" "460")))
 )
 
 ; 2021-04-14
