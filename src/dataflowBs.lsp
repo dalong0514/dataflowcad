@@ -113,7 +113,7 @@
   (setq i 0)
   (repeat (length tankPressureElementList)
     (InsertBlockUtils (MoveInsertPositionUtils insPt 0 (* -40 i)) "BsGCTNozzleTableRow" "0DataFlow-BsGCT" (list (cons 0 dataType)))
-    (InsertBsGCTNozzleTableRowText (MoveInsertPositionUtils insPt 0 (* -40 i)) (nth i tankPressureElementList))
+    ; (InsertBsGCTNozzleTableRowText (MoveInsertPositionUtils insPt 0 (* -40 i)) (nth i tankPressureElementList))
     (setq i (1+ i))
   ) 
   (GeneratePolyLineUtils 
@@ -282,7 +282,7 @@
 
 ; 2021-04-20
 (defun GetBsGCTNozzleTableRowPropertyNameList ()
-  '("TAG" "MATERIAL" "STANDARD" "CONNECTION" "NAME" "LENGTH")
+  '("SYMBOL" "MATERIAL" "STANDARD" "CONNECTION" "NAME" "LENGTH")
 )
 
 ; 2021-04-19
@@ -318,6 +318,20 @@
               )
            ) 
     (GetBsGCTTankData)
+  )
+)
+
+; 2021-04-20
+(defun GetBsGCTTankNozzleDictData () 
+  (mapcar '(lambda (y) 
+              (mapcar '(lambda (xx yy) 
+                         (cons xx yy)
+                      ) 
+                (append (list "TAG") (GetBsGCTNozzleTableRowPropertyNameList))
+                y
+              )
+           ) 
+    (GetBsGCTNozzleData)
   )
 )
 
@@ -376,7 +390,7 @@
 
 (defun c:foo (/ insPt)
   (InsertAllBsGCTTank)
-  ; (mapcar '(lambda (x) (cdr x)) (cadr (SplitListListByIndexUtils 4 (car (GetBsGCTTankDictData)))))
+  ; (GetBsGCTTankNozzleDictData)
 )
 
 ; Generate BsGCT
