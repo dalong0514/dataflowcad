@@ -52,9 +52,19 @@
   )
 )
 
-; 2021-04-17
-(defun InsertBsGCTDesignStandard (insPt dataType /) 
+; refactored at 2021-04-20
+(defun InsertBsGCTDesignStandard (insPt dataType tankStandardList /) 
   (InsertBlockUtils insPt "BsGCTDesignStandard" "0DataFlow-BsGCT" (list (cons 0 dataType)))
+  (InsertBsGCTTankStandardText (MoveInsertPositionUtils insPt 20 -90) tankStandardList)
+)
+
+; 2021-04-20
+(defun InsertBsGCTTankStandardText (insPt tankStandardList / i) 
+  (setq i 0)
+  (repeat (length tankStandardList)
+    (GenerateLevelLeftTextUtils (MoveInsertPositionUtils insPt 0 (* -35 i)) (nth i tankStandardList) "0DataFlow-BsText" 20 0.7) 
+    (setq i (1+ i))
+  ) 
 )
 
 ; 2021-04-17
@@ -410,7 +420,8 @@
 ; )
 
 ; 2021-04-17
-(defun InsertOneBsTankGCT (insPt oneTankData tankPressureElementList tankOtherRequestList / equipTag bsGCTType barrelRadius barrelHalfHeight designParamDictList) 
+(defun InsertOneBsTankGCT (insPt oneTankData tankPressureElementList tankOtherRequestList tankStandardList / 
+                           equipTag bsGCTType barrelRadius barrelHalfHeight designParamDictList) 
   (setq equipTag (GetDottedPairValueUtils "TAG" oneTankData))
   (setq bsGCTType (strcat (GetDottedPairValueUtils "BSGCT_TYPE" oneTankData) "-" equipTag))
   (setq barrelRadius (GetHalfNumberUtils (atoi (GetDottedPairValueUtils "BarrelRadius" oneTankData))))
@@ -419,7 +430,7 @@
   (InsertBsGCTDrawFrame insPt equipTag)
   (InsertBsGCTDataHeader (MoveInsertPositionUtils insPt -900 2870) bsGCTType)
   (InsertBsGCTDesignParam (MoveInsertPositionUtils insPt -900 2820) bsGCTType designParamDictList)
-  (InsertBsGCTDesignStandard (MoveInsertPositionUtils insPt -450 2820) bsGCTType)
+  (InsertBsGCTDesignStandard (MoveInsertPositionUtils insPt -450 2820) bsGCTType tankStandardList)
   (InsertBsGCTRequirement (MoveInsertPositionUtils insPt -450 2620) bsGCTType)
   (InsertBsGCTPressureElement (MoveInsertPositionUtils insPt -900 1980) bsGCTType tankPressureElementList)
   (InsertBsGCTOtherRequest (MoveInsertPositionUtils insPt -900 (- 1900 (* 40 (length tankPressureElementList)))) bsGCTType tankOtherRequestList)
@@ -429,16 +440,17 @@
 )
 
 ; 2021-04-17
-(defun InsertAllBsGCTTank (/ insPt bsGCTImportedList allBsGCTTankDictData tankPressureElementList tankOtherRequestList totalNum insPtList) 
+(defun InsertAllBsGCTTank (/ insPt bsGCTImportedList allBsGCTTankDictData tankPressureElementList tankOtherRequestList tankStandardList insPtList) 
   (VerifyBsGCTBlockLayerText)
   (setq insPt (getpoint "\n拾取设备一览表插入点："))
   (setq bsGCTImportedList (GetBsGCTImportedList))
   (setq allBsGCTTankDictData (GetBsGCTTankDictData bsGCTImportedList))
   (setq tankPressureElementList (GetBsGCTTankPressureElementList))
   (setq tankOtherRequestList (GetBsGCTTankOtherRequestData bsGCTImportedList)) 
+  (setq tankStandardList (GetBsGCTTankStandardData bsGCTImportedList)) 
   (setq insPtList (GetInsertPtListByXMoveUtils insPt (GenerateSortedNumByList allBsGCTTankDictData 0) 5200))
   (mapcar '(lambda (x y) 
-            (InsertOneBsTankGCT x y tankPressureElementList tankOtherRequestList) 
+            (InsertOneBsTankGCT x y tankPressureElementList tankOtherRequestList tankStandardList) 
           ) 
     insPtList
     allBsGCTTankDictData 
