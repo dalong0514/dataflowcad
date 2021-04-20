@@ -39,8 +39,13 @@
 )
 
 ; 2021-04-17
-(defun InsertBsGCTDesignParam (insPt dataType /) 
+; refactored at - 2021-04-20
+(defun InsertBsGCTDesignParam (insPt dataType designParamDictList /) 
   (InsertBlockUtils insPt "BsGCTDesignParam" "0DataFlow-BsGCT" (list (cons 0 dataType)))
+  (ModifyMultiplePropertyForOneBlockUtils (entlast) 
+    (mapcar '(lambda (x) (car x)) designParamDictList)
+    (mapcar '(lambda (x) (cdr x)) designParamDictList)
+  )
 )
 
 ; 2021-04-17
@@ -328,13 +333,14 @@
 ; )
 
 ; 2021-04-17
-(defun InsertOneBsTankGCT (insPt oneTankData tankPressureElementList tankOtherRequestList / bsGCTType barrelRadius barrelHalfHeight) 
+(defun InsertOneBsTankGCT (insPt oneTankData tankPressureElementList tankOtherRequestList / bsGCTType barrelRadius barrelHalfHeight designParamDictList) 
   (setq bsGCTType (GetDottedPairValueUtils "BSGCT_TYPE" oneTankData))
   (setq barrelRadius (GetHalfNumberUtils (atoi (GetDottedPairValueUtils "BarrelRadius" oneTankData))))
   (setq barrelHalfHeight (GetHalfNumberUtils (atoi (GetDottedPairValueUtils "BarrelHeight" oneTankData))))
+  (setq designParamDictList (cadr (SplitListListByIndexUtils 4 oneTankData)))
   (InsertBsGCTDrawFrame insPt bsGCTType)
   (InsertBsGCTDataHeader (MoveInsertPositionUtils insPt -900 2870) bsGCTType)
-  (InsertBsGCTDesignParam (MoveInsertPositionUtils insPt -900 2820) bsGCTType)
+  (InsertBsGCTDesignParam (MoveInsertPositionUtils insPt -900 2820) bsGCTType designParamDictList)
   (InsertBsGCTDesignStandard (MoveInsertPositionUtils insPt -450 2820) bsGCTType)
   (InsertBsGCTRequirement (MoveInsertPositionUtils insPt -450 2620) bsGCTType)
   (InsertBsGCTPressureElement (MoveInsertPositionUtils insPt -900 1980) bsGCTType tankPressureElementList)
@@ -362,10 +368,8 @@
 )
 
 (defun c:foo (/ insPt)
-  
-  (cadr (SplitListListByIndexUtils 4 (car (GetBsGCTTankDictData))))
-  ; (car (GetBsGCTTankDictData))
-  ; (InsertAllBsGCTTank)
+  (InsertAllBsGCTTank)
+  ; (mapcar '(lambda (x) (cdr x)) (cadr (SplitListListByIndexUtils 4 (car (GetBsGCTTankDictData)))))
 )
 
 ; Generate BsGCT
