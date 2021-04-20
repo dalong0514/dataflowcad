@@ -265,6 +265,14 @@
   (StrListToListListUtils (ReadBsDataFromCSVStrategy "BsGCT"))
 )
 
+(defun GetTankBsGCTMainPropertyNameList ()
+  '("BSGCT_TYPE" "TAG" "BarrelRadius" "BarrelHeight")
+)
+
+(defun GetTankBsGCTDesignParamPropertyNameList ()
+  '("SERVIVE_LIFE" "PRESSURE" "DESIGN_PRESSURE" "TEMP" "DESIGN_TEMP" "SUBSTANCE" "SUBSTANCE_PROPERTY" "SUBSTANCE_DENSITY" "CORROSION_ALLOWANCE" "WELD_JOINT" "FULL_VOLUME" "LOAD_FACTOR" "SV_SET_PRESSURE" "SV_MAX_PRESSURE" "INSULATION_THICKNESS" "NET_WEIGHT" "SS_WEIGHT" "OPERATION_WEIGHT" "TOTAL_WEIGHT")
+)
+
 ; 2021-04-19
 (defun GetTankBsGCTDesignData () 
   (mapcar '(lambda (x) 
@@ -276,6 +284,29 @@
       (GetBsGCTImportedList)
     ) 
   )  
+)
+
+; 2021-04-19
+(defun GetBsGCTTankData () 
+  (vl-remove-if-not '(lambda (x) 
+                      (= (car x) "Tank") 
+                    ) 
+    (GetBsGCTImportedList)
+  ) 
+)
+
+; 2021-04-19
+(defun GetBsGCTTankDictData () 
+  (mapcar '(lambda (y) 
+              (mapcar '(lambda (xx yy) 
+                         (cons xx yy)
+                      ) 
+                (append (GetTankBsGCTMainPropertyNameList) (GetTankBsGCTDesignParamPropertyNameList))
+                y
+              )
+           ) 
+    (GetBsGCTTankData)
+  )
 )
 
 ; 2021-04-19
@@ -318,8 +349,8 @@
 
 (defun c:foo (/ insPt)
   ; (InsertBsGCTStrategy "Tank" "")
-  (InsertOneBsTankGCT "")
-  ; (GetBsGCTNozzleData)
+  ; (InsertOneBsTankGCT (car (GetTankBsGCTDesignData)))
+  (GetBsGCTTankDictData)
 )
 
 ; Generate BsGCT

@@ -25,6 +25,17 @@
   ) 
 )
 
+; 2021-04-20
+(defun c:RemoveEducation () 
+  (ExecuteFunctionAfterVerifyDateUtils 'RemoveEducationMacro '())
+)
+
+; 2021-04-20
+(defun RemoveEducationMacro ()
+  (arxload "D:\\dataflowcad\\remove-education.arx")
+  ; (command "_.qsave")
+)
+
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
 ; Utils Function 
