@@ -120,7 +120,6 @@
       (mapcar '(lambda (x) (car x)) (nth i oneBsGCTTankNozzleDictData))
       (mapcar '(lambda (x) (cdr x)) (nth i oneBsGCTTankNozzleDictData))
     ) 
-    ; (InsertBsGCTNozzleTableRowText (MoveInsertPositionUtils insPt 0 (* -40 i)) (nth i tankPressureElementList))
     (setq i (1+ i))
   ) 
   (GeneratePolyLineUtils 
@@ -131,15 +130,6 @@
     insPt
     (MoveInsertPositionUtils insPt 0 (- 0 (* 40 (length oneBsGCTTankNozzleDictData)))) 
     "0DataFlow-BsGCT" 3.6) 
-)
-
-; 2021-03-17
-(defun InsertBsGCTNozzleTableRowText (insPt textList /) 
-  (GenerateLevelCenterTextUtils (MoveInsertPositionUtils insPt 38.1 -32) (nth 0 textList) "0DataFlow-BsText" 20 0.7) 
-  (GenerateLevelCenterTextUtils (MoveInsertPositionUtils insPt 126.2 -32) (nth 1 textList) "0DataFlow-BsText" 20 0.7) 
-  (GenerateLevelCenterTextUtils (MoveInsertPositionUtils insPt 326.2 -32) (nth 2 textList) "0DataFlow-BsText" 20 0.6) 
-  (GenerateLevelCenterTextUtils (MoveInsertPositionUtils insPt 513.7 -32) (nth 3 textList) "0DataFlow-BsText" 20 0.7) 
-  (GenerateLevelLeftTextUtils (MoveInsertPositionUtils insPt 566.2 -32) (nth 4 textList) "0DataFlow-BsText" 20 0.6) 
 )
 
 ; 2021-04-18
