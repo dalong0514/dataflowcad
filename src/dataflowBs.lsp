@@ -345,35 +345,19 @@
 )
 
 ; 2021-04-17
-(defun InsertAllBsGCTTank (/ insPt totalNum) 
+(defun InsertAllBsGCTTank (/ insPt allBsGCTTankDictData tankPressureElementList tankOtherRequestList totalNum insPtList) 
   (VerifyBsGCTBlockLayerText)
   (setq insPt (getpoint "\n拾取设备一览表插入点："))
+  (setq allBsGCTTankDictData (GetBsGCTTankDictData))
   (setq tankPressureElementList (GetBsGCTTankPressureElementList))
   (setq tankOtherRequestList (GetBsGCTTankOtherRequestList)) 
-  (InsertOneBsTankGCT 
-    insPt 
-    (car (GetBsGCTTankDictData)) 
-    tankPressureElementList 
-    tankOtherRequestList)
-  
-  
-  ; (setq totalNum (1+ (/ (length (GetNsEquipDictList)) 29)))
-  ; (setq num 1)
-  ; (mapcar '(lambda (x) 
-  ;             (InsertNsEquipFrame (MoveInsertPositionUtils insPt -3000 -25200) totalNum num)
-  ;             (setq insPtList (GetInsertPtListByYMoveUtils insPt (GenerateSortedNumByList x 0) -800))
-  ;             (mapcar '(lambda (xx yy) 
-  ;                       (InsertNsEquipListLeftTextByRow yy xx textHeight)
-  ;                     ) 
-  ;               x
-  ;               insPtList
-  ;             ) 
-  ;             (setq insPt (GetNextNsEquipFrameInsPtStrategy insPt insertDirection))
-  ;             (setq num (1+ num))
-  ;          ) 
-  ;   (SplitListByNumUtils equipDictList 29)
-  ; )  
-  
+  (setq insPtList (GetInsertPtListByXMoveUtils insPt (GenerateSortedNumByList allBsGCTTankDictData 0) 5200))
+  (mapcar '(lambda (x y) 
+            (InsertOneBsTankGCT x y tankPressureElementList tankOtherRequestList) 
+          ) 
+    insPtList
+    allBsGCTTankDictData 
+  ) 
 )
 
 (defun c:foo (/ insPt)
