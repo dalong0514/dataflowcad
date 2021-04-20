@@ -27,9 +27,13 @@
 ; 2021-04-17
 (defun InsertBsGCTDrawFrame (insPt dataType /) 
   (InsertBlockByNoPropertyUtils insPt "BsGCTDrawFrame" "0DataFlow-BsFrame")
-  (InsertBlockByScaleUtils insPt "title.equip.2017" "0DataFlow-BsFrame" (list (cons 4 "工程图") (cons 15 "设备") (cons 16 "1:5")) 5)
+  (InsertBlockByScaleUtils insPt "title.equip.2017" "0DataFlow-BsFrame" (list (cons 4 "工程图")) 5)
+  (ModifyMultiplePropertyForOneBlockUtils (entlast) 
+    (list "Speci" "Scale" "EquipNAME")
+    (list "设备" "1:5" equipTag)
+  )  
   (InsertBlockByScaleUtils (MoveInsertPositionUtils insPt 0 230) "revisions.2017" "0DataFlow-BsFrame" (list (cons 2 "1")) 5)
-  (InsertBlockByScaleUtils (MoveInsertPositionUtils insPt 0 355) "intercheck.2017" "0DataFlow-BsFrame" (list (cons 2 "1")) 5)
+  (InsertBlockByNoPropertyByScaleUtils (MoveInsertPositionUtils insPt 0 355) "intercheck.2017" "0DataFlow-BsFrame" 5)
   (InsertBlockByNoPropertyByScaleUtils (MoveInsertPositionUtils insPt 0 540) "stamp2.2017" "0DataFlow-BsFrame" 5)
 )
 
@@ -362,12 +366,13 @@
 ; )
 
 ; 2021-04-17
-(defun InsertOneBsTankGCT (insPt oneTankData tankPressureElementList tankOtherRequestList / bsGCTType barrelRadius barrelHalfHeight designParamDictList) 
-  (setq bsGCTType (strcat (GetDottedPairValueUtils "BSGCT_TYPE" oneTankData) "-" (GetDottedPairValueUtils "TAG" oneTankData)))
+(defun InsertOneBsTankGCT (insPt oneTankData tankPressureElementList tankOtherRequestList / equipTag bsGCTType barrelRadius barrelHalfHeight designParamDictList) 
+  (setq equipTag (GetDottedPairValueUtils "TAG" oneTankData))
+  (setq bsGCTType (strcat (GetDottedPairValueUtils "BSGCT_TYPE" oneTankData) "-" equipTag))
   (setq barrelRadius (GetHalfNumberUtils (atoi (GetDottedPairValueUtils "BarrelRadius" oneTankData))))
   (setq barrelHalfHeight (GetHalfNumberUtils (atoi (GetDottedPairValueUtils "BarrelHeight" oneTankData))))
   (setq designParamDictList (cadr (SplitListListByIndexUtils 4 oneTankData)))
-  (InsertBsGCTDrawFrame insPt bsGCTType)
+  (InsertBsGCTDrawFrame insPt equipTag)
   (InsertBsGCTDataHeader (MoveInsertPositionUtils insPt -900 2870) bsGCTType)
   (InsertBsGCTDesignParam (MoveInsertPositionUtils insPt -900 2820) bsGCTType designParamDictList)
   (InsertBsGCTDesignStandard (MoveInsertPositionUtils insPt -450 2820) bsGCTType)
