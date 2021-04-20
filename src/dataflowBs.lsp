@@ -363,7 +363,7 @@
 
 ; 2021-04-17
 (defun InsertOneBsTankGCT (insPt oneTankData tankPressureElementList tankOtherRequestList / bsGCTType barrelRadius barrelHalfHeight designParamDictList) 
-  (setq bsGCTType (GetDottedPairValueUtils "BSGCT_TYPE" oneTankData))
+  (setq bsGCTType (strcat (GetDottedPairValueUtils "BSGCT_TYPE" oneTankData) "-" (GetDottedPairValueUtils "TAG" oneTankData)))
   (setq barrelRadius (GetHalfNumberUtils (atoi (GetDottedPairValueUtils "BarrelRadius" oneTankData))))
   (setq barrelHalfHeight (GetHalfNumberUtils (atoi (GetDottedPairValueUtils "BarrelHeight" oneTankData))))
   (setq designParamDictList (cadr (SplitListListByIndexUtils 4 oneTankData)))
