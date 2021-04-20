@@ -67,9 +67,29 @@
   ) 
 )
 
-; 2021-04-17
-(defun InsertBsGCTRequirement (insPt dataType /) 
+; refactored at 2021-04-20
+(defun InsertBsGCTRequirement (insPt dataType tankHeadStyleList tankHeadMaterialList /) 
   (InsertBlockUtils insPt "BsGCTRequirement" "0DataFlow-BsGCT" (list (cons 0 dataType)))
+  (InsertBsGCTTankHeadStyleText (MoveInsertPositionUtils insPt 55 -100) tankHeadStyleList)
+  (InsertBsGCTTankHeadMaterialText (MoveInsertPositionUtils insPt 55 -240) tankHeadMaterialList)
+)
+
+; 2021-04-20
+(defun InsertBsGCTTankHeadStyleText (insPt tankHeadStyleList / i) 
+  (setq i 0)
+  (repeat (length tankHeadStyleList)
+    (GenerateLevelLeftTextUtils (MoveInsertPositionUtils insPt 0 (* -30 i)) (nth i tankHeadStyleList) "0DataFlow-BsText" 20 0.7) 
+    (setq i (1+ i))
+  ) 
+)
+
+; 2021-04-20
+(defun InsertBsGCTTankHeadMaterialText (insPt tankHeadMaterialList / i) 
+  (setq i 0)
+  (repeat (length tankHeadMaterialList)
+    (GenerateLevelLeftTextUtils (MoveInsertPositionUtils insPt 0 (* -30 i)) (nth i tankHeadMaterialList) "0DataFlow-BsText" 20 0.7) 
+    (setq i (1+ i))
+  ) 
 )
 
 ; 2021-04-17
@@ -420,7 +440,7 @@
 ; )
 
 ; 2021-04-17
-(defun InsertOneBsTankGCT (insPt oneTankData tankPressureElementList tankOtherRequestList tankStandardList / 
+(defun InsertOneBsTankGCT (insPt oneTankData tankPressureElementList tankOtherRequestList tankStandardList tankHeadStyleList tankHeadMaterialList / 
                            equipTag bsGCTType barrelRadius barrelHalfHeight designParamDictList) 
   (setq equipTag (GetDottedPairValueUtils "TAG" oneTankData))
   (setq bsGCTType (strcat (GetDottedPairValueUtils "BSGCT_TYPE" oneTankData) "-" equipTag))
@@ -431,7 +451,7 @@
   (InsertBsGCTDataHeader (MoveInsertPositionUtils insPt -900 2870) bsGCTType)
   (InsertBsGCTDesignParam (MoveInsertPositionUtils insPt -900 2820) bsGCTType designParamDictList)
   (InsertBsGCTDesignStandard (MoveInsertPositionUtils insPt -450 2820) bsGCTType tankStandardList)
-  (InsertBsGCTRequirement (MoveInsertPositionUtils insPt -450 2620) bsGCTType)
+  (InsertBsGCTRequirement (MoveInsertPositionUtils insPt -450 2620) bsGCTType tankHeadStyleList tankHeadMaterialList)
   (InsertBsGCTPressureElement (MoveInsertPositionUtils insPt -900 1980) bsGCTType tankPressureElementList)
   (InsertBsGCTOtherRequest (MoveInsertPositionUtils insPt -900 (- 1900 (* 40 (length tankPressureElementList)))) bsGCTType tankOtherRequestList)
   (InsertBsGCTNozzleTable (MoveInsertPositionUtils insPt -1800 2870) bsGCTType oneTankData)
@@ -440,7 +460,8 @@
 )
 
 ; 2021-04-17
-(defun InsertAllBsGCTTank (/ insPt bsGCTImportedList allBsGCTTankDictData tankPressureElementList tankOtherRequestList tankStandardList insPtList) 
+(defun InsertAllBsGCTTank (/ insPt bsGCTImportedList allBsGCTTankDictData tankPressureElementList 
+                           tankOtherRequestList tankStandardList tankHeadStyleList tankHeadMaterialList insPtList) 
   (VerifyBsGCTBlockLayerText)
   (setq insPt (getpoint "\n拾取设备一览表插入点："))
   (setq bsGCTImportedList (GetBsGCTImportedList))
@@ -448,9 +469,11 @@
   (setq tankPressureElementList (GetBsGCTTankPressureElementList))
   (setq tankOtherRequestList (GetBsGCTTankOtherRequestData bsGCTImportedList)) 
   (setq tankStandardList (GetBsGCTTankStandardData bsGCTImportedList)) 
+  (setq tankHeadStyleList (GetBsGCTTankHeadStyleData bsGCTImportedList)) 
+  (setq tankHeadMaterialList (GetBsGCTTankHeadMaterialData bsGCTImportedList)) 
   (setq insPtList (GetInsertPtListByXMoveUtils insPt (GenerateSortedNumByList allBsGCTTankDictData 0) 5200))
   (mapcar '(lambda (x y) 
-            (InsertOneBsTankGCT x y tankPressureElementList tankOtherRequestList tankStandardList) 
+            (InsertOneBsTankGCT x y tankPressureElementList tankOtherRequestList tankStandardList tankHeadStyleList tankHeadMaterialList) 
           ) 
     insPtList
     allBsGCTTankDictData 
