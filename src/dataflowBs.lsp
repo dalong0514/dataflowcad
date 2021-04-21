@@ -448,7 +448,7 @@
   (setq barrelHalfHeight (GetHalfNumberUtils (atoi (GetDottedPairValueUtils "barrelHeight" oneTankData))))
   (setq thickNess (atoi (GetDottedPairValueUtils "thickNess" oneTankData)))
   ; split oneTankData to Two Parts
-  (setq designParamDictList (cadr (SplitListListByIndexUtils 5 oneTankData)))
+  (setq designParamDictList (cadr (SplitLDictListByDictKeyUtils "SERVIVE_LIFE" oneTankData)))
   (InsertBsGCTDrawFrame insPt equipTag)
   (InsertBsGCTDataHeader (MoveInsertPositionUtils insPt -900 2870) bsGCTType)
   (InsertBsGCTDesignParam (MoveInsertPositionUtils insPt -900 2820) bsGCTType designParamDictList)
