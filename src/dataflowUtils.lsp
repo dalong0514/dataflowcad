@@ -28,6 +28,7 @@
 ; 2021-04-20
 (defun c:RemoveEducation () 
   (ExecuteFunctionAfterVerifyDateUtils 'RemoveEducationMacro '())
+  (alert "去教育版成功，请保存文件！")
 )
 
 ; 2021-04-20

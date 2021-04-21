@@ -6,8 +6,8 @@
   )
 )
 
-(defun c:printVersionInfoNS ()
-  (alert "设备设计流最新版本号 V0.1，更新时间：2021-03-22\n数据流内网地址：192.168.1.38")(princ)
+(defun c:printVersionInfoBS ()
+  (alert "设备设计流最新版本号 V0.1，更新时间：2021-05-10\n数据流内网地址：192.168.1.38")(princ)
 )
 
 ;;;-------------------------------------------------------------------------;;;
@@ -479,6 +479,11 @@
     allBsGCTTankDictData 
   ) 
   (princ)
+)
+
+; 2021-04-21
+(defun c:InsertAllBsGCT ()
+  (ExecuteFunctionAfterVerifyDateUtils 'InsertAllBsGCTTank '())
 )
 
 (defun c:foo (/ insPt)
