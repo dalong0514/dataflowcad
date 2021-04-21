@@ -303,7 +303,7 @@
 
 ; 2021-04-20
 (defun GetTankBsGCTMainPropertyNameList ()
-  '("BSGCT_TYPE" "TAG" "BarrelRadius" "BarrelHeight")
+  '("BSGCT_TYPE" "TAG" "barrelRadius" "barrelHeight" "thickNess")
 )
 
 ; 2021-04-20
@@ -441,12 +441,14 @@
 
 ; 2021-04-17
 (defun InsertOneBsTankGCT (insPt oneTankData tankPressureElementList tankOtherRequestList tankStandardList tankHeadStyleList tankHeadMaterialList / 
-                           equipTag bsGCTType barrelRadius barrelHalfHeight designParamDictList) 
+                           equipTag bsGCTType barrelRadius barrelHalfHeight thickNess designParamDictList) 
   (setq equipTag (GetDottedPairValueUtils "TAG" oneTankData))
   (setq bsGCTType (strcat (GetDottedPairValueUtils "BSGCT_TYPE" oneTankData) "-" equipTag))
-  (setq barrelRadius (GetHalfNumberUtils (atoi (GetDottedPairValueUtils "BarrelRadius" oneTankData))))
-  (setq barrelHalfHeight (GetHalfNumberUtils (atoi (GetDottedPairValueUtils "BarrelHeight" oneTankData))))
-  (setq designParamDictList (cadr (SplitListListByIndexUtils 4 oneTankData)))
+  (setq barrelRadius (GetHalfNumberUtils (atoi (GetDottedPairValueUtils "barrelRadius" oneTankData))))
+  (setq barrelHalfHeight (GetHalfNumberUtils (atoi (GetDottedPairValueUtils "barrelHeight" oneTankData))))
+  (setq thickNess (atoi (GetDottedPairValueUtils "thickNess" oneTankData)))
+  ; split oneTankData to Two Parts
+  (setq designParamDictList (cadr (SplitListListByIndexUtils 5 oneTankData)))
   (InsertBsGCTDrawFrame insPt equipTag)
   (InsertBsGCTDataHeader (MoveInsertPositionUtils insPt -900 2870) bsGCTType)
   (InsertBsGCTDesignParam (MoveInsertPositionUtils insPt -900 2820) bsGCTType designParamDictList)
@@ -455,7 +457,8 @@
   (InsertBsGCTPressureElement (MoveInsertPositionUtils insPt -900 1980) bsGCTType tankPressureElementList)
   (InsertBsGCTOtherRequest (MoveInsertPositionUtils insPt -900 (- 1900 (* 40 (length tankPressureElementList)))) bsGCTType tankOtherRequestList)
   (InsertBsGCTNozzleTable (MoveInsertPositionUtils insPt -1800 2870) bsGCTType oneTankData)
-  (InsertBsGCTTankGraphy (MoveInsertPositionUtils insPt -2915 1600) barrelRadius barrelHalfHeight 8 bsGCTType)
+  ; thickNess param refactored at 2021-04-21
+  (InsertBsGCTTankGraphy (MoveInsertPositionUtils insPt -2915 1600) barrelRadius barrelHalfHeight thickNess bsGCTType)
   (princ)
 )
 
