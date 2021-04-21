@@ -1659,6 +1659,16 @@
    (SplitListListByItemUtils (nth index originList) originList)
 )
 
+; 2021-04-21
+; Unit Test Compeleted
+(defun SplitLDictListByDictKeyUtils (dictKey originList / r) 
+  (setq originList 
+    (vl-member-if '(lambda (y) (setq r (cons y r)) (equal dictKey (car y))) 
+                    originList)
+  )
+  (list (reverse (cdr r)) originList) 
+)
+
 ; 2021-03-22
 (defun GetAllDrawLabelPositionListUtils () 
   (mapcar '(lambda (x) 

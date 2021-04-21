@@ -52,7 +52,15 @@
   (ExtractMonomerNumUtilsTest)
   (SplitListByIndexUtilsTest)
   (SplitListListByIndexUtilsTest)
+  (SplitLDictListByDictKeyUtilsTest)
   (DL:PrintTestResults (DL:CountBooleans *testList*))
+)
+
+; 2021-04-20
+(defun SplitLDictListByDictKeyUtilsTest () 
+  (AssertEqual 'SplitLDictListByDictKeyUtils
+    (list "thickNess" (list (list "1" "260") (list "thickNess" "2") (list "360" "自定义备注测试2") (list "1" "260"))) 
+    (list (list (list "1" "260") ) (list (list "thickNess" "2") (list "360" "自定义备注测试2") (list "1" "260"))))
 )
 
 ; 2021-04-20
