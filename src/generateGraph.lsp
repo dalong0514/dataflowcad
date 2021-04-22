@@ -647,24 +647,26 @@
     centerLineLayer
     6
   ) 
+  ; left two lines
   (GenerateLineUtils 
-    (MoveInsertPositionUtils insPt (- 0 barrelRadius) barrelHalfHeight) 
-    (MoveInsertPositionUtils insPt (- 0 barrelRadius) (- 0 barrelHalfHeight))
+    (MoveInsertPositionUtils insPt (GetNegativeNumberUtils barrelRadius) barrelHalfHeight) 
+    (MoveInsertPositionUtils insPt (GetNegativeNumberUtils barrelRadius) (GetNegativeNumberUtils barrelHalfHeight))
     entityLayer
   ) 
   (GenerateLineUtils 
     (MoveInsertPositionUtils insPt barrelRadius barrelHalfHeight) 
-    (MoveInsertPositionUtils insPt barrelRadius (- 0 barrelHalfHeight))
+    (MoveInsertPositionUtils insPt barrelRadius (GetNegativeNumberUtils barrelHalfHeight))
     entityLayer
   ) 
+  ; right two lines
   (GenerateLineUtils 
     (MoveInsertPositionUtils insPt (- 0 barrelRadius thickNess) barrelHalfHeight) 
-    (MoveInsertPositionUtils insPt (- 0 barrelRadius thickNess) (- 0 barrelHalfHeight))
+    (MoveInsertPositionUtils insPt (- 0 barrelRadius thickNess) (GetNegativeNumberUtils barrelHalfHeight))
     entityLayer
   ) 
   (GenerateLineUtils 
     (MoveInsertPositionUtils insPt (+ barrelRadius thickNess) barrelHalfHeight) 
-    (MoveInsertPositionUtils insPt (+ barrelRadius thickNess) (- 0 barrelHalfHeight))
+    (MoveInsertPositionUtils insPt (+ barrelRadius thickNess) (GetNegativeNumberUtils barrelHalfHeight))
     entityLayer
   )  
   (princ)
