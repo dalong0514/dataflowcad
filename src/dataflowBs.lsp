@@ -315,6 +315,12 @@
     (GetLastVlaObjectUtils) 
     (list (cons "LEG_HEIGHT" legHeight))
   ) 
+  (InsertBsGCTGroundPlate (MoveInsertPositionUtils insPt 8 (- 150 legHeight)) dataType)
+)
+
+; 2021-04-22
+(defun InsertBsGCTGroundPlate (insPt dataType /) 
+  (InsertBlockUtils insPt "BsGCTGroundPlate" "0DataFlow-BsThickLine" (list (cons 0 dataType)))
 )
 
 ; 2021-04-17
