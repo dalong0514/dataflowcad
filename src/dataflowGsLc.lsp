@@ -297,6 +297,67 @@
 )
 
 ; logic for UpdateInstrumentLocation 
+; 2021-04-22
+(defun c:UpdatePipeDataFromEquip () 
+  (ExecuteFunctionAfterVerifyDateUtils 'UpdatePipeDataFromEquipMacro '())
+)
+
+; 2021-04-22
+(defun UpdatePipeDataFromEquipMacro (/ allEquipTagDataList allEquipDataList allPipeDataList entityNameList matchedList) 
+  (setq allEquipTagDataList 
+    (mapcar '(lambda (x) 
+               (GetDottedPairValueUtils "tag" x)
+            ) 
+      (GetAllEquipDataUtils)
+    ) 
+  ) 
+  (setq allEquipDataList 
+    (mapcar '(lambda (x) 
+               (cons 
+                 (GetDottedPairValueUtils "tag" x)
+                 x
+               )
+            ) 
+      (GetAllEquipDataUtils)
+    ) 
+  ) 
+  ; must filter first
+  (setq allPipeDataList 
+    ; relatedid value maybe null
+    (vl-remove-if-not '(lambda (x) 
+                        (and (/= (GetDottedPairValueUtils "from" x) "") 
+                             (/= (member (GetDottedPairValueUtils "from" x) allEquipTagDataList) nil))  
+                      ) 
+      (GetAllPipeDataUtils)
+    )
+  ) 
+  (setq entityNameList 
+    (mapcar '(lambda (x) 
+               (cons 
+                 (handent (GetDottedPairValueUtils "entityhandle" x))
+                 (GetDottedPairValueUtils "from" x)
+               )
+            ) 
+      allPipeDataList
+    ) 
+  ) 
+  (mapcar '(lambda (x) 
+            (setq matchedList (GetDottedPairValueUtils (cdr x) allEquipDataList))
+            (ModifyMultiplePropertyForOneBlockUtils (car x) 
+              (list "SUBSTANCE" "TEMP" "PRESSURE") 
+              (list 
+                (GetDottedPairValueUtils "substance" matchedList)
+                (GetDottedPairValueUtils "temp" matchedList)
+                (GetDottedPairValueUtils "pressure" matchedList)
+              )  
+            )
+          ) 
+    entityNameList
+  ) 
+  (alert "更新完成")(princ)
+)
+
+; logic for UpdateInstrumentLocation 
 ; 2021-04-14
 (defun c:UpdateInstrumentLocation () 
   (ExecuteFunctionAfterVerifyDateUtils 'UpdateInstrumentLocationMacro '())

@@ -1426,6 +1426,15 @@
   )
 )
 
+; 2021-04-22
+(defun GetAllEquipHandleListUtils () 
+  (mapcar '(lambda (x) 
+             (cdr (assoc "entityhandle" x))
+           ) 
+    (GetAllEquipDataUtils)
+  )
+)
+
 ; 2021-03-09
 (defun GetAllMarkedDataByTypeUtils (dataType /) 
   (cons dataType 

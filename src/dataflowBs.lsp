@@ -581,9 +581,9 @@
 )
 
 (defun c:foo (/ insPt)
-  (setq insPt (getpoint "\n拾取设备一览表插入点："))
+  ; (setq insPt (getpoint "\n拾取设备一览表插入点："))
   ; (InsertAllBsGCTTank)
-  (InsertBsGCTUpRightAnnotation insPt "BsGCT" "椭圆封头" "EHA" 800 8)
+  (UpdatePipeDataFromEquipMacro)
 )
 
 ; Generate BsGCT
