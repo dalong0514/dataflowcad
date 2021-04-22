@@ -178,7 +178,20 @@
   (GenerateDownllipseHeadNozzle (MoveInsertPositionUtils insPt 0 (- 0 newBarrelHalfHeight (/ barrelRadius 2) thickNess)) dataType)
   (InsertBsGCTSupportLeg (MoveInsertPositionUtils insPt (+ barrelRadius thickNess) (- 0 (- newBarrelHalfHeight 25))) dataType)
   (InsertBsGCTTankBarrelDimension insPt barrelRadius barrelHalfHeight thickNess)
+  (InsertBsGCTTankAnnotation insPt dataType barrelRadius thickNess)
   (princ)
+)
+
+; 2021-04-22
+(defun InsertBsGCTTankAnnotation (insPt dataType barrelRadius thickNess /) 
+  (InsertBsGCTTankDownLeftAnnotation 
+    (MoveInsertPositionUtils insPt (- 0 barrelRadius) (- 0 barrelHalfHeight 25 50))
+    dataType 
+    "Õ÷‘≤∑‚Õ∑" "EHA" (* 2 barrelRadius) thickNess)
+  (InsertBsGCTTankUpLeftAnnotation 
+    (MoveInsertPositionUtils insPt (- 0 barrelRadius) (+ barrelHalfHeight 25 50))
+    dataType 
+    "Õ÷‘≤∑‚Õ∑" "EHA" (* 2 barrelRadius) thickNess) 
 )
 
 ; 2021-04-22
