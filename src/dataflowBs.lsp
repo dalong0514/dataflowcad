@@ -196,34 +196,34 @@
 
 ; 2021-04-22
 (defun InsertBsGCTTankDownLeftHeadAnnotation (insPt dataType fristText equipType barrelDiameter thickNess /) 
-  (InsertBsGCTTankDownLeftAnnotation insPt dataType fristText (InlineExpandVariableUtils "%equipType% %barrelDiameter%x%thickNess%(7.1)")) 
+  (InsertBsGCTDownLeftAnnotation insPt dataType fristText (InlineExpandVariableUtils "%equipType% %barrelDiameter%x%thickNess%(7.1)")) 
 )
 
 ; 2021-04-22
 (defun InsertBsGCTTankUpLeftHeadAnnotation (insPt dataType fristText equipType barrelDiameter thickNess /) 
-  (InsertBsGCTTankUpLeftAnnotation insPt dataType fristText (InlineExpandVariableUtils "%equipType% %barrelDiameter%x%thickNess%(7.1)")) 
+  (InsertBsGCTUpLeftAnnotation insPt dataType fristText (InlineExpandVariableUtils "%equipType% %barrelDiameter%x%thickNess%(7.1)")) 
 )
 
 ; 2021-04-22
-(defun InsertBsGCTTankDownLeftAnnotation (insPt dataType fristText secondText /) 
+(defun InsertBsGCTDownLeftAnnotation (insPt dataType fristText secondText /) 
   (InsertBsGCTAnnotation insPt (MoveInsertPositionUtils insPt -130 -100) (MoveInsertPositionUtils insPt -50 -100) 
     dataType fristText secondText) 
 )
 
 ; 2021-04-22
-(defun InsertBsGCTTankDownRightAnnotation (insPt dataType fristText equipType barrelDiameter thickNess /) 
+(defun InsertBsGCTDownRightAnnotation (insPt dataType fristText equipType barrelDiameter thickNess /) 
   (InsertBsGCTAnnotation insPt (MoveInsertPositionUtils insPt 130 -100) (MoveInsertPositionUtils insPt 50 -100) 
     dataType fristText (InlineExpandVariableUtils "%equipType% %barrelDiameter%x%thickNess%(7.1)")) 
 )
 
 ; 2021-04-22
-(defun InsertBsGCTTankUpLeftAnnotation (insPt dataType fristText secondText /) 
+(defun InsertBsGCTUpLeftAnnotation (insPt dataType fristText secondText /) 
   (InsertBsGCTAnnotation insPt (MoveInsertPositionUtils insPt -130 100) (MoveInsertPositionUtils insPt -50 100) 
     dataType fristText secondText) 
 )
 
 ; 2021-04-22
-(defun InsertBsGCTTankUpRightAnnotation (insPt dataType fristText equipType barrelDiameter thickNess /) 
+(defun InsertBsGCTUpRightAnnotation (insPt dataType fristText equipType barrelDiameter thickNess /) 
   (InsertBsGCTAnnotation insPt (MoveInsertPositionUtils insPt 130 100) (MoveInsertPositionUtils insPt 50 100) 
     dataType fristText (InlineExpandVariableUtils "%equipType% %barrelDiameter%x%thickNess%(7.1)")) 
 )
@@ -331,6 +331,12 @@
 ; 2021-04-22
 (defun InsertBsGCTGroundPlate (insPt dataType /) 
   (InsertBlockUtils insPt "BsGCTGroundPlate" "0DataFlow-BsThickLine" (list (cons 0 dataType)))
+  (InsertBsGCTGroundPlateAnnotation (MoveInsertPositionUtils insPt -50 15) dataType)
+)
+
+; 2021-04-22
+(defun InsertBsGCTGroundPlateAnnotation (insPt dataType /) 
+  (InsertBsGCTUpLeftAnnotation insPt dataType "接地板" "") 
 )
 
 ; 2021-04-17
@@ -577,7 +583,7 @@
 (defun c:foo (/ insPt)
   (setq insPt (getpoint "\n拾取设备一览表插入点："))
   ; (InsertAllBsGCTTank)
-  (InsertBsGCTTankUpRightAnnotation insPt "BsGCT" "椭圆封头" "EHA" 800 8)
+  (InsertBsGCTUpRightAnnotation insPt "BsGCT" "椭圆封头" "EHA" 800 8)
 )
 
 ; Generate BsGCT
