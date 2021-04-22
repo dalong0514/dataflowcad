@@ -10,7 +10,10 @@
 (defun GetVerifyDataFromServer (/ fileDir)
   (setq fileDir "\\\\192.168.1.38\\dataflow\\system-data\\verifydata.txt")
   ; (setq fileDir "\\\\MEDICINE--DC\\dataflow\\system-data\\verifydata.txt")
-  (atoi (car (ReadDataFromFileUtils fileDir)))
+  (cond 
+    ((/= (ReadDataFromFileUtils fileDir) nil) (atoi (car (ReadDataFromFileUtils fileDir))))
+    (T -1000)
+  )
 )
 
 ; 2021-04-09
@@ -2026,18 +2029,18 @@
 )
 
 ; 2021-04-17
-(defun ReadDataFromFileUtils (fileDir / filePtr i textLine resultList)
-  (setq filePtr (open fileDir "r"))
-  (if filePtr 
+(defun ReadDataFromFileUtils (fileDir / filePtr i textLine resultList) 
+  (if (/= (open fileDir "r") nil) 
     (progn 
+      (setq filePtr (open fileDir "r"))
       (setq i 1)
       (while (setq textLine (read-line filePtr)) 
         (setq resultList (append resultList (list textLine)))
         (setq i (+ 1 i))
       )
-    )
+      (close filePtr)
+    ) 
   )
-  (close filePtr)
   resultList
 )
 
