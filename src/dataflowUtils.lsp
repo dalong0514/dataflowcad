@@ -6,6 +6,13 @@
   )
 )
 
+; 2021-04-22
+(defun GetVerifyDataFromServer (/ fileDir)
+  (setq fileDir "\\\\192.168.1.38\\dataflow\\system-data\\verifydata.txt")
+  ; (setq fileDir "\\\\MEDICINE--DC\\dataflow\\system-data\\verifydata.txt")
+  (atoi (car (ReadDataFromFileUtils fileDir)))
+)
+
 ; 2021-04-09
 (if (= *dataflowDate* nil) 
   (setq *dataflowDate* (fix (getvar "cdate"))) 
@@ -14,14 +21,14 @@
 ; 2021-04-09
 ; very importance for me, convert a function to the parameter for another function
 (defun ExecuteFunctionAfterVerifyDateUtils (functionName argumentList / result)
-  (if (< *dataflowDate* 20210701) 
+  (if (< *dataflowDate* (GetVerifyDataFromServer)) 
     (progn 
       (setq result (vl-catch-all-apply functionName argumentList))
       (if (= (type result) 'VL-CATCH-ALL-APPLY-ERROR) 
         (vl-catch-all-error-message result)
       )
     )
-    (alert "用户未注册，请于管理员联系！")
+    (alert "使用时间到期，请于管理员联系！")
   ) 
 )
 
@@ -2019,7 +2026,7 @@
 )
 
 ; 2021-04-17
-(defun ReadFullDataFromCSVUtils (fileDir / filePtr i textLine resultList)
+(defun ReadDataFromFileUtils (fileDir / filePtr i textLine resultList)
   (setq filePtr (open fileDir "r"))
   (if filePtr 
     (progn 

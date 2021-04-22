@@ -280,7 +280,7 @@
     ((= dataType "BsGCTTankPressureElement") (setq fileDir "D:\\dataflowcad\\bsdata\\tankPressureElement.csv"))
     ((= dataType "BsGCTTankOtherRequest") (setq fileDir "D:\\dataflowcad\\bsdata\\tankOtherRequest.csv"))
   ) 
-  (StrListToListListUtils (ReadFullDataFromCSVUtils fileDir))
+  (StrListToListListUtils (ReadDataFromFileUtils fileDir))
 )
 
 ; 2021-04-19
@@ -490,9 +490,11 @@
 )
 
 (defun c:foo (/ insPt)
-  (InsertAllBsGCTTank)
+  ; (InsertAllBsGCTTank)
   ; (GetBsGCTTankHeadMaterialData (GetBsGCTImportedList))
   ; (GetBsGCTTankNozzleDictData)
+  (GetVerifyDataFromServer)
+  ; (GetCurrentCADFileDirUtils)
 )
 
 ; Generate BsGCT
