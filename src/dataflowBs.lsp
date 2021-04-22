@@ -176,7 +176,7 @@
   (GenerateDoubleLineBarrelUtils insPt barrelRadius newBarrelHalfHeight "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" thickNess)
   (GenerateDoubleLineEllipseHeadUtils (MoveInsertPositionUtils insPt 0 (- 0 newBarrelHalfHeight)) barrelRadius "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" -1 thickNess)
   (GenerateDownllipseHeadNozzle (MoveInsertPositionUtils insPt 0 (- 0 newBarrelHalfHeight (/ barrelRadius 2) thickNess)) dataType)
-  (InsertBsGCTSupportLeg (MoveInsertPositionUtils insPt (+ barrelRadius thickNess) (- 0 (- newBarrelHalfHeight 25))) dataType)
+  (InsertBsGCTSupportLeg (MoveInsertPositionUtils insPt (+ barrelRadius thickNess) (- 0 (- newBarrelHalfHeight 25))) dataType 800)
   (InsertBsGCTTankBarrelDimension insPt barrelRadius barrelHalfHeight thickNess)
   (InsertBsGCTTankAnnotation insPt dataType barrelRadius thickNess)
   (princ)
@@ -309,12 +309,12 @@
 )
 
 ; 2021-04-18
-(defun InsertBsGCTSupportLeg (insPt dataType /) 
+(defun InsertBsGCTSupportLeg (insPt dataType legHeight /) 
   (InsertBlockUtils insPt "BsGCTSupportLeg-A2" "0DataFlow-BsThickLine" (list (cons 0 dataType)))
-  ; (SetDynamicBlockPropertyValueUtils 
-  ;   (GetLastVlaObjectUtils) 
-  ;   (list (cons "LEG_HEIGHT" "1000"))
-  ; ) 
+  (SetDynamicBlockPropertyValueUtils 
+    (GetLastVlaObjectUtils) 
+    (list (cons "LEG_HEIGHT" legHeight))
+  ) 
 )
 
 ; 2021-04-17
