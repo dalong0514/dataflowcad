@@ -10,10 +10,11 @@
 (defun GetVerifyDataFromServer (/ fileDir)
   (setq fileDir "\\\\192.168.1.38\\dataflow\\system-data\\verifydata.txt")
   ; (setq fileDir "\\\\MEDICINE--DC\\dataflow\\system-data\\verifydata.txt")
-  (cond 
-    ((/= (ReadDataFromFileUtils fileDir) nil) (atoi (car (ReadDataFromFileUtils fileDir))))
-    (T -1000)
-  )
+  (if (/= (type (vl-catch-all-apply 'ReadDataFromFileUtils (list fileDir))) 'VL-CATCH-ALL-APPLY-ERROR) 
+    (atoi (car (ReadDataFromFileUtils fileDir))) 
+    ; offline - set the verify date 20210601
+    20210601
+  ) 
 )
 
 ; 2021-04-09
@@ -31,7 +32,7 @@
         (vl-catch-all-error-message result)
       )
     )
-    (alert "使用时间到期，请于管理员联系！")
+    (alert "用户未注册，请于管理员联系！")
   ) 
 )
 
@@ -2030,17 +2031,17 @@
 
 ; 2021-04-17
 (defun ReadDataFromFileUtils (fileDir / filePtr i textLine resultList) 
-  (if (/= (open fileDir "r") nil) 
+  (setq filePtr (open fileDir "r"))
+  (if filePtr
     (progn 
-      (setq filePtr (open fileDir "r"))
       (setq i 1)
       (while (setq textLine (read-line filePtr)) 
         (setq resultList (append resultList (list textLine)))
-        (setq i (+ 1 i))
+        (setq i (1+ i))
       )
-      (close filePtr)
     ) 
   )
+  (close filePtr)
   resultList
 )
 
