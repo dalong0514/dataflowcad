@@ -181,7 +181,49 @@
   (princ)
 )
 
+; 2021-04-22
+(defun InsertBsGCTTankDownLeftAnnotation (insPt dataType fristText equipType barrelDiameter thickNess /) 
+  (InsertBsGCTAnnotation insPt (MoveInsertPositionUtils insPt -130 -100) (MoveInsertPositionUtils insPt -50 -100) 
+    dataType fristText (InlineExpandVariableUtils "%equipType% %barrelDiameter%x%thickNess%(7.1)")) 
+)
+
+; 2021-04-22
+(defun InsertBsGCTTankDownRightAnnotation (insPt dataType fristText equipType barrelDiameter thickNess /) 
+  (InsertBsGCTAnnotation insPt (MoveInsertPositionUtils insPt 130 -100) (MoveInsertPositionUtils insPt 50 -100) 
+    dataType fristText (InlineExpandVariableUtils "%equipType% %barrelDiameter%x%thickNess%(7.1)")) 
+)
+
+; 2021-04-22
+(defun InsertBsGCTTankUpLeftAnnotation (insPt dataType fristText equipType barrelDiameter thickNess /) 
+  (InsertBsGCTAnnotation insPt (MoveInsertPositionUtils insPt -130 100) (MoveInsertPositionUtils insPt -50 100) 
+    dataType fristText (InlineExpandVariableUtils "%equipType% %barrelDiameter%x%thickNess%(7.1)")) 
+)
+
+; 2021-04-22
+(defun InsertBsGCTTankUpRightAnnotation (insPt dataType fristText equipType barrelDiameter thickNess /) 
+  (InsertBsGCTAnnotation insPt (MoveInsertPositionUtils insPt 130 100) (MoveInsertPositionUtils insPt 50 100) 
+    dataType fristText (InlineExpandVariableUtils "%equipType% %barrelDiameter%x%thickNess%(7.1)")) 
+)
+
+; 2021-04-22
+(defun InsertBsGCTAnnotation (insPt blockInsPt lineInsPt dataType fristText secondText /) 
+  (InsertTwoLinesAnnotationUtils blockInsPt "BsGCTAnnotation" "0DataFlow-BsGCT" 
+    dataType fristText secondText)
+  (GenerateLineUtils 
+    lineInsPt
+    insPt
+    "0DataFlow-BsGCT"
+  )  
+)
+
+; 2021-04-22
+(defun InsertTwoLinesAnnotationUtils (insPt blockName layerName dataType fristText secondText /) 
+  (InsertBlockUtils insPt blockName layerName 
+    (list (cons 0 dataType) (cons 1 fristText) (cons 2 secondText)))
+)
+
 ; 2021-04-19
+; refactored at 2021-04-22
 (defun InsertBsGCTTankBarrelDimension (insPt barrelRadius barrelHalfHeight thickNess /) 
   ; Barrel diameter
   (InsertBsGCTDimension 
@@ -504,11 +546,9 @@
 )
 
 (defun c:foo (/ insPt)
+  (setq insPt (getpoint "\n拾取设备一览表插入点："))
   ; (InsertAllBsGCTTank)
-  ; (GetBsGCTTankHeadMaterialData (GetBsGCTImportedList))
-  ; (GetBsGCTTankNozzleDictData)
-  (GetVerifyDataFromServer)
-  ; (GetCurrentCADFileDirUtils)
+  (InsertBsGCTTankUpRightAnnotation insPt "BsGCT" "椭圆封头" "EHA" 800 8)
 )
 
 ; Generate BsGCT
