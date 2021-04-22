@@ -206,7 +206,21 @@
     (MoveInsertPositionUtils insPt 0 barrelHalfHeight) 
     (MoveInsertPositionUtils insPt 0 (+ barrelHalfHeight (/ barrelRadius 2) 25 thickNess))  
     (MoveInsertPositionUtils insPt (+ barrelRadius 200) 0) 
-    "")  
+    "") 
+  ; vertical up distance for head and barrel
+  (InsertBsGCTDimension 
+    (MoveInsertPositionUtils insPt barrelRadius barrelHalfHeight) 
+    (MoveInsertPositionUtils insPt barrelRadius (+ barrelHalfHeight 25)) 
+    ; the Y position of dimension is option
+    (MoveInsertPositionUtils insPt (- barrelRadius 100) 0) 
+    "") 
+  ; vertical down distance for head and barrel
+  (InsertBsGCTDimension 
+    (MoveInsertPositionUtils insPt barrelRadius (GetNegativeNumberUtils barrelHalfHeight)) 
+    (MoveInsertPositionUtils insPt barrelRadius (- 0 barrelHalfHeight 25)) 
+    ; the Y position of dimension is option
+    (MoveInsertPositionUtils insPt (- barrelRadius 100) 0) 
+    "")   
 )
 
 ; 2021-04-19
