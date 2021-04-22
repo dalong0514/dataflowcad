@@ -184,20 +184,30 @@
 
 ; 2021-04-22
 (defun InsertBsGCTTankAnnotation (insPt dataType barrelRadius thickNess /) 
-  (InsertBsGCTTankDownLeftAnnotation 
+  (InsertBsGCTTankDownLeftHeadAnnotation 
     (MoveInsertPositionUtils insPt (- 0 barrelRadius) (- 0 barrelHalfHeight 25 50))
     dataType 
     "Õ÷‘≤∑‚Õ∑" "EHA" (* 2 barrelRadius) thickNess)
-  (InsertBsGCTTankUpLeftAnnotation 
+  (InsertBsGCTTankUpLeftHeadAnnotation 
     (MoveInsertPositionUtils insPt (- 0 barrelRadius) (+ barrelHalfHeight 25 50))
     dataType 
     "Õ÷‘≤∑‚Õ∑" "EHA" (* 2 barrelRadius) thickNess) 
 )
 
 ; 2021-04-22
-(defun InsertBsGCTTankDownLeftAnnotation (insPt dataType fristText equipType barrelDiameter thickNess /) 
+(defun InsertBsGCTTankDownLeftHeadAnnotation (insPt dataType fristText equipType barrelDiameter thickNess /) 
+  (InsertBsGCTTankDownLeftAnnotation insPt dataType fristText (InlineExpandVariableUtils "%equipType% %barrelDiameter%x%thickNess%(7.1)")) 
+)
+
+; 2021-04-22
+(defun InsertBsGCTTankUpLeftHeadAnnotation (insPt dataType fristText equipType barrelDiameter thickNess /) 
+  (InsertBsGCTTankUpLeftAnnotation insPt dataType fristText (InlineExpandVariableUtils "%equipType% %barrelDiameter%x%thickNess%(7.1)")) 
+)
+
+; 2021-04-22
+(defun InsertBsGCTTankDownLeftAnnotation (insPt dataType fristText secondText /) 
   (InsertBsGCTAnnotation insPt (MoveInsertPositionUtils insPt -130 -100) (MoveInsertPositionUtils insPt -50 -100) 
-    dataType fristText (InlineExpandVariableUtils "%equipType% %barrelDiameter%x%thickNess%(7.1)")) 
+    dataType fristText secondText) 
 )
 
 ; 2021-04-22
@@ -207,9 +217,9 @@
 )
 
 ; 2021-04-22
-(defun InsertBsGCTTankUpLeftAnnotation (insPt dataType fristText equipType barrelDiameter thickNess /) 
+(defun InsertBsGCTTankUpLeftAnnotation (insPt dataType fristText secondText /) 
   (InsertBsGCTAnnotation insPt (MoveInsertPositionUtils insPt -130 100) (MoveInsertPositionUtils insPt -50 100) 
-    dataType fristText (InlineExpandVariableUtils "%equipType% %barrelDiameter%x%thickNess%(7.1)")) 
+    dataType fristText secondText) 
 )
 
 ; 2021-04-22
