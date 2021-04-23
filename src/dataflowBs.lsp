@@ -393,16 +393,6 @@
 )
 
 ; 2021-04-20
-(defun GetTankBsGCTMainPropertyNameList ()
-  '("BSGCT_TYPE" "TAG" "barrelRadius" "barrelHeight" "thickNess")
-)
-
-; 2021-04-20
-(defun GetTankBsGCTDesignParamPropertyNameList ()
-  '("SERVIVE_LIFE" "PRESSURE" "DESIGN_PRESSURE" "TEMP" "DESIGN_TEMP" "SUBSTANCE" "SUBSTANCE_PROPERTY" "SUBSTANCE_DENSITY" "CORROSION_ALLOWANCE" "WELD_JOINT" "FULL_VOLUME" "LOAD_FACTOR" "SV_SET_PRESSURE" "SV_MAX_PRESSURE" "INSULATION_THICKNESS" "NET_WEIGHT" "SS_WEIGHT" "OPERATION_WEIGHT" "TOTAL_WEIGHT")
-)
-
-; 2021-04-20
 (defun GetBsGCTNozzleTableRowPropertyNameList ()
   '("SYMBOL" "MATERIAL" "STANDARD" "CONNECTION" "NAME" "LENGTH")
 )
@@ -435,7 +425,7 @@
               (mapcar '(lambda (xx yy) 
                          (cons xx yy)
                       ) 
-                (append (GetTankBsGCTMainPropertyNameList) (GetTankBsGCTDesignParamPropertyNameList))
+                (GetBsGCTTankMainKeysData)
                 y
               )
            ) 
@@ -596,7 +586,9 @@
 (defun c:foo (/ insPt)
   ; (setq insPt (getpoint "\n拾取设备一览表插入点："))
   ; (InsertAllBsGCTTank)
-  (UpdatePipeDataFromEquipMacro)
+  ; (UpdatePipeDataFromEquipMacro)
+  ; (GetBsGCTTankMainKeysData)
+  (GetBsGCTTankDictData (GetBsGCTImportedList))
 )
 
 ; Generate BsGCT
