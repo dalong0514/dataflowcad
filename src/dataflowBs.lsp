@@ -392,11 +392,6 @@
   (StrListToListListUtils (ReadBsDataFromCSVStrategy "BsGCT"))
 )
 
-; 2021-04-20
-(defun GetBsGCTNozzleTableRowPropertyNameList ()
-  '("SYMBOL" "MATERIAL" "STANDARD" "CONNECTION" "NAME" "LENGTH")
-)
-
 ; 2021-04-19
 (defun GetTankBsGCTDesignData () 
   (mapcar '(lambda (x) 
@@ -439,7 +434,7 @@
               (mapcar '(lambda (xx yy) 
                          (cons xx yy)
                       ) 
-                (append (list "TAG") (GetBsGCTNozzleTableRowPropertyNameList))
+                (GetBsGCTNozzleKeysData)
                 y
               )
            ) 
@@ -526,6 +521,19 @@
   )
 )
 
+; 2021-04-23
+(defun GetBsGCTNozzleKeysData () 
+  (cdr 
+    (car 
+      (vl-remove-if-not '(lambda (x) 
+                          (= (car x) "NozzleKeys") 
+                        ) 
+        (GetBsGCTImportedList)
+      )  
+    ) 
+  ) 
+)
+
 ; 2021-04-17
 ; (defun InsertBsGCTStrategy (dataType designData /) 
 ;   (cond 
@@ -588,7 +596,7 @@
   ; (InsertAllBsGCTTank)
   ; (UpdatePipeDataFromEquipMacro)
   ; (GetBsGCTTankMainKeysData)
-  (GetBsGCTTankDictData (GetBsGCTImportedList))
+  (GetBsGCTTankNozzleDictData)
 )
 
 ; Generate BsGCT
