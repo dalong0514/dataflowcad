@@ -196,12 +196,12 @@
 
 ; 2021-04-22
 (defun InsertBsGCTTankDownLeftHeadAnnotation (insPt dataType fristText equipType barrelDiameter thickNess /) 
-  (InsertBsGCTDownLeftAnnotation insPt dataType fristText (InlineExpandVariableUtils "%equipType% %barrelDiameter%x%thickNess%(7.1)")) 
+  (InsertBsGCTDownLeftAnnotation insPt dataType fristText (InlineExpandVariableUtils "%equipType% %barrelDiameter%x%thickNess%")) 
 )
 
 ; 2021-04-22
 (defun InsertBsGCTTankUpLeftHeadAnnotation (insPt dataType fristText equipType barrelDiameter thickNess /) 
-  (InsertBsGCTUpLeftAnnotation insPt dataType fristText (InlineExpandVariableUtils "%equipType% %barrelDiameter%x%thickNess%(7.1)")) 
+  (InsertBsGCTUpLeftAnnotation insPt dataType fristText (InlineExpandVariableUtils "%equipType% %barrelDiameter%x%thickNess%")) 
 )
 
 ; 2021-04-22
@@ -211,9 +211,9 @@
 )
 
 ; 2021-04-22
-(defun InsertBsGCTDownRightAnnotation (insPt dataType fristText equipType barrelDiameter thickNess /) 
+(defun InsertBsGCTDownRightAnnotation (insPt dataType fristText secondText /) 
   (InsertBsGCTAnnotation insPt (MoveInsertPositionUtils insPt 130 -100) (MoveInsertPositionUtils insPt 50 -100) 
-    dataType fristText (InlineExpandVariableUtils "%equipType% %barrelDiameter%x%thickNess%(7.1)")) 
+    dataType fristText secondText) 
 )
 
 ; 2021-04-22
@@ -225,7 +225,7 @@
 ; 2021-04-22
 (defun InsertBsGCTUpRightAnnotation (insPt dataType fristText equipType barrelDiameter thickNess /) 
   (InsertBsGCTAnnotation insPt (MoveInsertPositionUtils insPt 130 100) (MoveInsertPositionUtils insPt 50 100) 
-    dataType fristText (InlineExpandVariableUtils "%equipType% %barrelDiameter%x%thickNess%(7.1)")) 
+    dataType fristText secondText) 
 )
 
 ; 2021-04-22
@@ -549,7 +549,8 @@
   (setq barrelRadius (GetHalfNumberUtils (atoi (GetDottedPairValueUtils "barrelRadius" oneTankData))))
   (setq barrelHalfHeight (GetHalfNumberUtils (atoi (GetDottedPairValueUtils "barrelHeight" oneTankData))))
   (setq thickNess (atoi (GetDottedPairValueUtils "BARREL_THICKNESS" oneTankData)))
-  (setq headThickNess (atoi (GetDottedPairValueUtils "HEAD_THICKNESS" oneTankData)))
+  ; do not convert to int frist 2021-04-23
+  (setq headThickNess (GetDottedPairValueUtils "HEAD_THICKNESS" oneTankData))
   ; split oneTankData to Two Parts
   (setq designParamDictList (cadr (SplitLDictListByDictKeyUtils "SERVIVE_LIFE" oneTankData)))
   (InsertBsGCTDrawFrame insPt equipTag)
