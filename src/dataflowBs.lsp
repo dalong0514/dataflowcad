@@ -167,7 +167,7 @@
 )
 
 ; 2021-04-18
-(defun InsertBsGCTTankGraphy (insPt barrelRadius barrelHalfHeight thickNess dataType / newBarrelHalfHeight nozzleOffset) 
+(defun InsertBsGCTTankGraphy (insPt barrelRadius barrelHalfHeight thickNess headThickNess dataType / newBarrelHalfHeight nozzleOffset) 
   ; the head height is 25
   (setq newBarrelHalfHeight (+ barrelHalfHeight 25)) 
   (setq nozzleOffset 100)
@@ -178,20 +178,20 @@
   (GenerateDownllipseHeadNozzle (MoveInsertPositionUtils insPt 0 (- 0 newBarrelHalfHeight (/ barrelRadius 2) thickNess)) dataType)
   (InsertBsGCTSupportLeg (MoveInsertPositionUtils insPt (+ barrelRadius thickNess) (- 0 (- newBarrelHalfHeight 25))) dataType 800)
   (InsertBsGCTTankBarrelDimension insPt barrelRadius barrelHalfHeight thickNess)
-  (InsertBsGCTTankAnnotation insPt dataType barrelRadius thickNess)
+  (InsertBsGCTTankAnnotation insPt dataType barrelRadius headThickNess)
   (princ)
 )
 
 ; 2021-04-22
-(defun InsertBsGCTTankAnnotation (insPt dataType barrelRadius thickNess /) 
+(defun InsertBsGCTTankAnnotation (insPt dataType barrelRadius headThickNess /) 
   (InsertBsGCTTankDownLeftHeadAnnotation 
     (MoveInsertPositionUtils insPt (- 0 barrelRadius) (- 0 barrelHalfHeight 25 50))
     dataType 
-    "Õ÷‘≤∑‚Õ∑" "EHA" (* 2 barrelRadius) thickNess)
+    "Õ÷‘≤∑‚Õ∑" "EHA" (* 2 barrelRadius) headThickNess)
   (InsertBsGCTTankUpLeftHeadAnnotation 
     (MoveInsertPositionUtils insPt (- 0 barrelRadius) (+ barrelHalfHeight 25 50))
     dataType 
-    "Õ÷‘≤∑‚Õ∑" "EHA" (* 2 barrelRadius) thickNess) 
+    "Õ÷‘≤∑‚Õ∑" "EHA" (* 2 barrelRadius) headThickNess) 
 )
 
 ; 2021-04-22
@@ -543,12 +543,13 @@
 
 ; 2021-04-17
 (defun InsertOneBsTankGCT (insPt oneTankData tankPressureElementList tankOtherRequestList tankStandardList tankHeadStyleList tankHeadMaterialList / 
-                           equipTag bsGCTType barrelRadius barrelHalfHeight thickNess designParamDictList) 
+                           equipTag bsGCTType barrelRadius barrelHalfHeight thickNess headThickNess designParamDictList) 
   (setq equipTag (GetDottedPairValueUtils "TAG" oneTankData))
   (setq bsGCTType (strcat (GetDottedPairValueUtils "BSGCT_TYPE" oneTankData) "-" equipTag))
   (setq barrelRadius (GetHalfNumberUtils (atoi (GetDottedPairValueUtils "barrelRadius" oneTankData))))
   (setq barrelHalfHeight (GetHalfNumberUtils (atoi (GetDottedPairValueUtils "barrelHeight" oneTankData))))
-  (setq thickNess (atoi (GetDottedPairValueUtils "thickNess" oneTankData)))
+  (setq thickNess (atoi (GetDottedPairValueUtils "BARREL_THICKNESS" oneTankData)))
+  (setq headThickNess (atoi (GetDottedPairValueUtils "HEAD_THICKNESS" oneTankData)))
   ; split oneTankData to Two Parts
   (setq designParamDictList (cadr (SplitLDictListByDictKeyUtils "SERVIVE_LIFE" oneTankData)))
   (InsertBsGCTDrawFrame insPt equipTag)
@@ -560,7 +561,7 @@
   (InsertBsGCTOtherRequest (MoveInsertPositionUtils insPt -900 (- 1900 (* 40 (length tankPressureElementList)))) bsGCTType tankOtherRequestList)
   (InsertBsGCTNozzleTable (MoveInsertPositionUtils insPt -1800 2870) bsGCTType oneTankData)
   ; thickNess param refactored at 2021-04-21
-  (InsertBsGCTTankGraphy (MoveInsertPositionUtils insPt -2915 1600) barrelRadius barrelHalfHeight thickNess bsGCTType)
+  (InsertBsGCTTankGraphy (MoveInsertPositionUtils insPt -2915 1600) barrelRadius barrelHalfHeight thickNess headThickNess bsGCTType)
   (princ)
 )
 
