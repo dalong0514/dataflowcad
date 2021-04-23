@@ -461,7 +461,7 @@
 (defun GetBsGCTNozzleData () 
   (mapcar '(lambda (x) (cdr x)) 
     (vl-remove-if-not '(lambda (x) 
-                        (= (car x) "nozzle") 
+                        (= (car x) "Nozzle") 
                       ) 
       (GetBsGCTImportedList)
     )  
@@ -521,6 +521,19 @@
       bsGCTImportedList
     )  
   ) 
+)
+
+; 2021-04-23
+(defun GetBsGCTTankMainKeysData () 
+  (cdr 
+    (car 
+      (vl-remove-if-not '(lambda (x) 
+                          (= (car x) "Tank-MainKeys") 
+                        ) 
+        (GetBsGCTImportedList)
+      )  
+    ) 
+  )
 )
 
 ; 2021-04-17
