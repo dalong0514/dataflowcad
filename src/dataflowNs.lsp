@@ -336,7 +336,10 @@
 
 ; refactored at 2021-04-25
 (defun RepairNsEquipSpecFanEfficiency (dataList /) 
-  (strcat "风机效率：" (cdr dataList))
+  (strcat "风机效率：" 
+    (rtos (fix (* 100 (atof (cdr dataList)))))
+    "%"
+  )
 )
 
 ; refactored at 2021-04-25
