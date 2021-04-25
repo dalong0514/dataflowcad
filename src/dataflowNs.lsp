@@ -61,7 +61,7 @@
 )
 
 ; 2021-03-17
-(defun InsertNsEquipListTable (insertDirection / insPt) 
+(defun InsertNsEquipListTableV1 (insertDirection / insPt) 
   (VerifyNsBzTextStyleByName "DataFlow")
   (VerifyNsBzTextStyleByName "TitleText")
   (VerifyNsBzLayerByName "0DataFlow-NsText")
@@ -84,7 +84,7 @@
 )
 
 ; refactored at 2021-03-12
-(defun InsertNsEquipTextList (insPt equipDictList insertDirection / textInsPt textHeight insPtList totalNum num) 
+(defun InsertNsEquipTextListV1 (insPt equipDictList insertDirection / textInsPt textHeight insPtList totalNum num) 
   (setq textHeight 350)
   (setq totalNum (1+ (/ (length (GetNsEquipDictList)) 29)))
   (setq num 1)
@@ -270,6 +270,9 @@
   (if (= dataType "NsEquip") 
     (setq fileDir "D:\\dataflowcad\\nsdata\\tempEquip.csv")
   )
+  (if (= dataType "NsEquipV2") 
+    (setq fileDir "D:\\dataflowcad\\nsdata\\tempEquip2.csv")
+  )
   (ReadDataFromCSVUtils fileDir)
 )
 
@@ -296,4 +299,289 @@
 ; 2021-03-17
 (defun InsertNsEquipListLeftText (insPt textContent textHeight /) 
   (GenerateLevelLeftTextUtils insPt textContent "0DataFlow-NsText" textHeight 0.7) 
+)
+
+
+
+
+
+; 2021-04-25
+(defun GetNsEquipImportedListV2 ()
+  (StrListToListListUtils (ReadNsDataFromCSVStrategy "NsEquipV2"))
+)
+
+; 2021-04-25
+(defun GetOriginNsEquipDictListV2 (/ nsEquipImportedList propertyNameList) 
+  (setq nsEquipImportedList (GetNsEquipImportedListV2))
+  (setq propertyNameList (car nsEquipImportedList))
+  (mapcar '(lambda (y) 
+              (mapcar '(lambda (xx yy) 
+                         (cons xx yy)
+                      ) 
+                propertyNameList
+                y
+              )
+           ) 
+    (cdr nsEquipImportedList)
+  )
+)
+
+; 2021-04-25
+(defun ProcessOriginNsEquipDictList (/ rowId)
+  (setq rowId 0)
+  (mapcar '(lambda (x) 
+             (setq rowId (1+ rowId))
+             (append 
+                (list 
+                  ; id must convert to string 
+                  (cons "id" (rtos rowId))
+                )
+                (list 
+                  (cons "tag" (strcat (GetDottedPairValueUtils "tag1" x) "-" (GetDottedPairValueUtils "tag2" x) "-" (GetDottedPairValueUtils "tag3" x))) 
+                )
+                x
+                (list 
+                  (cons "comment" (strcat (GetDottedPairValueUtils "comment1" x) "#" (GetDottedPairValueUtils "comment2" x))) 
+                ) 
+             )
+           ) 
+    (GetOriginNsEquipDictListV2)
+  )
+)
+
+; 2021-04-25
+(defun GetNsEquipRowDictListList (originNsEquipDictList / firstRowNameList specificationRowNameList) 
+  (setq firstRowNameList 
+    '("id" "tag" "name" "airVolume" "type" "unit" "num" "weight" "comment" "source"))
+  (setq specificationRowNameList 
+    '("runMode" "rotateSpeed" "fullPressure" "staticPressure" "residualPressure" "power" "voltage" "transferMode" "fanEfficiency" "unitPower" "efficiency" "noise" "size" "ioPosition" "ioSize" "explosionProof")) 
+  ; the key logic
+  (mapcar '(lambda (x) 
+             (append 
+               (list 
+                  (vl-remove-if-not '(lambda (xx) 
+                                      (/= (member (car xx) firstRowNameList) nil) 
+                                    ) 
+                    x
+                  )  
+               )
+                (vl-remove-if-not '(lambda (xx) 
+                                    (and 
+                                      (/= (member (car xx) specificationRowNameList) nil) 
+                                      (/= (cdr xx) "") 
+                                    )
+                                  ) 
+                  x
+                ) 
+               (list (cons "NsEquipNull" "NsEquipNull"))
+             )
+           ) 
+    originNsEquipDictList
+  ) 
+)
+
+; 2021-04-25
+(defun GetNsEquipRowDictList (originNsEquipDictList / resultList) 
+  (mapcar '(lambda (x) 
+             (setq resultList (append resultList x))
+           ) 
+    (GetNsEquipRowDictListList originNsEquipDictList)
+  ) 
+  resultList
+)
+
+; refactored at 2021-03-12
+(defun InsertNsEquipTextListV2 (insPt equipDictList insertDirection / textHeight totalNum num insPtList) 
+  (setq textHeight 350)
+  (setq totalNum (1+ (/ (length equipDictList) 29)))
+  (setq num 1)
+  (mapcar '(lambda (x) 
+              (InsertNsEquipFrame (MoveInsertPositionUtils insPt -3000 -25200) totalNum num)
+              ; (setq insPtList (GetInsertPtListByYMoveUtils insPt (GenerateSortedNumByList x 0) -800))
+              (setq insPtList (GetInsertPtListByYMoveUtils insPt (GenerateSortedNumByList x 0) -800))
+              (mapcar '(lambda (xx yy) 
+                        (InsertNsEquipListLeftTextByRowV2 yy xx textHeight)
+                      ) 
+                x
+                insPtList
+              ) 
+              (setq insPt (GetNextNsEquipFrameInsPtStrategy insPt insertDirection))
+              (setq num (1+ num))
+           ) 
+    (SplitListByNumUtils equipDictList 29)
+  ) 
+)
+
+; 2021-04-25
+(defun InsertNsEquipListLeftTextByRowV2 (insPt rowData textHeight /) 
+  (if (IsListDataTypeUtils (car rowData))
+    (InsertFristRowNsEquipListV2 insPt rowData textHeight) 
+    (InsertMiddleRowNsEquipListV2 insPt rowData textHeight)
+  )
+)
+
+; 2021-04-25
+; ("id" "tag" "name" "airVolume" "type" "unit" "num" "weight" "comment" "source")
+(defun InsertFristRowNsEquipListV2 (insPt rowData textHeight /) 
+  (InsertNsEquipListCenterText insPt (GetDottedPairValueUtils "id" rowData) textHeight)
+  (InsertNsEquipListCenterTextByWidth (MoveInsertPositionUtils insPt 1500 0) (GetDottedPairValueUtils "tag" rowData) textHeight 0.5)
+  (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 2700 0) (GetDottedPairValueUtils "name" rowData) textHeight)
+  (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 6700 0) (RepairNsEquipAirVolume (GetDottedPairValueUtils "airVolume" rowData)) textHeight)
+  (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 14700 0) (GetDottedPairValueUtils "type" rowData) textHeight)
+  (InsertNsEquipListCenterText (MoveInsertPositionUtils insPt 21300 0) (GetDottedPairValueUtils "unit" rowData) textHeight)
+  (InsertNsEquipListCenterText (MoveInsertPositionUtils insPt 22300 0) (GetDottedPairValueUtils "num" rowData) textHeight)
+  (InsertNsEquipListCenterText (MoveInsertPositionUtils insPt 24600 0) (GetDottedPairValueUtils "weight" rowData) textHeight)
+  (InsertNsEquipListCenterText (MoveInsertPositionUtils insPt 30550 0) (GetDottedPairValueUtils "source" rowData) textHeight)
+  (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 33600 0) (GetDottedPairValueUtils "comment" rowData) textHeight)
+)
+
+; 2021-04-25
+(defun InsertMiddleRowNsEquipListV2 (insPt rowData textHeight /) 
+  (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 6700 0) (RepairNsEquipSpecificationStrategy rowData) textHeight)
+)
+
+; ("runMode" "rotateSpeed" "fullPressure" "staticPressure" "residualPressure" "power" "voltage" "transferMode" "fanEfficiency" "unitPower" "efficiency" "noise" "size" "ioPosition" "ioSize" "explosionProof")
+(defun RepairNsEquipSpecificationStrategy (rowData /)
+  (cond 
+    ((= (car rowData) "runMode") (RepairNsEquipSpecRunMode rowData))
+    ((= (car rowData) "rotateSpeed") (RepairNsEquipSpecRotateSpeed rowData))
+    ((= (car rowData) "fullPressure") (RepairNsEquipSpecFullPressure rowData))
+    ((= (car rowData) "staticPressure") (RepairNsEquipSpecStaticPressure rowData))
+    ((= (car rowData) "residualPressure") (RepairNsEquipSpecResidualPressure rowData))
+    ((= (car rowData) "power") (RepairNsEquipSpecPower rowData))
+    ((= (car rowData) "voltage") (RepairNsEquipSpecVoltage rowData))
+    ((= (car rowData) "transferMode") (RepairNsEquipSpecTransferMode rowData))
+    ((= (car rowData) "fanEfficiency") (RepairNsEquipSpecFanEfficiency rowData))
+    ((= (car rowData) "unitPower") (RepairNsEquipSpecUnitPower rowData))
+    ((= (car rowData) "efficiency") (RepairNsEquipSpecEfficiency rowData))
+    ((= (car rowData) "noise") (RepairNsEquipSpecNoise rowData))
+    ((= (car rowData) "size") (RepairNsEquipSpecSize rowData))
+    ((= (car rowData) "ioPosition") (RepairNsEquipSpecIOPosition rowData))
+    ((= (car rowData) "ioSize") (RepairNsEquipSpecIOSize rowData))
+    ((= (car rowData) "explosionProof") (RepairNsEquipSpecExplosionProof rowData))
+    (T (cdr rowData))
+  )
+)
+
+; refactored at 2021-04-25
+(defun RepairNsEquipSpecRunMode (dataList /) 
+  (strcat "运行方式：" (cdr dataList))
+)
+
+; refactored at 2021-04-25
+(defun RepairNsEquipSpecRotateSpeed (dataList /) 
+  (strcat "转速：" (cdr dataList) "r/min")
+)
+
+; refactored at 2021-04-25
+(defun RepairNsEquipSpecFullPressure (dataList /) 
+  (strcat "全压：" (cdr dataList) "Pa")
+)
+
+; refactored at 2021-04-25
+(defun RepairNsEquipSpecStaticPressure (dataList /) 
+  (strcat "静压：" (cdr dataList) "Pa")
+)
+
+; refactored at 2021-04-25
+(defun RepairNsEquipSpecResidualPressure (dataList /) 
+  (strcat "机外余压：" (cdr dataList) "Pa")
+)
+
+; refactored at 2021-04-25
+(defun RepairNsEquipSpecPower (dataList /) 
+  (strcat "功率：" (cdr dataList) "kW")
+)
+
+; refactored at 2021-04-25
+(defun RepairNsEquipSpecVoltage (dataList /) 
+  (strcat "电压：" (cdr dataList))
+)
+
+; refactored at 2021-04-25
+(defun RepairNsEquipSpecTransferMode (dataList /) 
+  (strcat "传动方式：" (cdr dataList))
+)
+
+; refactored at 2021-04-25
+(defun RepairNsEquipSpecFanEfficiency (dataList /) 
+  (strcat "风机效率：" (cdr dataList))
+)
+
+; refactored at 2021-04-25
+(defun RepairNsEquipSpecUnitPower (dataList /) 
+  (strcat "单位风量耗功率：" (cdr dataList))
+)
+
+; refactored at 2021-04-25
+(defun RepairNsEquipSpecEfficiency (dataList /) 
+  (strcat "能效等级：" (cdr dataList))
+)
+
+; refactored at 2021-04-25
+(defun RepairNsEquipSpecNoise (dataList /) 
+  (strcat "噪声：" (cdr dataList) "dB（A）")
+)
+
+; refactored at 2021-04-25
+(defun RepairNsEquipSpecSize (dataList /) 
+  (strcat "外形尺寸：" (cdr dataList))
+)
+
+; refactored at 2021-04-25
+(defun RepairNsEquipSpecIOPosition (dataList /) 
+  (strcat "进/出口方位角：" (cdr dataList))
+)
+
+; refactored at 2021-04-25
+(defun RepairNsEquipSpecIOSize (dataList /) 
+  (strcat "进/出口尺寸：" (cdr dataList))
+)
+
+; refactored at 2021-04-25
+(defun RepairNsEquipSpecExplosionProof (dataList /) 
+  (strcat "防爆等级：" (cdr dataList))
+)
+
+; 2021-04-25
+(defun InsertNsEquipListTable (insertDirection / insPt) 
+  (VerifyNsBzTextStyleByName "DataFlow")
+  (VerifyNsBzTextStyleByName "TitleText")
+  (VerifyNsBzLayerByName "0DataFlow-NsText")
+  (VerifyNsBzLayerByName "0DataFlow-NsEquipFrame")
+  (VerifyNsBzBlockByName "equiplist.2017") 
+  (setq insPt (getpoint "\n拾取设备一览表插入点："))
+  (InsertNsEquipTextList (MoveInsertPositionUtils insPt 3000 25200) (GetNsEquipRowDictList (ProcessOriginNsEquipDictList)) insertDirection)
+  (DeleteNsEquipNullText)
+  (princ)
+)
+
+; refactored at 2021-04-25
+(defun InsertNsEquipTextList (insPt equipDictList insertDirection / textHeight totalNum num insPtList) 
+  (setq textHeight 350)
+  (setq totalNum (1+ (/ (length equipDictList) 29)))
+  (setq num 1)
+  (mapcar '(lambda (x) 
+              (InsertNsEquipFrame (MoveInsertPositionUtils insPt -3000 -25200) totalNum num)
+              (setq insPtList (GetInsertPtListByYMoveUtils insPt (GenerateSortedNumByList x 0) -800))
+              (mapcar '(lambda (xx yy) 
+                        (InsertNsEquipListLeftTextByRowV2 yy xx textHeight)
+                      ) 
+                x
+                insPtList
+              ) 
+              (setq insPt (GetNextNsEquipFrameInsPtStrategy insPt insertDirection))
+              (setq num (1+ num))
+           ) 
+    (SplitListByNumUtils equipDictList 29)
+  ) 
+)
+
+
+
+
+(defun c:foo ()
+  (GetNsEquipRowDictList (ProcessOriginNsEquipDictList))
+  ; (GetNsEquipDictList)
+  ; (ProcessOriginNsEquipDictList)
 )

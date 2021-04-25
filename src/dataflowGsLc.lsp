@@ -324,8 +324,10 @@
   ; must filter first
   (setq allPipeDataList 
     ; relatedid value maybe null
+    ; refactored at 2021-04-25 update only for two end is equipment
     (vl-remove-if-not '(lambda (x) 
-                        (and (/= (GetDottedPairValueUtils "from" x) "") 
+                        (and (IsKsLocationOnEquip (GetDottedPairValueUtils "from" x))
+                             (IsKsLocationOnEquip (GetDottedPairValueUtils "to" x))
                              (/= (member (GetDottedPairValueUtils "from" x) allEquipTagDataList) nil))  
                       ) 
       (GetAllPipeDataUtils)

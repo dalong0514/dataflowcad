@@ -593,14 +593,6 @@
   (ExecuteFunctionAfterVerifyDateUtils 'InsertAllBsGCTTank '())
 )
 
-(defun c:foo (/ insPt)
-  ; (setq insPt (getpoint "\n拾取设备一览表插入点："))
-  ; (InsertAllBsGCTTank)
-  ; (UpdatePipeDataFromEquipMacro)
-  ; (GetBsGCTTankMainKeysData)
-  (GetBsGCTTankNozzleDictData)
-)
-
 ; Generate BsGCT
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
