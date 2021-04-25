@@ -341,7 +341,7 @@
                 )
                 x
                 (list 
-                  (cons "comment" (strcat (GetDottedPairValueUtils "comment1" x) "#" (GetDottedPairValueUtils "comment2" x))) 
+                  (cons "comment" (strcat (GetDottedPairValueUtils "comment1" x) "£»" (GetDottedPairValueUtils "comment2" x))) 
                 ) 
              )
            ) 
@@ -432,7 +432,19 @@
   (InsertNsEquipListCenterText (MoveInsertPositionUtils insPt 22300 0) (GetDottedPairValueUtils "num" rowData) textHeight)
   (InsertNsEquipListCenterText (MoveInsertPositionUtils insPt 24600 0) (GetDottedPairValueUtils "weight" rowData) textHeight)
   (InsertNsEquipListCenterText (MoveInsertPositionUtils insPt 30550 0) (GetDottedPairValueUtils "source" rowData) textHeight)
-  (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 33600 0) (GetDottedPairValueUtils "comment" rowData) textHeight)
+  (InsertNsEquipComments (MoveInsertPositionUtils insPt 33600 0) (GetDottedPairValueUtils "comment" rowData) textHeight)
+)
+
+; 2021-04-25
+(defun InsertNsEquipComments (insPt commentData textHeight / commentList i)
+  (setq i 0)
+  (setq commentList (StrToListUtils commentData "£»"))
+  (mapcar '(lambda (x) 
+             (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 0 (- 0 (* i 800))) x textHeight)
+             (setq i (1+ i))
+           ) 
+    commentList
+  ) 
 )
 
 ; 2021-04-25
@@ -440,6 +452,7 @@
   (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 6700 0) (RepairNsEquipSpecificationStrategy rowData) textHeight)
 )
 
+; 2021-04-25
 ; ("runMode" "rotateSpeed" "fullPressure" "staticPressure" "residualPressure" "power" "voltage" "transferMode" "fanEfficiency" "unitPower" "efficiency" "noise" "size" "ioPosition" "ioSize" "explosionProof")
 (defun RepairNsEquipSpecificationStrategy (rowData /)
   (cond 

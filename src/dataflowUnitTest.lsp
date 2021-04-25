@@ -98,6 +98,9 @@
   (AssertEqual 'StrToListUtils 
     (list "PL1101\\PL1102\\PL1103" "\\") 
     (list "PL1101" "PL1102" "PL1103"))  
+  (AssertEqual 'StrToListUtils 
+    (list "工器具#防雨弯头；出口自带不锈钢防虫网；入口自带不锈钢防护网" "@") 
+    (list "工器具#防雨弯头；出口自带不锈钢防虫网；入口自带不锈钢防护网"))  
 )
 
 ; 2021-03-17
