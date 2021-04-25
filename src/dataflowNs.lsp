@@ -60,6 +60,23 @@
   (princ)
 )
 
+; 2021-04-25
+(defun InsertNsEquipListTable (insertDirection / insPt) 
+  (VerifyNsBzTextStyleByName "DataFlow")
+  (VerifyNsBzTextStyleByName "TitleText")
+  (VerifyNsBzLayerByName "0DataFlow-NsText")
+  (VerifyNsBzLayerByName "0DataFlow-NsEquipFrame")
+  (VerifyNsBzBlockByName "equiplist.2017") 
+  (setq insPt (getpoint "\n拾取设备一览表插入点："))
+  (InsertNsEquipTextList (MoveInsertPositionUtils insPt 3000 25200) (GetNsEquipRowDictList (ProcessOriginNsEquipDictList)) insertDirection)
+  (DeleteNsEquipNullText)
+  (princ)
+)
+
+
+
+
+
 ; 2021-03-17
 (defun InsertNsEquipListTableV1 (insertDirection / insPt) 
   (VerifyNsBzTextStyleByName "DataFlow")
@@ -270,15 +287,7 @@
   (if (= dataType "NsEquip") 
     (setq fileDir "D:\\dataflowcad\\nsdata\\tempEquip.csv")
   )
-  (if (= dataType "NsEquipV2") 
-    (setq fileDir "D:\\dataflowcad\\nsdata\\tempEquip2.csv")
-  )
   (ReadDataFromCSVUtils fileDir)
-)
-
-; 2021-03-17
-(defun GetNsEquipImportedList ()
-  (StrListToListListUtils (ReadNsDataFromCSVStrategy "NsEquip"))
 )
 
 ; 2021-03-17
@@ -304,15 +313,14 @@
 
 
 
-
-; 2021-04-25
-(defun GetNsEquipImportedListV2 ()
-  (StrListToListListUtils (ReadNsDataFromCSVStrategy "NsEquipV2"))
+; refacotered at 2021-04-25
+(defun GetNsEquipImportedList ()
+  (StrListToListListUtils (ReadNsDataFromCSVStrategy "NsEquip"))
 )
 
 ; 2021-04-25
 (defun GetOriginNsEquipDictListV2 (/ nsEquipImportedList propertyNameList) 
-  (setq nsEquipImportedList (GetNsEquipImportedListV2))
+  (setq nsEquipImportedList (GetNsEquipImportedList))
   (setq propertyNameList (car nsEquipImportedList))
   (mapcar '(lambda (y) 
               (mapcar '(lambda (xx yy) 
@@ -556,18 +564,7 @@
   (strcat "防爆等级：" (cdr dataList))
 )
 
-; 2021-04-25
-(defun InsertNsEquipListTable (insertDirection / insPt) 
-  (VerifyNsBzTextStyleByName "DataFlow")
-  (VerifyNsBzTextStyleByName "TitleText")
-  (VerifyNsBzLayerByName "0DataFlow-NsText")
-  (VerifyNsBzLayerByName "0DataFlow-NsEquipFrame")
-  (VerifyNsBzBlockByName "equiplist.2017") 
-  (setq insPt (getpoint "\n拾取设备一览表插入点："))
-  (InsertNsEquipTextList (MoveInsertPositionUtils insPt 3000 25200) (GetNsEquipRowDictList (ProcessOriginNsEquipDictList)) insertDirection)
-  (DeleteNsEquipNullText)
-  (princ)
-)
+
 
 ; refactored at 2021-04-25
 (defun InsertNsEquipTextList (insPt equipDictList insertDirection / textHeight totalNum num insPtList) 
@@ -590,11 +587,3 @@
   ) 
 )
 
-
-
-
-(defun c:foo ()
-  (GetNsEquipRowDictList (ProcessOriginNsEquipDictList))
-  ; (GetNsEquipDictList)
-  ; (ProcessOriginNsEquipDictList)
-)
