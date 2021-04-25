@@ -73,6 +73,27 @@
   (princ)
 )
 
+; refactored at 2021-04-25
+(defun InsertNsEquipTextList (insPt equipDictList insertDirection / textHeight totalNum num insPtList) 
+  (setq textHeight 350)
+  (setq totalNum (1+ (/ (length equipDictList) 29)))
+  (setq num 1)
+  (mapcar '(lambda (x) 
+              (InsertNsEquipFrame (MoveInsertPositionUtils insPt -3000 -25200) totalNum num)
+              (setq insPtList (GetInsertPtListByYMoveUtils insPt (GenerateSortedNumByList x 0) -800))
+              (mapcar '(lambda (xx yy) 
+                        (InsertNsEquipListLeftTextByRow yy xx textHeight)
+                      ) 
+                x
+                insPtList
+              ) 
+              (setq insPt (GetNextNsEquipFrameInsPtStrategy insPt insertDirection))
+              (setq num (1+ num))
+           ) 
+    (SplitListByNumUtils equipDictList 29)
+  ) 
+)
+
 ; 2021-03-17
 (defun DeleteNsEquipNullText ()
   (DeleteEntityBySSUtils (GetAllNsEquipNullTextSS))
@@ -130,7 +151,7 @@
 )
 
 ; 2021-04-25
-(defun GetOriginNsEquipDictListV2 (/ nsEquipImportedList propertyNameList) 
+(defun GetOriginNsEquipDictList (/ nsEquipImportedList propertyNameList) 
   (setq nsEquipImportedList (GetNsEquipImportedList))
   (setq propertyNameList (car nsEquipImportedList))
   (mapcar '(lambda (y) 
@@ -164,7 +185,7 @@
                 ) 
              )
            ) 
-    (GetOriginNsEquipDictListV2)
+    (GetOriginNsEquipDictList)
   )
 )
 
@@ -209,39 +230,17 @@
   resultList
 )
 
-; refactored at 2021-03-12
-(defun InsertNsEquipTextListV2 (insPt equipDictList insertDirection / textHeight totalNum num insPtList) 
-  (setq textHeight 350)
-  (setq totalNum (1+ (/ (length equipDictList) 29)))
-  (setq num 1)
-  (mapcar '(lambda (x) 
-              (InsertNsEquipFrame (MoveInsertPositionUtils insPt -3000 -25200) totalNum num)
-              ; (setq insPtList (GetInsertPtListByYMoveUtils insPt (GenerateSortedNumByList x 0) -800))
-              (setq insPtList (GetInsertPtListByYMoveUtils insPt (GenerateSortedNumByList x 0) -800))
-              (mapcar '(lambda (xx yy) 
-                        (InsertNsEquipListLeftTextByRowV2 yy xx textHeight)
-                      ) 
-                x
-                insPtList
-              ) 
-              (setq insPt (GetNextNsEquipFrameInsPtStrategy insPt insertDirection))
-              (setq num (1+ num))
-           ) 
-    (SplitListByNumUtils equipDictList 29)
-  ) 
-)
-
 ; 2021-04-25
-(defun InsertNsEquipListLeftTextByRowV2 (insPt rowData textHeight /) 
+(defun InsertNsEquipListLeftTextByRow (insPt rowData textHeight /) 
   (if (IsListDataTypeUtils (car rowData))
-    (InsertFristRowNsEquipListV2 insPt rowData textHeight) 
-    (InsertMiddleRowNsEquipListV2 insPt rowData textHeight)
+    (InsertFristRowNsEquipList insPt rowData textHeight) 
+    (InsertMiddleRowNsEquipList insPt rowData textHeight)
   )
 )
 
 ; 2021-04-25
 ; ("id" "tag" "name" "airVolume" "type" "unit" "num" "weight" "comment" "source")
-(defun InsertFristRowNsEquipListV2 (insPt rowData textHeight /) 
+(defun InsertFristRowNsEquipList (insPt rowData textHeight /) 
   (InsertNsEquipListCenterText insPt (GetDottedPairValueUtils "id" rowData) textHeight)
   (InsertNsEquipListCenterTextByWidth (MoveInsertPositionUtils insPt 1500 0) (GetDottedPairValueUtils "tag" rowData) textHeight 0.5)
   (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 2700 0) (GetDottedPairValueUtils "name" rowData) textHeight)
@@ -267,7 +266,7 @@
 )
 
 ; 2021-04-25
-(defun InsertMiddleRowNsEquipListV2 (insPt rowData textHeight /) 
+(defun InsertMiddleRowNsEquipList (insPt rowData textHeight /) 
   (InsertNsEquipListLeftText (MoveInsertPositionUtils insPt 6700 0) (RepairNsEquipSpecificationStrategy rowData) textHeight)
 )
 
@@ -376,25 +375,4 @@
 )
 
 
-
-; refactored at 2021-04-25
-(defun InsertNsEquipTextList (insPt equipDictList insertDirection / textHeight totalNum num insPtList) 
-  (setq textHeight 350)
-  (setq totalNum (1+ (/ (length equipDictList) 29)))
-  (setq num 1)
-  (mapcar '(lambda (x) 
-              (InsertNsEquipFrame (MoveInsertPositionUtils insPt -3000 -25200) totalNum num)
-              (setq insPtList (GetInsertPtListByYMoveUtils insPt (GenerateSortedNumByList x 0) -800))
-              (mapcar '(lambda (xx yy) 
-                        (InsertNsEquipListLeftTextByRowV2 yy xx textHeight)
-                      ) 
-                x
-                insPtList
-              ) 
-              (setq insPt (GetNextNsEquipFrameInsPtStrategy insPt insertDirection))
-              (setq num (1+ num))
-           ) 
-    (SplitListByNumUtils equipDictList 29)
-  ) 
-)
 
