@@ -1507,6 +1507,15 @@
     (reverse (cons strData resultList))
 )
 
+;; Separates a string to list by index
+; uint test compeleted
+(defun SplitStrToListByIndexUtils (strData index /)
+  (list 
+    (substr strData 1 index)
+    (substr strData (1+ index))
+  )
+)
+
 (defun StrListToListListUtils (strList / resultList)
   (foreach item strList 
     (setq resultList (append resultList (list (StrToListUtils item ","))))

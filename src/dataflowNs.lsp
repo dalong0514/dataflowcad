@@ -140,10 +140,24 @@
 
 ; 2021-04-26
 (defun ModifyNsEquipFrameProjectInfo (entityName nsEquipProjectInfoList /)
-  (ModifyMultiplePropertyForOneBlockUtils entityName
-    (list "PROJECT1" "UNITNAME" "DwgNo" "SPECI")
-    nsEquipProjectInfoList
-  )  
+  (if (> (strlen (car nsEquipProjectInfoList)) 42) 
+    (ModifyMultiplePropertyForOneBlockUtils entityName
+      (list "PROJECT2L1" "PROJECT2L2" "UNITNAME" "DwgNo" "SPECI" "VER")
+      (RepairNsEquipProjectInfoList nsEquipProjectInfoList)
+    ) 
+    (ModifyMultiplePropertyForOneBlockUtils entityName
+      (list "PROJECT1" "UNITNAME" "DwgNo" "SPECI" "VER")
+      nsEquipProjectInfoList
+    ) 
+  )
+)
+
+; 2021-04-26
+(defun RepairNsEquipProjectInfoList (nsEquipProjectInfoList /) 
+  (append 
+    (SplitStrToListByIndexUtils (car nsEquipProjectInfoList) 42)
+    (cdr nsEquipProjectInfoList)
+  )
 )
 
 ; 2021-03-17
