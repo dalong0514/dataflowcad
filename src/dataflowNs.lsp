@@ -344,7 +344,9 @@
 
 ; refactored at 2021-04-25
 (defun RepairNsEquipSpecUnitPower (dataList /) 
-  (strcat "单位风量耗功率：" (cdr dataList))
+  (strcat "单位风量耗功率：" 
+    (vl-princ-to-string (/ (atoi (cdr dataList)) 100.00))
+  )
 )
 
 ; refactored at 2021-04-25
@@ -376,6 +378,3 @@
 (defun RepairNsEquipSpecExplosionProof (dataList /) 
   (strcat "防爆等级：" (cdr dataList))
 )
-
-
-
