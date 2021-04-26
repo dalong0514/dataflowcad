@@ -132,10 +132,15 @@
   (ReadDataFromCSVUtils fileDir)
 )
 
-; 2021-03-17
+; refactored at 2021-04-26
 (defun InsertNsEquipFrame (insPt totalNum num nsEquipProjectInfoList /) 
   (InsertBlockByScaleUtils insPt "equiplist.2017" "0DataFlow-NsEquipFrame" (list (cons 0 totalNum) (cons 1 num)) 100)
-  (ModifyMultiplePropertyForOneBlockUtils (entlast) 
+  (ModifyNsEquipFrameProjectInfo (entlast) nsEquipProjectInfoList)  
+)
+
+; 2021-04-26
+(defun ModifyNsEquipFrameProjectInfo (entityName nsEquipProjectInfoList /)
+  (ModifyMultiplePropertyForOneBlockUtils entityName
     (list "PROJECT1" "UNITNAME" "DwgNo" "SPECI")
     nsEquipProjectInfoList
   )  
