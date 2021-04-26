@@ -151,9 +151,10 @@
 )
 
 ; 2021-04-25
+; refactored at 2021-04-26
 (defun GetOriginNsEquipDictList (/ nsEquipImportedList propertyNameList) 
   (setq nsEquipImportedList (GetNsEquipImportedList))
-  (setq propertyNameList (car nsEquipImportedList))
+  (setq propertyNameList (cadr nsEquipImportedList))
   (mapcar '(lambda (y) 
               (mapcar '(lambda (xx yy) 
                          (cons xx yy)
@@ -162,7 +163,16 @@
                 y
               )
            ) 
-    (cdr nsEquipImportedList)
+    (cdr (cdr nsEquipImportedList))
+  )
+)
+
+; 2021-04-26
+(defun GetNsEquipProjectInfoList () 
+  (vl-remove-if-not '(lambda (x) 
+                      (/= x "") 
+                    ) 
+    (car (GetNsEquipImportedList))
   )
 )
 
