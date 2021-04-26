@@ -181,11 +181,19 @@
                 )
                 x
                 (list 
-                  (cons "comment" (strcat (GetDottedPairValueUtils "comment1" x) "£»" (GetDottedPairValueUtils "comment2" x))) 
+                  (cons "comment" (RepairNsEquipSpecComment (GetDottedPairValueUtils "comment1" x) (GetDottedPairValueUtils "comment2" x))) 
                 ) 
              )
            ) 
     (GetOriginNsEquipDictList)
+  )
+)
+
+; 2021-04-26
+(defun RepairNsEquipSpecComment (fristComment secondComment /) 
+  (if (/= fristComment "") 
+    (strcat "·þÎñÇøÓò£º" fristComment "£»" secondComment)
+    (strcat "" secondComment)
   )
 )
 
