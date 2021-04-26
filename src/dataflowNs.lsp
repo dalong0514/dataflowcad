@@ -61,25 +61,32 @@
 )
 
 ; 2021-04-25
-(defun InsertNsEquipListTable (insertDirection / insPt) 
+(defun InsertNsEquipListTable (insertDirection / insPt nsEquipImportedList nsEquipProjectInfoList) 
   (VerifyNsBzTextStyleByName "DataFlow")
   (VerifyNsBzTextStyleByName "TitleText")
   (VerifyNsBzLayerByName "0DataFlow-NsText")
   (VerifyNsBzLayerByName "0DataFlow-NsEquipFrame")
   (VerifyNsBzBlockByName "equiplist.2017") 
+  (setq nsEquipImportedList (GetNsEquipImportedList))
+  (setq nsEquipProjectInfoList (GetNsEquipProjectInfoList nsEquipImportedList))
   (setq insPt (getpoint "\n拾取设备一览表插入点："))
-  (InsertNsEquipTextList (MoveInsertPositionUtils insPt 3000 25200) (GetNsEquipRowDictList (ProcessOriginNsEquipDictList)) insertDirection)
+  (InsertNsEquipTextList 
+    (MoveInsertPositionUtils insPt 3000 25200) 
+    (GetNsEquipRowDictList (ProcessOriginNsEquipDictList nsEquipImportedList)) 
+    insertDirection 
+    nsEquipProjectInfoList
+  )
   (DeleteNsEquipNullText)
   (princ)
 )
 
 ; refactored at 2021-04-25
-(defun InsertNsEquipTextList (insPt equipDictList insertDirection / textHeight totalNum num insPtList) 
+(defun InsertNsEquipTextList (insPt equipDictList insertDirection nsEquipProjectInfoList / textHeight totalNum num insPtList) 
   (setq textHeight 350)
   (setq totalNum (1+ (/ (length equipDictList) 29)))
   (setq num 1)
   (mapcar '(lambda (x) 
-              (InsertNsEquipFrame (MoveInsertPositionUtils insPt -3000 -25200) totalNum num)
+              (InsertNsEquipFrame (MoveInsertPositionUtils insPt -3000 -25200) totalNum num nsEquipProjectInfoList)
               (setq insPtList (GetInsertPtListByYMoveUtils insPt (GenerateSortedNumByList x 0) -800))
               (mapcar '(lambda (xx yy) 
                         (InsertNsEquipListLeftTextByRow yy xx textHeight)
@@ -126,8 +133,12 @@
 )
 
 ; 2021-03-17
-(defun InsertNsEquipFrame (insPt totalNum num /) 
-  (InsertBlockByScaleUtils insPt "equiplist.2017" "0DataFlow-NsEquipFrame" (list (cons 0 totalNum) (cons 1 num) (cons 8 "暖通")) 100)
+(defun InsertNsEquipFrame (insPt totalNum num nsEquipProjectInfoList /) 
+  (InsertBlockByScaleUtils insPt "equiplist.2017" "0DataFlow-NsEquipFrame" (list (cons 0 totalNum) (cons 1 num)) 100)
+  (ModifyMultiplePropertyForOneBlockUtils (entlast) 
+    (list "PROJECT1" "UNITNAME" "DwgNo" "SPECI")
+    nsEquipProjectInfoList
+  )  
 )
 
 ; 2021-03-17
@@ -152,8 +163,7 @@
 
 ; 2021-04-25
 ; refactored at 2021-04-26
-(defun GetOriginNsEquipDictList (/ nsEquipImportedList propertyNameList) 
-  (setq nsEquipImportedList (GetNsEquipImportedList))
+(defun GetOriginNsEquipDictList (nsEquipImportedList / propertyNameList) 
   (setq propertyNameList (cadr nsEquipImportedList))
   (mapcar '(lambda (y) 
               (mapcar '(lambda (xx yy) 
@@ -168,16 +178,16 @@
 )
 
 ; 2021-04-26
-(defun GetNsEquipProjectInfoList () 
+(defun GetNsEquipProjectInfoList (nsEquipImportedList /) 
   (vl-remove-if-not '(lambda (x) 
                       (/= x "") 
                     ) 
-    (car (GetNsEquipImportedList))
+    (car nsEquipImportedList)
   )
 )
 
 ; 2021-04-25
-(defun ProcessOriginNsEquipDictList (/ rowId)
+(defun ProcessOriginNsEquipDictList (nsEquipImportedList / rowId)
   (setq rowId 0)
   (mapcar '(lambda (x) 
              (setq rowId (1+ rowId))
@@ -195,7 +205,7 @@
                 ) 
              )
            ) 
-    (GetOriginNsEquipDictList)
+    (GetOriginNsEquipDictList nsEquipImportedList)
   )
 )
 
