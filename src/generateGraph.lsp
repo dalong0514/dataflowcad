@@ -83,6 +83,15 @@
   ) 
 )
 
+; 2021-04-27
+(defun StealGsLcTextStyleByNameList (textStyleNameList /)
+  (Steal (GetGsLcModulesPath) 
+    (list 
+      (list "Text Styles" textStyleNameList)
+    )
+  ) 
+)
+
 ; 2021-03-09
 (defun StealGsBzBlockByNameList (blockNameList /)
   (Steal (GetGsBzModulesPath) 
@@ -97,6 +106,15 @@
   (Steal (GetGsBzModulesPath) 
     (list 
       (list "Layers" layerNameList)
+    )
+  ) 
+)
+
+; 2021-04-27
+(defun StealGsBzTextStyleByNameList (textStyleNameList /)
+  (Steal (GetGsBzModulesPath) 
+    (list 
+      (list "Text Styles" textStyleNameList)
     )
   ) 
 )
@@ -178,6 +196,13 @@
   )
 )
 
+; 2021-04-27
+(defun VerifyGsLcTextStyleByName (textStyleName /) 
+  (if (= (tblsearch "STYLE" textStyleName) nil) 
+    (StealGsLcTextStyleByNameList (list textStyleName))
+  )
+)
+
 ; 2021-03-09
 (defun VerifyGsBzBlockByName (blockName /) 
   (if (= (tblsearch "BLOCK" blockName) nil) 
@@ -189,6 +214,13 @@
 (defun VerifyGsBzLayerByName (layerName /) 
   (if (= (tblsearch "LAYER" layerName) nil) 
     (StealGsBzLayerByNameList (list layerName))
+  )
+)
+
+; 2021-04-27
+(defun VerifyGsBzTextStyleByName (textStyleName /) 
+  (if (= (tblsearch "STYLE" textStyleName) nil) 
+    (StealGsBzTextStyleByNameList (list textStyleName))
   )
 )
 
