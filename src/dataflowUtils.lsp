@@ -11,9 +11,9 @@
   (setq fileDir "\\\\192.168.1.38\\dataflow\\system-data\\verifydata.txt")
   ; (setq fileDir "\\\\MEDICINE--DC\\dataflow\\system-data\\verifydata.txt")
   (if (/= (type (vl-catch-all-apply 'ReadDataFromFileUtils (list fileDir))) 'VL-CATCH-ALL-APPLY-ERROR) 
-    (atoi (car (ReadDataFromFileUtils fileDir))) 
+    (mapcar '(lambda (x) (atoi x)) (ReadDataFromFileUtils fileDir))
     ; offline - set the verify date 20210601
-    20210601
+    '(20210415 20210615)
   ) 
 )
 
@@ -25,7 +25,7 @@
 ; 2021-04-09
 ; very importance for me, convert a function to the parameter for another function
 (defun ExecuteFunctionAfterVerifyDateUtils (functionName argumentList / result)
-  (if (< *dataflowDate* (GetVerifyDataFromServer)) 
+  (if (and (> *dataflowDate* (car (GetVerifyDataFromServer))) (< *dataflowDate* (cadr (GetVerifyDataFromServer))) )
     (progn 
       (setq result (vl-catch-all-apply functionName argumentList))
       (if (= (type result) 'VL-CATCH-ALL-APPLY-ERROR) 

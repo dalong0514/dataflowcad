@@ -430,14 +430,14 @@
 )
 
 ; 2021-04-09
-(defun ExportGsDataMacro (/ dataTypeList dataTypeChNameList)
+(defun ExportGsDataMacroV1 (/ dataTypeList dataTypeChNameList)
   (setq dataTypeList '("Pipe" "Equipment" "InstrumentAndEquipmentAndPipe" "Equipment" "OuterPipe" "GsCleanAir"))
   (setq dataTypeChNameList '("管道数据" "设备数据" "仪表数据" "电气数据" "外管数据" "洁净空调")) 
   (ExportTempDataByBox "exportTempDataBox" dataTypeList dataTypeChNameList "Gs")
 )
 
 ; 2021-04-09
-(defun ExportGsDataMacroV2 (/ dataTypeList dataTypeChNameList)
+(defun ExportGsDataMacro (/ dataTypeList dataTypeChNameList)
   (setq dataTypeList '("Pipe" "Equipment" "InstrumentAndEquipmentAndPipe" "Electric" "OuterPipe" "GsCleanAir"))
   (setq dataTypeChNameList '("管道数据" "设备数据" "仪表数据" "电气数据" "外管数据" "洁净空调")) 
   (ExportCADDataByBox "exportCADDataBox" dataTypeList dataTypeChNameList "Gs")
