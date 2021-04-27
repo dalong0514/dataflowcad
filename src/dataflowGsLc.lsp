@@ -114,6 +114,7 @@
 
 ; refactored at 2021-04-09
 (defun InsertEquipTagMacro (/ ss equipInfoList insPt insPtList)
+  (VerifyGsLcTextStyleByName "DataFlow")
   (VerifyGsLcBlockByName "EquipTagV2")
   (setq ss (GetEquipmentSSBySelectUtils))
   (setq equipInfoList (GetEquipTagList ss))
