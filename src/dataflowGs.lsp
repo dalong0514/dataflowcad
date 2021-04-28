@@ -3509,18 +3509,58 @@
                    (GetDottedPairValueUtils 10 (cadr x))
              )
            ) 
-    (GetGsLcStrategyEntityData (GetAllPipeAndEquipData))
+    (GetGsLcStrategyEntityData (GetGsLcPipeAndEquipData))
   ) 
 )
 
 ; 2021-04-28
-(defun GetAllPipeAndEquipData () 
-  (GetSelectedEntityDataUtils (GetAllEquipmentAndPipeSSUtils))
+(defun GetGsLcPipeAndEquipData () 
+  ; (GetSelectedEntityDataUtils (GetAllEquipmentAndPipeSSUtils))
+  (GetSelectedEntityDataUtils (GetEquipmentAndPipeSSBySelectUtils))
 )
 
 (defun c:foo ()
-  (mapcar '(lambda (x) (car x)) (GetAllGsLcPipeAndEquipDrawNumDictListData))
-  
+  (UpdateAllPublicPipeFromToDataByBox "UpdateAllPublicPipeFromToDataBox")
+)
+
+; 2021-04-28
+(defun UpdateAllPublicPipeFromToDataByBox (tileName / dcl_id status sslen)
+  (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\dcl\\" "dataflowGs.dcl")))
+  (setq status 2)
+  (while (>= status 2)
+    ; Create the dialog box
+    (new_dialog tileName dcl_id "" '(-1 -1))
+    ; Added the actions to the Cancel and Pick Point button
+    (action_tile "cancel" "(done_dialog 0)")
+    (action_tile "btnSelect" "(done_dialog 2)")
+    (action_tile "btnAllSelect" "(done_dialog 3)") 
+    (action_tile "btnModify" "(done_dialog 4)") 
+    (if (/= sslen nil)
+      (set_tile "exportDataNumMsg" (strcat "选择数据的数量： " (rtos sslen)))
+    ) 
+    ; select button
+    (if (= 2 (setq status (start_dialog))) 
+      (progn 
+        (setq ss (GetEquipmentAndPipeSSBySelectUtils))
+        (setq sslen (sslength ss)) 
+      )
+    )
+    ; All select button
+    (if (= 3 status) 
+      (progn 
+        (setq ss (GetAllEquipmentAndPipeSSUtils))
+        (setq sslen (sslength ss)) 
+      )
+    ) 
+    ; update data button
+    (if (= 4 status) 
+      (progn 
+        (princ "da") 
+      )
+    )
+  )
+  (unload_dialog dcl_id)
+  (princ)
 )
 
 ; Update from/to Data for PulicPipe

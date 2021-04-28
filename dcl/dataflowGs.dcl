@@ -102,3 +102,41 @@ updateGsBzEquipGraphBox : dialog {
     : spacer { height = 3; } 
   }
 }
+
+UpdateAllPublicPipeFromToDataBox : dialog {
+  label = "天正设计流数据一体化工艺V2.0———一键获取公共工程管道来去向数据"; 
+  key = "UpdateAllPublicPipeFromToData";
+  : boxed_radio_column {
+    key = "showOriginDataBox";
+    width = 100;
+    : text {
+      key = "exportDataNumMsg";
+      label = "选择数据的数量：";
+    } 
+    : spacer { height = 3; } 
+    : row { 
+      fixed_width = true; 
+      alignment = centered; 
+      : button { 
+        key = "btnSelect"; 
+        label = "选取"; 
+        is_default = "true"; 
+      } 
+      : spacer { width = 1; } 
+      : button { 
+        key = "btnAllSelect"; 
+        label = "全选"; 
+        is_default = "true"; 
+      } 
+      : spacer { width = 1; }  
+      : button { 
+        key = "btnModify"; 
+        label = "更新"; 
+        is_default = "true"; 
+      } 
+      : spacer { width = 2; } 
+      cancel_button; 
+    }
+    : spacer { height = 3; } 
+  }
+}
