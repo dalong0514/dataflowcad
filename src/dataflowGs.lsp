@@ -3390,39 +3390,66 @@
 )
 
 ; 2021-04-28
-(defun UpdateAllPublicPipeFromToDataMacro () 
+(defun UpdateAllPublicPipeFromToDataMacro (/ oneDrawPipeAndEquipData) 
   (foreach item (GetGsLcDrawNumList) 
+    (setq oneDrawPipeAndEquipData (GetDottedPairValueUtils item (GetAllGsLcPipeAndEquipDrawNumDictListData)))
     (mapcar '(lambda (x) 
-                (UpdateOneDrawPublicPipeFromToData x)
+                (UpdateOneDrawPublicPipeFromToData x (GetMinDistanceEquipTagForPublicPipe oneDrawPipeAndEquipData (caddr x)))
              ) 
-      (FliterPublicPipeForFromToData 
-        (GetDottedPairValueUtils item (GetAllGsLcPipeAndEquipDrawNumDictListData))
-      ) 
+      (FliterPublicPipeForFromToData oneDrawPipeAndEquipData) 
     ) 
   )
-  ; (alert "流程图数据图号更新成功！")
+  (alert "流程图数据图号更新成功！")
 )
 
 ; 2021-04-28
-(defun UpdateOneDrawPublicPipeFromToData (publicPipeData /) 
-  (cond 
-    ((IsPublicPipeFromByEntityName (cadr publicPipeData)) (UpdateOneDrawPublicPipeFromData (cadr publicPipeData) "from"))
-    ((IsPublicPipeToByEntityName (cadr publicPipeData)) (UpdateOneDrawPublicPipeToData (cadr publicPipeData) "to"))
+(defun GetMinDistanceEquipTagForPublicPipe (oneDrawPipeAndEquipData pipeLocation / resultList entityName)
+  (setq resultList 
+    (mapcar '(lambda (x) 
+              (list 
+                (cadr x)
+                (distance (caddr x) pipeLocation)
+              )
+            ) 
+      (FliterEquipForFromToData oneDrawPipeAndEquipData)
+    )  
   )
+  (setq entityName 
+    (car (car (vl-sort resultList '(lambda (x y) (< (cadr x) (cadr y)))))) 
+  )
+  (GetDottedPairValueUtils "tag" (GetAllPropertyDictForOneBlock entityName)) 
+)
+
+; 2021-04-28
+(defun UpdateOneDrawPublicPipeFromToData (publicPipeData equipTag /) 
+  (cond 
+    ((IsPublicPipeFromByEntityName (cadr publicPipeData)) (UpdateOneDrawPublicPipeFromData (cadr publicPipeData) equipTag))
+    ((IsPublicPipeToByEntityName (cadr publicPipeData)) (UpdateOneDrawPublicPipeToData (cadr publicPipeData) equipTag))
+  )
+)
+
+; 2021-04-28
+(defun GetGsLcToPublicPipeCode () 
+  '("CWS" "LS" "LWS" "HWS" "HOS" "N" "DW" "DNW" "PW")
+)
+
+; 2021-04-28
+(defun GetGsLcFromPublicPipeCode () 
+  '("CWR" "SC" "LWR" "HWR" "HOR" "VT" "VTa" "VTb" "VA" "VAa" "VAb" "BD")
 )
 
 ; 2021-04-28
 (defun IsPublicPipeFromByEntityName (entityName /) 
   (member 
     (GetPipeCodeByPipeNum (GetDottedPairValueUtils "pipenum" (GetAllPropertyDictForOneBlock entityName)))  
-    '("CWR" "SC"))
+    (GetGsLcFromPublicPipeCode))
 )
 
 ; 2021-04-28
 (defun IsPublicPipeToByEntityName (entityName /) 
   (member 
     (GetPipeCodeByPipeNum (GetDottedPairValueUtils "pipenum" (GetAllPropertyDictForOneBlock entityName)))  
-    '("CWS" "LS"))
+    (GetGsLcToPublicPipeCode))
 )
 
 ; 2021-04-28
@@ -3443,13 +3470,19 @@
   )
 )
 
-
-
-
 ; 2021-04-28
 (defun FliterPublicPipeForFromToData (entityData / publicPipeData) 
   (vl-remove-if-not '(lambda (x) 
                        (IsGsLcPipeByEntityNameUtils (cadr x))
+                    ) 
+    entityData
+  )
+)
+
+; 2021-04-28
+(defun FliterEquipForFromToData (entityData / publicPipeData) 
+  (vl-remove-if-not '(lambda (x) 
+                       (not (IsGsLcPipeByEntityNameUtils (cadr x)))
                     ) 
     entityData
   )
@@ -3461,10 +3494,6 @@
     T
   )
 )
-
-
-
-
 
 ; 2021-04-28
 (defun GetAllGsLcPipeAndEquipDrawNumDictListData () 
@@ -3487,12 +3516,6 @@
 (defun GetAllPipeAndEquipData () 
   (GetSelectedEntityDataUtils (GetAllEquipmentAndPipeSSUtils))
 )
-
-(defun c:foo () 
-  (UpdateAllPublicPipeFromToDataMacro)
-  
-)
-
 
 ; Update from/to Data for PulicPipe
 ;;;-------------------------------------------------------------------------;;;
