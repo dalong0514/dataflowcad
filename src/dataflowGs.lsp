@@ -3390,9 +3390,10 @@
 )
 
 ; 2021-04-28
-(defun UpdateAllPublicPipeFromToDataMacro (/ oneDrawPipeAndEquipData) 
-  (foreach item (GetGsLcDrawNumList) 
-    (setq oneDrawPipeAndEquipData (GetDottedPairValueUtils item (GetAllGsLcPipeAndEquipDrawNumDictListData)))
+(defun UpdateAllPublicPipeFromToDataMacro (/ allDrawPipeAndEquipData oneDrawPipeAndEquipData) 
+  (setq allDrawPipeAndEquipData (GetAllGsLcPipeAndEquipDrawNumDictListData))
+  (foreach item (mapcar '(lambda (x) (car x)) allDrawPipeAndEquipData) 
+    (setq oneDrawPipeAndEquipData (GetDottedPairValueUtils item allDrawPipeAndEquipData))
     (mapcar '(lambda (x) 
                 (UpdateOneDrawPublicPipeFromToData x (GetMinDistanceEquipTagForPublicPipe oneDrawPipeAndEquipData (caddr x)))
              ) 
@@ -3515,6 +3516,11 @@
 ; 2021-04-28
 (defun GetAllPipeAndEquipData () 
   (GetSelectedEntityDataUtils (GetAllEquipmentAndPipeSSUtils))
+)
+
+(defun c:foo ()
+  (mapcar '(lambda (x) (car x)) (GetAllGsLcPipeAndEquipDrawNumDictListData))
+  
 )
 
 ; Update from/to Data for PulicPipe
