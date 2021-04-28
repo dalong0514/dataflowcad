@@ -3382,6 +3382,124 @@
 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
+; Update from/to Data for PulicPipe
+
+; 2021-04-28
+(defun c:UpdateAllPublicPipeFromToData () 
+  (ExecuteFunctionAfterVerifyDateUtils 'UpdateAllPublicPipeFromToDataMacro '())
+)
+
+; 2021-04-28
+(defun UpdateAllPublicPipeFromToDataMacro () 
+  (foreach item (GetGsLcDrawNumList) 
+    (mapcar '(lambda (x) 
+                (UpdateOneDrawPublicPipeFromToData x)
+             ) 
+      (FliterPublicPipeForFromToData 
+        (GetDottedPairValueUtils item (GetAllGsLcPipeAndEquipDrawNumDictListData))
+      ) 
+    ) 
+  )
+  ; (alert "流程图数据图号更新成功！")
+)
+
+; 2021-04-28
+(defun UpdateOneDrawPublicPipeFromToData (publicPipeData /) 
+  (cond 
+    ((IsPublicPipeFromByEntityName (cadr publicPipeData)) (UpdateOneDrawPublicPipeFromData (cadr publicPipeData) "from"))
+    ((IsPublicPipeToByEntityName (cadr publicPipeData)) (UpdateOneDrawPublicPipeToData (cadr publicPipeData) "to"))
+  )
+)
+
+; 2021-04-28
+(defun IsPublicPipeFromByEntityName (entityName /) 
+  (member 
+    (GetPipeCodeByPipeNum (GetDottedPairValueUtils "pipenum" (GetAllPropertyDictForOneBlock entityName)))  
+    '("CWR" "SC"))
+)
+
+; 2021-04-28
+(defun IsPublicPipeToByEntityName (entityName /) 
+  (member 
+    (GetPipeCodeByPipeNum (GetDottedPairValueUtils "pipenum" (GetAllPropertyDictForOneBlock entityName)))  
+    '("CWS" "LS"))
+)
+
+; 2021-04-28
+(defun UpdateOneDrawPublicPipeFromData (entityName fromData /) 
+  (ModifyMultiplePropertyForOneBlockUtils 
+    entityName
+    (list "FROM") 
+    (list fromData)
+  )
+)
+
+; 2021-04-28
+(defun UpdateOneDrawPublicPipeToData (entityName ToData /) 
+  (ModifyMultiplePropertyForOneBlockUtils 
+    entityName
+    (list "TO") 
+    (list ToData)
+  )
+)
+
+
+
+
+; 2021-04-28
+(defun FliterPublicPipeForFromToData (entityData / publicPipeData) 
+  (vl-remove-if-not '(lambda (x) 
+                       (IsGsLcPipeByEntityNameUtils (cadr x))
+                    ) 
+    entityData
+  )
+)
+
+; 2021-04-28
+(defun IsGsLcPipeByEntityNameUtils (entityName / entityData) 
+  (if (GetDottedPairValueUtils "pipenum" (GetAllPropertyDictForOneBlock entityName)) 
+    T
+  )
+)
+
+
+
+
+
+; 2021-04-28
+(defun GetAllGsLcPipeAndEquipDrawNumDictListData () 
+  (ChunkListByColumnIndexUtils (GetAllGsLcPipeAndEquipDictListData) 0) 
+)
+
+; 2021-04-15
+(defun GetAllGsLcPipeAndEquipDictListData () 
+  (mapcar '(lambda (x) 
+             (list (car x) 
+                   (GetDottedPairValueUtils -1 (cadr x))
+                   (GetDottedPairValueUtils 10 (cadr x))
+             )
+           ) 
+    (GetGsLcStrategyEntityData (GetAllPipeAndEquipData))
+  ) 
+)
+
+; 2021-04-28
+(defun GetAllPipeAndEquipData () 
+  (GetSelectedEntityDataUtils (GetAllEquipmentAndPipeSSUtils))
+)
+
+(defun c:foo () 
+  (UpdateAllPublicPipeFromToDataMacro)
+  
+)
+
+
+; Update from/to Data for PulicPipe
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
 ; logic for Common Function of Little Tools
 
 ; refactored at 2021-04-09
