@@ -113,6 +113,11 @@ UpdateAllPublicPipeFromToDataBox : dialog {
       key = "exportDataNumMsg";
       label = "选择数据的数量：";
     } 
+    : spacer { height = 2; }  
+    : text {
+      key = "modifyStatusMsg";
+      label = "修改状态：";
+    } 
     : spacer { height = 3; } 
     : row { 
       fixed_width = true; 

@@ -3386,12 +3386,12 @@
 
 ; 2021-04-28
 (defun c:UpdateAllPublicPipeFromToData () 
-  (ExecuteFunctionAfterVerifyDateUtils 'UpdateAllPublicPipeFromToDataMacro '())
+  (ExecuteFunctionAfterVerifyDateUtils 'UpdateAllPublicPipeFromToDataByBox '("UpdateAllPublicPipeFromToDataBox"))
 )
 
 ; 2021-04-28
-(defun UpdateAllPublicPipeFromToDataMacro (/ allDrawPipeAndEquipData oneDrawPipeAndEquipData) 
-  (setq allDrawPipeAndEquipData (GetAllGsLcPipeAndEquipDrawNumDictListData))
+(defun UpdateAllPublicPipeFromToDataMacro (ss / allDrawPipeAndEquipData oneDrawPipeAndEquipData) 
+  (setq allDrawPipeAndEquipData (GetAllGsLcPipeAndEquipDrawNumDictListData ss))
   (foreach item (mapcar '(lambda (x) (car x)) allDrawPipeAndEquipData) 
     (setq oneDrawPipeAndEquipData (GetDottedPairValueUtils item allDrawPipeAndEquipData))
     (mapcar '(lambda (x) 
@@ -3400,7 +3400,6 @@
       (FliterPublicPipeForFromToData oneDrawPipeAndEquipData) 
     ) 
   )
-  (alert "流程图数据图号更新成功！")
 )
 
 ; 2021-04-28
@@ -3497,34 +3496,29 @@
 )
 
 ; 2021-04-28
-(defun GetAllGsLcPipeAndEquipDrawNumDictListData () 
-  (ChunkListByColumnIndexUtils (GetAllGsLcPipeAndEquipDictListData) 0) 
+(defun GetAllGsLcPipeAndEquipDrawNumDictListData (ss /) 
+  (ChunkListByColumnIndexUtils (GetAllGsLcPipeAndEquipDictListData ss) 0) 
 )
 
 ; 2021-04-15
-(defun GetAllGsLcPipeAndEquipDictListData () 
+(defun GetAllGsLcPipeAndEquipDictListData (ss /) 
   (mapcar '(lambda (x) 
              (list (car x) 
                    (GetDottedPairValueUtils -1 (cadr x))
                    (GetDottedPairValueUtils 10 (cadr x))
              )
            ) 
-    (GetGsLcStrategyEntityData (GetGsLcPipeAndEquipData))
+    (GetGsLcStrategyEntityData (GetGsLcPipeAndEquipData ss))
   ) 
 )
 
 ; 2021-04-28
-(defun GetGsLcPipeAndEquipData () 
-  ; (GetSelectedEntityDataUtils (GetAllEquipmentAndPipeSSUtils))
-  (GetSelectedEntityDataUtils (GetEquipmentAndPipeSSBySelectUtils))
-)
-
-(defun c:foo ()
-  (UpdateAllPublicPipeFromToDataByBox "UpdateAllPublicPipeFromToDataBox")
+(defun GetGsLcPipeAndEquipData (ss /) 
+  (GetSelectedEntityDataUtils ss)
 )
 
 ; 2021-04-28
-(defun UpdateAllPublicPipeFromToDataByBox (tileName / dcl_id status sslen)
+(defun UpdateAllPublicPipeFromToDataByBox (tileName / dcl_id status sslen modifyStatus)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\dcl\\" "dataflowGs.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -3538,6 +3532,9 @@
     (if (/= sslen nil)
       (set_tile "exportDataNumMsg" (strcat "选择数据的数量： " (rtos sslen)))
     ) 
+    (if (= modifyStatus 1)
+      (set_tile "modifyStatusMsg" "修改状态：已完成")
+    )  
     ; select button
     (if (= 2 (setq status (start_dialog))) 
       (progn 
@@ -3555,8 +3552,10 @@
     ; update data button
     (if (= 4 status) 
       (progn 
-        (princ "da") 
-      )
+        (UpdateAllPublicPipeFromToDataMacro ss) 
+        (setq modifyStatus 1) 
+        (setq sslen nil)
+      ) 
     )
   )
   (unload_dialog dcl_id)
