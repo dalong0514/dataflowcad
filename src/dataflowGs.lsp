@@ -3497,11 +3497,11 @@
 
 ; 2021-04-28
 (defun GetAllGsLcPipeAndEquipDrawNumDictListData (ss /) 
-  (ChunkListByColumnIndexUtils (GetAllGsLcPipeAndEquipDictListData ss) 0) 
+  (ChunkListByColumnIndexUtils (GetGsLcPipeAndEquipDictListData ss) 0) 
 )
 
 ; 2021-04-15
-(defun GetAllGsLcPipeAndEquipDictListData (ss /) 
+(defun GetGsLcPipeAndEquipDictListData (ss /) 
   (mapcar '(lambda (x) 
              (list (car x) 
                    (GetDottedPairValueUtils -1 (cadr x))
@@ -3518,7 +3518,7 @@
 )
 
 ; 2021-04-28
-(defun UpdateAllPublicPipeFromToDataByBox (tileName / dcl_id status sslen modifyStatus)
+(defun UpdateAllPublicPipeFromToDataByBox (tileName / dcl_id status sslen modifyStatus fromCodeInput fromCodeList fromCodeListString toCodeInput toCodeList toCodeListString)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\dcl\\" "dataflowGs.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -3527,14 +3527,40 @@
     ; Added the actions to the Cancel and Pick Point button
     (action_tile "cancel" "(done_dialog 0)")
     (action_tile "btnSelect" "(done_dialog 2)")
-    (action_tile "btnAllSelect" "(done_dialog 3)") 
-    (action_tile "btnModify" "(done_dialog 4)") 
+    (action_tile "btnAllSelect" "(done_dialog 3)")
+    (action_tile "btnModify" "(done_dialog 4)")
+    (action_tile "btnAddFromCode" "(done_dialog 5)")
+    (action_tile "btnAddToCode" "(done_dialog 6)")
+    (mode_tile "fromCodeInput" 2)
+    (action_tile "fromCodeInput" "(setq fromCodeInput $value)")
+    (mode_tile "toCodeInput" 2)
+    (action_tile "toCodeInput" "(setq toCodeInput $value)") 
+    (if (= toCodeList nil) 
+      (progn 
+        (setq toCodeList (GetGsLcToPublicPipeCode))
+        (setq toCodeListString (vl-princ-to-string toCodeList))
+      )
+    ) 
+    (if (= fromCodeList nil)
+      (progn 
+        (setq fromCodeList (GetGsLcFromPublicPipeCode))
+        (setq fromCodeListString (vl-princ-to-string fromCodeList))
+      ) 
+    ) 
     (if (/= sslen nil)
       (set_tile "exportDataNumMsg" (strcat "选择数据的数量： " (rtos sslen)))
     ) 
+    (if (= modifyStatus 2)
+      (set_tile "fromCodeMsg" (strcat "可以匹配的【出】设备的公用管道代号： " fromCodeListString))
+    ) 
+    (if (= modifyStatus 3)
+      (set_tile "toCodeMsg" (strcat "可以匹配的【进】设备的公用管道代号： " toCodeListString))
+    )  
     (if (= modifyStatus 1)
       (set_tile "modifyStatusMsg" "修改状态：已完成")
-    )  
+    ) 
+    (set_tile "fromCodeMsg" (strcat "可以匹配的【出】设备的公用管道代号： " fromCodeListString))
+    (set_tile "toCodeMsg" (strcat "可以匹配的【进】设备的公用管道代号： " toCodeListString))
     ; select button
     (if (= 2 (setq status (start_dialog))) 
       (progn 
@@ -3557,6 +3583,22 @@
         (setq sslen nil)
       ) 
     )
+    ; add from code
+    (if (= 5 status) 
+      (progn 
+        (setq fromCodeList (append fromCodeList (list fromCodeInput)))
+        (setq fromCodeListString (vl-princ-to-string fromCodeList))
+        (setq modifyStatus 2) 
+      ) 
+    ) 
+    ; add to code
+    (if (= 6 status) 
+      (progn 
+        (setq toCodeList (append toCodeList (list toCodeInput)))
+        (setq toCodeListString (vl-princ-to-string toCodeList))
+        (setq modifyStatus 3) 
+      ) 
+    )  
   )
   (unload_dialog dcl_id)
   (princ)

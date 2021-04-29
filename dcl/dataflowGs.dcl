@@ -110,6 +110,50 @@ UpdateAllPublicPipeFromToDataBox : dialog {
     key = "showOriginDataBox";
     width = 100;
     : text {
+      key = "fromCodeMsg";
+      label = "可以匹配的【出】设备的公用管道代号：";
+    }
+    : spacer { height = 1; } 
+    : row {
+      fixed_width = true; 
+      alignment = left;  
+      : edit_box {
+        key = "fromCodeInput";
+        edit_width = 50;
+        mnemonic = "N";
+        value = "";
+      }
+      : spacer { width = 2; }  
+      : button { 
+        key = "btnAddFromCode"; 
+        label = "增加"; 
+        is_default = "true"; 
+      }  
+    }
+    : spacer { height = 1; }  
+    : text {
+      key = "toCodeMsg";
+      label = "可以匹配的【进】设备的公用管道代号：";
+    }
+    : spacer { height = 1; } 
+    : row {
+      fixed_width = true; 
+      alignment = left;  
+      : edit_box {
+        key = "toCodeInput";
+        edit_width = 50;
+        mnemonic = "N";
+        value = "";
+      }
+      : spacer { width = 2; }  
+      : button { 
+        key = "btnAddToCode"; 
+        label = "增加"; 
+        is_default = "true"; 
+      }  
+    }
+    : spacer { height = 1; }   
+    : text {
       key = "exportDataNumMsg";
       label = "选择数据的数量：";
     } 
@@ -124,7 +168,7 @@ UpdateAllPublicPipeFromToDataBox : dialog {
       alignment = centered; 
       : button { 
         key = "btnSelect"; 
-        label = "选取"; 
+        label = "框选"; 
         is_default = "true"; 
       } 
       : spacer { width = 1; } 
