@@ -125,6 +125,74 @@
   (GenerateEntityObjectElement "EquipTagV2" insPtList equipInfoList)
 )
 
+; 2021-04-29
+(defun c:InsertAllGsLcEquipTag () 
+  (ExecuteFunctionAfterVerifyDateUtils 'InsertAllGsLcEquipTagMacro '())
+)
+
+; 2021-04-29
+(defun InsertAllGsLcEquipTagMacro ( / allDrawEquipData allGsLcDrawLabelPositionDictData oneDrawEquipData drawPosition) 
+  (setq allDrawEquipData (GetAllGsLcEquipDrawNumDictListData))
+  (setq allGsLcDrawLabelPositionDictData (GetAllGsLcDrawLabelPositionDictDataUtils))
+  (foreach item (mapcar '(lambda (x) (car x)) allDrawEquipData) 
+    (setq oneDrawEquipData (GetOneDrawEquipDictData (GetDottedPairValueUtils item allDrawEquipData)))
+    ; sorted by equipTag
+    (setq oneDrawEquipData (vl-sort oneDrawEquipData '(lambda (x y) (< (GetDottedPairValueUtils "tag" x) (GetDottedPairValueUtils "tag" y)))))
+    (setq drawPosition (GetDottedPairValueUtils item allGsLcDrawLabelPositionDictData))
+    (InsertOneDrawEquipTag drawPosition oneDrawEquipData)
+  )
+)
+
+; 2021-04-29
+(defun GetAllGsLcEquipDrawNumDictListData () 
+  (ChunkListByColumnIndexUtils (GetGsLcAllEquipDictListData) 0) 
+)
+
+; 2021-04-15
+(defun GetGsLcAllEquipDictListData () 
+  (mapcar '(lambda (x) 
+             (list (car x) 
+                   (GetDottedPairValueUtils -1 (cadr x))
+                   (GetDottedPairValueUtils 10 (cadr x))
+             )
+           ) 
+    (GetGsLcStrategyEntityData (GetSelectedEntityDataUtils (GetAllEquipmentSSUtils)))
+  ) 
+)
+
+; 2021-04-29
+(defun InsertOneDrawEquipTag (insPt equipData /) 
+  (setq insPtList (GetInsertPtListByXMoveUtils (MoveInsertPositionUtils insPt -770 40) (GenerateSortedNumByList equipData 0) 30))
+  (mapcar '(lambda (x y) 
+              (InsertOneGsLcEquipTag x y)
+            ) 
+    insPtList
+    equipData
+  ) 
+)
+
+; 2021-04-29
+(defun InsertOneGsLcEquipTag (insPt dataList /)
+  (VerifyGsLcBlockByName "EquipTag")
+  (VerifyGsLcLayerByName "0DataFlow-GsLcEquipTag")
+  (InsertBlockUtils insPt "EquipTag" "0DataFlow-GsLcEquipTag" 
+    (list 
+      (cons 1 (GetDottedPairValueUtils "tag" dataList))
+      (cons 2 (GetDottedPairValueUtils "name" dataList))
+      (cons 3 (GetDottedPairValueUtils "entityhandle" dataList))
+    )
+  )
+)
+
+; 2021-04-29
+(defun GetOneDrawEquipDictData (oneDrawEquipData /) 
+  (mapcar '(lambda (x) 
+             (GetAllPropertyDictForOneBlock (cadr x))
+            ) 
+    oneDrawEquipData
+  ) 
+)
+
 ; Unit Test Completed
 (defun GenerateSortedNumByList (originList i / resultList)
   (repeat (length originList) 

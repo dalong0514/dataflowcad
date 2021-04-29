@@ -3219,6 +3219,19 @@
   ) 
 )
 
+; 2021-04-29
+; must use cons, the it is valid for function [GetDottedPairValueUtils]
+(defun GetAllGsLcDrawLabelPositionDictDataUtils () 
+  (mapcar '(lambda (x) 
+             (cons 
+               (GetDottedPairValueUtils "dwgno" x)
+               (GetEntityPositionByEntityNameUtils (handent (cdr (assoc "entityhandle" x))))
+             )
+           ) 
+    (GetBlockAllPropertyDictListUtils (GetEntityNameListBySSUtils (GetAllDrawLabelSSUtils)))
+  ) 
+)
+
 ; 2021-04-15
 (defun GetGsLcA1DrawPositionRangeUtils (position /)
   (list (+ (car position) -841) (+ (cadr position) 594))
