@@ -806,20 +806,17 @@
 (defun GetPipenumOrTag (sourceData / equipmentData pipeData result) 
   (setq equipmentData (FilterBlockEquipmentDataUtils sourceData))
   (setq pipeData (FilterBlockPipeDataUtils sourceData)) 
-  (if (/= equipmentData nil) 
-    (setq result 
-      (list (GetDottedPairValueUtils "entityhandle" (car equipmentData)) (GetDottedPairValueUtils "tag" (car equipmentData)))
-    )
-  ) 
-  (if (/= pipeData nil) 
-    (setq result 
-      (list (GetDottedPairValueUtils "entityhandle" (car pipeData)) (GetDottedPairValueUtils "pipenum" (car pipeData)))
-    )
-  ) 
-  (if (and (= equipmentData nil) (= pipeData nil))
-    (alert "请选择一个设备或管道")
-  ) 
-  result
+  (cond 
+    ((/= equipmentData nil) 
+     (list (GetDottedPairValueUtils "entityhandle" (car equipmentData)) (GetDottedPairValueUtils "tag" (car equipmentData)))
+     )
+    ((/= pipeData nil) 
+     (list (GetDottedPairValueUtils "entityhandle" (car pipeData)) (GetDottedPairValueUtils "pipenum" (car pipeData)))
+     )
+    ((and (= equipmentData nil) (= pipeData nil)) 
+     (alert "请选择一个设备或管道")
+     )
+  )
 )
 
 ; refactored at 2021-04-29
