@@ -126,6 +126,47 @@
 )
 
 ; 2021-04-29
+(defun c:UpdateGsLcEquipTag () 
+  (ExecuteFunctionAfterVerifyDateUtils 'UpdateGsLcEquipTagMacro '())
+)
+
+; 2021-04-29
+(defun UpdateGsLcEquipTagMacro (/ entityNameList allEquipHandleList relatedPipeData) 
+  (setq allEquipHandleList (GetAllEquipHandleListUtils))
+  ; must filter first
+  (setq entityNameList 
+    ; relatedid value maybe null
+    (vl-remove-if-not '(lambda (x) 
+                        ; relatedid may be not in the allHandleList
+                        (and (/= (cdr (assoc "relatedid" (GetAllPropertyDictForOneBlock x))) "") 
+                             (/= (member (cdr (assoc "relatedid" (GetAllPropertyDictForOneBlock x))) allEquipHandleList) nil)) 
+                      ) 
+      (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "EquipTag"))
+    )
+  ) 
+  (mapcar '(lambda (x) 
+             (setq relatedPipeData (append relatedPipeData 
+                                     (list (GetAllPropertyDictForOneBlock (handent (cdr (assoc "relatedid" x)))))
+                                   ))
+           ) 
+    (GetBlockAllPropertyDictListUtils entityNameList)
+  ) 
+  (mapcar '(lambda (x y) 
+            (ModifyMultiplePropertyForOneBlockUtils x 
+              (list "TAG" "NAME") 
+              (list 
+                (GetDottedPairValueUtils "tag" y)
+                (GetDottedPairValueUtils "name" y)
+              )
+            )
+          ) 
+    entityNameList
+    relatedPipeData 
+  ) 
+  (alert "更新完成")(princ)
+)
+
+; 2021-04-29
 (defun c:InsertAllGsLcEquipTag () 
   (ExecuteFunctionAfterVerifyDateUtils 'InsertAllGsLcEquipTagMacro '())
 )
@@ -139,6 +180,7 @@
 (defun InsertGsLcEquipTagMacro ( / insPt equipData) 
   (princ "\n框选设备数据：")
   (setq equipData (GetEquipDictDataBySelectUtils))
+  ; sorted by equipTag
   (setq equipData (vl-sort equipData '(lambda (x y) (< (GetDottedPairValueUtils "tag" x) (GetDottedPairValueUtils "tag" y)))))
   (setq insPt (getpoint "\n选取设备位号的插入点："))
   (InsertOneDrawEquipTag insPt equipData)

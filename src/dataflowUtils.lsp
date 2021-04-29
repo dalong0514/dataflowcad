@@ -659,6 +659,7 @@
     ((= dataType "Reducer") (ssget '((0 . "INSERT") (2 . "Reducer"))))
     ((= dataType "FireFightHPipe") (ssget '((0 . "INSERT") (2 . "FireFightHPipe")))) 
     ((= dataType "GsBzEquip") (ssget '((0 . "INSERT") (2 . "GsBz*"))))
+    ((= dataType "EquipTag") (ssget '((0 . "INSERT") (2 . "EquipTag"))))
   ) 
 )
 
@@ -697,6 +698,7 @@
     ((= dataType "Reducer") (ssget "X" '((0 . "INSERT") (2 . "Reducer"))))
     ((= dataType "FireFightPipe") (ssget "X" '((0 . "INSERT") (2 . "FireFightHPipe")))) 
     ((= dataType "GsBzEquip") (ssget "X" '((0 . "INSERT") (2 . "GsBz*"))))
+    ((= dataType "EquipTag") (ssget "X" '((0 . "INSERT") (2 . "EquipTag")))) 
   )
 )
 
