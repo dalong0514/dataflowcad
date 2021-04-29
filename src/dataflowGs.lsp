@@ -802,14 +802,19 @@
   (princ)
 )
 
+; refactored at 2021-04-29
 (defun GetPipenumOrTag (sourceData / equipmentData pipeData result) 
   (setq equipmentData (FilterBlockEquipmentDataUtils sourceData))
   (setq pipeData (FilterBlockPipeDataUtils sourceData)) 
   (if (/= equipmentData nil) 
-    (setq result (GetDottedPairValueUtils "tag" (car equipmentData)))
+    (setq result 
+      (list (GetDottedPairValueUtils "entityhandle" (car equipmentData)) (GetDottedPairValueUtils "tag" (car equipmentData)))
+    )
   ) 
   (if (/= pipeData nil) 
-    (setq result (GetDottedPairValueUtils "pipenum" (car pipeData)))
+    (setq result 
+      (list (GetDottedPairValueUtils "entityhandle" (car pipeData)) (GetDottedPairValueUtils "pipenum" (car pipeData)))
+    )
   ) 
   (if (and (= equipmentData nil) (= pipeData nil))
     (alert "请选择一个设备或管道")
@@ -817,10 +822,11 @@
   result
 )
 
+; refactored at 2021-04-29
 (defun ModifyLocatonForInstrument (entityNameList locationData /)
   (if (/= locationData "") 
     (mapcar '(lambda (x) 
-              (ModifyMultiplePropertyForOneBlockUtils x (list "LOCATION") (list locationData))
+              (ModifyMultiplePropertyForOneBlockUtils x (list "VERSION" "LOCATION") locationData)
             ) 
       entityNameList
     )
