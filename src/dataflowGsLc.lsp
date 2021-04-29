@@ -131,6 +131,20 @@
 )
 
 ; 2021-04-29
+(defun c:InsertGsLcEquipTag () 
+  (ExecuteFunctionAfterVerifyDateUtils 'InsertGsLcEquipTagMacro '())
+)
+
+; 2021-04-29
+(defun InsertGsLcEquipTagMacro ( / insPt equipData) 
+  (princ "\n框选设备数据：")
+  (setq equipData (GetEquipDictDataBySelectUtils))
+  (setq equipData (vl-sort equipData '(lambda (x y) (< (GetDottedPairValueUtils "tag" x) (GetDottedPairValueUtils "tag" y)))))
+  (setq insPt (getpoint "\n选取设备位号的插入点："))
+  (InsertOneDrawEquipTag insPt equipData)
+)
+
+; 2021-04-29
 (defun InsertAllGsLcEquipTagMacro ( / allDrawEquipData allGsLcDrawLabelPositionDictData oneDrawEquipData drawPosition) 
   (setq allDrawEquipData (GetAllGsLcEquipDrawNumDictListData))
   (setq allGsLcDrawLabelPositionDictData (GetAllGsLcDrawLabelPositionDictDataUtils))
@@ -139,7 +153,7 @@
     ; sorted by equipTag
     (setq oneDrawEquipData (vl-sort oneDrawEquipData '(lambda (x y) (< (GetDottedPairValueUtils "tag" x) (GetDottedPairValueUtils "tag" y)))))
     (setq drawPosition (GetDottedPairValueUtils item allGsLcDrawLabelPositionDictData))
-    (InsertOneDrawEquipTag drawPosition oneDrawEquipData)
+    (InsertOneDrawEquipTag (MoveInsertPositionUtils drawPosition -770 40) oneDrawEquipData)
   )
 )
 
@@ -162,7 +176,7 @@
 
 ; 2021-04-29
 (defun InsertOneDrawEquipTag (insPt equipData /) 
-  (setq insPtList (GetInsertPtListByXMoveUtils (MoveInsertPositionUtils insPt -770 40) (GenerateSortedNumByList equipData 0) 30))
+  (setq insPtList (GetInsertPtListByXMoveUtils insPt (GenerateSortedNumByList equipData 0) 30))
   (mapcar '(lambda (x y) 
               (InsertOneGsLcEquipTag x y)
             ) 

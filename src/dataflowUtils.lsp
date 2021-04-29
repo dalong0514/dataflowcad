@@ -1403,6 +1403,11 @@
   (GetBlockAllPropertyDictListUtils (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "Equipment")))
 )
 
+; 2021-04-29
+(defun GetEquipDictDataBySelectUtils () 
+  (GetBlockAllPropertyDictListUtils (GetEntityNameListBySSUtils (GetEquipmentSSBySelectUtils)))
+)
+
 ; 2021-03-14
 (defun GetAllPipeAndEquipDataUtils () 
   (GetBlockAllPropertyDictListUtils (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "EquipmentAndPipe")))
