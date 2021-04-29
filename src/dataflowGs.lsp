@@ -3390,12 +3390,12 @@
 )
 
 ; 2021-04-28
-(defun UpdateAllPublicPipeFromToDataMacro (ss / allDrawPipeAndEquipData oneDrawPipeAndEquipData) 
+(defun UpdateAllPublicPipeFromToDataMacro (ss fromCodeList toCodeList / allDrawPipeAndEquipData oneDrawPipeAndEquipData) 
   (setq allDrawPipeAndEquipData (GetAllGsLcPipeAndEquipDrawNumDictListData ss))
   (foreach item (mapcar '(lambda (x) (car x)) allDrawPipeAndEquipData) 
     (setq oneDrawPipeAndEquipData (GetDottedPairValueUtils item allDrawPipeAndEquipData))
     (mapcar '(lambda (x) 
-                (UpdateOneDrawPublicPipeFromToData x (GetMinDistanceEquipTagForPublicPipe oneDrawPipeAndEquipData (caddr x)))
+                (UpdateOneDrawPublicPipeFromToData x (GetMinDistanceEquipTagForPublicPipe oneDrawPipeAndEquipData (caddr x)) fromCodeList toCodeList)
              ) 
       (FliterPublicPipeForFromToData oneDrawPipeAndEquipData) 
     ) 
@@ -3421,10 +3421,10 @@
 )
 
 ; 2021-04-28
-(defun UpdateOneDrawPublicPipeFromToData (publicPipeData equipTag /) 
+(defun UpdateOneDrawPublicPipeFromToData (publicPipeData equipTag fromCodeList toCodeList /) 
   (cond 
-    ((IsPublicPipeFromByEntityName (cadr publicPipeData)) (UpdateOneDrawPublicPipeFromData (cadr publicPipeData) equipTag))
-    ((IsPublicPipeToByEntityName (cadr publicPipeData)) (UpdateOneDrawPublicPipeToData (cadr publicPipeData) equipTag))
+    ((IsPublicPipeFromByEntityName (cadr publicPipeData) fromCodeList) (UpdateOneDrawPublicPipeFromData (cadr publicPipeData) equipTag))
+    ((IsPublicPipeToByEntityName (cadr publicPipeData) toCodeList) (UpdateOneDrawPublicPipeToData (cadr publicPipeData) equipTag))
   )
 )
 
@@ -3439,17 +3439,17 @@
 )
 
 ; 2021-04-28
-(defun IsPublicPipeFromByEntityName (entityName /) 
+(defun IsPublicPipeFromByEntityName (entityName fromCodeList /) 
   (member 
     (GetPipeCodeByPipeNum (GetDottedPairValueUtils "pipenum" (GetAllPropertyDictForOneBlock entityName)))  
-    (GetGsLcFromPublicPipeCode))
+    fromCodeList)
 )
 
 ; 2021-04-28
-(defun IsPublicPipeToByEntityName (entityName /) 
+(defun IsPublicPipeToByEntityName (entityName toCodeList /) 
   (member 
     (GetPipeCodeByPipeNum (GetDottedPairValueUtils "pipenum" (GetAllPropertyDictForOneBlock entityName)))  
-    (GetGsLcToPublicPipeCode))
+    toCodeList)
 )
 
 ; 2021-04-28
@@ -3578,7 +3578,7 @@
     ; update data button
     (if (= 4 status) 
       (progn 
-        (UpdateAllPublicPipeFromToDataMacro ss) 
+        (UpdateAllPublicPipeFromToDataMacro ss fromCodeList toCodeList) 
         (setq modifyStatus 1) 
         (setq sslen nil)
       ) 
