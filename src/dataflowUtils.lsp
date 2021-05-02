@@ -1926,18 +1926,18 @@
 )
 
 (defun SortSelectionSetByXYZ (ssSelections /  lstOfSelections lstOfSublists lstSelections)
- (if
-  (and 
-   (setq lstSelections (SelectionSetToList ssSelections))
-   (setq lstOfSublists (mapcar '(lambda (X)(cons X (cdr (assoc 10 (entget X))))) lstSelections))
-   (setq lstOfSublists (sortlistofsublistsbyitemX lstOfSublists 3 1))
-    ; the key is -1 for y cordinate
-   (setq lstOfSublists (sortlistofsublistsbyitemX lstOfSublists 2 -1))
-   (setq lstOfSublists (sortlistofsublistsbyitemX lstOfSublists 1 1))
-   (setq ssSelections  (listtoselectionset (mapcar 'car lstOfSublists)))
+  (if
+    (and 
+    (setq lstSelections (SelectionSetToList ssSelections))
+    (setq lstOfSublists (mapcar '(lambda (X)(cons X (cdr (assoc 10 (entget X))))) lstSelections))
+    (setq lstOfSublists (sortlistofsublistsbyitemX lstOfSublists 3 1))
+      ; the key is -1 for y cordinate
+    (setq lstOfSublists (sortlistofsublistsbyitemX lstOfSublists 2 -1))
+    (setq lstOfSublists (sortlistofsublistsbyitemX lstOfSublists 1 1))
+    (setq ssSelections  (listtoselectionset (mapcar 'car lstOfSublists)))
+    )
+    ssSelections
   )
-  ssSelections
- )
 )
 
 ; 2021-04-02
