@@ -2318,7 +2318,7 @@
     (mode_tile "numberDirection" 2)
     (action_tile "dataType" "(setq dataType $value)")
     (action_tile "numberMode" "(setq numberMode $value)")
-    (action_tile "numberDirection" "(setq numberMode $value)")
+    (action_tile "numberDirection" "(setq numberDirection $value)")
     (action_tile "startNumberString" "(setq startNumberString $value)")
     ; init the default data of text
     (progn 
@@ -2353,7 +2353,7 @@
     ; setting for saving the existed value of a box
     (set_tile "dataType" dataType)
     (set_tile "numberMode" numberMode)
-    (set_tile "numberMode" numberDirection)
+    (set_tile "numberDirection" numberDirection)
     (set_tile "startNumberString" startNumberString)
     ; Display the number of selected pipes
     (if (/= sslen nil)
