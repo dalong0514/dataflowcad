@@ -2382,7 +2382,8 @@
       (progn 
         (setq selectedDataType (nth (atoi dataType) dataTypeList))
         (setq ss (GetBlockSSBySelectByDataTypeUtils selectedDataType))
-        (setq ss (SortSelectionSetByXYZ ss))  ; sort by x cordinate
+        ; 2021-05-02 sort by numberDirecion
+        (setq ss (GetSSByNumberDirectionStrategy numberDirection ss)) 
         (setq entityNameList (GetEntityNameListBySSUtils ss))
         (setq propertyValueDictList (GetPropertyDictListByPropertyNameList entityNameList (numberedPropertyNameListStrategy selectedDataType)))
         (setq matchedList (GetNumberedPropertyValueListStrategy propertyValueDictList selectedDataType "Instrument"))
@@ -2432,6 +2433,14 @@
             ) 
       item
     ) 
+  )
+)
+
+; 2021-05-02
+(defun GetSSByNumberDirectionStrategy (numberDirection ss /) 
+  (cond 
+    ((= numberDirection "0") (SortSelectionSetByRowColumn ss))
+    ((= numberDirection "1") (SortSelectionSetByXYZ ss))
   )
 )
 
