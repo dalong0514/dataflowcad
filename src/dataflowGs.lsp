@@ -2961,46 +2961,23 @@
   )
 )
 
+; refactored at 2021-05-02
 (defun GetCodeNameListStrategy (propertyValueDictList dataType / propertyName dataList resultList) 
+  (setq propertyName (car (numberedPropertyNameListStrategy dataType)))
+  (setq dataList (GetValueListByOneKeyUtils propertyValueDictList propertyName)) 
   (if (= dataType "Pipe") 
-    (progn 
-      (setq propertyName (car (numberedPropertyNameListStrategy dataType)))
-      (setq dataList 
-        (GetValueListByOneKeyUtils propertyValueDictList propertyName)
-      ) 
-      (setq resultList (GetPipeCodeNameList dataList))
-    )
+    (setq resultList (GetPipeCodeNameList dataList))
   ) 
-  (if (= dataType "Equipment") 
-    (progn 
-      (setq propertyName (car (numberedPropertyNameListStrategy dataType)))
-      (setq dataList 
-        (GetValueListByOneKeyUtils propertyValueDictList propertyName)
-      ) 
-      (setq resultList (GetEquipmentCodeNameList dataList))
-    )
+  (if (or (= dataType "Equipment") (= dataType "Instrument") (= dataType "GsBzEquip")) ; 2021-02-03
+    (setq resultList (GetEquipmentCodeNameList dataList))
   ) 
-  (if (= dataType "Instrument") 
-    (progn 
-      (setq propertyName (cadr (numberedPropertyNameListStrategy dataType)))
-      (setq dataList 
-        (GetValueListByOneKeyUtils propertyValueDictList propertyName)
-      ) 
-      (setq resultList (GetEquipmentCodeNameList dataList)) 
-    )
-  )
   (if (or (= dataType "GsCleanAir") (= dataType "FireFightHPipe")) ; 2021-02-03
-    (progn 
-      (setq propertyName (car (numberedPropertyNameListStrategy dataType)))
-      (setq dataList 
-        (GetValueListByOneKeyUtils propertyValueDictList propertyName)
-      ) 
-      (setq resultList (GetGsCleanAirCodeNameList dataList))
-    )
+    (setq resultList (GetGsCleanAirCodeNameList dataList))
   )
   (DeduplicateForListUtils resultList)
 )
 
+; refactored at 2021-05-02
 (defun GetPipeCodeNameList (pipeNumList /) 
   (mapcar '(lambda (x) 
              (GetPipeCodeByPipeNum x)
@@ -3011,15 +2988,21 @@
 
 ; 2021-03-16
 (defun GetPipeCodeByPipeNum (pipeNum /)
-  (RegExpReplace pipeNum"([A-Za-z]+)\\d*-.*" "$1" nil nil)
+  (RegExpReplace pipeNum "([A-Za-z]+)\\d*-.*" "$1" nil nil)
 )
 
+; refactored at 2021-05-02
 (defun GetEquipmentCodeNameList (tagList /) 
   (mapcar '(lambda (x) 
-            (RegExpReplace x "([A-Za-z]+).*" "$1" nil nil)
+            (GetEquipmentCodeName x)
           ) 
     tagList
   )
+)
+
+; 2021-05-02
+(defun GetEquipmentCodeName (equipmentCodeName /) 
+  (RegExpReplace equipmentCodeName "([A-Za-z]+).*" "$1" nil nil)
 )
 
 ; unit test compeleted
