@@ -154,7 +154,7 @@
 
 ; refactored at 2021-05-02
 (defun GetNumberLayoutDataTypeList ()
-  '("GsBzEquip" "FireFightHPipe")
+  '("GsBzEquip" "GsCleanAir")
   ; '("GsCleanAir" "FireFightHPipe")
 )
 

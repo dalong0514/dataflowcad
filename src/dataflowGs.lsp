@@ -2418,6 +2418,7 @@
   )
 )
 
+; refactored at 2021-05-02
 (defun GetNumberedDataListStrategy (propertyValueDictList dataType codeNameList numberMode startNumberString / childrenData childrenDataList numberedList) 
   (cond 
     ((or (= dataType "Pipe") (= dataType "Equipment") ) 
@@ -2426,13 +2427,14 @@
     ((= dataType "Instrument") 
       (GetInstrumentChildrenDataList propertyValueDictList dataType numberMode startNumberString)
     )
-    ((or (= dataType "GsCleanAir") (= dataType "FireFightHPipe")) 
+    ((or (= dataType "GsCleanAir") (= dataType "FireFightHPipe") (= dataType "GsBzEquip")) 
       (GetGsCleanAirRoomNumDataList propertyValueDictList dataType codeNameList numberMode startNumberString)
     )
   )
 )
 
-(defun GetGsCleanAirRoomNumDataList (propertyValueDictList dataType codeNameList numberMode startNumberString / childrenData childrenDataList numberedList) 
+; refactored at 2021-05-02
+(defun GetGsCleanAirRoomNumDataList (propertyValueDictList dataType codeNameList numberMode startNumberString / childrenDataList numberedList) 
   (cond 
     ((= numberMode "0") 
       (progn 
@@ -2449,7 +2451,7 @@
   )
   (mapcar '(lambda (x y) 
               (mapcar '(lambda (xx yy) 
-                        (append xx (list (cons "numberedString" (GetGsCleanAirCodeNameByNumberMode yy numberMode startNumberString))))
+                        (append xx (list (cons "numberedString" (GetGsCleanAirCodeNameByNumberModeStrategy yy numberMode startNumberString dataType))))
                       ) 
                 x 
                 y
@@ -2469,6 +2471,9 @@
     ((= dataType "FireFightHPipe") 
       (GetGsCleanAirCodeName (cdr (assoc "PIPENUM" x)))
     ) 
+    ((= dataType "GsBzEquip") 
+      (GetGsCleanAirCodeName (cdr (assoc "TAG" x)))
+    )
   )
 )
 
@@ -2856,10 +2861,28 @@
   (list childrenDataList numberedList)
 )
 
+(defun GetGsCleanAirCodeNameByNumberModeStrategy (originString numberMode startNumberString dataType /) 
+  (cond 
+    ((= dataType "GsCleanAir") 
+     (GetGsCleanAirCodeNameByNumberMode originString numberMode startNumberString))
+    ((= dataType "GsBzEquip") 
+     (GetGsBzEquipTagNameByNumberMode originString numberMode startNumberString))
+  ) 
+)
+
+; 2021-05-02
 (defun GetGsCleanAirCodeNameByNumberMode (originString numberMode startNumberString /) 
   (cond 
     ((= numberMode "0") (RegExpReplace originString "(.*[A-Za-z]+)(\\d*).*" (strcat startNumberString "$1" "$2") nil nil))
     ((= numberMode "1") (RegExpReplace originString "(\\d*).*" (strcat startNumberString "$1") nil nil))
+  ) 
+)
+
+; 2021-05-02
+(defun GetGsBzEquipTagNameByNumberMode (originString numberMode startNumberString /) 
+  (cond 
+    ((= numberMode "0") (RegExpReplace originString "(.*[A-Za-z]+)(\\d*).*" (strcat "$1" startNumberString "$2") nil nil))
+    ((= numberMode "1") (RegExpReplace originString "(\\d*).*" (strcat "$1" startNumberString) nil nil))
   ) 
 )
 
@@ -2883,7 +2906,7 @@
 
 (defun GetNumberedListStrategy (numberedDataList dataType / resultList) 
   (cond 
-    ((or (= dataType "Pipe") (= dataType "Equipment") (= dataType "GsCleanAir") (= dataType "FireFightHPipe"))
+    ((or (= dataType "Pipe") (= dataType "Equipment") (= dataType "GsCleanAir") (= dataType "FireFightHPipe") (= dataType "GsBzEquip"))
       (GetPipeAndEquipNumberedList numberedDataList dataType)
     )
     ((= dataType "Instrument") (GetInstrumentNumberedList numberedDataList dataType))
@@ -2968,10 +2991,10 @@
   (if (= dataType "Pipe") 
     (setq resultList (GetPipeCodeNameList dataList))
   ) 
-  (if (or (= dataType "Equipment") (= dataType "Instrument") (= dataType "GsBzEquip")) ; 2021-02-03
+  (if (or (= dataType "Equipment") (= dataType "Instrument")) ; 2021-02-03
     (setq resultList (GetEquipmentCodeNameList dataList))
   ) 
-  (if (or (= dataType "GsCleanAir") (= dataType "FireFightHPipe")) ; 2021-02-03
+  (if (or (= dataType "GsCleanAir") (= dataType "FireFightHPipe") (= dataType "GsBzEquip")) ; 2021-02-03
     (setq resultList (GetGsCleanAirCodeNameList dataList))
   )
   (DeduplicateForListUtils resultList)
