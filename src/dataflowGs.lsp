@@ -1983,6 +1983,7 @@
   '("温度" "压力" "液位" "流量" "称重" "检测" "开关阀" "温度调节阀" "压力调节阀" "液位调节阀" "流量调节阀")
 )
 
+; refactored at 2021-05-02
 (defun numberedPropertyNameListStrategy (dataType /)
   (cond 
     ((= dataType "Pipe") '("PIPENUM" "DRAWNUM"))
@@ -1997,6 +1998,7 @@
     ((= dataType "Equipment") '("TAG" "DRAWNUM"))
     ((= dataType "GsCleanAir") '("ROOM_NUM"))
     ((= dataType "FireFightHPipe") '("PIPENUM"))  ; 2021-02-03
+    ((= dataType "GsBzEquip") '("TAG"))  ; 2021-05-02
   )
 )
 
@@ -2124,7 +2126,7 @@
         (setq propertyValueDictList (GetPropertyDictListByPropertyNameList entityNameList (numberedPropertyNameListStrategy selectedDataType)))
         ; filter pipe by patternValue
         (setq propertyValueDictList (FilterPipeByPatternValue propertyValueDictList patternValue selectedDataType))
-        (setq matchedList (GetNumberedPropertyValueList propertyValueDictList selectedDataType dataChildrenType))
+        (setq matchedList (GetNumberedPropertyValueListStrategy propertyValueDictList selectedDataType dataChildrenType))
         (setq sslen (length matchedList))
       )
     )
@@ -2139,7 +2141,7 @@
         (setq propertyValueDictList (GetPropertyDictListByPropertyNameList entityNameList (numberedPropertyNameListStrategy selectedDataType)))
         ; filter pipe by patternValue
         (setq propertyValueDictList (FilterPipeByPatternValue propertyValueDictList patternValue selectedDataType)) 
-        (setq matchedList (GetNumberedPropertyValueList propertyValueDictList selectedDataType dataChildrenType))
+        (setq matchedList (GetNumberedPropertyValueListStrategy propertyValueDictList selectedDataType dataChildrenType))
         (setq sslen (length matchedList))
       )
     )
@@ -2152,7 +2154,7 @@
         (setq propertyValueDictList (GetPropertyDictListByPropertyNameList entityNameList (numberedPropertyNameListStrategy selectedDataType)))
         ; filter pipe by patternValue
         (setq propertyValueDictList (FilterPipeByPatternValue propertyValueDictList patternValue selectedDataType)) 
-        (setq matchedList (GetNumberedPropertyValueList propertyValueDictList selectedDataType dataChildrenType))
+        (setq matchedList (GetNumberedPropertyValueListStrategy propertyValueDictList selectedDataType dataChildrenType))
         (setq sslen (length matchedList))
       )
     )
@@ -2235,7 +2237,8 @@
   resultList
 )
 
-(defun GetNumberedPropertyValueList (dictList dataType dataChildrenType /) 
+; refactored at 2021-05-02
+(defun GetNumberedPropertyValueListStrategy (dictList dataType dataChildrenType /) 
   (if (= dataType "Instrument") 
     (progn 
       (setq dictList (GetInstrumentChildrenTypeList dictList dataType dataChildrenType))
@@ -2247,11 +2250,7 @@
         dictList
       ) 
     )
-    (mapcar '(lambda (x) 
-              (cdr (assoc (car (numberedPropertyNameListStrategy dataType)) x))
-            ) 
-      dictList
-    ) 
+    (GetNumberedPropertyValueList dictList dataType)
   )
 )
 
@@ -2261,6 +2260,15 @@
                                 (instrumentFunctionMatchStrategy dataChildrenType)
                        ) 
                      ) 
+    dictList
+  )
+)
+
+; 2021-05-02
+(defun GetNumberedPropertyValueList (dictList dataType /) 
+  (mapcar '(lambda (x) 
+            (cdr (assoc (car (numberedPropertyNameListStrategy dataType)) x))
+          ) 
     dictList
   )
 )
@@ -2360,7 +2368,7 @@
         (setq ss (SortSelectionSetByXYZ ss))  ; sort by x cordinate
         (setq entityNameList (GetEntityNameListBySSUtils ss))
         (setq propertyValueDictList (GetPropertyDictListByPropertyNameList entityNameList (numberedPropertyNameListStrategy selectedDataType)))
-        (setq matchedList (GetNumberedPropertyValueList propertyValueDictList selectedDataType "Instrument"))
+        (setq matchedList (GetNumberedPropertyValueListStrategy propertyValueDictList selectedDataType "Instrument"))
         (setq sslen (length matchedList))
       )
     )

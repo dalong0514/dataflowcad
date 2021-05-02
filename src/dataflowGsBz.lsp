@@ -152,12 +152,15 @@
   (numberLayoutDataByBox dataTypeList "enhancedNumberBox")
 )
 
+; refactored at 2021-05-02
 (defun GetNumberLayoutDataTypeList ()
-  '("GsCleanAir" "FireFightHPipe")
+  '("GsBzEquip" "FireFightHPipe")
+  ; '("GsCleanAir" "FireFightHPipe")
 )
 
 (defun GetNumberLayoutDataTypeChNameList ()
-  '("洁净空调" "给排水消防立管")
+  '("布置图设备位号" "洁净空调")
+  ; '("洁净空调" "给排水消防立管")
 )
 
 (defun GetNumberLayoutDataModeChNameList ()
@@ -238,7 +241,7 @@
         (setq ss (SortSelectionSetByXYZ ss))  ; sort by x cordinate
         (setq entityNameList (GetEntityNameListBySSUtils ss))
         (setq propertyValueDictList (GetPropertyDictListByPropertyNameList entityNameList (numberedPropertyNameListStrategy selectedDataType)))
-        (setq matchedList (GetNumberedPropertyValueList propertyValueDictList selectedDataType "Instrument"))
+        (setq matchedList (GetNumberedPropertyValueList propertyValueDictList selectedDataType))
         (setq sslen (length matchedList))
       )
     )
@@ -271,11 +274,6 @@
 
 ;;;-------------------------------------------------------------------------;;;
 ; migrate JS Layout Draw
-
-; refactored at 2021-04-09
-(defun c:numberLayoutData () 
-  (ExecuteFunctionAfterVerifyDateUtils 'NumberLayoutDataMacro '())
-)
 
 ; refactored at 2021-04-09
 (defun c:purgeJSDrawData () 
