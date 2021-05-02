@@ -2300,7 +2300,7 @@
   '("按流程图号" "不按流程图号" "仪表编号按设备位号")
 )
 
-(defun enhancedNumberByBox (dataTypeList dataTypeChNameList dataModeChNameList tileName / dcl_id dataType numberMode status selectedPropertyName 
+(defun enhancedNumberByBox (dataTypeList dataTypeChNameList dataModeChNameList tileName / dcl_id dataType numberMode numberDirection status selectedPropertyName 
                             selectedDataType ss sslen matchedList confirmList propertyValueDictList entityNameList 
                             modifyMessageStatus numberedDataList numberedList codeNameList startNumberString)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\dcl\\" "dataflow.dcl")))
@@ -2315,8 +2315,10 @@
     (action_tile "btnComfirmNumber" "(done_dialog 4)")
     (mode_tile "dataType" 2)
     (mode_tile "numberMode" 2)
+    (mode_tile "numberDirection" 2)
     (action_tile "dataType" "(setq dataType $value)")
     (action_tile "numberMode" "(setq numberMode $value)")
+    (action_tile "numberDirection" "(setq numberMode $value)")
     (action_tile "startNumberString" "(setq startNumberString $value)")
     ; init the default data of text
     (progn 
@@ -2330,12 +2332,20 @@
                 dataModeChNameList
       )
       (end_list)
-    )  
+      (start_list "numberDirection" 3)
+      (mapcar '(lambda (x) (add_list x)) 
+                '("自上而下" "自左而右")
+      )
+      (end_list)
+    ) 
     (if (= nil dataType)
       (setq dataType "0")
     )
     (if (= nil numberMode)
       (setq numberMode "0")
+    )
+    (if (= nil numberDirection)
+      (setq numberDirection "0")
     )
     (if (= nil startNumberString)
       (setq startNumberString "")
@@ -2343,6 +2353,7 @@
     ; setting for saving the existed value of a box
     (set_tile "dataType" dataType)
     (set_tile "numberMode" numberMode)
+    (set_tile "numberMode" numberDirection)
     (set_tile "startNumberString" startNumberString)
     ; Display the number of selected pipes
     (if (/= sslen nil)

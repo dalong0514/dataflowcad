@@ -357,6 +357,14 @@ enhancedNumberBox : dialog {
         value = "";
       }
       : spacer { height = 1; }
+      : popup_list { 
+        label = "±àºÅ·½Ïò";
+        key = "numberDirection"; 
+        edit_width = 40;
+        list = "";
+        value = "";
+      }
+      : spacer { height = 1; }
       : row {
         : text {
           key = "startNumberStringMsg";
