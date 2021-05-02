@@ -2908,7 +2908,7 @@
 (defun GetGsBzEquipTagNameByNumberMode (originString numberMode startNumberString /) 
   (cond 
     ((= numberMode "0") (RegExpReplace originString "(.*[A-Za-z]+)(\\d*).*" (strcat "$1" startNumberString "$2") nil nil))
-    ((= numberMode "1") (RegExpReplace originString "(\\d*).*" (strcat "$1" startNumberString) nil nil))
+    ((= numberMode "1") (RegExpReplace originString "(\\d*).*" (strcat startNumberString "$1") nil nil))
   ) 
 )
 
