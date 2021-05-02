@@ -147,130 +147,28 @@
 )
 
 ; refactored at 2021-04-09
-(defun NumberLayoutDataMacro (/ dataTypeList)
-  (setq dataTypeList (GetNumberLayoutDataTypeList))
-  (numberLayoutDataByBox dataTypeList "enhancedNumberBox")
+(defun NumberLayoutDataMacro (/ dataTypeList dataTypeChNameList dataModeChNameList)
+  (setq dataTypeList (GetNumberGsBzDataTypeList))
+  (setq dataTypeChNameList (GetNumberGsBzDataTypeChNameList))
+  (setq dataModeChNameList (GetNumberGsBzDataModeChNameList))
+  (enhancedNumberByBox dataTypeList dataTypeChNameList dataModeChNameList "enhancedNumberBox")
 )
 
 ; refactored at 2021-05-02
-(defun GetNumberLayoutDataTypeList ()
+(defun GetNumberGsBzDataTypeList ()
   '("GsBzEquip" "GsCleanAir")
   ; '("GsCleanAir" "FireFightHPipe")
 )
 
-(defun GetNumberLayoutDataTypeChNameList ()
+; refactored at 2021-05-02
+(defun GetNumberGsBzDataTypeChNameList ()
   '("布置图设备位号" "洁净空调")
   ; '("洁净空调" "给排水消防立管")
 )
 
-(defun GetNumberLayoutDataModeChNameList ()
+(defun GetNumberGsBzDataModeChNameList ()
   '("按代号自动编码" "不按代号自动编号")
 )
-
-(defun numberLayoutDataByBox (dataTypeList tileName / dcl_id dataType numberMode status selectedPropertyName 
-                            selectedDataType ss sslen matchedList confirmList propertyValueDictList entityNameList 
-                            modifyMessageStatus numberedDataList numberedList codeNameList startNumberString)
-  (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\dcl\\" "dataflow.dcl")))
-  (setq status 2)
-  (while (>= status 2)
-    ; Create the dialog box
-    (new_dialog tileName dcl_id "" '(-1 -1))
-    ; Added the actions to the Cancel and Pick Point button
-    (action_tile "cancel" "(done_dialog 0)")
-    (action_tile "btnSelect" "(done_dialog 2)")
-    (action_tile "btnPreviewNumber" "(done_dialog 3)")
-    (action_tile "btnComfirmNumber" "(done_dialog 4)")
-    (mode_tile "dataType" 2)
-    (mode_tile "numberMode" 2)
-    (action_tile "dataType" "(setq dataType $value)")
-    (action_tile "numberMode" "(setq numberMode $value)")
-    (action_tile "startNumberString" "(setq startNumberString $value)")
-    ; init the default data of text
-    (progn 
-      (start_list "dataType" 3)
-      (mapcar '(lambda (x) (add_list x)) 
-                (GetNumberLayoutDataTypeChNameList)
-      )
-      (end_list)
-      (start_list "numberMode" 3)
-      (mapcar '(lambda (x) (add_list x)) 
-                (GetNumberLayoutDataModeChNameList)
-      )
-      (end_list)
-    )  
-    (if (= nil dataType)
-      (setq dataType "0")
-    )
-    (if (= nil numberMode)
-      (setq numberMode "0")
-    )
-    (if (= nil startNumberString)
-      (setq startNumberString "")
-    ) 
-    ; setting for saving the existed value of a box
-    (set_tile "dataType" dataType)
-    (set_tile "numberMode" numberMode)
-    (set_tile "startNumberString" startNumberString)
-    ; Display the number of selected pipes
-    (if (/= sslen nil)
-      (set_tile "msg" (strcat "匹配到的数量： " (rtos sslen)))
-    )
-    (if (= modifyMessageStatus 1)
-      (set_tile "modifyBtnMsg" "编号状态：已完成")
-    )
-    (if (= modifyMessageStatus 0)
-      (set_tile "modifyBtnMsg" "请先预览修改")
-    )
-    (if (/= selectedDataType nil)
-      (set_tile "dataType" dataType)
-    )
-    (if (/= matchedList nil)
-      (progn
-        (start_list "matchedResult" 3)
-        (mapcar '(lambda (x) (add_list x)) 
-                 matchedList)
-        ;(add_list matchedList)
-        (end_list)
-      )
-    )
-    ; select button
-    (if (= 2 (setq status (start_dialog)))
-      (progn 
-        (setq selectedDataType (nth (atoi dataType) dataTypeList))
-        (setq ss (GetBlockSSBySelectByDataTypeUtils selectedDataType))
-        (setq ss (SortSelectionSetByXYZ ss))  ; sort by x cordinate
-        (setq entityNameList (GetEntityNameListBySSUtils ss))
-        (setq propertyValueDictList (GetPropertyDictListByPropertyNameList entityNameList (numberedPropertyNameListStrategy selectedDataType)))
-        (setq matchedList (GetNumberedPropertyValueList propertyValueDictList selectedDataType))
-        (setq sslen (length matchedList))
-      )
-    )
-    ; confirm button
-    (if (= 3 status)
-      (progn 
-        (setq codeNameList (GetCodeNameListStrategy propertyValueDictList selectedDataType))
-        (setq numberedDataList (GetNumberedDataListStrategy propertyValueDictList selectedDataType codeNameList numberMode startNumberString))
-        (setq matchedList (GetNumberedListStrategy numberedDataList selectedDataType))
-        (setq confirmList matchedList)
-      )
-    )
-    ; modify button
-    (if (= 4 status)
-      (progn 
-        (if (/= confirmList nil) 
-          (progn 
-            (UpdateNumberedData numberedDataList selectedDataType)
-            (setq modifyMessageStatus 1)
-          )
-          (setq modifyMessageStatus 0)
-        )
-      )
-    )
-  )
-  (unload_dialog dcl_id)
-  (princ)
-)
-
 
 ;;;-------------------------------------------------------------------------;;;
 ; migrate JS Layout Draw
