@@ -103,22 +103,16 @@
   (setq i 0)
   (repeat (length tankPressureElementList)
     (InsertBlockUtils (MoveInsertPositionUtils insPt 0 (* -40 i)) "BsGCTPressureElementRow" "0DataFlow-BsGCT" (list (cons 0 dataType)))
-    (InsertBsGCTPressureElementRowText (MoveInsertPositionUtils insPt 0 (* -40 i)) (nth i tankPressureElementList))
+    (ModifyMultiplePropertyForOneBlockUtils (entlast) 
+      (mapcar '(lambda (x) (car x)) (nth i tankPressureElementList))
+      (mapcar '(lambda (x) (cdr x)) (nth i tankPressureElementList))
+    )
     (setq i (1+ i))
   ) 
   (GeneratePolyLineUtils 
     insPt
     (MoveInsertPositionUtils insPt 0 (- 0 (* 40 (length tankPressureElementList)))) 
     "0DataFlow-BsGCT" 3.6)  
-)
-
-; 2021-03-17
-(defun InsertBsGCTPressureElementRowText (insPt textList /) 
-  (GenerateLevelCenterTextUtils (MoveInsertPositionUtils insPt 62.5 -32) (nth 0 textList) "0DataFlow-BsText" 20 0.7) 
-  (GenerateLevelCenterTextUtils (MoveInsertPositionUtils insPt 175 -32) (nth 1 textList) "0DataFlow-BsText" 20 0.7) 
-  (GenerateLevelCenterTextUtils (MoveInsertPositionUtils insPt 337.5 -32) (nth 2 textList) "0DataFlow-BsText" 20 0.7) 
-  (GenerateLevelCenterTextUtils (MoveInsertPositionUtils insPt 575 -32) (nth 3 textList) "0DataFlow-BsText" 20 0.7) 
-  (GenerateLevelCenterTextUtils (MoveInsertPositionUtils insPt 800 -32) (nth 4 textList) "0DataFlow-BsText" 20 0.7) 
 )
 
 ; 2021-04-17
@@ -341,41 +335,6 @@
   (InsertBsGCTUpLeftAnnotation insPt dataType "接地板" "") 
 )
 
-; 2021-04-17
-(defun GetBsGCTTankPressureElementDictList ()
-  (mapcar '(lambda (y) 
-              (mapcar '(lambda (xx yy) 
-                         (cons xx yy)
-                      ) 
-                (car (GetBsImportedListFromCSVStrategy "BsGCTTankPressureElement"))
-                y
-              )
-           ) 
-    (cdr (GetBsImportedListFromCSVStrategy "BsGCTTankPressureElement"))
-  ) 
-)
-
-; 2021-04-17
-(defun GetBsGCTTankPressureElementList ()
-  (cdr (GetBsImportedListFromCSVStrategy "BsGCTTankPressureElement"))
-)
-
-; 2021-04-17
-(defun GetBsGCTTankOtherRequestList ()
-  (mapcar '(lambda (x) (car x)) 
-    (cdr (GetBsImportedListFromCSVStrategy "BsGCTTankOtherRequest"))
-  )
-)
-
-; 2021-04-17
-(defun GetBsImportedListFromCSVStrategy (dataType / fileDir)
-  (cond 
-    ((= dataType "BsGCTTankPressureElement") (setq fileDir "D:\\dataflowcad\\bsdata\\tankPressureElement.csv"))
-    ((= dataType "BsGCTTankOtherRequest") (setq fileDir "D:\\dataflowcad\\bsdata\\tankOtherRequest.csv"))
-  ) 
-  (StrListToListListUtils (ReadDataFromFileUtils fileDir))
-)
-
 ; 2021-04-19
 (defun InsertBsGCTDimension (firstInsPt secondInsPt textInsPt textOverrideContent /)
   (InsertAlignedDimensionUtils firstInsPt secondInsPt textInsPt "0DataFlow-BsDimension" "DataFlow-BsGCT" textOverrideContent)
@@ -462,6 +421,44 @@
                         (= (GetDottedPairValueUtils "TAG" x) tankTag) 
                       ) 
       (GetBsGCTTankNozzleDictData)
+    )  
+  ) 
+)
+
+; 2021-05-06
+(defun GetBsGCTTankPressureElementDictData (bsGCTImportedList /) 
+  (mapcar '(lambda (y) 
+              (mapcar '(lambda (xx yy) 
+                         (cons xx yy)
+                      ) 
+                (GetBsGCTTankPressureElementKeysData bsGCTImportedList)
+                y
+              )
+           ) 
+    (GetBsGCTTankPressureElementData bsGCTImportedList)
+  )
+)
+
+; 2021-05-06
+(defun GetBsGCTTankPressureElementKeysData (bsGCTImportedList /) 
+  (cdr 
+    (car 
+      (vl-remove-if-not '(lambda (x) 
+                          (= (car x) "Tank-PressureElementKeys") 
+                        ) 
+        bsGCTImportedList
+      )  
+    ) 
+  ) 
+)
+
+; 2021-05-06
+(defun GetBsGCTTankPressureElementData (bsGCTImportedList /) 
+  (mapcar '(lambda (x) (cdr x)) 
+    (vl-remove-if-not '(lambda (x) 
+                        (= (car x) "Tank-PressureElement") 
+                      ) 
+      bsGCTImportedList
     )  
   ) 
 )
@@ -576,7 +573,7 @@
   (setq insPt (getpoint "\n拾取设备一览表插入点："))
   (setq bsGCTImportedList (GetBsGCTImportedList))
   (setq allBsGCTTankDictData (GetBsGCTTankDictData bsGCTImportedList))
-  (setq tankPressureElementList (GetBsGCTTankPressureElementList))
+  (setq tankPressureElementList (GetBsGCTTankPressureElementDictData bsGCTImportedList))
   (setq tankOtherRequestList (GetBsGCTTankOtherRequestData bsGCTImportedList)) 
   (setq tankStandardList (GetBsGCTTankStandardData bsGCTImportedList)) 
   (setq tankHeadStyleList (GetBsGCTTankHeadStyleData bsGCTImportedList)) 
@@ -594,6 +591,10 @@
 ; 2021-04-21
 (defun c:InsertAllBsGCT ()
   (ExecuteFunctionAfterVerifyDateUtils 'InsertAllBsGCTTank '())
+)
+
+(defun c:foo ()
+  (GetBsGCTTankPressureElementDictData (GetBsGCTImportedList))
 )
 
 ; Generate BsGCT
