@@ -593,10 +593,6 @@
   (ExecuteFunctionAfterVerifyDateUtils 'InsertAllBsGCTTank '())
 )
 
-(defun c:foo ()
-  (GetBsGCTTankPressureElementDictData (GetBsGCTImportedList))
-)
-
 ; Generate BsGCT
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
