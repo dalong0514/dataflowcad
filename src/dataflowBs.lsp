@@ -169,27 +169,27 @@
 ; 2021-04-18
 (defun InsertBsGCTTankGraphy (insPt barrelRadius barrelHalfHeight thickNess headThickNess dataType straightEdgeHeight / newBarrelHalfHeight nozzleOffset) 
   ; refactored at 2021-05-06 straightEdgeHeight is 25
-  (setq newBarrelHalfHeight (+ barrelHalfHeight 25)) 
+  (setq newBarrelHalfHeight (+ barrelHalfHeight straightEdgeHeight)) 
   (setq nozzleOffset 100)
   (GenerateDoubleLineEllipseHeadUtils (MoveInsertPositionUtils insPt 0 newBarrelHalfHeight) barrelRadius "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" 1 thickNess)
   (GenerateUpEllipseHeadNozzle (MoveInsertPositionUtils insPt 0 (+ newBarrelHalfHeight (/ barrelRadius 2) thickNess)) (+ barrelRadius thickNess) dataType nozzleOffset thickNess)
   (GenerateDoubleLineBarrelUtils insPt barrelRadius newBarrelHalfHeight "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" thickNess)
   (GenerateDoubleLineEllipseHeadUtils (MoveInsertPositionUtils insPt 0 (- 0 newBarrelHalfHeight)) barrelRadius "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" -1 thickNess)
   (GenerateDownllipseHeadNozzle (MoveInsertPositionUtils insPt 0 (- 0 newBarrelHalfHeight (/ barrelRadius 2) thickNess)) dataType)
-  (InsertBsGCTSupportLeg (MoveInsertPositionUtils insPt (+ barrelRadius thickNess) (- 0 (- newBarrelHalfHeight 25))) dataType 800)
-  (InsertBsGCTTankBarrelDimension insPt barrelRadius barrelHalfHeight thickNess)
-  (InsertBsGCTTankAnnotation insPt dataType barrelRadius headThickNess)
+  (InsertBsGCTSupportLeg (MoveInsertPositionUtils insPt (+ barrelRadius thickNess) (- 0 (- newBarrelHalfHeight straightEdgeHeight))) dataType 800)
+  (InsertBsGCTTankBarrelDimension insPt barrelRadius barrelHalfHeight thickNess straightEdgeHeight)
+  (InsertBsGCTTankAnnotation insPt dataType barrelRadius headThickNess straightEdgeHeight)
   (princ)
 )
 
 ; 2021-04-22
-(defun InsertBsGCTTankAnnotation (insPt dataType barrelRadius headThickNess /) 
+(defun InsertBsGCTTankAnnotation (insPt dataType barrelRadius headThickNess straightEdgeHeight /) 
   (InsertBsGCTTankDownLeftHeadAnnotation 
-    (MoveInsertPositionUtils insPt (- 0 barrelRadius) (- 0 barrelHalfHeight 25 50))
+    (MoveInsertPositionUtils insPt (- 0 barrelRadius) (- 0 barrelHalfHeight straightEdgeHeight 50))
     dataType 
     "Õ÷‘≤∑‚Õ∑" "EHA" (* 2 barrelRadius) headThickNess)
   (InsertBsGCTTankUpLeftHeadAnnotation 
-    (MoveInsertPositionUtils insPt (- 0 barrelRadius) (+ barrelHalfHeight 25 50))
+    (MoveInsertPositionUtils insPt (- 0 barrelRadius) (+ barrelHalfHeight straightEdgeHeight 50))
     dataType 
     "Õ÷‘≤∑‚Õ∑" "EHA" (* 2 barrelRadius) headThickNess) 
 )
@@ -247,7 +247,7 @@
 
 ; 2021-04-19
 ; refactored at 2021-04-22
-(defun InsertBsGCTTankBarrelDimension (insPt barrelRadius barrelHalfHeight thickNess /) 
+(defun InsertBsGCTTankBarrelDimension (insPt barrelRadius barrelHalfHeight thickNess straightEdgeHeight /) 
   ; Barrel diameter
   (InsertBsGCTDimension 
     (MoveInsertPositionUtils insPt (GetNegativeNumberUtils barrelRadius) 0) 
@@ -269,20 +269,20 @@
   ; vertical head
   (InsertBsGCTDimension 
     (MoveInsertPositionUtils insPt 0 barrelHalfHeight) 
-    (MoveInsertPositionUtils insPt 0 (+ barrelHalfHeight (/ barrelRadius 2) 25 thickNess))  
+    (MoveInsertPositionUtils insPt 0 (+ barrelHalfHeight (/ barrelRadius 2) straightEdgeHeight thickNess))  
     (MoveInsertPositionUtils insPt (+ barrelRadius 200) 0) 
     "") 
   ; vertical up distance for head and barrel
   (InsertBsGCTDimension 
     (MoveInsertPositionUtils insPt barrelRadius barrelHalfHeight) 
-    (MoveInsertPositionUtils insPt barrelRadius (+ barrelHalfHeight 25)) 
+    (MoveInsertPositionUtils insPt barrelRadius (+ barrelHalfHeight straightEdgeHeight)) 
     ; the Y position of dimension is option
     (MoveInsertPositionUtils insPt (- barrelRadius 100) 0) 
     "") 
   ; vertical down distance for head and barrel
   (InsertBsGCTDimension 
     (MoveInsertPositionUtils insPt barrelRadius (GetNegativeNumberUtils barrelHalfHeight)) 
-    (MoveInsertPositionUtils insPt barrelRadius (- 0 barrelHalfHeight 25)) 
+    (MoveInsertPositionUtils insPt barrelRadius (- 0 barrelHalfHeight straightEdgeHeight)) 
     ; the Y position of dimension is option
     (MoveInsertPositionUtils insPt (- barrelRadius 100) 0) 
     "")   
