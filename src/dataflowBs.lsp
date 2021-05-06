@@ -167,8 +167,8 @@
 )
 
 ; 2021-04-18
-(defun InsertBsGCTTankGraphy (insPt barrelRadius barrelHalfHeight thickNess headThickNess dataType / newBarrelHalfHeight nozzleOffset) 
-  ; the head height is 25
+(defun InsertBsGCTTankGraphy (insPt barrelRadius barrelHalfHeight thickNess headThickNess dataType straightEdgeHeight / newBarrelHalfHeight nozzleOffset) 
+  ; refactored at 2021-05-06 straightEdgeHeight is 25
   (setq newBarrelHalfHeight (+ barrelHalfHeight 25)) 
   (setq nozzleOffset 100)
   (GenerateDoubleLineEllipseHeadUtils (MoveInsertPositionUtils insPt 0 newBarrelHalfHeight) barrelRadius "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" 1 thickNess)
@@ -543,7 +543,7 @@
 
 ; 2021-04-17
 (defun InsertOneBsTankGCT (insPt oneTankData tankPressureElementList tankOtherRequestList tankStandardList tankHeadStyleList tankHeadMaterialList / 
-                           equipTag bsGCTType barrelRadius barrelHalfHeight thickNess headThickNess designParamDictList) 
+                           equipTag bsGCTType barrelRadius barrelHalfHeight thickNess headThickNess designParamDictList straightEdgeHeight) 
   (setq equipTag (GetDottedPairValueUtils "TAG" oneTankData))
   (setq bsGCTType (strcat (GetDottedPairValueUtils "BSGCT_TYPE" oneTankData) "-" equipTag))
   (setq barrelRadius (GetHalfNumberUtils (atoi (GetDottedPairValueUtils "barrelRadius" oneTankData))))
@@ -551,6 +551,7 @@
   (setq thickNess (atoi (GetDottedPairValueUtils "BARREL_THICKNESS" oneTankData)))
   ; do not convert to int frist 2021-04-23
   (setq headThickNess (GetDottedPairValueUtils "HEAD_THICKNESS" oneTankData))
+  (setq straightEdgeHeight 25)
   ; split oneTankData to Two Parts
   (setq designParamDictList (cadr (SplitLDictListByDictKeyUtils "SERVIVE_LIFE" oneTankData)))
   (InsertBsGCTDrawFrame insPt equipTag)
@@ -562,7 +563,7 @@
   (InsertBsGCTOtherRequest (MoveInsertPositionUtils insPt -900 (- 1900 (* 40 (length tankPressureElementList)))) bsGCTType tankOtherRequestList)
   (InsertBsGCTNozzleTable (MoveInsertPositionUtils insPt -1800 2870) bsGCTType oneTankData)
   ; thickNess param refactored at 2021-04-21
-  (InsertBsGCTTankGraphy (MoveInsertPositionUtils insPt -2915 1600) barrelRadius barrelHalfHeight thickNess headThickNess bsGCTType)
+  (InsertBsGCTTankGraphy (MoveInsertPositionUtils insPt -2915 1600) barrelRadius barrelHalfHeight thickNess headThickNess bsGCTType straightEdgeHeight)
   (princ)
 )
 
