@@ -108,7 +108,7 @@
 
 ; 2021-05-07
 (defun InsertBsGCTTankInspectData (insPt dataType oneTankData / inspectDictData) 
-  (InsertBlockUtils insPt "BsGCTInspectData-Tank" "0DataFlow-BsGCT" (list (cons 0 dataType)))
+  (InsertBlockUtils insPt "BsGCTInspectData-TankB" "0DataFlow-BsGCT" (list (cons 0 dataType)))
   (setq inspectDictData (append 
                           (GetBsGCTInspectDictData (GetDottedPairValueUtils "BARREL_INSPECT_RATE" oneTankData) "BARREL_")
                           (GetBsGCTInspectDictData (GetDottedPairValueUtils "CD_INSPECT_RATE" oneTankData) "CD_")
