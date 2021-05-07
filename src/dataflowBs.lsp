@@ -541,10 +541,13 @@
 ; )
 
 ; 2021-04-17
+; refacotred at 2021-05-07
 (defun InsertOneBsTankGCT (insPt oneTankData tankPressureElementList tankOtherRequestList tankStandardList tankHeadStyleList tankHeadMaterialList / 
                            equipTag bsGCTType barrelRadius barrelHalfHeight thickNess headThickNess designParamDictList straightEdgeHeight) 
   (setq equipTag (GetDottedPairValueUtils "TAG" oneTankData))
-  (setq bsGCTType (strcat (GetDottedPairValueUtils "BSGCT_TYPE" oneTankData) "-" equipTag))
+  ; (setq bsGCTType (strcat (GetDottedPairValueUtils "BSGCT_TYPE" oneTankData) "-" equipTag))
+  ; refacotred at 2021-05-07 use equipTag as the label for data
+  (setq bsGCTType equipTag)
   (setq barrelRadius (GetHalfNumberUtils (atoi (GetDottedPairValueUtils "barrelRadius" oneTankData))))
   (setq barrelHalfHeight (GetHalfNumberUtils (atoi (GetDottedPairValueUtils "barrelHeight" oneTankData))))
   (setq thickNess (atoi (GetDottedPairValueUtils "BARREL_THICKNESS" oneTankData)))
