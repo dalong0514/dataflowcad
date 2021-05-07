@@ -74,6 +74,29 @@
   (InsertBsGCTTankHeadMaterialText (MoveInsertPositionUtils insPt 55 -240) tankHeadMaterialList)
 )
 
+; refactored at 2021-05-07
+(defun InsertBsGCTTankInspectData (insPt dataType oneTankData / inspectDictData) 
+  (InsertBlockUtils insPt "BsGCTInspectData-Tank" "0DataFlow-BsGCT" (list (cons 0 dataType)))
+  (setq inspectDictData (GetTankInspectDictData oneTankData))
+  (ModifyMultiplePropertyForOneBlockUtils (entlast) 
+    (mapcar '(lambda (x) (car x)) inspectDictData)
+    (mapcar '(lambda (x) (cdr x)) inspectDictData)
+  )
+)
+
+; 2021-05-07
+; ready to refactor
+(defun GetTankInspectDictData (oneTankData /)
+  (vl-remove-if-not '(lambda (x) 
+                      (or 
+                        (= (car x) "BARREL_INSPECT_RATE") 
+                        (= (car x) "CD_INSPECT_RATE") 
+                      )
+                    ) 
+    oneTankData
+  )
+)
+
 ; 2021-04-20
 (defun InsertBsGCTTankHeadStyleText (insPt tankHeadStyleList / i) 
   (setq i 0)
@@ -561,6 +584,7 @@
   (InsertBsGCTDesignParam (MoveInsertPositionUtils insPt -900 2820) bsGCTType designParamDictList)
   (InsertBsGCTDesignStandard (MoveInsertPositionUtils insPt -450 2820) bsGCTType tankStandardList)
   (InsertBsGCTRequirement (MoveInsertPositionUtils insPt -450 2620) bsGCTType tankHeadStyleList tankHeadMaterialList)
+  (InsertBsGCTTankInspectData (MoveInsertPositionUtils insPt -450 2300) bsGCTType oneTankData)
   (InsertBsGCTPressureElement (MoveInsertPositionUtils insPt -900 1980) bsGCTType tankPressureElementList)
   (InsertBsGCTOtherRequest (MoveInsertPositionUtils insPt -900 (- 1900 (* 40 (length tankPressureElementList)))) bsGCTType tankOtherRequestList)
   (InsertBsGCTNozzleTable (MoveInsertPositionUtils insPt -1800 2870) bsGCTType oneTankData)
