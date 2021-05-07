@@ -74,24 +74,34 @@
   (InsertBsGCTTankHeadMaterialText (MoveInsertPositionUtils insPt 55 -240) tankHeadMaterialList)
 )
 
-; refactored at 2021-05-07
+; 2021-05-07
 (defun InsertBsGCTTankInspectData (insPt dataType oneTankData / inspectDictData) 
   (InsertBlockUtils insPt "BsGCTInspectData-Tank" "0DataFlow-BsGCT" (list (cons 0 dataType)))
-  (setq inspectDictData (GetTankInspectDictData oneTankData))
-  (ModifyMultiplePropertyForOneBlockUtils (entlast) 
-    (mapcar '(lambda (x) (car x)) inspectDictData)
-    (mapcar '(lambda (x) (cdr x)) inspectDictData)
-  )
+  (setq inspectDictData (GetBsGCTTankInspectDictData oneTankData))
+  (ModifyBlockPropertiesByDictDataUtils (entlast) inspectDictData)
 )
 
 ; 2021-05-07
 ; ready to refactor
-(defun GetTankInspectDictData (oneTankData /)
+(defun GetBsGCTTankInspectDictData (oneTankData /)
   (vl-remove-if-not '(lambda (x) 
-                      (or 
-                        (= (car x) "BARREL_INSPECT_RATE") 
-                        (= (car x) "CD_INSPECT_RATE") 
-                      )
+                       (member (car x) '("BARREL_INSPECT_RATE" "CD_INSPECT_RATE")) 
+                    ) 
+    oneTankData
+  )
+)
+
+; 2021-05-07
+(defun InsertBsGCTTestData (insPt dataType oneTankData / testDictData) 
+  (InsertBlockUtils insPt "BsGCTTestData" "0DataFlow-BsGCT" (list (cons 0 dataType)))
+  (setq testDictData (GetBsGCTTestDictData oneTankData))
+  (ModifyBlockPropertiesByDictDataUtils (entlast) testDictData)
+)
+
+; 2021-05-07
+(defun GetBsGCTTestDictData (oneTankData /)
+  (vl-remove-if-not '(lambda (x) 
+                       (member (car x) '("TEST_PRESSURE" "AIR_TEST_PRESSURE" "HEAT_TREAT")) 
                     ) 
     oneTankData
   )
@@ -585,6 +595,7 @@
   (InsertBsGCTDesignStandard (MoveInsertPositionUtils insPt -450 2820) bsGCTType tankStandardList)
   (InsertBsGCTRequirement (MoveInsertPositionUtils insPt -450 2620) bsGCTType tankHeadStyleList tankHeadMaterialList)
   (InsertBsGCTTankInspectData (MoveInsertPositionUtils insPt -450 2300) bsGCTType oneTankData)
+  (InsertBsGCTTestData (MoveInsertPositionUtils insPt -450 2140) bsGCTType oneTankData)
   (InsertBsGCTPressureElement (MoveInsertPositionUtils insPt -900 1980) bsGCTType tankPressureElementList)
   (InsertBsGCTOtherRequest (MoveInsertPositionUtils insPt -900 (- 1900 (* 40 (length tankPressureElementList)))) bsGCTType tankOtherRequestList)
   (InsertBsGCTNozzleTable (MoveInsertPositionUtils insPt -1800 2870) bsGCTType oneTankData)

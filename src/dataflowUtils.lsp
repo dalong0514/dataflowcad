@@ -1206,6 +1206,14 @@
   (entupd entityName)
 )
 
+; 2021-05-07
+(defun ModifyBlockPropertiesByDictDataUtils (entityName dictData /)
+  (ModifyMultiplePropertyForOneBlockUtils entityName 
+    (mapcar '(lambda (x) (car x)) dictData)
+    (mapcar '(lambda (x) (cdr x)) dictData)
+  )
+)
+
 (defun GetMultiplePropertyForOneBlockUtils (entityName propertyNameList / entityData entx propertyName propertyValueList)
   (setq entityData (entget entityName))
   ; get attribute data of block
