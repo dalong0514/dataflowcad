@@ -7,8 +7,40 @@
 )
 
 (defun c:printVersionInfoBS ()
-  (alert "设备设计流最新版本号 V0.1，更新时间：2021-05-10\n数据流内网地址：192.168.1.38")(princ)
+  (alert "设备设计流最新版本号 V0.2，更新时间：2021-05-10\n数据流内网地址：192.168.1.38")(princ)
 )
+
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+; Constants
+
+; 2021-05-07
+(defun GetBsGCTInspectDictData (inspectRate prefixString /) 
+  (mapcar '(lambda (x) 
+             (cons 
+               (strcat prefixString (car x))
+               (cdr x)
+             )
+           ) 
+    (GetBsGCTInspectDictDataStrategy inspectRate)
+  )
+)
+
+; 2021-05-07
+(defun GetBsGCTInspectDictDataStrategy (inspectRate /) 
+  (cond 
+    ((= inspectRate "20%") 
+     (list (cons "INSPECT_RATE" "20%") (cons "INSPECT_GRADE" "AB") (cons "INSPECT_STANDARD" "NB/T47013.2-2015") (cons "INSPECT_QUALIFIED" "RT-Ⅲ")))
+    ((= inspectRate "100%") 
+     (list (cons "INSPECT_RATE" "100%") (cons "INSPECT_GRADE" "AB") (cons "INSPECT_STANDARD" "NB/T47013.2-2015") (cons "INSPECT_QUALIFIED" "RT-Ⅱ")))
+    ((= inspectRate "/") 
+     (list (cons "INSPECT_RATE" "/") (cons "INSPECT_GRADE" "/") (cons "INSPECT_STANDARD" "/") (cons "INSPECT_QUALIFIED" "/")))
+  )
+)
+
+; Constants
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
@@ -77,18 +109,11 @@
 ; 2021-05-07
 (defun InsertBsGCTTankInspectData (insPt dataType oneTankData / inspectDictData) 
   (InsertBlockUtils insPt "BsGCTInspectData-Tank" "0DataFlow-BsGCT" (list (cons 0 dataType)))
-  (setq inspectDictData (GetBsGCTTankInspectDictData oneTankData))
+  (setq inspectDictData (append 
+                          (GetBsGCTInspectDictData (GetDottedPairValueUtils "BARREL_INSPECT_RATE" oneTankData) "BARREL_")
+                          (GetBsGCTInspectDictData (GetDottedPairValueUtils "CD_INSPECT_RATE" oneTankData) "CD_")
+                        ))
   (ModifyBlockPropertiesByDictDataUtils (entlast) inspectDictData)
-)
-
-; 2021-05-07
-; ready to refactor
-(defun GetBsGCTTankInspectDictData (oneTankData /)
-  (vl-remove-if-not '(lambda (x) 
-                       (member (car x) '("BARREL_INSPECT_RATE" "CD_INSPECT_RATE")) 
-                    ) 
-    oneTankData
-  )
 )
 
 ; 2021-05-07
