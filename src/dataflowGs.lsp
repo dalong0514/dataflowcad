@@ -1,4 +1,4 @@
-;冯大龙编于 2020-2021 年
+;冯大龙开发于 2020-2021 年
 (if (= *comLibraryStatus* nil) 
   (progn 
     (vl-load-com)
@@ -11,7 +11,7 @@
 ; basic Function
 
 (defun c:printVersionInfo ()
-  (alert "最新版本号 V2.2，更新时间：2021-05-01\n数据流内网地址：192.168.1.38")(princ)
+  (alert "最新版本号 V2.2，更新时间：2021-05-08\n数据流内网地址：192.168.1.38")(princ)
 )
 
 (defun c:syncAllDataFlowBlock (/ item) 
