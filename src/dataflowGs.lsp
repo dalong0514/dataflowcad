@@ -877,26 +877,20 @@
   (princ)
 )
 
-(defun GetPipenumOrTagForBrushPipe (/ dataSS dataList result)
-  (setq dataSS (GetEquipmentAndPipeSSBySelectUtils))
-  (if (/= dataSS nil) 
-    (progn 
-      (setq dataList (GetPipenumOrTagList dataSS))
-      (if (/= (cdr (assoc "tag" dataList)) nil) 
-        (setq result (cdr (assoc "tag" dataList)))
-      )
-      (if (/= (cdr (assoc "pipenum" dataList)) nil) 
-        (setq result (cdr (assoc "pipenum" dataList)))
-      )
-    )
-    (setq result "")
+; refatored at 2021-05-08
+(defun GetPipenumOrTagForBrushPipe (/ dataSS dataList result) 
+  (setq dataList (GetPipenumOrTagList (GetEquipmentAndPipeSSBySelectUtils)))
+  (cond 
+    ((/= (GetDottedPairValueUtils "tag" dataList) nil) (GetDottedPairValueUtils "tag" dataList))
+    ((/= (GetDottedPairValueUtils "pipenum" dataList) nil) (GetDottedPairValueUtils "pipenum" dataList))
+    (T "")
   )
-  result
 )
 
+; refatored at 2021-05-08
 (defun GetPipenumOrTagList (dataSS /)
-  (GetAllPropertyDictForOneBlock 
-    (car (GetEntityNameListBySSUtils dataSS))
+  (if (/= dataSS nil) 
+    (GetAllPropertyDictForOneBlock (car (GetEntityNameListBySSUtils dataSS)))
   )
 )
 
