@@ -878,11 +878,13 @@
 )
 
 ; refatored at 2021-05-08
-(defun GetPipenumOrTagForBrushPipe (/ dataSS dataList result) 
+(defun GetPipenumOrTagForBrushPipe (/ dataList) 
   (setq dataList (GetPipenumOrTagList (GetEquipmentAndPipeSSBySelectUtils)))
   (cond 
-    ((/= (GetDottedPairValueUtils "tag" dataList) nil) (GetDottedPairValueUtils "tag" dataList))
-    ((/= (GetDottedPairValueUtils "pipenum" dataList) nil) (GetDottedPairValueUtils "pipenum" dataList))
+    ((/= (GetDottedPairValueUtils "tag" dataList) nil) 
+     (cons (GetDottedPairValueUtils "entityhandle" dataList) (GetDottedPairValueUtils "tag" dataList)))
+    ((/= (GetDottedPairValueUtils "pipenum" dataList) nil) 
+     (cons (GetDottedPairValueUtils "entityhandle" dataList) (GetDottedPairValueUtils "pipenum" dataList)))
     (T "")
   )
 )
@@ -906,7 +908,9 @@
 ; 2021-05-08
 (defun ModifyGsLcPipeStartAndEndData (entityNameList startData endData /)
   (mapcar '(lambda (x) 
-            (ModifyMultiplePropertyForOneBlockUtils x (list "FROM" "TO") (list startData endData))
+            (ModifyMultiplePropertyForOneBlockUtils x 
+              (list "VERSION" "FROM" "TO") 
+              (list (car startData) (cdr startData) (cdr endData)))
           ) 
     entityNameList
   )
@@ -915,7 +919,9 @@
 ; 2021-05-08
 (defun ModifyGsLcPipeStartData (entityNameList startData /)
   (mapcar '(lambda (x) 
-            (ModifyMultiplePropertyForOneBlockUtils x (list "FROM") (list startData))
+            (ModifyMultiplePropertyForOneBlockUtils x 
+              (list "VERSION" "FROM") 
+              (list (car startData) (cdr startData)))
           ) 
     entityNameList
   )
@@ -924,7 +930,9 @@
 ; 2021-05-08
 (defun ModifyGsLcPipeEndData (entityNameList endData /)
   (mapcar '(lambda (x) 
-            (ModifyMultiplePropertyForOneBlockUtils x (list "TO") (list endData))
+            (ModifyMultiplePropertyForOneBlockUtils x 
+              (list "VERSION" "TO") 
+              (list (car endData) (cdr endData)))
           ) 
     entityNameList
   )
