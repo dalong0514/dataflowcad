@@ -1413,6 +1413,15 @@
   (GetBlockAllPropertyDictListUtils (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "Equipment")))
 )
 
+; 2021-05-08
+(defun GetAllEquipHandleTagDictDataUtils () 
+  (mapcar '(lambda (x) 
+              (cons (GetDottedPairValueUtils "entityhandle" x) (GetDottedPairValueUtils "tag" x))
+            ) 
+    (GetAllEquipDataUtils)
+  ) 
+)
+
 ; 2021-04-29
 (defun GetEquipDictDataBySelectUtils () 
   (GetBlockAllPropertyDictListUtils (GetEntityNameListBySSUtils (GetEquipmentSSBySelectUtils)))

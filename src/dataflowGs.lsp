@@ -3587,6 +3587,38 @@
   (GetSelectedEntityDataUtils ss)
 )
 
+; 2021-05-08
+(defun GetAllBindedPipeEntityName () 
+  (mapcar '(lambda (x) 
+              (handent (GetDottedPairValueUtils "entityhandle" x))
+            ) 
+    (FilterGsLcBindedPipe)
+  ) 
+)
+
+; 2021-05-08
+(defun FilterGsLcBindedPipe (/ allEquipHandleList) 
+  (setq allEquipHandleList (GetAllEquipHandleListUtils))
+  (vl-remove-if-not '(lambda (x) 
+                       (FilterGsLcBindedPipePredication (GetDottedPairValueUtils "version" x) allEquipHandleList)
+                    ) 
+    (GetAllPipeDataUtils)
+  )
+)
+
+; 2021-05-08
+(defun FilterGsLcBindedPipePredication (entityHandle allEquipHandleList /)
+  (and 
+    (/= entityHandle "")
+    (RegexpTestUtils entityHandle "\\w+" nil)
+    (member entityHandle allEquipHandleList)
+  )
+)
+
+(defun c:foo ()
+  (GetAllEquipHandleTagDictDataUtils)
+)
+
 ; 2021-04-28
 (defun UpdateAllPublicPipeFromToDataByBox (tileName / dcl_id status sslen modifyStatus fromCodeInput fromCodeList fromCodeListString toCodeInput toCodeList toCodeListString)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\dcl\\" "dataflowGs.dcl")))
