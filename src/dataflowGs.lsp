@@ -3460,13 +3460,19 @@
 )
 
 ; 2021-04-28
+; refactored at 2021-05-08
 (defun UpdateAllPublicPipeFromToDataMacro (ss fromCodeList toCodeList / allDrawPipeAndEquipData oneDrawPipeAndEquipData allBindedPipedataList) 
   (setq allDrawPipeAndEquipData (GetAllGsLcPipeAndEquipDrawNumDictListData ss))
   (setq allBindedPipedataList (list (GetAllBindedPipeEntityName) (GetAllEquipHandleTagDictDataUtils)))
   (foreach item (mapcar '(lambda (x) (car x)) allDrawPipeAndEquipData) 
     (setq oneDrawPipeAndEquipData (GetDottedPairValueUtils item allDrawPipeAndEquipData))
     (mapcar '(lambda (x) 
-                (UpdateOneDrawPublicPipeFromToData x (GetMinDistanceEquipTagForPublicPipe oneDrawPipeAndEquipData (caddr x)) fromCodeList toCodeList allBindedPipedataList)
+                (UpdateOneDrawPublicPipeFromToDataStrategy 
+                  x 
+                  (GetMinDistanceEquipTagForPublicPipe oneDrawPipeAndEquipData (caddr x)) 
+                  fromCodeList 
+                  toCodeList 
+                  allBindedPipedataList)
              ) 
       (FliterPublicPipeForFromToData oneDrawPipeAndEquipData) 
     ) 
@@ -3492,10 +3498,13 @@
 )
 
 ; 2021-04-28
-(defun UpdateOneDrawPublicPipeFromToData (publicPipeData equipTag fromCodeList toCodeList allBindedPipedataList /) 
+; refactored at 2021-05-08
+(defun UpdateOneDrawPublicPipeFromToDataStrategy (publicPipeData equipTag fromCodeList toCodeList allBindedPipedataList /) 
   (cond 
-    ((IsPublicPipeFromByEntityName (cadr publicPipeData) fromCodeList) (UpdateOneDrawPublicPipeFromData (cadr publicPipeData) equipTag allBindedPipedataList))
-    ((IsPublicPipeToByEntityName (cadr publicPipeData) toCodeList) (UpdateOneDrawPublicPipeToData (cadr publicPipeData) equipTag allBindedPipedataList))
+    ((IsPublicPipeFromByEntityName (cadr publicPipeData) fromCodeList) 
+     (UpdateOneDrawPublicPipeFromToData (cadr publicPipeData) equipTag allBindedPipedataList "FROM"))
+    ((IsPublicPipeToByEntityName (cadr publicPipeData) toCodeList) 
+     (UpdateOneDrawPublicPipeFromToData (cadr publicPipeData) equipTag allBindedPipedataList "TO"))
   )
 )
 
@@ -3525,27 +3534,14 @@
 
 ; 2021-04-28
 ; refactored at 2021-05-08
-(defun UpdateOneDrawPublicPipeFromData (entityName fromData allBindedPipedataList /) 
+(defun UpdateOneDrawPublicPipeFromToData (entityName fromData allBindedPipedataList propertyName /) 
   (ModifyMultiplePropertyForOneBlockUtils 
     entityName
-    (list "FROM") 
+    (list propertyName) 
     (list fromData)
   )
   (if (member entityName (car allBindedPipedataList)) 
-    (UpdateBindedPublicPipeFromToData entityName (cadr allBindedPipedataList) "FROM")
-  )
-)
-
-; 2021-04-28
-; refactored at 2021-05-08
-(defun UpdateOneDrawPublicPipeToData (entityName ToData allBindedPipedataList /) 
-  (ModifyMultiplePropertyForOneBlockUtils 
-    entityName
-    (list "TO") 
-    (list ToData)
-  )
-  (if (member entityName (car allBindedPipedataList)) 
-    (UpdateBindedPublicPipeFromToData entityName (cadr allBindedPipedataList) "TO")
+    (UpdateBindedPublicPipeFromToData entityName (cadr allBindedPipedataList) propertyName)
   )
 )
 
