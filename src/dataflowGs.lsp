@@ -715,24 +715,24 @@
   resultList
 )
 
-(defun GetClassDictStrategy (dataType / result) 
+; refactored at 2021-05-08
+(defun GetClassDictStrategy (dataType /) 
   (cond 
-    ((= dataType "InstrumentP") (setq result (cons "class" "concentrated")))
-    ((= dataType "InstrumentL") (setq result (cons "class" "location")))
-    ((= dataType "InstrumentSIS") (setq result (cons "class" "sis")))
-    ((= dataType "Pipe") (setq result (cons "class" "pipeline")))
-    ((= dataType "OuterPipe") (setq result (cons "class" "outerpipe")))
-    ((= dataType "Reactor") (setq result (cons "class" "reactor")))
-    ((= dataType "Tank") (setq result (cons "class" "tank")))
-    ((= dataType "Heater") (setq result (cons "class" "heater")))
-    ((= dataType "Pump") (setq result (cons "class" "pump")))
-    ((= dataType "Vacuum") (setq result (cons "class" "vacuum")))
-    ((= dataType "Centrifuge") (setq result (cons "class" "centrifuge")))
-    ((= dataType "CustomEquip") (setq result (cons "class" "custom")))
-    ((= dataType "GsCleanAir") (setq result (cons "class" "gscleanair")))
-    ((= dataType "KsInstallMaterial") (setq result (cons "class" "ksinstallmaterial")))
+    ((= dataType "InstrumentP") (cons "data_class" "concentrated"))
+    ((= dataType "InstrumentL") (cons "data_class" "location"))
+    ((= dataType "InstrumentSIS") (cons "data_class" "sis"))
+    ((= dataType "Pipe") (cons "data_class" "pipeline"))
+    ((= dataType "Reactor") (cons "data_class" "reactor"))
+    ((= dataType "Tank") (cons "data_class" "tank"))
+    ((= dataType "Heater") (cons "data_class" "heater"))
+    ((= dataType "Pump") (cons "data_class" "pump"))
+    ((= dataType "Vacuum") (cons "data_class" "vacuum"))
+    ((= dataType "Centrifuge") (cons "data_class" "centrifuge"))
+    ((= dataType "CustomEquip") (cons "data_class" "custom"))
+    ((= dataType "OuterPipe") (cons "data_class" "outerpipe"))
+    ((= dataType "GsCleanAir") (cons "data_class" "gscleanair"))
+    ((= dataType "KsInstallMaterial") (cons "data_class" "ksinstallmaterial"))
   )
-  result
 )
 
 (defun ExtractOuterPipeToJsonList (/ outerPipeJsonList pipeSS pipeEntityNameList pipePropertyNameList outerPipeSS outerPipeEntityNameList 
