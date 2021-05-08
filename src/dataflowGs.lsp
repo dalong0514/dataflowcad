@@ -894,27 +894,39 @@
   )
 )
 
+; refatored at 2021-05-08
 (defun ModifyStartEndForPipes (entityNameList startData endData /)
-  (if (and (/= startData "") (/= endData "")) 
-    (mapcar '(lambda (x) 
-              (ModifyMultiplePropertyForOneBlockUtils x (list "FROM" "TO") (list startData endData))
-            ) 
-      entityNameList
-    )
+  (cond 
+    ((and (/= startData "") (/= endData "")) (ModifyGsLcPipeStartAndEndData entityNameList startData endData))
+    ((and (/= startData "") (= endData "")) (ModifyGsLcPipeStartData entityNameList startData))
+    ((and (= startData "") (/= endData "")) (ModifyGsLcPipeEndData entityNameList endData))
   )
-  (if (and (/= startData "") (= endData "")) 
-    (mapcar '(lambda (x) 
-              (ModifyMultiplePropertyForOneBlockUtils x (list "FROM") (list startData))
-            ) 
-      entityNameList
-    )
+)
+
+; 2021-05-08
+(defun ModifyGsLcPipeStartAndEndData (entityNameList startData endData /)
+  (mapcar '(lambda (x) 
+            (ModifyMultiplePropertyForOneBlockUtils x (list "FROM" "TO") (list startData endData))
+          ) 
+    entityNameList
   )
-  (if (and (= startData "") (/= endData "")) 
-    (mapcar '(lambda (x) 
-              (ModifyMultiplePropertyForOneBlockUtils x (list "TO") (list endData))
-            ) 
-      entityNameList
-    )
+)
+
+; 2021-05-08
+(defun ModifyGsLcPipeStartData (entityNameList startData /)
+  (mapcar '(lambda (x) 
+            (ModifyMultiplePropertyForOneBlockUtils x (list "FROM") (list startData))
+          ) 
+    entityNameList
+  )
+)
+
+; 2021-05-08
+(defun ModifyGsLcPipeEndData (entityNameList endData /)
+  (mapcar '(lambda (x) 
+            (ModifyMultiplePropertyForOneBlockUtils x (list "TO") (list endData))
+          ) 
+    entityNameList
   )
 )
 
