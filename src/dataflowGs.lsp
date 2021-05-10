@@ -11,7 +11,7 @@
 ; basic Function
 
 (defun c:printVersionInfo ()
-  (alert "最新版本号 V2.2，更新时间：2021-05-08\n数据流内网地址：192.168.1.38")(princ)
+  (alert "最新版本号 V2.2，更新时间：2021-05-10\n数据流内网地址：192.168.1.38")(princ)
 )
 
 (defun c:syncAllDataFlowBlock (/ item) 
@@ -3510,12 +3510,12 @@
 
 ; 2021-04-28
 (defun GetGsLcToPublicPipeCode () 
-  '("CWS" "LS" "LWS" "HWS" "HOS" "N" "DW" "DNW" "PW")
+  '("CWS" "LS" "LWS" "RWS" "HWS" "HOS" "N" "DW" "DNW" "PW")
 )
 
 ; 2021-04-28
 (defun GetGsLcFromPublicPipeCode () 
-  '("CWR" "SC" "LWR" "HWR" "HOR" "VT" "VTa" "VTb" "VA" "VAa" "VAb" "BD")
+  '("CWR" "SC" "LWR" "RWR" "HWR" "HOR" "VT" "VTa" "VTb" "VA" "VAa" "VAb" "BD")
 )
 
 ; 2021-04-28
