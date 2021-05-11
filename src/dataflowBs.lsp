@@ -107,10 +107,13 @@
 )
 
 ; 2021-05-07
+; refactored at 2021-05-11
 (defun InsertBsGCTTankInspectData (insPt dataType oneTankData / inspectDictData) 
-  (InsertBlockUtils insPt "BsGCTInspectData-TankB" "0DataFlow-BsGCT" (list (cons 0 dataType)))
+  ; BsGCTInspectData-TankA or BsGCTInspectData-TankB, ready for the whole logic 2021-05-11
+  (InsertBlockUtils insPt "BsGCTInspectData-TankA" "0DataFlow-BsGCT" (list (cons 0 dataType)))
   (setq inspectDictData (append 
                           (GetBsGCTInspectDictData (GetDottedPairValueUtils "BARREL_INSPECT_RATE" oneTankData) "BARREL_")
+                          (GetBsGCTInspectDictData (GetDottedPairValueUtils "HEAD_INSPECT_RATE" oneTankData) "HEAD_")
                           (GetBsGCTInspectDictData (GetDottedPairValueUtils "CD_INSPECT_RATE" oneTankData) "CD_")
                         ))
   (ModifyBlockPropertiesByDictDataUtils (entlast) inspectDictData)
