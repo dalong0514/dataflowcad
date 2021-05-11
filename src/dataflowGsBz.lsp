@@ -239,9 +239,9 @@
 ; 2021-05-11
 (defun insertAllGsBzColumnCenterLine ()
   (VerifyGsBzBlockByName "GsBzColumnCenterLine")
-  (VerifyGsBzLayerByName "0DataFlow-GsBzCenterLine")
+  ; (VerifyGsBzLayerByName "0DataFlow-GsBzCenterLine")
   (mapcar '(lambda (x) 
-             (InsertBlockByNoPropertyUtils x "GsBzColumnCenterLine" "0DataFlow-GsBzCenterLine")
+             (InsertBlockByNoPropertyUtils x "GsBzColumnCenterLine" "COLUMN")
              ; could set the dynamic block property
               ; (SetDynamicBlockPropertyValueUtils 
               ;   (GetLastVlaObjectUtils) 
