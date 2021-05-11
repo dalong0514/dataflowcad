@@ -227,7 +227,25 @@
   (CADLispCopy (GetAllCopyDrawLabelSS) '(0 0 0) '(400000 0 0)) 
   (CADLispCopy (GetAllJSAxisSS) '(0 0 0) '(400000 0 0)) 
   (generateJSDraw (MoveCopyEntityData))
+  ; refactored at 2021-05-11
+  (insertAllGsBzColumnCenterLine)
   (alert "移出建筑底图成功！") 
+)
+
+; 2021-05-11
+(defun insertAllGsBzColumnCenterLine ()
+  (VerifyGsBzBlockByName "GsBzColumnCenterLine")
+  (VerifyGsBzLayerByName "0DataFlow-GsBzCenterLine")
+  (mapcar '(lambda (x) 
+             (InsertBlockByNoPropertyUtils x "GsBzColumnCenterLine" "0DataFlow-GsBzCenterLine")
+             ; could set the dynamic block property
+              ; (SetDynamicBlockPropertyValueUtils 
+              ;   (GetLastVlaObjectUtils) 
+              ;   (list (cons "XDistance" 800) (cons "YDistance" 800))
+              ; )        
+           ) 
+    (GetAllJSDrawColumnPosition)
+  ) 
 )
 
 ; 2021-03-02
