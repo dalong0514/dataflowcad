@@ -76,8 +76,8 @@
 
 ; 2021-04-17
 ; refactored at - 2021-04-20
-(defun InsertBsGCTDesignParam (insPt dataType designParamDictList /) 
-  (InsertBlockUtils insPt "BsGCTDesignParam" "0DataFlow-BsGCT" (list (cons 0 dataType)))
+(defun InsertBsGCTTankDesignParam (insPt dataType designParamDictList blockName /) 
+  (InsertBlockUtils insPt blockName "0DataFlow-BsGCT" (list (cons 0 dataType)))
   (ModifyMultiplePropertyForOneBlockUtils (entlast) 
     (mapcar '(lambda (x) (car x)) designParamDictList)
     (mapcar '(lambda (x) (cdr x)) designParamDictList)
@@ -629,7 +629,7 @@
   (setq designParamDictList (cadr (SplitLDictListByDictKeyUtils "SERVIVE_LIFE" oneTankData)))
   (InsertBsGCTDrawFrame insPt equipTag)
   (InsertBsGCTDataHeader (MoveInsertPositionUtils insPt -900 2870) bsGCTType)
-  (InsertBsGCTDesignParam (MoveInsertPositionUtils insPt -900 2820) bsGCTType designParamDictList)
+  (InsertBsGCTTankDesignParam (MoveInsertPositionUtils insPt -900 2820) bsGCTType designParamDictList "BsGCTDesignParam")
   (InsertBsGCTDesignStandard (MoveInsertPositionUtils insPt -450 2820) bsGCTType tankStandardList)
   (InsertBsGCTRequirement (MoveInsertPositionUtils insPt -450 2620) bsGCTType tankHeadStyleList tankHeadMaterialList)
   (InsertBsGCTTankInspectData (MoveInsertPositionUtils insPt -450 2300) bsGCTType oneTankData)
