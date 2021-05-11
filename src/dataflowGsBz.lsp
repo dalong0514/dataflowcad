@@ -179,8 +179,10 @@
 )
 
 ; refactored at 2021-04-09
+; refactored at 2021-05-11
 (defun PurgeJSDrawDataMacro () 
   (DeleteEntityBySSUtils (GetAllJSDrawCopySS))
+  (DeleteEntityBySSUtils (GetAllGsBzColumnCenterLineSS))
   (alert "建筑底图清理成功")
 )
 
@@ -209,6 +211,8 @@
       (setq newDrawBasePositionList (GetNewDrawBasePositionList GSDrawBasePositionList JSDrawBasePositionList))
       (setq JSDrawData (car (cdr (vl-bb-ref 'architectureDraw)))) ; why have car? - 2021-02-28
       (DeleteEntityBySSUtils (GetAllJSDrawCopySS))
+      ; refactored at 2021-05-11
+      (DeleteEntityBySSUtils (GetAllGsBzColumnCenterLineSS))
       (GenerateNewJSEntityData newDrawBasePositionList JSDrawData)
       (alert "建筑底图更新成功") 
     )
@@ -426,6 +430,11 @@
 ; 2021-02-27
 (defun GetAllJSDrawColumnSS () 
   (ssget "X" '((0 . "INSERT") (8 . "COLUMN")))
+)
+
+; 2021-05-11
+(defun GetAllGsBzColumnCenterLineSS () 
+  (ssget "X" '((0 . "INSERT") (2 . "GsBzColumnCenterLine")))
 )
 
 ; 2021-03-31
