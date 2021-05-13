@@ -772,14 +772,8 @@
 
     (mode_tile "fromCodeInput" 2)
     (action_tile "fromCodeInput" "(setq fromCodeInput $value)")
-    (mode_tile "toCodeInput" 2)
-    (action_tile "toCodeInput" "(setq toCodeInput $value)") 
-    (if (= toCodeList nil) 
-      (progn 
-        (setq toCodeList (GetGsLcToPublicPipeCode))
-        (setq toCodeListString (vl-princ-to-string toCodeList))
-      )
-    ) 
+
+
     (if (= fromCodeList nil)
       (progn 
         (setq fromCodeList (GetGsLcFromPublicPipeCode))
@@ -792,14 +786,12 @@
     (if (= modifyStatus 2)
       (set_tile "fromCodeMsg" (strcat "可以匹配的【出】设备的公用管道代号： " fromCodeListString))
     ) 
-    (if (= modifyStatus 3)
-      (set_tile "toCodeMsg" (strcat "可以匹配的【进】设备的公用管道代号： " toCodeListString))
-    )  
+
     (if (= modifyStatus 1)
       (set_tile "modifyStatusMsg" "修改状态：已完成")
     ) 
     (set_tile "fromCodeMsg" (strcat "可以匹配的【出】设备的公用管道代号： " fromCodeListString))
-    (set_tile "toCodeMsg" (strcat "可以匹配的【进】设备的公用管道代号： " toCodeListString))
+
     ; select button
     (if (= 2 (setq status (start_dialog))) 
       (progn 
