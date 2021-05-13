@@ -553,24 +553,28 @@
   )
 )
 
+; refactored at 2021-05-13
 (defun GetAllDrawLabelSSUtils (/ ss)
   (setq ss (ssget "X" '((0 . "INSERT") 
         (-4 . "<OR")
           (2 . "title.2017")
           (2 . "title")
           (2 . "TITLE_20170")
+          (2 . "title.equip.2017")
         (-4 . "OR>")
       )
     )
   )
 )
 
+; refactored at 2021-05-13
 (defun GetDrawLabelSSBySelectUtils (/ ss)
   (setq ss (ssget '((0 . "INSERT") 
         (-4 . "<OR")
           (2 . "title.2017")
           (2 . "title")
           (2 . "TITLE_20170")
+          (2 . "title.equip.2017")
         (-4 . "OR>")
       )
     )

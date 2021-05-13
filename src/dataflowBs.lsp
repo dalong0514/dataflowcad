@@ -663,6 +663,39 @@
 )
 
 ; 2021-05-13
+(defun UpdateOneBsTankGCT (oneTankData tankPressureElementList tankOtherRequestList tankStandardList tankHeadStyleList tankHeadMaterialList / 
+                           insPt equipTag bsGCTType equipType) 
+  (setq equipTag (GetDottedPairValueUtils "TAG" oneTankData))
+  (setq bsGCTType equipTag)
+  (setq insPt (GetGCTFramePositionByEquipTag equipTag))
+  (setq equipType (GetDottedPairValueUtils "equipType" oneTankData))
+  (InsertGCTOneBsTankTable insPt bsGCTType oneTankData tankStandardList tankHeadStyleList 
+                           tankHeadMaterialList tankPressureElementList tankOtherRequestList)
+  (princ)
+)
+
+; 2021-05-13
+(defun GetGCTFramePositionByEquipTag (equipTag /)
+  (GetEntityPositionByEntityNameUtils (GetGCTFrameEntityNameByEquipTag equipTag))
+)
+
+; 2021-05-13
+(defun GetGCTFrameEntityNameByEquipTag (equipTag /)
+  (handent 
+    (GetDottedPairValueUtils "entityhandle" 
+      (car 
+        (vl-remove-if-not 
+          '(lambda (x) 
+            (= (GetDottedPairValueUtils "equipname" x) equipTag)
+          ) 
+          (GetBlockAllPropertyDictListUtils (GetEntityNameListBySSUtils (GetAllDrawLabelSSUtils)))
+        )
+      )
+    )
+  )
+)
+
+; 2021-05-13
 ; refacotred at 2021-05-07
 (defun InsertGCTOneBsTankTable (insPt bsGCTType oneTankData tankStandardList tankHeadStyleList tankHeadMaterialList 
                                 tankPressureElementList tankOtherRequestList / designParamDictList) 
@@ -716,9 +749,45 @@
   (ExecuteFunctionAfterVerifyDateUtils 'InsertAllBsGCTTank '())
 )
 
-
 ;;;-------------------------------------------------------------------------;;;
 ; Update BsGCT Table data
+
+; 2021-05-13
+(defun c:UpdateAllBsGCT ()
+  (ExecuteFunctionAfterVerifyDateUtils 'UpdateBsGCTTankByEquipTag '())
+)
+
+; 2021-05-13
+(defun UpdateBsGCTTankByEquipTag (equipTagList / bsGCTImportedList allBsGCTTankDictData tankPressureElementList 
+                           tankOtherRequestList tankStandardList tankHeadStyleList tankHeadMaterialList insPtList) 
+  (VerifyBsGCTBlockLayerText)
+  (DeleteBsGCTTableByEquipTagListUtils equipTagList)
+  (DeleteBsGCTPolyLineAndTextByEquipTagListUtils equipTagList)
+  (setq bsGCTImportedList (GetBsGCTImportedList))
+  (setq allBsGCTTankDictData (GetBsGCTTankDictData bsGCTImportedList))
+  ; filter the updated data
+  (setq allBsGCTTankDictData (FilterUpdatedBsGCTTankDictData allBsGCTTankDictData equipTagList))
+  (setq tankPressureElementList (GetBsGCTTankPressureElementDictData bsGCTImportedList))
+  (setq tankOtherRequestList (GetBsGCTTankOtherRequestData bsGCTImportedList)) 
+  (setq tankStandardList (GetBsGCTTankStandardData bsGCTImportedList)) 
+  (setq tankHeadStyleList (GetBsGCTTankHeadStyleData bsGCTImportedList)) 
+  (setq tankHeadMaterialList (GetBsGCTTankHeadMaterialData bsGCTImportedList)) 
+  (mapcar '(lambda (y) 
+            (UpdateOneBsTankGCT y tankPressureElementList tankOtherRequestList tankStandardList tankHeadStyleList tankHeadMaterialList) 
+          ) 
+    allBsGCTTankDictData 
+  ) 
+  (princ)
+)
+
+; 2021-05-13
+(defun FilterUpdatedBsGCTTankDictData (allBsGCTTankDictData equipTagList /)
+  (vl-remove-if-not '(lambda (x) 
+                      (member (GetDottedPairValueUtils "TAG" x) equipTagList) 
+                    ) 
+    allBsGCTTankDictData
+  )
+)
 
 ; 2021-05-13
 (defun FilterBsGCTTableByEquipTagListUtils (propertyName equipTagList /)
@@ -750,14 +819,6 @@
                     ) 
     (GetEntityNameListBySSUtils (GetAllTextAndPloyLineSSUtils))
   ) 
-)
-
-(defun c:foo ()
-  (DeleteBsGCTTableByEquipTagListUtils '("V1101" "V1102"))
-  (DeleteBsGCTPolyLineAndTextByEquipTagListUtils '("V1101" "V1102"))
-  ; (BindDataFlowXDataToObjectUtils (car (GetEntityNameListBySSUtils (ssget))) "V1101")
-  ; (GetStringXDataByEntityNameUtils (car (GetEntityNameListBySSUtils (ssget))))
-  ; (DeleteEntityBySSUtils (GetAllTextAndPloyLineSSUtils))
 )
 
 ; Generate BsGCT
