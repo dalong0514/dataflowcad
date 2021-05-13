@@ -1551,11 +1551,18 @@
 (defun DeleteEntityBySSUtils (ss /) 
   (mapcar '(lambda (x) 
              (entdel x)
-             (princ)
            ) 
     (GetEntityNameListBySSUtils ss) 
   ) 
-  (princ)
+)
+
+; 2021-05-13
+(defun DeleteEntityByEntityNameListUtils (entityNameList /) 
+  (mapcar '(lambda (x) 
+             (entdel x)
+           ) 
+    entityNameList
+  ) 
 )
 
 ; 2021-02-02
@@ -2279,11 +2286,6 @@
   resultList
 )
 
-; 2021-03-09
-(defun GetVlaObjectPropertyAndMethodUtils (VlaObject /)
-  (vlax-dump-object VlaObject T)
-)
-
 (defun InsertBlockUtilsTTSS (insPt blockName layerName propertyDictList / acadObj curDoc insertionPnt modelSpace blockRefObj blockAttributes)
   (setq acadObj (vlax-get-acad-object))
   (setq curDoc (vla-get-activedocument acadObj)) 
@@ -2354,8 +2356,32 @@
 ;;;-------------------------------------------------------------------------;;;
 ; Vla-Object Utils Function 
 
+; 2021-05-13
+(defun FilterBlockByOnePropertyUtils (entityNameList propertyName propertyValue /)
+  (vl-remove-if-not '(lambda (x) 
+                      (= (VlaGetBlockPropertyValueUtils x propertyName) propertyValue) 
+                    ) 
+    entityNameList
+  ) 
+)
+
+; 2021-05-12
+(defun VlaGetEntityPropertyAndMethodUtils (entityName /)
+  (vlax-dump-object (vlax-ename->vla-object entityName) T)
+)
+
+; 2021-05-12
+(defun VlaGetEntityPropertyAndMethodBySelectUtils ()
+  (vlax-dump-object (VlaGetObjectBySelectUtils) T)
+)
+
+; 2021-03-09
+(defun GetVlaObjectPropertyAndMethodUtils (VlaObject /)
+  (vlax-dump-object VlaObject T)
+)
+
 ; 2021-03-25
-(defun GetVlaObjectBySelectUtils (/ )
+(defun VlaGetObjectBySelectUtils (/ )
   (vlax-ename->vla-object 
     (car (GetEntityNameListBySSUtils (ssget)))
   ) 
@@ -2364,6 +2390,21 @@
 ; 2021-03-25
 (defun GetLastVlaObjectUtils (/ )
   (vlax-ename->vla-object (entlast)) 
+)
+
+; 2021-05-13
+;; Get Attribute Value
+;; Returns the value held by the specified tag within the supplied block, if present.
+;; blk - [vla] VLA Block Reference Object
+;; tag - [str] Attribute TagString
+;; Returns: [str] Attribute value, else nil if tag is not found.
+(defun VlaGetBlockPropertyValueUtils (entityName tag / blk)
+  (setq blk (vlax-ename->vla-object entityName))
+  (setq tag (strcase tag))
+  (vl-some 
+    '(lambda (att) (if (= tag (strcase (vla-get-tagstring att))) (vla-get-textstring att))) 
+    (vlax-invoke blk 'getattributes)
+  )
 )
 
 ; 2021-03-25

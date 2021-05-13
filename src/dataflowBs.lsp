@@ -703,6 +703,30 @@
   (ExecuteFunctionAfterVerifyDateUtils 'InsertAllBsGCTTank '())
 )
 
+
+;;;-------------------------------------------------------------------------;;;
+; Update BsGCT Table data
+
+; 2021-05-13
+(defun FilterBsGCTTableSSByEquipTagListUtils (propertyName equipTagList /)
+  (vl-remove-if-not '(lambda (x) 
+                      (member (VlaGetBlockPropertyValueUtils x propertyName) equipTagList) 
+                    ) 
+    (GetEntityNameListBySSUtils (GetAllBsGCTTableSSUtils))
+  ) 
+)
+
+; 2021-05-13
+(defun DeleteBsGCTTableByEquipTagListUtils (equipTagList /)
+  (DeleteEntityByEntityNameListUtils 
+    (FilterBsGCTTableSSByEquipTagListUtils "bsgct_type" equipTagList)
+  )
+)
+
+(defun c:foo ()
+  (DeleteBsGCTTableByEquipTagListUtils '("V1101" "V1102"))
+)
+
 ; Generate BsGCT
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
