@@ -758,7 +758,7 @@
 )
 
 ; 2021-05-13
-(defun UpdateBsGCTBySelectByBox (tileName / dcl_id status sslen modifyStatus fromCodeInput fromCodeList fromCodeListString toCodeInput toCodeList toCodeListString)
+(defun UpdateBsGCTBySelectByBox (tileName / dcl_id status sslen modifyStatus fromCodeList fromCodeListString toCodeList)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\dcl\\" "dataflowBs.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -769,9 +769,6 @@
     (action_tile "btnSelect" "(done_dialog 2)")
     (action_tile "btnAllSelect" "(done_dialog 3)")
     (action_tile "btnModify" "(done_dialog 4)")
-
-    (mode_tile "fromCodeInput" 2)
-    (action_tile "fromCodeInput" "(setq fromCodeInput $value)")
 
 
     (if (= fromCodeList nil)
