@@ -42,6 +42,21 @@
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
 
+
+
+
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+; Bs Utils
+
+(defun GetAllBsGCTTableSSUtils (/ ss)
+  (ssget "X" '((0 . "INSERT") (2 . "BsGCTTable*")))
+)
+
+; Bs Utils
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
 ; Generate BsGCT - Tank
@@ -71,7 +86,7 @@
 
 ; 2021-04-17
 (defun InsertBsGCTDataHeader (insPt dataType /) 
-  (InsertBlockUtils insPt "BsGCTDataHeader" "0DataFlow-BsGCT" (list (cons 0 dataType)))
+  (InsertBlockUtils insPt "BsGCTTableDataHeader" "0DataFlow-BsGCT" (list (cons 0 dataType)))
 )
 
 ; 2021-04-17
@@ -86,7 +101,7 @@
 
 ; refactored at 2021-04-20
 (defun InsertBsGCTDesignStandard (insPt dataType tankStandardList /) 
-  (InsertBlockUtils insPt "BsGCTDesignStandard" "0DataFlow-BsGCT" (list (cons 0 dataType)))
+  (InsertBlockUtils insPt "BsGCTTableDesignStandard" "0DataFlow-BsGCT" (list (cons 0 dataType)))
   (InsertBsGCTTankStandardText (MoveInsertPositionUtils insPt 20 -90) tankStandardList)
 )
 
@@ -101,7 +116,7 @@
 
 ; refactored at 2021-04-20
 (defun InsertBsGCTRequirement (insPt dataType tankHeadStyleList tankHeadMaterialList /) 
-  (InsertBlockUtils insPt "BsGCTRequirement" "0DataFlow-BsGCT" (list (cons 0 dataType)))
+  (InsertBlockUtils insPt "BsGCTTableRequirement" "0DataFlow-BsGCT" (list (cons 0 dataType)))
   (InsertBsGCTTankHeadStyleText (MoveInsertPositionUtils insPt 55 -100) tankHeadStyleList)
   (InsertBsGCTTankHeadMaterialText (MoveInsertPositionUtils insPt 55 -240) tankHeadMaterialList)
 )
@@ -109,8 +124,8 @@
 ; 2021-05-07
 ; refactored at 2021-05-11
 (defun InsertBsGCTTankInspectData (insPt dataType oneTankData / inspectDictData) 
-  ; BsGCTInspectData-TankA or BsGCTInspectData-TankB, ready for the whole logic 2021-05-11
-  (InsertBlockUtils insPt "BsGCTInspectData-TankA" "0DataFlow-BsGCT" (list (cons 0 dataType)))
+  ; BsGCTTableInspectData-TankA or BsGCTTableInspectData-TankB, ready for the whole logic 2021-05-11
+  (InsertBlockUtils insPt "BsGCTTableInspectData-TankA" "0DataFlow-BsGCT" (list (cons 0 dataType)))
   (setq inspectDictData (append 
                           (GetBsGCTInspectDictData (GetDottedPairValueUtils "BARREL_INSPECT_RATE" oneTankData) "BARREL_")
                           (GetBsGCTInspectDictData (GetDottedPairValueUtils "HEAD_INSPECT_RATE" oneTankData) "HEAD_")
@@ -121,7 +136,7 @@
 
 ; 2021-05-07
 (defun InsertBsGCTTestData (insPt dataType oneTankData / testDictData) 
-  (InsertBlockUtils insPt "BsGCTTestData" "0DataFlow-BsGCT" (list (cons 0 dataType)))
+  (InsertBlockUtils insPt "BsGCTTableTestData" "0DataFlow-BsGCT" (list (cons 0 dataType)))
   (setq testDictData (GetBsGCTTestDictData oneTankData))
   (ModifyBlockPropertiesByDictDataUtils (entlast) testDictData)
 )
@@ -155,7 +170,7 @@
 
 ; 2021-04-17
 (defun InsertBsGCTPressureElement (insPt dataType tankPressureElementList / i) 
-  (InsertBlockUtils insPt "BsGCTPressureElement" "0DataFlow-BsGCT" (list (cons 0 dataType)))
+  (InsertBlockUtils insPt "BsGCTTablePressureElement" "0DataFlow-BsGCT" (list (cons 0 dataType)))
   (InsertBsGCTPressureElementRow (MoveInsertPositionUtils insPt 0 -80) dataType tankPressureElementList)
 )
 
@@ -163,7 +178,7 @@
 (defun InsertBsGCTPressureElementRow (insPt dataType tankPressureElementList / i) 
   (setq i 0)
   (repeat (length tankPressureElementList)
-    (InsertBlockUtils (MoveInsertPositionUtils insPt 0 (* -40 i)) "BsGCTPressureElementRow" "0DataFlow-BsGCT" (list (cons 0 dataType)))
+    (InsertBlockUtils (MoveInsertPositionUtils insPt 0 (* -40 i)) "BsGCTTablePressureElementRow" "0DataFlow-BsGCT" (list (cons 0 dataType)))
     (ModifyMultiplePropertyForOneBlockUtils (entlast) 
       (mapcar '(lambda (x) (car x)) (nth i tankPressureElementList))
       (mapcar '(lambda (x) (cdr x)) (nth i tankPressureElementList))
@@ -178,7 +193,7 @@
 
 ; 2021-04-17
 (defun InsertBsGCTOtherRequest (insPt dataType tankOtherRequestList / i) 
-  (InsertBlockUtils insPt "BsGCTOtherRequest" "0DataFlow-BsGCT" (list (cons 0 dataType)))
+  (InsertBlockUtils insPt "BsGCTTableOtherRequest" "0DataFlow-BsGCT" (list (cons 0 dataType)))
   (InsertBsGCTTankOtherRequestText (MoveInsertPositionUtils insPt 40 -65) dataType tankOtherRequestList)
 )
 
@@ -194,7 +209,7 @@
 ; 2021-04-17
 (defun InsertBsGCTNozzleTable (insPt dataType oneTankData / oneBsGCTTankNozzleDictData) 
   (setq oneBsGCTTankNozzleDictData (GetOneBsGCTTankNozzleDictData (GetDottedPairValueUtils "TAG" oneTankData)))
-  (InsertBlockUtils insPt "BsGCTNozzleTableHeader" "0DataFlow-BsGCT" (list (cons 0 dataType)))
+  (InsertBlockUtils insPt "BsGCTTableNozzleTableHeader" "0DataFlow-BsGCT" (list (cons 0 dataType)))
   (if (/= oneBsGCTTankNozzleDictData nil) 
     (InsertBsGCTNozzleTableRow (MoveInsertPositionUtils insPt 0 -130) dataType oneBsGCTTankNozzleDictData)
   )
@@ -204,7 +219,7 @@
 (defun InsertBsGCTNozzleTableRow (insPt dataType oneBsGCTTankNozzleDictData / i) 
   (setq i 0)
   (repeat (length oneBsGCTTankNozzleDictData)
-    (InsertBlockUtils (MoveInsertPositionUtils insPt 0 (* -40 i)) "BsGCTNozzleTableRow" "0DataFlow-BsGCT" (list (cons 0 dataType)))
+    (InsertBlockUtils (MoveInsertPositionUtils insPt 0 (* -40 i)) "BsGCTTableNozzleTableRow" "0DataFlow-BsGCT" (list (cons 0 dataType)))
     (ModifyMultiplePropertyForOneBlockUtils (entlast) 
       (mapcar '(lambda (x) (car x)) (nth i oneBsGCTTankNozzleDictData))
       (mapcar '(lambda (x) (cdr x)) (nth i oneBsGCTTankNozzleDictData))
@@ -297,7 +312,7 @@
 
 ; 2021-04-22
 (defun InsertBsGCTAnnotation (insPt blockInsPt lineInsPt dataType fristText secondText /) 
-  (InsertTwoLinesAnnotationUtils blockInsPt "BsGCTAnnotation" "0DataFlow-BsGCT" 
+  (InsertTwoLinesAnnotationUtils blockInsPt "BsGCTGraphAnnotation" "0DataFlow-BsGCT" 
     dataType fristText secondText)
   (GenerateLineUtils 
     lineInsPt
@@ -372,22 +387,22 @@
 ; 2021-04-19
 (defun GenerateUpEllipseHeadNozzle (insPt barrelRadius dataType nozzleOffset thickNess / yOffset leftNozzleinsPt rightNozzleinsPt) 
   (setq yOffset (- (GetYByXForEllipseUtils barrelRadius (- barrelRadius nozzleOffset)) (/ barrelRadius 2)))
-  (InsertBlockUtils insPt "BsGCTNozzle" "0DataFlow-BsThickLine" (list (cons 0 dataType)))
+  (InsertBlockUtils insPt "BsGCTGraphNozzle" "0DataFlow-BsThickLine" (list (cons 0 dataType)))
   (setq leftNozzleinsPt (MoveInsertPositionUtils insPt (- 0 (- barrelRadius nozzleOffset thickNess)) yOffset))
   (setq rightNozzleinsPt (MoveInsertPositionUtils insPt (- barrelRadius nozzleOffset thickNess) yOffset))
-  (InsertBlockUtils leftNozzleinsPt "BsGCTNozzle" "0DataFlow-BsThickLine" (list (cons 0 dataType)))
-  (InsertBlockUtils rightNozzleinsPt "BsGCTNozzle" "0DataFlow-BsThickLine" (list (cons 0 dataType)))
+  (InsertBlockUtils leftNozzleinsPt "BsGCTGraphNozzle" "0DataFlow-BsThickLine" (list (cons 0 dataType)))
+  (InsertBlockUtils rightNozzleinsPt "BsGCTGraphNozzle" "0DataFlow-BsThickLine" (list (cons 0 dataType)))
   (InsertBsGCTTankNozzleDimension insPt leftNozzleinsPt rightNozzleinsPt)
 )
 
 ; 2021-04-19
 (defun GenerateDownllipseHeadNozzle (insPt dataType /) 
-  (InsertBlockByRotateUtils insPt "BsGCTNozzle" "0DataFlow-BsThickLine" (list (cons 0 dataType)) PI)
+  (InsertBlockByRotateUtils insPt "BsGCTGraphNozzle" "0DataFlow-BsThickLine" (list (cons 0 dataType)) PI)
 )
 
 ; 2021-04-18
 (defun InsertBsGCTSupportLeg (insPt dataType legHeight /) 
-  (InsertBlockUtils insPt "BsGCTSupportLeg-A2" "0DataFlow-BsThickLine" (list (cons 0 dataType)))
+  (InsertBlockUtils insPt "BsGCTGraphSupportLeg-A2" "0DataFlow-BsThickLine" (list (cons 0 dataType)))
   (SetDynamicBlockPropertyValueUtils 
     (GetLastVlaObjectUtils) 
     (list (cons "LEG_HEIGHT" legHeight))
@@ -397,7 +412,7 @@
 
 ; 2021-04-22
 (defun InsertBsGCTGroundPlate (insPt dataType /) 
-  (InsertBlockUtils insPt "BsGCTGroundPlate" "0DataFlow-BsThickLine" (list (cons 0 dataType)))
+  (InsertBlockUtils insPt "BsGCTGraphGroundPlate" "0DataFlow-BsThickLine" (list (cons 0 dataType)))
   (InsertBsGCTGroundPlateAnnotation (MoveInsertPositionUtils insPt -50 15) dataType)
 )
 
@@ -629,7 +644,6 @@
   (InsertBsGCTDrawFrame insPt equipTag)
   (InsertGCTOneBsTankTable insPt bsGCTType oneTankData tankStandardList tankHeadStyleList 
                            tankHeadMaterialList tankPressureElementList tankOtherRequestList)
-  
   ; thickNess param refactored at 2021-04-21
   (InsertBsGCTTankGraphyStrategy (MoveInsertPositionUtils insPt -2915 1600) barrelRadius barrelHalfHeight thickNess headThickNess bsGCTType straightEdgeHeight equipType)
   (princ)
@@ -642,7 +656,7 @@
   ; split oneTankData to Two Parts
   (setq designParamDictList (cadr (SplitLDictListByDictKeyUtils "SERVIVE_LIFE" oneTankData)))
   (InsertBsGCTDataHeader (MoveInsertPositionUtils insPt -900 2870) bsGCTType)
-  (InsertBsGCTTankDesignParam (MoveInsertPositionUtils insPt -900 2820) bsGCTType designParamDictList "BsGCTDesignParam")
+  (InsertBsGCTTankDesignParam (MoveInsertPositionUtils insPt -900 2820) bsGCTType designParamDictList "BsGCTTableDesignParam")
   (InsertBsGCTDesignStandard (MoveInsertPositionUtils insPt -450 2820) bsGCTType tankStandardList)
   (InsertBsGCTRequirement (MoveInsertPositionUtils insPt -450 2620) bsGCTType tankHeadStyleList tankHeadMaterialList)
   (InsertBsGCTTankInspectData (MoveInsertPositionUtils insPt -450 2300) bsGCTType oneTankData)
