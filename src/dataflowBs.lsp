@@ -102,14 +102,16 @@
 ; refactored at 2021-04-20
 (defun InsertBsGCTDesignStandard (insPt dataType tankStandardList /) 
   (InsertBlockUtils insPt "BsGCTTableDesignStandard" "0DataFlow-BsGCT" (list (cons 0 dataType)))
-  (InsertBsGCTTankStandardText (MoveInsertPositionUtils insPt 20 -90) tankStandardList)
+  (InsertBsGCTTankStandardText (MoveInsertPositionUtils insPt 20 -90) tankStandardList dataType)
 )
 
 ; 2021-04-20
-(defun InsertBsGCTTankStandardText (insPt tankStandardList / i) 
+(defun InsertBsGCTTankStandardText (insPt tankStandardList dataType / i) 
   (setq i 0)
   (repeat (length tankStandardList)
     (GenerateLevelLeftTextUtils (MoveInsertPositionUtils insPt 0 (* -35 i)) (nth i tankStandardList) "0DataFlow-BsText" 20 0.7) 
+    ; bind equipTag to Xdata - 2021-05-13
+    (BindDataFlowXDataToObjectUtils (entlast) dataType)
     (setq i (1+ i))
   ) 
 )
@@ -117,8 +119,8 @@
 ; refactored at 2021-04-20
 (defun InsertBsGCTRequirement (insPt dataType tankHeadStyleList tankHeadMaterialList /) 
   (InsertBlockUtils insPt "BsGCTTableRequirement" "0DataFlow-BsGCT" (list (cons 0 dataType)))
-  (InsertBsGCTTankHeadStyleText (MoveInsertPositionUtils insPt 55 -100) tankHeadStyleList)
-  (InsertBsGCTTankHeadMaterialText (MoveInsertPositionUtils insPt 55 -240) tankHeadMaterialList)
+  (InsertBsGCTTankHeadStyleText (MoveInsertPositionUtils insPt 55 -100) tankHeadStyleList dataType)
+  (InsertBsGCTTankHeadMaterialText (MoveInsertPositionUtils insPt 55 -240) tankHeadMaterialList dataType)
 )
 
 ; 2021-05-07
@@ -151,19 +153,23 @@
 )
 
 ; 2021-04-20
-(defun InsertBsGCTTankHeadStyleText (insPt tankHeadStyleList / i) 
+(defun InsertBsGCTTankHeadStyleText (insPt tankHeadStyleList dataType / i) 
   (setq i 0)
   (repeat (length tankHeadStyleList)
     (GenerateLevelLeftTextUtils (MoveInsertPositionUtils insPt 0 (* -30 i)) (nth i tankHeadStyleList) "0DataFlow-BsText" 20 0.7) 
+    ; bind equipTag to Xdata - 2021-05-13
+    (BindDataFlowXDataToObjectUtils (entlast) dataType)
     (setq i (1+ i))
   ) 
 )
 
 ; 2021-04-20
-(defun InsertBsGCTTankHeadMaterialText (insPt tankHeadMaterialList / i) 
+(defun InsertBsGCTTankHeadMaterialText (insPt tankHeadMaterialList dataType / i) 
   (setq i 0)
   (repeat (length tankHeadMaterialList)
     (GenerateLevelLeftTextUtils (MoveInsertPositionUtils insPt 0 (* -30 i)) (nth i tankHeadMaterialList) "0DataFlow-BsText" 20 0.7) 
+    ; bind equipTag to Xdata - 2021-05-13
+    (BindDataFlowXDataToObjectUtils (entlast) dataType)
     (setq i (1+ i))
   ) 
 )
@@ -196,14 +202,16 @@
 ; 2021-04-17
 (defun InsertBsGCTOtherRequest (insPt dataType tankOtherRequestList / i) 
   (InsertBlockUtils insPt "BsGCTTableOtherRequest" "0DataFlow-BsGCT" (list (cons 0 dataType)))
-  (InsertBsGCTTankOtherRequestText (MoveInsertPositionUtils insPt 40 -65) dataType tankOtherRequestList)
+  (InsertBsGCTTankOtherRequestText (MoveInsertPositionUtils insPt 40 -65) tankOtherRequestList dataType)
 )
 
 ; 2021-04-17
-(defun InsertBsGCTTankOtherRequestText (insPt dataType tankOtherRequestList / i) 
+(defun InsertBsGCTTankOtherRequestText (insPt tankOtherRequestList dataType / i) 
   (setq i 0)
   (repeat (length tankOtherRequestList)
     (GenerateLevelLeftTextUtils (MoveInsertPositionUtils insPt 0 (* -30 i)) (nth i tankOtherRequestList) "0DataFlow-BsText" 20 0.7) 
+    ; bind equipTag to Xdata - 2021-05-13
+    (BindDataFlowXDataToObjectUtils (entlast) dataType)
     (setq i (1+ i))
   ) 
 )
@@ -732,12 +740,6 @@
   ; (DeleteBsGCTTableByEquipTagListUtils '("V1101" "V1102"))
   (BindDataFlowXDataToObjectUtils (car (GetEntityNameListBySSUtils (ssget))) "V1101")
   ; (GetStringXDataByEntityNameUtils (car (GetEntityNameListBySSUtils (ssget))))
-    ; bind equipTag to Xdata - 2021-05-13
-  ; (GeneratePolyLineUtils 
-  ;   insPt
-  ;   (MoveInsertPositionUtils insPt 0 (- 0 (* 40 (length tankPressureElementList)))) 
-  ;   "0DataFlow-BsGCT" 3.6) 
-  ; (BindDataFlowXDataToObjectUtils (entlast) dataType)
 )
 
 (defun c:ddfoo ()
