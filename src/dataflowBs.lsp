@@ -614,7 +614,7 @@
 ; 2021-04-17
 ; refacotred at 2021-05-07
 (defun InsertOneBsTankGCT (insPt oneTankData tankPressureElementList tankOtherRequestList tankStandardList tankHeadStyleList tankHeadMaterialList / 
-                           equipTag bsGCTType barrelRadius barrelHalfHeight thickNess headThickNess designParamDictList straightEdgeHeight equipType) 
+                           equipTag bsGCTType barrelRadius barrelHalfHeight thickNess headThickNess straightEdgeHeight equipType) 
   (setq equipTag (GetDottedPairValueUtils "TAG" oneTankData))
   ; (setq bsGCTType (strcat (GetDottedPairValueUtils "BSGCT_TYPE" oneTankData) "-" equipTag))
   ; refacotred at 2021-05-07 use equipTag as the label for data
@@ -625,9 +625,22 @@
   ; do not convert to int frist 2021-04-23
   (setq headThickNess (GetDottedPairValueUtils "HEAD_THICKNESS" oneTankData))
   (setq straightEdgeHeight 25)
+  (setq equipType (GetDottedPairValueUtils "equipType" oneTankData))
+  (InsertBsGCTDrawFrame insPt equipTag)
+  (InsertGCTOneBsTankTable insPt bsGCTType oneTankData tankStandardList tankHeadStyleList 
+                           tankHeadMaterialList tankPressureElementList tankOtherRequestList)
+  
+  ; thickNess param refactored at 2021-04-21
+  (InsertBsGCTTankGraphyStrategy (MoveInsertPositionUtils insPt -2915 1600) barrelRadius barrelHalfHeight thickNess headThickNess bsGCTType straightEdgeHeight equipType)
+  (princ)
+)
+
+; 2021-05-13
+; refacotred at 2021-05-07
+(defun InsertGCTOneBsTankTable (insPt bsGCTType oneTankData tankStandardList tankHeadStyleList tankHeadMaterialList 
+                                tankPressureElementList tankOtherRequestList / designParamDictList) 
   ; split oneTankData to Two Parts
   (setq designParamDictList (cadr (SplitLDictListByDictKeyUtils "SERVIVE_LIFE" oneTankData)))
-  (InsertBsGCTDrawFrame insPt equipTag)
   (InsertBsGCTDataHeader (MoveInsertPositionUtils insPt -900 2870) bsGCTType)
   (InsertBsGCTTankDesignParam (MoveInsertPositionUtils insPt -900 2820) bsGCTType designParamDictList "BsGCTDesignParam")
   (InsertBsGCTDesignStandard (MoveInsertPositionUtils insPt -450 2820) bsGCTType tankStandardList)
@@ -637,10 +650,6 @@
   (InsertBsGCTPressureElement (MoveInsertPositionUtils insPt -900 1980) bsGCTType tankPressureElementList)
   (InsertBsGCTOtherRequest (MoveInsertPositionUtils insPt -900 (- 1900 (* 40 (length tankPressureElementList)))) bsGCTType tankOtherRequestList)
   (InsertBsGCTNozzleTable (MoveInsertPositionUtils insPt -1800 2870) bsGCTType oneTankData)
-  ; thickNess param refactored at 2021-04-21
-  (setq equipType (GetDottedPairValueUtils "equipType" oneTankData))
-  (InsertBsGCTTankGraphyStrategy (MoveInsertPositionUtils insPt -2915 1600) barrelRadius barrelHalfHeight thickNess headThickNess bsGCTType straightEdgeHeight equipType)
-  (princ)
 )
 
 ; 2021-05-11
