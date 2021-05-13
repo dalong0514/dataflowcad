@@ -758,7 +758,7 @@
 )
 
 ; 2021-05-13
-(defun UpdateBsGCTBySelectByBox (tileName / dcl_id status sslen modifyStatus fromCodeList fromCodeListString toCodeList)
+(defun UpdateBsGCTBySelectByBox (tileName / dcl_id status sslen equipTagAndPositionList modifyStatus fromCodeList fromCodeListString toCodeList)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\dcl\\" "dataflowBs.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -770,7 +770,6 @@
     (action_tile "btnAllSelect" "(done_dialog 3)")
     (action_tile "btnModify" "(done_dialog 4)")
 
-
     (if (= fromCodeList nil)
       (progn 
         (setq fromCodeList (GetGsLcFromPublicPipeCode))
@@ -781,19 +780,23 @@
       (set_tile "exportDataNumMsg" (strcat "选择数据的数量： " (rtos sslen)))
     ) 
     (if (= modifyStatus 2)
-      (set_tile "fromCodeMsg" (strcat "可以匹配的【出】设备的公用管道代号： " fromCodeListString))
+      (set_tile "fromCodeMsg" (strcat "已选择的设备位号： " (vl-princ-to-string fromCodeList)))
     ) 
 
     (if (= modifyStatus 1)
       (set_tile "modifyStatusMsg" "修改状态：已完成")
     ) 
-    (set_tile "fromCodeMsg" (strcat "可以匹配的【出】设备的公用管道代号： " fromCodeListString))
+    
+    (set_tile "fromCodeMsg" (strcat "可以匹配的【出】设备的公用管道代号： " (vl-princ-to-string fromCodeList)))
 
     ; select button
     (if (= 2 (setq status (start_dialog))) 
       (progn 
         (setq ss (GetDrawLabelSSBySelectUtils))
         (setq sslen (sslength ss)) 
+        (setq equipTagAndPositionList (GetGCTUpdatedEquipTagAndPositionList ss))
+        (setq fromCodeList (mapcar '(lambda (x) (car x)) equipTagAndPositionList))
+        (setq modifyStatus 2) 
       )
     )
     ; All select button
@@ -811,11 +814,21 @@
         (setq sslen nil)
       ) 
     )
-
- 
   )
   (unload_dialog dcl_id)
   (princ)
+)
+
+; 2021-05-13
+(defun GetGCTUpdatedEquipTagAndPositionList (ss /)
+  (mapcar '(lambda (x) 
+            (list 
+              (GetDottedPairValueUtils "equipname" x) 
+              (GetEntityPositionByEntityNameUtils (handent (GetDottedPairValueUtils "entityhandle" x))) 
+            )
+          ) 
+    (GetBlockAllPropertyDictListUtils (GetEntityNameListBySSUtils ss))
+  )
 )
 
 ; 2021-05-13
