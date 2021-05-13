@@ -753,8 +753,88 @@
 ; Update BsGCT Table data
 
 ; 2021-05-13
-(defun c:UpdateAllBsGCT ()
-  (ExecuteFunctionAfterVerifyDateUtils 'UpdateBsGCTTankByEquipTag '())
+(defun c:UpdateBsGCTData ()
+  (ExecuteFunctionAfterVerifyDateUtils 'UpdateBsGCTBySelectByBox '("UpdateBsGCTBySelectBox"))
+)
+
+; 2021-04-28
+(defun UpdateBsGCTBySelectByBox (tileName / dcl_id status sslen modifyStatus fromCodeInput fromCodeList fromCodeListString toCodeInput toCodeList toCodeListString)
+  (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\dcl\\" "dataflowBs.dcl")))
+  (setq status 2)
+  (while (>= status 2)
+    ; Create the dialog box
+    (new_dialog tileName dcl_id "" '(-1 -1))
+    ; Added the actions to the Cancel and Pick Point button
+    (action_tile "cancel" "(done_dialog 0)")
+    (action_tile "btnSelect" "(done_dialog 2)")
+    (action_tile "btnAllSelect" "(done_dialog 3)")
+    (action_tile "btnModify" "(done_dialog 4)")
+    (action_tile "btnAddFromCode" "(done_dialog 5)")
+    (action_tile "btnAddToCode" "(done_dialog 6)")
+    (mode_tile "fromCodeInput" 2)
+    (action_tile "fromCodeInput" "(setq fromCodeInput $value)")
+    (mode_tile "toCodeInput" 2)
+    (action_tile "toCodeInput" "(setq toCodeInput $value)") 
+
+    (if (= fromCodeList nil)
+      (progn 
+        (setq fromCodeList (GetGsLcFromPublicPipeCode))
+        (setq fromCodeListString (vl-princ-to-string fromCodeList))
+      ) 
+    ) 
+    (if (/= sslen nil)
+      (set_tile "exportDataNumMsg" (strcat "选择数据的数量： " (rtos sslen)))
+    ) 
+    (if (= modifyStatus 2)
+      (set_tile "fromCodeMsg" (strcat "已选择的设备位号： " fromCodeListString))
+    ) 
+
+    (if (= modifyStatus 1)
+      (set_tile "modifyStatusMsg" "修改状态：已完成")
+    ) 
+    (set_tile "fromCodeMsg" (strcat "已选择的设备位号：  " fromCodeListString))
+
+    ; select button
+    (if (= 2 (setq status (start_dialog))) 
+      (progn 
+        (setq ss (GetEquipmentAndPipeSSBySelectUtils))
+        (setq sslen (sslength ss)) 
+      )
+    )
+    ; All select button
+    (if (= 3 status) 
+      (progn 
+        (setq ss (GetAllEquipmentAndPipeSSUtils))
+        (setq sslen (sslength ss)) 
+      )
+    ) 
+    ; update data button
+    (if (= 4 status) 
+      (progn 
+        (UpdateAllPublicPipeFromToDataMacro ss fromCodeList toCodeList) 
+        (setq modifyStatus 1) 
+        (setq sslen nil)
+      ) 
+    )
+    ; add from code
+    (if (= 5 status) 
+      (progn 
+        (setq fromCodeList (append fromCodeList (list fromCodeInput)))
+        (setq fromCodeListString (vl-princ-to-string fromCodeList))
+        (setq modifyStatus 2) 
+      ) 
+    ) 
+    ; add to code
+    (if (= 6 status) 
+      (progn 
+        (setq toCodeList (append toCodeList (list toCodeInput)))
+        (setq toCodeListString (vl-princ-to-string toCodeList))
+        (setq modifyStatus 3) 
+      ) 
+    )  
+  )
+  (unload_dialog dcl_id)
+  (princ)
 )
 
 ; 2021-05-13
