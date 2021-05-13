@@ -663,11 +663,11 @@
 )
 
 ; 2021-05-13
-(defun UpdateOneBsTankGCT (oneTankData tankPressureElementList tankOtherRequestList tankStandardList tankHeadStyleList tankHeadMaterialList / 
-                           insPt equipTag bsGCTType equipType) 
+(defun UpdateOneBsTankGCT (insPt oneTankData tankPressureElementList tankOtherRequestList tankStandardList tankHeadStyleList tankHeadMaterialList / 
+                          equipTag bsGCTType equipType) 
   (setq equipTag (GetDottedPairValueUtils "TAG" oneTankData))
   (setq bsGCTType equipTag)
-  (setq insPt (GetGCTFramePositionByEquipTag equipTag))
+  ; (setq insPt (GetGCTFramePositionByEquipTag equipTag))
   (setq equipType (GetDottedPairValueUtils "equipType" oneTankData))
   (InsertGCTOneBsTankTable insPt bsGCTType oneTankData tankStandardList tankHeadStyleList 
                            tankHeadMaterialList tankPressureElementList tankOtherRequestList)
@@ -758,7 +758,7 @@
 )
 
 ; 2021-05-13
-(defun UpdateBsGCTBySelectByBox (tileName / dcl_id status sslen equipTagAndPositionList modifyStatus fromCodeList fromCodeListString toCodeList)
+(defun UpdateBsGCTBySelectByBox (tileName / dcl_id status sslen equipTagAndPositionList equipTagList equipPositionList modifyStatus)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\dcl\\" "dataflowBs.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -769,47 +769,42 @@
     (action_tile "btnSelect" "(done_dialog 2)")
     (action_tile "btnAllSelect" "(done_dialog 3)")
     (action_tile "btnModify" "(done_dialog 4)")
-
-    (if (= fromCodeList nil)
-      (progn 
-        (setq fromCodeList (GetGsLcFromPublicPipeCode))
-        (setq fromCodeListString (vl-princ-to-string fromCodeList))
-      ) 
-    ) 
     (if (/= sslen nil)
       (set_tile "exportDataNumMsg" (strcat "选择数据的数量： " (rtos sslen)))
     ) 
     (if (= modifyStatus 2)
-      (set_tile "fromCodeMsg" (strcat "已选择的设备位号： " (vl-princ-to-string fromCodeList)))
-    ) 
-
+      (set_tile "equipTagListMsg" (strcat "已选择的设备位号：" (vl-princ-to-string equipTagList)))
+    )
     (if (= modifyStatus 1)
       (set_tile "modifyStatusMsg" "修改状态：已完成")
     ) 
-    
-    (set_tile "fromCodeMsg" (strcat "可以匹配的【出】设备的公用管道代号： " (vl-princ-to-string fromCodeList)))
-
+    (set_tile "equipTagListMsg" (strcat "已选择的设备位号：" (vl-princ-to-string equipTagList)))
     ; select button
     (if (= 2 (setq status (start_dialog))) 
       (progn 
         (setq ss (GetDrawLabelSSBySelectUtils))
         (setq sslen (sslength ss)) 
-        (setq equipTagAndPositionList (GetGCTUpdatedEquipTagAndPositionList ss))
-        (setq fromCodeList (mapcar '(lambda (x) (car x)) equipTagAndPositionList))
+        (setq equipTagAndPositionList (vl-sort (GetGCTUpdatedEquipTagAndPositionList ss) '(lambda (x y) (< (car x) (car y)))))
+        (setq equipTagList (mapcar '(lambda (x) (car x)) equipTagAndPositionList))
+        (setq equipPositionList (mapcar '(lambda (x) (cadr x)) equipTagAndPositionList))
         (setq modifyStatus 2) 
       )
     )
     ; All select button
     (if (= 3 status) 
       (progn 
-        (setq ss (GetAllEquipmentAndPipeSSUtils))
+        (setq ss (GetAllDrawLabelSSUtils))
         (setq sslen (sslength ss)) 
+        (setq equipTagAndPositionList (vl-sort (GetGCTUpdatedEquipTagAndPositionList ss) '(lambda (x y) (< (car x) (car y)))))
+        (setq equipTagList (mapcar '(lambda (x) (car x)) equipTagAndPositionList))
+        (setq equipPositionList (mapcar '(lambda (x) (cadr x)) equipTagAndPositionList))
+        (setq modifyStatus 2) 
       )
     ) 
     ; update data button
     (if (= 4 status) 
       (progn 
-        (UpdateAllPublicPipeFromToDataMacro ss fromCodeList toCodeList) 
+        (UpdateBsGCTTankByEquipTag equipTagList equipPositionList) 
         (setq modifyStatus 1) 
         (setq sslen nil)
       ) 
@@ -832,7 +827,7 @@
 )
 
 ; 2021-05-13
-(defun UpdateBsGCTTankByEquipTag (equipTagList / bsGCTImportedList allBsGCTTankDictData tankPressureElementList 
+(defun UpdateBsGCTTankByEquipTag (equipTagList equipPositionList / bsGCTImportedList allBsGCTTankDictData tankPressureElementList 
                            tankOtherRequestList tankStandardList tankHeadStyleList tankHeadMaterialList insPtList) 
   (VerifyBsGCTBlockLayerText)
   (DeleteBsGCTTableByEquipTagListUtils equipTagList)
@@ -846,9 +841,10 @@
   (setq tankStandardList (GetBsGCTTankStandardData bsGCTImportedList)) 
   (setq tankHeadStyleList (GetBsGCTTankHeadStyleData bsGCTImportedList)) 
   (setq tankHeadMaterialList (GetBsGCTTankHeadMaterialData bsGCTImportedList)) 
-  (mapcar '(lambda (y) 
-            (UpdateOneBsTankGCT y tankPressureElementList tankOtherRequestList tankStandardList tankHeadStyleList tankHeadMaterialList) 
+  (mapcar '(lambda (x y) 
+            (UpdateOneBsTankGCT x y tankPressureElementList tankOtherRequestList tankStandardList tankHeadStyleList tankHeadMaterialList) 
           ) 
+    equipPositionList
     allBsGCTTankDictData 
   ) 
   (princ)

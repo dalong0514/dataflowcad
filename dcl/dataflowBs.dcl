@@ -4,9 +4,9 @@ UpdateBsGCTBySelectBox : dialog {
   key = "UpdateBsGCTBySelect";
   : boxed_radio_column {
     key = "showOriginDataBox";
-    width = 100;
+    width = 120;
     : text {
-      key = "fromCodeMsg";
+      key = "equipTagListMsg";
       label = "已选择的设备位号：";
     }
     : spacer { height = 1; }  
