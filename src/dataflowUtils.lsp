@@ -2485,8 +2485,9 @@
 )
 
 ; 2021-03-26
-(defun BindXDataToObjectUtils (xdataList / entityName entityData) 
-  (setq entityName (car (GetEntityNameListBySSUtils (ssget))))
+; refactored at 2021-05-13
+(defun BindDataFlowXDataToObjectUtils (entityName xdataString / xdataList entityData) 
+  (setq xdataList (CreateStringXDataUtils xdataString))
   (setq entityData (entget entityName))
   (setq entityData (append entityData (list xdataList)))
   (entmod entityData)

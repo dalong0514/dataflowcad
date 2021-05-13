@@ -185,10 +185,12 @@
     )
     (setq i (1+ i))
   ) 
+  ; bind equipTag to Xdata - 2021-05-13
   (GeneratePolyLineUtils 
     insPt
     (MoveInsertPositionUtils insPt 0 (- 0 (* 40 (length tankPressureElementList)))) 
-    "0DataFlow-BsGCT" 3.6)  
+    "0DataFlow-BsGCT" 3.6) 
+  (BindDataFlowXDataToObjectUtils (entlast) dataType)
 )
 
 ; 2021-04-17
@@ -226,14 +228,17 @@
     ) 
     (setq i (1+ i))
   ) 
+  ; bind equipTag to Xdata - 2021-05-13
   (GeneratePolyLineUtils 
     (MoveInsertPositionUtils insPt 0 (- 0 (* 40 (length oneBsGCTTankNozzleDictData)))) 
     (MoveInsertPositionUtils insPt 900 (- 0 (* 40 (length oneBsGCTTankNozzleDictData)))) 
     "0DataFlow-BsGCT" 3.6)
+  (BindDataFlowXDataToObjectUtils (entlast) dataType)
   (GeneratePolyLineUtils 
     insPt
     (MoveInsertPositionUtils insPt 0 (- 0 (* 40 (length oneBsGCTTankNozzleDictData)))) 
     "0DataFlow-BsGCT" 3.6) 
+  (BindDataFlowXDataToObjectUtils (entlast) dataType)
 )
 
 ; 2021-04-18
@@ -724,7 +729,19 @@
 )
 
 (defun c:foo ()
-  (DeleteBsGCTTableByEquipTagListUtils '("V1101" "V1102"))
+  ; (DeleteBsGCTTableByEquipTagListUtils '("V1101" "V1102"))
+  (BindDataFlowXDataToObjectUtils (car (GetEntityNameListBySSUtils (ssget))) "V1101")
+  ; (GetStringXDataByEntityNameUtils (car (GetEntityNameListBySSUtils (ssget))))
+    ; bind equipTag to Xdata - 2021-05-13
+  ; (GeneratePolyLineUtils 
+  ;   insPt
+  ;   (MoveInsertPositionUtils insPt 0 (- 0 (* 40 (length tankPressureElementList)))) 
+  ;   "0DataFlow-BsGCT" 3.6) 
+  ; (BindDataFlowXDataToObjectUtils (entlast) dataType)
+)
+
+(defun c:ddfoo ()
+  (GetStringXDataByEntityNameUtils (car (GetEntityNameListBySSUtils (ssget))))
 )
 
 ; Generate BsGCT
