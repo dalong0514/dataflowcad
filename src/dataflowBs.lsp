@@ -721,7 +721,7 @@
 ; Update BsGCT Table data
 
 ; 2021-05-13
-(defun FilterBsGCTTableSSByEquipTagListUtils (propertyName equipTagList /)
+(defun FilterBsGCTTableByEquipTagListUtils (propertyName equipTagList /)
   (vl-remove-if-not '(lambda (x) 
                       (member (VlaGetBlockPropertyValueUtils x propertyName) equipTagList) 
                     ) 
@@ -732,18 +732,32 @@
 ; 2021-05-13
 (defun DeleteBsGCTTableByEquipTagListUtils (equipTagList /)
   (DeleteEntityByEntityNameListUtils 
-    (FilterBsGCTTableSSByEquipTagListUtils "bsgct_type" equipTagList)
+    (FilterBsGCTTableByEquipTagListUtils "bsgct_type" equipTagList)
   )
 )
 
-(defun c:foo ()
-  ; (DeleteBsGCTTableByEquipTagListUtils '("V1101" "V1102"))
-  (BindDataFlowXDataToObjectUtils (car (GetEntityNameListBySSUtils (ssget))) "V1101")
-  ; (GetStringXDataByEntityNameUtils (car (GetEntityNameListBySSUtils (ssget))))
+; 2021-05-13
+(defun DeleteBsGCTPolyLineAndTextByEquipTagListUtils (equipTagList /)
+  (DeleteEntityByEntityNameListUtils 
+    (FilterBsGCTPolyLineAndTextByEquipTagListUtils "bsgct_type" equipTagList)
+  )
 )
 
-(defun c:ddfoo ()
-  (GetStringXDataByEntityNameUtils (car (GetEntityNameListBySSUtils (ssget))))
+; 2021-05-13
+(defun FilterBsGCTPolyLineAndTextByEquipTagListUtils (propertyName equipTagList /)
+  (vl-remove-if-not '(lambda (x) 
+                      (member (GetStringXDataByEntityNameUtils x) equipTagList) 
+                    ) 
+    (GetEntityNameListBySSUtils (GetAllTextAndPloyLineSSUtils))
+  ) 
+)
+
+(defun c:foo ()
+  (DeleteBsGCTTableByEquipTagListUtils '("V1101" "V1102"))
+  (DeleteBsGCTPolyLineAndTextByEquipTagListUtils '("V1101" "V1102"))
+  ; (BindDataFlowXDataToObjectUtils (car (GetEntityNameListBySSUtils (ssget))) "V1101")
+  ; (GetStringXDataByEntityNameUtils (car (GetEntityNameListBySSUtils (ssget))))
+  ; (DeleteEntityBySSUtils (GetAllTextAndPloyLineSSUtils))
 )
 
 ; Generate BsGCT

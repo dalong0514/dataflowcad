@@ -593,6 +593,11 @@
 )
 
 ; 2021-03-16
+(defun GetAllTextSSBySelectUtils ()
+  (ssget "X" '((0 . "TEXT")))
+)
+
+; 2021-03-16
 (defun GetTextSSByLayerBySelectUtils (layerName / ss)
   (setq ss (ssget (list (cons 0 "TEXT") (cons 8 layerName))))
 )
@@ -703,8 +708,45 @@
 )
 
 ; 2021-04-18
-(defun GetLineEntitySSBySelectUtils () 
+(defun GetLineSSBySelectUtils () 
   (ssget '((0 . "LINE")))
+)
+
+; 2021-05-13
+(defun GetAllLineSSUtils ()
+  (ssget "X" '((0 . "LINE")))
+)
+
+; 2021-05-13
+(defun GetPloyLineSSBySelectUtils () 
+  (ssget '((0 . "LWPOLYLINE")))
+)
+
+; 2021-05-13
+(defun GetAllPloyLineESSUtils ()
+  (ssget "X" '((0 . "LWPOLYLINE")))
+)
+
+; 2021-05-13
+(defun GetAllLineAndPloyLineSSUtils (/ ss)
+  (ssget "X" '( 
+        (-4 . "<OR")
+          (0 . "LWPOLYLINE")
+          (0 . "LINE")
+        (-4 . "OR>")
+      )
+  )
+)
+
+; 2021-05-13
+(defun GetAllTextAndPloyLineSSUtils (/ ss)
+  (ssget "X" '( 
+        (-4 . "<OR")
+          (0 . "TEXT")
+          (0 . "LWPOLYLINE")
+        (-4 . "OR>")
+      )
+  )
 )
 
 ; refactored at 2021-04-18 - rename function name
