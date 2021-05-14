@@ -885,6 +885,26 @@
 
 )
 
+; 2021-05-14
+(defun GenerateGsBzReactorTagByGraphMacro (/)
+  (GetAllGsBzEquipGraphyData)
+
+  
+
+  (setq equipTagData (InsertGsBzEquipTag dataList insPtList dataType))
+  (UpdateGsEquipTagPropertyValue equipTagData (GetPropertyNameListStrategy dataType))
+  
+  (setq equipPropertyTagDictList (GetGsBzEquipPropertyTagDictListStrategy dataType dataList))
+  (setq equipGraphData (InsertGsBzEquipGraph equipPropertyTagDictList insPtList dataType allGsBzEquipBlockNameList))
+  (MigrateGsBzEquipTagPropertyValueFromCSV equipGraphData (GetPropertyNameListStrategy dataType))
+  
+
+)
+
+(defun c:foo ()
+  (GetAllGsBzReactorGraphyData)
+)
+
 
 
 ;;;-------------------------------------------------------------------------;;;
@@ -1378,7 +1398,82 @@
 
 ; 2021-04-09
 (defun GetAllGsBzEquipGraphyData () 
-  (GetSelectedEntityDataUtils (ssget "X" '((0 . "INSERT") (2 . "GsBz*"))))
+  (GetSelectedEntityDataUtils (GetAllGsBzEquipGraphySSUtils))
+)
+
+; 2021-05-14
+(defun GetAllGsBzEquipGraphySSUtils () 
+  (ssget "X" '((0 . "INSERT") (2 . "GsBz*")))
+)
+
+; 2021-05-14
+(defun GetAllGsBzReactorGraphySSUtils () 
+  (ssget "X" '((0 . "INSERT") (2 . "GsBzReactor*")))
+)
+
+; 2021-05-14
+(defun GetAllGsBzTankGraphySSUtils () 
+  (ssget "X" '((0 . "INSERT") (2 . "GsBzTank*")))
+)
+
+; 2021-05-14
+(defun GetAllGsBzHeaterGraphySSUtils () 
+  (ssget "X" '((0 . "INSERT") (2 . "GsBzHeater*")))
+)
+
+; 2021-05-14
+(defun GetAllGsBzPumpGraphySSUtils () 
+  (ssget "X" '((0 . "INSERT") (2 . "GsBzPump*")))
+)
+
+; 2021-05-14
+(defun GetAllGsBzCentrifugeGraphySSUtils () 
+  (ssget "X" '((0 . "INSERT") (2 . "GsBzCentrifuge*")))
+)
+
+; 2021-05-14
+(defun GetAllGsBzVacuumGraphySSUtils () 
+  (ssget "X" '((0 . "INSERT") (2 . "GsBzRVacuum*")))
+)
+
+; 2021-05-14
+(defun GetAllGsBzCustomEquipGraphySSUtils () 
+  (ssget "X" '((0 . "INSERT") (2 . "GsBzCustomEquip*")))
+)
+
+; 2021-05-14
+(defun GetAllGsBzReactorGraphyData () 
+  (GetBlockAllPropertyDictListUtils (GetEntityNameListBySSUtils (GetAllGsBzReactorGraphySSUtils)))
+)
+
+; 2021-05-14
+(defun GetAllGsBzTankGraphyData () 
+  (GetBlockAllPropertyDictListUtils (GetEntityNameListBySSUtils (GetAllGsBzTankGraphySSUtils)))
+)
+
+; 2021-05-14
+(defun GetAllGsBzHeaterGraphyData () 
+  (GetBlockAllPropertyDictListUtils (GetEntityNameListBySSUtils (GetAllGsBzHeaterGraphySSUtils)))
+)
+
+; 2021-05-14
+(defun GetAllGsBzPumpGraphyData () 
+  (GetBlockAllPropertyDictListUtils (GetEntityNameListBySSUtils (GetAllGsBzPumpGraphySSUtils)))
+)
+
+; 2021-05-14
+(defun GetAllGsBzCentrifugeGraphyData () 
+  (GetBlockAllPropertyDictListUtils (GetEntityNameListBySSUtils (GetAllGsBzCentrifugeGraphySSUtils)))
+)
+
+; 2021-05-14
+(defun GetAllGsBzzVacuumGraphyData () 
+  (GetBlockAllPropertyDictListUtils (GetEntityNameListBySSUtils (GetAllGsBzVacuumGraphySSUtils)))
+)
+
+; 2021-05-14
+(defun GetAllGsBzCustomEquipGraphyData () 
+  (GetBlockAllPropertyDictListUtils (GetEntityNameListBySSUtils (GetAllGsBzCustomEquipGraphySSUtils)))
 )
 
 ; 2021-04-09

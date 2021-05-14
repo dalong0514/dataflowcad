@@ -1124,17 +1124,6 @@
   resultList
 )
 
-(defun GetAllPropertyDictList (entityNameList / propertyNameList resultList) 
-  ; entityhandle will have been added twice, delete it first
-  (setq propertyNameList (cdr (GetBlockPropertyNameListByEntityNameUtils (car entityNameList))))
-  (mapcar '(lambda (x) 
-             (setq resultList (append resultList (list (GetPropertyDictListForOneBlockByPropertyNameList x propertyNameList))))
-           ) 
-    entityNameList
-  )
-  resultList
-)
-
 (defun GetPropertyValueListByEntityNameList (entityNameList propertyNameList / resultList) 
   (mapcar '(lambda (x) 
              (setq resultList (append resultList (list (GetPropertyValueListForOneBlockByPropertyNameList x propertyNameList))))
