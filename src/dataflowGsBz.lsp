@@ -868,45 +868,42 @@
 
 (defun GenerateGsBzEquipTagByGraphMacro (/)
   (VerifyGsBzEquipTagLayer)
-  (if (/= (GetAllGsBzReactorGraphySSUtils) nil)
-    (GenerateGsBzReactorTagByGraphMacro)
-  )
-  (if (/= (GetAllGsBzTankGraphySSUtils) nil)
-    (GenerateGsBzTankTagByGraphMacro)
+  (if (/= (GetAllGsBzReactorGraphySSUtils) nil) (GenerateGsBzReactorTagByGraphStrategy "Reactor"))
+  (if (/= (GetAllGsBzTankGraphySSUtils) nil) (GenerateGsBzReactorTagByGraphStrategy "Tank"))
+  (if (/= (GetAllGsBzHeaterGraphySSUtils) nil) (GenerateGsBzReactorTagByGraphStrategy "Heater"))
+  (if (/= (GetAllGsBzPumpGraphySSUtils) nil) (GenerateGsBzReactorTagByGraphStrategy "Pump"))
+  (if (/= (GetAllGsBzCentrifugeGraphySSUtils) nil) (GenerateGsBzReactorTagByGraphStrategy "Centrifuge"))
+  (if (/= (GetAllGsBzVacuumGraphySSUtils) nil) (GenerateGsBzReactorTagByGraphStrategy "Vacuum"))
+  (if (/= (GetAllGsBzCustomEquipGraphySSUtils) nil) (GenerateGsBzReactorTagByGraphStrategy "CustomEquip"))
+)
+
+; 2021-05-14
+(defun GenerateGsBzReactorTagByGraphStrategy (dataType /)
+  (cond 
+    ((= dataType "Reactor") (GenerateGsBzEquipTagByGraphImpl "Reactor" (GetAllGsBzReactorGraphyData)))
+    ((= dataType "Tank") (GenerateGsBzEquipTagByGraphImpl "Tank" (GetAllGsBzTankGraphyData)))
+    ((= dataType "Heater") (GenerateGsBzEquipTagByGraphImpl "Heater" (GetAllGsBzHeaterGraphyData)))
+    ((= dataType "Pump") (GenerateGsBzEquipTagByGraphImpl "Pump" (GetAllGsBzPumpGraphyData)))
+    ((= dataType "Centrifuge") (GenerateGsBzEquipTagByGraphImpl "Centrifuge" (GetAllGsBzCentrifugeGraphyData)))
+    ((= dataType "Vacuum") (GenerateGsBzEquipTagByGraphImpl "Vacuum" (GetAllGsBzVacuumGraphyData)))
+    ((= dataType "CustomEquip") (GenerateGsBzEquipTagByGraphImpl "CustomEquip" (GetAllGsBzCustomEquipGraphyData)))
   )
 )
 
 ; 2021-05-14
-(defun GenerateGsBzReactorTagByGraphMacro (/)
-  (VerifyGsBzBlockByName "Reactor")
+(defun GenerateGsBzEquipTagByGraphImpl (dataType gsBzReactorGraphyData /)
+  (VerifyGsBzBlockByName dataType)
   (mapcar '(lambda (y) 
              (InsertBlockByNoPropertyUtils 
                (MoveInsertPositionUtils (GetEntityPositionByEntityNameUtils (handent (GetDottedPairValueUtils "entityhandle" y)))  2000 -2000)
-               "Reactor" 
+               dataType
                "0DataFlow-GsBzEquipTag")
               (ModifyMultiplePropertyForOneBlockUtils (entlast) 
                 (mapcar '(lambda (x) (strcase (car x))) y)
                 (mapcar '(lambda (x) (cdr x)) y)
               )
           ) 
-    (GetAllGsBzReactorGraphyData)
-  ) 
-)
-
-; 2021-05-14
-(defun GenerateGsBzTankTagByGraphMacro (/)
-  (VerifyGsBzBlockByName "Tank")
-  (mapcar '(lambda (y) 
-             (InsertBlockByNoPropertyUtils 
-               (MoveInsertPositionUtils (GetEntityPositionByEntityNameUtils (handent (GetDottedPairValueUtils "entityhandle" y)))  2000 -2000)
-               "Tank" 
-               "0DataFlow-GsBzEquipTag")
-              (ModifyMultiplePropertyForOneBlockUtils (entlast) 
-                (mapcar '(lambda (x) (strcase (car x))) y)
-                (mapcar '(lambda (x) (cdr x)) y)
-              )
-          ) 
-    (GetAllGsBzTankGraphyData)
+    gsBzReactorGraphyData
   ) 
 )
 
