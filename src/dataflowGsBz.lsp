@@ -859,6 +859,35 @@
 )
 
 ;;;-------------------------------------------------------------------------;;;
+; Generate GsBzEquipTag By GsBzEquipGraph
+
+; 2021-05-14
+(defun c:GenerateGsBzEquipTagByGraph ()
+  (ExecuteFunctionAfterVerifyDateUtils 'GenerateGsBzEquipTagByGraphMacro '())
+)
+
+(defun GenerateGsBzEquipTagByGraphMacro (/)
+  (VerifyGsBzEquipTagLayer)
+  
+  (setq dataType (GetImportedDataTypeByindex exportDataType))
+  
+
+  
+
+
+  (setq equipTagData (InsertGsBzEquipTag dataList insPtList dataType))
+  (UpdateGsEquipTagPropertyValue equipTagData (GetPropertyNameListStrategy dataType))
+  
+  (setq equipPropertyTagDictList (GetGsBzEquipPropertyTagDictListStrategy dataType dataList))
+  (setq equipGraphData (InsertGsBzEquipGraph equipPropertyTagDictList insPtList dataType allGsBzEquipBlockNameList))
+  (MigrateGsBzEquipTagPropertyValueFromCSV equipGraphData (GetPropertyNameListStrategy dataType))
+  
+
+)
+
+
+
+;;;-------------------------------------------------------------------------;;;
 ; Generate GsBzEquipData By Import CSV
 
 ; refactored at 2021-04-09
