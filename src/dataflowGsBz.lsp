@@ -868,44 +868,47 @@
 
 (defun GenerateGsBzEquipTagByGraphMacro (/)
   (VerifyGsBzEquipTagLayer)
-  
-  (setq dataType (GetImportedDataTypeByindex exportDataType))
-  
-
-  
-
-
-  (setq equipTagData (InsertGsBzEquipTag dataList insPtList dataType))
-  (UpdateGsEquipTagPropertyValue equipTagData (GetPropertyNameListStrategy dataType))
-  
-  (setq equipPropertyTagDictList (GetGsBzEquipPropertyTagDictListStrategy dataType dataList))
-  (setq equipGraphData (InsertGsBzEquipGraph equipPropertyTagDictList insPtList dataType allGsBzEquipBlockNameList))
-  (MigrateGsBzEquipTagPropertyValueFromCSV equipGraphData (GetPropertyNameListStrategy dataType))
-  
-
+  (if (/= (GetAllGsBzReactorGraphySSUtils) nil)
+    (GenerateGsBzReactorTagByGraphMacro)
+  )
+  (if (/= (GetAllGsBzTankGraphySSUtils) nil)
+    (GenerateGsBzTankTagByGraphMacro)
+  )
 )
 
 ; 2021-05-14
 (defun GenerateGsBzReactorTagByGraphMacro (/)
-  (GetAllGsBzEquipGraphyData)
-
-  
-
-  (setq equipTagData (InsertGsBzEquipTag dataList insPtList dataType))
-  (UpdateGsEquipTagPropertyValue equipTagData (GetPropertyNameListStrategy dataType))
-  
-  (setq equipPropertyTagDictList (GetGsBzEquipPropertyTagDictListStrategy dataType dataList))
-  (setq equipGraphData (InsertGsBzEquipGraph equipPropertyTagDictList insPtList dataType allGsBzEquipBlockNameList))
-  (MigrateGsBzEquipTagPropertyValueFromCSV equipGraphData (GetPropertyNameListStrategy dataType))
-  
-
+  (VerifyGsBzBlockByName "Reactor")
+  (mapcar '(lambda (y) 
+             (InsertBlockByNoPropertyUtils 
+               (MoveInsertPositionUtils (GetEntityPositionByEntityNameUtils (handent (GetDottedPairValueUtils "entityhandle" y)))  2000 -2000)
+               "Reactor" 
+               "0DataFlow-GsBzEquipTag")
+              (ModifyMultiplePropertyForOneBlockUtils (entlast) 
+                (mapcar '(lambda (x) (strcase (car x))) y)
+                (mapcar '(lambda (x) (cdr x)) y)
+              )
+          ) 
+    (GetAllGsBzReactorGraphyData)
+  ) 
 )
 
-(defun c:foo ()
-  (GetAllGsBzReactorGraphyData)
+; 2021-05-14
+(defun GenerateGsBzTankTagByGraphMacro (/)
+  (VerifyGsBzBlockByName "Tank")
+  (mapcar '(lambda (y) 
+             (InsertBlockByNoPropertyUtils 
+               (MoveInsertPositionUtils (GetEntityPositionByEntityNameUtils (handent (GetDottedPairValueUtils "entityhandle" y)))  2000 -2000)
+               "Tank" 
+               "0DataFlow-GsBzEquipTag")
+              (ModifyMultiplePropertyForOneBlockUtils (entlast) 
+                (mapcar '(lambda (x) (strcase (car x))) y)
+                (mapcar '(lambda (x) (cdr x)) y)
+              )
+          ) 
+    (GetAllGsBzTankGraphyData)
+  ) 
 )
-
-
 
 ;;;-------------------------------------------------------------------------;;;
 ; Generate GsBzEquipData By Import CSV
