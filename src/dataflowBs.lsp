@@ -105,6 +105,12 @@
   (InsertBsGCTTankStandardText (MoveInsertPositionUtils insPt 20 -90) tankStandardList dataType)
 )
 
+; 2021-05-16
+(defun InsertBsGCTHorizontalTankDesignStandard (insPt dataType tankStandardList /) 
+  (InsertBlockUtils insPt "BsGCTTableHorizontalTankDesignStandard" "0DataFlow-BsGCT" (list (cons 0 dataType)))
+  (InsertBsGCTTankStandardText (MoveInsertPositionUtils insPt 20 -90) tankStandardList dataType)
+)
+
 ; 2021-04-20
 (defun InsertBsGCTTankStandardText (insPt tankStandardList dataType / i) 
   (setq i 0)
@@ -655,8 +661,8 @@
   (setq straightEdgeHeight 25)
   (setq equipType (GetBsGCTTankEquipTypeStrategy (GetDottedPairValueUtils "equipType" oneTankData)))
   (InsertBsGCTDrawFrame insPt equipTag)
-  (InsertGCTOneBsTankTable insPt bsGCTType oneTankData tankStandardList tankHeadStyleList 
-                           tankHeadMaterialList tankPressureElementList tankOtherRequestList)
+  (InsertBsGCTTankTableStrategy insPt bsGCTType oneTankData tankStandardList tankHeadStyleList 
+                           tankHeadMaterialList tankPressureElementList tankOtherRequestList equipType)
   ; thickNess param refactored at 2021-04-21
   (InsertBsGCTTankGraphyStrategy (MoveInsertPositionUtils insPt -2915 1600) barrelRadius barrelHalfHeight thickNess headThickNess bsGCTType straightEdgeHeight equipType)
   (princ)
@@ -669,8 +675,8 @@
   (setq bsGCTType equipTag)
   ; (setq insPt (GetGCTFramePositionByEquipTag equipTag))
   (setq equipType (GetBsGCTTankEquipTypeStrategy (GetDottedPairValueUtils "equipType" oneTankData)))
-  (InsertGCTOneBsTankTable insPt bsGCTType oneTankData tankStandardList tankHeadStyleList 
-                           tankHeadMaterialList tankPressureElementList tankOtherRequestList)
+  (InsertBsGCTTankTableStrategy insPt bsGCTType oneTankData tankStandardList tankHeadStyleList 
+                           tankHeadMaterialList tankPressureElementList tankOtherRequestList equipType)
   (princ)
 )
 
@@ -697,7 +703,7 @@
 
 ; 2021-05-13
 ; refacotred at 2021-05-07
-(defun InsertGCTOneBsTankTable (insPt bsGCTType oneTankData tankStandardList tankHeadStyleList tankHeadMaterialList 
+(defun InsertGCTOneBsVerticalTankTable (insPt bsGCTType oneTankData tankStandardList tankHeadStyleList tankHeadMaterialList 
                                 tankPressureElementList tankOtherRequestList / designParamDictList) 
   ; split oneTankData to Two Parts
   (setq designParamDictList (cadr (SplitLDictListByDictKeyUtils "SERVIVE_LIFE" oneTankData)))
@@ -713,11 +719,40 @@
 )
 
 ; 2021-05-16
+(defun InsertGCTOneBsHorizontalTankTable (insPt bsGCTType oneTankData tankStandardList tankHeadStyleList tankHeadMaterialList 
+                                tankPressureElementList tankOtherRequestList / designParamDictList) 
+  ; split oneTankData to Two Parts
+  (setq designParamDictList (cadr (SplitLDictListByDictKeyUtils "SERVIVE_LIFE" oneTankData)))
+  (InsertBsGCTDataHeader (MoveInsertPositionUtils insPt -900 2870) bsGCTType)
+  (InsertBsGCTTankDesignParam (MoveInsertPositionUtils insPt -900 2820) bsGCTType designParamDictList "BsGCTTableHorizontalTankDesignParam")
+  (InsertBsGCTHorizontalTankDesignStandard (MoveInsertPositionUtils insPt -450 2820) bsGCTType tankStandardList)
+  (InsertBsGCTRequirement (MoveInsertPositionUtils insPt -450 2540) bsGCTType tankHeadStyleList tankHeadMaterialList)
+  (InsertBsGCTTankInspectData (MoveInsertPositionUtils insPt -450 2220) bsGCTType oneTankData)
+  (InsertBsGCTTestData (MoveInsertPositionUtils insPt -450 2060) bsGCTType oneTankData)
+  (InsertBsGCTPressureElement (MoveInsertPositionUtils insPt -900 1900) bsGCTType tankPressureElementList)
+  (InsertBsGCTOtherRequest (MoveInsertPositionUtils insPt -900 (- 1820 (* 40 (length tankPressureElementList)))) bsGCTType tankOtherRequestList)
+  (InsertBsGCTNozzleTable (MoveInsertPositionUtils insPt -1800 2870) bsGCTType oneTankData)
+)
+
+; 2021-05-16
 ; unit compeleted
 (defun GetBsGCTTankEquipTypeStrategy (equipType /)
   (cond 
     ((RegexpTestUtils equipType "Á¢Ê½Ë«ÍÖ.*" nil) "verticalTank")
     ((RegexpTestUtils equipType "ÎÔÊ½Ë«ÍÖ.*" nil) "horizontalTank")
+  )
+)
+
+; 2021-05-11
+(defun InsertBsGCTTankTableStrategy (insPt bsGCTType oneTankData tankStandardList tankHeadStyleList tankHeadMaterialList 
+                                tankPressureElementList tankOtherRequestList equipType /)
+  (cond 
+    ((= equipType "verticalTank") 
+     (InsertGCTOneBsVerticalTankTable insPt bsGCTType oneTankData tankStandardList tankHeadStyleList tankHeadMaterialList 
+                                tankPressureElementList tankOtherRequestList))
+    ((= equipType "horizontalTank") 
+     (InsertGCTOneBsHorizontalTankTable insPt bsGCTType oneTankData tankStandardList tankHeadStyleList tankHeadMaterialList 
+                                tankPressureElementList tankOtherRequestList))
   )
 )
 
