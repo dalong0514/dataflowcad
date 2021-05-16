@@ -53,7 +53,14 @@
   (SplitListByIndexUtilsTest)
   (SplitListListByIndexUtilsTest)
   (SplitLDictListByDictKeyUtilsTest)
+  (GetBsGCTTankEquipTypeStrategyTest)
   (DL:PrintTestResults (DL:CountBooleans *testList*))
+)
+
+; 2021-05-16
+(defun GetBsGCTTankEquipTypeStrategyTest () 
+  (AssertEqual 'GetBsGCTTankEquipTypeStrategy (list "立式双椭圆封头") "verticalTank")
+  (AssertEqual 'GetBsGCTTankEquipTypeStrategy (list "卧式双椭圆封头") "horizontalTank")
 )
 
 ; 2021-04-20

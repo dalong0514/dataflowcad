@@ -712,6 +712,15 @@
   (InsertBsGCTNozzleTable (MoveInsertPositionUtils insPt -1800 2870) bsGCTType oneTankData)
 )
 
+; 2021-05-16
+; unit compeleted
+(defun GetBsGCTTankEquipTypeStrategy (equipType /)
+  (cond 
+    ((RegexpTestUtils equipType "Á¢Ê½Ë«ÍÖ.*" nil) "verticalTank")
+    ((RegexpTestUtils equipType "ÎÔÊ½Ë«ÍÖ.*" nil) "horizontalTank")
+  )
+)
+
 ; 2021-05-11
 (defun InsertBsGCTTankGraphyStrategy (insPt barrelRadius barrelHalfHeight thickNess headThickNess bsGCTType straightEdgeHeight equipType /)
   (cond 
