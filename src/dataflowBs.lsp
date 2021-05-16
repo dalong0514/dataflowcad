@@ -653,7 +653,7 @@
   ; do not convert to int frist 2021-04-23
   (setq headThickNess (GetDottedPairValueUtils "HEAD_THICKNESS" oneTankData))
   (setq straightEdgeHeight 25)
-  (setq equipType (GetDottedPairValueUtils "equipType" oneTankData))
+  (setq equipType (GetBsGCTTankEquipTypeStrategy (GetDottedPairValueUtils "equipType" oneTankData)))
   (InsertBsGCTDrawFrame insPt equipTag)
   (InsertGCTOneBsTankTable insPt bsGCTType oneTankData tankStandardList tankHeadStyleList 
                            tankHeadMaterialList tankPressureElementList tankOtherRequestList)
@@ -668,7 +668,7 @@
   (setq equipTag (GetDottedPairValueUtils "TAG" oneTankData))
   (setq bsGCTType equipTag)
   ; (setq insPt (GetGCTFramePositionByEquipTag equipTag))
-  (setq equipType (GetDottedPairValueUtils "equipType" oneTankData))
+  (setq equipType (GetBsGCTTankEquipTypeStrategy (GetDottedPairValueUtils "equipType" oneTankData)))
   (InsertGCTOneBsTankTable insPt bsGCTType oneTankData tankStandardList tankHeadStyleList 
                            tankHeadMaterialList tankPressureElementList tankOtherRequestList)
   (princ)
@@ -724,9 +724,9 @@
 ; 2021-05-11
 (defun InsertBsGCTTankGraphyStrategy (insPt barrelRadius barrelHalfHeight thickNess headThickNess bsGCTType straightEdgeHeight equipType /)
   (cond 
-    ((RegexpTestUtils equipType "Á¢Ê½Ë«ÍÖ.*" nil) 
+    ((= equipType "verticalTank") 
      (InsertBsGCTVerticalTankGraphy insPt barrelRadius barrelHalfHeight thickNess headThickNess bsGCTType straightEdgeHeight))
-    ((RegexpTestUtils equipType "ÎÔÊ½Ë«ÍÖ.*" nil) 
+    ((= equipType "horizontalTank") 
      (InsertBsGCTHorizontalTankGraphy insPt barrelRadius barrelHalfHeight thickNess headThickNess bsGCTType straightEdgeHeight))
   )
 )
