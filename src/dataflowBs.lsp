@@ -569,8 +569,9 @@
 )
 
 ; 2021-04-20
+; refactored at 2021-05-18
 (defun GetBsGCTTankStandardData (bsGCTImportedList /) 
-  (mapcar '(lambda (x) (cadr x)) 
+  (mapcar '(lambda (x) (cdr x)) 
     (vl-remove-if-not '(lambda (x) 
                         (= (car x) "Tank-Standard") 
                       ) 
@@ -580,8 +581,9 @@
 )
 
 ; 2021-04-20
+; refactored at 2021-05-18
 (defun GetBsGCTTankHeadStyleData (bsGCTImportedList /) 
-  (mapcar '(lambda (x) (cadr x)) 
+  (mapcar '(lambda (x) (cdr x)) 
     (vl-remove-if-not '(lambda (x) 
                         (= (car x) "Tank-HeadStyle") 
                       ) 
@@ -591,8 +593,9 @@
 )
 
 ; 2021-04-20
+; refactored at 2021-05-18
 (defun GetBsGCTTankHeadMaterialData (bsGCTImportedList /) 
-  (mapcar '(lambda (x) (cadr x)) 
+  (mapcar '(lambda (x) (cdr x)) 
     (vl-remove-if-not '(lambda (x) 
                         (= (car x) "Tank-HeadMaterial") 
                       ) 
@@ -602,8 +605,9 @@
 )
 
 ; 2021-04-20
+; refactored at 2021-05-18
 (defun GetBsGCTTankOtherRequestData (bsGCTImportedList /) 
-  (mapcar '(lambda (x) (cadr x)) 
+  (mapcar '(lambda (x) (cdr x)) 
     (vl-remove-if-not '(lambda (x) 
                         (= (car x) "Tank-OtherRequest") 
                       ) 
@@ -784,15 +788,24 @@
 )
 
 ; 2021-05-11
+; refactored at 2021-05-18
 (defun InsertBsGCTTankTableStrategy (insPt bsGCTType oneTankData tankStandardList tankHeadStyleList tankHeadMaterialList 
                                 tankPressureElementList tankOtherRequestList equipType /)
   (cond 
     ((= equipType "verticalTank") 
-     (InsertGCTOneBsVerticalTankTable insPt bsGCTType oneTankData tankStandardList tankHeadStyleList tankHeadMaterialList 
-                                tankPressureElementList tankOtherRequestList))
+     (InsertGCTOneBsVerticalTankTable insPt bsGCTType oneTankData 
+       (FilterListListByFirstItemUtils tankStandardList "verticalTank") 
+       (FilterListListByFirstItemUtils tankHeadStyleList "verticalTank") 
+       (FilterListListByFirstItemUtils tankHeadMaterialList "verticalTank")                    
+       tankPressureElementList 
+       (FilterListListByFirstItemUtils tankOtherRequestList "verticalTank")))
     ((= equipType "horizontalTank") 
-     (InsertGCTOneBsHorizontalTankTable insPt bsGCTType oneTankData tankStandardList tankHeadStyleList tankHeadMaterialList 
-                                tankPressureElementList tankOtherRequestList))
+     (InsertGCTOneBsHorizontalTankTable insPt bsGCTType oneTankData 
+       (FilterListListByFirstItemUtils tankStandardList "horizontalTank") 
+       (FilterListListByFirstItemUtils tankHeadStyleList "horizontalTank") 
+       (FilterListListByFirstItemUtils tankHeadMaterialList "horizontalTank")                    
+       tankPressureElementList 
+       (FilterListListByFirstItemUtils tankOtherRequestList "horizontalTank")))
   )
 )
 

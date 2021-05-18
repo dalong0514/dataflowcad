@@ -1821,6 +1821,17 @@
   (/ originNumber 2)
 )
 
+; 2021-05-18
+(defun FilterListListByFirstItemUtils (listList itemName /)
+  (mapcar '(lambda (x) (cadr x)) 
+    (vl-remove-if-not '(lambda (x) 
+                        (= (car x) itemName) 
+                      ) 
+      listList
+    )  
+  )
+)
+
 ; Utils Function 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
