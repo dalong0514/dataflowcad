@@ -703,6 +703,7 @@
 
 ; 2021-05-13
 ; refacotred at 2021-05-07
+; refactored at 2021-05-18
 (defun InsertGCTOneBsVerticalTankTable (insPt bsGCTType oneTankData tankStandardList tankHeadStyleList tankHeadMaterialList 
                                 tankPressureElementList tankOtherRequestList / designParamDictList leftInsPt rightInsPt) 
   ; split oneTankData to Two Parts
@@ -722,7 +723,7 @@
   ; the height of BsGCTOtherRequest is 270
   (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 -270))
   (InsertBsGCTNozzleTable leftInsPt bsGCTType oneTankData)
-  
+  ; insert tabe in right position
   ; the height of BsGCTDataHeader is 50
   (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 -50))
   (InsertBsGCTHorizontalTankDesignStandard rightInsPt bsGCTType tankStandardList)
@@ -738,6 +739,7 @@
 )
 
 ; 2021-05-16
+; refactored at 2021-05-18
 (defun InsertGCTOneBsHorizontalTankTable (insPt bsGCTType oneTankData tankStandardList tankHeadStyleList tankHeadMaterialList 
                                 tankPressureElementList tankOtherRequestList / designParamDictList leftInsPt rightInsPt) 
   ; split oneTankData to Two Parts
@@ -757,7 +759,7 @@
   ; the height of BsGCTOtherRequest is 270
   (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 -270))
   (InsertBsGCTNozzleTable leftInsPt bsGCTType oneTankData)
-  
+  ; insert tabe in right position
   ; the height of BsGCTDataHeader is 50
   (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 -50))
   (InsertBsGCTHorizontalTankDesignStandard rightInsPt bsGCTType tankStandardList)
