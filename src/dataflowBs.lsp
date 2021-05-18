@@ -206,8 +206,13 @@
 )
 
 ; 2021-04-17
-(defun InsertBsGCTOtherRequest (insPt dataType tankOtherRequestList / i) 
+; refactored at 2021-05-18
+(defun InsertBsGCTOtherRequest (insPt dataType tankOtherRequestList otherRequestHeght /) 
   (InsertBlockUtils insPt "BsGCTTableOtherRequest" "0DataFlow-BsGCT" (list (cons 0 dataType)))
+  (SetDynamicBlockPropertyValueUtils 
+    (GetLastVlaObjectUtils) 
+    (list (cons "TOTALHEIGHT" otherRequestHeght))
+  ) 
   (InsertBsGCTTankOtherRequestText (MoveInsertPositionUtils insPt 40 -65) tankOtherRequestList dataType)
 )
 
@@ -723,7 +728,7 @@
   (InsertBsGCTPressureElement leftInsPt bsGCTType tankPressureElementList)
   ; the height of BsGCTPressureElement is [length of tankPressureElementList, add 2]
   (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 (- 0 (* 40 (+ (length tankPressureElementList) 2)))))
-  (InsertBsGCTOtherRequest leftInsPt bsGCTType tankOtherRequestList)
+  (InsertBsGCTOtherRequest leftInsPt bsGCTType tankOtherRequestList 270)
   ; the height of BsGCTOtherRequest is 270
   (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 -270))
   (InsertBsGCTNozzleTable leftInsPt bsGCTType oneTankData)
@@ -759,9 +764,9 @@
   (InsertBsGCTPressureElement leftInsPt bsGCTType tankPressureElementList)
   ; the height of BsGCTPressureElement is [length of tankPressureElementList, add 2]
   (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 (- 0 (* 40 (+ (length tankPressureElementList) 2)))))
-  (InsertBsGCTOtherRequest leftInsPt bsGCTType tankOtherRequestList)
-  ; the height of BsGCTOtherRequest is 270
-  (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 -270))
+  (InsertBsGCTOtherRequest leftInsPt bsGCTType tankOtherRequestList 400)
+  ; the height of BsGCTOtherRequest is 400
+  (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 -400))
   (InsertBsGCTNozzleTable leftInsPt bsGCTType oneTankData)
   ; insert tabe in right position
   ; the height of BsGCTDataHeader is 50
