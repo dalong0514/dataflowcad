@@ -262,10 +262,13 @@
 )
 
 ; 2021-04-18
-(defun InsertBsGCTVerticalTankGraphy (insPt barrelRadius barrelHalfHeight thickNess headThickNess dataType straightEdgeHeight / newBarrelHalfHeight nozzleOffset) 
+(defun InsertBsGCTVerticalTankGraphy (insPt barrelRadius barrelHalfHeight thickNess headThickNess dataType straightEdgeHeight allBsGCTSupportDictData / 
+                                      newBarrelHalfHeight nozzleOffset oneBsGCTTankSupportDictData legSupportHeight) 
   ; refactored at 2021-05-06 straightEdgeHeight is 25
   (setq newBarrelHalfHeight (+ barrelHalfHeight straightEdgeHeight)) 
   (setq nozzleOffset 100)
+  (setq oneBsGCTTankSupportDictData (GetOneBsGCTTankSupportDictData dataType allBsGCTSupportDictData))
+  (setq legSupportHeight (atoi (GetDottedPairValueUtils "SUPPORT_HEIGHT" oneBsGCTTankSupportDictData)))
   (GenerateDoubleLineEllipseHeadUtils (MoveInsertPositionUtils insPt 0 newBarrelHalfHeight) 
     barrelRadius "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" 1 thickNess straightEdgeHeight)
   (GenerateUpEllipseHeadNozzle (MoveInsertPositionUtils insPt 0 (+ newBarrelHalfHeight (/ barrelRadius 2) thickNess)) (+ barrelRadius thickNess) dataType nozzleOffset thickNess)
@@ -273,19 +276,21 @@
   (GenerateDoubleLineEllipseHeadUtils (MoveInsertPositionUtils insPt 0 (- 0 newBarrelHalfHeight)) 
     barrelRadius "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" -1 thickNess straightEdgeHeight)
   (GenerateDownllipseHeadNozzle (MoveInsertPositionUtils insPt 0 (- 0 newBarrelHalfHeight (/ barrelRadius 2) thickNess)) dataType)
-  (InsertBsGCTLegSupport (MoveInsertPositionUtils insPt (+ barrelRadius thickNess) (- 0 (- newBarrelHalfHeight straightEdgeHeight))) dataType 800)
+  (InsertBsGCTLegSupport (MoveInsertPositionUtils insPt (+ barrelRadius thickNess) (- 0 (- newBarrelHalfHeight straightEdgeHeight))) dataType legSupportHeight)
   (InsertBsGCTTankBarrelDimension insPt barrelRadius barrelHalfHeight thickNess straightEdgeHeight)
   (InsertBsGCTTankAnnotation insPt dataType barrelRadius headThickNess straightEdgeHeight)
   (princ)
 )
 
 ; 2021-05-18
-(defun InsertBsGCTHorizontalTankGraphy (insPt barrelRadius barrelHalfHeight thickNess headThickNess dataType straightEdgeHeight / 
-                                        newBarrelHalfHeight nozzleOffset saddleSupportOffset) 
+(defun InsertBsGCTHorizontalTankGraphy (insPt barrelRadius barrelHalfHeight thickNess headThickNess dataType straightEdgeHeight allBsGCTSupportDictData / 
+                                        newBarrelHalfHeight nozzleOffset oneBsGCTTankSupportDictData saddleSupportOffset saddleSupportHeight) 
   ; refactored at 2021-05-06 straightEdgeHeight is 25
   (setq newBarrelHalfHeight (+ barrelHalfHeight straightEdgeHeight)) 
   (setq nozzleOffset 100)
-  (setq saddleSupportOffset 300)
+  (setq oneBsGCTTankSupportDictData (GetOneBsGCTTankSupportDictData dataType allBsGCTSupportDictData))
+  (setq saddleSupportOffset (atoi (GetDottedPairValueUtils "SUPPORT_POSITION" oneBsGCTTankSupportDictData)))
+  (setq saddleSupportHeight (atoi (GetDottedPairValueUtils "SUPPORT_HEIGHT" oneBsGCTTankSupportDictData)))
   ; [insPt barrelRadius entityLayer centerLineLayer directionStatus thickNess straightEdgeHeight]
   (GenerateDoubleLineHorizontalEllipseHeadUtils (MoveInsertPositionUtils insPt newBarrelHalfHeight 0) 
     barrelRadius "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" 1 thickNess straightEdgeHeight)
@@ -294,8 +299,10 @@
   (GenerateDoubleLineHorizontalEllipseHeadUtils (MoveInsertPositionUtils insPt (- 0 newBarrelHalfHeight) 0) 
     barrelRadius "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" -1 thickNess straightEdgeHeight)
   ; (GenerateDownllipseHeadNozzle (MoveInsertPositionUtils insPt 0 (- 0 newBarrelHalfHeight (/ barrelRadius 2) thickNess)) dataType)
-  (InsertBsGCTSaddleSupport (MoveInsertPositionUtils insPt saddleSupportOffset (GetNegativeNumberUtils (+ barrelRadius thickNess))) dataType 200 "BI")
-  (InsertBsGCTSaddleSupport (MoveInsertPositionUtils insPt (GetNegativeNumberUtils saddleSupportOffset) (GetNegativeNumberUtils (+ barrelRadius thickNess))) dataType 200 "BI")
+  (InsertBsGCTSaddleSupport (MoveInsertPositionUtils insPt saddleSupportOffset (GetNegativeNumberUtils (+ barrelRadius thickNess))) 
+    dataType saddleSupportHeight "BI")
+  (InsertBsGCTSaddleSupport (MoveInsertPositionUtils insPt (GetNegativeNumberUtils saddleSupportOffset) (GetNegativeNumberUtils (+ barrelRadius thickNess))) 
+    dataType saddleSupportHeight "BI")
   ; (InsertBsGCTTankBarrelDimension insPt barrelRadius barrelHalfHeight thickNess straightEdgeHeight)
   ; (InsertBsGCTTankAnnotation insPt dataType barrelRadius headThickNess straightEdgeHeight)
   (princ)
@@ -670,6 +677,55 @@
   ) 
 )
 
+; 2021-04-20
+(defun GetOneBsGCTTankSupportDictData (tankTag allBsGCTSupportDictData /) 
+  (car 
+    (vl-remove-if-not '(lambda (x) 
+                        (= (GetDottedPairValueUtils "TAG" x) tankTag) 
+                      ) 
+      allBsGCTSupportDictData
+    )  
+  ) 
+)
+
+; 2021-04-20
+(defun GetAllBsGCTSupportDictData (bsGCTImportedList /) 
+  (mapcar '(lambda (y) 
+              (mapcar '(lambda (xx yy) 
+                         (cons xx yy)
+                      ) 
+                (GetBsGCTSupportKeysData bsGCTImportedList)
+                y
+              )
+           ) 
+    (GetAllBsGCTSupportData bsGCTImportedList)
+  )
+)
+
+; 2021-05-18
+(defun GetBsGCTSupportKeysData (bsGCTImportedList /) 
+  (cdr 
+    (car 
+      (vl-remove-if-not '(lambda (x) 
+                          (= (car x) "SupportKeys") 
+                        ) 
+        bsGCTImportedList
+      )  
+    ) 
+  ) 
+)
+
+; 2021-04-19
+(defun GetAllBsGCTSupportData (bsGCTImportedList /) 
+  (mapcar '(lambda (x) (cdr x)) 
+    (vl-remove-if-not '(lambda (x) 
+                        (= (car x) "Support") 
+                      ) 
+      bsGCTImportedList
+    )  
+  ) 
+)
+
 ; 2021-04-17
 ; (defun InsertBsGCTStrategy (dataType designData /) 
 ;   (cond 
@@ -679,7 +735,7 @@
 
 ; 2021-04-17
 ; refacotred at 2021-05-07
-(defun InsertOneBsTankGCT (insPt oneTankData tankPressureElementList tankOtherRequestList tankStandardList tankHeadStyleList tankHeadMaterialList / 
+(defun InsertOneBsTankGCT (insPt oneTankData tankPressureElementList tankOtherRequestList tankStandardList tankHeadStyleList tankHeadMaterialList allBsGCTSupportDictData / 
                            equipTag bsGCTType barrelRadius barrelHalfHeight thickNess headThickNess straightEdgeHeight equipType) 
   (setq equipTag (GetDottedPairValueUtils "TAG" oneTankData))
   ; (setq bsGCTType (strcat (GetDottedPairValueUtils "BSGCT_TYPE" oneTankData) "-" equipTag))
@@ -696,7 +752,8 @@
   (InsertBsGCTTankTableStrategy insPt bsGCTType oneTankData tankStandardList tankHeadStyleList 
                            tankHeadMaterialList tankPressureElementList tankOtherRequestList equipType)
   ; thickNess param refactored at 2021-04-21
-  (InsertBsGCTTankGraphyStrategy (MoveInsertPositionUtils insPt -2915 1600) barrelRadius barrelHalfHeight thickNess headThickNess bsGCTType straightEdgeHeight equipType)
+  (InsertBsGCTTankGraphyStrategy (MoveInsertPositionUtils insPt -2915 1600) 
+    barrelRadius barrelHalfHeight thickNess headThickNess bsGCTType straightEdgeHeight equipType allBsGCTSupportDictData)
   (princ)
 )
 
@@ -838,19 +895,21 @@
 )
 
 ; 2021-05-11
-(defun InsertBsGCTTankGraphyStrategy (insPt barrelRadius barrelHalfHeight thickNess headThickNess bsGCTType straightEdgeHeight equipType /)
+(defun InsertBsGCTTankGraphyStrategy (insPt barrelRadius barrelHalfHeight thickNess headThickNess bsGCTType straightEdgeHeight equipType allBsGCTSupportDictData /)
   (cond 
     ((= equipType "verticalTank") 
-     (InsertBsGCTVerticalTankGraphy insPt barrelRadius barrelHalfHeight thickNess headThickNess bsGCTType straightEdgeHeight))
+     (InsertBsGCTVerticalTankGraphy insPt barrelRadius barrelHalfHeight thickNess headThickNess 
+       bsGCTType straightEdgeHeight allBsGCTSupportDictData))
     ((= equipType "horizontalTank") 
      ; refactored at 2021-05-18 move the insPt for HorizontalTankGraphy
-     (InsertBsGCTHorizontalTankGraphy (MoveInsertPositionUtils insPt 450 -150) barrelRadius barrelHalfHeight thickNess headThickNess bsGCTType straightEdgeHeight))
+     (InsertBsGCTHorizontalTankGraphy (MoveInsertPositionUtils insPt 450 -150) barrelRadius barrelHalfHeight thickNess headThickNess 
+       bsGCTType straightEdgeHeight allBsGCTSupportDictData))
   )
 )
 
 ; 2021-04-17
 (defun InsertAllBsGCTTank (/ insPt bsGCTImportedList allBsGCTTankDictData tankPressureElementList 
-                           tankOtherRequestList tankStandardList tankHeadStyleList tankHeadMaterialList insPtList) 
+                           tankOtherRequestList tankStandardList tankHeadStyleList tankHeadMaterialList allBsGCTSupportDictData insPtList) 
   (VerifyBsGCTBlockLayerText)
   (setq insPt (getpoint "\n拾取设备一览表插入点："))
   (setq bsGCTImportedList (GetBsGCTImportedList))
@@ -860,9 +919,10 @@
   (setq tankStandardList (GetBsGCTTankStandardData bsGCTImportedList)) 
   (setq tankHeadStyleList (GetBsGCTTankHeadStyleData bsGCTImportedList)) 
   (setq tankHeadMaterialList (GetBsGCTTankHeadMaterialData bsGCTImportedList)) 
+  (setq allBsGCTSupportDictData (GetAllBsGCTSupportDictData bsGCTImportedList))
   (setq insPtList (GetInsertPtListByXMoveUtils insPt (GenerateSortedNumByList allBsGCTTankDictData 0) 5200))
   (mapcar '(lambda (x y) 
-            (InsertOneBsTankGCT x y tankPressureElementList tankOtherRequestList tankStandardList tankHeadStyleList tankHeadMaterialList) 
+            (InsertOneBsTankGCT x y tankPressureElementList tankOtherRequestList tankStandardList tankHeadStyleList tankHeadMaterialList allBsGCTSupportDictData) 
           ) 
     insPtList
     allBsGCTTankDictData 
