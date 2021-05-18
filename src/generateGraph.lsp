@@ -727,7 +727,7 @@
 )
 
 ; 2021-04-18
-(defun GenerateDoubleLineBarrelUtils (insPt barrelRadius barrelHalfHeight entityLayer centerLineLayer thickNess /) 
+(defun GenerateVerticalDoubleLineBarrelUtils (insPt barrelRadius barrelHalfHeight entityLayer centerLineLayer thickNess /) 
   (GenerateLineByLineScaleUtils 
     (MoveInsertPositionUtils insPt 0 (+ barrelHalfHeight (/ barrelRadius 2) thickNess)) 
     (MoveInsertPositionUtils insPt 0 (- 0 barrelHalfHeight (/ barrelRadius 2) thickNess))
@@ -754,6 +754,39 @@
   (GenerateLineUtils 
     (MoveInsertPositionUtils insPt (+ barrelRadius thickNess) barrelHalfHeight) 
     (MoveInsertPositionUtils insPt (+ barrelRadius thickNess) (GetNegativeNumberUtils barrelHalfHeight))
+    entityLayer
+  )  
+  (princ)
+)
+
+; 2021-05-18
+(defun GenerateHorizontalDoubleLineBarrelUtils (insPt barrelRadius barrelHalfHeight entityLayer centerLineLayer thickNess /) 
+  (GenerateLineByLineScaleUtils 
+    (MoveInsertPositionUtils insPt (+ barrelHalfHeight (/ barrelRadius 2) thickNess) 0) 
+    (MoveInsertPositionUtils insPt (- 0 barrelHalfHeight (/ barrelRadius 2) thickNess) 0)
+    centerLineLayer
+    6
+  ) 
+  ; left two lines
+  (GenerateLineUtils 
+    (MoveInsertPositionUtils insPt barrelHalfHeight (GetNegativeNumberUtils barrelRadius)) 
+    (MoveInsertPositionUtils insPt (GetNegativeNumberUtils barrelHalfHeight) (GetNegativeNumberUtils barrelRadius))
+    entityLayer
+  ) 
+  (GenerateLineUtils 
+    (MoveInsertPositionUtils insPt barrelHalfHeight barrelRadius) 
+    (MoveInsertPositionUtils insPt (GetNegativeNumberUtils barrelHalfHeight) barrelRadius)
+    entityLayer
+  ) 
+  ; right two lines
+  (GenerateLineUtils 
+    (MoveInsertPositionUtils insPt barrelHalfHeight (- 0 barrelRadius thickNess)) 
+    (MoveInsertPositionUtils insPt (GetNegativeNumberUtils barrelHalfHeight) (- 0 barrelRadius thickNess))
+    entityLayer
+  ) 
+  (GenerateLineUtils 
+    (MoveInsertPositionUtils insPt barrelHalfHeight (+ barrelRadius thickNess)) 
+    (MoveInsertPositionUtils insPt (GetNegativeNumberUtils barrelHalfHeight) (+ barrelRadius thickNess))
     entityLayer
   )  
   (princ)
