@@ -704,34 +704,72 @@
 ; 2021-05-13
 ; refacotred at 2021-05-07
 (defun InsertGCTOneBsVerticalTankTable (insPt bsGCTType oneTankData tankStandardList tankHeadStyleList tankHeadMaterialList 
-                                tankPressureElementList tankOtherRequestList / designParamDictList) 
+                                tankPressureElementList tankOtherRequestList / designParamDictList leftInsPt rightInsPt) 
   ; split oneTankData to Two Parts
   (setq designParamDictList (cadr (SplitLDictListByDictKeyUtils "SERVIVE_LIFE" oneTankData)))
-  (InsertBsGCTDataHeader (MoveInsertPositionUtils insPt -900 2870) bsGCTType)
-  (InsertBsGCTTankDesignParam (MoveInsertPositionUtils insPt -900 2820) bsGCTType designParamDictList "BsGCTTableDesignParam")
-  (InsertBsGCTDesignStandard (MoveInsertPositionUtils insPt -450 2820) bsGCTType tankStandardList)
-  (InsertBsGCTRequirement (MoveInsertPositionUtils insPt -450 2620) bsGCTType tankHeadStyleList tankHeadMaterialList)
-  (InsertBsGCTTankInspectData (MoveInsertPositionUtils insPt -450 2300) bsGCTType oneTankData)
-  (InsertBsGCTTestData (MoveInsertPositionUtils insPt -450 2140) bsGCTType oneTankData)
-  (InsertBsGCTPressureElement (MoveInsertPositionUtils insPt -900 1980) bsGCTType tankPressureElementList)
-  (InsertBsGCTOtherRequest (MoveInsertPositionUtils insPt -900 (- 1900 (* 40 (length tankPressureElementList)))) bsGCTType tankOtherRequestList)
-  (InsertBsGCTNozzleTable (MoveInsertPositionUtils insPt -1800 2870) bsGCTType oneTankData)
+  (setq leftInsPt (MoveInsertPositionUtils insPt -900 2870))
+  (setq rightInsPt (MoveInsertPositionUtils insPt -450 2870))
+  (InsertBsGCTDataHeader leftInsPt bsGCTType)
+  ; the height of BsGCTDataHeader is 50
+  (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 -50))
+  (InsertBsGCTTankDesignParam leftInsPt bsGCTType designParamDictList "BsGCTTableHorizontalTankDesignParam")
+  ; the height of BsGCTTankDesignParam is 840
+  (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 -840))
+  (InsertBsGCTPressureElement leftInsPt bsGCTType tankPressureElementList)
+  ; the height of BsGCTPressureElement is [length of tankPressureElementList, add 2]
+  (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 (- 0 (* 40 (+ (length tankPressureElementList) 2)))))
+  (InsertBsGCTOtherRequest leftInsPt bsGCTType tankOtherRequestList)
+  ; the height of BsGCTOtherRequest is 270
+  (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 -270))
+  (InsertBsGCTNozzleTable leftInsPt bsGCTType oneTankData)
+  
+  ; the height of BsGCTDataHeader is 50
+  (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 -50))
+  (InsertBsGCTHorizontalTankDesignStandard rightInsPt bsGCTType tankStandardList)
+  ; the height of BsGCTHorizontalTankDesignStandard is 200
+  (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 -200))
+  (InsertBsGCTRequirement rightInsPt bsGCTType tankHeadStyleList tankHeadMaterialList)
+  ; the height of BsGCTRequirement is 320
+  (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 -320))
+  (InsertBsGCTTankInspectData rightInsPt bsGCTType oneTankData)
+  ; the height of BsGCTTankInspectData is 160
+  (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 -160))
+  (InsertBsGCTTestData rightInsPt bsGCTType oneTankData)
 )
 
 ; 2021-05-16
 (defun InsertGCTOneBsHorizontalTankTable (insPt bsGCTType oneTankData tankStandardList tankHeadStyleList tankHeadMaterialList 
-                                tankPressureElementList tankOtherRequestList / designParamDictList) 
+                                tankPressureElementList tankOtherRequestList / designParamDictList leftInsPt rightInsPt) 
   ; split oneTankData to Two Parts
   (setq designParamDictList (cadr (SplitLDictListByDictKeyUtils "SERVIVE_LIFE" oneTankData)))
-  (InsertBsGCTDataHeader (MoveInsertPositionUtils insPt -900 2870) bsGCTType)
-  (InsertBsGCTTankDesignParam (MoveInsertPositionUtils insPt -900 2820) bsGCTType designParamDictList "BsGCTTableHorizontalTankDesignParam")
-  (InsertBsGCTHorizontalTankDesignStandard (MoveInsertPositionUtils insPt -450 2820) bsGCTType tankStandardList)
-  (InsertBsGCTRequirement (MoveInsertPositionUtils insPt -450 2540) bsGCTType tankHeadStyleList tankHeadMaterialList)
-  (InsertBsGCTTankInspectData (MoveInsertPositionUtils insPt -450 2220) bsGCTType oneTankData)
-  (InsertBsGCTTestData (MoveInsertPositionUtils insPt -450 2060) bsGCTType oneTankData)
-  (InsertBsGCTPressureElement (MoveInsertPositionUtils insPt -900 1900) bsGCTType tankPressureElementList)
-  (InsertBsGCTOtherRequest (MoveInsertPositionUtils insPt -900 (- 1820 (* 40 (length tankPressureElementList)))) bsGCTType tankOtherRequestList)
-  (InsertBsGCTNozzleTable (MoveInsertPositionUtils insPt -1800 2870) bsGCTType oneTankData)
+  (setq leftInsPt (MoveInsertPositionUtils insPt -900 2870))
+  (setq rightInsPt (MoveInsertPositionUtils insPt -450 2870))
+  (InsertBsGCTDataHeader leftInsPt bsGCTType)
+  ; the height of BsGCTDataHeader is 50
+  (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 -50))
+  (InsertBsGCTTankDesignParam leftInsPt bsGCTType designParamDictList "BsGCTTableHorizontalTankDesignParam")
+  ; the height of BsGCTTankDesignParam is 920
+  (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 -920))
+  (InsertBsGCTPressureElement leftInsPt bsGCTType tankPressureElementList)
+  ; the height of BsGCTPressureElement is [length of tankPressureElementList, add 2]
+  (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 (- 0 (* 40 (+ (length tankPressureElementList) 2)))))
+  (InsertBsGCTOtherRequest leftInsPt bsGCTType tankOtherRequestList)
+  ; the height of BsGCTOtherRequest is 270
+  (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 -270))
+  (InsertBsGCTNozzleTable leftInsPt bsGCTType oneTankData)
+  
+  ; the height of BsGCTDataHeader is 50
+  (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 -50))
+  (InsertBsGCTHorizontalTankDesignStandard rightInsPt bsGCTType tankStandardList)
+  ; the height of BsGCTHorizontalTankDesignStandard is 280
+  (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 -280))
+  (InsertBsGCTRequirement rightInsPt bsGCTType tankHeadStyleList tankHeadMaterialList)
+  ; the height of BsGCTRequirement is 320
+  (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 -320))
+  (InsertBsGCTTankInspectData rightInsPt bsGCTType oneTankData)
+  ; the height of BsGCTTankInspectData is 160
+  (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 -160))
+  (InsertBsGCTTestData rightInsPt bsGCTType oneTankData)
 )
 
 ; 2021-05-16
