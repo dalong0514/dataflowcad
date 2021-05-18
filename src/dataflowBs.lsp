@@ -745,7 +745,7 @@
   (InsertBsGCTDataHeader leftInsPt bsGCTType)
   ; the height of BsGCTDataHeader is 50
   (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 -50))
-  (InsertBsGCTTankDesignParam leftInsPt bsGCTType designParamDictList "BsGCTTableHorizontalTankDesignParam")
+  (InsertBsGCTTankDesignParam leftInsPt bsGCTType designParamDictList "BsGCTTableDesignParam")
   ; the height of BsGCTTankDesignParam is 840
   (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 -840))
   (InsertBsGCTPressureElement leftInsPt bsGCTType tankPressureElementList)
@@ -758,7 +758,7 @@
   ; insert tabe in right position
   ; the height of BsGCTDataHeader is 50
   (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 -50))
-  (InsertBsGCTHorizontalTankDesignStandard rightInsPt bsGCTType tankStandardList)
+  (InsertBsGCTDesignStandard rightInsPt bsGCTType tankStandardList)
   ; the height of BsGCTHorizontalTankDesignStandard is 200
   (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 -200))
   (InsertBsGCTRequirement rightInsPt bsGCTType tankHeadStyleList tankHeadMaterialList)
