@@ -102,20 +102,21 @@
 ; refactored at 2021-04-20
 (defun InsertBsGCTDesignStandard (insPt dataType tankStandardList /) 
   (InsertBlockUtils insPt "BsGCTTableDesignStandard" "0DataFlow-BsGCT" (list (cons 0 dataType)))
-  (InsertBsGCTTankStandardText (MoveInsertPositionUtils insPt 20 -90) tankStandardList dataType)
+  (InsertBsGCTTankStandardText (MoveInsertPositionUtils insPt 20 -80) tankStandardList dataType)
 )
 
 ; 2021-05-16
 (defun InsertBsGCTHorizontalTankDesignStandard (insPt dataType tankStandardList /) 
   (InsertBlockUtils insPt "BsGCTTableHorizontalTankDesignStandard" "0DataFlow-BsGCT" (list (cons 0 dataType)))
-  (InsertBsGCTTankStandardText (MoveInsertPositionUtils insPt 20 -90) tankStandardList dataType)
+  (InsertBsGCTTankStandardText (MoveInsertPositionUtils insPt 20 -80) tankStandardList dataType)
 )
 
 ; 2021-04-20
+; refactored at 2021-05-18
 (defun InsertBsGCTTankStandardText (insPt tankStandardList dataType / i) 
   (setq i 0)
   (repeat (length tankStandardList)
-    (GenerateLevelLeftTextUtils (MoveInsertPositionUtils insPt 0 (* -35 i)) (nth i tankStandardList) "0DataFlow-BsText" 20 0.7) 
+    (GenerateLevelLeftTextUtils (MoveInsertPositionUtils insPt 0 (* -30 i)) (nth i tankStandardList) "0DataFlow-BsText" 20 0.7) 
     ; bind equipTag to Xdata - 2021-05-13
     (BindDataFlowXDataToObjectUtils (entlast) dataType)
     (setq i (1+ i))
