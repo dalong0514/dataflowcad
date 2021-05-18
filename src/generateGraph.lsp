@@ -598,12 +598,24 @@
   (princ)
 )
 
+; 2021-05-18
+; directionStatus: dxfcode 210: 1 up, -1 down
+; ratio dxf 40: Ratio of minor axis to major axis
+(defun GenerateHorizontalEllipseUtils (insPt entityLayer ellipseDiameter directionStatus ratio /)
+  (entmake 
+    (list (cons 0 "ELLIPSE") (cons 100 "AcDbEntity") (cons 67 0) (cons 8 entityLayer) (cons 100 "AcDbEllipse") 
+          (cons 10 insPt) (cons 11 (list 0 (- 0 ellipseDiameter) 0)) (cons 210 (list 0 0 directionStatus)) (cons 40 ratio) (cons 41 0.0) (cons 42 3.14159) 
+    )
+  )
+  (princ)
+)
+
 ; 2021-04-18
 ; directionStatus: dxfcode 210: 1 up, -1 down
 (defun GenerateSingleLineEllipseHeadUtils (insPt barrelRadius entityLayer centerLineLayer directionStatus straightEdgeHeight /)
   (GenerateEllipseUtils insPt entityLayer barrelRadius directionStatus 0.5)
   (GenerateEllipseHeadVerticalLineUtils insPt barrelRadius entityLayer directionStatus)
-  (GenerateEllipseHeadLevelLineUtils insPt barrelRadius entityLayer centerLineLayer directionStatus straightEdgeHeight)
+  (GenerateVerticalEllipseHeadCenterLineUtils insPt barrelRadius entityLayer centerLineLayer directionStatus straightEdgeHeight)
   (princ)
 )
 
@@ -615,12 +627,24 @@
   (GenerateEllipseUtils insPt entityLayer (+ barrelRadius thickNess) directionStatus (/ (float (+ (/ barrelRadius 2) thickNess)) (+ barrelRadius thickNess)))
   (GenerateEllipseHeadVerticalLineUtils insPt barrelRadius entityLayer directionStatus)
   (GenerateEllipseHeadVerticalLineUtils insPt (+ barrelRadius thickNess) entityLayer directionStatus)
-  (GenerateEllipseHeadLevelLineUtils insPt (+ barrelRadius thickNess) entityLayer centerLineLayer directionStatus straightEdgeHeight)
+  (GenerateVerticalEllipseHeadCenterLineUtils insPt (+ barrelRadius thickNess) entityLayer centerLineLayer directionStatus straightEdgeHeight)
+  (princ)
+)
+
+; 2021-05-18
+; directionStatus: dxfcode 210: 1 up, -1 down
+(defun GenerateDoubleLineHorizontalEllipseHeadUtils (insPt barrelRadius entityLayer centerLineLayer directionStatus thickNess straightEdgeHeight /)
+  (GenerateHorizontalEllipseUtils insPt entityLayer barrelRadius directionStatus 0.5)
+  ; ratio dxf 40: Ratio of minor axis to major axis
+  (GenerateHorizontalEllipseUtils insPt entityLayer (+ barrelRadius thickNess) directionStatus (/ (float (+ (/ barrelRadius 2) thickNess)) (+ barrelRadius thickNess)))
+  (GenerateEllipseHeadHorizontalLineUtils insPt barrelRadius entityLayer directionStatus)
+  (GenerateEllipseHeadHorizontalLineUtils insPt (+ barrelRadius thickNess) entityLayer directionStatus)
+  (GenerateHorizontalEllipseHeadCenterLineUtils insPt (+ barrelRadius thickNess) entityLayer centerLineLayer directionStatus straightEdgeHeight)
   (princ)
 )
 
 ; 2021-04-18
-(defun GenerateEllipseHeadLevelLineUtils (insPt barrelRadius entityLayer centerLineLayer directionStatus straightEdgeHeight /)
+(defun GenerateVerticalEllipseHeadCenterLineUtils (insPt barrelRadius entityLayer centerLineLayer directionStatus straightEdgeHeight /)
   (GenerateLineByLineScaleUtils 
     (MoveInsertPositionUtils insPt (- 0 barrelRadius) 0) 
     (MoveInsertPositionUtils insPt (+ 0 barrelRadius) 0)
@@ -630,6 +654,22 @@
   (GenerateLineUtils 
     (MoveInsertPositionUtils insPt (- 0 barrelRadius) (* (GetNegativeNumberUtils straightEdgeHeight) directionStatus)) 
     (MoveInsertPositionUtils insPt (+ 0 barrelRadius) (* (GetNegativeNumberUtils straightEdgeHeight) directionStatus))
+    entityLayer
+  ) 
+  (princ)
+)
+
+; 2021-05-18
+(defun GenerateHorizontalEllipseHeadCenterLineUtils (insPt barrelRadius entityLayer centerLineLayer directionStatus straightEdgeHeight /)
+  (GenerateLineByLineScaleUtils 
+    (MoveInsertPositionUtils insPt 0 (- 0 barrelRadius)) 
+    (MoveInsertPositionUtils insPt 0 (+ 0 barrelRadius))
+    centerLineLayer
+    6
+  )
+  (GenerateLineUtils 
+    (MoveInsertPositionUtils insPt (* (GetNegativeNumberUtils straightEdgeHeight) directionStatus) (- 0 barrelRadius)) 
+    (MoveInsertPositionUtils insPt (* (GetNegativeNumberUtils straightEdgeHeight) directionStatus) (+ 0 barrelRadius))
     entityLayer
   ) 
   (princ)
@@ -645,6 +685,21 @@
   (GenerateLineUtils 
     (MoveInsertPositionUtils insPt (+ 0 barrelRadius) 0) 
     (MoveInsertPositionUtils insPt (+ 0 barrelRadius) (* (GetNegativeNumberUtils straightEdgeHeight) directionStatus))
+    entityLayer
+  ) 
+  (princ)
+)
+
+; 2021-05-18
+(defun GenerateEllipseHeadHorizontalLineUtils (insPt barrelRadius entityLayer directionStatus /)
+  (GenerateLineUtils 
+    (MoveInsertPositionUtils insPt 0 (- 0 barrelRadius)) 
+    (MoveInsertPositionUtils insPt (* (GetNegativeNumberUtils straightEdgeHeight) directionStatus) (- 0 barrelRadius))
+    entityLayer
+  )
+  (GenerateLineUtils 
+    (MoveInsertPositionUtils insPt 0 (+ 0 barrelRadius)) 
+    (MoveInsertPositionUtils insPt (* (GetNegativeNumberUtils straightEdgeHeight) directionStatus) (+ 0 barrelRadius))
     entityLayer
   ) 
   (princ)
