@@ -535,32 +535,34 @@
 
 ; 2021-05-18
 ; refactored at 2021-05-19
-(defun InsertBsGCTRightSaddleSupport (insPt dataType saddleHeight oneBsGCTTankSupportDictData barrelRadius / groundPlateInsPt) 
-  (InsertBlockUtils insPt "BsGCTGraphSaddleSupport-SideView-BI-800" "0DataFlow-BsThickLine" (list (cons 0 dataType)))
+(defun InsertBsGCTRightSaddleSupport (insPt dataType saddleHeight oneBsGCTTankSupportDictData barrelRadius / saddleType groundPlateInsPt) 
+  (setq saddleType (GetSaddleSupportTypeUtils oneBsGCTTankSupportDictData barrelRadius))
+  (InsertBlockUtils insPt saddleType "0DataFlow-BsThickLine" (list (cons 0 dataType)))
   (SetDynamicBlockPropertyValueUtils 
     (GetLastVlaObjectUtils) 
     (list (cons "SADDLE_HEIGHT" saddleHeight))
   ) 
   ; mirror the right saddle support
   (MirrorBlockUtils (entlast))
-  (setq groundPlateInsPt (MoveInsertPositionUtils insPt (GetNegativeNumberUtils (GetSaddleSupportDownOffsetEnums "BsGCTGraphSaddleSupport-SideView-BI-800")) (- 150 saddleHeight)))
+  (setq groundPlateInsPt (MoveInsertPositionUtils insPt (GetNegativeNumberUtils (GetSaddleSupportDownOffsetEnums saddleType)) (- 150 saddleHeight)))
   (InsertBsGCTFaceLeftGroundPlate groundPlateInsPt dataType)
   (InsertBsGCTDownRightGroundPlateAnnotation groundPlateInsPt dataType)
   (InsertBsGCTUpRightSaddleSupportAnnotation 
-    (MoveInsertPositionUtils insPt (GetSaddleSupportUpOffsetEnums "BsGCTGraphSaddleSupport-SideView-BI-800") 100)
+    (MoveInsertPositionUtils insPt 0 (GetSaddleSupportUpOffsetEnums saddleType))
     oneBsGCTTankSupportDictData
     barrelRadius
     dataType)
 )
 
 ; 2021-05-19
-(defun InsertBsGCTLeftSaddleSupport (insPt dataType saddleHeight oneBsGCTTankSupportDictData barrelRadius / groundPlateInsPt) 
-  (InsertBlockUtils insPt "BsGCTGraphSaddleSupport-SideView-BI-800" "0DataFlow-BsThickLine" (list (cons 0 dataType)))
+(defun InsertBsGCTLeftSaddleSupport (insPt dataType saddleHeight oneBsGCTTankSupportDictData barrelRadius / saddleType groundPlateInsPt) 
+  (setq saddleType (GetSaddleSupportTypeUtils oneBsGCTTankSupportDictData barrelRadius))
+  (InsertBlockUtils insPt saddleType "0DataFlow-BsThickLine" (list (cons 0 dataType)))
   (SetDynamicBlockPropertyValueUtils 
     (GetLastVlaObjectUtils) 
     (list (cons "SADDLE_HEIGHT" saddleHeight))
   ) 
-  (setq groundPlateInsPt (MoveInsertPositionUtils insPt (GetSaddleSupportDownOffsetEnums "BsGCTGraphSaddleSupport-SideView-BI-800") (- 150 saddleHeight)))
+  (setq groundPlateInsPt (MoveInsertPositionUtils insPt (GetSaddleSupportDownOffsetEnums saddleType) (- 150 saddleHeight)))
   (InsertBsGCTFaceRightGroundPlate groundPlateInsPt dataType)
   ; groundPlate Dimension 
   (InsertBsGCTDimension 
@@ -574,6 +576,15 @@
     (MoveInsertPositionUtils insPt 0 (GetNegativeNumberUtils saddleHeight))
     (MoveInsertPositionUtils groundPlateInsPt 140 0) 
     "") 
+)
+
+; 2021-05-19
+(defun GetSaddleSupportTypeUtils (oneBsGCTTankSupportDictData barrelRadius /)
+(strcat 
+  "BsGCTGraphSaddleSupport-SideView-" 
+  (GetDottedPairValueUtils "SUPPORT_STYLE" oneBsGCTTankSupportDictData)
+  "-"
+  (rtos (* 2 barrelRadius)))
 )
 
 ; 2021-05-19
