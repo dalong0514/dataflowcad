@@ -536,26 +536,26 @@
 ; 2021-05-18
 ; refactored at 2021-05-19
 (defun InsertBsGCTRightSaddleSupport (insPt dataType saddleHeight saddleType / groundPlateInsPt) 
-  (InsertBlockUtils insPt "BsGCTGraphSaddleSupport-BI-800" "0DataFlow-BsThickLine" (list (cons 0 dataType)))
+  (InsertBlockUtils insPt "BsGCTGraphSaddleSupport-SideView-BI-800" "0DataFlow-BsThickLine" (list (cons 0 dataType)))
   (SetDynamicBlockPropertyValueUtils 
     (GetLastVlaObjectUtils) 
     (list (cons "SADDLE_HEIGHT" saddleHeight))
   ) 
   ; mirror the right saddle support
   (MirrorBlockUtils (entlast))
-  (setq groundPlateInsPt (MoveInsertPositionUtils insPt (GetNegativeNumberUtils (GetSaddleSupportOffsetEnums "BsGCTGraphSaddleSupport-BI-800")) (- 150 saddleHeight)))
+  (setq groundPlateInsPt (MoveInsertPositionUtils insPt (GetNegativeNumberUtils (GetSaddleSupportOffsetEnums "BsGCTGraphSaddleSupport-SideView-BI-800")) (- 150 saddleHeight)))
   (InsertBsGCTFaceLeftGroundPlate groundPlateInsPt dataType)
   (InsertBsGCTDownRightGroundPlateAnnotation groundPlateInsPt dataType)
 )
 
 ; 2021-05-19
 (defun InsertBsGCTLeftSaddleSupport (insPt dataType saddleHeight saddleType / groundPlateInsPt) 
-  (InsertBlockUtils insPt "BsGCTGraphSaddleSupport-BI-800" "0DataFlow-BsThickLine" (list (cons 0 dataType)))
+  (InsertBlockUtils insPt "BsGCTGraphSaddleSupport-SideView-BI-800" "0DataFlow-BsThickLine" (list (cons 0 dataType)))
   (SetDynamicBlockPropertyValueUtils 
     (GetLastVlaObjectUtils) 
     (list (cons "SADDLE_HEIGHT" saddleHeight))
   ) 
-  (setq groundPlateInsPt (MoveInsertPositionUtils insPt (GetSaddleSupportOffsetEnums "BsGCTGraphSaddleSupport-BI-800") (- 150 saddleHeight)))
+  (setq groundPlateInsPt (MoveInsertPositionUtils insPt (GetSaddleSupportOffsetEnums "BsGCTGraphSaddleSupport-SideView-BI-800") (- 150 saddleHeight)))
   (InsertBsGCTFaceRightGroundPlate groundPlateInsPt dataType)
   ; groundPlate Dimension 
   (InsertBsGCTDimension 
