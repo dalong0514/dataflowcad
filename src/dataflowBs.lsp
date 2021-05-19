@@ -277,7 +277,7 @@
     barrelRadius "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" -1 thickNess straightEdgeHeight)
   (GenerateDownllipseHeadNozzle (MoveInsertPositionUtils insPt 0 (- 0 newBarrelHalfHeight (/ barrelRadius 2) thickNess)) dataType)
   (InsertBsGCTLegSupport (MoveInsertPositionUtils insPt (+ barrelRadius thickNess) (- 0 (- newBarrelHalfHeight straightEdgeHeight))) dataType legSupportHeight)
-  (InsertBsGCTTankBarrelDimension insPt barrelRadius barrelHalfHeight thickNess straightEdgeHeight)
+  (InsertBsGCTVerticalTankBarrelDimension insPt barrelRadius barrelHalfHeight thickNess straightEdgeHeight)
   (InsertBsGCTTankAnnotation insPt dataType barrelRadius headThickNess straightEdgeHeight)
   (princ)
 )
@@ -303,7 +303,7 @@
     dataType saddleSupportHeight "BI")
   (InsertBsGCTSaddleSupport (MoveInsertPositionUtils insPt (GetNegativeNumberUtils saddleSupportOffset) (GetNegativeNumberUtils (+ barrelRadius thickNess))) 
     dataType saddleSupportHeight "BI")
-  ; (InsertBsGCTTankBarrelDimension insPt barrelRadius barrelHalfHeight thickNess straightEdgeHeight)
+  (InsertBsGCTHorizonticalTankBarrelDimension insPt barrelRadius barrelHalfHeight thickNess straightEdgeHeight)
   ; (InsertBsGCTTankAnnotation insPt dataType barrelRadius headThickNess straightEdgeHeight)
   (princ)
 )
@@ -373,7 +373,7 @@
 
 ; 2021-04-19
 ; refactored at 2021-04-22
-(defun InsertBsGCTTankBarrelDimension (insPt barrelRadius barrelHalfHeight thickNess straightEdgeHeight /) 
+(defun InsertBsGCTVerticalTankBarrelDimension (insPt barrelRadius barrelHalfHeight thickNess straightEdgeHeight /) 
   ; Barrel diameter
   (InsertBsGCTDimension 
     (MoveInsertPositionUtils insPt (GetNegativeNumberUtils barrelRadius) 0) 
@@ -412,6 +412,48 @@
     ; the Y position of dimension is option
     (MoveInsertPositionUtils insPt (- barrelRadius 100) 0) 
     "")   
+)
+
+; 2021-05-18
+(defun InsertBsGCTHorizonticalTankBarrelDimension (insPt barrelRadius barrelHalfHeight thickNess straightEdgeHeight /) 
+  ; Barrel diameter
+  (InsertBsGCTDimension 
+    (MoveInsertPositionUtils insPt 0 (GetNegativeNumberUtils barrelRadius)) 
+    (MoveInsertPositionUtils insPt 0 barrelRadius) 
+    (MoveInsertPositionUtils insPt 50 0) 
+    "%%c<>")
+  ; thickness
+  (InsertBsGCTDimension 
+    (MoveInsertPositionUtils insPt 0 (GetNegativeNumberUtils barrelRadius)) 
+    (MoveInsertPositionUtils insPt 0 (GetNegativeNumberUtils (+ barrelRadius thickNess))) 
+    (MoveInsertPositionUtils insPt 50 (+ barrelRadius thickNess 50)) 
+    "") 
+  ; ; vertical barrel
+  ; (InsertBsGCTDimension 
+  ;   (MoveInsertPositionUtils insPt barrelRadius barrelHalfHeight) 
+  ;   (MoveInsertPositionUtils insPt barrelRadius (GetNegativeNumberUtils barrelHalfHeight))  
+  ;   (MoveInsertPositionUtils insPt (+ barrelRadius 200) 0) 
+  ;   "") 
+  ; ; vertical head
+  ; (InsertBsGCTDimension 
+  ;   (MoveInsertPositionUtils insPt 0 barrelHalfHeight) 
+  ;   (MoveInsertPositionUtils insPt 0 (+ barrelHalfHeight (/ barrelRadius 2) straightEdgeHeight thickNess))  
+  ;   (MoveInsertPositionUtils insPt (+ barrelRadius 200) 0) 
+  ;   "") 
+  ; ; vertical up distance for head and barrel
+  ; (InsertBsGCTDimension 
+  ;   (MoveInsertPositionUtils insPt barrelRadius barrelHalfHeight) 
+  ;   (MoveInsertPositionUtils insPt barrelRadius (+ barrelHalfHeight straightEdgeHeight)) 
+  ;   ; the Y position of dimension is option
+  ;   (MoveInsertPositionUtils insPt (- barrelRadius 100) 0) 
+  ;   "") 
+  ; ; vertical down distance for head and barrel
+  ; (InsertBsGCTDimension 
+  ;   (MoveInsertPositionUtils insPt barrelRadius (GetNegativeNumberUtils barrelHalfHeight)) 
+  ;   (MoveInsertPositionUtils insPt barrelRadius (- 0 barrelHalfHeight straightEdgeHeight)) 
+  ;   ; the Y position of dimension is option
+  ;   (MoveInsertPositionUtils insPt (- barrelRadius 100) 0) 
+  ;   "")   
 )
 
 ; 2021-04-19

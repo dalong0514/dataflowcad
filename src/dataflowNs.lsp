@@ -125,11 +125,12 @@
 )
 
 ; 2021-03-17
-(defun ReadNsDataFromCSVStrategy (dataType / fileDir)
-  (if (= dataType "NsEquip") 
-    (setq fileDir "D:\\dataflowcad\\nsdata\\tempEquip.csv")
+; refactored at 2021-05-19
+(defun ReadNsDataFromFileStrategy (dataType /)
+  (cond 
+    ((= dataType "NsEquip") (ReadDataFromCSVUtils "D:\\dataflowcad\\nsdata\\tempEquip.csv"))
+    ((= dataType "nsCleanAir") (ReadDataFromFileUtils "D:\\dataflowcad\\tempdata\\nsCleanAir.json"))
   )
-  (ReadDataFromCSVUtils fileDir)
 )
 
 ; refactored at 2021-04-26
@@ -177,7 +178,7 @@
 
 ; refacotered at 2021-04-25
 (defun GetNsEquipImportedList ()
-  (StrListToListListUtils (ReadNsDataFromCSVStrategy "NsEquip"))
+  (StrListToListListUtils (ReadNsDataFromFileStrategy "NsEquip"))
 )
 
 ; 2021-04-25
@@ -424,4 +425,14 @@
 ; refactored at 2021-04-25
 (defun RepairNsEquipSpecExplosionProof (dataList /) 
   (strcat "·À±¬µÈ¼¶£º" (cdr dataList))
+)
+
+
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+; NS Clean Air
+
+; 2021-05-19
+(defun GetNsCleanAirData ()
+  (JsonToListUtils (car (ReadNsDataFromFileStrategy "nsCleanAir")))
 )

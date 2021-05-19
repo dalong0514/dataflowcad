@@ -105,7 +105,7 @@
 ) 
 
 ; 2021-03-28
-(defun ParseJSONToListUtils (json / data newData inStr dPrev strPos)
+(defun JsonToListUtils (json / data newData inStr dPrev strPos)
   ; Converts json string to list. By Denon Deterding (VL2 - 20200924)
   ; NOTE: json object strings will be truncated to 2300 characters MAX ('read' function limitation)
   ; ----- (the 'json' input variable is NOT limited to the 2300 chr limit)
@@ -2575,7 +2575,7 @@
 
 ; 2021-03-28
 (defun GetListXDataLByEntityNameUtils (entityName /) 
-  (ParseJSONToListUtils (GetStringXDataByEntityNameUtils entityName))
+  (JsonToListUtils (GetStringXDataByEntityNameUtils entityName))
 )
 
 ; XData Utils Function
@@ -2697,7 +2697,7 @@
 
 ; 2021-03-29
 (defun GetDictDictionaryDataByEntityNameUtils (entityName dKeyEntry /) 
-  (ParseJSONToListUtils (GetStringDictionaryDataByEntityNameUtils entityName dKeyEntry))
+  (JsonToListUtils (GetStringDictionaryDataByEntityNameUtils entityName dKeyEntry))
 )
 
 ; 2021-03-29
