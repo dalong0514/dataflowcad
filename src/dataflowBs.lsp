@@ -538,7 +538,7 @@
     (GetLastVlaObjectUtils) 
     (list (cons "SADDLE_HEIGHT" saddleHeight))
   ) 
-  (setq groundPlateInsPt (MoveInsertPositionUtils insPt (GetNegativeNumberUtils (GetSaddleSupportOffsetEnums "BsGCTGraphSaddleSupport-BI-800")) (- 150 saddleHeight)))
+  (setq groundPlateInsPt (MoveInsertPositionUtils insPt (GetSaddleSupportOffsetEnums "BsGCTGraphSaddleSupport-BI-800") (- 150 saddleHeight)))
   (InsertBsGCTFaceRightGroundPlate groundPlateInsPt dataType)
 )
 
