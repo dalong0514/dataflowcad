@@ -514,6 +514,11 @@
   (setq groundPlateInsPt (MoveInsertPositionUtils insPt 8 (- 150 legHeight)))
   (InsertBsGCTFaceLeftGroundPlate groundPlateInsPt dataType)
   (InsertBsGCTUpLeftGroundPlateAnnotation (MoveInsertPositionUtils groundPlateInsPt -50 15) dataType)
+  (InsertBsGCTDimension 
+    groundPlateInsPt 
+    (MoveInsertPositionUtils groundPlateInsPt 0 -150) 
+    (MoveInsertPositionUtils groundPlateInsPt -100 0) 
+    "") 
 )
 
 ; 2021-05-18
@@ -540,6 +545,11 @@
   ) 
   (setq groundPlateInsPt (MoveInsertPositionUtils insPt (GetSaddleSupportOffsetEnums "BsGCTGraphSaddleSupport-BI-800") (- 150 saddleHeight)))
   (InsertBsGCTFaceRightGroundPlate groundPlateInsPt dataType)
+  (InsertBsGCTDimension 
+    groundPlateInsPt 
+    (MoveInsertPositionUtils groundPlateInsPt 0 -150) 
+    (MoveInsertPositionUtils groundPlateInsPt 100 0) 
+    "") 
 )
 
 ; 2021-05-19
