@@ -300,9 +300,9 @@
     barrelRadius "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" -1 thickNess straightEdgeHeight)
   ; (GenerateDownllipseHeadNozzle (MoveInsertPositionUtils insPt 0 (- 0 newBarrelHalfHeight (/ barrelRadius 2) thickNess)) dataType)
   (InsertBsGCTRightSaddleSupport (MoveInsertPositionUtils insPt saddleSupportOffset (GetNegativeNumberUtils (+ barrelRadius thickNess))) 
-    dataType saddleSupportHeight "BI")
+    dataType saddleSupportHeight oneBsGCTTankSupportDictData)
   (InsertBsGCTLeftSaddleSupport (MoveInsertPositionUtils insPt (GetNegativeNumberUtils saddleSupportOffset) (GetNegativeNumberUtils (+ barrelRadius thickNess))) 
-    dataType saddleSupportHeight "BI")
+    dataType saddleSupportHeight oneBsGCTTankSupportDictData)
   (InsertBsGCTHorizonticalTankBarrelDimension insPt barrelRadius barrelHalfHeight thickNess straightEdgeHeight saddleSupportHeight saddleSupportOffset)
   (InsertBsGCTHorizonticalTankAnnotation insPt dataType barrelRadius headThickNess straightEdgeHeight)
   (princ)
@@ -361,7 +361,7 @@
 )
 
 ; 2021-04-22
-(defun InsertBsGCTUpRightAnnotation (insPt dataType fristText equipType barrelDiameter thickNess /) 
+(defun InsertBsGCTUpRightAnnotation (insPt dataType fristText secondText /) 
   (InsertBsGCTAnnotation insPt (MoveInsertPositionUtils insPt 130 100) (MoveInsertPositionUtils insPt 50 100) 
     dataType fristText secondText) 
 )
@@ -535,7 +535,7 @@
 
 ; 2021-05-18
 ; refactored at 2021-05-19
-(defun InsertBsGCTRightSaddleSupport (insPt dataType saddleHeight saddleType / groundPlateInsPt) 
+(defun InsertBsGCTRightSaddleSupport (insPt dataType saddleHeight oneBsGCTTankSupportDictData / groundPlateInsPt) 
   (InsertBlockUtils insPt "BsGCTGraphSaddleSupport-SideView-BI-800" "0DataFlow-BsThickLine" (list (cons 0 dataType)))
   (SetDynamicBlockPropertyValueUtils 
     (GetLastVlaObjectUtils) 
@@ -543,19 +543,23 @@
   ) 
   ; mirror the right saddle support
   (MirrorBlockUtils (entlast))
-  (setq groundPlateInsPt (MoveInsertPositionUtils insPt (GetNegativeNumberUtils (GetSaddleSupportOffsetEnums "BsGCTGraphSaddleSupport-SideView-BI-800")) (- 150 saddleHeight)))
+  (setq groundPlateInsPt (MoveInsertPositionUtils insPt (GetNegativeNumberUtils (GetSaddleSupportDownOffsetEnums "BsGCTGraphSaddleSupport-SideView-BI-800")) (- 150 saddleHeight)))
   (InsertBsGCTFaceLeftGroundPlate groundPlateInsPt dataType)
   (InsertBsGCTDownRightGroundPlateAnnotation groundPlateInsPt dataType)
+  (InsertBsGCTUpRightSaddleSupportAnnotation 
+    (MoveInsertPositionUtils insPt (GetSaddleSupportUpOffsetEnums "BsGCTGraphSaddleSupport-SideView-BI-800") 100)
+    oneBsGCTTankSupportDictData
+    dataType)
 )
 
 ; 2021-05-19
-(defun InsertBsGCTLeftSaddleSupport (insPt dataType saddleHeight saddleType / groundPlateInsPt) 
+(defun InsertBsGCTLeftSaddleSupport (insPt dataType saddleHeight oneBsGCTTankSupportDictData / groundPlateInsPt) 
   (InsertBlockUtils insPt "BsGCTGraphSaddleSupport-SideView-BI-800" "0DataFlow-BsThickLine" (list (cons 0 dataType)))
   (SetDynamicBlockPropertyValueUtils 
     (GetLastVlaObjectUtils) 
     (list (cons "SADDLE_HEIGHT" saddleHeight))
   ) 
-  (setq groundPlateInsPt (MoveInsertPositionUtils insPt (GetSaddleSupportOffsetEnums "BsGCTGraphSaddleSupport-SideView-BI-800") (- 150 saddleHeight)))
+  (setq groundPlateInsPt (MoveInsertPositionUtils insPt (GetSaddleSupportDownOffsetEnums "BsGCTGraphSaddleSupport-SideView-BI-800") (- 150 saddleHeight)))
   (InsertBsGCTFaceRightGroundPlate groundPlateInsPt dataType)
   ; groundPlate Dimension 
   (InsertBsGCTDimension 
@@ -596,6 +600,13 @@
 ; 2021-05-19
 (defun InsertBsGCTDownRightGroundPlateAnnotation (insPt dataType /) 
   (InsertBsGCTDownRightAnnotation insPt dataType "½ÓµØ°å" "") 
+)
+
+; 2021-05-19
+(defun InsertBsGCTUpRightSaddleSupportAnnotation (insPt oneBsGCTTankSupportDictData dataType / firstText secondText) 
+  (setq firstText (strcat (GetDottedPairValueUtils "SUPPORT_FORM" oneBsGCTTankSupportDictData) " " (GetDottedPairValueUtils "SUPPORT_STYLE" oneBsGCTTankSupportDictData)))
+  (setq secondText (GetDottedPairValueUtils "SUPPORT_STANDARD" oneBsGCTTankSupportDictData))
+  (InsertBsGCTUpRightAnnotation insPt dataType firstText secondText) 
 )
 
 ; 2021-04-19

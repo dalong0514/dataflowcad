@@ -200,12 +200,21 @@
 )
 
 ; 2021-05-19
-(defun GetSaddleSupportOffsetEnums (saddleType /)
+(defun GetSaddleSupportDownOffsetEnums (saddleType /)
   (cond 
     ((= saddleType "BsGCTGraphSaddleSupport-SideView-BI-800") 90)
     (T 100)
   )
 )
+
+; 2021-05-19
+(defun GetSaddleSupportUpOffsetEnums (saddleType /)
+  (cond 
+    ((= saddleType "BsGCTGraphSaddleSupport-SideView-BI-800") 140)
+    (T 100)
+  )
+)
+
 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
