@@ -54,7 +54,14 @@
   (SplitListListByIndexUtilsTest)
   (SplitLDictListByDictKeyUtilsTest)
   (GetBsGCTTankEquipTypeStrategyTest)
+  (GetBsGCTStraightEdgeHeightTest)
   (DL:PrintTestResults (DL:CountBooleans *testList*))
+)
+
+; 2021-05-16
+(defun GetBsGCTStraightEdgeHeightTest () 
+  (AssertEqual 'GetBsGCTStraightEdgeHeight (list 800) 25)
+  (AssertEqual 'GetBsGCTStraightEdgeHeight (list 1500) 40)
 )
 
 ; 2021-05-16

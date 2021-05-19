@@ -414,7 +414,7 @@
     "")   
 )
 
-; 2021-05-18
+; 2021-05-19
 (defun InsertBsGCTHorizonticalTankBarrelDimension (insPt barrelRadius barrelHalfHeight thickNess straightEdgeHeight /) 
   ; Barrel diameter
   (InsertBsGCTDimension 
@@ -428,18 +428,24 @@
     (MoveInsertPositionUtils insPt 0 (GetNegativeNumberUtils (+ barrelRadius thickNess))) 
     (MoveInsertPositionUtils insPt 50 (+ barrelRadius thickNess 50)) 
     "") 
-  ; ; vertical barrel
-  ; (InsertBsGCTDimension 
-  ;   (MoveInsertPositionUtils insPt barrelRadius barrelHalfHeight) 
-  ;   (MoveInsertPositionUtils insPt barrelRadius (GetNegativeNumberUtils barrelHalfHeight))  
-  ;   (MoveInsertPositionUtils insPt (+ barrelRadius 200) 0) 
-  ;   "") 
-  ; ; vertical head
-  ; (InsertBsGCTDimension 
-  ;   (MoveInsertPositionUtils insPt 0 barrelHalfHeight) 
-  ;   (MoveInsertPositionUtils insPt 0 (+ barrelHalfHeight (/ barrelRadius 2) straightEdgeHeight thickNess))  
-  ;   (MoveInsertPositionUtils insPt (+ barrelRadius 200) 0) 
-  ;   "") 
+  ; horizontial barrel
+  (InsertBsGCTDimension 
+    (MoveInsertPositionUtils insPt barrelHalfHeight (GetNegativeNumberUtils barrelRadius)) 
+    (MoveInsertPositionUtils insPt (GetNegativeNumberUtils barrelHalfHeight) (GetNegativeNumberUtils barrelRadius))  
+    (MoveInsertPositionUtils insPt 0 (GetNegativeNumberUtils (+ barrelRadius 400))) 
+    "") 
+  ; horizontial head - right
+  (InsertBsGCTDimension 
+    (MoveInsertPositionUtils insPt barrelHalfHeight 0) 
+    (MoveInsertPositionUtils insPt (+ barrelHalfHeight (/ barrelRadius 2) straightEdgeHeight thickNess) 0)  
+    (MoveInsertPositionUtils insPt 0 (GetNegativeNumberUtils (+ barrelRadius 400))) 
+    "") 
+  ; horizontial head - left
+  (InsertBsGCTDimension 
+    (MoveInsertPositionUtils insPt (GetNegativeNumberUtils barrelHalfHeight) 0) 
+    (MoveInsertPositionUtils insPt (GetNegativeNumberUtils (+ barrelHalfHeight (/ barrelRadius 2) straightEdgeHeight thickNess)) 0)  
+    (MoveInsertPositionUtils insPt 0 (GetNegativeNumberUtils (+ barrelRadius 400))) 
+    "") 
   ; ; vertical up distance for head and barrel
   ; (InsertBsGCTDimension 
   ;   (MoveInsertPositionUtils insPt barrelRadius barrelHalfHeight) 
@@ -797,6 +803,16 @@
   (InsertBsGCTTankGraphyStrategy (MoveInsertPositionUtils insPt -2915 1600) 
     barrelRadius barrelHalfHeight thickNess headThickNess bsGCTType straightEdgeHeight equipType allBsGCTSupportDictData)
   (princ)
+)
+
+; 2021-05-19
+; 标准封头的直边段高度，小于等于 2000 直径的是 25mm，大于 2000 直径的是 40mm
+(defun GetBsGCTStraightEdgeHeight (barrelRadius /)
+  (cond 
+    ((<= barrelRadius 1000) 25)
+    ((> barrelRadius 1000) 40)
+    (T 25)
+  )
 )
 
 ; 2021-05-13
