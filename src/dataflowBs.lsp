@@ -579,12 +579,30 @@
 )
 
 ; 2021-05-19
-(defun GetSaddleSupportTypeUtils (oneBsGCTTankSupportDictData barrelRadius /)
-(strcat 
-  "BsGCTGraphSaddleSupport-SideView-" 
-  (GetDottedPairValueUtils "SUPPORT_STYLE" oneBsGCTTankSupportDictData)
-  "-"
-  (rtos (* 2 barrelRadius)))
+(defun GetAllBsGCTSaddleSupportBlockNameList (/ entityData resultList) 
+  (setq entityData (tblnext "block" T)) 
+  (while entityData 
+    (if (wcmatch (cdr (assoc 2 entityData)) "BsGCTGraphSaddleSupport*") 
+      (setq resultList (append resultList (list (cdr (assoc 2 entityData)))))
+    )
+    (setq entityData (tblnext "block")) 
+  ) 
+  resultList
+)
+
+; 2021-05-19
+(defun GetSaddleSupportTypeUtils (oneBsGCTTankSupportDictData barrelRadius / saddleType)
+  (setq saddleType 
+    (strcat 
+      "BsGCTGraphSaddleSupport-SideView-" 
+      (GetDottedPairValueUtils "SUPPORT_STYLE" oneBsGCTTankSupportDictData)
+      "-"
+      (rtos (* 2 barrelRadius)))
+  )
+  (cond 
+    ((member saddleType (GetAllBsGCTSaddleSupportBlockNameList)) saddleType)
+    (T "BsGCTGraphSaddleSupport-SideView-BI-1000")
+  )
 )
 
 ; 2021-05-19
