@@ -303,7 +303,7 @@
     dataType saddleSupportHeight "BI")
   (InsertBsGCTLeftSaddleSupport (MoveInsertPositionUtils insPt (GetNegativeNumberUtils saddleSupportOffset) (GetNegativeNumberUtils (+ barrelRadius thickNess))) 
     dataType saddleSupportHeight "BI")
-  (InsertBsGCTHorizonticalTankBarrelDimension insPt barrelRadius barrelHalfHeight thickNess straightEdgeHeight)
+  (InsertBsGCTHorizonticalTankBarrelDimension insPt barrelRadius barrelHalfHeight thickNess straightEdgeHeight saddleSupportHeight saddleSupportOffset)
   (InsertBsGCTHorizonticalTankAnnotation insPt dataType barrelRadius headThickNess straightEdgeHeight)
   (princ)
 )
@@ -427,7 +427,7 @@
 )
 
 ; 2021-05-19
-(defun InsertBsGCTHorizonticalTankBarrelDimension (insPt barrelRadius barrelHalfHeight thickNess straightEdgeHeight /) 
+(defun InsertBsGCTHorizonticalTankBarrelDimension (insPt barrelRadius barrelHalfHeight thickNess straightEdgeHeight saddleSupportHeight saddleSupportOffset /) 
   ; Barrel diameter
   (InsertBsGCTDimension 
     (MoveInsertPositionUtils insPt 0 (GetNegativeNumberUtils barrelRadius)) 
@@ -444,34 +444,46 @@
   (InsertBsGCTDimension 
     (MoveInsertPositionUtils insPt barrelHalfHeight (GetNegativeNumberUtils barrelRadius)) 
     (MoveInsertPositionUtils insPt (GetNegativeNumberUtils barrelHalfHeight) (GetNegativeNumberUtils barrelRadius))  
-    (MoveInsertPositionUtils insPt 0 (GetNegativeNumberUtils (+ barrelRadius 400))) 
+    (MoveInsertPositionUtils insPt 0 (GetNegativeNumberUtils (+ barrelRadius saddleSupportHeight 300))) 
     "") 
   ; horizontial head - right
   (InsertBsGCTDimension 
     (MoveInsertPositionUtils insPt barrelHalfHeight 0) 
     (MoveInsertPositionUtils insPt (+ barrelHalfHeight (/ barrelRadius 2) straightEdgeHeight thickNess) 0)  
-    (MoveInsertPositionUtils insPt 0 (GetNegativeNumberUtils (+ barrelRadius 400))) 
+    (MoveInsertPositionUtils insPt 0 (GetNegativeNumberUtils (+ barrelRadius saddleSupportHeight 300))) 
     "") 
   ; horizontial head - left
   (InsertBsGCTDimension 
     (MoveInsertPositionUtils insPt (GetNegativeNumberUtils barrelHalfHeight) 0) 
     (MoveInsertPositionUtils insPt (GetNegativeNumberUtils (+ barrelHalfHeight (/ barrelRadius 2) straightEdgeHeight thickNess)) 0)  
-    (MoveInsertPositionUtils insPt 0 (GetNegativeNumberUtils (+ barrelRadius 400))) 
+    (MoveInsertPositionUtils insPt 0 (GetNegativeNumberUtils (+ barrelRadius saddleSupportHeight 300))) 
     "") 
-  ; horizontial - straightEdgeHeight
+  ; horizontial - straightEdgeHeight - right
   (InsertBsGCTDimension 
     (MoveInsertPositionUtils insPt barrelHalfHeight (GetNegativeNumberUtils barrelRadius)) 
     (MoveInsertPositionUtils insPt (+ barrelHalfHeight straightEdgeHeight) (GetNegativeNumberUtils barrelRadius)) 
     ; the Y position of dimension is option
     (MoveInsertPositionUtils insPt 0 (GetNegativeNumberUtils (- barrelRadius 100))) 
     "") 
-  ; vertical down distance for head and barrel
+  ; horizontial - straightEdgeHeight - left
   (InsertBsGCTDimension 
     (MoveInsertPositionUtils insPt (GetNegativeNumberUtils barrelHalfHeight) (GetNegativeNumberUtils barrelRadius)) 
     (MoveInsertPositionUtils insPt (- 0 barrelHalfHeight straightEdgeHeight) (GetNegativeNumberUtils barrelRadius)) 
     ; the Y position of dimension is option
     (MoveInsertPositionUtils insPt 0 (GetNegativeNumberUtils (- barrelRadius 100))) 
-    "")   
+    "") 
+  ; two saddle support
+  (InsertBsGCTDimension 
+    (MoveInsertPositionUtils insPt saddleSupportOffset (GetNegativeNumberUtils (+ barrelRadius saddleSupportHeight))) 
+    (MoveInsertPositionUtils insPt (GetNegativeNumberUtils saddleSupportOffset) (GetNegativeNumberUtils (+ barrelRadius saddleSupportHeight)))  
+    (MoveInsertPositionUtils insPt 0 (GetNegativeNumberUtils (+ barrelRadius saddleSupportHeight 200))) 
+    "") 
+  ; ; left saddle support
+  (InsertBsGCTDimension 
+    (MoveInsertPositionUtils insPt (GetNegativeNumberUtils barrelHalfHeight) (GetNegativeNumberUtils barrelRadius)) 
+    (MoveInsertPositionUtils insPt (GetNegativeNumberUtils saddleSupportOffset) (GetNegativeNumberUtils barrelRadius))  
+    (MoveInsertPositionUtils insPt 0 (GetNegativeNumberUtils (+ barrelRadius saddleSupportHeight 200))) 
+    "") 
 )
 
 ; 2021-04-19
