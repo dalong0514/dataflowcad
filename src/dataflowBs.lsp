@@ -545,7 +545,7 @@
   (MirrorBlockUtils (entlast))
   (setq groundPlateInsPt (MoveInsertPositionUtils insPt (GetNegativeNumberUtils (GetSaddleSupportOffsetEnums "BsGCTGraphSaddleSupport-BI-800")) (- 150 saddleHeight)))
   (InsertBsGCTFaceLeftGroundPlate groundPlateInsPt dataType)
-  (InsertBsGCTDownLeftGroundPlateAnnotation (MoveInsertPositionUtils groundPlateInsPt -50 -15) dataType)
+  (InsertBsGCTDownRightGroundPlateAnnotation groundPlateInsPt dataType)
 )
 
 ; 2021-05-19
@@ -557,10 +557,17 @@
   ) 
   (setq groundPlateInsPt (MoveInsertPositionUtils insPt (GetSaddleSupportOffsetEnums "BsGCTGraphSaddleSupport-BI-800") (- 150 saddleHeight)))
   (InsertBsGCTFaceRightGroundPlate groundPlateInsPt dataType)
+  ; groundPlate Dimension 
   (InsertBsGCTDimension 
     groundPlateInsPt 
     (MoveInsertPositionUtils groundPlateInsPt 0 -150) 
     (MoveInsertPositionUtils groundPlateInsPt 100 0) 
+    "") 
+  ; saddle support Dimension 
+  (InsertBsGCTDimension 
+    insPt
+    (MoveInsertPositionUtils insPt 0 (GetNegativeNumberUtils saddleHeight))
+    (MoveInsertPositionUtils groundPlateInsPt 140 0) 
     "") 
 )
 
@@ -584,6 +591,11 @@
 ; 2021-05-19
 (defun InsertBsGCTDownLeftGroundPlateAnnotation (insPt dataType /) 
   (InsertBsGCTDownLeftAnnotation insPt dataType "接地板" "") 
+)
+
+; 2021-05-19
+(defun InsertBsGCTDownRightGroundPlateAnnotation (insPt dataType /) 
+  (InsertBsGCTDownRightAnnotation insPt dataType "接地板" "") 
 )
 
 ; 2021-04-19
