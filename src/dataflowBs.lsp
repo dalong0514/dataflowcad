@@ -278,7 +278,7 @@
   (GenerateDownllipseHeadNozzle (MoveInsertPositionUtils insPt 0 (- 0 newBarrelHalfHeight (/ barrelRadius 2) thickNess)) dataType)
   (InsertBsGCTLegSupport (MoveInsertPositionUtils insPt (+ barrelRadius thickNess) (- 0 (- newBarrelHalfHeight straightEdgeHeight))) dataType legSupportHeight)
   (InsertBsGCTVerticalTankBarrelDimension insPt barrelRadius barrelHalfHeight thickNess straightEdgeHeight)
-  (InsertBsGCTTankAnnotation insPt dataType barrelRadius headThickNess straightEdgeHeight)
+  (InsertBsGCTVerticalTankAnnotation insPt dataType barrelRadius headThickNess straightEdgeHeight)
   (princ)
 )
 
@@ -304,18 +304,30 @@
   (InsertBsGCTSaddleSupport (MoveInsertPositionUtils insPt (GetNegativeNumberUtils saddleSupportOffset) (GetNegativeNumberUtils (+ barrelRadius thickNess))) 
     dataType saddleSupportHeight "BI")
   (InsertBsGCTHorizonticalTankBarrelDimension insPt barrelRadius barrelHalfHeight thickNess straightEdgeHeight)
-  ; (InsertBsGCTTankAnnotation insPt dataType barrelRadius headThickNess straightEdgeHeight)
+  (InsertBsGCTHorizonticalTankAnnotation insPt dataType barrelRadius headThickNess straightEdgeHeight)
   (princ)
 )
 
 ; 2021-04-22
-(defun InsertBsGCTTankAnnotation (insPt dataType barrelRadius headThickNess straightEdgeHeight /) 
+(defun InsertBsGCTVerticalTankAnnotation (insPt dataType barrelRadius headThickNess straightEdgeHeight /) 
   (InsertBsGCTTankDownLeftHeadAnnotation 
     (MoveInsertPositionUtils insPt (- 0 barrelRadius) (- 0 barrelHalfHeight straightEdgeHeight 50))
     dataType 
     "Õ÷‘≤∑‚Õ∑" "EHA" (* 2 barrelRadius) headThickNess)
   (InsertBsGCTTankUpLeftHeadAnnotation 
     (MoveInsertPositionUtils insPt (- 0 barrelRadius) (+ barrelHalfHeight straightEdgeHeight 50))
+    dataType 
+    "Õ÷‘≤∑‚Õ∑" "EHA" (* 2 barrelRadius) headThickNess) 
+)
+
+; 2021-05-19
+(defun InsertBsGCTHorizonticalTankAnnotation (insPt dataType barrelRadius headThickNess straightEdgeHeight /) 
+  (InsertBsGCTTankUpLeftHeadAnnotation 
+    (MoveInsertPositionUtils insPt (- 0 barrelHalfHeight straightEdgeHeight 50) barrelRadius)
+    dataType 
+    "Õ÷‘≤∑‚Õ∑" "EHA" (* 2 barrelRadius) headThickNess)
+  (InsertBsGCTTankDownLeftHeadAnnotation 
+    (MoveInsertPositionUtils insPt (+ barrelHalfHeight (/ barrelRadius 2) straightEdgeHeight) 0)
     dataType 
     "Õ÷‘≤∑‚Õ∑" "EHA" (* 2 barrelRadius) headThickNess) 
 )
