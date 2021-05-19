@@ -792,6 +792,12 @@
   (princ)
 )
 
+; 2021-05-19
+; the DXFCode of 41 is -1 for mirroring the block
+(defun MirrorBlockUtils (entityName /)
+  (SetDXFValueUtils entityName 41 -1)
+)
+
 ; Generate CAD Graph Utils Function 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
