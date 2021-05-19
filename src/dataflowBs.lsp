@@ -299,11 +299,9 @@
   (GenerateDoubleLineHorizontalEllipseHeadUtils (MoveInsertPositionUtils insPt (- 0 newBarrelHalfHeight) 0) 
     barrelRadius "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" -1 thickNess straightEdgeHeight)
   ; (GenerateDownllipseHeadNozzle (MoveInsertPositionUtils insPt 0 (- 0 newBarrelHalfHeight (/ barrelRadius 2) thickNess)) dataType)
-  (InsertBsGCTSaddleSupport (MoveInsertPositionUtils insPt saddleSupportOffset (GetNegativeNumberUtils (+ barrelRadius thickNess))) 
+  (InsertBsGCTRightSaddleSupport (MoveInsertPositionUtils insPt saddleSupportOffset (GetNegativeNumberUtils (+ barrelRadius thickNess))) 
     dataType saddleSupportHeight "BI")
-  ; mirror the right saddle support
-  (MirrorBlockUtils (entlast))
-  (InsertBsGCTSaddleSupport (MoveInsertPositionUtils insPt (GetNegativeNumberUtils saddleSupportOffset) (GetNegativeNumberUtils (+ barrelRadius thickNess))) 
+  (InsertBsGCTLeftSaddleSupport (MoveInsertPositionUtils insPt (GetNegativeNumberUtils saddleSupportOffset) (GetNegativeNumberUtils (+ barrelRadius thickNess))) 
     dataType saddleSupportHeight "BI")
   (InsertBsGCTHorizonticalTankBarrelDimension insPt barrelRadius barrelHalfHeight thickNess straightEdgeHeight)
   (InsertBsGCTHorizonticalTankAnnotation insPt dataType barrelRadius headThickNess straightEdgeHeight)
@@ -507,34 +505,63 @@
 )
 
 ; 2021-04-18
-(defun InsertBsGCTLegSupport (insPt dataType legHeight /) 
+(defun InsertBsGCTLegSupport (insPt dataType legHeight / groundPlateInsPt) 
   (InsertBlockUtils insPt "BsGCTGraphLegSupport-A2" "0DataFlow-BsThickLine" (list (cons 0 dataType)))
   (SetDynamicBlockPropertyValueUtils 
     (GetLastVlaObjectUtils) 
     (list (cons "LEG_HEIGHT" legHeight))
   ) 
-  (InsertBsGCTGroundPlate (MoveInsertPositionUtils insPt 8 (- 150 legHeight)) dataType)
+  (setq groundPlateInsPt (MoveInsertPositionUtils insPt 8 (- 150 legHeight)))
+  (InsertBsGCTFaceLeftGroundPlate groundPlateInsPt dataType)
+  (InsertBsGCTUpLeftGroundPlateAnnotation (MoveInsertPositionUtils groundPlateInsPt -50 15) dataType)
 )
 
 ; 2021-05-18
-(defun InsertBsGCTSaddleSupport (insPt dataType saddleHeight saddleType /) 
+; refactored at 2021-05-19
+(defun InsertBsGCTRightSaddleSupport (insPt dataType saddleHeight saddleType / groundPlateInsPt) 
   (InsertBlockUtils insPt "BsGCTGraphSaddleSupport-BI-800" "0DataFlow-BsThickLine" (list (cons 0 dataType)))
   (SetDynamicBlockPropertyValueUtils 
     (GetLastVlaObjectUtils) 
     (list (cons "SADDLE_HEIGHT" saddleHeight))
   ) 
-  ; (InsertBsGCTGroundPlate (MoveInsertPositionUtils insPt 8 (- 150 legHeight)) dataType)
+  ; mirror the right saddle support
+  (MirrorBlockUtils (entlast))
+  (setq groundPlateInsPt (MoveInsertPositionUtils insPt (GetNegativeNumberUtils (GetSaddleSupportOffsetEnums "BsGCTGraphSaddleSupport-BI-800")) (- 150 saddleHeight)))
+  (InsertBsGCTFaceLeftGroundPlate groundPlateInsPt dataType)
+  (InsertBsGCTDownLeftGroundPlateAnnotation (MoveInsertPositionUtils groundPlateInsPt -50 -15) dataType)
 )
 
-; 2021-04-22
-(defun InsertBsGCTGroundPlate (insPt dataType /) 
+; 2021-05-19
+(defun InsertBsGCTLeftSaddleSupport (insPt dataType saddleHeight saddleType / groundPlateInsPt) 
+  (InsertBlockUtils insPt "BsGCTGraphSaddleSupport-BI-800" "0DataFlow-BsThickLine" (list (cons 0 dataType)))
+  (SetDynamicBlockPropertyValueUtils 
+    (GetLastVlaObjectUtils) 
+    (list (cons "SADDLE_HEIGHT" saddleHeight))
+  ) 
+  (setq groundPlateInsPt (MoveInsertPositionUtils insPt (GetNegativeNumberUtils (GetSaddleSupportOffsetEnums "BsGCTGraphSaddleSupport-BI-800")) (- 150 saddleHeight)))
+  (InsertBsGCTFaceRightGroundPlate groundPlateInsPt dataType)
+)
+
+; 2021-05-19
+(defun InsertBsGCTFaceLeftGroundPlate (insPt dataType /) 
   (InsertBlockUtils insPt "BsGCTGraphGroundPlate" "0DataFlow-BsThickLine" (list (cons 0 dataType)))
-  (InsertBsGCTGroundPlateAnnotation (MoveInsertPositionUtils insPt -50 15) dataType)
+)
+
+; 2021-05-19
+(defun InsertBsGCTFaceRightGroundPlate (insPt dataType /) 
+  (InsertBlockUtils insPt "BsGCTGraphGroundPlate" "0DataFlow-BsThickLine" (list (cons 0 dataType)))
+  ; mirror the [BsGCTGraphGroundPlate]
+  (MirrorBlockUtils (entlast))
 )
 
 ; 2021-04-22
-(defun InsertBsGCTGroundPlateAnnotation (insPt dataType /) 
+(defun InsertBsGCTUpLeftGroundPlateAnnotation (insPt dataType /) 
   (InsertBsGCTUpLeftAnnotation insPt dataType "接地板" "") 
+)
+
+; 2021-05-19
+(defun InsertBsGCTDownLeftGroundPlateAnnotation (insPt dataType /) 
+  (InsertBsGCTDownLeftAnnotation insPt dataType "接地板" "") 
 )
 
 ; 2021-04-19

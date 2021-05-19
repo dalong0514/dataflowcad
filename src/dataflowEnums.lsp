@@ -199,6 +199,14 @@
   '("SERIALID" "STANDARDNUM" "MATERIALTYPE" "SPECIFICATION" "MATERIAL" "NUM" "MULTIPLE" "KSTYPE" "COMMENT")
 )
 
+; 2021-05-19
+(defun GetSaddleSupportOffsetEnums (saddleType /)
+  (cond 
+    ((= saddleType "BsGCTGraphSaddleSupport-BI-800") 90)
+    (T 100)
+  )
+)
+
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
 ; Gs Enums
