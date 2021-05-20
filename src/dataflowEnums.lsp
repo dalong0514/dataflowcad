@@ -200,21 +200,16 @@
 )
 
 ; 2021-05-19
-(defun GetSaddleSupportDownOffsetEnums (saddleType /)
+(defun GetSaddleSupportDownOffsetEnums (barrelDiameter /)
   (cond 
-    ((= saddleType "BsGCTGraphSaddleSupport-SideView-BI-500") 83)
-    ((= saddleType "BsGCTGraphSaddleSupport-SideView-BI-600") 83)
-    ((= saddleType "BsGCTGraphSaddleSupport-SideView-BI-700") 83)
-    ((= saddleType "BsGCTGraphSaddleSupport-SideView-BI-800") 90)
-    ((= saddleType "BsGCTGraphSaddleSupport-SideView-BI-900") 90)
-    ((= saddleType "BsGCTGraphSaddleSupport-SideView-BI-1000") 114)
-    ((= saddleType "BsGCTGraphSaddleSupport-SideView-BI-1100") 114)
-    ((= saddleType "BsGCTGraphSaddleSupport-SideView-BI-1200") 114)
-    ((= saddleType "BsGCTGraphSaddleSupport-SideView-BI-1300") 125)
-    ((= saddleType "BsGCTGraphSaddleSupport-SideView-BI-1400") 125)
-    ((= saddleType "BsGCTGraphSaddleSupport-SideView-BI-1500") 128)
-    ((= saddleType "BsGCTGraphSaddleSupport-SideView-BI-1600") 128)
-    (T 100)
+    ((<= barrelDiameter 750) 83)
+    ((<= barrelDiameter 950) 90)
+    ((<= barrelDiameter 1200) 114)
+    ((<= barrelDiameter 1700) 128)
+    ((<= barrelDiameter 2000) 136)
+    ((<= barrelDiameter 2400) 158)
+    ((<= barrelDiameter 2800) 193)
+    (T 214)
   )
 )
 
@@ -222,6 +217,7 @@
 (defun GetSaddleSupportUpOffsetEnums (saddleType /)
   (cond 
     ((= saddleType "BsGCTGraphSaddleSupport-SideView-BI-500") 143)
+    ((= saddleType "BsGCTGraphSaddleSupport-SideView-BI-500") 159)
     ((= saddleType "BsGCTGraphSaddleSupport-SideView-BI-600") 184)
     ((= saddleType "BsGCTGraphSaddleSupport-SideView-BI-700") 202)
     ((= saddleType "BsGCTGraphSaddleSupport-SideView-BI-800") 234)

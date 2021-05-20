@@ -544,7 +544,7 @@
   ) 
   ; mirror the right saddle support
   (MirrorBlockUtils (entlast))
-  (setq groundPlateInsPt (MoveInsertPositionUtils insPt (GetNegativeNumberUtils (GetSaddleSupportDownOffsetEnums saddleType)) (- 150 saddleHeight)))
+  (setq groundPlateInsPt (MoveInsertPositionUtils insPt (GetNegativeNumberUtils (GetSaddleSupportDownOffsetEnums (* 2 barrelRadius))) (- 150 saddleHeight)))
   (InsertBsGCTFaceLeftGroundPlate groundPlateInsPt dataType)
   (InsertBsGCTDownRightGroundPlateAnnotation groundPlateInsPt dataType)
   (InsertBsGCTUpRightSaddleSupportAnnotation 
@@ -562,7 +562,7 @@
     (GetLastVlaObjectUtils) 
     (list (cons "SADDLE_HEIGHT" saddleHeight))
   ) 
-  (setq groundPlateInsPt (MoveInsertPositionUtils insPt (GetSaddleSupportDownOffsetEnums saddleType) (- 150 saddleHeight)))
+  (setq groundPlateInsPt (MoveInsertPositionUtils insPt (GetSaddleSupportDownOffsetEnums (* 2 barrelRadius)) (- 150 saddleHeight)))
   (InsertBsGCTFaceRightGroundPlate groundPlateInsPt dataType)
   ; groundPlate Dimension 
   (InsertBsGCTDimension 
@@ -601,7 +601,7 @@
   )
   (cond 
     ((member saddleType (GetAllBsGCTSaddleSupportBlockNameList)) saddleType)
-    (T "BsGCTGraphSaddleSupport-SideView-BI-1000")
+    (T "BsGCTGraphSaddleSupport-SideView-BI-2500")
   )
 )
 
