@@ -11,7 +11,7 @@
 ; Gs Enums
 
 (defun GetSyncFlowBlockNameList ()
-  '("InstrumentL" "InstrumentP" "InstrumentSIS" "Centrifuge" "CustomEquip" "Heater" "Pump" "Reactor" "Tank" "Vacuum" "OuterPipeLeft" "OuterPipeRight" "GsCleanAir")
+  '("InstrumentL" "InstrumentP" "InstrumentSIS" "Centrifuge" "CustomEquip" "Heater" "Pump" "Reactor" "Tank" "Vacuum" "OuterPipeLeft" "OuterPipeRight" "OuterPipeDoubleArrow" "GsCleanAir")
 )
 
 ; refactored at 2021-04-08

@@ -619,6 +619,19 @@
   (InsertGsLcBlockOuterPipe insPt "OuterPipeLeft" (GetGsLcBlockOuterPipePropertyDict ss))
 )
 
+; 2021-05-20
+(defun c:InsertBlockOuterPipeDoubleArrow() 
+  (ExecuteFunctionAfterVerifyDateUtils 'InsertBlockOuterPipeDoubleArrowMacro '())
+)
+
+; 2021-05-20
+(defun InsertBlockOuterPipeDoubleArrowMacro (/ ss insPt) 
+  (prompt "\n选取管道块：")
+  (setq ss (GetBlockSSBySelectByDataTypeUtils "Pipe"))
+  (setq insPt (getpoint "\n选取外管块的插入点："))
+  (InsertGsLcBlockOuterPipe insPt "OuterPipeDoubleArrow" (GetGsLcBlockOuterPipePropertyDict ss))
+)
+
 ; 2021-03-08
 (defun InsertGsLcBlockOuterPipe (insPt blockName blockPropertyDict /) 
   (VerifyGsLcBlockByName blockName)
