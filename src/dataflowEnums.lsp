@@ -214,25 +214,27 @@
 )
 
 ; 2021-05-19
-(defun GetSaddleSupportUpOffsetEnums (saddleType /)
+(defun GetSaddleSupportUpOffsetEnums (barrelDiameter /)
   (cond 
-    ((= saddleType "BsGCTGraphSaddleSupport-SideView-BI-500") 143)
-    ((= saddleType "BsGCTGraphSaddleSupport-SideView-BI-500") 159)
-    ((= saddleType "BsGCTGraphSaddleSupport-SideView-BI-600") 184)
-    ((= saddleType "BsGCTGraphSaddleSupport-SideView-BI-700") 202)
-    ((= saddleType "BsGCTGraphSaddleSupport-SideView-BI-800") 234)
-    ((= saddleType "BsGCTGraphSaddleSupport-SideView-BI-900") 261)
-    ((= saddleType "BsGCTGraphSaddleSupport-SideView-BI-1000") 292)
-    ((= saddleType "BsGCTGraphSaddleSupport-SideView-BI-1100") 324)
-    ((= saddleType "BsGCTGraphSaddleSupport-SideView-BI-1200") 351)
-    ((= saddleType "BsGCTGraphSaddleSupport-SideView-BI-1300") 383)
-    ((= saddleType "BsGCTGraphSaddleSupport-SideView-BI-1400") 410)
-    ((= saddleType "BsGCTGraphSaddleSupport-SideView-BI-1500") 441)
-    ((= saddleType "BsGCTGraphSaddleSupport-SideView-BI-1600") 473)
-    (T 250)
+    ((<= barrelDiameter 500) 143)
+    ((<= barrelDiameter 600) 184)
+    ((<= barrelDiameter 700) 202)
+    ((<= barrelDiameter 800) 234)
+    ((<= barrelDiameter 900) 261)
+    ((<= barrelDiameter 1000) 292)
+    ((<= barrelDiameter 1200) 324)
+    ((<= barrelDiameter 1400) 383)
+    ((<= barrelDiameter 1600) 441)
+    ((<= barrelDiameter 1800) 500)
+    ((<= barrelDiameter 2000) 560)
+    ((<= barrelDiameter 2200) 620)
+    ((<= barrelDiameter 2400) 679)
+    ((<= barrelDiameter 2600) 737)
+    ((<= barrelDiameter 2800) 797)
+    ((<= barrelDiameter 3000) 854)
+    (T 886)
   )
 )
-
 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;

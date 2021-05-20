@@ -548,7 +548,7 @@
   (InsertBsGCTFaceLeftGroundPlate groundPlateInsPt dataType)
   (InsertBsGCTDownRightGroundPlateAnnotation groundPlateInsPt dataType)
   (InsertBsGCTUpRightSaddleSupportAnnotation 
-    (MoveInsertPositionUtils insPt 0 (GetSaddleSupportUpOffsetEnums saddleType))
+    (MoveInsertPositionUtils insPt 0 (GetSaddleSupportUpOffsetEnums (* 2 barrelRadius)))
     oneBsGCTTankSupportDictData
     barrelRadius
     dataType)
