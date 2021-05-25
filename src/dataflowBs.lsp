@@ -866,6 +866,31 @@
   ) 
 )
 
+
+
+
+; 2021-05-25
+(defun GetBsGCTHeaterHeadStyleData (bsGCTImportedList /) 
+  (mapcar '(lambda (x) (cdr x)) 
+    (vl-remove-if-not '(lambda (x) 
+                        (= (car x) "Heater-HeadStyle") 
+                      ) 
+      bsGCTImportedList
+    )  
+  ) 
+)
+
+; 2021-05-25
+(defun GetBsGCTHeaterHeadMaterialData (bsGCTImportedList /) 
+  (mapcar '(lambda (x) (cdr x)) 
+    (vl-remove-if-not '(lambda (x) 
+                        (= (car x) "Heater-HeadMaterial") 
+                      ) 
+      bsGCTImportedList
+    )  
+  ) 
+)
+
 ; 2021-04-20
 ; refactored at 2021-05-18
 (defun GetBsGCTTankOtherRequestData (bsGCTImportedList /) 
@@ -1186,13 +1211,13 @@
 
 ; 2021-05-25
 (defun InsertAllBsGCTHeater (insPt bsGCTImportedList / allBsGCTHeaterDictData heaterPressureElementList 
-                           heaterOtherRequestList heaterStandardList tankHeadStyleList tankHeadMaterialList allBsGCTSupportDictData insPtList) 
+                           heaterOtherRequestList heaterStandardList heaterHeadStyleList heaterHeadMaterialList allBsGCTSupportDictData insPtList) 
   (setq allBsGCTHeaterDictData (GetBsGCTHeaterDictData bsGCTImportedList))
   (setq heaterPressureElementList (GetBsGCTHeaterPressureElementDictData bsGCTImportedList))
   (setq heaterOtherRequestList (GetBsGCTHeaterOtherRequestData bsGCTImportedList)) 
   (setq heaterStandardList (GetBsGCTHeaterStandardData bsGCTImportedList)) 
-  ; (setq tankHeadStyleList (GetBsGCTTankHeadStyleData bsGCTImportedList)) 
-  ; (setq tankHeadMaterialList (GetBsGCTTankHeadMaterialData bsGCTImportedList)) 
+  (setq heaterHeadStyleList (GetBsGCTHeaterHeadStyleData bsGCTImportedList)) 
+  (setq heaterHeadMaterialList (GetBsGCTHeaterHeadMaterialData bsGCTImportedList)) 
   ; (setq allBsGCTSupportDictData (GetAllBsGCTSupportDictData bsGCTImportedList))
   ; (setq insPtList (GetInsertPtListByXMoveUtils insPt (GenerateSortedNumByList allBsGCTTankDictData 0) 5200))
   ; (mapcar '(lambda (x y) 
@@ -1201,7 +1226,7 @@
   ;   insPtList
   ;   allBsGCTTankDictData 
   ; ) 
-  (princ heaterStandardList)
+  (princ heaterHeadMaterialList)
   (princ)
 )
 
