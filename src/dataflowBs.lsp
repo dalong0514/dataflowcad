@@ -831,6 +831,17 @@
   ) 
 )
 
+; 2021-05-25
+(defun GetBsGCTHeaterStandardData (bsGCTImportedList /) 
+  (mapcar '(lambda (x) (cdr x)) 
+    (vl-remove-if-not '(lambda (x) 
+                        (= (car x) "Heater-Standard") 
+                      ) 
+      bsGCTImportedList
+    )  
+  ) 
+)
+
 ; 2021-04-20
 ; refactored at 2021-05-18
 (defun GetBsGCTTankHeadStyleData (bsGCTImportedList /) 
@@ -861,6 +872,17 @@
   (mapcar '(lambda (x) (cdr x)) 
     (vl-remove-if-not '(lambda (x) 
                         (= (car x) "Tank-OtherRequest") 
+                      ) 
+      bsGCTImportedList
+    )  
+  ) 
+)
+
+; 2021-05-25
+(defun GetBsGCTHeaterOtherRequestData (bsGCTImportedList /) 
+  (mapcar '(lambda (x) (cdr x)) 
+    (vl-remove-if-not '(lambda (x) 
+                        (= (car x) "Heater-OtherRequest") 
                       ) 
       bsGCTImportedList
     )  
@@ -1164,11 +1186,11 @@
 
 ; 2021-05-25
 (defun InsertAllBsGCTHeater (insPt bsGCTImportedList / allBsGCTHeaterDictData heaterPressureElementList 
-                           tankOtherRequestList tankStandardList tankHeadStyleList tankHeadMaterialList allBsGCTSupportDictData insPtList) 
+                           heaterOtherRequestList heaterStandardList tankHeadStyleList tankHeadMaterialList allBsGCTSupportDictData insPtList) 
   (setq allBsGCTHeaterDictData (GetBsGCTHeaterDictData bsGCTImportedList))
   (setq heaterPressureElementList (GetBsGCTHeaterPressureElementDictData bsGCTImportedList))
-  ; (setq tankOtherRequestList (GetBsGCTTankOtherRequestData bsGCTImportedList)) 
-  ; (setq tankStandardList (GetBsGCTTankStandardData bsGCTImportedList)) 
+  (setq heaterOtherRequestList (GetBsGCTHeaterOtherRequestData bsGCTImportedList)) 
+  (setq heaterStandardList (GetBsGCTHeaterStandardData bsGCTImportedList)) 
   ; (setq tankHeadStyleList (GetBsGCTTankHeadStyleData bsGCTImportedList)) 
   ; (setq tankHeadMaterialList (GetBsGCTTankHeadMaterialData bsGCTImportedList)) 
   ; (setq allBsGCTSupportDictData (GetAllBsGCTSupportDictData bsGCTImportedList))
@@ -1179,7 +1201,7 @@
   ;   insPtList
   ;   allBsGCTTankDictData 
   ; ) 
-  (princ heaterPressureElementList)
+  (princ heaterStandardList)
   (princ)
 )
 
