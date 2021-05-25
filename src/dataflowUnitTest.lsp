@@ -68,8 +68,8 @@
 (defun GetBsGCTTankEquipTypeStrategyTest () 
   (AssertEqual 'GetBsGCTEquipTypeStrategy (list "立式双椭圆封头") "verticalTank")
   (AssertEqual 'GetBsGCTEquipTypeStrategy (list "卧式双椭圆封头") "horizontalTank")
-  (AssertEqual 'GetBsGCTEquipTypeStrategy (list "立式换热器") "Heater")
-  (AssertEqual 'GetBsGCTEquipTypeStrategy (list "卧式双换热器") "Heater")
+  (AssertEqual 'GetBsGCTEquipTypeStrategy (list "立式换热器") "verticalHeater")
+  (AssertEqual 'GetBsGCTEquipTypeStrategy (list "卧式换热器") "horizontalHeater")
 )
 
 ; 2021-04-20

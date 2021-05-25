@@ -1079,8 +1079,8 @@
   (InsertBsGCTDrawFrame insPt equipTag)
   (InsertBsGCTEquipTableStrategy insPt bsGCTType oneHeaterData heaterStandardList heaterHeadStyleList 
                            heaterHeadMaterialList heaterPressureElementList heaterOtherRequestList equipType)
-  ; (InsertBsGCTTankGraphyStrategy (MoveInsertPositionUtils insPt -2915 1600) 
-  ;   barrelRadius barrelHalfHeight thickNess headThickNess bsGCTType straightEdgeHeight equipType allBsGCTSupportDictData)
+  (InsertBsGCTHeaterGraphyStrategy (MoveInsertPositionUtils insPt -2915 1600) 
+    barrelRadius barrelHalfHeight thickNess headThickNess bsGCTType straightEdgeHeight equipType allBsGCTSupportDictData)
 )
 
 ; 2021-05-19
@@ -1240,7 +1240,8 @@
   (cond 
     ((RegexpTestUtils equipType "立式双椭.*" nil) "verticalTank")
     ((RegexpTestUtils equipType "卧式双椭.*" nil) "horizontalTank")
-    ((RegexpTestUtils equipType ".*换热.*" nil) "Heater")
+    ((RegexpTestUtils equipType "立式换热.*" nil) "verticalHeater")
+    ((RegexpTestUtils equipType "卧式换热.*" nil) "horizontalHeater")
   )
 )
 
@@ -1264,13 +1265,26 @@
        (FilterListListByFirstItemUtils equipHeadMaterialList "horizontalTank")                    
        equipPressureElementList 
        (FilterListListByFirstItemUtils equipOtherRequestList "horizontalTank")))
-    ((= equipType "Heater") 
+    ((or (= equipType "verticalHeater") (= equipType "horizontalHeater")) 
      (InsertGCTOneBsHeaterTable insPt bsGCTType oneEquipData 
        (FilterListListByFirstItemUtils equipStandardList "Heater") 
        (FilterListListByFirstItemUtils equipHeadStyleList "Heater") 
        (FilterListListByFirstItemUtils equipHeadMaterialList "Heater")                    
        equipPressureElementList 
        (FilterListListByFirstItemUtils equipOtherRequestList "Heater")))
+  )
+)
+
+; 2021-05-25
+(defun InsertBsGCTHeaterGraphyStrategy (insPt barrelRadius barrelHalfHeight thickNess headThickNess bsGCTType straightEdgeHeight equipType allBsGCTSupportDictData /)
+  (cond 
+    ((= equipType "verticalTank") 
+     (InsertBsGCTVerticalTankGraphy insPt barrelRadius barrelHalfHeight thickNess headThickNess 
+       bsGCTType straightEdgeHeight allBsGCTSupportDictData))
+    ((= equipType "horizontalTank") 
+     ; refactored at 2021-05-18 move the insPt for HorizontalTankGraphy
+     (InsertBsGCTHorizontalTankGraphy (MoveInsertPositionUtils insPt 450 -150) barrelRadius barrelHalfHeight thickNess headThickNess 
+       bsGCTType straightEdgeHeight allBsGCTSupportDictData))
   )
 )
 
