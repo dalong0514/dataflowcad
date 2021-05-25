@@ -894,13 +894,6 @@
 )
 
 ; 2021-04-17
-; (defun InsertBsGCTStrategy (dataType designData /) 
-;   (cond 
-;     ((= dataType "Tank") (InsertOneBsTankGCT designData))
-;   )
-; )
-
-; 2021-04-17
 ; refacotred at 2021-05-07
 (defun InsertOneBsTankGCT (insPt oneTankData tankPressureElementList tankOtherRequestList tankStandardList tankHeadStyleList tankHeadMaterialList allBsGCTSupportDictData / 
                            equipTag bsGCTType barrelRadius barrelHalfHeight thickNess headThickNess straightEdgeHeight equipType) 
@@ -1107,9 +1100,39 @@
   (princ)
 )
 
+; 2021-05-25
+(defun InsertAllBsGCTHeater (insPt bsGCTImportedList / allBsGCTTankDictData tankPressureElementList 
+                           tankOtherRequestList tankStandardList tankHeadStyleList tankHeadMaterialList allBsGCTSupportDictData insPtList) 
+  (setq allBsGCTTankDictData (GetBsGCTTankDictData bsGCTImportedList))
+  (setq tankPressureElementList (GetBsGCTTankPressureElementDictData bsGCTImportedList))
+  (setq tankOtherRequestList (GetBsGCTTankOtherRequestData bsGCTImportedList)) 
+  (setq tankStandardList (GetBsGCTTankStandardData bsGCTImportedList)) 
+  (setq tankHeadStyleList (GetBsGCTTankHeadStyleData bsGCTImportedList)) 
+  (setq tankHeadMaterialList (GetBsGCTTankHeadMaterialData bsGCTImportedList)) 
+  (setq allBsGCTSupportDictData (GetAllBsGCTSupportDictData bsGCTImportedList))
+  (setq insPtList (GetInsertPtListByXMoveUtils insPt (GenerateSortedNumByList allBsGCTTankDictData 0) 5200))
+  (mapcar '(lambda (x y) 
+            (InsertOneBsTankGCT x y tankPressureElementList tankOtherRequestList tankStandardList tankHeadStyleList tankHeadMaterialList allBsGCTSupportDictData) 
+          ) 
+    insPtList
+    allBsGCTTankDictData 
+  ) 
+  (princ)
+)
+
+; 2021-05-25
+(defun InsertAllBsGCTMacro (/ insPt bsGCTImportedList allBsGCTTankDictData tankPressureElementList 
+                           tankOtherRequestList tankStandardList tankHeadStyleList tankHeadMaterialList allBsGCTSupportDictData insPtList) 
+  (VerifyBsGCTBlockLayerText)
+  (setq insPt (getpoint "\n拾取设备一览表插入点："))
+  (setq bsGCTImportedList (GetBsGCTImportedList))
+  (InsertAllBsGCTHeater insPt bsGCTImportedList)
+)
+
 ; 2021-04-21
 (defun c:InsertAllBsGCT ()
-  (ExecuteFunctionAfterVerifyDateUtils 'InsertAllBsGCTTank '())
+  ; (ExecuteFunctionAfterVerifyDateUtils 'InsertAllBsGCTTank '())
+  (ExecuteFunctionAfterVerifyDateUtils 'InsertAllBsGCTMacro '())
 )
 
 ;;;-------------------------------------------------------------------------;;;
