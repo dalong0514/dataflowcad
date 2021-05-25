@@ -66,8 +66,8 @@
 
 ; 2021-05-16
 (defun GetBsGCTTankEquipTypeStrategyTest () 
-  (AssertEqual 'GetBsGCTTankEquipTypeStrategy (list "立式双椭圆封头") "verticalTank")
-  (AssertEqual 'GetBsGCTTankEquipTypeStrategy (list "卧式双椭圆封头") "horizontalTank")
+  (AssertEqual 'GetBsGCTEquipTypeStrategy (list "立式双椭圆封头") "verticalTank")
+  (AssertEqual 'GetBsGCTEquipTypeStrategy (list "卧式双椭圆封头") "horizontalTank")
 )
 
 ; 2021-04-20

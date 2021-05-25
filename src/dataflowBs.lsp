@@ -91,7 +91,7 @@
 
 ; 2021-04-17
 ; refactored at - 2021-04-20
-(defun InsertBsGCTTankDesignParam (insPt dataType designParamDictList blockName /) 
+(defun InsertBsGCTDesignParam (insPt dataType designParamDictList blockName /) 
   (InsertBlockUtils insPt blockName "0DataFlow-BsGCT" (list (cons 0 dataType)))
   (ModifyMultiplePropertyForOneBlockUtils (entlast) 
     (mapcar '(lambda (x) (car x)) designParamDictList)
@@ -100,14 +100,9 @@
 )
 
 ; refactored at 2021-04-20
-(defun InsertBsGCTDesignStandard (insPt dataType tankStandardList /) 
-  (InsertBlockUtils insPt "BsGCTTableDesignStandard" "0DataFlow-BsGCT" (list (cons 0 dataType)))
-  (InsertBsGCTTankStandardText (MoveInsertPositionUtils insPt 20 -80) tankStandardList dataType)
-)
-
-; 2021-05-16
-(defun InsertBsGCTHorizontalTankDesignStandard (insPt dataType tankStandardList /) 
-  (InsertBlockUtils insPt "BsGCTTableHorizontalTankDesignStandard" "0DataFlow-BsGCT" (list (cons 0 dataType)))
+; refactored at 2021-05-25
+(defun InsertBsGCTDesignStandard (insPt dataType blockName tankStandardList /) 
+  (InsertBlockUtils insPt blockName "0DataFlow-BsGCT" (list (cons 0 dataType)))
   (InsertBsGCTTankStandardText (MoveInsertPositionUtils insPt 20 -80) tankStandardList dataType)
 )
 
@@ -124,10 +119,29 @@
 )
 
 ; refactored at 2021-04-20
-(defun InsertBsGCTRequirement (insPt dataType tankHeadStyleList tankHeadMaterialList /) 
-  (InsertBlockUtils insPt "BsGCTTableRequirement" "0DataFlow-BsGCT" (list (cons 0 dataType)))
-  (InsertBsGCTTankHeadStyleText (MoveInsertPositionUtils insPt 55 -100) tankHeadStyleList dataType)
-  (InsertBsGCTTankHeadMaterialText (MoveInsertPositionUtils insPt 55 -240) tankHeadMaterialList dataType)
+(defun InsertBsGCTRequirement (insPt dataType blockName tankHeadStyleList tankHeadMaterialList /) 
+  (InsertBlockUtils insPt blockName "0DataFlow-BsGCT" (list (cons 0 dataType)))
+  (InsertBsGCTRequirementTextStrategy insPt dataType blockName tankHeadStyleList tankHeadMaterialList)
+)
+
+; 2021-05-25
+(defun InsertBsGCTRequirementTextStrategy (insPt dataType blockName tankHeadStyleList tankHeadMaterialList /)
+  (cond 
+    ((= blockName "BsGCTTableRequirement") (InsertBsGCTTankRequirementText insPt dataType tankHeadStyleList tankHeadMaterialList))
+    ((= blockName "BsGCTTableRequirement-Heater") (InsertBsGCTHeaterRequirementText insPt dataType tankHeadStyleList tankHeadMaterialList))
+  )
+)
+
+; 2021-05-25
+(defun InsertBsGCTTankRequirementText (insPt dataType tankHeadStyleList tankHeadMaterialList /)
+  (InsertBsGCTEquipHeadStyleText (MoveInsertPositionUtils insPt 55 -100) tankHeadStyleList dataType)
+  (InsertBsGCTEquipHeadMaterialText (MoveInsertPositionUtils insPt 55 -240) tankHeadMaterialList dataType)
+)
+
+; 2021-05-25
+(defun InsertBsGCTHeaterRequirementText (insPt dataType tankHeadStyleList tankHeadMaterialList /)
+  (InsertBsGCTEquipHeadStyleText (MoveInsertPositionUtils insPt 55 -80) tankHeadStyleList dataType)
+  (InsertBsGCTEquipHeadMaterialText (MoveInsertPositionUtils insPt 55 -200) tankHeadMaterialList dataType)
 )
 
 ; 2021-05-07
@@ -160,7 +174,7 @@
 )
 
 ; 2021-04-20
-(defun InsertBsGCTTankHeadStyleText (insPt tankHeadStyleList dataType / i) 
+(defun InsertBsGCTEquipHeadStyleText (insPt tankHeadStyleList dataType / i) 
   (setq i 0)
   (repeat (length tankHeadStyleList)
     (GenerateLevelLeftTextUtils (MoveInsertPositionUtils insPt 0 (* -30 i)) (nth i tankHeadStyleList) "0DataFlow-BsText" 20 0.7) 
@@ -171,7 +185,7 @@
 )
 
 ; 2021-04-20
-(defun InsertBsGCTTankHeadMaterialText (insPt tankHeadMaterialList dataType / i) 
+(defun InsertBsGCTEquipHeadMaterialText (insPt tankHeadMaterialList dataType / i) 
   (setq i 0)
   (repeat (length tankHeadMaterialList)
     (GenerateLevelLeftTextUtils (MoveInsertPositionUtils insPt 0 (* -30 i)) (nth i tankHeadMaterialList) "0DataFlow-BsText" 20 0.7) 
@@ -1016,9 +1030,9 @@
   ; do not convert to int frist 2021-04-23
   (setq headThickNess (GetDottedPairValueUtils "HEAD_THICKNESS" oneTankData))
   (setq straightEdgeHeight 25)
-  (setq equipType (GetBsGCTTankEquipTypeStrategy (GetDottedPairValueUtils "equipType" oneTankData)))
+  (setq equipType (GetBsGCTEquipTypeStrategy (GetDottedPairValueUtils "equipType" oneTankData)))
   (InsertBsGCTDrawFrame insPt equipTag)
-  (InsertBsGCTTankTableStrategy insPt bsGCTType oneTankData tankStandardList tankHeadStyleList 
+  (InsertBsGCTEquipTableStrategy insPt bsGCTType oneTankData tankStandardList tankHeadStyleList 
                            tankHeadMaterialList tankPressureElementList tankOtherRequestList equipType)
   ; thickNess param refactored at 2021-04-21
   (InsertBsGCTTankGraphyStrategy (MoveInsertPositionUtils insPt -2915 1600) 
@@ -1038,10 +1052,10 @@
   ; do not convert to int frist 2021-04-23
   (setq headThickNess (GetDottedPairValueUtils "HEAD_THICKNESS" oneHeaterData))
   (setq straightEdgeHeight 25)
-  (setq equipType (GetBsGCTTankEquipTypeStrategy (GetDottedPairValueUtils "equipType" oneHeaterData)))
+  (setq equipType (GetBsGCTEquipTypeStrategy (GetDottedPairValueUtils "equipType" oneHeaterData)))
   (InsertBsGCTDrawFrame insPt equipTag)
-  ; (InsertBsGCTTankTableStrategy insPt bsGCTType oneHeaterData heaterStandardList heaterHeadStyleList 
-  ;                          heaterHeadMaterialList heaterPressureElementList heaterOtherRequestList equipType)
+  (InsertBsGCTEquipTableStrategy insPt bsGCTType oneHeaterData heaterStandardList heaterHeadStyleList 
+                           heaterHeadMaterialList heaterPressureElementList heaterOtherRequestList equipType)
   ; (InsertBsGCTTankGraphyStrategy (MoveInsertPositionUtils insPt -2915 1600) 
   ;   barrelRadius barrelHalfHeight thickNess headThickNess bsGCTType straightEdgeHeight equipType allBsGCTSupportDictData)
 )
@@ -1062,8 +1076,8 @@
   (setq equipTag (GetDottedPairValueUtils "TAG" oneTankData))
   (setq bsGCTType equipTag)
   ; (setq insPt (GetGCTFramePositionByEquipTag equipTag))
-  (setq equipType (GetBsGCTTankEquipTypeStrategy (GetDottedPairValueUtils "equipType" oneTankData)))
-  (InsertBsGCTTankTableStrategy insPt bsGCTType oneTankData tankStandardList tankHeadStyleList 
+  (setq equipType (GetBsGCTEquipTypeStrategy (GetDottedPairValueUtils "equipType" oneTankData)))
+  (InsertBsGCTEquipTableStrategy insPt bsGCTType oneTankData tankStandardList tankHeadStyleList 
                            tankHeadMaterialList tankPressureElementList tankOtherRequestList equipType)
   (princ)
 )
@@ -1101,7 +1115,7 @@
   (InsertBsGCTDataHeader leftInsPt bsGCTType)
   ; the height of BsGCTDataHeader is 50
   (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 -50))
-  (InsertBsGCTTankDesignParam leftInsPt bsGCTType designParamDictList "BsGCTTableDesignParam")
+  (InsertBsGCTDesignParam leftInsPt bsGCTType designParamDictList "BsGCTTableDesignParam")
   ; the height of BsGCTTankDesignParam is 840
   (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 -840))
   (InsertBsGCTPressureElement leftInsPt bsGCTType tankPressureElementList)
@@ -1114,10 +1128,10 @@
   ; insert tabe in right position
   ; the height of BsGCTDataHeader is 50
   (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 -50))
-  (InsertBsGCTDesignStandard rightInsPt bsGCTType tankStandardList)
-  ; the height of BsGCTHorizontalTankDesignStandard is 200
+  (InsertBsGCTDesignStandard rightInsPt bsGCTType "BsGCTTableDesignStandard" tankStandardList)
+  ; the height of BsGCTVerticalTankDesignStandard is 200
   (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 -200))
-  (InsertBsGCTRequirement rightInsPt bsGCTType tankHeadStyleList tankHeadMaterialList)
+  (InsertBsGCTRequirement rightInsPt bsGCTType "BsGCTTableRequirement" tankHeadStyleList tankHeadMaterialList)
   ; the height of BsGCTRequirement is 320
   (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 -320))
   (InsertBsGCTTankInspectData rightInsPt bsGCTType oneTankData)
@@ -1137,7 +1151,7 @@
   (InsertBsGCTDataHeader leftInsPt bsGCTType)
   ; the height of BsGCTDataHeader is 50
   (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 -50))
-  (InsertBsGCTTankDesignParam leftInsPt bsGCTType designParamDictList "BsGCTTableHorizontalTankDesignParam")
+  (InsertBsGCTDesignParam leftInsPt bsGCTType designParamDictList "BsGCTTableHorizontalTankDesignParam")
   ; the height of BsGCTTankDesignParam is 920
   (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 -920))
   (InsertBsGCTPressureElement leftInsPt bsGCTType tankPressureElementList)
@@ -1150,10 +1164,10 @@
   ; insert tabe in right position
   ; the height of BsGCTDataHeader is 50
   (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 -50))
-  (InsertBsGCTHorizontalTankDesignStandard rightInsPt bsGCTType tankStandardList)
+  (InsertBsGCTDesignStandard rightInsPt bsGCTType "BsGCTTableHorizontalTankDesignStandard" tankStandardList)
   ; the height of BsGCTHorizontalTankDesignStandard is 280
   (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 -280))
-  (InsertBsGCTRequirement rightInsPt bsGCTType tankHeadStyleList tankHeadMaterialList)
+  (InsertBsGCTRequirement rightInsPt bsGCTType "BsGCTTableRequirement" tankHeadStyleList tankHeadMaterialList)
   ; the height of BsGCTRequirement is 320
   (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 -320))
   (InsertBsGCTTankInspectData rightInsPt bsGCTType oneTankData)
@@ -1162,34 +1176,78 @@
   (InsertBsGCTTestData rightInsPt bsGCTType oneTankData)
 )
 
+; 2021-05-25
+(defun InsertGCTOneBsHeaterTable (insPt bsGCTType oneHeaterData heaterStandardList heaterHeadStyleList heaterHeadMaterialList 
+                                heaterPressureElementList heaterOtherRequestList / designParamDictList leftInsPt rightInsPt) 
+  ; split oneHeaterData to Two Parts
+  (setq designParamDictList (cadr (SplitLDictListByDictKeyUtils "SERVIVE_LIFE" oneHeaterData)))
+  (setq leftInsPt (MoveInsertPositionUtils insPt -900 2870))
+  (setq rightInsPt (MoveInsertPositionUtils insPt -450 2870))
+  (InsertBsGCTDataHeader leftInsPt bsGCTType)
+  ; the height of BsGCTDataHeader is 50
+  (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 -50))
+  (InsertBsGCTDesignParam leftInsPt bsGCTType designParamDictList "BsGCTTableDesignParam-Heater")
+  ; the height of BsGCTTankDesignParam is 960
+  (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 -960))
+  (InsertBsGCTPressureElement leftInsPt bsGCTType heaterPressureElementList)
+  ; the height of BsGCTPressureElement is [length of tankPressureElementList, add 2]
+  (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 (- 0 (* 40 (+ (length heaterPressureElementList) 2)))))
+  (InsertBsGCTOtherRequest leftInsPt bsGCTType heaterOtherRequestList 350)
+  ; the height of BsGCTOtherRequest is 350
+  (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 -350))
+  (InsertBsGCTNozzleTable leftInsPt bsGCTType oneHeaterData)
+  ; insert tabe in right position
+  ; the height of BsGCTDataHeader is 50
+  (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 -50))
+  (InsertBsGCTDesignStandard rightInsPt bsGCTType "BsGCTTableDesignStandard-Heater" heaterStandardList)
+  ; the height of BsGCTHorizontalTankDesignStandard is 240
+  (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 -240))
+  (InsertBsGCTRequirement rightInsPt bsGCTType "BsGCTTableRequirement-Heater" heaterHeadStyleList heaterHeadMaterialList)
+  ; the height of BsGCTRequirement is 280
+  (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 -280))
+  (InsertBsGCTTankInspectData rightInsPt bsGCTType oneHeaterData)
+  ; ; the height of BsGCTTankInspectData is 160
+  ; (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 -160))
+  ; (InsertBsGCTTestData rightInsPt bsGCTType oneHeaterData)
+)
+
 ; 2021-05-16
 ; unit compeleted
-(defun GetBsGCTTankEquipTypeStrategy (equipType /)
+(defun GetBsGCTEquipTypeStrategy (equipType /)
   (cond 
     ((RegexpTestUtils equipType "立式双椭.*" nil) "verticalTank")
     ((RegexpTestUtils equipType "卧式双椭.*" nil) "horizontalTank")
+    ((RegexpTestUtils equipType ".*换热.*" nil) "Heater")
   )
 )
 
 ; 2021-05-11
 ; refactored at 2021-05-18
-(defun InsertBsGCTTankTableStrategy (insPt bsGCTType oneTankData tankStandardList tankHeadStyleList tankHeadMaterialList 
-                                tankPressureElementList tankOtherRequestList equipType /)
+; refactored at 2021-05-25
+(defun InsertBsGCTEquipTableStrategy (insPt bsGCTType oneEquipData equipStandardList equipHeadStyleList equipHeadMaterialList 
+                                equipPressureElementList equipOtherRequestList equipType /)
   (cond 
     ((= equipType "verticalTank") 
-     (InsertGCTOneBsVerticalTankTable insPt bsGCTType oneTankData 
-       (FilterListListByFirstItemUtils tankStandardList "verticalTank") 
-       (FilterListListByFirstItemUtils tankHeadStyleList "verticalTank") 
-       (FilterListListByFirstItemUtils tankHeadMaterialList "verticalTank")                    
-       tankPressureElementList 
-       (FilterListListByFirstItemUtils tankOtherRequestList "verticalTank")))
+     (InsertGCTOneBsVerticalTankTable insPt bsGCTType oneEquipData 
+       (FilterListListByFirstItemUtils equipStandardList "verticalTank") 
+       (FilterListListByFirstItemUtils equipHeadStyleList "verticalTank") 
+       (FilterListListByFirstItemUtils equipHeadMaterialList "verticalTank")                    
+       equipPressureElementList 
+       (FilterListListByFirstItemUtils equipOtherRequestList "verticalTank")))
     ((= equipType "horizontalTank") 
-     (InsertGCTOneBsHorizontalTankTable insPt bsGCTType oneTankData 
-       (FilterListListByFirstItemUtils tankStandardList "horizontalTank") 
-       (FilterListListByFirstItemUtils tankHeadStyleList "horizontalTank") 
-       (FilterListListByFirstItemUtils tankHeadMaterialList "horizontalTank")                    
-       tankPressureElementList 
-       (FilterListListByFirstItemUtils tankOtherRequestList "horizontalTank")))
+     (InsertGCTOneBsHorizontalTankTable insPt bsGCTType oneEquipData 
+       (FilterListListByFirstItemUtils equipStandardList "horizontalTank") 
+       (FilterListListByFirstItemUtils equipHeadStyleList "horizontalTank") 
+       (FilterListListByFirstItemUtils equipHeadMaterialList "horizontalTank")                    
+       equipPressureElementList 
+       (FilterListListByFirstItemUtils equipOtherRequestList "horizontalTank")))
+    ((= equipType "Heater") 
+     (InsertGCTOneBsHeaterTable insPt bsGCTType oneEquipData 
+       (FilterListListByFirstItemUtils equipStandardList "Heater") 
+       (FilterListListByFirstItemUtils equipHeadStyleList "Heater") 
+       (FilterListListByFirstItemUtils equipHeadMaterialList "Heater")                    
+       equipPressureElementList 
+       (FilterListListByFirstItemUtils equipOtherRequestList "Heater")))
   )
 )
 
