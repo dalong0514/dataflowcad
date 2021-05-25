@@ -682,17 +682,40 @@
   ) 
 )
 
+; 2021-05-25
+(defun GetBsGCTHeaterData (bsGCTImportedList /) 
+  (vl-remove-if-not '(lambda (x) 
+                      (= (car x) "Heater") 
+                    ) 
+    bsGCTImportedList
+  ) 
+)
+
 ; 2021-04-19
 (defun GetBsGCTTankDictData (bsGCTImportedList /) 
   (mapcar '(lambda (y) 
               (mapcar '(lambda (xx yy) 
                          (cons xx yy)
                       ) 
-                (GetBsGCTTankMainKeysData)
+                (GetBsGCTTankMainKeysData bsGCTImportedList)
                 y
               )
            ) 
     (GetBsGCTTankData bsGCTImportedList)
+  )
+)
+
+; 2021-05-25
+(defun GetBsGCTHeaterDictData (bsGCTImportedList /) 
+  (mapcar '(lambda (y) 
+              (mapcar '(lambda (xx yy) 
+                         (cons xx yy)
+                      ) 
+                (GetBsGCTHeaterMainKeysData bsGCTImportedList)
+                y
+              )
+           ) 
+    (GetBsGCTHeaterData bsGCTImportedList)
   )
 )
 
@@ -746,6 +769,21 @@
   )
 )
 
+; 2021-05-25
+(defun GetBsGCTHeaterPressureElementDictData (bsGCTImportedList /) 
+  (mapcar '(lambda (y) 
+              (mapcar '(lambda (xx yy) 
+                         (cons xx yy)
+                      ) 
+                ; for PressureElementKeysData, tank and heater are the same
+                (GetBsGCTTankPressureElementKeysData bsGCTImportedList)
+                y
+              )
+           ) 
+    (GetBsGCTHeaterPressureElementData bsGCTImportedList)
+  )
+)
+
 ; 2021-05-06
 (defun GetBsGCTTankPressureElementKeysData (bsGCTImportedList /) 
   (cdr 
@@ -764,6 +802,17 @@
   (mapcar '(lambda (x) (cdr x)) 
     (vl-remove-if-not '(lambda (x) 
                         (= (car x) "Tank-PressureElement") 
+                      ) 
+      bsGCTImportedList
+    )  
+  ) 
+)
+
+; 2021-05-25
+(defun GetBsGCTHeaterPressureElementData (bsGCTImportedList /) 
+  (mapcar '(lambda (x) (cdr x)) 
+    (vl-remove-if-not '(lambda (x) 
+                        (= (car x) "Heater-PressureElement") 
                       ) 
       bsGCTImportedList
     )  
@@ -819,13 +868,26 @@
 )
 
 ; 2021-04-23
-(defun GetBsGCTTankMainKeysData () 
+(defun GetBsGCTTankMainKeysData (bsGCTImportedList /) 
   (cdr 
     (car 
       (vl-remove-if-not '(lambda (x) 
                           (= (car x) "Tank-MainKeys") 
                         ) 
-        (GetBsGCTImportedList)
+        bsGCTImportedList
+      )  
+    ) 
+  )
+)
+
+; 2021-05-25
+(defun GetBsGCTHeaterMainKeysData (bsGCTImportedList /) 
+  (cdr 
+    (car 
+      (vl-remove-if-not '(lambda (x) 
+                          (= (car x) "Heater-MainKeys") 
+                        ) 
+        bsGCTImportedList
       )  
     ) 
   )
@@ -1101,22 +1163,23 @@
 )
 
 ; 2021-05-25
-(defun InsertAllBsGCTHeater (insPt bsGCTImportedList / allBsGCTTankDictData tankPressureElementList 
+(defun InsertAllBsGCTHeater (insPt bsGCTImportedList / allBsGCTHeaterDictData heaterPressureElementList 
                            tankOtherRequestList tankStandardList tankHeadStyleList tankHeadMaterialList allBsGCTSupportDictData insPtList) 
-  (setq allBsGCTTankDictData (GetBsGCTTankDictData bsGCTImportedList))
-  (setq tankPressureElementList (GetBsGCTTankPressureElementDictData bsGCTImportedList))
-  (setq tankOtherRequestList (GetBsGCTTankOtherRequestData bsGCTImportedList)) 
-  (setq tankStandardList (GetBsGCTTankStandardData bsGCTImportedList)) 
-  (setq tankHeadStyleList (GetBsGCTTankHeadStyleData bsGCTImportedList)) 
-  (setq tankHeadMaterialList (GetBsGCTTankHeadMaterialData bsGCTImportedList)) 
-  (setq allBsGCTSupportDictData (GetAllBsGCTSupportDictData bsGCTImportedList))
-  (setq insPtList (GetInsertPtListByXMoveUtils insPt (GenerateSortedNumByList allBsGCTTankDictData 0) 5200))
-  (mapcar '(lambda (x y) 
-            (InsertOneBsTankGCT x y tankPressureElementList tankOtherRequestList tankStandardList tankHeadStyleList tankHeadMaterialList allBsGCTSupportDictData) 
-          ) 
-    insPtList
-    allBsGCTTankDictData 
-  ) 
+  (setq allBsGCTHeaterDictData (GetBsGCTHeaterDictData bsGCTImportedList))
+  (setq heaterPressureElementList (GetBsGCTHeaterPressureElementDictData bsGCTImportedList))
+  ; (setq tankOtherRequestList (GetBsGCTTankOtherRequestData bsGCTImportedList)) 
+  ; (setq tankStandardList (GetBsGCTTankStandardData bsGCTImportedList)) 
+  ; (setq tankHeadStyleList (GetBsGCTTankHeadStyleData bsGCTImportedList)) 
+  ; (setq tankHeadMaterialList (GetBsGCTTankHeadMaterialData bsGCTImportedList)) 
+  ; (setq allBsGCTSupportDictData (GetAllBsGCTSupportDictData bsGCTImportedList))
+  ; (setq insPtList (GetInsertPtListByXMoveUtils insPt (GenerateSortedNumByList allBsGCTTankDictData 0) 5200))
+  ; (mapcar '(lambda (x y) 
+  ;           (InsertOneBsTankGCT x y tankPressureElementList tankOtherRequestList tankStandardList tankHeadStyleList tankHeadMaterialList allBsGCTSupportDictData) 
+  ;         ) 
+  ;   insPtList
+  ;   allBsGCTTankDictData 
+  ; ) 
+  (princ heaterPressureElementList)
   (princ)
 )
 
