@@ -1329,11 +1329,11 @@
 (defun InsertAllBsGCTMacro (/ insPt bsGCTImportedList allBsGCTTankDictData tankPressureElementList 
                            tankOtherRequestList tankStandardList tankHeadStyleList tankHeadMaterialList allBsGCTSupportDictData insPtList) 
   (VerifyBsGCTBlockLayerText)
-  (setq insPt (getpoint "\n拾取设备一览表插入点："))
+  (setq insPt (getpoint "\n拾取工程图插入点："))
   (setq bsGCTImportedList (GetBsGCTImportedList))
   (setq allBsGCTSupportDictData (GetAllBsGCTSupportDictData bsGCTImportedList))
-  ; (InsertAllBsGCTTank insPt bsGCTImportedList allBsGCTSupportDictData)
-  (InsertAllBsGCTHeater insPt bsGCTImportedList allBsGCTSupportDictData)
+  (InsertAllBsGCTTank insPt bsGCTImportedList allBsGCTSupportDictData)
+  (InsertAllBsGCTHeater (MoveInsertPositionUtils insPt 0 -4000) bsGCTImportedList allBsGCTSupportDictData)
 )
 
 ; 2021-04-21
