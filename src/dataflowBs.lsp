@@ -144,11 +144,32 @@
   (InsertBsGCTEquipHeadMaterialText (MoveInsertPositionUtils insPt 55 -200) tankHeadMaterialList dataType)
 )
 
+; 2021-05-25
+(defun InsertBsGCTInspectData (insPt dataType blockName oneEquipData /) 
+  (cond 
+    ((= blockName "BsGCTTableInspectData-TankA") (InsertBsGCTTankInspectData insPt dataType blockName oneEquipData))
+    ((= blockName "BsGCTTableInspectData-Heater") (InsertBsGCTHeaterInspectData insPt dataType blockName oneEquipData))
+  )
+)
+
+; 2021-05-25
+(defun InsertBsGCTHeaterInspectData (insPt dataType blockName oneHeaterData / inspectDictData) 
+  (InsertBlockUtils insPt blockName "0DataFlow-BsGCT" (list (cons 0 dataType)))
+  (setq inspectDictData (append 
+                          (GetBsGCTInspectDictData (GetDottedPairValueUtils "SHELL_INSPECT_RATE" oneHeaterData) "SHELL_BARREL_")
+                          (GetBsGCTInspectDictData (GetDottedPairValueUtils "BARREL_INSPECT_RATE" oneHeaterData) "BARREL_")
+                          (GetBsGCTInspectDictData (GetDottedPairValueUtils "HEAD_INSPECT_RATE" oneHeaterData) "HEAD_")
+                          (GetBsGCTInspectDictData (GetDottedPairValueUtils "CD_INSPECT_RATE" oneHeaterData) "CD_")
+                          (GetBsGCTInspectDictData (GetDottedPairValueUtils "HEATER_INSPECT_RATE" oneHeaterData) "HEATER_")
+                        ))
+  (ModifyBlockPropertiesByDictDataUtils (entlast) inspectDictData)
+)
+
 ; 2021-05-07
 ; refactored at 2021-05-11
-(defun InsertBsGCTTankInspectData (insPt dataType oneTankData / inspectDictData) 
+(defun InsertBsGCTTankInspectData (insPt dataType blockName oneTankData / inspectDictData) 
   ; BsGCTTableInspectData-TankA or BsGCTTableInspectData-TankB, ready for the whole logic 2021-05-11
-  (InsertBlockUtils insPt "BsGCTTableInspectData-TankA" "0DataFlow-BsGCT" (list (cons 0 dataType)))
+  (InsertBlockUtils insPt blockName "0DataFlow-BsGCT" (list (cons 0 dataType)))
   (setq inspectDictData (append 
                           (GetBsGCTInspectDictData (GetDottedPairValueUtils "BARREL_INSPECT_RATE" oneTankData) "BARREL_")
                           (GetBsGCTInspectDictData (GetDottedPairValueUtils "HEAD_INSPECT_RATE" oneTankData) "HEAD_")
@@ -158,18 +179,20 @@
 )
 
 ; 2021-05-07
-(defun InsertBsGCTTestData (insPt dataType oneTankData / testDictData) 
-  (InsertBlockUtils insPt "BsGCTTableTestData" "0DataFlow-BsGCT" (list (cons 0 dataType)))
-  (setq testDictData (GetBsGCTTestDictData oneTankData))
+(defun InsertBsGCTTestData (insPt dataType blockName oneEquipData / testDictData) 
+  (InsertBlockUtils insPt blockName "0DataFlow-BsGCT" (list (cons 0 dataType)))
+  (setq testDictData (GetBsGCTTestDictData oneEquipData))
   (ModifyBlockPropertiesByDictDataUtils (entlast) testDictData)
 )
 
 ; 2021-05-07
-(defun GetBsGCTTestDictData (oneTankData /)
+; refacotred at 2021-05-25
+(defun GetBsGCTTestDictData (oneEquipData /)
   (vl-remove-if-not '(lambda (x) 
-                       (member (car x) '("TEST_PRESSURE" "AIR_TEST_PRESSURE" "HEAT_TREAT")) 
+                       (member (car x) 
+                               '("TEST_PRESSURE" "AIR_TEST_PRESSURE" "HEAT_TREAT" "SHELL_WATER_TEST_PRESSURE" "TUBE_WATER_TEST_PRESSURE" "SHELL_AIR_TEST_PRESSURE" "TUBE_AIR_TEST_PRESSURE")) 
                     ) 
-    oneTankData
+    oneEquipData
   )
 )
 
@@ -1134,10 +1157,10 @@
   (InsertBsGCTRequirement rightInsPt bsGCTType "BsGCTTableRequirement" tankHeadStyleList tankHeadMaterialList)
   ; the height of BsGCTRequirement is 320
   (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 -320))
-  (InsertBsGCTTankInspectData rightInsPt bsGCTType oneTankData)
+  (InsertBsGCTInspectData rightInsPt bsGCTType "BsGCTTableInspectData-TankA" oneTankData)
   ; the height of BsGCTTankInspectData is 160
   (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 -160))
-  (InsertBsGCTTestData rightInsPt bsGCTType oneTankData)
+  (InsertBsGCTTestData rightInsPt bsGCTType "BsGCTTableTestData" oneTankData)
 )
 
 ; 2021-05-16
@@ -1170,10 +1193,10 @@
   (InsertBsGCTRequirement rightInsPt bsGCTType "BsGCTTableRequirement" tankHeadStyleList tankHeadMaterialList)
   ; the height of BsGCTRequirement is 320
   (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 -320))
-  (InsertBsGCTTankInspectData rightInsPt bsGCTType oneTankData)
+  (InsertBsGCTInspectData rightInsPt bsGCTType "BsGCTTableInspectData-TankA" oneTankData)
   ; the height of BsGCTTankInspectData is 160
   (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 -160))
-  (InsertBsGCTTestData rightInsPt bsGCTType oneTankData)
+  (InsertBsGCTTestData rightInsPt bsGCTType "BsGCTTableTestData" oneTankData)
 )
 
 ; 2021-05-25
@@ -1205,10 +1228,10 @@
   (InsertBsGCTRequirement rightInsPt bsGCTType "BsGCTTableRequirement-Heater" heaterHeadStyleList heaterHeadMaterialList)
   ; the height of BsGCTRequirement is 280
   (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 -280))
-  (InsertBsGCTTankInspectData rightInsPt bsGCTType oneHeaterData)
-  ; ; the height of BsGCTTankInspectData is 160
-  ; (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 -160))
-  ; (InsertBsGCTTestData rightInsPt bsGCTType oneHeaterData)
+  (InsertBsGCTInspectData rightInsPt bsGCTType "BsGCTTableInspectData-Heater" oneHeaterData)
+  ; the height of BsGCTTankInspectData is 240
+  (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 -240))
+  (InsertBsGCTTestData rightInsPt bsGCTType "BsGCTTableTestData-Heater" oneHeaterData)
 )
 
 ; 2021-05-16
