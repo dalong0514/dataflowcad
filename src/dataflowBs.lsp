@@ -1004,7 +1004,7 @@
 
 ; 2021-04-17
 ; refacotred at 2021-05-07
-(defun InsertOneBsTankGCT (insPt oneTankData tankPressureElementList tankOtherRequestList tankStandardList tankHeadStyleList tankHeadMaterialList allBsGCTSupportDictData / 
+(defun InsertOneBsGCTTank (insPt oneTankData tankPressureElementList tankOtherRequestList tankStandardList tankHeadStyleList tankHeadMaterialList allBsGCTSupportDictData / 
                            equipTag bsGCTType barrelRadius barrelHalfHeight thickNess headThickNess straightEdgeHeight equipType) 
   (setq equipTag (GetDottedPairValueUtils "TAG" oneTankData))
   ; (setq bsGCTType (strcat (GetDottedPairValueUtils "BSGCT_TYPE" oneTankData) "-" equipTag))
@@ -1023,7 +1023,27 @@
   ; thickNess param refactored at 2021-04-21
   (InsertBsGCTTankGraphyStrategy (MoveInsertPositionUtils insPt -2915 1600) 
     barrelRadius barrelHalfHeight thickNess headThickNess bsGCTType straightEdgeHeight equipType allBsGCTSupportDictData)
-  (princ)
+)
+
+; 2021-05-25
+(defun InsertOneBsGCTHeater (insPt oneHeaterData heaterPressureElementList heaterOtherRequestList heaterStandardList heaterHeadStyleList 
+                             heaterHeadMaterialList allBsGCTSupportDictData / equipTag bsGCTType barrelRadius barrelHalfHeight thickNess 
+                             headThickNess straightEdgeHeight equipType) 
+  (setq equipTag (GetDottedPairValueUtils "TAG" oneHeaterData))
+  ; use equipTag as the label for data
+  (setq bsGCTType equipTag)
+  (setq barrelRadius (GetHalfNumberUtils (atoi (GetDottedPairValueUtils "barrelRadius" oneHeaterData))))
+  (setq barrelHalfHeight (GetHalfNumberUtils (atoi (GetDottedPairValueUtils "barrelHeight" oneHeaterData))))
+  (setq thickNess (atoi (GetDottedPairValueUtils "BARREL_THICKNESS" oneHeaterData)))
+  ; do not convert to int frist 2021-04-23
+  (setq headThickNess (GetDottedPairValueUtils "HEAD_THICKNESS" oneHeaterData))
+  (setq straightEdgeHeight 25)
+  (setq equipType (GetBsGCTTankEquipTypeStrategy (GetDottedPairValueUtils "equipType" oneHeaterData)))
+  (InsertBsGCTDrawFrame insPt equipTag)
+  ; (InsertBsGCTTankTableStrategy insPt bsGCTType oneHeaterData heaterStandardList heaterHeadStyleList 
+  ;                          heaterHeadMaterialList heaterPressureElementList heaterOtherRequestList equipType)
+  ; (InsertBsGCTTankGraphyStrategy (MoveInsertPositionUtils insPt -2915 1600) 
+  ;   barrelRadius barrelHalfHeight thickNess headThickNess bsGCTType straightEdgeHeight equipType allBsGCTSupportDictData)
 )
 
 ; 2021-05-19
@@ -1187,46 +1207,40 @@
 )
 
 ; 2021-04-17
-(defun InsertAllBsGCTTank (/ insPt bsGCTImportedList allBsGCTTankDictData tankPressureElementList 
-                           tankOtherRequestList tankStandardList tankHeadStyleList tankHeadMaterialList allBsGCTSupportDictData insPtList) 
-  (VerifyBsGCTBlockLayerText)
-  (setq insPt (getpoint "\n拾取设备一览表插入点："))
-  (setq bsGCTImportedList (GetBsGCTImportedList))
+; refactored at 2021-05-25
+(defun InsertAllBsGCTTank (insPt bsGCTImportedList allBsGCTSupportDictData / allBsGCTTankDictData tankPressureElementList 
+                           tankOtherRequestList tankStandardList tankHeadStyleList tankHeadMaterialList insPtList) 
   (setq allBsGCTTankDictData (GetBsGCTTankDictData bsGCTImportedList))
   (setq tankPressureElementList (GetBsGCTTankPressureElementDictData bsGCTImportedList))
   (setq tankOtherRequestList (GetBsGCTTankOtherRequestData bsGCTImportedList)) 
   (setq tankStandardList (GetBsGCTTankStandardData bsGCTImportedList)) 
   (setq tankHeadStyleList (GetBsGCTTankHeadStyleData bsGCTImportedList)) 
   (setq tankHeadMaterialList (GetBsGCTTankHeadMaterialData bsGCTImportedList)) 
-  (setq allBsGCTSupportDictData (GetAllBsGCTSupportDictData bsGCTImportedList))
   (setq insPtList (GetInsertPtListByXMoveUtils insPt (GenerateSortedNumByList allBsGCTTankDictData 0) 5200))
   (mapcar '(lambda (x y) 
-            (InsertOneBsTankGCT x y tankPressureElementList tankOtherRequestList tankStandardList tankHeadStyleList tankHeadMaterialList allBsGCTSupportDictData) 
+            (InsertOneBsGCTTank x y tankPressureElementList tankOtherRequestList tankStandardList tankHeadStyleList tankHeadMaterialList allBsGCTSupportDictData) 
           ) 
     insPtList
     allBsGCTTankDictData 
   ) 
-  (princ)
 )
 
 ; 2021-05-25
-(defun InsertAllBsGCTHeater (insPt bsGCTImportedList / allBsGCTHeaterDictData heaterPressureElementList 
-                           heaterOtherRequestList heaterStandardList heaterHeadStyleList heaterHeadMaterialList allBsGCTSupportDictData insPtList) 
+(defun InsertAllBsGCTHeater (insPt bsGCTImportedList allBsGCTSupportDictData / allBsGCTHeaterDictData heaterPressureElementList 
+                           heaterOtherRequestList heaterStandardList heaterHeadStyleList heaterHeadMaterialList insPtList) 
   (setq allBsGCTHeaterDictData (GetBsGCTHeaterDictData bsGCTImportedList))
   (setq heaterPressureElementList (GetBsGCTHeaterPressureElementDictData bsGCTImportedList))
   (setq heaterOtherRequestList (GetBsGCTHeaterOtherRequestData bsGCTImportedList)) 
   (setq heaterStandardList (GetBsGCTHeaterStandardData bsGCTImportedList)) 
   (setq heaterHeadStyleList (GetBsGCTHeaterHeadStyleData bsGCTImportedList)) 
   (setq heaterHeadMaterialList (GetBsGCTHeaterHeadMaterialData bsGCTImportedList)) 
-  ; (setq allBsGCTSupportDictData (GetAllBsGCTSupportDictData bsGCTImportedList))
-  ; (setq insPtList (GetInsertPtListByXMoveUtils insPt (GenerateSortedNumByList allBsGCTTankDictData 0) 5200))
-  ; (mapcar '(lambda (x y) 
-  ;           (InsertOneBsTankGCT x y tankPressureElementList tankOtherRequestList tankStandardList tankHeadStyleList tankHeadMaterialList allBsGCTSupportDictData) 
-  ;         ) 
-  ;   insPtList
-  ;   allBsGCTTankDictData 
-  ; ) 
-  (princ heaterHeadMaterialList)
+  (setq insPtList (GetInsertPtListByXMoveUtils insPt (GenerateSortedNumByList allBsGCTHeaterDictData 0) 5200))
+  (mapcar '(lambda (x y) 
+            (InsertOneBsGCTHeater x y heaterPressureElementList heaterOtherRequestList heaterStandardList heaterHeadStyleList heaterHeadMaterialList allBsGCTSupportDictData) 
+          ) 
+    insPtList
+    allBsGCTHeaterDictData 
+  ) 
   (princ)
 )
 
@@ -1236,12 +1250,13 @@
   (VerifyBsGCTBlockLayerText)
   (setq insPt (getpoint "\n拾取设备一览表插入点："))
   (setq bsGCTImportedList (GetBsGCTImportedList))
-  (InsertAllBsGCTHeater insPt bsGCTImportedList)
+  (setq allBsGCTSupportDictData (GetAllBsGCTSupportDictData bsGCTImportedList))
+  ; (InsertAllBsGCTTank insPt bsGCTImportedList allBsGCTSupportDictData)
+  (InsertAllBsGCTHeater insPt bsGCTImportedList allBsGCTSupportDictData)
 )
 
 ; 2021-04-21
 (defun c:InsertAllBsGCT ()
-  ; (ExecuteFunctionAfterVerifyDateUtils 'InsertAllBsGCTTank '())
   (ExecuteFunctionAfterVerifyDateUtils 'InsertAllBsGCTMacro '())
 )
 
