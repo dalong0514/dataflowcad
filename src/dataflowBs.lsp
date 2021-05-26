@@ -345,6 +345,30 @@
   (princ)
 )
 
+; 2021-04-26
+(defun InsertBsGCTVerticalHeaterGraphy (insPt barrelRadius barrelHalfHeight thickNess headThickNess dataType straightEdgeHeight allBsGCTSupportDictData / 
+                                      newBarrelHalfHeight nozzleOffset oneBsGCTTankSupportDictData legSupportHeight) 
+  (setq newBarrelHalfHeight (+ barrelHalfHeight straightEdgeHeight)) 
+  (setq nozzleOffset 100)
+  (setq oneBsGCTTankSupportDictData (GetOneBsGCTTankSupportDictData dataType allBsGCTSupportDictData))
+  ; (setq legSupportHeight (atoi (GetDottedPairValueUtils "SUPPORT_HEIGHT" oneBsGCTTankSupportDictData)))
+  (GenerateDoubleLineEllipseHeadUtils (MoveInsertPositionUtils insPt 0 newBarrelHalfHeight) 
+    barrelRadius "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" 1 thickNess straightEdgeHeight)
+  (GenerateUpEllipseHeadNozzle (MoveInsertPositionUtils insPt 0 (+ newBarrelHalfHeight (/ barrelRadius 2) thickNess)) (+ barrelRadius thickNess) dataType nozzleOffset thickNess)
+  (GenerateBsGCTFlangeUtils (MoveInsertPositionUtils insPt 0 (- newBarrelHalfHeight straightEdgeHeight)) dataType "BsGCTGraphRectangleBottomBase" barrelRadius thickNess)
+  ; (GenerateVerticalDoubleLineBarrelUtils insPt barrelRadius newBarrelHalfHeight "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" thickNess)
+  
+  
+  
+  ; (GenerateDoubleLineEllipseHeadUtils (MoveInsertPositionUtils insPt 0 (- 0 newBarrelHalfHeight)) 
+  ;   barrelRadius "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" -1 thickNess straightEdgeHeight)
+  ; (GenerateDownllipseHeadNozzle (MoveInsertPositionUtils insPt 0 (- 0 newBarrelHalfHeight (/ barrelRadius 2) thickNess)) dataType)
+  ; (InsertBsGCTLegSupport (MoveInsertPositionUtils insPt (+ barrelRadius thickNess) (- 0 (- newBarrelHalfHeight straightEdgeHeight))) dataType legSupportHeight)
+  ; (InsertBsGCTVerticalTankBarrelDimension insPt barrelRadius barrelHalfHeight thickNess straightEdgeHeight)
+  ; (InsertBsGCTVerticalTankAnnotation insPt dataType barrelRadius headThickNess straightEdgeHeight)
+  (princ)
+)
+
 ; 2021-04-22
 (defun InsertBsGCTVerticalTankAnnotation (insPt dataType barrelRadius headThickNess straightEdgeHeight /) 
   (InsertBsGCTTankDownLeftHeadAnnotation 
@@ -1278,12 +1302,12 @@
 ; 2021-05-25
 (defun InsertBsGCTHeaterGraphyStrategy (insPt barrelRadius barrelHalfHeight thickNess headThickNess bsGCTType straightEdgeHeight equipType allBsGCTSupportDictData /)
   (cond 
-    ((= equipType "verticalTank") 
-     (InsertBsGCTVerticalTankGraphy insPt barrelRadius barrelHalfHeight thickNess headThickNess 
+    ((= equipType "verticalHeater") 
+     (InsertBsGCTVerticalHeaterGraphy insPt barrelRadius barrelHalfHeight thickNess headThickNess 
        bsGCTType straightEdgeHeight allBsGCTSupportDictData))
-    ((= equipType "horizontalTank") 
+    ((= equipType "horizontalHeater") 
      ; refactored at 2021-05-18 move the insPt for HorizontalTankGraphy
-     (InsertBsGCTHorizontalTankGraphy (MoveInsertPositionUtils insPt 450 -150) barrelRadius barrelHalfHeight thickNess headThickNess 
+     (InsertBsGCTHorizontalHeaterGraphy (MoveInsertPositionUtils insPt 450 -150) barrelRadius barrelHalfHeight thickNess headThickNess 
        bsGCTType straightEdgeHeight allBsGCTSupportDictData))
   )
 )

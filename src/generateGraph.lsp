@@ -330,7 +330,7 @@
 )
 
 ; 2021-04-05
-; level is 0, vertical is 1.57
+; level is 0, vertical is 1.57[PI/2]
 (defun InsertBlockByRotateUtils (insPt blockName layerName propertyDictList rotate / acadObj curDoc insertionPnt modelSpace blockRefObj blockAttributes)
   (setq acadObj (vlax-get-acad-object))
   (setq curDoc (vla-get-activedocument acadObj)) 
@@ -790,6 +790,45 @@
     entityLayer
   )  
   (princ)
+)
+
+; 2021-05-26
+(defun GenerateBsGCTFlangeUtils (insPt dataType blockName barrelRadius thickNess / flangeBarrelHeight outerDiameter flangeNeckHeight flangeHeight)
+  (InsertBlockByRotateUtils insPt blockName "0DataFlow-BsThickLine" (list (cons 0 dataType)) PI)
+  (setq flangeBarrelHeight (GetFlangeBarrelHeightEnums (* 2 barrelRadius)))
+  (setq outerDiameter (* (+ barrelRadius thickNess) 2))
+  (SetDynamicBlockPropertyValueUtils 
+    (GetLastVlaObjectUtils) 
+    (list (cons "LENGTH" outerDiameter) (cons "WIDTH" flangeBarrelHeight))
+  ) 
+  (setq flangeNeckHeight (GetFlangeNeckHeightEnums (* 2 barrelRadius)))
+  (GenerateBsGCTFlangeNeckUtils 
+    (MoveInsertPositionUtils insPt 0 (GetNegativeNumberUtils flangeBarrelHeight)) dataType "BsGCTGraphFlangeNeck-RF" outerDiameter flangeNeckHeight)
+  (setq flangeHeight (GetFlangeHeightEnums (* 2 barrelRadius)))
+  (GenerateBsGCTNeckFlangeUtils 
+    (MoveInsertPositionUtils insPt 0 (- 0 flangeBarrelHeight flangeNeckHeight)) dataType "BsGCTGraphFlange-RF" outerDiameter flangeHeight)
+)
+
+; 2021-05-26
+(defun GenerateBsGCTFlangeNeckUtils (insPt dataType blockName outerDiameter flangeNeckHeight /)
+  (InsertBlockByRotateUtils insPt blockName "0DataFlow-BsThickLine" (list (cons 0 dataType)) PI)
+  (SetDynamicBlockPropertyValueUtils 
+    (GetLastVlaObjectUtils) 
+    (list (cons "DIAMETER" outerDiameter) (cons "HEIGHT" flangeNeckHeight))
+  ) 
+)
+
+; 2021-05-26
+(defun GenerateBsGCTNeckFlangeUtils (insPt dataType blockName outerDiameter flangeHeight /)
+  (InsertBlockByRotateUtils insPt blockName "0DataFlow-BsThickLine" (list (cons 0 dataType)) PI)
+  (SetDynamicBlockPropertyValueUtils 
+    (GetLastVlaObjectUtils) 
+    (list 
+      (cons "DIAMETER" outerDiameter) 
+      (cons "BLOT_DIAMETER" 700)
+      (cons "FLANGE_DIAMETER" 740)
+      (cons "HEIGHT" flangeHeight))
+  ) 
 )
 
 ; 2021-05-19
