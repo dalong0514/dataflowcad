@@ -801,13 +801,13 @@
 )
 
 ; 2021-05-26
-(defun GenerateBsGCTFlangeUtils (insPt dataType barrelRadius thickNess rotate / outerDiameter flangeBarrelHeight flangeNeckHeight flangeHeight totalFlangeHeight) 
+(defun GenerateBsGCTFlangeUtils (insPt dataType barrelRadius thickNess rotate directionStatus / outerDiameter flangeBarrelHeight flangeNeckHeight flangeHeight totalFlangeHeight) 
   (setq outerDiameter (* (+ barrelRadius thickNess) 2))
   (setq flangeBarrelHeight (GetFlangeBarrelHeightEnums (* 2 barrelRadius)))
   (GenerateBsGCTFlangeUpBarrel insPt dataType "BsGCTGraphRectangleBottomBase" outerDiameter flangeBarrelHeight rotate)
   (setq flangeNeckHeight (GetFlangeNeckHeightEnums (* 2 barrelRadius)))
   (GenerateBsGCTFlangeNeck 
-    (MoveInsertPositionUtils insPt 0 (GetNegativeNumberUtils flangeBarrelHeight)) dataType "BsGCTGraphFlangeNeck-RF" outerDiameter flangeNeckHeight rotate)
+    (MoveInsertPositionUtils insPt 0 (- 0 flangeBarrelHeight)) dataType "BsGCTGraphFlangeNeck-RF" outerDiameter flangeNeckHeight rotate)
   (setq flangeHeight (GetFlangeHeightEnums (* 2 barrelRadius)))
   (GenerateBsGCTNeckFlange 
     (MoveInsertPositionUtils insPt 0 (- 0 flangeBarrelHeight flangeNeckHeight)) dataType "BsGCTGraphFlange-RF" outerDiameter flangeHeight rotate)

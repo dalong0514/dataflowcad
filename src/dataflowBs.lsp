@@ -361,10 +361,13 @@
   (GenerateUpEllipseHeadNozzle (MoveInsertPositionUtils insPt 0 (+ newBarrelHalfHeight (/ barrelRadius 2) thickNess)) (+ barrelRadius thickNess) dataType nozzleOffset thickNess)
   (setq totalFlangeHeight 
     ; the upper Flange - rotate is PI
-    (GenerateBsGCTFlangeUtils (MoveInsertPositionUtils insPt 0 (- newBarrelHalfHeight straightEdgeHeight)) dataType barrelRadius thickNess PI)
+    (GenerateBsGCTFlangeUtils (MoveInsertPositionUtils insPt 0 barrelHalfHeight) dataType barrelRadius thickNess PI -1)
   )
   (GenerateVerticalDoubleLineBarrelUtils insPt barrelRadius (- barrelHalfHeight totalFlangeHeight) "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" thickNess)
   (GenerateBsGCTVerticalTankCenterLine insPt newBarrelHalfHeight barrelRadius thickNess)
+  ; the down Flange - rotate is 0
+  ; (GenerateBsGCTFlangeUtils (MoveInsertPositionUtils insPt 0 (- 0 barrelHalfHeight)) dataType barrelRadius thickNess 0 1)
+  
   
   
   (GenerateDoubleLineEllipseHeadUtils (MoveInsertPositionUtils insPt 0 (- 0 newBarrelHalfHeight)) 
