@@ -812,6 +812,17 @@
   (GenerateBsGCTNeckFlange 
     (MoveInsertPositionUtils insPt 0 (* directionStatus (+ flangeBarrelHeight flangeNeckHeight))) 
     dataType "BsGCTGraphFlange-RF" outerDiameter thickNess flangeHeight rotate)
+  ; 2021-05-27
+  (GenerateBsGCTNeckFlangeBlot 
+    (MoveInsertPositionUtils insPt 
+      (GetHalfNumberUtils (GetNeckFlangeBoltDiameterEnums (* 2 barrelRadius))) 
+      (* directionStatus (+ flangeBarrelHeight flangeNeckHeight flangeHeight 3))) 
+    dataType "BsGCTGraphBlot" flangeHeight)
+  (GenerateBsGCTNeckFlangeBlot 
+    (MoveInsertPositionUtils insPt 
+      (GetNegativeNumberUtils (GetHalfNumberUtils (GetNeckFlangeBoltDiameterEnums (* 2 barrelRadius))) )
+      (* directionStatus (+ flangeBarrelHeight flangeNeckHeight flangeHeight 3))) 
+    dataType "BsGCTGraphBlot" flangeHeight)
   (GenerateBsGCTFlangeDoubleRaised 
     (MoveInsertPositionUtils insPt 0 (* directionStatus (+ flangeBarrelHeight flangeNeckHeight flangeHeight))) 
     dataType "BsGCTGraphRectangleBottomBase" (* barrelRadius 2) rotate directionStatus)
@@ -874,6 +885,15 @@
       (cons "BLOT_DIAMETER" (GetNeckFlangeBoltDiameterEnums heaterDiameter))
       (cons "FLANGE_DIAMETER" (GetNeckFlangeDiameterEnums heaterDiameter))
       (cons "HEIGHT" flangeHeight))
+  ) 
+)
+
+; 2021-05-27
+(defun GenerateBsGCTNeckFlangeBlot (insPt dataType blockName flangeHeight /)
+  (InsertBlockUtils insPt blockName "0DataFlow-BsThickLine" (list (cons 0 dataType)))
+  (SetDynamicBlockPropertyValueUtils 
+    (GetLastVlaObjectUtils) 
+    (list (cons "BLOT_LENGTH" (* (+ flangeHeight 50) 2)))
   ) 
 )
 
