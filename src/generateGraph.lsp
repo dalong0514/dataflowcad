@@ -821,6 +821,15 @@
 )
 
 ; 2021-05-27
+(defun GetBsGCTHeaterFlangeTotalHeight (barrelRadius / flangeBarrelHeight flangeNeckHeight flangeHeight) 
+  (setq flangeBarrelHeight (GetFlangeBarrelHeightEnums (* 2 barrelRadius)))
+  (setq flangeNeckHeight (GetFlangeNeckHeightEnums (* 2 barrelRadius)))
+  (setq flangeHeight (GetFlangeHeightEnums (* 2 barrelRadius)))
+  ; the height of two raised is 6
+  (+ flangeBarrelHeight flangeNeckHeight flangeHeight 6 flangeHeight)
+)
+
+; 2021-05-27
 (defun GenerateBsGCTFlangeUpBarrel (insPt dataType blockName outerDiameter flangeBarrelHeight rotate /)
   (InsertBlockByRotateUtils insPt "BsGCTGraphRectangleBottomBase" "0DataFlow-BsThickLine" (list (cons 0 dataType)) rotate)
   (SetDynamicBlockPropertyValueUtils 

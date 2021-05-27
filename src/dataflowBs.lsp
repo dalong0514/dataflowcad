@@ -352,21 +352,20 @@
 ; 2021-05-27
 (defun InsertBsGCTVerticalHeaterGraphy (insPt barrelRadius barrelHalfHeight thickNess headThickNess dataType straightEdgeHeight allBsGCTSupportDictData / 
                                       newBarrelHalfHeight nozzleOffset oneBsGCTTankSupportDictData totalFlangeHeight legSupportHeight) 
-  (setq newBarrelHalfHeight (+ barrelHalfHeight straightEdgeHeight)) 
   (setq nozzleOffset 100)
   (setq oneBsGCTTankSupportDictData (GetOneBsGCTTankSupportDictData dataType allBsGCTSupportDictData))
   ; (setq legSupportHeight (atoi (GetDottedPairValueUtils "SUPPORT_HEIGHT" oneBsGCTTankSupportDictData)))
+  (setq totalFlangeHeight (GetBsGCTHeaterFlangeTotalHeight barrelRadius))
+  (setq newBarrelHalfHeight (+ barrelHalfHeight straightEdgeHeight totalFlangeHeight)) 
   (GenerateDoubleLineEllipseHeadUtils (MoveInsertPositionUtils insPt 0 newBarrelHalfHeight) 
     barrelRadius "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" 1 thickNess straightEdgeHeight)
   (GenerateUpEllipseHeadNozzle (MoveInsertPositionUtils insPt 0 (+ newBarrelHalfHeight (/ barrelRadius 2) thickNess)) (+ barrelRadius thickNess) dataType nozzleOffset thickNess)
-  (setq totalFlangeHeight 
-    ; the upper Flange - rotate is PI
-    (GenerateBsGCTFlangeUtils (MoveInsertPositionUtils insPt 0 barrelHalfHeight) dataType barrelRadius thickNess PI -1)
-  )
-  (GenerateVerticalDoubleLineBarrelUtils insPt barrelRadius (- barrelHalfHeight totalFlangeHeight) "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" thickNess)
+  ; the upper Flange - rotate is PI
+  (GenerateBsGCTFlangeUtils (MoveInsertPositionUtils insPt 0 (- newBarrelHalfHeight straightEdgeHeight)) dataType barrelRadius thickNess PI -1)
+  (GenerateVerticalDoubleLineBarrelUtils insPt barrelRadius barrelHalfHeight "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" thickNess)
   (GenerateBsGCTVerticalTankCenterLine insPt newBarrelHalfHeight barrelRadius thickNess)
   ; the down Flange - rotate is 0
-  (GenerateBsGCTFlangeUtils (MoveInsertPositionUtils insPt 0 (- 0 barrelHalfHeight)) dataType barrelRadius thickNess 0 1)
+  (GenerateBsGCTFlangeUtils (MoveInsertPositionUtils insPt 0 (- straightEdgeHeight newBarrelHalfHeight)) dataType barrelRadius thickNess 0 1)
   (GenerateDoubleLineEllipseHeadUtils (MoveInsertPositionUtils insPt 0 (- 0 newBarrelHalfHeight)) 
     barrelRadius "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" -1 thickNess straightEdgeHeight)
   (GenerateDownllipseHeadNozzle (MoveInsertPositionUtils insPt 0 (- 0 newBarrelHalfHeight (/ barrelRadius 2) thickNess)) dataType)
