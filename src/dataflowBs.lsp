@@ -366,10 +366,7 @@
   (GenerateVerticalDoubleLineBarrelUtils insPt barrelRadius (- barrelHalfHeight totalFlangeHeight) "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" thickNess)
   (GenerateBsGCTVerticalTankCenterLine insPt newBarrelHalfHeight barrelRadius thickNess)
   ; the down Flange - rotate is 0
-  ; (GenerateBsGCTFlangeUtils (MoveInsertPositionUtils insPt 0 (- 0 barrelHalfHeight)) dataType barrelRadius thickNess 0 1)
-  
-  
-  
+  (GenerateBsGCTFlangeUtils (MoveInsertPositionUtils insPt 0 (- 0 barrelHalfHeight)) dataType barrelRadius thickNess 0 1)
   (GenerateDoubleLineEllipseHeadUtils (MoveInsertPositionUtils insPt 0 (- 0 newBarrelHalfHeight)) 
     barrelRadius "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" -1 thickNess straightEdgeHeight)
   (GenerateDownllipseHeadNozzle (MoveInsertPositionUtils insPt 0 (- 0 newBarrelHalfHeight (/ barrelRadius 2) thickNess)) dataType)

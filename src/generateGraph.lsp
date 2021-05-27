@@ -807,15 +807,16 @@
   (GenerateBsGCTFlangeUpBarrel insPt dataType "BsGCTGraphRectangleBottomBase" outerDiameter flangeBarrelHeight rotate)
   (setq flangeNeckHeight (GetFlangeNeckHeightEnums (* 2 barrelRadius)))
   (GenerateBsGCTFlangeNeck 
-    (MoveInsertPositionUtils insPt 0 (- 0 flangeBarrelHeight)) dataType "BsGCTGraphFlangeNeck-RF" outerDiameter flangeNeckHeight rotate)
+    (MoveInsertPositionUtils insPt 0 (* directionStatus flangeBarrelHeight)) dataType "BsGCTGraphFlangeNeck-RF" outerDiameter flangeNeckHeight rotate)
   (setq flangeHeight (GetFlangeHeightEnums (* 2 barrelRadius)))
   (GenerateBsGCTNeckFlange 
-    (MoveInsertPositionUtils insPt 0 (- 0 flangeBarrelHeight flangeNeckHeight)) dataType "BsGCTGraphFlange-RF" outerDiameter flangeHeight rotate)
+    (MoveInsertPositionUtils insPt 0 (* directionStatus (+ flangeBarrelHeight flangeNeckHeight))) dataType "BsGCTGraphFlange-RF" outerDiameter flangeHeight rotate)
   (GenerateBsGCTFlangeDoubleRaised 
-    (MoveInsertPositionUtils insPt 0 (- 0 flangeBarrelHeight flangeNeckHeight flangeHeight)) dataType "BsGCTGraphRectangleBottomBase" (* barrelRadius 2) rotate)
+    (MoveInsertPositionUtils insPt 0 (* directionStatus (+ flangeBarrelHeight flangeNeckHeight flangeHeight))) 
+    dataType "BsGCTGraphRectangleBottomBase" (* barrelRadius 2) rotate directionStatus)
   ; the height of two raised is 6
   (GenerateBsGCTNeckFlange 
-    (MoveInsertPositionUtils insPt 0 (- 0 flangeBarrelHeight flangeNeckHeight flangeHeight 6)) dataType "BsGCTGraphFlange-RF" outerDiameter flangeHeight rotate)
+    (MoveInsertPositionUtils insPt 0 (* directionStatus (+ flangeBarrelHeight flangeNeckHeight flangeHeight 6))) dataType "BsGCTGraphFlange-RF" outerDiameter flangeHeight rotate)
   (setq totalFlangeHeight (+ flangeBarrelHeight flangeNeckHeight flangeHeight 6 flangeHeight))
 )
 
@@ -829,13 +830,13 @@
 )
 
 ; 2021-05-27
-(defun GenerateBsGCTFlangeDoubleRaised (insPt dataType blockName barrelDiameter rotate /)
+(defun GenerateBsGCTFlangeDoubleRaised (insPt dataType blockName barrelDiameter rotate directionStatus /)
   (InsertBlockByRotateUtils insPt "BsGCTGraphRectangleBottomBase" "0DataFlow-BsThickLine" (list (cons 0 dataType)) rotate)
   (SetDynamicBlockPropertyValueUtils 
     (GetLastVlaObjectUtils) 
     (list (cons "LENGTH" (+ barrelDiameter 55)) (cons "WIDTH" 3))
   ) 
-  (InsertBlockByRotateUtils (MoveInsertPositionUtils insPt 0 -3) "BsGCTGraphRectangleBottomBase" "0DataFlow-BsThickLine" (list (cons 0 dataType)) rotate)
+  (InsertBlockByRotateUtils (MoveInsertPositionUtils insPt 0 (* directionStatus 3)) "BsGCTGraphRectangleBottomBase" "0DataFlow-BsThickLine" (list (cons 0 dataType)) rotate)
   (SetDynamicBlockPropertyValueUtils 
     (GetLastVlaObjectUtils) 
     (list (cons "LENGTH" (+ barrelDiameter 55)) (cons "WIDTH" 3))
