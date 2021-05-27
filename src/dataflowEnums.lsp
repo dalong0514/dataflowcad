@@ -305,6 +305,30 @@
   )
 )
 
+; 2021-05-27
+(defun GetNeckFlangeDiameterEnums (heaterDiameter /)
+  (cond 
+    ((<= heaterDiameter 650) (+ heaterDiameter 140))
+    ((<= heaterDiameter 1400) (+ heaterDiameter 160))
+    ((<= heaterDiameter 1800) (+ heaterDiameter 195))
+    ((<= heaterDiameter 2000) (+ heaterDiameter 215))
+    ((<= heaterDiameter 2200) (+ heaterDiameter 240))
+    (T (+ heaterDiameter 240))
+  )
+)
+
+; 2021-05-27
+(defun GetNeckFlangeBoltDiameterEnums (heaterDiameter /)
+  (cond 
+    ((<= heaterDiameter 650) (- (GetNeckFlangeDiameterEnums heaterDiameter) 40))
+    ((<= heaterDiameter 1400) (- (GetNeckFlangeDiameterEnums heaterDiameter) 45))
+    ((<= heaterDiameter 1800) (- (GetNeckFlangeDiameterEnums heaterDiameter) 55))
+    ((<= heaterDiameter 2000) (- (GetNeckFlangeDiameterEnums heaterDiameter) 60))
+    ((<= heaterDiameter 2200) (- (GetNeckFlangeDiameterEnums heaterDiameter) 70))
+    (T (- (GetNeckFlangeDiameterEnums heaterDiameter) 20))
+  )
+)
+
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
 ; Gs Enums

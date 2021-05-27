@@ -810,13 +810,15 @@
     (MoveInsertPositionUtils insPt 0 (* directionStatus flangeBarrelHeight)) dataType "BsGCTGraphFlangeNeck-RF" outerDiameter flangeNeckHeight rotate)
   (setq flangeHeight (GetFlangeHeightEnums (* 2 barrelRadius)))
   (GenerateBsGCTNeckFlange 
-    (MoveInsertPositionUtils insPt 0 (* directionStatus (+ flangeBarrelHeight flangeNeckHeight))) dataType "BsGCTGraphFlange-RF" outerDiameter flangeHeight rotate)
+    (MoveInsertPositionUtils insPt 0 (* directionStatus (+ flangeBarrelHeight flangeNeckHeight))) 
+    dataType "BsGCTGraphFlange-RF" outerDiameter thickNess flangeHeight rotate)
   (GenerateBsGCTFlangeDoubleRaised 
     (MoveInsertPositionUtils insPt 0 (* directionStatus (+ flangeBarrelHeight flangeNeckHeight flangeHeight))) 
     dataType "BsGCTGraphRectangleBottomBase" (* barrelRadius 2) rotate directionStatus)
   ; the height of two raised is 6
   (GenerateBsGCTNeckFlange 
-    (MoveInsertPositionUtils insPt 0 (* directionStatus (+ flangeBarrelHeight flangeNeckHeight flangeHeight 6))) dataType "BsGCTGraphFlange-RF" outerDiameter flangeHeight rotate)
+    (MoveInsertPositionUtils insPt 0 (* directionStatus (+ flangeBarrelHeight flangeNeckHeight flangeHeight 6))) 
+    dataType "BsGCTGraphFlange-RF" outerDiameter thickNess flangeHeight rotate)
   (setq totalFlangeHeight (+ flangeBarrelHeight flangeNeckHeight flangeHeight 6 flangeHeight))
 )
 
@@ -862,14 +864,15 @@
 )
 
 ; 2021-05-26
-(defun GenerateBsGCTNeckFlange (insPt dataType blockName outerDiameter flangeHeight rotate /)
+(defun GenerateBsGCTNeckFlange (insPt dataType blockName outerDiameter thickNess flangeHeight rotate / heaterDiameter)
+  (setq heaterDiameter (- outerDiameter (* thickNess 2)))
   (InsertBlockByRotateUtils insPt blockName "0DataFlow-BsThickLine" (list (cons 0 dataType)) rotate)
   (SetDynamicBlockPropertyValueUtils 
     (GetLastVlaObjectUtils) 
     (list 
       (cons "DIAMETER" outerDiameter) 
-      (cons "BLOT_DIAMETER" 700)
-      (cons "FLANGE_DIAMETER" 740)
+      (cons "BLOT_DIAMETER" (GetNeckFlangeBoltDiameterEnums heaterDiameter))
+      (cons "FLANGE_DIAMETER" (GetNeckFlangeDiameterEnums heaterDiameter))
       (cons "HEIGHT" flangeHeight))
   ) 
 )
