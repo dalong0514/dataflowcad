@@ -1092,7 +1092,7 @@
     barrelRadius barrelHalfHeight thickNess headThickNess bsGCTType straightEdgeHeight equipType allBsGCTSupportDictData)
 )
 
-; 2021-05-25
+; 2021-05-27
 (defun InsertOneBsGCTHeater (insPt oneHeaterData heaterPressureElementList heaterOtherRequestList heaterStandardList heaterHeadStyleList 
                              heaterHeadMaterialList allBsGCTSupportDictData / equipTag bsGCTType barrelRadius barrelHalfHeight thickNess 
                              headThickNess straightEdgeHeight equipType) 
@@ -1100,7 +1100,12 @@
   ; use equipTag as the label for data
   (setq bsGCTType equipTag)
   (setq barrelRadius (GetHalfNumberUtils (atoi (GetDottedPairValueUtils "barrelRadius" oneHeaterData))))
-  (setq barrelHalfHeight (GetHalfNumberUtils (atoi (GetDottedPairValueUtils "barrelHeight" oneHeaterData))))
+  ; different from tank, tube length subtract EXCEED_LENGTH - 2021-5-27
+  (setq barrelHalfHeight 
+    (- 
+      (GetHalfNumberUtils (atoi (GetDottedPairValueUtils "barrelHeight" oneHeaterData))) 
+      (atoi (GetDottedPairValueUtils "EXCEED_LENGTH" oneHeaterData)))
+  )
   (setq thickNess (atoi (GetDottedPairValueUtils "BARREL_THICKNESS" oneHeaterData)))
   ; do not convert to int frist 2021-04-23
   (setq headThickNess (GetDottedPairValueUtils "HEAD_THICKNESS" oneHeaterData))
