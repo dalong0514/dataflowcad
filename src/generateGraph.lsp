@@ -801,27 +801,27 @@
 )
 
 ; 2021-05-26
-(defun GenerateBsGCTFlangeUtils (insPt dataType barrelRadius thickNess / outerDiameter flangeBarrelHeight flangeNeckHeight flangeHeight totalFlangeHeight) 
+(defun GenerateBsGCTFlangeUtils (insPt dataType barrelRadius thickNess rotate / outerDiameter flangeBarrelHeight flangeNeckHeight flangeHeight totalFlangeHeight) 
   (setq outerDiameter (* (+ barrelRadius thickNess) 2))
   (setq flangeBarrelHeight (GetFlangeBarrelHeightEnums (* 2 barrelRadius)))
-  (GenerateBsGCTFlangeUpBarrel insPt dataType "BsGCTGraphRectangleBottomBase" outerDiameter flangeBarrelHeight)
+  (GenerateBsGCTFlangeUpBarrel insPt dataType "BsGCTGraphRectangleBottomBase" outerDiameter flangeBarrelHeight rotate)
   (setq flangeNeckHeight (GetFlangeNeckHeightEnums (* 2 barrelRadius)))
   (GenerateBsGCTFlangeNeck 
-    (MoveInsertPositionUtils insPt 0 (GetNegativeNumberUtils flangeBarrelHeight)) dataType "BsGCTGraphFlangeNeck-RF" outerDiameter flangeNeckHeight)
+    (MoveInsertPositionUtils insPt 0 (GetNegativeNumberUtils flangeBarrelHeight)) dataType "BsGCTGraphFlangeNeck-RF" outerDiameter flangeNeckHeight rotate)
   (setq flangeHeight (GetFlangeHeightEnums (* 2 barrelRadius)))
   (GenerateBsGCTNeckFlange 
-    (MoveInsertPositionUtils insPt 0 (- 0 flangeBarrelHeight flangeNeckHeight)) dataType "BsGCTGraphFlange-RF" outerDiameter flangeHeight)
+    (MoveInsertPositionUtils insPt 0 (- 0 flangeBarrelHeight flangeNeckHeight)) dataType "BsGCTGraphFlange-RF" outerDiameter flangeHeight rotate)
   (GenerateBsGCTFlangeDoubleRaised 
-    (MoveInsertPositionUtils insPt 0 (- 0 flangeBarrelHeight flangeNeckHeight flangeHeight)) dataType "BsGCTGraphRectangleBottomBase" (* barrelRadius 2))
+    (MoveInsertPositionUtils insPt 0 (- 0 flangeBarrelHeight flangeNeckHeight flangeHeight)) dataType "BsGCTGraphRectangleBottomBase" (* barrelRadius 2) rotate)
   ; the height of two raised is 6
   (GenerateBsGCTNeckFlange 
-    (MoveInsertPositionUtils insPt 0 (- 0 flangeBarrelHeight flangeNeckHeight flangeHeight 6)) dataType "BsGCTGraphFlange-RF" outerDiameter flangeHeight)
+    (MoveInsertPositionUtils insPt 0 (- 0 flangeBarrelHeight flangeNeckHeight flangeHeight 6)) dataType "BsGCTGraphFlange-RF" outerDiameter flangeHeight rotate)
   (setq totalFlangeHeight (+ flangeBarrelHeight flangeNeckHeight flangeHeight 6 flangeHeight))
 )
 
 ; 2021-05-27
-(defun GenerateBsGCTFlangeUpBarrel (insPt dataType blockName outerDiameter flangeBarrelHeight /)
-  (InsertBlockByRotateUtils insPt "BsGCTGraphRectangleBottomBase" "0DataFlow-BsThickLine" (list (cons 0 dataType)) PI)
+(defun GenerateBsGCTFlangeUpBarrel (insPt dataType blockName outerDiameter flangeBarrelHeight rotate /)
+  (InsertBlockByRotateUtils insPt "BsGCTGraphRectangleBottomBase" "0DataFlow-BsThickLine" (list (cons 0 dataType)) rotate)
   (SetDynamicBlockPropertyValueUtils 
     (GetLastVlaObjectUtils) 
     (list (cons "LENGTH" outerDiameter) (cons "WIDTH" flangeBarrelHeight))
@@ -829,13 +829,13 @@
 )
 
 ; 2021-05-27
-(defun GenerateBsGCTFlangeDoubleRaised (insPt dataType blockName barrelDiameter /)
-  (InsertBlockByRotateUtils insPt "BsGCTGraphRectangleBottomBase" "0DataFlow-BsThickLine" (list (cons 0 dataType)) PI)
+(defun GenerateBsGCTFlangeDoubleRaised (insPt dataType blockName barrelDiameter rotate /)
+  (InsertBlockByRotateUtils insPt "BsGCTGraphRectangleBottomBase" "0DataFlow-BsThickLine" (list (cons 0 dataType)) rotate)
   (SetDynamicBlockPropertyValueUtils 
     (GetLastVlaObjectUtils) 
     (list (cons "LENGTH" (+ barrelDiameter 55)) (cons "WIDTH" 3))
   ) 
-  (InsertBlockByRotateUtils (MoveInsertPositionUtils insPt 0 -3) "BsGCTGraphRectangleBottomBase" "0DataFlow-BsThickLine" (list (cons 0 dataType)) PI)
+  (InsertBlockByRotateUtils (MoveInsertPositionUtils insPt 0 -3) "BsGCTGraphRectangleBottomBase" "0DataFlow-BsThickLine" (list (cons 0 dataType)) rotate)
   (SetDynamicBlockPropertyValueUtils 
     (GetLastVlaObjectUtils) 
     (list (cons "LENGTH" (+ barrelDiameter 55)) (cons "WIDTH" 3))
@@ -843,8 +843,8 @@
 )
 
 ; 2021-05-26
-(defun GenerateBsGCTFlangeNeck (insPt dataType blockName outerDiameter flangeNeckHeight /)
-  (InsertBlockByRotateUtils insPt blockName "0DataFlow-BsThickLine" (list (cons 0 dataType)) PI)
+(defun GenerateBsGCTFlangeNeck (insPt dataType blockName outerDiameter flangeNeckHeight rotate /)
+  (InsertBlockByRotateUtils insPt blockName "0DataFlow-BsThickLine" (list (cons 0 dataType)) rotate)
   (SetDynamicBlockPropertyValueUtils 
     (GetLastVlaObjectUtils) 
     (list (cons "DIAMETER" outerDiameter) (cons "HEIGHT" flangeNeckHeight))
@@ -852,8 +852,8 @@
 )
 
 ; 2021-05-26
-(defun GenerateBsGCTNeckFlange (insPt dataType blockName outerDiameter flangeHeight /)
-  (InsertBlockByRotateUtils insPt blockName "0DataFlow-BsThickLine" (list (cons 0 dataType)) PI)
+(defun GenerateBsGCTNeckFlange (insPt dataType blockName outerDiameter flangeHeight rotate /)
+  (InsertBlockByRotateUtils insPt blockName "0DataFlow-BsThickLine" (list (cons 0 dataType)) rotate)
   (SetDynamicBlockPropertyValueUtils 
     (GetLastVlaObjectUtils) 
     (list 
