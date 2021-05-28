@@ -44,6 +44,11 @@
   (VerifyGsBzLayerByName "0DataFlow-GsBzEquipComment")
 )
 
+; 2021-05-28
+(defun VerifyGsBzGraphBlock () 
+  (VerifyGsBzBlockByName "GsBzGraph*")
+)
+
 ; 2021-03-12
 (defun GetAllGsBzEquipBlockNameList (/ entityData resultList) 
   (StealAllGsBzEquipBlocks)
@@ -1541,6 +1546,52 @@
     oneFloorGsBzLevelAxisoTwoPointData
   )  
 )
+
+;;;-------------------------------------------------------------------------;;;
+; Generate GSBz Reactor Graph
+
+; 2021-05-28
+(defun GenerateGSBzReactorGraph (insPt reactorRadius jacketRadius nozzleRadius blotRadius nozzleAngle lugAngle /) 
+  (GenerateGSBzReactorGraphBarrel insPt reactorRadius jacketRadius nozzleRadius nozzleAngle)
+  (GenerateGSBzReactorGraphLugSupport insPt (* 2 jacketRadius) (* 2 blotRadius) lugAngle)
+)
+
+; 2021-05-28
+(defun GenerateGSBzReactorGraphBarrel (insPt reactorRadius jacketRadius nozzleRadius nozzleAngle /) 
+  (InsertBlockUtils insPt "GSBzGraphReactor" "0DataFlow-GsBzEquip" (list (cons 1 "")))
+  (SetDynamicBlockPropertyValueUtils 
+    (GetLastVlaObjectUtils) 
+    (list 
+      (cons "DIAMETER" (rtos reactorRadius)) 
+      (cons "STATUS" "PersonHole") 
+      (cons "JACKET_DIAMETER" (rtos jacketRadius))
+      (cons "NOZZLE_DIAMETER" nozzleRadius) 
+      (cons "NOZZLE_ANGLE" nozzleAngle) 
+    )
+  ) 
+)
+
+; 2021-05-28
+(defun GenerateGSBzReactorGraphLugSupport (insPt reactorDiameter blotDiameter lugAngle /) 
+  (InsertBlockByRotateUtils insPt "GSBzGraphLugSupportTopView-A6" "0DataFlow-GsBzEquip" (list (cons 1 "")) lugAngle)
+  (SetDynamicBlockPropertyValueUtils 
+    (GetLastVlaObjectUtils) 
+    (list 
+      (cons "LUG_DIAMETER_X" (rtos reactorDiameter)) 
+      (cons "LUG_DIAMETER_Y" (rtos reactorDiameter)) 
+      (cons "BLOT_DIAMETER_X" (rtos blotDiameter))
+      (cons "BLOT_DIAMETER_Y" (rtos blotDiameter)) 
+    )
+  ) 
+)
+
+;2021-05-28
+; (defun c:foo () 
+;   (VerifyGsBzEquipLayer)
+;   (VerifyGsBzGraphBlock)
+;   (setq insPt (getpoint "\n拾取工程图插入点："))
+;   (GenerateGSBzReactorGraph insPt 1200 1300 750 1450 (/ PI 0.5) (/ PI 4))
+; )
 
 ; Equipemnt Layout
 ;;;-------------------------------------------------------------------------;;;
