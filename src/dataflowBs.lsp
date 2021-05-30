@@ -373,8 +373,7 @@
   (GenerateDownllipseHeadNozzle (MoveInsertPositionUtils insPt 0 (- 0 newBarrelHalfHeight (/ barrelRadius 2) thickNess)) dataType)
   (setq lugSupportOffset (atoi (GetDottedPairValueUtils "SUPPORT_POSITION" oneBsGCTTankSupportDictData)))
   (setq lugYPosition (- (+ barrelHalfHeight (GetFlangeHeightEnums (* 2 barrelRadius))) lugSupportOffset))
-  (InsertBsGCTLeftLugSupport (MoveInsertPositionUtils insPt (- 0 thickNess thickNess barrelRadius) lugYPosition) 
-    dataType oneBsGCTTankSupportDictData thickNess)
+  (InsertBsGCTLugSupport insPt dataType oneBsGCTTankSupportDictData thickNess barrelRadius lugYPosition)
   
   
   ; (InsertBsGCTVerticalTankBarrelDimension insPt barrelRadius barrelHalfHeight thickNess straightEdgeHeight)
@@ -617,14 +616,12 @@
 )
 
 ; 2021-05-30
-(defun InsertBsGCTLeftLugSupport (insPt dataType oneBsGCTTankSupportDictData thickNess / supportType groundPlateInsPt) 
+(defun InsertBsGCTLugSupport (insPt dataType oneBsGCTTankSupportDictData thickNess barrelRadius lugYPosition / supportType) 
   (setq supportType (GetLugSupportTypeUtils oneBsGCTTankSupportDictData))
-  (InsertBlockUtils insPt supportType "0DataFlow-BsThickLine" (list (cons 0 dataType)))
-  ; ready to refactor
-  (SetDynamicBlockPropertyValueUtils 
-    (GetLastVlaObjectUtils) 
-    (list (cons "THICKNESS" thickNess))
-  ) 
+  (InsertBsGCTLeftLugSupport (MoveInsertPositionUtils insPt (- 0 thickNess thickNess barrelRadius) lugYPosition) supportType
+    dataType oneBsGCTTankSupportDictData thickNess)
+  (InsertBsGCRightLugSupport (MoveInsertPositionUtils insPt (+ thickNess thickNess barrelRadius) lugYPosition) supportType 
+    dataType oneBsGCTTankSupportDictData thickNess)
   ; (setq groundPlateInsPt (MoveInsertPositionUtils insPt (GetSaddleSupportDownOffsetEnums (* 2 barrelRadius)) (- 150 saddleHeight)))
   ; (InsertBsGCTFaceRightGroundPlate groundPlateInsPt dataType)
   ; ; groundPlate Dimension 
@@ -639,6 +636,28 @@
   ;   (MoveInsertPositionUtils insPt 0 (GetNegativeNumberUtils saddleHeight))
   ;   (MoveInsertPositionUtils groundPlateInsPt 140 0) 
   ;   "") 
+)
+
+; 2021-05-30
+(defun InsertBsGCTLeftLugSupport (insPt supportType dataType oneBsGCTTankSupportDictData thickNess /) 
+  (InsertBlockUtils insPt supportType "0DataFlow-BsThickLine" (list (cons 0 dataType)))
+  ; ready to refactor
+  (SetDynamicBlockPropertyValueUtils 
+    (GetLastVlaObjectUtils) 
+    (list (cons "THICKNESS" thickNess))
+  ) 
+)
+
+; 2021-05-30
+(defun InsertBsGCRightLugSupport (insPt supportType dataType oneBsGCTTankSupportDictData thickNess /) 
+  (InsertBlockUtils insPt supportType "0DataFlow-BsThickLine" (list (cons 0 dataType)))
+  ; ready to refactor
+  (SetDynamicBlockPropertyValueUtils 
+    (GetLastVlaObjectUtils) 
+    (list (cons "THICKNESS" thickNess))
+  ) 
+  ; mirror the lug support
+  (MirrorBlockUtils (entlast))
 )
 
 ; 2021-05-18
