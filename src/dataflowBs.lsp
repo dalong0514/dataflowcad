@@ -7,7 +7,7 @@
 )
 
 (defun c:printVersionInfoBS ()
-  (alert "设备设计流最新版本号 V0.1，更新时间：2021-05-13\n数据流内网地址：192.168.1.38")(princ)
+  (alert "设备设计流最新版本号 V0.3，更新时间：2021-05-30\n数据流内网地址：192.168.1.38")(princ)
 )
 
 ;;;-------------------------------------------------------------------------;;;
@@ -1394,9 +1394,9 @@
     ((= equipType "verticalHeater") 
      (InsertBsGCTVerticalHeaterGraphy insPt barrelRadius barrelHalfHeight exceedLength thickNess headThickNess 
        bsGCTType straightEdgeHeight allBsGCTSupportDictData))
-    ((= equipType "horizontalHeater") 
-     (InsertBsGCTVerticalHeaterGraphy (MoveInsertPositionUtils insPt 450 -150) barrelRadius barrelHalfHeight exceedLength thickNess headThickNess 
-       bsGCTType straightEdgeHeight allBsGCTSupportDictData))
+    ; ((= equipType "horizontalHeater") 
+    ;  (InsertBsGCTVerticalHeaterGraphy (MoveInsertPositionUtils insPt 450 -150) barrelRadius barrelHalfHeight exceedLength thickNess headThickNess 
+    ;    bsGCTType straightEdgeHeight allBsGCTSupportDictData))
   )
 )
 
