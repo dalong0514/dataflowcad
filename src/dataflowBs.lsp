@@ -300,12 +300,12 @@
 
 ; 2021-04-18
 (defun InsertBsGCTVerticalTankGraphy (insPt barrelRadius barrelHalfHeight thickNess headThickNess dataType straightEdgeHeight allBsGCTSupportDictData / 
-                                      newBarrelHalfHeight nozzleOffset oneBsGCTTankSupportDictData legSupportHeight) 
+                                      newBarrelHalfHeight nozzleOffset oneBsGCTEquipSupportDictData legSupportHeight) 
   ; refactored at 2021-05-06 straightEdgeHeight is 25
   (setq newBarrelHalfHeight (+ barrelHalfHeight straightEdgeHeight)) 
   (setq nozzleOffset 100)
-  (setq oneBsGCTTankSupportDictData (GetOneBsGCTTankSupportDictData dataType allBsGCTSupportDictData))
-  (setq legSupportHeight (atoi (GetDottedPairValueUtils "SUPPORT_HEIGHT" oneBsGCTTankSupportDictData)))
+  (setq oneBsGCTEquipSupportDictData (GetOneBsGCTTankSupportDictData dataType allBsGCTSupportDictData))
+  (setq legSupportHeight (atoi (GetDottedPairValueUtils "SUPPORT_HEIGHT" oneBsGCTEquipSupportDictData)))
   (GenerateDoubleLineEllipseHeadUtils (MoveInsertPositionUtils insPt 0 newBarrelHalfHeight) 
     barrelRadius "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" 1 thickNess straightEdgeHeight)
   (GenerateUpEllipseHeadNozzle (MoveInsertPositionUtils insPt 0 (+ newBarrelHalfHeight (/ barrelRadius 2) thickNess)) (+ barrelRadius thickNess) dataType nozzleOffset thickNess)
@@ -323,13 +323,13 @@
 
 ; 2021-05-18
 (defun InsertBsGCTHorizontalTankGraphy (insPt barrelRadius barrelHalfHeight thickNess headThickNess dataType straightEdgeHeight allBsGCTSupportDictData / 
-                                        newBarrelHalfHeight nozzleOffset oneBsGCTTankSupportDictData saddleSupportOffset saddleSupportHeight) 
+                                        newBarrelHalfHeight nozzleOffset oneBsGCTEquipSupportDictData saddleSupportOffset saddleSupportHeight) 
   ; refactored at 2021-05-06 straightEdgeHeight is 25
   (setq newBarrelHalfHeight (+ barrelHalfHeight straightEdgeHeight)) 
   (setq nozzleOffset 100)
-  (setq oneBsGCTTankSupportDictData (GetOneBsGCTTankSupportDictData dataType allBsGCTSupportDictData))
-  (setq saddleSupportOffset (atoi (GetDottedPairValueUtils "SUPPORT_POSITION" oneBsGCTTankSupportDictData)))
-  (setq saddleSupportHeight (atoi (GetDottedPairValueUtils "SUPPORT_HEIGHT" oneBsGCTTankSupportDictData)))
+  (setq oneBsGCTEquipSupportDictData (GetOneBsGCTTankSupportDictData dataType allBsGCTSupportDictData))
+  (setq saddleSupportOffset (atoi (GetDottedPairValueUtils "SUPPORT_POSITION" oneBsGCTEquipSupportDictData)))
+  (setq saddleSupportHeight (atoi (GetDottedPairValueUtils "SUPPORT_HEIGHT" oneBsGCTEquipSupportDictData)))
   ; [insPt barrelRadius entityLayer centerLineLayer directionStatus thickNess straightEdgeHeight]
   (GenerateDoubleLineHorizontalEllipseHeadUtils (MoveInsertPositionUtils insPt newBarrelHalfHeight 0) 
     barrelRadius "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" 1 thickNess straightEdgeHeight)
@@ -341,9 +341,9 @@
     barrelRadius "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" -1 thickNess straightEdgeHeight)
   ; (GenerateDownllipseHeadNozzle (MoveInsertPositionUtils insPt 0 (- 0 newBarrelHalfHeight (/ barrelRadius 2) thickNess)) dataType)
   (InsertBsGCTRightSaddleSupport (MoveInsertPositionUtils insPt saddleSupportOffset (GetNegativeNumberUtils (+ barrelRadius thickNess))) 
-    dataType saddleSupportHeight oneBsGCTTankSupportDictData barrelRadius)
+    dataType saddleSupportHeight oneBsGCTEquipSupportDictData barrelRadius)
   (InsertBsGCTLeftSaddleSupport (MoveInsertPositionUtils insPt (GetNegativeNumberUtils saddleSupportOffset) (GetNegativeNumberUtils (+ barrelRadius thickNess))) 
-    dataType saddleSupportHeight oneBsGCTTankSupportDictData barrelRadius)
+    dataType saddleSupportHeight oneBsGCTEquipSupportDictData barrelRadius)
   (InsertBsGCTHorizonticalTankBarrelDimension insPt barrelRadius barrelHalfHeight thickNess straightEdgeHeight saddleSupportHeight saddleSupportOffset)
   (InsertBsGCTHorizonticalTankAnnotation insPt dataType barrelRadius headThickNess straightEdgeHeight)
   (princ)
@@ -351,12 +351,12 @@
 
 ; 2021-05-30
 (defun InsertBsGCTVerticalHeaterGraphy (insPt barrelRadius barrelHalfHeight exceedLength thickNess headThickNess dataType straightEdgeHeight allBsGCTSupportDictData / 
-                                      newBarrelHalfHeight nozzleOffset oneBsGCTTankSupportDictData totalFlangeHeight lugSupportOffset lugYPosition) 
+                                      newBarrelHalfHeight nozzleOffset oneBsGCTEquipSupportDictData totalFlangeHeight lugSupportOffset lugYPosition) 
   (GenerateBsGCTHeaterTube (MoveInsertPositionUtils insPt -100 0) dataType "0DataFlow-BsDottedLine" 25 (* barrelHalfHeight 2))
   ; different from tank, tube length subtract EXCEED_LENGTH - 2021-5-27 refactored at 2021-05-30
   (setq barrelHalfHeight (- barrelHalfHeight exceedLength))
   (setq nozzleOffset 100)
-  (setq oneBsGCTTankSupportDictData (GetOneBsGCTTankSupportDictData dataType allBsGCTSupportDictData))
+  (setq oneBsGCTEquipSupportDictData (GetOneBsGCTTankSupportDictData dataType allBsGCTSupportDictData))
   (setq totalFlangeHeight (GetBsGCTHeaterFlangeTotalHeight barrelRadius))
   (setq newBarrelHalfHeight (+ barrelHalfHeight straightEdgeHeight totalFlangeHeight))
   (GenerateDoubleLineEllipseHeadUtils (MoveInsertPositionUtils insPt 0 newBarrelHalfHeight) 
@@ -371,9 +371,9 @@
   (GenerateDoubleLineEllipseHeadUtils (MoveInsertPositionUtils insPt 0 (- 0 newBarrelHalfHeight)) 
     barrelRadius "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" -1 thickNess straightEdgeHeight)
   (GenerateDownllipseHeadNozzle (MoveInsertPositionUtils insPt 0 (- 0 newBarrelHalfHeight (/ barrelRadius 2) thickNess)) dataType)
-  (setq lugSupportOffset (atoi (GetDottedPairValueUtils "SUPPORT_POSITION" oneBsGCTTankSupportDictData)))
+  (setq lugSupportOffset (atoi (GetDottedPairValueUtils "SUPPORT_POSITION" oneBsGCTEquipSupportDictData)))
   (setq lugYPosition (- (+ barrelHalfHeight (GetFlangeHeightEnums (* 2 barrelRadius))) lugSupportOffset))
-  (InsertBsGCTLugSupport insPt dataType oneBsGCTTankSupportDictData thickNess barrelRadius lugYPosition)
+  (InsertBsGCTLugSupport insPt dataType oneBsGCTEquipSupportDictData thickNess barrelRadius lugYPosition)
   
   
   ; (InsertBsGCTVerticalTankBarrelDimension insPt barrelRadius barrelHalfHeight thickNess straightEdgeHeight)
@@ -616,12 +616,12 @@
 )
 
 ; 2021-05-30
-(defun InsertBsGCTLugSupport (insPt dataType oneBsGCTTankSupportDictData thickNess barrelRadius lugYPosition / supportType) 
-  (setq supportType (GetLugSupportTypeUtils oneBsGCTTankSupportDictData))
+(defun InsertBsGCTLugSupport (insPt dataType oneBsGCTEquipSupportDictData thickNess barrelRadius lugYPosition / supportType) 
+  (setq supportType (GetLugSupportTypeUtils oneBsGCTEquipSupportDictData))
   (InsertBsGCTLeftLugSupport (MoveInsertPositionUtils insPt (- 0 thickNess thickNess barrelRadius) lugYPosition) supportType
-    dataType oneBsGCTTankSupportDictData thickNess)
+    dataType oneBsGCTEquipSupportDictData thickNess)
   (InsertBsGCRightLugSupport (MoveInsertPositionUtils insPt (+ thickNess thickNess barrelRadius) lugYPosition) supportType 
-    dataType oneBsGCTTankSupportDictData thickNess)
+    dataType oneBsGCTEquipSupportDictData thickNess)
   ; (setq groundPlateInsPt (MoveInsertPositionUtils insPt (GetSaddleSupportDownOffsetEnums (* 2 barrelRadius)) (- 150 saddleHeight)))
   ; (InsertBsGCTFaceRightGroundPlate groundPlateInsPt dataType)
   ; ; groundPlate Dimension 
@@ -639,7 +639,7 @@
 )
 
 ; 2021-05-30
-(defun InsertBsGCTLeftLugSupport (insPt supportType dataType oneBsGCTTankSupportDictData thickNess /) 
+(defun InsertBsGCTLeftLugSupport (insPt supportType dataType oneBsGCTEquipSupportDictData thickNess /) 
   (InsertBlockUtils insPt supportType "0DataFlow-BsThickLine" (list (cons 0 dataType)))
   ; ready to refactor
   (SetDynamicBlockPropertyValueUtils 
@@ -649,7 +649,7 @@
 )
 
 ; 2021-05-30
-(defun InsertBsGCRightLugSupport (insPt supportType dataType oneBsGCTTankSupportDictData thickNess /) 
+(defun InsertBsGCRightLugSupport (insPt supportType dataType oneBsGCTEquipSupportDictData thickNess /) 
   (InsertBlockUtils insPt supportType "0DataFlow-BsThickLine" (list (cons 0 dataType)))
   ; ready to refactor
   (SetDynamicBlockPropertyValueUtils 
@@ -662,8 +662,8 @@
 
 ; 2021-05-18
 ; refactored at 2021-05-19
-(defun InsertBsGCTRightSaddleSupport (insPt dataType saddleHeight oneBsGCTTankSupportDictData barrelRadius / supportType groundPlateInsPt) 
-  (setq supportType (GetSaddleSupportTypeUtils oneBsGCTTankSupportDictData barrelRadius))
+(defun InsertBsGCTRightSaddleSupport (insPt dataType saddleHeight oneBsGCTEquipSupportDictData barrelRadius / supportType groundPlateInsPt) 
+  (setq supportType (GetSaddleSupportTypeUtils oneBsGCTEquipSupportDictData barrelRadius))
   (InsertBlockUtils insPt supportType "0DataFlow-BsThickLine" (list (cons 0 dataType)))
   (SetDynamicBlockPropertyValueUtils 
     (GetLastVlaObjectUtils) 
@@ -676,14 +676,14 @@
   (InsertBsGCTDownRightGroundPlateAnnotation groundPlateInsPt dataType)
   (InsertBsGCTUpRightSaddleSupportAnnotation 
     (MoveInsertPositionUtils insPt 0 (GetSaddleSupportUpOffsetEnums (* 2 barrelRadius)))
-    oneBsGCTTankSupportDictData
+    oneBsGCTEquipSupportDictData
     barrelRadius
     dataType)
 )
 
 ; 2021-05-19
-(defun InsertBsGCTLeftSaddleSupport (insPt dataType saddleHeight oneBsGCTTankSupportDictData barrelRadius / supportType groundPlateInsPt) 
-  (setq supportType (GetSaddleSupportTypeUtils oneBsGCTTankSupportDictData barrelRadius))
+(defun InsertBsGCTLeftSaddleSupport (insPt dataType saddleHeight oneBsGCTEquipSupportDictData barrelRadius / supportType groundPlateInsPt) 
+  (setq supportType (GetSaddleSupportTypeUtils oneBsGCTEquipSupportDictData barrelRadius))
   (InsertBlockUtils insPt supportType "0DataFlow-BsThickLine" (list (cons 0 dataType)))
   (SetDynamicBlockPropertyValueUtils 
     (GetLastVlaObjectUtils) 
@@ -716,11 +716,11 @@
 )
 
 ; 2021-05-30
-(defun GetLugSupportTypeUtils (oneBsGCTTankSupportDictData / supportType)
+(defun GetLugSupportTypeUtils (oneBsGCTEquipSupportDictData / supportType)
   (setq supportType 
     (strcat 
       "BsGCTGraphLugSupport-SideView-" 
-      (GetDottedPairValueUtils "SUPPORT_STYLE" oneBsGCTTankSupportDictData))
+      (GetDottedPairValueUtils "SUPPORT_STYLE" oneBsGCTEquipSupportDictData))
   )
   (cond 
     ((member supportType (GetAllBsGCTLugSupportBlockNameList)) supportType)
@@ -729,11 +729,11 @@
 )
 
 ; 2021-05-19
-(defun GetSaddleSupportTypeUtils (oneBsGCTTankSupportDictData barrelRadius / supportType)
+(defun GetSaddleSupportTypeUtils (oneBsGCTEquipSupportDictData barrelRadius / supportType)
   (setq supportType 
     (strcat 
       "BsGCTGraphSaddleSupport-SideView-" 
-      (GetDottedPairValueUtils "SUPPORT_STYLE" oneBsGCTTankSupportDictData)
+      (GetDottedPairValueUtils "SUPPORT_STYLE" oneBsGCTEquipSupportDictData)
       "-"
       (rtos (* 2 barrelRadius)))
   )
@@ -771,12 +771,12 @@
 )
 
 ; 2021-05-19
-(defun InsertBsGCTUpRightSaddleSupportAnnotation (insPt oneBsGCTTankSupportDictData barrelRadius dataType / firstText secondText) 
+(defun InsertBsGCTUpRightSaddleSupportAnnotation (insPt oneBsGCTEquipSupportDictData barrelRadius dataType / firstText secondText) 
   (setq firstText 
          (strcat 
-           (GetDottedPairValueUtils "SUPPORT_FORM" oneBsGCTTankSupportDictData) " " 
-           (GetDottedPairValueUtils "SUPPORT_STYLE" oneBsGCTTankSupportDictData) " " (rtos (* 2 barrelRadius))))
-  (setq secondText (GetDottedPairValueUtils "SUPPORT_STANDARD" oneBsGCTTankSupportDictData))
+           (GetDottedPairValueUtils "SUPPORT_FORM" oneBsGCTEquipSupportDictData) " " 
+           (GetDottedPairValueUtils "SUPPORT_STYLE" oneBsGCTEquipSupportDictData) " " (rtos (* 2 barrelRadius))))
+  (setq secondText (GetDottedPairValueUtils "SUPPORT_STANDARD" oneBsGCTEquipSupportDictData))
   (InsertBsGCTUpRightAnnotation insPt dataType firstText secondText) 
 )
 
