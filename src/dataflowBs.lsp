@@ -350,13 +350,16 @@
 )
 
 ; 2021-05-27
-(defun InsertBsGCTVerticalHeaterGraphy (insPt barrelRadius barrelHalfHeight thickNess headThickNess dataType straightEdgeHeight allBsGCTSupportDictData / 
+(defun InsertBsGCTVerticalHeaterGraphy (insPt barrelRadius barrelHalfHeight exceedLength thickNess headThickNess dataType straightEdgeHeight allBsGCTSupportDictData / 
                                       newBarrelHalfHeight nozzleOffset oneBsGCTTankSupportDictData totalFlangeHeight legSupportHeight) 
+  (GenerateBsGCTHeaterTube (MoveInsertPositionUtils insPt -100 0) dataType "0DataFlow-BsDottedLine" 25 (* barrelHalfHeight 2))
+  ; different from tank, tube length subtract EXCEED_LENGTH - 2021-5-27 refactored at 2021-05-30
+  (setq barrelHalfHeight (- barrelHalfHeight exceedLength))
   (setq nozzleOffset 100)
   (setq oneBsGCTTankSupportDictData (GetOneBsGCTTankSupportDictData dataType allBsGCTSupportDictData))
   ; (setq legSupportHeight (atoi (GetDottedPairValueUtils "SUPPORT_HEIGHT" oneBsGCTTankSupportDictData)))
   (setq totalFlangeHeight (GetBsGCTHeaterFlangeTotalHeight barrelRadius))
-  (setq newBarrelHalfHeight (+ barrelHalfHeight straightEdgeHeight totalFlangeHeight)) 
+  (setq newBarrelHalfHeight (+ barrelHalfHeight straightEdgeHeight totalFlangeHeight))
   (GenerateDoubleLineEllipseHeadUtils (MoveInsertPositionUtils insPt 0 newBarrelHalfHeight) 
     barrelRadius "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" 1 thickNess straightEdgeHeight)
   (GenerateUpEllipseHeadNozzle (MoveInsertPositionUtils insPt 0 (+ newBarrelHalfHeight (/ barrelRadius 2) thickNess)) (+ barrelRadius thickNess) dataType nozzleOffset thickNess)
@@ -370,9 +373,21 @@
     barrelRadius "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" -1 thickNess straightEdgeHeight)
   (GenerateDownllipseHeadNozzle (MoveInsertPositionUtils insPt 0 (- 0 newBarrelHalfHeight (/ barrelRadius 2) thickNess)) dataType)
   ; (InsertBsGCTLegSupport (MoveInsertPositionUtils insPt (+ barrelRadius thickNess) (- 0 (- newBarrelHalfHeight straightEdgeHeight))) dataType legSupportHeight)
+  
+  
+  
   ; (InsertBsGCTVerticalTankBarrelDimension insPt barrelRadius barrelHalfHeight thickNess straightEdgeHeight)
   ; (InsertBsGCTVerticalTankAnnotation insPt dataType barrelRadius headThickNess straightEdgeHeight)
   (princ)
+)
+
+; 2021-05-30
+(defun GenerateBsGCTHeaterTube (insPt dataType blockName tubeDiameter tubeLength /)
+  (InsertBlockUtils insPt "BsGCTGraphHeaterTube" blockName (list (cons 0 dataType)))
+  (SetDynamicBlockPropertyValueUtils 
+    (GetLastVlaObjectUtils) 
+    (list (cons "TUBE_DIAMETER" tubeDiameter) (cons "TUBE_LENGTH" tubeLength))
+  ) 
 )
 
 ; 2021-04-22
@@ -1094,18 +1109,15 @@
 
 ; 2021-05-27
 (defun InsertOneBsGCTHeater (insPt oneHeaterData heaterPressureElementList heaterOtherRequestList heaterStandardList heaterHeadStyleList 
-                             heaterHeadMaterialList allBsGCTSupportDictData / equipTag bsGCTType barrelRadius barrelHalfHeight thickNess 
+                             heaterHeadMaterialList allBsGCTSupportDictData / equipTag bsGCTType barrelRadius barrelHalfHeight exceedLength thickNess 
                              headThickNess straightEdgeHeight equipType) 
   (setq equipTag (GetDottedPairValueUtils "TAG" oneHeaterData))
   ; use equipTag as the label for data
   (setq bsGCTType equipTag)
   (setq barrelRadius (GetHalfNumberUtils (atoi (GetDottedPairValueUtils "barrelRadius" oneHeaterData))))
-  ; different from tank, tube length subtract EXCEED_LENGTH - 2021-5-27
-  (setq barrelHalfHeight 
-    (- 
-      (GetHalfNumberUtils (atoi (GetDottedPairValueUtils "barrelHeight" oneHeaterData))) 
-      (atoi (GetDottedPairValueUtils "EXCEED_LENGTH" oneHeaterData)))
-  )
+  ; refactored at - 2021-05-30 tube length for drawing tube
+  (setq barrelHalfHeight (GetHalfNumberUtils (atoi (GetDottedPairValueUtils "barrelHeight" oneHeaterData))))
+  (setq exceedLength (atoi (GetDottedPairValueUtils "EXCEED_LENGTH" oneHeaterData)))
   (setq thickNess (atoi (GetDottedPairValueUtils "BARREL_THICKNESS" oneHeaterData)))
   ; do not convert to int frist 2021-04-23
   (setq headThickNess (GetDottedPairValueUtils "HEAD_THICKNESS" oneHeaterData))
@@ -1115,7 +1127,7 @@
   (InsertBsGCTEquipTableStrategy insPt bsGCTType oneHeaterData heaterStandardList heaterHeadStyleList 
                            heaterHeadMaterialList heaterPressureElementList heaterOtherRequestList equipType)
   (InsertBsGCTHeaterGraphyStrategy (MoveInsertPositionUtils insPt -2915 1600) 
-    barrelRadius barrelHalfHeight thickNess headThickNess bsGCTType straightEdgeHeight equipType allBsGCTSupportDictData)
+    barrelRadius barrelHalfHeight exceedLength thickNess headThickNess bsGCTType straightEdgeHeight equipType allBsGCTSupportDictData)
 )
 
 ; 2021-05-19
@@ -1311,14 +1323,13 @@
 )
 
 ; 2021-05-25
-(defun InsertBsGCTHeaterGraphyStrategy (insPt barrelRadius barrelHalfHeight thickNess headThickNess bsGCTType straightEdgeHeight equipType allBsGCTSupportDictData /)
+(defun InsertBsGCTHeaterGraphyStrategy (insPt barrelRadius barrelHalfHeight exceedLength thickNess headThickNess bsGCTType straightEdgeHeight equipType allBsGCTSupportDictData /)
   (cond 
     ((= equipType "verticalHeater") 
-     (InsertBsGCTVerticalHeaterGraphy insPt barrelRadius barrelHalfHeight thickNess headThickNess 
+     (InsertBsGCTVerticalHeaterGraphy insPt barrelRadius barrelHalfHeight exceedLength thickNess headThickNess 
        bsGCTType straightEdgeHeight allBsGCTSupportDictData))
     ((= equipType "horizontalHeater") 
-     ; refactored at 2021-05-18 move the insPt for HorizontalTankGraphy
-     (InsertBsGCTHorizontalHeaterGraphy (MoveInsertPositionUtils insPt 450 -150) barrelRadius barrelHalfHeight thickNess headThickNess 
+     (InsertBsGCTVerticalHeaterGraphy (MoveInsertPositionUtils insPt 450 -150) barrelRadius barrelHalfHeight exceedLength thickNess headThickNess 
        bsGCTType straightEdgeHeight allBsGCTSupportDictData))
   )
 )
