@@ -1836,6 +1836,18 @@
   )
 )
 
+; 2021-05-30
+(defun GetAllBlockNameListByNamePatternUtils (namePattern / entityData resultList) 
+  (setq entityData (tblnext "block" T)) 
+  (while entityData 
+    (if (wcmatch (cdr (assoc 2 entityData)) namePattern) 
+      (setq resultList (append resultList (list (cdr (assoc 2 entityData)))))
+    )
+    (setq entityData (tblnext "block")) 
+  ) 
+  resultList
+)
+
 ; Utils Function 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
