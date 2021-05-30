@@ -351,7 +351,7 @@
 
 ; 2021-05-30
 (defun InsertBsGCTVerticalHeaterGraphy (insPt barrelRadius barrelHalfHeight exceedLength thickNess headThickNess dataType straightEdgeHeight allBsGCTSupportDictData / 
-                                      newBarrelHalfHeight nozzleOffset oneBsGCTEquipSupportDictData totalFlangeHeight lugSupportOffset lugYPosition) 
+                                      newBarrelHalfHeight nozzleOffset oneBsGCTEquipSupportDictData totalFlangeHeight) 
   (GenerateBsGCTHeaterTube (MoveInsertPositionUtils insPt -100 0) dataType "0DataFlow-BsDottedLine" 25 (* barrelHalfHeight 2))
   ; different from tank, tube length subtract EXCEED_LENGTH - 2021-5-27 refactored at 2021-05-30
   (setq barrelHalfHeight (- barrelHalfHeight exceedLength))
@@ -371,9 +371,7 @@
   (GenerateDoubleLineEllipseHeadUtils (MoveInsertPositionUtils insPt 0 (- 0 newBarrelHalfHeight)) 
     barrelRadius "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" -1 thickNess straightEdgeHeight)
   (GenerateDownllipseHeadNozzle (MoveInsertPositionUtils insPt 0 (- 0 newBarrelHalfHeight (/ barrelRadius 2) thickNess)) dataType)
-  (setq lugSupportOffset (atoi (GetDottedPairValueUtils "SUPPORT_POSITION" oneBsGCTEquipSupportDictData)))
-  (setq lugYPosition (- (+ barrelHalfHeight (GetFlangeHeightEnums (* 2 barrelRadius))) lugSupportOffset))
-  (InsertBsGCTLugSupport insPt dataType oneBsGCTEquipSupportDictData thickNess barrelRadius lugYPosition)
+  (InsertBsGCTLugSupport insPt dataType oneBsGCTEquipSupportDictData thickNess barrelRadius barrelHalfHeight)
   
   
   ; (InsertBsGCTVerticalTankBarrelDimension insPt barrelRadius barrelHalfHeight thickNess straightEdgeHeight)
@@ -616,12 +614,16 @@
 )
 
 ; 2021-05-30
-(defun InsertBsGCTLugSupport (insPt dataType oneBsGCTEquipSupportDictData thickNess barrelRadius lugYPosition / supportType) 
+(defun InsertBsGCTLugSupport (insPt dataType oneBsGCTEquipSupportDictData thickNess barrelRadius barrelHalfHeight / 
+                              lugSupportOffset flangeTopOffset lugYPosition supportType leftLugPosition rightLugPosition) 
+  (setq lugSupportOffset (atoi (GetDottedPairValueUtils "SUPPORT_POSITION" oneBsGCTEquipSupportDictData)))
+  (setq flangeTopOffset (+ barrelHalfHeight (GetFlangeHeightEnums (* 2 barrelRadius))))
+  (setq lugYPosition (- flangeTopOffset lugSupportOffset))
   (setq supportType (GetLugSupportTypeUtils oneBsGCTEquipSupportDictData))
-  (InsertBsGCTLeftLugSupport (MoveInsertPositionUtils insPt (- 0 thickNess thickNess barrelRadius) lugYPosition) supportType
-    dataType oneBsGCTEquipSupportDictData thickNess)
-  (InsertBsGCRightLugSupport (MoveInsertPositionUtils insPt (+ thickNess thickNess barrelRadius) lugYPosition) supportType 
-    dataType oneBsGCTEquipSupportDictData thickNess)
+  (setq leftLugPosition (MoveInsertPositionUtils insPt (- 0 thickNess thickNess barrelRadius) lugYPosition))
+  (InsertBsGCTLeftLugSupport leftLugPosition supportType dataType oneBsGCTEquipSupportDictData thickNess)
+  (setq rightLugPosition (MoveInsertPositionUtils insPt (+ thickNess thickNess barrelRadius) lugYPosition))
+  (InsertBsGCRightLugSupport rightLugPosition supportType dataType oneBsGCTEquipSupportDictData thickNess)
   ; (setq groundPlateInsPt (MoveInsertPositionUtils insPt (GetSaddleSupportDownOffsetEnums (* 2 barrelRadius)) (- 150 saddleHeight)))
   ; (InsertBsGCTFaceRightGroundPlate groundPlateInsPt dataType)
   ; ; groundPlate Dimension 
@@ -630,12 +632,20 @@
   ;   (MoveInsertPositionUtils groundPlateInsPt 0 -150) 
   ;   (MoveInsertPositionUtils groundPlateInsPt 100 0) 
   ;   "") 
-  ; ; saddle support Dimension 
-  ; (InsertBsGCTDimension 
-  ;   insPt
-  ;   (MoveInsertPositionUtils insPt 0 (GetNegativeNumberUtils saddleHeight))
-  ;   (MoveInsertPositionUtils groundPlateInsPt 140 0) 
-  ;   "") 
+  
+  ; lug support Dimension 
+  ; Y direction
+  (InsertBsGCTDimension 
+    (MoveInsertPositionUtils insPt (- 0 thickNess thickNess barrelRadius) lugYPosition)
+    (MoveInsertPositionUtils insPt (- 0 thickNess thickNess barrelRadius) flangeTopOffset)
+    (MoveInsertPositionUtils leftLugPosition -100 0) 
+    "") 
+  ; X direction
+  (InsertBsGCTDimension 
+    (MoveInsertPositionUtils leftLugPosition (GetNegativeNumberUtils (GetLugSupportBlotOffsetEnums supportType)) 0) 
+    (MoveInsertPositionUtils rightLugPosition (GetLugSupportBlotOffsetEnums supportType) 0) 
+    (MoveInsertPositionUtils leftLugPosition 0 -100) 
+    "") 
 )
 
 ; 2021-05-30

@@ -329,6 +329,21 @@
   )
 )
 
+; 2021-05-30
+(defun GetLugSupportBlotOffsetEnums (supportType /)
+  (cond 
+    ((= supportType "BsGCTGraphSaddleSupport-SideView-B1") 126)
+    ((= supportType "BsGCTGraphSaddleSupport-SideView-B2") 136)
+    ((= supportType "BsGCTGraphSaddleSupport-SideView-B3") 151)
+    ((= supportType "BsGCTGraphSaddleSupport-SideView-B4") 215)
+    ((= supportType "BsGCTGraphSaddleSupport-SideView-B5") 234)
+    ((= supportType "BsGCTGraphSaddleSupport-SideView-B6") 256)
+    ((= supportType "BsGCTGraphSaddleSupport-SideView-B7") 290)
+    ((= supportType "BsGCTGraphSaddleSupport-SideView-B8") 350)
+    (T 136)
+  )
+)
+
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
 ; Gs Enums
