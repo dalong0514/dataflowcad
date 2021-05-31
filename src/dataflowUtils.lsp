@@ -55,10 +55,10 @@
 ; tansfor gb2312 to utf8
 (defun FileEncodeTransUtils (file charset1 charset2 / obj encode)
   (setq obj (vlax-create-object "ADODB.Stream"))
-  (vlax-put-property obj 'type 2);1-reading binary, 2-reading text
-  (vlax-put-property obj 'mode 3);1-read, 2-write, 3-read and write
+  (vlax-put-property obj 'type 2); 1-reading binary, 2-reading text
+  (vlax-put-property obj 'mode 3); 1-read, 2-write, 3-read and write
   (vlax-invoke obj 'open)
-  (vlax-put-property obj "charset" charset1);;unicode;utf-8;ascii;gb2312;big5;gbk
+  (vlax-put-property obj "charset" charset1);; unicode;utf-8;ascii;gb2312;big5;gbk
   (vlax-invoke-method obj 'loadfromfile file)
   (setq encode (vlax-invoke obj 'readtext))
   (vlax-invoke obj 'close)
@@ -67,10 +67,10 @@
   (vlax-put-property obj 'type 2)
   (vlax-put-property obj 'mode 3)
   (vlax-invoke obj 'open)
-  (vlax-put-property obj "charset" charset2);;unicode;utf-8;ascii;gb2312;big5;gbk
+  (vlax-put-property obj "charset" charset2);; unicode;utf-8;ascii;gb2312;big5;gbk
   (vlax-invoke obj 'writetext encode)
-  (vlax-invoke-method obj 'savetofile file 2);1-create£¬2-rewrite
-  (vlax-invoke obj 'flush);force the data in cache outputed
+  (vlax-invoke-method obj 'savetofile file 2); 1-create£¬2-rewrite
+  (vlax-invoke obj 'flush); force the data in cache outputed
   (vlax-invoke obj 'close)
   (vlax-release-object obj)
 )
@@ -2142,6 +2142,8 @@
 
 ; 2021-04-17
 (defun ReadDataFromFileUtils (fileDir / filePtr i textLine resultList) 
+  ; refactored at 2021-05-31
+  (FileEncodeTransUtils fileDir "utf-8" "gb2312")
   (setq filePtr (open fileDir "r"))
   (if filePtr
     (progn 

@@ -1585,14 +1585,6 @@
   ) 
 )
 
-;2021-05-28
-; (defun c:foo () 
-;   (VerifyGsBzEquipLayer)
-;   (VerifyGsBzGraphBlock)
-;   (setq insPt (getpoint "\n拾取工程图插入点："))
-;   (GenerateGSBzReactorGraph insPt 1200 1300 750 1450 (/ PI 0.5) (/ PI 4))
-; )
-
 ; Equipemnt Layout
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;

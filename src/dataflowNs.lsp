@@ -432,7 +432,16 @@
 ;;;-------------------------------------------------------------------------;;;
 ; NS Clean Air
 
-; 2021-05-19
-(defun GetNsCleanAirData ()
-  (JsonToListUtils (car (ReadNsDataFromFileStrategy "nsCleanAir")))
+; 2021-05-31
+(defun GetAllNsCleanAirData ()
+  (mapcar '(lambda (x) (JsonToListUtils x)) 
+    (ReadNsDataFromFileStrategy "nsCleanAir")
+  ) 
+)
+
+
+
+
+(defun c:foo ()
+  (GetAllNsCleanAirData)
 )
