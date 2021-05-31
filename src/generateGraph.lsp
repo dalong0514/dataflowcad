@@ -31,6 +31,12 @@
   (setq result "\\\\192.168.1.38\\dataflow\\allBlocks\\NsBzBlocks.dwg")
 )
 
+; 2021-05-31
+(defun GetNsACHModulesPath (/ result)
+  ; (setq result "D:\\dataflowcad\\allBlocks\\NsACHBlocks.dwg")
+  (setq result "\\\\192.168.1.38\\dataflow\\allBlocks\\NsACHBlocks.dwg")
+)
+
 ; 2021-03-17
 ; refactored at 2021-04-22
 (defun GetBsModulesPath (/ result)
@@ -140,6 +146,33 @@
 ; 2021-03-17
 (defun StealNsBzTextStyleByNameList (textStyleNameList /)
   (Steal (GetNsBzModulesPath) 
+    (list 
+      (list "Text Styles" textStyleNameList)
+    )
+  ) 
+)
+
+; 2021-05-31
+(defun StealNsACHBlockByNameList (blockNameList /)
+  (Steal (GetNsACHModulesPath) 
+    (list 
+      (list "Blocks" blockNameList)
+    )
+  ) 
+)
+
+; 2021-05-31
+(defun StealNsACHLayerByNameList (layerNameList /)
+  (Steal (GetNsACHModulesPath) 
+    (list 
+      (list "Layers" layerNameList)
+    )
+  ) 
+)
+
+; 2021-05-31
+(defun StealNsACHTextStyleByNameList (textStyleNameList /)
+  (Steal (GetNsACHModulesPath) 
     (list 
       (list "Text Styles" textStyleNameList)
     )
