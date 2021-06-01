@@ -129,7 +129,7 @@
 (defun ReadNsDataFromFileStrategy (dataType /)
   (cond 
     ((= dataType "NsEquip") (ReadDataFromCSVUtils "D:\\dataflowcad\\nsdata\\tempEquip.csv"))
-    ((= dataType "nsCleanAir") (ReadDataFromFileUtils "D:\\dataflowcad\\tempdata\\nsCleanAir.json"))
+    ((= dataType "nsCleanAir") (ReadDataFromFileByEncodeTransUtils "D:\\dataflowcad\\tempdata\\nsCleanAir.json"))
   )
 )
 
@@ -475,7 +475,7 @@
 (defun InsertOneNsACHPID (insPt allNsCleanAirData / equipType) 
   ; (setq equipTag (GetDottedPairValueUtils "TAG" oneTankData))
   (InsertNSACHDrawFrame insPt)
-  ; (InsertAllNsACHRoomS insPt "2B" allNsCleanAirData)
+  (InsertAllNsACHRoomS (MoveInsertPositionUtils insPt -45500 47000) "2B" allNsCleanAirData)
   ; (InsertBsGCTEquipTableStrategy insPt bsGCTType oneTankData tankStandardList tankHeadStyleList 
   ;                          tankHeadMaterialList tankPressureElementList tankOtherRequestList equipType)
 )
@@ -495,29 +495,29 @@
 ; 2021-06-01
 (defun InsertAllNsACHRoomS (insPt systemNum roomDictList / totalNum num insPtList) 
   (setq totalNum (1+ (/ (length roomDictList) 7)))
-  ; (setq num 1)
-  ; (mapcar '(lambda (x) 
-  ;             (setq insPtList (GetInsertPtListByYMoveUtils insPt (GenerateSortedNumByList x 0) -11500))
-  ;             (mapcar '(lambda (xx yy) 
-  ;                       (InsertOneNsACHRoomS yy "NsCAH-Room-S" systemNum xx)
-  ;                     ) 
-  ;               x
-  ;               insPtList
-  ;             ) 
-  ;             (setq insPt (MoveInsertPositionUtils insPt 6600 0))
-  ;             (setq num (1+ num))
-  ;          ) 
-  ;   (SplitListByNumUtils roomDictList 7)
-  ; ) 
+  (setq num 1)
+  (mapcar '(lambda (x) 
+              (setq insPtList (GetInsertPtListByXMoveUtils insPt (GenerateSortedNumByList x 0) 6600))
+              (mapcar '(lambda (xx yy) 
+                        (InsertOneNsACHRoomS yy "NsCAH-Room-S" systemNum xx)
+                      ) 
+                x
+                insPtList
+              ) 
+              (setq insPt (MoveInsertPositionUtils insPt 0 -11500))
+              (setq num (1+ num))
+           ) 
+    (SplitListByNumUtils roomDictList 7)
+  ) 
 )
 
 ; 2021-06-01
-(defun InsertOneNsACHRoomS (insPt blockName systemNum roomDictList /) 
+(defun InsertOneNsACHRoomS (insPt blockName systemNum oneRoomDictList /) 
   (InsertBlockUtils insPt blockName "0DataFlow-NsCAH" (list (cons 0 systemNum)))
-  ; (ModifyMultiplePropertyForOneBlockUtils (entlast) 
-  ;   (mapcar '(lambda (x) (car x)) designParamDictList)
-  ;   (mapcar '(lambda (x) (cdr x)) designParamDictList)
-  ; )
+  (ModifyMultiplePropertyForOneBlockUtils (entlast) 
+    (mapcar '(lambda (x) (strcase (car x))) oneRoomDictList)
+    (mapcar '(lambda (x) (cadr x)) oneRoomDictList)
+  )
 )
 
 

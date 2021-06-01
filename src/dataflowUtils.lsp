@@ -2142,7 +2142,25 @@
 
 ; 2021-04-17
 (defun ReadDataFromFileUtils (fileDir / filePtr i textLine resultList) 
+  (setq filePtr (open fileDir "r"))
+  (if filePtr
+    (progn 
+      (setq i 1)
+      (while (setq textLine (read-line filePtr)) 
+        (setq resultList (append resultList (list textLine)))
+        (setq i (1+ i))
+      )
+    ) 
+  )
+  (close filePtr)
+  resultList
+)
+
+; 2021-06-01
+; for data imported by electron, it is a red problem, ready to refactor
+(defun ReadDataFromFileByEncodeTransUtils (fileDir / filePtr i textLine resultList) 
   ; refactored at 2021-05-31
+  ; unicode;utf-8;ascii;gb2312;big5;gbk
   (FileEncodeTransUtils fileDir "utf-8" "gb2312")
   (setq filePtr (open fileDir "r"))
   (if filePtr
