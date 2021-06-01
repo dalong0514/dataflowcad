@@ -432,6 +432,28 @@
 ;;;-------------------------------------------------------------------------;;;
 ; NS Clean Air
 
+; 2021-06-01
+(defun VerifyNsACHBlockLayerText ()
+  (VerifyNsCAHTextStyleByName "DataFlow")
+  (VerifyNsCAHTextStyleByName "TitleText")
+  (VerifyNsCAHLayerByName "0DataFlow*")
+  (VerifyNsCAHBlockByName "NsCAH*")
+  (VerifyNsCAHBlockByName "*\.2017")
+)
+
+; 2021-06-01
+(defun c:InsertNsACH ()
+  (ExecuteFunctionAfterVerifyDateUtils 'InsertNsACHMacro '())
+)
+
+; 2021-06-01
+(defun InsertNsACHMacro (/ insPt allNsCleanAirData insPtList) 
+  (VerifyNsACHBlockLayerText)
+  (setq insPt (getpoint "\n拾取PID插入点："))
+  (setq allNsCleanAirData (GetAllNsCleanAirData))
+  (InsertOneNsACHPID insPt allNsCleanAirData)
+)
+
 ; 2021-05-31
 (defun GetAllNsCleanAirData ()
   (mapcar '(lambda (x) (JsonToListUtils x)) 
@@ -439,6 +461,25 @@
   ) 
 )
 
+; refacotred at 2021-05-07
+(defun InsertOneNsACHPID (insPt allNsCleanAirData / equipType) 
+  ; (setq equipTag (GetDottedPairValueUtils "TAG" oneTankData))
+  (InsertNSACHDrawFrame insPt)
+  ; (InsertBsGCTEquipTableStrategy insPt bsGCTType oneTankData tankStandardList tankHeadStyleList 
+  ;                          tankHeadMaterialList tankPressureElementList tankOtherRequestList equipType)
+)
+
+; 2021-06-01
+(defun InsertNSACHDrawFrame (insPt /) 
+  (InsertBlockByNoPropertyUtils insPt "NsCAH-DrawFrame" "0DataFlow-NsTitanTitle")
+  (InsertBlockByScaleUtils insPt "title.2017" "0DataFlow-NsTitanTitle" (list (cons 1 "")) 100)
+  (ModifyMultiplePropertyForOneBlockUtils (entlast) 
+    (list "Stage" "Scale")
+    (list "施工图" "1:100")
+  )  
+  (InsertBlockByScaleUtils (MoveInsertPositionUtils insPt 0 4600) "revisions.2017" "0DataFlow-NsTitanTitle" (list (cons 4 "")) 100)
+  (InsertBlockByNoPropertyByScaleUtils (MoveInsertPositionUtils insPt -18000 0) "intercheck.2017" "0DataFlow-NsTitanTitle" 100)
+)
 
 
 

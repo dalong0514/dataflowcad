@@ -77,7 +77,7 @@
   (InsertBlockByScaleUtils insPt "title.equip.2017" "0DataFlow-BsFrame" (list (cons 4 "工程图")) 5)
   (ModifyMultiplePropertyForOneBlockUtils (entlast) 
     (list "Speci" "Scale" "EquipNAME")
-    (list "设备" "1:5" equipTag)
+    (list "设备" "1:5" dataType)
   )  
   (InsertBlockByScaleUtils (MoveInsertPositionUtils insPt 0 230) "revisions.2017" "0DataFlow-BsFrame" (list (cons 2 "1")) 5)
   (InsertBlockByNoPropertyByScaleUtils (MoveInsertPositionUtils insPt 0 355) "intercheck.2017" "0DataFlow-BsFrame" 5)

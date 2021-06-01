@@ -33,8 +33,8 @@
 
 ; 2021-05-31
 (defun GetNsACHModulesPath (/ result)
-  ; (setq result "D:\\dataflowcad\\allBlocks\\NsACHBlocks.dwg")
-  (setq result "\\\\192.168.1.38\\dataflow\\allBlocks\\NsACHBlocks.dwg")
+  ; (setq result "D:\\dataflowcad\\allBlocks\\NsCAHBlocks.dwg")
+  (setq result "\\\\192.168.1.38\\dataflow\\allBlocks\\NsCAHBlocks.dwg")
 )
 
 ; 2021-03-17
@@ -153,7 +153,7 @@
 )
 
 ; 2021-05-31
-(defun StealNsACHBlockByNameList (blockNameList /)
+(defun StealNsCAHBlockByNameList (blockNameList /)
   (Steal (GetNsACHModulesPath) 
     (list 
       (list "Blocks" blockNameList)
@@ -162,7 +162,7 @@
 )
 
 ; 2021-05-31
-(defun StealNsACHLayerByNameList (layerNameList /)
+(defun StealNsCAHLayerByNameList (layerNameList /)
   (Steal (GetNsACHModulesPath) 
     (list 
       (list "Layers" layerNameList)
@@ -171,7 +171,7 @@
 )
 
 ; 2021-05-31
-(defun StealNsACHTextStyleByNameList (textStyleNameList /)
+(defun StealNsCAHTextStyleByNameList (textStyleNameList /)
   (Steal (GetNsACHModulesPath) 
     (list 
       (list "Text Styles" textStyleNameList)
@@ -275,6 +275,27 @@
 (defun VerifyNsBzTextStyleByName (textStyleName /) 
   (if (= (tblsearch "STYLE" textStyleName) nil) 
     (StealNsBzTextStyleByNameList (list textStyleName))
+  )
+)
+
+; 2021-06-01
+(defun VerifyNsCAHBlockByName (blockName /) 
+  (if (= (tblsearch "BLOCK" blockName) nil) 
+    (StealNsCAHBlockByNameList (list blockName))
+  )
+)
+
+; 2021-06-01
+(defun VerifyNsCAHLayerByName (layerName /) 
+  (if (= (tblsearch "LAYER" layerName) nil) 
+    (StealNsCAHLayerByNameList (list layerName))
+  )
+)
+
+; 2021-06-01
+(defun VerifyNsCAHTextStyleByName (textStyleName /) 
+  (if (= (tblsearch "STYLE" textStyleName) nil) 
+    (StealNsCAHTextStyleByNameList (list textStyleName))
   )
 )
 
