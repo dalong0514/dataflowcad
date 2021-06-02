@@ -500,8 +500,9 @@
               (setq insPtList (GetInsertPtListByXMoveUtils insPt (GenerateSortedNumByList x 0) 6600))
               (mapcar '(lambda (xx yy) 
                          (InsertOneNsACHRoomS yy "NsCAH-Room-S" systemNum xx)
-                         (InsertNsCAHHEPA (MoveInsertPositionUtils yy 2000 6000) "NsCAH-RE-HEPA" systemNum)
-                         (InsertNsCAHInstrument (MoveInsertPositionUtils yy 3500 5500) "NsCAH-InstrumentP" systemNum)
+                         (InsertNsCAHHEPA (MoveInsertPositionUtils yy 2000 6000) systemNum)
+                         (InsertNsCAHInstrument (MoveInsertPositionUtils yy 3500 5500) systemNum)
+                         (InsertNsCARoomPositiveAirRate (MoveInsertPositionUtils yy 500 0) systemNum)
                       ) 
                 x
                 insPtList
@@ -524,17 +525,24 @@
 
 ; 2021-06-02
 ; 高效送风口
-(defun InsertNsCAHHEPA (insPt blockName systemNum /) 
-  (InsertBlockUtils insPt blockName "0DataFlow-NsNT-LET-HEPA" (list (cons 1 systemNum) (cons 2 "H13")))
+(defun InsertNsCAHHEPA (insPt systemNum /) 
+  (InsertBlockUtils insPt "NsCAH-RE-HEPA" "0DataFlow-NsNT-LET-HEPA" (list (cons 1 systemNum) (cons 2 "H13")))
 )
 
 ; 2021-06-02
-(defun InsertNsCAHInstrument (insPt blockName systemNum /) 
-  (InsertBlockUtils insPt blockName "0DataFlow-NsCAHInstrument" (list (cons 1 systemNum)))
+(defun InsertNsCAHInstrument (insPt systemNum /) 
+  (InsertBlockUtils insPt "NsCAH-InstrumentP" "0DataFlow-NsCAHInstrument" (list (cons 1 systemNum)))
   (ModifyMultiplePropertyForOneBlockUtils (entlast) 
     (list "FUNCTION" "NAME")
     (list "PDI" "微差压计")
   )  
+)
+
+; 2021-06-02
+(defun InsertNsCARoomPositiveAirRate (insPt systemNum /) 
+  (InsertBlockUtils insPt "NsCAH-RE-Room-In" "0DataFlow-NsNT-ROOM" (list (cons 1 systemNum)))
+  (InsertBlockUtils (MoveInsertPositionUtils insPt 1000 0) "NsCAH-RE-Room-Out" "0DataFlow-NsNT-ROOM" (list (cons 1 systemNum)))
+  (InsertBlockUtils (MoveInsertPositionUtils insPt 2000 0) "NsCAH-RE-Room-PositiveAR" "0DataFlow-NsNT-ROOM" (list (cons 1 systemNum)))
 )
 
 
