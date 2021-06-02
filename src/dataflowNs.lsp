@@ -503,6 +503,7 @@
                          (InsertNsCAHHEPA (MoveInsertPositionUtils yy 2000 6000) systemNum)
                          (InsertNsCAHInstrument (MoveInsertPositionUtils yy 3500 5500) systemNum)
                          (InsertNsCARoomPositiveAirRate (MoveInsertPositionUtils yy 500 0) systemNum)
+                         (InsertNsCAHReturnClipWall (MoveInsertPositionUtils yy 4250 0) systemNum)
                       ) 
                 x
                 insPtList
@@ -544,6 +545,25 @@
   (InsertBlockUtils (MoveInsertPositionUtils insPt 1000 0) "NsCAH-RE-Room-Out" "0DataFlow-NsNT-ROOM" (list (cons 1 systemNum)))
   (InsertBlockUtils (MoveInsertPositionUtils insPt 2000 0) "NsCAH-RE-Room-PositiveAR" "0DataFlow-NsNT-ROOM" (list (cons 1 systemNum)))
 )
+
+; 2021-06-02
+(defun InsertNsCAHReturnClipWall (insPt systemNum /) 
+  (InsertBlockUtils insPt "NsCAH-ReturnExhaust-ClipWall" "0DataFlow-NsNT-DUCT-R.A" (list (cons 1 systemNum)))
+  (ModifyMultiplePropertyForOneBlockUtils (entlast) 
+    (list "RETURN_EXHAUST" "RETURN_EXHAUST_CLIPWALL")
+    (list "R.A" "ªÿ∑Áº–«Ω Retuin air wall")
+  )  
+)
+
+; 2021-06-02
+(defun InsertNsCAHExhaustClipWall (insPt systemNum /) 
+  (InsertBlockUtils insPt "NsCAH-ReturnExhaust-ClipWall" "0DataFlow-NsNT-DUCT-E.A" (list (cons 1 systemNum)))
+  (ModifyMultiplePropertyForOneBlockUtils (entlast) 
+    (list "RETURN_EXHAUST" "RETURN_EXHAUST_CLIPWALL")
+    (list "E.A" "≈≈∑Áº–«Ω Exhaust air wall")
+  )  
+)
+
 
 
 (defun c:foo ()
