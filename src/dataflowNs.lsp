@@ -537,7 +537,9 @@
   (ModifyMultiplePropertyForOneBlockUtils (entlast) 
     (list "FUNCTION" "NAME")
     (list "PDI" "Œ¢≤Ó—πº∆")
-  )  
+  ) 
+  (GenerateLineByLineScaleUtils (MoveInsertPositionUtils insPt 0 500) (MoveInsertPositionUtils insPt 0 1500) "0DataFlow-NsNT-INSTRUMENT-LINE" 1000)
+  (GenerateLineByLineScaleUtils (MoveInsertPositionUtils insPt 0 1500) (MoveInsertPositionUtils insPt 550 1500) "0DataFlow-NsNT-INSTRUMENT-LINE" 1000)
 )
 
 ; 2021-06-02
