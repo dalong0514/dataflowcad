@@ -507,7 +507,7 @@
                          (InsertNsCAHInstrument (MoveInsertPositionUtils yy 3500 5500) systemNum)
                          (InsertNsCARoomPositiveAirRate (MoveInsertPositionUtils yy 500 0) systemNum)
                          (InsertNsCAHClipWallStrategy (MoveInsertPositionUtils yy 4250 0) xx)
-                         (InsertTotalNsCAHValve (MoveInsertPositionUtils yy 2000 7300) xx)
+                        ;  (InsertTotalNsCAHValve (MoveInsertPositionUtils yy 2000 7300) xx)
                       ) 
                 x
                 insPtList
@@ -529,9 +529,12 @@
 )
 
 ; 2021-06-02
-(defun InsertNsCAHSupplyAirUnit (insPt oneRoomDictList / systemNum) 
+(defun InsertNsCAHSupplyAirUnit (insPt oneRoomDictList / systemNum nsCAHValveDictList) 
   (setq systemNum (GetListPairValueUtils "systemNum" oneRoomDictList))
   (InsertNsCAHHEPA insPt systemNum)
+  (setq nsCAHValveDictList (GetCAHValveDictList oneRoomDictList))
+  (InsertNsCAHValve (MoveInsertPositionUtils insPt 0 1300) "NsCAH-RE-CAV-Venturi" (GetCAHCAVValveDictList nsCAHValveDictList))
+  (InsertNsCAHDuctSA (MoveInsertPositionUtils insPt 0 1300) "0DataFlow-NsNT-DUCT-S.A")
 )
 
 ; 2021-06-02
