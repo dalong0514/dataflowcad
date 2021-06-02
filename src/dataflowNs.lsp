@@ -516,7 +516,7 @@
 
 ; 2021-06-01
 (defun InsertOneNsACHRoomS (insPt blockName systemNum oneRoomDictList /) 
-  (InsertBlockUtils insPt blockName "0DataFlow-NsNT-ROOM" (list (cons 1 systemNum)))
+  (InsertBlockUtils insPt blockName "0DataFlow-NsNT-ROOM" (list (cons 1 "")))
   (ModifyMultiplePropertyForOneBlockUtils (entlast) 
     (mapcar '(lambda (x) (strcase (car x))) oneRoomDictList)
     (mapcar '(lambda (x) (cadr x)) oneRoomDictList)
