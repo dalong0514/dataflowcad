@@ -506,7 +506,7 @@
                          (InsertNsCAHHEPA (MoveInsertPositionUtils yy 2000 6000) systemNum)
                          (InsertNsCAHInstrument (MoveInsertPositionUtils yy 3500 5500) systemNum)
                          (InsertNsCARoomPositiveAirRate (MoveInsertPositionUtils yy 500 0) systemNum)
-                         (InsertNsCAHReturnClipWall (MoveInsertPositionUtils yy 4250 0) systemNum)
+                         (InsertNsCAHClipWallStrategy (MoveInsertPositionUtils yy 4250 0) xx)
                          (InsertTotalNsCAHValve (MoveInsertPositionUtils yy 2000 7300) xx)
                       ) 
                 x
@@ -550,6 +550,14 @@
   (InsertBlockUtils insPt "NsCAH-RE-Room-In" "0DataFlow-NsNT-ROOM" (list (cons 1 systemNum)))
   (InsertBlockUtils (MoveInsertPositionUtils insPt 1000 0) "NsCAH-RE-Room-Out" "0DataFlow-NsNT-ROOM" (list (cons 1 systemNum)))
   (InsertBlockUtils (MoveInsertPositionUtils insPt 2000 0) "NsCAH-RE-Room-PositiveAR" "0DataFlow-NsNT-ROOM" (list (cons 1 systemNum)))
+)
+
+; 2021-06-02
+(defun InsertNsCAHClipWallStrategy (insPt oneRoomDictList /) 
+  (cond 
+    ((> (GetListPairValueUtils "roomExhaustAirRate" oneRoomDictList) 0) (InsertNsCAHExhaustClipWall insPt "systemNum"))
+    ((> (GetListPairValueUtils "roomReturnAirRate" oneRoomDictList) 0) (InsertNsCAHReturnClipWall insPt "systemNum"))
+  )
 )
 
 ; 2021-06-02
@@ -640,10 +648,9 @@
 
 
 
-
-
 (defun c:foo (/ insPt)
-  (setq insPt (getpoint "\n拾取PID插入点："))
+  ; (setq insPt (getpoint "\n拾取PID插入点："))
   ; (GetAllNsCleanAirData)
-  (InsertNsCAHDuct insPt)
+  (car (GetAllNsCleanAirData))
+  ; (InsertNsCAHDuct insPt)
 )
