@@ -507,7 +507,6 @@
                          (InsertNsCAHInstrument (MoveInsertPositionUtils yy 3500 5500) systemNum)
                          (InsertNsCARoomPositiveAirRate (MoveInsertPositionUtils yy 500 0) systemNum)
                          (InsertNsCAHClipWallStrategy (MoveInsertPositionUtils yy 4250 0) xx)
-                        ;  (InsertTotalNsCAHValve (MoveInsertPositionUtils yy 2000 7300) xx)
                       ) 
                 x
                 insPtList
@@ -606,15 +605,6 @@
 )
 
 ; 2021-06-02
-(defun InsertTotalNsCAHValve (insPt oneRoomDictList / nsCAHValveDictList) 
-  (setq nsCAHValveDictList (GetCAHValveDictList oneRoomDictList))
-  (InsertNsCAHValve insPt "NsCAH-RE-CAV-Venturi" (GetCAHCAVValveDictList nsCAHValveDictList))
-  (InsertNsCAHDuctSA insPt "0DataFlow-NsNT-DUCT-S.A")
-  (InsertNsCAHValve (MoveInsertPositionUtils insPt 2250 0) "NsCAH-RE-VAV-Venturi" (GetCAHVAVValveDictList nsCAHValveDictList))
-  (InsertNsCAHDuctRA (MoveInsertPositionUtils insPt 2250 0) "0DataFlow-NsNT-DUCT-R.A")
-)
-
-; 2021-06-02
 (defun InsertNsCAHDuctSA (insPt layerName /) 
   (GenerateLineUtils (MoveInsertPositionUtils insPt 0 300) (MoveInsertPositionUtils insPt 0 1050) layerName)
   (InsertNsCAHDuctArcLine (MoveInsertPositionUtils insPt 0 1200) layerName 350)
@@ -651,36 +641,6 @@
     (mapcar '(lambda (x) (cadr x)) nsCAHValveDictList)
   )
 )
-
-; 2021-06-02
-(defun GetCAHCAVValveDictList (nsCAHValveDictList /)
-  (append 
-    nsCAHValveDictList
-    (list (list "TAG" "CAV0101"))
-  )
-)
-
-; 2021-06-02
-(defun GetCAHVAVValveDictList (nsCAHValveDictList /)
-  (append 
-    nsCAHValveDictList
-    (list (list "TAG" "VAV0101"))
-  )
-)
-
-; 2021-06-02 ready to refactor
-(defun GetCAHValveDictList (oneRoomDictList /)
-  (append 
-    (list (list "systemNum" (GetListPairValueUtils "systemNum" oneRoomDictList)))
-    (list (list "CMH" (vl-princ-to-string (GetListPairValueUtils "roomSupplyAirRate" oneRoomDictList))))
-  )
-)
-; (vl-remove-if-not '(lambda (x) 
-;                     (member (car x) 
-;                             '("systemNum" "roomSupplyAirRate")) 
-;                   ) 
-;   oneRoomDictList
-; )
 
 ; 2021-06-02
 (defun GetCAHSupplyAirRateValveDictList (oneRoomDictList /)
