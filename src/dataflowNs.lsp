@@ -499,11 +499,12 @@
   (mapcar '(lambda (x) 
               (setq insPtList (GetInsertPtListByXMoveUtils insPt (GenerateSortedNumByList x 0) 6600))
               (mapcar '(lambda (xx yy) 
-                         (InsertOneNsACHRoomS yy "NsCAH-Room-S" systemNum xx)
+                         (InsertOneNsACHRoomS yy "NsCAH-Room-S" xx)
                          (InsertNsCAHHEPA (MoveInsertPositionUtils yy 2000 6000) systemNum)
                          (InsertNsCAHInstrument (MoveInsertPositionUtils yy 3500 5500) systemNum)
                          (InsertNsCARoomPositiveAirRate (MoveInsertPositionUtils yy 500 0) systemNum)
                          (InsertNsCAHReturnClipWall (MoveInsertPositionUtils yy 4250 0) systemNum)
+                         (InsertNsCAHCAVValve (MoveInsertPositionUtils yy 2000 7300) xx)
                       ) 
                 x
                 insPtList
@@ -516,7 +517,7 @@
 )
 
 ; 2021-06-01
-(defun InsertOneNsACHRoomS (insPt blockName systemNum oneRoomDictList /) 
+(defun InsertOneNsACHRoomS (insPt blockName oneRoomDictList /) 
   (InsertBlockUtils insPt blockName "0DataFlow-NsNT-ROOM" (list (cons 1 "")))
   (ModifyMultiplePropertyForOneBlockUtils (entlast) 
     (mapcar '(lambda (x) (strcase (car x))) oneRoomDictList)
@@ -564,8 +565,34 @@
   )  
 )
 
+; 2021-06-02
+(defun InsertNsCAHCAVValve (insPt oneRoomDictList / nsCAHValveDictList) 
+  (setq nsCAHValveDictList (GetCAHValveDictList oneRoomDictList))
+  (InsertBlockUtils insPt "NsCAH-RE-CAV-Venturi" "0DataFlow-NsNT-VALVE-CAV" (list (cons 1 "")))
+  (ModifyMultiplePropertyForOneBlockUtils (entlast) 
+    (mapcar '(lambda (x) (strcase (car x))) nsCAHValveDictList)
+    (mapcar '(lambda (x) (cadr x)) nsCAHValveDictList)
+  )
+)
+
+; 2021-06-02 ready to refactor
+(defun GetCAHValveDictList (oneRoomDictList /)
+  (append 
+    ; (vl-remove-if-not '(lambda (x) 
+    ;                     (member (car x) 
+    ;                             '("systemNum" "roomSupplyAirRate")) 
+    ;                   ) 
+    ;   oneRoomDictList
+    ; )
+    (list (list "CMH" (GetListPairValueUtils "systemNum" oneRoomDictList)))
+    (list (list "TAG" "CAV"))
+    (list (list "CMH" (vl-princ-to-string (GetListPairValueUtils "roomSupplyAirRate" oneRoomDictList))))
+  )
+)
+
 
 
 (defun c:foo ()
-  (GetAllNsCleanAirData)
+  ; (GetAllNsCleanAirData)
+  (GetListPairValueUtils "roomSupplyAirRate" (car (GetAllNsCleanAirData)))
 )

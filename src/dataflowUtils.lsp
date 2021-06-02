@@ -166,6 +166,11 @@
   (cdr (assoc keyName dataList))
 )
 
+; 2021-06-02
+(defun GetListPairValueUtils (keyName dataList /)
+  (cadr (assoc keyName dataList))
+)
+
 ; refactored at 2021-03-08
 (defun GetOneEntityDataUtils ()
   ;(entget (car (entsel)))
