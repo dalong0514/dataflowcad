@@ -498,12 +498,12 @@
   (setq num 1)
   (mapcar '(lambda (x) 
               (setq insPtList (GetInsertPtListByXMoveUtils insPt (GenerateSortedNumByList x 0) 6600))
-              (GenerateLineUtils (MoveInsertPositionUtils insPt -6100 9500) (MoveInsertPositionUtils insPt 43350 9500) "0DataFlow-NsNT-DUCT-S.A")
+              (GenerateLineUtils (MoveInsertPositionUtils insPt -6100 9500) (MoveInsertPositionUtils insPt 41600 9500) "0DataFlow-NsNT-DUCT-S.A")
               (GenerateLineUtils (MoveInsertPositionUtils insPt -6100 9000) (MoveInsertPositionUtils insPt 43350 9000) "0DataFlow-NsNT-DUCT-R.A")
               (GenerateLineUtils (MoveInsertPositionUtils insPt -6100 8500) (MoveInsertPositionUtils insPt 43350 8500) "0DataFlow-NsNT-DUCT-E.A")
               (mapcar '(lambda (xx yy) 
                          (InsertOneNsACHRoomS yy "NsCAH-Room-S" xx)
-                         (InsertNsCAHHEPA (MoveInsertPositionUtils yy 2000 6000) systemNum)
+                         (InsertNsCAHSupplyAirUnit (MoveInsertPositionUtils yy 2000 6000) xx)
                          (InsertNsCAHInstrument (MoveInsertPositionUtils yy 3500 5500) systemNum)
                          (InsertNsCARoomPositiveAirRate (MoveInsertPositionUtils yy 500 0) systemNum)
                          (InsertNsCAHClipWallStrategy (MoveInsertPositionUtils yy 4250 0) xx)
@@ -526,6 +526,12 @@
     (mapcar '(lambda (x) (strcase (car x))) oneRoomDictList)
     (mapcar '(lambda (x) (cadr x)) oneRoomDictList)
   )
+)
+
+; 2021-06-02
+(defun InsertNsCAHSupplyAirUnit (insPt oneRoomDictList / systemNum) 
+  (setq systemNum (GetListPairValueUtils "systemNum" oneRoomDictList))
+  (InsertNsCAHHEPA insPt systemNum)
 )
 
 ; 2021-06-02
@@ -553,10 +559,11 @@
 )
 
 ; 2021-06-02
-(defun InsertNsCAHClipWallStrategy (insPt oneRoomDictList /) 
+(defun InsertNsCAHClipWallStrategy (insPt oneRoomDictList / systemNum) 
+  (setq systemNum (GetListPairValueUtils "systemNum" oneRoomDictList))
   (cond 
-    ((> (GetListPairValueUtils "roomExhaustAirRate" oneRoomDictList) 0) (InsertNsCAHExhaustClipWall insPt "systemNum"))
-    ((> (GetListPairValueUtils "roomReturnAirRate" oneRoomDictList) 0) (InsertNsCAHReturnClipWall insPt "systemNum"))
+    ((> (GetListPairValueUtils "roomExhaustAirRate" oneRoomDictList) 0) (InsertNsCAHExhaustClipWall insPt systemNum))
+    ((> (GetListPairValueUtils "roomReturnAirRate" oneRoomDictList) 0) (InsertNsCAHReturnClipWall insPt systemNum))
   )
 )
 
