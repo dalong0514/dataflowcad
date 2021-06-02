@@ -499,7 +499,8 @@
   (mapcar '(lambda (x) 
               (setq insPtList (GetInsertPtListByXMoveUtils insPt (GenerateSortedNumByList x 0) 6600))
               (mapcar '(lambda (xx yy) 
-                        (InsertOneNsACHRoomS yy "NsCAH-Room-S" systemNum xx)
+                         (InsertOneNsACHRoomS yy "NsCAH-Room-S" systemNum xx)
+                         (InsertNsCAHHEPA (MoveInsertPositionUtils yy 2000 6000) "NsCAH-RE-HEPA" systemNum)
                       ) 
                 x
                 insPtList
@@ -520,11 +521,13 @@
   )
 )
 
+; 2021-06-02
+; 高效送风口
+(defun InsertNsCAHHEPA (insPt blockName systemNum /) 
+  (InsertBlockUtils insPt blockName "0DataFlow-NsCAH" (list (cons 1 systemNum) (cons 2 "H13")))
+)
 
 
 (defun c:foo ()
   (GetAllNsCleanAirData)
-  ; (car (GetAllNsCleanAirData))
-  ; (ReadNsDataFromFileStrategy "nsCleanAir")
-  ; (princ (strlen (ReadNsDataFromFileStrategy "nsCleanAir")))(princ)
 )
