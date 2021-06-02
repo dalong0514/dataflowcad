@@ -32,9 +32,9 @@
 )
 
 ; 2021-05-31
-(defun GetNsACHModulesPath (/ result)
-  ; (setq result "D:\\dataflowcad\\allBlocks\\NsCAHBlocks.dwg")
-  (setq result "\\\\192.168.1.38\\dataflow\\allBlocks\\NsCAHBlocks.dwg")
+(defun GetNsCAHModulesPath (/ result)
+  (setq result "D:\\dataflowcad\\allBlocks\\NsCAHBlocks.dwg")
+  ; (setq result "\\\\192.168.1.38\\dataflow\\allBlocks\\NsCAHBlocks.dwg")
 )
 
 ; 2021-03-17
@@ -154,7 +154,7 @@
 
 ; 2021-05-31
 (defun StealNsCAHBlockByNameList (blockNameList /)
-  (Steal (GetNsACHModulesPath) 
+  (Steal (GetNsCAHModulesPath) 
     (list 
       (list "Blocks" blockNameList)
     )
@@ -163,7 +163,7 @@
 
 ; 2021-05-31
 (defun StealNsCAHLayerByNameList (layerNameList /)
-  (Steal (GetNsACHModulesPath) 
+  (Steal (GetNsCAHModulesPath) 
     (list 
       (list "Layers" layerNameList)
     )
@@ -172,7 +172,7 @@
 
 ; 2021-05-31
 (defun StealNsCAHTextStyleByNameList (textStyleNameList /)
-  (Steal (GetNsACHModulesPath) 
+  (Steal (GetNsCAHModulesPath) 
     (list 
       (list "Text Styles" textStyleNameList)
     )
