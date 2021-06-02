@@ -615,6 +615,15 @@
   )(princ)
 )
 
+; 2021-06-02
+; firstAngle secondAngle Ω‡æªø’µÚ”“≤‡∞Î‘≤ (50 . 4.71239) (51 . 1.5708)
+(defun GenerateArcUtils (insPt entityLayer radius firstAngle secondAngle /)
+  (entmake (list (cons 0 "ARC") (cons 100 "AcDbEntity") (cons 67 0) (cons 8 entityLayer) (cons 100 "AcDbCircle") 
+                  (cons 10 insPt) (cons 40 radius) (cons 210 '(0.0 0.0 1.0)) (cons 100 "AcDbArc") (cons 50 firstAngle) (cons 51 secondAngle)
+             )
+  )(princ)
+)
+
 ; 2021-03-05
 (defun GenerateVerticalPolyline (insPt blockLayer lineWidth /)
   (entmake 

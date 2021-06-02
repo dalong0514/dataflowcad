@@ -571,7 +571,29 @@
 (defun InsertTotalNsCAHValve (insPt oneRoomDictList / nsCAHValveDictList) 
   (setq nsCAHValveDictList (GetCAHValveDictList oneRoomDictList))
   (InsertNsCAHValve insPt "NsCAH-RE-CAV-Venturi" (GetCAHCAVValveDictList nsCAHValveDictList))
+  (InsertNsCAHDuctSA insPt "0DataFlow-NsNT-DUCT-S.A")
   (InsertNsCAHValve (MoveInsertPositionUtils insPt 2250 0) "NsCAH-RE-VAV-Venturi" (GetCAHVAVValveDictList nsCAHValveDictList))
+  (InsertNsCAHDuctRA (MoveInsertPositionUtils insPt 2250 0) "0DataFlow-NsNT-DUCT-R.A")
+)
+
+(defun InsertNsCAHDuctSA (insPt layerName /) 
+  (GenerateLineUtils (MoveInsertPositionUtils insPt 0 300) (MoveInsertPositionUtils insPt 0 1050) layerName)
+  (InsertNsCAHDuctArcLine (MoveInsertPositionUtils insPt 0 1200) layerName 350)
+  (InsertNsCAHDuctArcLine (MoveInsertPositionUtils insPt 0 1700) layerName 500)
+)
+
+(defun InsertNsCAHDuctRA (insPt layerName /) 
+  (GenerateLineUtils (MoveInsertPositionUtils insPt 0 300) (MoveInsertPositionUtils insPt 0 1050) layerName)
+  (InsertNsCAHDuctArcLine (MoveInsertPositionUtils insPt 0 1200) layerName 500)
+)
+
+(defun InsertNsCAHDuctArcLine (insPt layerName lineLength /) 
+  (InsertNsCAHDuctArc insPt layerName)
+  (GenerateLineUtils (MoveInsertPositionUtils insPt 0 150) (MoveInsertPositionUtils insPt 0 lineLength) layerName)
+)
+
+(defun InsertNsCAHDuctArc (insPt layerName /)
+  (GenerateArcUtils insPt layerName 150 (* 1.5 PI) (* 0.5 PI))
 )
 
 ; 2021-06-02
@@ -616,7 +638,9 @@
 
 
 
-(defun c:foo ()
+
+(defun c:foo (/ insPt)
+  (setq insPt (getpoint "\n ∞»°PID≤Â»Îµ„£∫"))
   ; (GetAllNsCleanAirData)
-  (GetListPairValueUtils "roomSupplyAirRate" (car (GetAllNsCleanAirData)))
+  (InsertNsCAHDuct insPt)
 )
