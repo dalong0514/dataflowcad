@@ -2158,22 +2158,23 @@
 
 ; 2021-06-01
 ; for data imported by electron, it is a red problem, ready to refactor
-(defun ReadDataFromFileByEncodeTransUtils (fileDir / filePtr i textLine resultList) 
-  ; refactored at 2021-05-31
-  ; unicode;utf-8;ascii;gb2312;big5;gbk
-  (FileEncodeTransUtils fileDir "utf-8" "gb2312")
-  (setq filePtr (open fileDir "r"))
-  (if filePtr
-    (progn 
-      (setq i 1)
-      (while (setq textLine (read-line filePtr)) 
-        (setq resultList (append resultList (list textLine)))
-        (setq i (1+ i))
-      )
-    ) 
-  )
-  (close filePtr)
-  resultList
+; refactored at 2021-06-02 - the red hat has been solved
+(defun ReadDataFromFileByEncodeUtils (fileDir / obj fileText) 
+  (setq obj (vlax-create-object "ADODB.Stream"))
+  (vlax-put-property obj 'type 2); 1-reading binary, 2-reading text
+  (vlax-put-property obj 'mode 3); 1-read, 2-write, 3-read and write
+  (vlax-invoke obj 'open)
+  (vlax-put-property obj "charset" "utf-8");; unicode;utf-8;ascii;gb2312;big5;gbk
+  (vlax-invoke-method obj 'loadfromfile fileDir)
+  (setq fileText (vlax-invoke obj 'readtext))
+  (vlax-invoke obj 'close)
+  ; the function must trim the last item[nil]
+  (DeleteLastItemUtils (StrToListUtils fileText "\n"))
+)
+
+; 2021-06-02
+(defun DeleteLastItemUtils (originList /)
+  (reverse (cdr (reverse originList)))
 )
 
 ; Read and Write Utils

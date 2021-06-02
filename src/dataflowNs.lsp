@@ -129,7 +129,7 @@
 (defun ReadNsDataFromFileStrategy (dataType /)
   (cond 
     ((= dataType "NsEquip") (ReadDataFromCSVUtils "D:\\dataflowcad\\nsdata\\tempEquip.csv"))
-    ((= dataType "nsCleanAir") (ReadDataFromFileByEncodeTransUtils "D:\\dataflowcad\\tempdata\\nsCleanAir.json"))
+    ((= dataType "nsCleanAir") (ReadDataFromFileByEncodeUtils "D:\\dataflowcad\\tempdata\\nsCleanAir.json"))
   )
 )
 
@@ -513,7 +513,7 @@
 
 ; 2021-06-01
 (defun InsertOneNsACHRoomS (insPt blockName systemNum oneRoomDictList /) 
-  (InsertBlockUtils insPt blockName "0DataFlow-NsCAH" (list (cons 0 systemNum)))
+  (InsertBlockUtils insPt blockName "0DataFlow-NsCAH" (list (cons 1 systemNum)))
   (ModifyMultiplePropertyForOneBlockUtils (entlast) 
     (mapcar '(lambda (x) (strcase (car x))) oneRoomDictList)
     (mapcar '(lambda (x) (cadr x)) oneRoomDictList)
@@ -524,4 +524,7 @@
 
 (defun c:foo ()
   (GetAllNsCleanAirData)
+  ; (car (GetAllNsCleanAirData))
+  ; (ReadNsDataFromFileStrategy "nsCleanAir")
+  ; (princ (strlen (ReadNsDataFromFileStrategy "nsCleanAir")))(princ)
 )
