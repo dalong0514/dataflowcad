@@ -501,6 +501,7 @@
               (mapcar '(lambda (xx yy) 
                          (InsertOneNsACHRoomS yy "NsCAH-Room-S" systemNum xx)
                          (InsertNsCAHHEPA (MoveInsertPositionUtils yy 2000 6000) "NsCAH-RE-HEPA" systemNum)
+                         (InsertNsCAHInstrument (MoveInsertPositionUtils yy 3500 5500) "NsCAH-InstrumentP" systemNum)
                       ) 
                 x
                 insPtList
@@ -514,7 +515,7 @@
 
 ; 2021-06-01
 (defun InsertOneNsACHRoomS (insPt blockName systemNum oneRoomDictList /) 
-  (InsertBlockUtils insPt blockName "0DataFlow-NsCAH" (list (cons 1 systemNum)))
+  (InsertBlockUtils insPt blockName "0DataFlow-NsNT-ROOM" (list (cons 1 systemNum)))
   (ModifyMultiplePropertyForOneBlockUtils (entlast) 
     (mapcar '(lambda (x) (strcase (car x))) oneRoomDictList)
     (mapcar '(lambda (x) (cadr x)) oneRoomDictList)
@@ -524,7 +525,16 @@
 ; 2021-06-02
 ; 高效送风口
 (defun InsertNsCAHHEPA (insPt blockName systemNum /) 
-  (InsertBlockUtils insPt blockName "0DataFlow-NsCAH" (list (cons 1 systemNum) (cons 2 "H13")))
+  (InsertBlockUtils insPt blockName "0DataFlow-NsNT-LET-HEPA" (list (cons 1 systemNum) (cons 2 "H13")))
+)
+
+; 2021-06-02
+(defun InsertNsCAHInstrument (insPt blockName systemNum /) 
+  (InsertBlockUtils insPt blockName "0DataFlow-NsCAHInstrument" (list (cons 1 systemNum)))
+  (ModifyMultiplePropertyForOneBlockUtils (entlast) 
+    (list "FUNCTION" "NAME")
+    (list "PDI" "微差压计")
+  )  
 )
 
 
