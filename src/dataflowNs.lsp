@@ -504,7 +504,7 @@
                          (InsertNsCAHInstrument (MoveInsertPositionUtils yy 3500 5500) systemNum)
                          (InsertNsCARoomPositiveAirRate (MoveInsertPositionUtils yy 500 0) systemNum)
                          (InsertNsCAHReturnClipWall (MoveInsertPositionUtils yy 4250 0) systemNum)
-                         (InsertNsCAHCAVValve (MoveInsertPositionUtils yy 2000 7300) xx)
+                         (InsertTotalNsCAHValve (MoveInsertPositionUtils yy 2000 7300) xx)
                       ) 
                 x
                 insPtList
@@ -566,29 +566,51 @@
 )
 
 ; 2021-06-02
-(defun InsertNsCAHCAVValve (insPt oneRoomDictList / nsCAHValveDictList) 
+(defun InsertTotalNsCAHValve (insPt oneRoomDictList / nsCAHValveDictList) 
   (setq nsCAHValveDictList (GetCAHValveDictList oneRoomDictList))
-  (InsertBlockUtils insPt "NsCAH-RE-CAV-Venturi" "0DataFlow-NsNT-VALVE-CAV" (list (cons 1 "")))
+  (InsertNsCAHValve insPt "NsCAH-RE-CAV-Venturi" (GetCAHCAVValveDictList nsCAHValveDictList))
+  (InsertNsCAHValve (MoveInsertPositionUtils insPt 2250 0) "NsCAH-RE-VAV-Venturi" (GetCAHVAVValveDictList nsCAHValveDictList))
+)
+
+; 2021-06-02
+(defun InsertNsCAHValve (insPt blockName nsCAHValveDictList /) 
+  (InsertBlockUtils insPt blockName "0DataFlow-NsNT-VALVE-CAV" (list (cons 1 "")))
   (ModifyMultiplePropertyForOneBlockUtils (entlast) 
     (mapcar '(lambda (x) (strcase (car x))) nsCAHValveDictList)
     (mapcar '(lambda (x) (cadr x)) nsCAHValveDictList)
   )
 )
 
+; 2021-06-02
+(defun GetCAHCAVValveDictList (nsCAHValveDictList /)
+  (append 
+    nsCAHValveDictList
+    (list (list "TAG" "CAV0101"))
+  )
+)
+
+; 2021-06-02
+(defun GetCAHVAVValveDictList (nsCAHValveDictList /)
+  (append 
+    nsCAHValveDictList
+    (list (list "TAG" "VAV0101"))
+  )
+)
+
 ; 2021-06-02 ready to refactor
 (defun GetCAHValveDictList (oneRoomDictList /)
   (append 
-    ; (vl-remove-if-not '(lambda (x) 
-    ;                     (member (car x) 
-    ;                             '("systemNum" "roomSupplyAirRate")) 
-    ;                   ) 
-    ;   oneRoomDictList
-    ; )
-    (list (list "CMH" (GetListPairValueUtils "systemNum" oneRoomDictList)))
-    (list (list "TAG" "CAV"))
+    (list (list "systemNum" (GetListPairValueUtils "systemNum" oneRoomDictList)))
     (list (list "CMH" (vl-princ-to-string (GetListPairValueUtils "roomSupplyAirRate" oneRoomDictList))))
   )
 )
+; (vl-remove-if-not '(lambda (x) 
+;                     (member (car x) 
+;                             '("systemNum" "roomSupplyAirRate")) 
+;                   ) 
+;   oneRoomDictList
+; )
+
 
 
 
