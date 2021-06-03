@@ -677,7 +677,7 @@
 (defun InsertNsCAHAirConditionUnitTypeOne (insPt systemNum nsSystemCleanAirData /) 
   (InsertNsCAHAHUOutdoorAir insPt systemNum nsSystemCleanAirData)
   (setq insPt (MoveInsertPositionUtils insPt 1500 0))
-  (InsertBlockUtils insPt "NsCAH-AHU-FabricRough" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
+  (InsertNsCAHAHUFabricRough insPt systemNum)
   (setq insPt (MoveInsertPositionUtils insPt 1750 0))
   (InsertNsCAHAHUHotWater insPt systemNum nsSystemCleanAirData)
   
@@ -712,6 +712,19 @@
   (InsertNsCAHLeftInstrumentUnit (MoveInsertPositionUtils insPt -250 4050) "NsCAH-InstrumentL" systemNum "TG")
   (InsertNsCAHLargeRightInstrumentUnit (MoveInsertPositionUtils insPt -250 7100) "NsCAH-InstrumentP" systemNum "MOV")
   (InsertNsCAHDownInstrumentLengthUnit (MoveInsertPositionUtils insPt 800 1000) "NsCAH-InstrumentP" systemNum "TMI" 1200)
+)
+
+; 2021-06-03
+(defun InsertNsCAHAHUFabricRough (insPt systemNum / ) 
+  (InsertBlockUtils insPt "NsCAH-AHU-FabricRough" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum))) 
+  (GenerateLineUtils (MoveInsertPositionUtils insPt -625 -200) (MoveInsertPositionUtils insPt 625 -200) "0DataFlow-NsNT-INSTRUMENT")
+  (GenerateLineUtils (MoveInsertPositionUtils insPt -625 -200) (MoveInsertPositionUtils insPt -625 1200) "0DataFlow-NsNT-INSTRUMENT")
+  (GenerateLineUtils (MoveInsertPositionUtils insPt 625 -200) (MoveInsertPositionUtils insPt 625 1200) "0DataFlow-NsNT-INSTRUMENT")
+  (InsertNsCAHDownInstrumentUnit (MoveInsertPositionUtils insPt 0 -200) "NsCAH-InstrumentP" systemNum "PDIA")
+  (ModifyMultiplePropertyForOneBlockUtils (entlast) 
+    (list "HALARM")
+    (list "H")
+  )  
 )
 
 ; 2021-06-03
