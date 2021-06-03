@@ -472,12 +472,11 @@
 )
 
 ; refacotred at 2021-05-07
-(defun InsertOneNsACHPID (insPt allNsCleanAirData / equipType) 
-  ; (setq equipTag (GetDottedPairValueUtils "TAG" oneTankData))
+(defun InsertOneNsACHPID (insPt allNsCleanAirData / systemNum) 
+  (setq systemNum (GetListPairValueUtils "systemNum" (car allNsCleanAirData)))
+  ; (setq systemNum (GetListPairValueUtils "systemNum" oneRoomDictList))
   (InsertNSACHDrawFrame insPt)
-  (InsertAllNsACHRoomS (MoveInsertPositionUtils insPt -45500 47000) "2B" allNsCleanAirData)
-  ; (InsertBsGCTEquipTableStrategy insPt bsGCTType oneTankData tankStandardList tankHeadStyleList 
-  ;                          tankHeadMaterialList tankPressureElementList tankOtherRequestList equipType)
+  (InsertAllNsACHRoomS (MoveInsertPositionUtils insPt -45500 47000) systemNum allNsCleanAirData)
 )
 
 ; 2021-06-01
@@ -492,6 +491,8 @@
   (InsertBlockByNoPropertyByScaleUtils (MoveInsertPositionUtils insPt -18000 0) "intercheck.2017" "0DataFlow-NsTitanTitle" 100)
 )
 
+;;;-------------------------------------------------------------------------;;;
+; Generate All Room Graph
 ; 2021-06-01
 (defun InsertAllNsACHRoomS (insPt systemNum roomDictList / totalNum num insPtList) 
   (setq totalNum (1+ (/ (length roomDictList) 7)))
@@ -503,10 +504,10 @@
               (GenerateLineUtils (MoveInsertPositionUtils insPt -6100 8500) (MoveInsertPositionUtils insPt 43350 8500) "0DataFlow-NsNT-DUCT-E.A")
               (mapcar '(lambda (xx yy) 
                          (InsertOneNsACHRoomS yy "NsCAH-Room-S" xx)
-                         (InsertNsCAHSupplyAirUnit (MoveInsertPositionUtils yy 2000 6000) xx)
+                         (InsertNsCAHSupplyAirUnit (MoveInsertPositionUtils yy 2000 6000) xx systemNum)
                          (InsertNsCAHInstrument (MoveInsertPositionUtils yy 3500 5500) systemNum)
                          (InsertNsCARoomPositiveAirRate (MoveInsertPositionUtils yy 500 0) systemNum)
-                         (InsertNsCAHClipWallStrategy (MoveInsertPositionUtils yy 4250 0) xx)
+                         (InsertNsCAHClipWallStrategy (MoveInsertPositionUtils yy 4250 0) xx systemNum)
                       ) 
                 x
                 insPtList
@@ -520,7 +521,7 @@
 
 ; 2021-06-01
 (defun InsertOneNsACHRoomS (insPt blockName oneRoomDictList /) 
-  (InsertBlockUtils insPt blockName "0DataFlow-NsNT-ROOM" (list (cons 1 "")))
+  (InsertBlockByNoPropertyUtils insPt blockName "0DataFlow-NsNT-ROOM")
   (ModifyMultiplePropertyForOneBlockUtils (entlast) 
     (mapcar '(lambda (x) (strcase (car x))) oneRoomDictList)
     (mapcar '(lambda (x) (cadr x)) oneRoomDictList)
@@ -528,8 +529,7 @@
 )
 
 ; 2021-06-02
-(defun InsertNsCAHSupplyAirUnit (insPt oneRoomDictList / systemNum nsCAHValveDictList) 
-  (setq systemNum (GetListPairValueUtils "systemNum" oneRoomDictList))
+(defun InsertNsCAHSupplyAirUnit (insPt oneRoomDictList systemNum / nsCAHValveDictList) 
   (InsertNsCAHHEPA insPt systemNum)
   (setq nsCAHValveDictList (GetCAHSupplyAirRateValveDictList oneRoomDictList))
   (InsertNsCAHValve (MoveInsertPositionUtils insPt 0 1300) "NsCAH-RE-CAV-Venturi" nsCAHValveDictList)
@@ -561,16 +561,15 @@
 )
 
 ; 2021-06-02
-(defun InsertNsCAHClipWallStrategy (insPt oneRoomDictList /) 
+(defun InsertNsCAHClipWallStrategy (insPt oneRoomDictList systemNum /) 
   (cond 
-    ((> (GetListPairValueUtils "roomExhaustAirRate" oneRoomDictList) 0) (InsertNsCAHExhaustAirUnit insPt oneRoomDictList))
-    ((> (GetListPairValueUtils "roomReturnAirRate" oneRoomDictList) 0) (InsertNsCAHReturnAirUnit insPt oneRoomDictList))
+    ((> (GetListPairValueUtils "roomExhaustAirRate" oneRoomDictList) 0) (InsertNsCAHExhaustAirUnit insPt oneRoomDictList systemNum))
+    ((> (GetListPairValueUtils "roomReturnAirRate" oneRoomDictList) 0) (InsertNsCAHReturnAirUnit insPt oneRoomDictList systemNum))
   )
 )
 
 ; 2021-06-02
-(defun InsertNsCAHExhaustAirUnit (insPt oneRoomDictList / systemNum nsCAHValveDictList) 
-  (setq systemNum (GetListPairValueUtils "systemNum" oneRoomDictList))
+(defun InsertNsCAHExhaustAirUnit (insPt oneRoomDictList systemNum / nsCAHValveDictList) 
   (InsertNsCAHExhaustClipWall insPt systemNum)
   (setq nsCAHValveDictList (GetCAHExhaustAirRateValveDictList oneRoomDictList))
   (InsertNsCAHValve (MoveInsertPositionUtils insPt 0 7300) "NsCAH-RE-VAV-Venturi" nsCAHValveDictList)
@@ -578,8 +577,7 @@
 )
 
 ; 2021-06-02
-(defun InsertNsCAHReturnAirUnit (insPt oneRoomDictList / systemNum nsCAHValveDictList) 
-  (setq systemNum (GetListPairValueUtils "systemNum" oneRoomDictList))
+(defun InsertNsCAHReturnAirUnit (insPt oneRoomDictList systemNum / nsCAHValveDictList) 
   (InsertNsCAHReturnClipWall insPt systemNum)
   (setq nsCAHValveDictList (GetCAHReturnAirRateValveDictList oneRoomDictList))
   (InsertNsCAHValve (MoveInsertPositionUtils insPt 0 7300) "NsCAH-RE-VAV-Venturi" nsCAHValveDictList)
@@ -668,6 +666,13 @@
     (list (list "TAG" "VAV0101"))
   )
 )
+
+;;;-------------------------------------------------------------------------;;;
+; Generate Air Condition Unit
+(defun InsertNsACHAirConditionUnitTypeOne (insPt systemNum /) 
+  (InsertBlockUtils insPt blockName "0DataFlow-NsNT-ROOM" (list (cons 1 "")))
+)
+
 
 
 
