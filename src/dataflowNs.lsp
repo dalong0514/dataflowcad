@@ -509,7 +509,7 @@
               (mapcar '(lambda (xx yy) 
                          (InsertOneNsACHRoomS yy "NsCAH-Room-S" xx)
                          (InsertNsCAHSupplyAirUnit (MoveInsertPositionUtils yy 2000 6000) xx systemNum)
-                         (InsertNsCAHInstrument (MoveInsertPositionUtils yy 3500 5500) systemNum)
+                         (InsertNsCAHInstrument (MoveInsertPositionUtils yy 3600 5600) systemNum)
                          (InsertNsCARoomPositiveAirRate (MoveInsertPositionUtils yy 500 0) systemNum)
                          (InsertNsCAHClipWallStrategy (MoveInsertPositionUtils yy 4250 0) xx systemNum)
                       ) 
@@ -553,8 +553,8 @@
     (list "FUNCTION" "NAME")
     (list "PDI" "Œ¢≤Ó—πº∆")
   ) 
-  (GenerateLineByLineScaleUtils (MoveInsertPositionUtils insPt 0 500) (MoveInsertPositionUtils insPt 0 1500) "0DataFlow-NsNT-INSTRUMENT-LINE" 1000)
-  (GenerateLineByLineScaleUtils (MoveInsertPositionUtils insPt 0 1500) (MoveInsertPositionUtils insPt 550 1500) "0DataFlow-NsNT-INSTRUMENT-LINE" 1000)
+  (GenerateLineByLineScaleUtils (MoveInsertPositionUtils insPt 0 400) (MoveInsertPositionUtils insPt 0 1400) "0DataFlow-NsNT-INSTRUMENT-LINE" 1000)
+  (GenerateLineByLineScaleUtils (MoveInsertPositionUtils insPt 0 1400) (MoveInsertPositionUtils insPt 450 1400) "0DataFlow-NsNT-INSTRUMENT-LINE" 1000)
 )
 
 ; 2021-06-02
@@ -708,6 +708,7 @@
   (GenerateLineUtils (MoveInsertPositionUtils insPt 0 4100) (MoveInsertPositionUtils insPt 0 6900) "0DataFlow-NsNT-DUCT-F.A")
   (GenerateLineUtils (MoveInsertPositionUtils insPt -1000 6900) (MoveInsertPositionUtils insPt 0 6900) "0DataFlow-NsNT-DUCT-F.A")
   (InsertBlockUtils (MoveInsertPositionUtils insPt -1000 6900) "NsCAH-AHU-AirInlet" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
+  (InsertNsCAHUpInstrumentUnit (MoveInsertPositionUtils insPt -500 6900) systemNum "TIMC")
   (InsertBlockUtils (MoveInsertPositionUtils insPt -200 5700) "NsCAH-AHU-Arrow" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
   (GenerateVerticalLeftTextUtils 
     (MoveInsertPositionUtils insPt 400 4500) 
@@ -715,6 +716,11 @@
     "0DataFlow-NsNT-PIPE-TEXT" 300 0.7)
 )
 
+; 2021-06-03
+(defun InsertNsCAHUpInstrumentUnit (insPt systemNum functionCode / ) 
+  (GenerateLineUtils insPt (MoveInsertPositionUtils insPt 0 500) "0DataFlow-NsCAHInstrument")
+  (InsertBlockUtils (MoveInsertPositionUtils insPt 0 900) "NsCAH-InstrumentP" "0DataFlow-NsCAHInstrument" (list (cons 1 systemNum) (cons 2 functionCode)))
+)
 
 
 
