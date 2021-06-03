@@ -477,6 +477,7 @@
   ; (setq systemNum (GetListPairValueUtils "systemNum" oneRoomDictList))
   (InsertNSACHDrawFrame insPt)
   (InsertAllNsACHRoomS (MoveInsertPositionUtils insPt -45500 47000) systemNum allNsCleanAirData)
+  (InsertNsCAHAirConditionUnitTypeOne (MoveInsertPositionUtils insPt -78000 32000) systemNum)
 )
 
 ; 2021-06-01
@@ -669,9 +670,32 @@
 
 ;;;-------------------------------------------------------------------------;;;
 ; Generate Air Condition Unit
-(defun InsertNsACHAirConditionUnitTypeOne (insPt systemNum /) 
-  (InsertBlockUtils insPt blockName "0DataFlow-NsNT-ROOM" (list (cons 1 "")))
+; 2021-06-03
+(defun InsertNsCAHAirConditionUnitTypeOne (insPt systemNum /) 
+  (InsertBlockUtils insPt "NsCAH-AHU-OutsideAir" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
+  (setq insPt (MoveInsertPositionUtils insPt 1250 0))
+  (InsertBlockUtils insPt "NsCAH-AHU-PlateRough" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
+  (setq insPt (MoveInsertPositionUtils insPt 1500 0))
+  (InsertBlockUtils insPt "NsCAH-AHU-SteamHeat" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum))) 
+  (setq insPt (MoveInsertPositionUtils insPt 1750 0))
+  (InsertBlockUtils insPt "NsCAH-AHU-ReturnAir" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
+  (setq insPt (MoveInsertPositionUtils insPt 1750 0))
+  (InsertBlockUtils insPt "NsCAH-AHU-SurfaceCooler" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
+  (setq insPt (MoveInsertPositionUtils insPt 2000 0))
+  (InsertBlockUtils insPt "NsCAH-AHU-SteamHeat" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
+  (setq insPt (MoveInsertPositionUtils insPt 2000 0))
+  (InsertBlockUtils insPt "NsCAH-AHU-SteamHumidify" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
+  (setq insPt (MoveInsertPositionUtils insPt 3000 0))
+  (InsertBlockUtils insPt "NsCAH-AHU-FanSection-Level" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
+  (setq insPt (MoveInsertPositionUtils insPt 2750 0))
+  (InsertBlockUtils insPt "NsCAH-AHU-MeanFlowAir" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
+  (setq insPt (MoveInsertPositionUtils insPt 1500 0))
+  (InsertBlockUtils insPt "NsCAH-AHU-MediumEfficiency" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
+  (setq insPt (MoveInsertPositionUtils insPt 1500 0))
+  (InsertBlockUtils insPt "NsCAH-AHU-SupplyAir" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
 )
+
+
 
 
 
