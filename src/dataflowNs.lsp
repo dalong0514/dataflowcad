@@ -471,12 +471,15 @@
   ) 
 )
 
-; refacotred at 2021-05-07
-(defun InsertOneNsACHPID (insPt allNsCleanAirData / systemNum) 
-  (setq systemNum (GetListPairValueUtils "systemNum" (car allNsCleanAirData)))
-  ; (setq systemNum (GetListPairValueUtils "systemNum" oneRoomDictList))
+; 2021-05-07
+; refacotred at 2021-06-03
+(defun InsertOneNsACHPID (insPt allNsCleanAirData / nsSystemCleanAirData sysRefrigeratingData nsRoomCleanAirData systemNum) 
+  (setq nsSystemCleanAirData (car allNsCleanAirData))
+  (setq sysRefrigeratingData (cadr allNsCleanAirData))
+  (setq nsRoomCleanAirData (cdr (cdr allNsCleanAirData)))
+  (setq systemNum (GetListPairValueUtils "systemNum" (car nsRoomCleanAirData)))
   (InsertNSACHDrawFrame insPt)
-  (InsertAllNsACHRoomS (MoveInsertPositionUtils insPt -45500 47000) systemNum allNsCleanAirData)
+  (InsertAllNsACHRoomS (MoveInsertPositionUtils insPt -45500 47000) systemNum nsRoomCleanAirData)
   (InsertNsCAHAirConditionUnitTypeOne (MoveInsertPositionUtils insPt -78000 32000) systemNum)
 )
 
