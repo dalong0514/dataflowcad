@@ -480,7 +480,7 @@
   (setq systemNum (GetListPairValueUtils "systemNum" (car nsRoomCleanAirData)))
   (InsertNSACHDrawFrame insPt)
   (InsertAllNsACHRoomS (MoveInsertPositionUtils insPt -45500 47000) systemNum nsRoomCleanAirData)
-  (InsertNsCAHAirConditionUnitTypeOne (MoveInsertPositionUtils insPt -78000 32000) systemNum)
+  (InsertNsCAHAirConditionUnitTypeOne (MoveInsertPositionUtils insPt -78000 32000) systemNum nsSystemCleanAirData)
 )
 
 ; 2021-06-01
@@ -674,8 +674,8 @@
 ;;;-------------------------------------------------------------------------;;;
 ; Generate Air Condition Unit
 ; 2021-06-03
-(defun InsertNsCAHAirConditionUnitTypeOne (insPt systemNum /) 
-  (InsertBlockUtils insPt "NsCAH-AHU-OutsideAir" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
+(defun InsertNsCAHAirConditionUnitTypeOne (insPt systemNum nsSystemCleanAirData /) 
+  (InsertNsCAHAHUOutdoorAir insPt systemNum nsSystemCleanAirData)
   (setq insPt (MoveInsertPositionUtils insPt 1250 0))
   (InsertBlockUtils insPt "NsCAH-AHU-PlateRough" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
   (setq insPt (MoveInsertPositionUtils insPt 1500 0))
@@ -696,8 +696,24 @@
   (InsertBlockUtils insPt "NsCAH-AHU-MediumEfficiency" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
   (setq insPt (MoveInsertPositionUtils insPt 1500 0))
   (InsertBlockUtils insPt "NsCAH-AHU-SupplyAir" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
+  (princ nsSystemCleanAirData)(princ)
 )
 
+; 2021-06-03
+(defun InsertNsCAHAHUOutdoorAir (insPt systemNum nsSystemCleanAirData / systemOutsideAirRate ) 
+  (setq systemOutsideAirRate (GetListPairValueUtils "systemOutsideAirRate" nsSystemCleanAirData))
+  (InsertBlockUtils insPt "NsCAH-AHU-OutdoorAir" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
+  (GenerateLineUtils (MoveInsertPositionUtils insPt 0 3300) (MoveInsertPositionUtils insPt 0 3800) "0DataFlow-NsNT-DUCT-F.A")
+  (InsertBlockUtils (MoveInsertPositionUtils insPt 0 3950) "NsCAH-AHU-ElectricDamper" "0DataFlow-NsNT-DUCT-DAMPER" (list (cons 1 systemNum)))
+  (GenerateLineUtils (MoveInsertPositionUtils insPt 0 4100) (MoveInsertPositionUtils insPt 0 6900) "0DataFlow-NsNT-DUCT-F.A")
+  (GenerateLineUtils (MoveInsertPositionUtils insPt -1000 6900) (MoveInsertPositionUtils insPt 0 6900) "0DataFlow-NsNT-DUCT-F.A")
+  (InsertBlockUtils (MoveInsertPositionUtils insPt -1000 6900) "NsCAH-AHU-AirInlet" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
+  (InsertBlockUtils (MoveInsertPositionUtils insPt -200 5700) "NsCAH-AHU-Arrow" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
+  (GenerateVerticalLeftTextUtils 
+    (MoveInsertPositionUtils insPt 400 4500) 
+    (strcat "F.A " (vl-princ-to-string systemOutsideAirRate) "m3/h") 
+    "0DataFlow-NsNT-PIPE-TEXT" 300 0.7)
+)
 
 
 
