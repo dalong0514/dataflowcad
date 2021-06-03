@@ -548,7 +548,7 @@
 
 ; 2021-06-02
 (defun InsertNsCAHInstrument (insPt systemNum /) 
-  (InsertBlockUtils insPt "NsCAH-InstrumentP" "0DataFlow-NsCAHInstrument" (list (cons 1 systemNum)))
+  (InsertBlockUtils insPt "NsCAH-InstrumentP" "0DataFlow-NsNT-INSTRUMENT" (list (cons 1 systemNum)))
   (ModifyMultiplePropertyForOneBlockUtils (entlast) 
     (list "FUNCTION" "NAME")
     (list "PDI" "Œ¢≤Ó—πº∆")
@@ -708,19 +708,40 @@
   (GenerateLineUtils (MoveInsertPositionUtils insPt 0 4100) (MoveInsertPositionUtils insPt 0 6900) "0DataFlow-NsNT-DUCT-F.A")
   (GenerateLineUtils (MoveInsertPositionUtils insPt -1000 6900) (MoveInsertPositionUtils insPt 0 6900) "0DataFlow-NsNT-DUCT-F.A")
   (InsertBlockUtils (MoveInsertPositionUtils insPt -1000 6900) "NsCAH-AHU-AirInlet" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
-  (InsertNsCAHUpInstrumentUnit (MoveInsertPositionUtils insPt -500 6900) systemNum "TIMC")
   (InsertBlockUtils (MoveInsertPositionUtils insPt -200 5700) "NsCAH-AHU-Arrow" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
   (GenerateVerticalLeftTextUtils 
     (MoveInsertPositionUtils insPt 400 4500) 
-    (strcat "F.A " (vl-princ-to-string systemOutsideAirRate) "m3/h") 
+    (strcat "F.A " (vl-princ-to-string systemOutsideAirRate) " m3/h") 
     "0DataFlow-NsNT-PIPE-TEXT" 300 0.7)
+  (InsertNsCAHUpInstrumentUnit (MoveInsertPositionUtils insPt -500 6900) systemNum "TIMC")
+  (InsertNsCAHRightInstrumentUnit (MoveInsertPositionUtils insPt 0 5850) systemNum "FIC")
+  (InsertNsCAHRightInstrumentUnit (MoveInsertPositionUtils insPt 510 3950) systemNum "MD")
 )
 
 ; 2021-06-03
 (defun InsertNsCAHUpInstrumentUnit (insPt systemNum functionCode / ) 
-  (GenerateLineUtils insPt (MoveInsertPositionUtils insPt 0 500) "0DataFlow-NsCAHInstrument")
-  (InsertBlockUtils (MoveInsertPositionUtils insPt 0 900) "NsCAH-InstrumentP" "0DataFlow-NsCAHInstrument" (list (cons 1 systemNum) (cons 2 functionCode)))
+  (GenerateLineUtils insPt (MoveInsertPositionUtils insPt 0 500) "0DataFlow-NsNT-INSTRUMENT")
+  (InsertBlockUtils (MoveInsertPositionUtils insPt 0 900) "NsCAH-InstrumentP" "0DataFlow-NsNT-INSTRUMENT" (list (cons 1 systemNum) (cons 2 functionCode)))
 )
+
+; 2021-06-03
+(defun InsertNsCAHDownInstrumentUnit (insPt systemNum functionCode / ) 
+  (GenerateLineUtils insPt (MoveInsertPositionUtils insPt 0 -500) "0DataFlow-NsNT-INSTRUMENT")
+  (InsertBlockUtils (MoveInsertPositionUtils insPt 0 -900) "NsCAH-InstrumentP" "0DataFlow-NsNT-INSTRUMENT" (list (cons 1 systemNum) (cons 2 functionCode)))
+)
+
+; 2021-06-03
+(defun InsertNsCAHRightInstrumentUnit (insPt systemNum functionCode / ) 
+  (GenerateLineUtils insPt (MoveInsertPositionUtils insPt 500 0) "0DataFlow-NsNT-INSTRUMENT")
+  (InsertBlockUtils (MoveInsertPositionUtils insPt 900 0) "NsCAH-InstrumentP" "0DataFlow-NsNT-INSTRUMENT" (list (cons 1 systemNum) (cons 2 functionCode)))
+)
+
+; 2021-06-03
+(defun InsertNsCAHLeftInstrumentUnit (insPt systemNum functionCode / ) 
+  (GenerateLineUtils insPt (MoveInsertPositionUtils insPt -500 0) "0DataFlow-NsNT-INSTRUMENT")
+  (InsertBlockUtils (MoveInsertPositionUtils insPt -900 0) "NsCAH-InstrumentP" "0DataFlow-NsNT-INSTRUMENT" (list (cons 1 systemNum) (cons 2 functionCode)))
+)
+
 
 
 
