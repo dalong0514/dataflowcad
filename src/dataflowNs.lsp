@@ -457,30 +457,79 @@
 )
 
 ; 2021-06-01
-(defun InsertNsACHMacro (/ insPt allNsCleanAirData) 
+; refacotred at 2021-06-04
+(defun InsertNsACHMacro (/ insPt allNsCleanAirData insPtList) 
   (VerifyAllNsACHSymbol)
   (setq insPt (getpoint "\n拾取PID插入点："))
   (setq allNsCleanAirData (GetAllNsCleanAirData))
-  (InsertOneNsACHPID insPt allNsCleanAirData)
+  (setq insPtList (GetInsertPtListByXMoveUtils insPt (GenerateSortedNumByList allNsCleanAirData 0) 104100))
+  (mapcar '(lambda (x y) 
+            (InsertOneNsACHPID x (cdr y))
+          ) 
+    insPtList
+    allNsCleanAirData
+  ) 
 )
 
 ; 2021-05-31
-(defun GetAllNsCleanAirData ()
-  (mapcar '(lambda (x) (JsonToListUtils x)) 
-    (ReadNsDataFromFileStrategy "nsCleanAir")
-  ) 
+(defun GetAllNsCleanAirData () 
+  (ChunkListByKeyNameUtils 
+    (mapcar '(lambda (x) (JsonToListUtils x)) 
+      (ReadNsDataFromFileStrategy "nsCleanAir")
+    ) 
+    "systemNum"
+  )
 )
 
 ; 2021-05-07
 ; refacotred at 2021-06-03
-(defun InsertOneNsACHPID (insPt allNsCleanAirData / nsSystemCleanAirData sysRefrigeratingData nsRoomCleanAirData systemNum) 
-  (setq nsSystemCleanAirData (car allNsCleanAirData))
-  (setq sysRefrigeratingData (cadr allNsCleanAirData))
-  (setq nsRoomCleanAirData (cdr (cdr allNsCleanAirData)))
+; refacotred at 2021-06-04
+(defun InsertOneNsACHPID (insPt allNsCleanAirData / nsSystemCleanAirData nsSysRefrigeratingData nsRoomCleanAirData systemNum) 
+  (setq nsSystemCleanAirData (GetSystemCleanAirData allNsCleanAirData))
+  (setq nsSysRefrigeratingData (GetSysRefrigeratingData allNsCleanAirData))
+  (setq nsRoomCleanAirData (GetRoomCleanAirData allNsCleanAirData))
   (setq systemNum (GetListPairValueUtils "systemNum" (car nsRoomCleanAirData)))
   (InsertNSACHDrawFrame insPt)
   (InsertAllNsACHRoomS (MoveInsertPositionUtils insPt -45500 47000) systemNum nsRoomCleanAirData)
-  (InsertNsCAHAirConditionUnitTypeOne (MoveInsertPositionUtils insPt -78000 32000) systemNum nsSystemCleanAirData sysRefrigeratingData)
+  (InsertNsCAHAirConditionUnitTypeOne (MoveInsertPositionUtils insPt -78000 32000) systemNum nsSystemCleanAirData nsSysRefrigeratingData)
+)
+
+; 2021-06-04
+(defun GetRoomCleanAirData (allNsCleanAirData /)
+  (vl-remove-if-not 
+    '(lambda (x) (/= (GetListPairValueUtils "roomSupplyAirRate" x) nil))
+    allNsCleanAirData
+  )
+)
+
+; 2021-06-04
+(defun GetSystemCleanAirData (allNsCleanAirData /)
+  (car 
+    (vl-remove-if-not 
+      '(lambda (x) (/= (GetListPairValueUtils "systemSupplyAirRate" x) nil))
+      allNsCleanAirData
+    )
+  )
+)
+
+; 2021-06-04
+(defun GetSystemCleanAirData (allNsCleanAirData /)
+  (car 
+    (vl-remove-if-not 
+      '(lambda (x) (/= (GetListPairValueUtils "systemSupplyAirRate" x) nil))
+      allNsCleanAirData
+    )
+  )
+)
+
+; 2021-06-04
+(defun GetSysRefrigeratingData (allNsCleanAirData /)
+  (car 
+    (vl-remove-if-not 
+      '(lambda (x) (/= (GetListPairValueUtils "winterHeatingSteamRate" x) nil))
+      allNsCleanAirData
+    )
+  )
 )
 
 ; 2021-06-01
@@ -995,8 +1044,8 @@
 
 (defun c:foo (/ insPt)
   ; (setq insPt (getpoint "\n拾取PID插入点："))
-  (car (ChunkListByKeyNameUtils (GetAllNsCleanAirData) "systemNum"))
   ; (length (ChunkListByKeyNameUtils (GetAllNsCleanAirData) "systemNum"))
   ; (car (GetAllNsCleanAirData))
   ; (InsertNsCAHDuct insPt)
+  (GetSysRefrigeratingData (cdr (car (GetAllNsCleanAirData))))
 )
