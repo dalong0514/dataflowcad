@@ -751,8 +751,8 @@
 )
 
 ; 2021-06-04
-(defun InsertNsCAHAHUSteamHumidify (insPt systemNum nsSystemCleanAirData / systemOutsideAirRate ) 
-  (setq systemOutsideAirRate (GetListPairValueUtils "systemOutsideAirRate" nsSystemCleanAirData))
+(defun InsertNsCAHAHUSteamHumidify (insPt systemNum nsSystemCleanAirData / systemOutdoorAirRate ) 
+  (setq systemOutdoorAirRate (GetListPairValueUtils "systemOutdoorAirRate" nsSystemCleanAirData))
   (InsertBlockUtils insPt "NsCAH-AHU-SteamHumidify" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum))) 
   (InsertBlockUtils (MoveInsertPositionUtils insPt 550 2500) "NsCAH-AHU-Pipe-LS" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
   (SetDynamicBlockPropertyValueUtils 
@@ -764,8 +764,8 @@
 )
 
 ; 2021-06-04
-(defun InsertNsCAHAHUSteamHeat (insPt systemNum nsSystemCleanAirData / systemOutsideAirRate ) 
-  (setq systemOutsideAirRate (GetListPairValueUtils "systemOutsideAirRate" nsSystemCleanAirData))
+(defun InsertNsCAHAHUSteamHeat (insPt systemNum nsSystemCleanAirData / systemOutdoorAirRate ) 
+  (setq systemOutdoorAirRate (GetListPairValueUtils "systemOutdoorAirRate" nsSystemCleanAirData))
   (InsertBlockUtils insPt "NsCAH-AHU-SteamHeat" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum))) 
   (InsertBlockUtils (MoveInsertPositionUtils insPt 250 2500) "NsCAH-AHU-Pipe-LS" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
   (InsertNsCAHAHULsInstrumentUnit insPt systemNum)
@@ -773,8 +773,8 @@
 )
 
 ; 2021-06-04
-(defun InsertNsCAHAHUSurfaceCooler (insPt systemNum nsSystemCleanAirData / systemOutsideAirRate ) 
-  (setq systemOutsideAirRate (GetListPairValueUtils "systemOutsideAirRate" nsSystemCleanAirData))
+(defun InsertNsCAHAHUSurfaceCooler (insPt systemNum nsSystemCleanAirData / systemOutdoorAirRate ) 
+  (setq systemOutdoorAirRate (GetListPairValueUtils "systemOutdoorAirRate" nsSystemCleanAirData))
   (InsertBlockUtils insPt "NsCAH-AHU-SurfaceCooler" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum))) 
   (InsertBlockUtils (MoveInsertPositionUtils insPt 250 500) "NsCAH-AHU-Pipe-LW" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
   (InsertNsCAHAHUHwLwInstrumentUnit insPt systemNum)
@@ -888,8 +888,8 @@
 )
 
 ; 2021-06-03
-(defun InsertNsCAHAHUOutdoorAir (insPt systemNum nsSystemCleanAirData / systemOutsideAirRate ) 
-  (setq systemOutsideAirRate (GetListPairValueUtils "systemOutsideAirRate" nsSystemCleanAirData))
+(defun InsertNsCAHAHUOutdoorAir (insPt systemNum nsSystemCleanAirData / systemOutdoorAirRate ) 
+  (setq systemOutdoorAirRate (GetListPairValueUtils "systemOutdoorAirRate" nsSystemCleanAirData))
   (InsertBlockUtils insPt "NsCAH-AHU-OutdoorAir" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
   (GenerateLineUtils (MoveInsertPositionUtils insPt 0 3300) (MoveInsertPositionUtils insPt 0 6900) "0DataFlow-NsNT-DUCT-F.A")
   (InsertBlockUtils (MoveInsertPositionUtils insPt 0 3950) "NsCAH-AHU-ElectricDamper" "0DataFlow-NsNT-DUCT-DAMPER" (list (cons 1 systemNum)))
@@ -898,7 +898,7 @@
   (InsertBlockUtils (MoveInsertPositionUtils insPt -200 5700) "NsCAH-AHU-Arrow" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
   (GenerateVerticalLeftTextUtils 
     (MoveInsertPositionUtils insPt 400 4500) 
-    (strcat "F.A " (vl-princ-to-string systemOutsideAirRate) " m3/h") 
+    (strcat "F.A " (vl-princ-to-string systemOutdoorAirRate) " m3/h") 
     "0DataFlow-NsNT-PIPE-TEXT" 300 0.7)
   (InsertNsCAHUpInstrumentUnit (MoveInsertPositionUtils insPt -500 6900) "NsCAH-InstrumentP" systemNum "TIMC")
   (InsertNsCAHRightInstrumentUnit (MoveInsertPositionUtils insPt 0 5850) "NsCAH-InstrumentP" systemNum "FIC")
