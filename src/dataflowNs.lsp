@@ -696,11 +696,27 @@
   (setq insPt (MoveInsertPositionUtils insPt 1500 0))
   (InsertNsCAHAHUFabricRough insPt systemNum)
   (setq insPt (MoveInsertPositionUtils insPt 1500 0))
-  
-  
-  
-  (InsertBlockUtils insPt "NsCAH-AHU-SupplyAir" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
+  (InsertNsCAHAHUSupplyAir insPt systemNum nsSystemCleanAirData)
   (princ nsSystemCleanAirData)(princ)
+)
+
+; 2021-06-04
+(defun InsertNsCAHAHUSupplyAir (insPt systemNum nsSystemCleanAirData / systemSupplyAirRate ) 
+  (setq systemSupplyAirRate  (GetListPairValueUtils "systemSupplyAirRate" nsSystemCleanAirData))
+  (InsertBlockUtils insPt "NsCAH-AHU-SupplyAir" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
+  (GenerateLineUtils (MoveInsertPositionUtils insPt 0 3300) (MoveInsertPositionUtils insPt 0 12350) "0DataFlow-NsNT-DUCT-S.A")
+  (InsertNsCAHDuctArcLine (MoveInsertPositionUtils insPt 0 12500) "0DataFlow-NsNT-DUCT-S.A" 500)
+  ; the distance 6900 is variable, ready to refactor
+  (GenerateLineUtils (MoveInsertPositionUtils insPt 0 13000) (MoveInsertPositionUtils insPt 6900 13000) "0DataFlow-NsNT-DUCT-S.A")
+  (InsertBlockByRotateUtils (MoveInsertPositionUtils insPt 1000 12900) "NsCAH-AHU-Arrow" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)) (* PI 0.5))
+  (GenerateLevelLeftTextUtils
+    (MoveInsertPositionUtils insPt 500 13100)
+    (strcat "S.A " (vl-princ-to-string systemSupplyAirRate) " m3/h") 
+    "0DataFlow-NsNT-PIPE-TEXT" 300 0.7)
+  (InsertNsCAHUpInstrumentUnit (MoveInsertPositionUtils insPt 3500 13000) "NsCAH-InstrumentP" systemNum "TIMC")
+  (InsertNsCAHUpInstrumentUnit (MoveInsertPositionUtils insPt 4500 13000) "NsCAH-InstrumentP" systemNum "FIC")
+  (InsertBlockUtils (MoveInsertPositionUtils insPt 0 8000) "NsCAH-AHU-Muffler" "0DataFlow-NsNT-DUCT-DAMPER" (list (cons 1 systemNum)))
+  (InsertNsCAHLevelFireDamper (MoveInsertPositionUtils insPt 0 9300) systemNum 70)
 )
 
 ; 2021-06-04
@@ -813,11 +829,11 @@
   (InsertBlockUtils (MoveInsertPositionUtils insPt 7300 12500) "NsCAH-AHU-Muffler" "0DataFlow-NsNT-DUCT-DAMPER" (list (cons 1 systemNum)))
   (InsertBlockByRotateUtils (MoveInsertPositionUtils insPt 10500 12500) "NsCAH-AHU-ButterflyValve" "0DataFlow-NsNT-DUCT-DAMPER" (list (cons 1 systemNum)) (* PI 0.5))
   (InsertNsCAHLeftInstrumentUnit (MoveInsertPositionUtils insPt 10500 13000) "NsCAH-InstrumentP" systemNum "MD")
-  (InsertNsCAHVerticallFireDamper (MoveInsertPositionUtils insPt 13000 12500) systemNum 70)
+  (InsertNsCAHVerticalFireDamper (MoveInsertPositionUtils insPt 13000 12500) systemNum 70)
 )
 
 ; 2021-06-04
-(defun InsertNsCAHVerticallFireDamper (insPt systemNum fireTemp / ) 
+(defun InsertNsCAHVerticalFireDamper (insPt systemNum fireTemp / ) 
   (InsertBlockByRotateUtils insPt "NsCAH-AHU-FireDamper" "0DataFlow-NsNT-DUCT-DAMPER" (list (cons 1 systemNum)) (* PI -0.5))
   (GenerateLevelCenterTextUtils
     (MoveInsertPositionUtils insPt 0 -650)
@@ -829,7 +845,7 @@
 (defun InsertNsCAHLevelFireDamper (insPt systemNum fireTemp / ) 
   (InsertBlockUtils insPt "NsCAH-AHU-FireDamper" "0DataFlow-NsNT-DUCT-DAMPER" (list (cons 1 systemNum)))
   (GenerateLevelCenterTextUtils
-    (MoveInsertPositionUtils insPt 250 400)
+    (MoveInsertPositionUtils insPt 450 300)
     (strcat (vl-princ-to-string fireTemp) "¡æ") 
     "0DataFlow-NsNT-PIPE-TEXT" 300 0.7)
 )
