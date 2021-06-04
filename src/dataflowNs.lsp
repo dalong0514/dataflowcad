@@ -683,9 +683,11 @@
   (InsertNsCAHAHUHotWater insPt systemNum nsSystemCleanAirData)
   (setq insPt (MoveInsertPositionUtils insPt 1750 0))
   (InsertNsCAHAHUReturnAir insPt systemNum nsSystemCleanAirData)
-
   (setq insPt (MoveInsertPositionUtils insPt 1750 0))
-  (InsertBlockUtils insPt "NsCAH-AHU-SurfaceCooler" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
+  (InsertNsCAHAHUSurfaceCooler insPt systemNum nsSystemCleanAirData)
+  
+  
+  
   (setq insPt (MoveInsertPositionUtils insPt 2000 0))
   (InsertBlockUtils insPt "NsCAH-AHU-SteamHeat" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
   (setq insPt (MoveInsertPositionUtils insPt 2000 0))
@@ -698,9 +700,30 @@
   (InsertBlockUtils insPt "NsCAH-AHU-MediumEfficiency" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
   (setq insPt (MoveInsertPositionUtils insPt 1500 0))
   (InsertBlockUtils insPt "NsCAH-AHU-SupplyAir" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
-  
-  
   (princ nsSystemCleanAirData)(princ)
+)
+
+
+
+
+
+; 2021-06-04
+(defun InsertNsCAHAHUSurfaceCooler (insPt systemNum nsSystemCleanAirData / systemOutsideAirRate ) 
+  (setq systemOutsideAirRate (GetListPairValueUtils "systemOutsideAirRate" nsSystemCleanAirData))
+  (InsertBlockUtils insPt "NsCAH-AHU-SurfaceCooler" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum))) 
+  (InsertBlockUtils (MoveInsertPositionUtils insPt 250 500) "NsCAH-AHU-Pipe-LW" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
+  (InsertNsCAHAHUHwLwInstrumentUnit insPt systemNum)
+  (InsertNsCAHDownInstrumentLengthUnit (MoveInsertPositionUtils insPt 800 1000) "NsCAH-InstrumentP" systemNum "TI" 1200)
+  (InsertNsCAHDownInstrumentLengthUnit (MoveInsertPositionUtils insPt -800 1000) "NsCAH-InstrumentP" systemNum "TI" 1200)
+)
+
+; 2021-06-04
+(defun InsertNsCAHAHUHwLwInstrumentUnit (insPt systemNum /) 
+  (InsertNsCAHRightInstrumentUnit (MoveInsertPositionUtils insPt 250 4850) "NsCAH-InstrumentL" systemNum "TG")
+  (InsertNsCAHRightInstrumentUnit (MoveInsertPositionUtils insPt 250 4050) "NsCAH-InstrumentL" systemNum "TG")
+  (InsertNsCAHLeftInstrumentUnit (MoveInsertPositionUtils insPt -250 4850) "NsCAH-InstrumentL" systemNum "TG")
+  (InsertNsCAHLeftInstrumentUnit (MoveInsertPositionUtils insPt -250 4050) "NsCAH-InstrumentL" systemNum "TG")
+  (InsertNsCAHLargeRightInstrumentUnit (MoveInsertPositionUtils insPt -250 7100) "NsCAH-InstrumentP" systemNum "MOV")
 )
 
 ; 2021-06-04
@@ -763,11 +786,7 @@
   (setq systemOutsideAirRate (GetListPairValueUtils "systemOutsideAirRate" nsSystemCleanAirData))
   (InsertBlockUtils insPt "NsCAH-AHU-HotWaterHeat" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum))) 
   (InsertBlockUtils (MoveInsertPositionUtils insPt 250 500) "NsCAH-AHU-Pipe-HW" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
-  (InsertNsCAHRightInstrumentUnit (MoveInsertPositionUtils insPt 250 4850) "NsCAH-InstrumentL" systemNum "TG")
-  (InsertNsCAHRightInstrumentUnit (MoveInsertPositionUtils insPt 250 4050) "NsCAH-InstrumentL" systemNum "TG")
-  (InsertNsCAHLeftInstrumentUnit (MoveInsertPositionUtils insPt -250 4850) "NsCAH-InstrumentL" systemNum "TG")
-  (InsertNsCAHLeftInstrumentUnit (MoveInsertPositionUtils insPt -250 4050) "NsCAH-InstrumentL" systemNum "TG")
-  (InsertNsCAHLargeRightInstrumentUnit (MoveInsertPositionUtils insPt -250 7100) "NsCAH-InstrumentP" systemNum "MOV")
+  (InsertNsCAHAHUHwLwInstrumentUnit insPt systemNum)
   (InsertNsCAHDownInstrumentLengthUnit (MoveInsertPositionUtils insPt 800 1000) "NsCAH-InstrumentP" systemNum "TMI" 1200)
 )
 
