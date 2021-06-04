@@ -800,6 +800,9 @@
   (setq systemExhaustAirRate (GetListPairValueUtils "systemExhaustAirRate" nsSystemCleanAirData))
   (InsertBlockUtils insPt "NsCAH-AHU-RoughMediumEfficiencyUnit" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum))) 
   (MirrorBlockUtils (entlast))
+  (GenerateLineUtils (MoveInsertPositionUtils insPt -8100 2000) (MoveInsertPositionUtils insPt -6800 2000) "0DataFlow-NsNT-DUCT-E.A")
+  (InsertBlockUtils (MoveInsertPositionUtils insPt -8100 2000) "NsCAH-AHU-AirOutlet" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
+  (InsertBlockByRotateUtils (MoveInsertPositionUtils insPt -7450 2000) "NsCAH-AHU-CheckValve" "0DataFlow-NsNT-DUCT-DAMPER" (list (cons 1 systemNum)) (* PI 0.5))
   (GenerateLineUtils (MoveInsertPositionUtils insPt 300 1450) (MoveInsertPositionUtils insPt 3000 1450) "0DataFlow-NsNT-DUCT-E.A")
   (GenerateLineUtils (MoveInsertPositionUtils insPt 3000 1450) (MoveInsertPositionUtils insPt 3000 -5000) "0DataFlow-NsNT-DUCT-E.A")
   (InsertBlockByRotateUtils (MoveInsertPositionUtils insPt 2800 -1500) "NsCAH-AHU-Arrow" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)) PI)
@@ -809,8 +812,6 @@
     "0DataFlow-NsNT-PIPE-TEXT" 300 0.7)
   (InsertBlockUtils (MoveInsertPositionUtils insPt 3000 -3500) "NsCAH-AHU-ButterflyValve" "0DataFlow-NsNT-DUCT-DAMPER" (list (cons 1 systemNum)))
   (InsertNsCAHRightInstrumentUnit (MoveInsertPositionUtils insPt 3500 -3500) "NsCAH-InstrumentP" systemNum "MD")
-  
-  ; TODO LIST
 )
 
 ; 2021-06-04
