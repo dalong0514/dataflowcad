@@ -687,11 +687,11 @@
   (InsertNsCAHAHUSurfaceCooler insPt systemNum nsSystemCleanAirData)
   (setq insPt (MoveInsertPositionUtils insPt 2000 0))
   (InsertNsCAHAHUSteamHeat insPt systemNum nsSystemCleanAirData)
-  
-  
   (setq insPt (MoveInsertPositionUtils insPt 2000 0))
-  (InsertBlockUtils insPt "NsCAH-AHU-SteamHumidify" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
+  (InsertNsCAHAHUSteamHumidify insPt systemNum nsSystemCleanAirData)
   (setq insPt (MoveInsertPositionUtils insPt 3000 0))
+  
+  
   (InsertBlockUtils insPt "NsCAH-AHU-FanSection-Level" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
   (setq insPt (MoveInsertPositionUtils insPt 2750 0))
   (InsertBlockUtils insPt "NsCAH-AHU-MeanFlowAir" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
@@ -700,6 +700,19 @@
   (setq insPt (MoveInsertPositionUtils insPt 1500 0))
   (InsertBlockUtils insPt "NsCAH-AHU-SupplyAir" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
   (princ nsSystemCleanAirData)(princ)
+)
+
+; 2021-06-04
+(defun InsertNsCAHAHUSteamHumidify (insPt systemNum nsSystemCleanAirData / systemOutsideAirRate ) 
+  (setq systemOutsideAirRate (GetListPairValueUtils "systemOutsideAirRate" nsSystemCleanAirData))
+  (InsertBlockUtils insPt "NsCAH-AHU-SteamHumidify" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum))) 
+  (InsertBlockUtils (MoveInsertPositionUtils insPt 550 2500) "NsCAH-AHU-Pipe-LS" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
+  (SetDynamicBlockPropertyValueUtils 
+    (GetLastVlaObjectUtils) 
+    (list (cons "PIPELENGTH" 3100))
+  ) 
+  (InsertNsCAHAHULsInstrumentUnit (MoveInsertPositionUtils insPt 300 0) systemNum)
+  (InsertBlockUtils (MoveInsertPositionUtils insPt 550 500) "NsCAH-AHU-Pipe-SC" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
 )
 
 ; 2021-06-04
