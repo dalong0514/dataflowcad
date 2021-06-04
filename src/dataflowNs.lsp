@@ -673,7 +673,7 @@
 
 ;;;-------------------------------------------------------------------------;;;
 ; Generate Air Condition Unit
-; 2021-06-03
+; 2021-06-04
 (defun InsertNsCAHAirConditionUnitTypeOne (insPt systemNum nsSystemCleanAirData sysRefrigeratingData /) 
   (InsertNsCAHAHUExhaustAir (MoveInsertPositionUtils insPt 13000 17500) systemNum nsSystemCleanAirData)
   (InsertNsCAHAHUOutdoorAir insPt systemNum nsSystemCleanAirData)
@@ -697,7 +697,7 @@
   (InsertNsCAHAHUFabricRough insPt systemNum)
   (setq insPt (MoveInsertPositionUtils insPt 1500 0))
   (InsertNsCAHAHUSupplyAir insPt systemNum nsSystemCleanAirData)
-  (princ sysRefrigeratingData)(princ)
+  ; (princ sysRefrigeratingData)(princ)
 )
 
 ; 2021-06-04
