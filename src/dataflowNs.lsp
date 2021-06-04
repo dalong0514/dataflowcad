@@ -480,7 +480,7 @@
   (setq systemNum (GetListPairValueUtils "systemNum" (car nsRoomCleanAirData)))
   (InsertNSACHDrawFrame insPt)
   (InsertAllNsACHRoomS (MoveInsertPositionUtils insPt -45500 47000) systemNum nsRoomCleanAirData)
-  (InsertNsCAHAirConditionUnitTypeOne (MoveInsertPositionUtils insPt -78000 32000) systemNum nsSystemCleanAirData)
+  (InsertNsCAHAirConditionUnitTypeOne (MoveInsertPositionUtils insPt -78000 32000) systemNum nsSystemCleanAirData sysRefrigeratingData)
 )
 
 ; 2021-06-01
@@ -674,13 +674,13 @@
 ;;;-------------------------------------------------------------------------;;;
 ; Generate Air Condition Unit
 ; 2021-06-03
-(defun InsertNsCAHAirConditionUnitTypeOne (insPt systemNum nsSystemCleanAirData /) 
+(defun InsertNsCAHAirConditionUnitTypeOne (insPt systemNum nsSystemCleanAirData sysRefrigeratingData /) 
   (InsertNsCAHAHUExhaustAir (MoveInsertPositionUtils insPt 13000 17500) systemNum nsSystemCleanAirData)
   (InsertNsCAHAHUOutdoorAir insPt systemNum nsSystemCleanAirData)
   (setq insPt (MoveInsertPositionUtils insPt 1500 0))
   (InsertNsCAHAHUFabricRough insPt systemNum)
   (setq insPt (MoveInsertPositionUtils insPt 1750 0))
-  (InsertNsCAHAHUHotWater insPt systemNum nsSystemCleanAirData)
+  (InsertNsCAHAHUHotWater insPt systemNum sysRefrigeratingData)
   (setq insPt (MoveInsertPositionUtils insPt 1750 0))
   (InsertNsCAHAHUReturnAir insPt systemNum nsSystemCleanAirData)
   (setq insPt (MoveInsertPositionUtils insPt 1750 0))
@@ -697,7 +697,7 @@
   (InsertNsCAHAHUFabricRough insPt systemNum)
   (setq insPt (MoveInsertPositionUtils insPt 1500 0))
   (InsertNsCAHAHUSupplyAir insPt systemNum nsSystemCleanAirData)
-  (princ nsSystemCleanAirData)(princ)
+  (princ sysRefrigeratingData)(princ)
 )
 
 ; 2021-06-04
@@ -852,10 +852,30 @@
 )
 
 ; 2021-06-03
-(defun InsertNsCAHAHUHotWater (insPt systemNum nsSystemCleanAirData / systemOutsideAirRate ) 
-  (setq systemOutsideAirRate (GetListPairValueUtils "systemOutsideAirRate" nsSystemCleanAirData))
+(defun InsertNsCAHAHUHotWater (insPt systemNum sysRefrigeratingData / 
+                               systemHWDiameter systemHWFlowRate systemHWSFlowRate systemHWSDiameter systemHWRFlowRate systemHWRDiameter) 
   (InsertBlockUtils insPt "NsCAH-AHU-HotWaterHeat" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum))) 
+  (setq systemHWDiameter (vl-princ-to-string (GetListPairValueUtils "outdoorAirPreheatCoolHeatPipeDiameter" sysRefrigeratingData)))
+  (setq systemHWFlowRate (vl-princ-to-string (GetListPairValueUtils "outdoorAirPreheatCoolHeatFlowRate" sysRefrigeratingData)))
+  (setq systemHWSFlowRate (strcat 
+                            (GetListPairValueUtils "hotWaterSupplyTemperature" sysRefrigeratingData)
+                            " "
+                            systemHWFlowRate
+                            "m3/h"
+                          ))
+  (setq systemHWSDiameter (strcat "HWS DN" systemHWDiameter))
+  (setq systemHWRFlowRate (strcat 
+                            (GetListPairValueUtils "hotWaterReturnTemperature" sysRefrigeratingData)
+                            " "
+                            systemHWFlowRate
+                            "m3/h"
+                          ))
+  (setq systemHWRDiameter (strcat "HWR DN" systemHWDiameter))
   (InsertBlockUtils (MoveInsertPositionUtils insPt 250 500) "NsCAH-AHU-Pipe-HW" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
+  (ModifyMultiplePropertyForOneBlockUtils (entlast) 
+    (list "HWS" "HWS_FLOW" "HWR" "HWR_FLOW")
+    (list systemHWSDiameter systemHWSFlowRate systemHWRDiameter systemHWRFlowRate)
+  ) 
   (InsertNsCAHAHUHwLwInstrumentUnit insPt systemNum)
   (InsertNsCAHDownInstrumentLengthUnit (MoveInsertPositionUtils insPt 800 1000) "NsCAH-InstrumentP" systemNum "TMI" 1200)
 )
