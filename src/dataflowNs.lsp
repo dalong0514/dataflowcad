@@ -684,7 +684,7 @@
   (setq insPt (MoveInsertPositionUtils insPt 1750 0))
   (InsertNsCAHAHUReturnAir insPt systemNum nsSystemCleanAirData)
   (setq insPt (MoveInsertPositionUtils insPt 1750 0))
-  (InsertNsCAHAHUSurfaceCooler insPt systemNum nsSystemCleanAirData)
+  (InsertNsCAHAHUSurfaceCooler insPt systemNum sysRefrigeratingData)
   (setq insPt (MoveInsertPositionUtils insPt 2000 0))
   (InsertNsCAHAHUSteamHeat insPt systemNum nsSystemCleanAirData)
   (setq insPt (MoveInsertPositionUtils insPt 2000 0))
@@ -764,19 +764,41 @@
 )
 
 ; 2021-06-04
-(defun InsertNsCAHAHUSteamHeat (insPt systemNum nsSystemCleanAirData / systemOutdoorAirRate ) 
-  (setq systemOutdoorAirRate (GetListPairValueUtils "systemOutdoorAirRate" nsSystemCleanAirData))
+(defun InsertNsCAHAHUSteamHeat (insPt systemNum nsSystemCleanAirData / 
+                                systemLWDiameter systemLWFlowRate systemLWSFlowRate systemLWSDiameter systemLWRFlowRate systemLWRDiameter) 
   (InsertBlockUtils insPt "NsCAH-AHU-SteamHeat" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum))) 
+  
+  
   (InsertBlockUtils (MoveInsertPositionUtils insPt 250 2500) "NsCAH-AHU-Pipe-LS" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
   (InsertNsCAHAHULsInstrumentUnit insPt systemNum)
   (InsertBlockUtils (MoveInsertPositionUtils insPt -250 500) "NsCAH-AHU-Pipe-SC" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
 )
 
 ; 2021-06-04
-(defun InsertNsCAHAHUSurfaceCooler (insPt systemNum nsSystemCleanAirData / systemOutdoorAirRate ) 
-  (setq systemOutdoorAirRate (GetListPairValueUtils "systemOutdoorAirRate" nsSystemCleanAirData))
+(defun InsertNsCAHAHUSurfaceCooler (insPt systemNum sysRefrigeratingData / 
+                                    systemLWDiameter systemLWFlowRate systemLWSFlowRate systemLWSDiameter systemLWRFlowRate systemLWRDiameter) 
   (InsertBlockUtils insPt "NsCAH-AHU-SurfaceCooler" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum))) 
+  (setq systemLWDiameter (vl-princ-to-string (GetListPairValueUtils "summerRefrigerationCoolHeatPipeDiameter" sysRefrigeratingData)))
+  (setq systemLWFlowRate (vl-princ-to-string (GetListPairValueUtils "summerRefrigerationCoolHeatFlowRate" sysRefrigeratingData)))
+  (setq systemLWSFlowRate (strcat 
+                            (GetListPairValueUtils "coldWaterSupplyMinTemperature" sysRefrigeratingData)
+                            "¡æ "
+                            systemLWFlowRate
+                            "m3/h"
+                          ))
+  (setq systemLWSDiameter (strcat "LWS DN" systemLWDiameter))
+  (setq systemLWRFlowRate (strcat 
+                            (GetListPairValueUtils "coldWaterReturnMinTemperature" sysRefrigeratingData)
+                            "¡æ "
+                            systemLWFlowRate
+                            "m3/h"
+                          ))
+  (setq systemLWRDiameter (strcat "LWR DN" systemLWDiameter))
   (InsertBlockUtils (MoveInsertPositionUtils insPt 250 500) "NsCAH-AHU-Pipe-LW" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
+  (ModifyMultiplePropertyForOneBlockUtils (entlast) 
+    (list "LWS" "LWS_FLOW" "LWR" "LWR_FLOW")
+    (list systemLWSDiameter systemLWSFlowRate systemLWRDiameter systemLWRFlowRate)
+  )
   (InsertNsCAHAHUHwLwInstrumentUnit insPt systemNum)
 )
 
@@ -859,14 +881,14 @@
   (setq systemHWFlowRate (vl-princ-to-string (GetListPairValueUtils "outdoorAirPreheatCoolHeatFlowRate" sysRefrigeratingData)))
   (setq systemHWSFlowRate (strcat 
                             (GetListPairValueUtils "hotWaterSupplyTemperature" sysRefrigeratingData)
-                            " "
+                            "¡æ "
                             systemHWFlowRate
                             "m3/h"
                           ))
   (setq systemHWSDiameter (strcat "HWS DN" systemHWDiameter))
   (setq systemHWRFlowRate (strcat 
                             (GetListPairValueUtils "hotWaterReturnTemperature" sysRefrigeratingData)
-                            " "
+                            "¡æ "
                             systemHWFlowRate
                             "m3/h"
                           ))
