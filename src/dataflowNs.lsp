@@ -688,7 +688,7 @@
   (setq insPt (MoveInsertPositionUtils insPt 2000 0))
   (InsertNsCAHAHUSteamHeat insPt systemNum sysRefrigeratingData)
   (setq insPt (MoveInsertPositionUtils insPt 2000 0))
-  (InsertNsCAHAHUSteamHumidify insPt systemNum nsSystemCleanAirData)
+  (InsertNsCAHAHUSteamHumidify insPt systemNum sysRefrigeratingData)
   (setq insPt (MoveInsertPositionUtils insPt 3000 0))
   (InsertNsCAHAHUFanSectionLevel insPt systemNum)
   (setq insPt (MoveInsertPositionUtils insPt 2750 0))
@@ -751,27 +751,34 @@
 )
 
 ; 2021-06-04
-(defun InsertNsCAHAHUSteamHumidify (insPt systemNum nsSystemCleanAirData / systemOutdoorAirRate ) 
-  (setq systemOutdoorAirRate (GetListPairValueUtils "systemOutdoorAirRate" nsSystemCleanAirData))
+(defun InsertNsCAHAHUSteamHumidify (insPt systemNum sysRefrigeratingData / systemLSDiameter systemLSFlowRate) 
   (InsertBlockUtils insPt "NsCAH-AHU-SteamHumidify" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum))) 
-  (InsertBlockUtils (MoveInsertPositionUtils insPt 550 2500) "NsCAH-AHU-Pipe-LS" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
+  (setq systemLSDiameter (strcat "LS DN" (vl-princ-to-string (GetListPairValueUtils "winterHumidSteamPipeDiameter" sysRefrigeratingData))))
+  (setq systemLSFlowRate (strcat 
+                            (GetListPairValueUtils "steamHumidificationPressure" sysRefrigeratingData)
+                            "MPa "
+                            (vl-princ-to-string (GetListPairValueUtils "winterHumidSteamRate" sysRefrigeratingData))
+                            "kg/h"
+                          ))
+  (InsertBlockUtils (MoveInsertPositionUtils insPt 250 2500) "NsCAH-AHU-Pipe-LS" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
   (SetDynamicBlockPropertyValueUtils 
     (GetLastVlaObjectUtils) 
     (list (cons "PIPELENGTH" 3100))
   ) 
-  (InsertNsCAHAHULsInstrumentUnit (MoveInsertPositionUtils insPt 300 0) systemNum)
+  (ModifyMultiplePropertyForOneBlockUtils (entlast) 
+    (list "LS" "LS_FLOW")
+    (list systemLSDiameter systemLSFlowRate)
+  )
   (InsertBlockUtils (MoveInsertPositionUtils insPt 550 500) "NsCAH-AHU-Pipe-SC" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
+  (ModifyMultiplePropertyForOneBlockUtils (entlast) 
+    (list "DIAMETER")
+    (list "SC DN20")
+  )
 )
 
 ; 2021-06-04
-(defun InsertNsCAHAHUSteamHeat (insPt systemNum sysRefrigeratingData / 
-                                systemLWDiameter systemLWFlowRate systemLWSFlowRate systemLWSDiameter systemLWRFlowRate systemLWRDiameter) 
+(defun InsertNsCAHAHUSteamHeat (insPt systemNum sysRefrigeratingData / systemLSDiameter systemLSFlowRate) 
   (InsertBlockUtils insPt "NsCAH-AHU-SteamHeat" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum))) 
-  (InsertNsCAHAHUSteamHeatPipeUnit insPt systemNum sysRefrigeratingData)
-)
-
-; 2021-06-04
-(defun InsertNsCAHAHUSteamHeatPipeUnit (insPt systemNum sysRefrigeratingData / systemLSDiameter systemLSFlowRate) 
   (setq systemLSDiameter (strcat "LS DN" (vl-princ-to-string (GetListPairValueUtils "winterHeatingSteamPipeDiameter" sysRefrigeratingData))))
   (setq systemLSFlowRate (strcat 
                             (GetListPairValueUtils "steamHeatingPressure" sysRefrigeratingData)
