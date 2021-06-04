@@ -453,7 +453,7 @@
 
 ; 2021-06-01
 (defun c:InsertNsACH ()
-  (ExecuteFunctionAfterVerifyDateUtils 'InsertNsACHMacro '())
+  (ExecuteFunctionAfterVerifyDateUtils 'InserOnetNsACHMacro '())
 )
 
 ; 2021-06-01
@@ -469,6 +469,14 @@
     insPtList
     allNsCleanAirData
   ) 
+)
+
+; 2021-06-04
+(defun InserOnetNsACHMacro (/ insPt allNsCleanAirData insPtList) 
+  (VerifyAllNsACHSymbol)
+  (setq insPt (getpoint "\n ∞»°PID≤Â»Îµ„£∫"))
+  (setq allNsCleanAirData (GetAllNsCleanAirData))
+  (InsertOneNsACHPID insPt (cdr (car allNsCleanAirData)))
 )
 
 ; 2021-05-31
