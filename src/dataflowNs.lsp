@@ -690,16 +690,48 @@
   (setq insPt (MoveInsertPositionUtils insPt 2000 0))
   (InsertNsCAHAHUSteamHumidify insPt systemNum nsSystemCleanAirData)
   (setq insPt (MoveInsertPositionUtils insPt 3000 0))
-  
-  
-  (InsertBlockUtils insPt "NsCAH-AHU-FanSection-Level" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
+  (InsertNsCAHAHUFanSectionLevel insPt systemNum)
   (setq insPt (MoveInsertPositionUtils insPt 2750 0))
   (InsertBlockUtils insPt "NsCAH-AHU-MeanFlowAir" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
   (setq insPt (MoveInsertPositionUtils insPt 1500 0))
-  (InsertBlockUtils insPt "NsCAH-AHU-MediumEfficiency" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
+  (InsertNsCAHAHUFabricRough insPt systemNum)
   (setq insPt (MoveInsertPositionUtils insPt 1500 0))
+  
+  
+  
   (InsertBlockUtils insPt "NsCAH-AHU-SupplyAir" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
   (princ nsSystemCleanAirData)(princ)
+)
+
+; 2021-06-04
+(defun InsertNsCAHAHUMediumEfficiency (insPt systemNum / ) 
+  (InsertBlockUtils insPt "NsCAH-AHU-MediumEfficiency" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum))) 
+  (InsertNsCAHAHUBottomPDIA insPt systemNum)
+)
+
+; 2021-06-04
+(defun InsertNsCAHAHUFanSectionLevel (insPt systemNum / ) 
+  (InsertBlockUtils insPt "NsCAH-AHU-FanSection-Level" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum))) 
+  (GenerateLineUtils (MoveInsertPositionUtils insPt -450 -200) (MoveInsertPositionUtils insPt 1750 -200) "0DataFlow-NsNT-INSTRUMENT")
+  (GenerateLineUtils (MoveInsertPositionUtils insPt -450 -200) (MoveInsertPositionUtils insPt -450 1200) "0DataFlow-NsNT-INSTRUMENT")
+  (GenerateLineUtils (MoveInsertPositionUtils insPt 1750 -200) (MoveInsertPositionUtils insPt 1750 2000) "0DataFlow-NsNT-INSTRUMENT")
+  (InsertNsCAHDownInstrumentUnit (MoveInsertPositionUtils insPt 0 -200) "NsCAH-InstrumentP" systemNum "PDIA")
+  (ModifyMultiplePropertyForOneBlockUtils (entlast) 
+    (list "HALARM")
+    (list "H")
+  )  
+)
+
+; 2021-06-04
+(defun InsertNsCAHAHUBottomPDIA (insPt systemNum / ) 
+  (GenerateLineUtils (MoveInsertPositionUtils insPt -625 -200) (MoveInsertPositionUtils insPt 625 -200) "0DataFlow-NsNT-INSTRUMENT")
+  (GenerateLineUtils (MoveInsertPositionUtils insPt -625 -200) (MoveInsertPositionUtils insPt -625 1200) "0DataFlow-NsNT-INSTRUMENT")
+  (GenerateLineUtils (MoveInsertPositionUtils insPt 625 -200) (MoveInsertPositionUtils insPt 625 1200) "0DataFlow-NsNT-INSTRUMENT")
+  (InsertNsCAHDownInstrumentUnit (MoveInsertPositionUtils insPt 0 -200) "NsCAH-InstrumentP" systemNum "PDIA")
+  (ModifyMultiplePropertyForOneBlockUtils (entlast) 
+    (list "HALARM")
+    (list "H")
+  )  
 )
 
 ; 2021-06-04
@@ -812,16 +844,10 @@
 )
 
 ; 2021-06-03
+; refacotred at 2021-06-04
 (defun InsertNsCAHAHUFabricRough (insPt systemNum / ) 
   (InsertBlockUtils insPt "NsCAH-AHU-FabricRough" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum))) 
-  (GenerateLineUtils (MoveInsertPositionUtils insPt -625 -200) (MoveInsertPositionUtils insPt 625 -200) "0DataFlow-NsNT-INSTRUMENT")
-  (GenerateLineUtils (MoveInsertPositionUtils insPt -625 -200) (MoveInsertPositionUtils insPt -625 1200) "0DataFlow-NsNT-INSTRUMENT")
-  (GenerateLineUtils (MoveInsertPositionUtils insPt 625 -200) (MoveInsertPositionUtils insPt 625 1200) "0DataFlow-NsNT-INSTRUMENT")
-  (InsertNsCAHDownInstrumentUnit (MoveInsertPositionUtils insPt 0 -200) "NsCAH-InstrumentP" systemNum "PDIA")
-  (ModifyMultiplePropertyForOneBlockUtils (entlast) 
-    (list "HALARM")
-    (list "H")
-  )  
+  (InsertNsCAHAHUBottomPDIA insPt systemNum)
 )
 
 ; 2021-06-03
