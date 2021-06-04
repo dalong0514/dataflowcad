@@ -993,12 +993,10 @@
 )
 
 
-
-
-
 (defun c:foo (/ insPt)
   ; (setq insPt (getpoint "\n ∞»°PID≤Â»Îµ„£∫"))
-  ; (GetAllNsCleanAirData)
-  (car (GetAllNsCleanAirData))
+  (car (ChunkListByKeyNameUtils (GetAllNsCleanAirData) "systemNum"))
+  ; (length (ChunkListByKeyNameUtils (GetAllNsCleanAirData) "systemNum"))
+  ; (car (GetAllNsCleanAirData))
   ; (InsertNsCAHDuct insPt)
 )

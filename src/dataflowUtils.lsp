@@ -1820,6 +1820,31 @@
   resultList
 )
 
+; 2021-06-04
+(defun ChunkListByKeyNameUtils (listData keyName / keyList resultList) 
+  (setq keyList 
+    (DeduplicateForListUtils 
+      (mapcar '(lambda (x) (GetListPairValueUtils keyName x)) listData) 
+    ) 
+  )  
+  (foreach item keyList
+    (setq resultList 
+           (append resultList 
+              (list 
+                (cons item 
+                  (vl-remove-if-not '(lambda (x) 
+                                      (= item (GetListPairValueUtils keyName x))
+                                    ) 
+                    listData
+                  ) 
+                ) 
+              )
+           )
+    )
+  )
+  resultList
+)
+
 ; 2021-04-19
 (defun GetNegativeNumberUtils (originNumber /)
   (- 0 originNumber)
