@@ -199,6 +199,11 @@
   '("SERIALID" "STANDARDNUM" "MATERIALTYPE" "SPECIFICATION" "MATERIAL" "NUM" "MULTIPLE" "KSTYPE" "COMMENT")
 )
 
+
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+; Bs Enums
+
 ; 2021-05-19
 (defun GetSaddleSupportDownOffsetEnums (barrelDiameter /)
   (cond 
@@ -344,6 +349,28 @@
   )
 )
 
+; Bs Enums
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
-; Gs Enums
+
+
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+; Ns Enums
+
+; 2021-06-09
+(defun GetNsCAHUnitWidthEnums (blockName /)
+  (cond 
+    ((= blockName "NsCAH-AHU-OutdoorAir") 1500)
+    ((= blockName "NsCAH-AHU-FabricRough") 1500)
+    ((= blockName "NsCAH-AHU-HotWaterHeat") 2000)
+    ((= blockName "NsCAH-AHU-ReturnAir") 1500)
+    ((= blockName "NsCAH-AHU-SurfaceCooler") 2000)
+    ((= blockName "NsCAH-AHU-SteamHeat") 2000)
+    ((= blockName "NsCAH-AHU-SteamHumidify") 2000)
+    ((= blockName "NsCAH-AHU-FanSection-Level") 4000)
+    ((= blockName "NsCAH-AHU-MeanFlowAir") 1500)
+    ((= blockName "NsCAH-AHU-SupplyAir") 1500)
+    (T 1500)
+  )
+)
