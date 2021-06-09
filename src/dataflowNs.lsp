@@ -492,14 +492,17 @@
 ; 2021-05-07
 ; refacotred at 2021-06-03
 ; refacotred at 2021-06-04
-(defun InsertOneNsACHPID (insPt allNsCleanAirData / nsSystemCleanAirData nsSysRefrigeratingData nsRoomCleanAirData systemNum) 
+; refacotred at 2021-06-09
+(defun InsertOneNsACHPID (insPt allNsCleanAirData / nsSystemCleanAirData nsSysRefrigeratingData nsRoomCleanAirData nsSysPIDData systemNum) 
   (setq nsSystemCleanAirData (GetSystemCleanAirData allNsCleanAirData))
   (setq nsSysRefrigeratingData (GetSysRefrigeratingData allNsCleanAirData))
   (setq nsRoomCleanAirData (GetRoomCleanAirData allNsCleanAirData))
-  (setq systemNum (GetListPairValueUtils "systemNum" (car nsRoomCleanAirData)))
+  (setq nsSysPIDData (GetSysPIDData allNsCleanAirData))
+  (setq systemNum (GetListPairValueUtils "systemNum" nsSystemCleanAirData))
   (InsertNSACHDrawFrame insPt)
   (InsertAllNsACHRoomS (MoveInsertPositionUtils insPt -45500 47000) systemNum nsRoomCleanAirData)
   (InsertNsCAHAirConditionUnitTypeOne (MoveInsertPositionUtils insPt -78000 32000) systemNum nsSystemCleanAirData nsSysRefrigeratingData)
+  (princ nsSysPIDData)(princ)
 )
 
 ; 2021-06-04
@@ -535,6 +538,16 @@
   (car 
     (vl-remove-if-not 
       '(lambda (x) (/= (GetListPairValueUtils "winterHeatingSteamRate" x) nil))
+      allNsCleanAirData
+    )
+  )
+)
+
+; 2021-06-09
+(defun GetSysPIDData (allNsCleanAirData /)
+  (car 
+    (vl-remove-if-not 
+      '(lambda (x) (/= (GetListPairValueUtils "supplyAirValveType" x) nil))
       allNsCleanAirData
     )
   )
