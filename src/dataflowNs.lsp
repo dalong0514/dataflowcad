@@ -791,7 +791,7 @@
     ((= unitName "NsCAH-AHU-FanSection-Level") (InsertNsCAHAHUFanSectionLevel insPt systemNum))
     ((= unitName "NsCAH-AHU-MeanFlowAir") (InsertNsCAHAHUMeanFlowAir insPt systemNum))
     ((wcmatch unitName "NsCAH-AHU-*Efficiency") (InsertNsCAHAHUFilterUnit insPt systemNum unitName nsSysPIDData))
-    ((= unitName "NsCAH-AHU-SupplyAir") (InsertNsCAHAHUSupplyAir insPt systemNum nsSystemCleanAirData))
+    ((= unitName "NsCAH-AHU-SupplyAir") (InsertNsCAHAHUSupplyAir insPt systemNum nsSystemCleanAirData nsSysPIDData))
   )
 )
 
@@ -802,7 +802,7 @@
              (cons (car x) (NsCAHChUnitNameToUnitNameEnums (cadr x)))
            ) 
     ; ready to refactor 回风净化空调机组 全新风净化空调机组
-    (GetListPairValueUtils "回风净化空调机组" (GetNsCAHUnitFormsDictList nsSysPIDData))
+    (GetListPairValueUtils "全新风净化空调机组" (GetNsCAHUnitFormsDictList nsSysPIDData))
   )
 )
 
@@ -842,7 +842,7 @@
 )
 
 ; 2021-06-04
-(defun InsertNsCAHAHUSupplyAir (insPt systemNum nsSystemCleanAirData / systemSupplyAirRate ) 
+(defun InsertNsCAHAHUSupplyAir (insPt systemNum nsSystemCleanAirData nsSysPIDData / systemSupplyAirRate) 
   (setq systemSupplyAirRate  (GetListPairValueUtils "systemSupplyAirRate" nsSystemCleanAirData))
   (InsertBlockUtils insPt "NsCAH-AHU-SupplyAir" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
   (setq insPt (MoveInsertPositionUtils insPt (/ (GetNsCAHUnitWidthEnums "NsCAH-AHU-SupplyAir") 2) 0))
@@ -856,9 +856,21 @@
     (strcat "S.A " (vl-princ-to-string systemSupplyAirRate) " m3/h") 
     "0DataFlow-NsNT-PIPE-TEXT" 300 0.7)
   (InsertNsCAHUpInstrumentUnit (MoveInsertPositionUtils insPt 3500 13000) "NsCAH-InstrumentP" systemNum "TIMC")
-  (InsertNsCAHUpInstrumentUnit (MoveInsertPositionUtils insPt 4500 13000) "NsCAH-InstrumentP" systemNum "FIC")
+  ; refactored at 2021-06-10
+  (InsertNsCAHSupplyAirValve (MoveInsertPositionUtils insPt 4500 13000) systemNum nsSysPIDData)
   (InsertBlockByRotateUtils (MoveInsertPositionUtils insPt 0 8000) "NsCAH-AHU-Muffler" "0DataFlow-NsNT-DUCT-DAMPER" (list (cons 1 systemNum)) (* PI 0.5))
   (InsertNsCAHLevelFireDamper (MoveInsertPositionUtils insPt 0 9300) systemNum 70)
+)
+
+; 2021-06-10
+(defun InsertNsCAHSupplyAirValve (insPt systemNum nsSysPIDData / supplyAirValveType) 
+  (setq supplyAirRateControlType (GetListPairValueUtils "supplyAirRateControlType" nsSysPIDData))
+  (cond 
+    ((wcmatch supplyAirRateControlType "定风量") (InsertNsCAHUpInstrumentUnit insPt "NsCAH-InstrumentP" systemNum "FIC"))
+    ((wcmatch supplyAirRateControlType "定静压") (InsertNsCAHUpInstrumentUnit insPt "NsCAH-InstrumentP" systemNum "PIC"))
+    ((wcmatch supplyAirRateControlType "定压差") (InsertNsCAHUpInstrumentUnit insPt "NsCAH-InstrumentP" systemNum "PIDC"))
+    ((wcmatch supplyAirRateControlType "变静压") (InsertNsCAHUpInstrumentUnit insPt "NsCAH-InstrumentP" systemNum "PIC"))
+  )
 )
 
 ; 2021-06-10
