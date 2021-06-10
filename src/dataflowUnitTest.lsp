@@ -55,7 +55,14 @@
   (SplitLDictListByDictKeyUtilsTest)
   (GetBsGCTTankEquipTypeStrategyTest)
   (GetBsGCTStraightEdgeHeightTest)
+  (ExtractIntegerFromStringUtilsTest)
   (DL:PrintTestResults (DL:CountBooleans *testList*))
+)
+
+; 2021-06-10
+(defun ExtractIntegerFromStringUtilsTest () 
+  (AssertEqual 'ExtractIntegerFromStringUtils (list "DN100") 100)
+  (AssertEqual 'ExtractIntegerFromStringUtils (list "23AB") 23)
 )
 
 ; 2021-05-16

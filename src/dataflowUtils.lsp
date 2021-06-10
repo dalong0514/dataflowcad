@@ -2349,6 +2349,13 @@
   result
 )
 
+; 2021-06-10
+; @return integer
+; unit test compeleted
+(defun ExtractIntegerFromStringUtils (originNumber /) 
+  (atoi (RegExpReplace originNumber "([^0-9]*)([0-9]+)([^0-9]*)" "$2" nil nil))
+)
+
 ; Extract Data Utils
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;

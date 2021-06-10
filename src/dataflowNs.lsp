@@ -785,7 +785,7 @@
     ((wcmatch unitName "NsCAH-AHU-*Rough") (InsertNsCAHAHUFilterUnit insPt systemNum unitName))
     ((= unitName "NsCAH-AHU-HotWaterHeat") (InsertNsCAHAHUHotWater insPt systemNum sysRefrigeratingData))
     ((= unitName "NsCAH-AHU-ReturnAir") (InsertNsCAHAHUReturnAir insPt systemNum nsSystemCleanAirData))
-    ((= unitName "NsCAH-AHU-SurfaceCooler") (InsertNsCAHAHUSurfaceCooler insPt systemNum sysRefrigeratingData))
+    ((= unitName "NsCAH-AHU-SurfaceCooler") (InsertNsCAHAHUSurfaceCooler insPt systemNum sysRefrigeratingData nsSysPIDData))
     ((= unitName "NsCAH-AHU-SteamHeat") (InsertNsCAHAHUSteamHeat insPt systemNum sysRefrigeratingData))
     ((= unitName "NsCAH-AHU-SteamHumidify") (InsertNsCAHAHUSteamHumidify insPt systemNum sysRefrigeratingData))
     ((= unitName "NsCAH-AHU-FanSection-Level") (InsertNsCAHAHUFanSectionLevel insPt systemNum))
@@ -954,8 +954,9 @@
 )
 
 ; 2021-06-04
-(defun InsertNsCAHAHUSurfaceCooler (insPt systemNum sysRefrigeratingData / 
-                                    systemLWDiameter systemLWFlowRate systemLWSFlowRate systemLWSDiameter systemLWRFlowRate systemLWRDiameter) 
+; refacotred at 2021-06-10
+(defun InsertNsCAHAHUSurfaceCooler (insPt systemNum sysRefrigeratingData nsSysPIDData / 
+                                    systemLWDiameter systemLWFlowRate systemLWSFlowRate systemLWDiameterInfo systemLWRFlowRate pdBalanceValveStatus) 
   (InsertBlockUtils insPt "NsCAH-AHU-SurfaceCooler" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum))) 
   (setq insPt (MoveInsertPositionUtils insPt (/ (GetNsCAHUnitWidthEnums "NsCAH-AHU-SurfaceCooler") 2) 0))
   (setq systemLWDiameter (vl-princ-to-string (GetListPairValueUtils "summerRefrigerationCoolHeatPipeDiameter" sysRefrigeratingData)))
@@ -966,20 +967,40 @@
                             systemLWFlowRate
                             "m3/h"
                           ))
-  (setq systemLWSDiameter (strcat "LWS DN" systemLWDiameter))
+  (setq systemLWDiameterInfo (strcat "LWS DN" systemLWDiameter))
   (setq systemLWRFlowRate (strcat 
                             (GetListPairValueUtils "coldWaterReturnMinTemperature" sysRefrigeratingData)
                             "¡æ "
                             systemLWFlowRate
                             "m3/h"
                           ))
-  (setq systemLWRDiameter (strcat "LWR DN" systemLWDiameter))
-  (InsertBlockUtils (MoveInsertPositionUtils insPt 250 500) "NsCAH-AHU-Pipe-LW" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
+  ; refacotred at 2021-06-10
+  (setq pdBalanceValveStatus (GetListPairValueUtils "pdBalanceValveStatus" nsSysPIDData))
+  (setq pipeDivideDiameter (GetListPairValueUtils "pipeDivideDiameter" nsSysPIDData))
+  (InsertBlockUtils 
+    (MoveInsertPositionUtils insPt 250 500) 
+    (GetNsCAHLWUnitBlockNameStrategy systemLWDiameter pipeDivideDiameter pdBalanceValveStatus)
+    "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
   (ModifyMultiplePropertyForOneBlockUtils (entlast) 
     (list "LWS" "LWS_FLOW" "LWR" "LWR_FLOW")
-    (list systemLWSDiameter systemLWSFlowRate systemLWRDiameter systemLWRFlowRate)
+    (list systemLWDiameterInfo systemLWSFlowRate systemLWDiameterInfo systemLWRFlowRate)
   )
   (InsertNsCAHAHUHwLwInstrumentUnit insPt systemNum)
+)
+
+; 2021-06-10
+(defun GetNsCAHLWUnitBlockNameStrategy (systemLWDiameter pipeDivideDiameter pdBalanceValveStatus /)
+  (cond 
+    ((and (< (ExtractIntegerFromStringUtils systemLWDiameter) (atoi pipeDivideDiameter)) (= pdBalanceValveStatus "0"))
+    "NsCAH-AHU-Pipe-LW-ShutoffNoPd")
+    ((and (>= (ExtractIntegerFromStringUtils systemLWDiameter) (atoi pipeDivideDiameter)) (= pdBalanceValveStatus "0"))
+    "NsCAH-AHU-Pipe-LW-ButterflyNoPd")
+    ((and (< (ExtractIntegerFromStringUtils systemLWDiameter) (atoi pipeDivideDiameter)) (= pdBalanceValveStatus "1"))
+    "NsCAH-AHU-Pipe-LW-Shutoff")
+    ((and (>= (ExtractIntegerFromStringUtils systemLWDiameter) (atoi pipeDivideDiameter)) (= pdBalanceValveStatus "1"))
+    "NsCAH-AHU-Pipe-LW-Butterfly")
+    (T "NsCAH-AHU-Pipe-LW-Butterfly")
+  )
 )
 
 ; 2021-06-04
@@ -1077,7 +1098,7 @@
                             "m3/h"
                           ))
   (setq systemHWRDiameter (strcat "HWR DN" systemHWDiameter))
-  (InsertBlockUtils (MoveInsertPositionUtils insPt 250 500) "NsCAH-AHU-Pipe-HW" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
+  (InsertBlockUtils (MoveInsertPositionUtils insPt 250 500) "NsCAH-AHU-Pipe-HW-Butterfly" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
   (ModifyMultiplePropertyForOneBlockUtils (entlast) 
     (list "HWS" "HWS_FLOW" "HWR" "HWR_FLOW")
     (list systemHWSDiameter systemHWSFlowRate systemHWRDiameter systemHWRFlowRate)
