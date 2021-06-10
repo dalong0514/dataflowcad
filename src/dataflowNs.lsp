@@ -501,7 +501,7 @@
   (setq systemNum (GetListPairValueUtils "systemNum" nsSystemCleanAirData))
   (InsertNSACHDrawFrame insPt)
   (InsertAllNsACHRoomS (MoveInsertPositionUtils insPt -45500 47000) systemNum nsRoomCleanAirData)
-  (InsertNsCAHAirConditionUnitTypeOne (MoveInsertPositionUtils insPt -78000 32000) systemNum nsSystemCleanAirData nsSysRefrigeratingData nsSysPIDData)
+  (InsertNsCAHAirConditionUnit (MoveInsertPositionUtils insPt -78000 32000) systemNum nsSystemCleanAirData nsSysRefrigeratingData nsSysPIDData)
 )
 
 ; 2021-06-04
@@ -758,46 +758,33 @@
 ;;;-------------------------------------------------------------------------;;;
 ; Generate Air Condition Unit
 ; 2021-06-04
-(defun InsertNsCAHAirConditionUnitTypeOne (insPt systemNum nsSystemCleanAirData sysRefrigeratingData nsSysPIDData /) 
+; refactored at 2021-06-10
+(defun InsertNsCAHAirConditionUnit (insPt systemNum nsSystemCleanAirData sysRefrigeratingData nsSysPIDData / oneNsCAHUnitForm) 
   (InsertNsCAHAHUExhaustAir (MoveInsertPositionUtils insPt 13000 17500) systemNum nsSystemCleanAirData)
-  (InsertNsCAHAHUOutdoorAir insPt systemNum nsSystemCleanAirData)
-  (setq insPt (MoveInsertPositionUtils insPt 1500 0))
-  (InsertNsCAHAHUFabricRough insPt systemNum)
-  (setq insPt (MoveInsertPositionUtils insPt 1500 0))
-  (InsertNsCAHAHUHotWater insPt systemNum sysRefrigeratingData)
-  (setq insPt (MoveInsertPositionUtils insPt 2000 0))
-  (InsertNsCAHAHUReturnAir insPt systemNum nsSystemCleanAirData)
-  (setq insPt (MoveInsertPositionUtils insPt 1500 0))
-  (InsertNsCAHAHUSurfaceCooler insPt systemNum sysRefrigeratingData)
-  (setq insPt (MoveInsertPositionUtils insPt 2000 0))
-  (InsertNsCAHAHUSteamHeat insPt systemNum sysRefrigeratingData)
-  (setq insPt (MoveInsertPositionUtils insPt 2000 0))
-  (InsertNsCAHAHUSteamHumidify insPt systemNum sysRefrigeratingData)
-  (setq insPt (MoveInsertPositionUtils insPt 2000 0))
-  (InsertNsCAHAHUFanSectionLevel insPt systemNum)
-  (setq insPt (MoveInsertPositionUtils insPt 4000 0))
-  (InsertBlockUtils insPt "NsCAH-AHU-MeanFlowAir" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
-  (setq insPt (MoveInsertPositionUtils insPt 1500 0))
-  (InsertNsCAHAHUFabricRough insPt systemNum)
-  (setq insPt (MoveInsertPositionUtils insPt 1500 0))
-  (InsertNsCAHAHUSupplyAir insPt systemNum nsSystemCleanAirData)
-  ; (princ sysRefrigeratingData)(princ)
-  (princ (GetOneNsCAHUnitForm nsSysPIDData))(princ)
+  ; sort by numId
+  (setq oneNsCAHUnitForm (vl-sort (GetOneNsCAHUnitForm nsSysPIDData) '(lambda (x y) (< (atoi (car x)) (atoi (car y))))))
+  (mapcar '(lambda (x) 
+             (InsertOneNsCAHnUnitStrategy (cdr x) insPt systemNum nsSystemCleanAirData sysRefrigeratingData)
+             (setq insPt (MoveInsertPositionUtils insPt (GetNsCAHUnitWidthEnums (cdr x)) 0))
+           ) 
+    oneNsCAHUnitForm
+  )
 )
 
-; 2021-06-09
-(defun InsertOneNsCAHnUnitStrategy (unitName /)
+; 2021-06-10
+(defun InsertOneNsCAHnUnitStrategy (unitName insPt systemNum nsSystemCleanAirData sysRefrigeratingData /)
   (cond 
-    ((= unitName "NsCAH-AHU-OutdoorAir") 1500)
-    ((= unitName "NsCAH-AHU-FabricRough") 1500)
-    ((= unitName "NsCAH-AHU-HotWaterHeat") 2000)
-    ((= unitName "NsCAH-AHU-ReturnAir") 1500)
-    ((= unitName "NsCAH-AHU-SurfaceCooler") 2000)
-    ((= unitName "NsCAH-AHU-SteamHeat") 2000)
-    ((= unitName "NsCAH-AHU-SteamHumidify") 2000)
-    ((= unitName "NsCAH-AHU-FanSection-Level") 4000)
-    ((= unitName "NsCAH-AHU-MeanFlowAir") 1500)
-    ((= unitName "NsCAH-AHU-SupplyAir") 1500)
+    ((= unitName "NsCAH-AHU-OutdoorAir") (InsertNsCAHAHUOutdoorAir insPt systemNum nsSystemCleanAirData))
+    ((wcmatch unitName "NsCAH-AHU-*Rough") (InsertNsCAHAHUFilterUnit insPt systemNum unitName))
+    ((= unitName "NsCAH-AHU-HotWaterHeat") (InsertNsCAHAHUHotWater insPt systemNum sysRefrigeratingData))
+    ((= unitName "NsCAH-AHU-ReturnAir") (InsertNsCAHAHUReturnAir insPt systemNum nsSystemCleanAirData))
+    ((= unitName "NsCAH-AHU-SurfaceCooler") (InsertNsCAHAHUSurfaceCooler insPt systemNum sysRefrigeratingData))
+    ((= unitName "NsCAH-AHU-SteamHeat") (InsertNsCAHAHUSteamHeat insPt systemNum sysRefrigeratingData))
+    ((= unitName "NsCAH-AHU-SteamHumidify") (InsertNsCAHAHUSteamHumidify insPt systemNum sysRefrigeratingData))
+    ((= unitName "NsCAH-AHU-FanSection-Level") (InsertNsCAHAHUFanSectionLevel insPt systemNum))
+    ((= unitName "NsCAH-AHU-MeanFlowAir") (InsertNsCAHAHUMeanFlowAir insPt systemNum))
+    ((wcmatch unitName "NsCAH-AHU-*Efficiency") (InsertNsCAHAHUFilterUnit insPt systemNum unitName))
+    ((= unitName "NsCAH-AHU-SupplyAir") (InsertNsCAHAHUSupplyAir insPt systemNum nsSystemCleanAirData))
   )
 )
 
@@ -807,14 +794,12 @@
   (mapcar '(lambda (x) 
              (cons (car x) (NsCAHChUnitNameToUnitNameEnums (cadr x)))
            ) 
-    ; ready to modify
-    (cadr (car (GetNsCAHUnitFormsDictList nsSysPIDData)))
+    ; ready to refactor 回风净化空调机组 全新风净化空调机组
+    (GetListPairValueUtils "回风净化空调机组" (GetNsCAHUnitFormsDictList nsSysPIDData))
   )
 )
 
 ; ((1 新风段) (2 板式粗效段) (3 中效段) (4 蒸汽加热段) (5 热水加热段) (6 蒸汽加热段) (7 蒸汽加湿段) (8 水平风机段) (9 均流段) (10 高中效段) (11 送风段))
-; sort by numId
-;(vl-sort testList '(lambda (x y) (< (car x) (car y))))
 ; 2021-06-10
 (defun GetNsCAHUnitFormsDictList (nsSysPIDData /) 
   (mapcar '(lambda (x) 
@@ -867,6 +852,11 @@
   (InsertNsCAHUpInstrumentUnit (MoveInsertPositionUtils insPt 4500 13000) "NsCAH-InstrumentP" systemNum "FIC")
   (InsertBlockByRotateUtils (MoveInsertPositionUtils insPt 0 8000) "NsCAH-AHU-Muffler" "0DataFlow-NsNT-DUCT-DAMPER" (list (cons 1 systemNum)) (* PI 0.5))
   (InsertNsCAHLevelFireDamper (MoveInsertPositionUtils insPt 0 9300) systemNum 70)
+)
+
+; 2021-06-10
+(defun InsertNsCAHAHUMeanFlowAir (insPt systemNum / ) 
+  (InsertBlockUtils insPt "NsCAH-AHU-MeanFlowAir" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
 )
 
 ; 2021-06-04
@@ -1001,22 +991,24 @@
 )
 
 ; 2021-06-04
-(defun InsertNsCAHAHUExhaustAir (insPt systemNum nsSystemCleanAirData / systemExhaustAirRate ) 
+(defun InsertNsCAHAHUExhaustAir (insPt systemNum nsSystemCleanAirData / systemExhaustAirRate xDistanceOffset) 
   (setq systemExhaustAirRate (GetListPairValueUtils "systemExhaustAirRate" nsSystemCleanAirData))
+  (setq xDistanceOffset 2000)
   (InsertBlockUtils insPt "NsCAH-AHU-RoughMediumEfficiencyUnit" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum))) 
   (MirrorBlockUtils (entlast))
   (GenerateLineUtils (MoveInsertPositionUtils insPt -8100 2000) (MoveInsertPositionUtils insPt -6800 2000) "0DataFlow-NsNT-DUCT-E.A")
   (InsertBlockUtils (MoveInsertPositionUtils insPt -8100 2000) "NsCAH-AHU-AirOutlet" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
   (InsertBlockByRotateUtils (MoveInsertPositionUtils insPt -7450 2000) "NsCAH-AHU-CheckValve" "0DataFlow-NsNT-DUCT-DAMPER" (list (cons 1 systemNum)) (* PI 0.5))
-  (GenerateLineUtils (MoveInsertPositionUtils insPt 300 1450) (MoveInsertPositionUtils insPt 3000 1450) "0DataFlow-NsNT-DUCT-E.A")
-  (GenerateLineUtils (MoveInsertPositionUtils insPt 3000 1450) (MoveInsertPositionUtils insPt 3000 -5000) "0DataFlow-NsNT-DUCT-E.A")
-  (InsertBlockByRotateUtils (MoveInsertPositionUtils insPt 2800 -1500) "NsCAH-AHU-Arrow" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)) PI)
+  ; refactored at 2021-06-10
+  (GenerateLineUtils (MoveInsertPositionUtils insPt 300 1450) (MoveInsertPositionUtils insPt xDistanceOffset 1450) "0DataFlow-NsNT-DUCT-E.A")
+  (GenerateLineUtils (MoveInsertPositionUtils insPt xDistanceOffset 1450) (MoveInsertPositionUtils insPt xDistanceOffset -5000) "0DataFlow-NsNT-DUCT-E.A")
+  (InsertBlockByRotateUtils (MoveInsertPositionUtils insPt (- xDistanceOffset 200) -1500) "NsCAH-AHU-Arrow" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)) PI)
   (GenerateVerticalLeftTextUtils 
-    (MoveInsertPositionUtils insPt 3400 -2000) 
+    (MoveInsertPositionUtils insPt (+ xDistanceOffset 400) -2000) 
     (strcat "E.A " (vl-princ-to-string systemExhaustAirRate) " m3/h") 
     "0DataFlow-NsNT-PIPE-TEXT" 300 0.7)
-  (InsertBlockUtils (MoveInsertPositionUtils insPt 3000 -3500) "NsCAH-AHU-ButterflyValve" "0DataFlow-NsNT-DUCT-DAMPER" (list (cons 1 systemNum)))
-  (InsertNsCAHRightInstrumentUnit (MoveInsertPositionUtils insPt 3500 -3500) "NsCAH-InstrumentP" systemNum "MD")
+  (InsertBlockUtils (MoveInsertPositionUtils insPt xDistanceOffset -3500) "NsCAH-AHU-ButterflyValve" "0DataFlow-NsNT-DUCT-DAMPER" (list (cons 1 systemNum)))
+  (InsertNsCAHRightInstrumentUnit (MoveInsertPositionUtils insPt (+ xDistanceOffset 500) -3500) "NsCAH-InstrumentP" systemNum "MD")
 )
 
 ; 2021-06-04
@@ -1087,11 +1079,11 @@
   (InsertNsCAHDownInstrumentLengthUnit (MoveInsertPositionUtils insPt 800 1000) "NsCAH-InstrumentP" systemNum "TMI" 1200)
 )
 
-; 2021-06-03
+; 2021-06-10
 ; refacotred at 2021-06-04
-(defun InsertNsCAHAHUFabricRough (insPt systemNum / ) 
-  (InsertBlockUtils insPt "NsCAH-AHU-FabricRough" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum))) 
-  (setq insPt (MoveInsertPositionUtils insPt (/ (GetNsCAHUnitWidthEnums "NsCAH-AHU-FabricRough") 2) 0))
+(defun InsertNsCAHAHUFilterUnit (insPt systemNum blockName / ) 
+  (InsertBlockUtils insPt blockName "0DataFlow-NsNT-AHU" (list (cons 1 systemNum))) 
+  (setq insPt (MoveInsertPositionUtils insPt (/ (GetNsCAHUnitWidthEnums blockName) 2) 0))
   (InsertNsCAHAHUBottomPDIA insPt systemNum)
 )
 
