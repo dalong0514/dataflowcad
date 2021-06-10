@@ -502,7 +502,6 @@
   (InsertNSACHDrawFrame insPt)
   (InsertAllNsACHRoomS (MoveInsertPositionUtils insPt -45500 47000) systemNum nsRoomCleanAirData nsSysPIDData)
   (InsertOneNsCAHAirConditionUnit (MoveInsertPositionUtils insPt -78000 32000) systemNum nsSystemCleanAirData nsSysRefrigeratingData nsSysPIDData)
-  (princ nsSysPIDData)(princ)
 )
 
 ; 2021-06-04
@@ -766,15 +765,24 @@
 ; Generate Air Condition Unit
 ; 2021-06-04
 ; refactored at 2021-06-10
-(defun InsertOneNsCAHAirConditionUnit (insPt systemNum nsSystemCleanAirData sysRefrigeratingData nsSysPIDData / oneNsCAHUnitForm) 
+(defun InsertOneNsCAHAirConditionUnit (insPt systemNum nsSystemCleanAirData sysRefrigeratingData nsSysPIDData /  nsCAHUnitFormChName oneNsCAHUnitForm) 
   (InsertNsCAHAHUExhaustAir (MoveInsertPositionUtils insPt 13000 17500) systemNum nsSystemCleanAirData)
+  (setq nsCAHUnitFormChName (GetNsCAHUnitFormChNameStrategy (GetListPairValueUtils "systemReturnAirRate" nsSystemCleanAirData)))
   ; sort by numId
-  (setq oneNsCAHUnitForm (vl-sort (GetOneNsCAHUnitForm nsSysPIDData) '(lambda (x y) (< (atoi (car x)) (atoi (car y))))))
+  (setq oneNsCAHUnitForm (vl-sort (GetOneNsCAHUnitForm nsSysPIDData nsCAHUnitFormChName) '(lambda (x y) (< (atoi (car x)) (atoi (car y))))))
   (mapcar '(lambda (x) 
              (InsertOneNsCAHnUnitStrategy (cdr x) insPt systemNum nsSystemCleanAirData sysRefrigeratingData nsSysPIDData)
              (setq insPt (MoveInsertPositionUtils insPt (GetNsCAHUnitWidthEnums (cdr x)) 0))
            ) 
     oneNsCAHUnitForm
+  )
+)
+
+; 2021-06-10
+(defun GetNsCAHUnitFormChNameStrategy (nsCAHUnitFormChName /)
+  (cond 
+    ((= nsCAHUnitFormChName 0) "全新风净化空调机组")
+    (T "回风净化空调机组")
   )
 )
 
@@ -798,12 +806,12 @@
 
 ; 2021-06-10
 ; ((1 . NsCAH-AHU-OutdoorAir) (2 . NsCAH-AHU-PlateRough) (3 . NsCAH-AHU-ReturnAir) (4 . NsCAH-AHU-MediumEfficiency) (5 . NsCAH-AHU-SurfaceCooler) (6 . NsCAH-AHU-SteamHeat) (7 . NsCAH-AHU-SteamHumidify) (8 . NsCAH-AHU-FanSection-Level) (9 . NsCAH-AHU-MeanFlowAir) (10 . NsCAH-AHU-HighMediumEfficiency) (11 . NsCAH-AHU-SupplyAir))
-(defun GetOneNsCAHUnitForm (nsSysPIDData /) 
+(defun GetOneNsCAHUnitForm (nsSysPIDData nsCAHUnitFormChName /) 
   (mapcar '(lambda (x) 
              (cons (car x) (NsCAHChUnitNameToUnitNameEnums (cadr x)))
            ) 
     ; ready to refactor 回风净化空调机组 全新风净化空调机组
-    (GetListPairValueUtils "回风净化空调机组" (GetNsCAHUnitFormsDictList nsSysPIDData))
+    (GetListPairValueUtils nsCAHUnitFormChName (GetNsCAHUnitFormsDictList nsSysPIDData))
   )
 )
 
