@@ -464,7 +464,7 @@
   (setq allNsCleanAirData (GetAllNsCleanAirData))
   (setq insPtList (GetInsertPtListByXMoveUtils insPt (GenerateSortedNumByList allNsCleanAirData 0) 104100))
   (mapcar '(lambda (x y) 
-            (InsertOneNsACHPID x (cdr y))
+            (InsertOneNsCAHPID x (cdr y))
           ) 
     insPtList
     allNsCleanAirData
@@ -476,7 +476,7 @@
   (VerifyAllNsACHSymbol)
   (setq insPt (getpoint "\n ∞»°PID≤Â»Îµ„£∫"))
   (setq allNsCleanAirData (GetAllNsCleanAirData))
-  (InsertOneNsACHPID insPt (cdr (car allNsCleanAirData)))
+  (InsertOneNsCAHPID insPt (cdr (car allNsCleanAirData)))
 )
 
 ; 2021-05-31
@@ -493,7 +493,7 @@
 ; refacotred at 2021-06-03
 ; refacotred at 2021-06-04
 ; refacotred at 2021-06-09
-(defun InsertOneNsACHPID (insPt allNsCleanAirData / nsSystemCleanAirData nsSysRefrigeratingData nsRoomCleanAirData nsSysPIDData systemNum) 
+(defun InsertOneNsCAHPID (insPt allNsCleanAirData / nsSystemCleanAirData nsSysRefrigeratingData nsRoomCleanAirData nsSysPIDData systemNum) 
   (setq nsSystemCleanAirData (GetSystemCleanAirData allNsCleanAirData))
   (setq nsSysRefrigeratingData (GetSysRefrigeratingData allNsCleanAirData))
   (setq nsRoomCleanAirData (GetRoomCleanAirData allNsCleanAirData))
@@ -501,7 +501,7 @@
   (setq systemNum (GetListPairValueUtils "systemNum" nsSystemCleanAirData))
   (InsertNSACHDrawFrame insPt)
   (InsertAllNsACHRoomS (MoveInsertPositionUtils insPt -45500 47000) systemNum nsRoomCleanAirData nsSysPIDData)
-  (InsertNsCAHAirConditionUnit (MoveInsertPositionUtils insPt -78000 32000) systemNum nsSystemCleanAirData nsSysRefrigeratingData nsSysPIDData)
+  (InsertOneNsCAHAirConditionUnit (MoveInsertPositionUtils insPt -78000 32000) systemNum nsSystemCleanAirData nsSysRefrigeratingData nsSysPIDData)
   (princ nsSysPIDData)(princ)
 )
 
@@ -766,12 +766,12 @@
 ; Generate Air Condition Unit
 ; 2021-06-04
 ; refactored at 2021-06-10
-(defun InsertNsCAHAirConditionUnit (insPt systemNum nsSystemCleanAirData sysRefrigeratingData nsSysPIDData / oneNsCAHUnitForm) 
+(defun InsertOneNsCAHAirConditionUnit (insPt systemNum nsSystemCleanAirData sysRefrigeratingData nsSysPIDData / oneNsCAHUnitForm) 
   (InsertNsCAHAHUExhaustAir (MoveInsertPositionUtils insPt 13000 17500) systemNum nsSystemCleanAirData)
   ; sort by numId
   (setq oneNsCAHUnitForm (vl-sort (GetOneNsCAHUnitForm nsSysPIDData) '(lambda (x y) (< (atoi (car x)) (atoi (car y))))))
   (mapcar '(lambda (x) 
-             (InsertOneNsCAHnUnitStrategy (cdr x) insPt systemNum nsSystemCleanAirData sysRefrigeratingData)
+             (InsertOneNsCAHnUnitStrategy (cdr x) insPt systemNum nsSystemCleanAirData sysRefrigeratingData nsSysPIDData)
              (setq insPt (MoveInsertPositionUtils insPt (GetNsCAHUnitWidthEnums (cdr x)) 0))
            ) 
     oneNsCAHUnitForm
@@ -779,7 +779,7 @@
 )
 
 ; 2021-06-10
-(defun InsertOneNsCAHnUnitStrategy (unitName insPt systemNum nsSystemCleanAirData sysRefrigeratingData /)
+(defun InsertOneNsCAHnUnitStrategy (unitName insPt systemNum nsSystemCleanAirData sysRefrigeratingData nsSysPIDData /)
   (cond 
     ((= unitName "NsCAH-AHU-OutdoorAir") (InsertNsCAHAHUOutdoorAir insPt systemNum nsSystemCleanAirData))
     ((wcmatch unitName "NsCAH-AHU-*Rough") (InsertNsCAHAHUFilterUnit insPt systemNum unitName))
