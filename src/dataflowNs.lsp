@@ -500,8 +500,9 @@
   (setq nsSysPIDData (GetSysPIDData allNsCleanAirData))
   (setq systemNum (GetListPairValueUtils "systemNum" nsSystemCleanAirData))
   (InsertNSACHDrawFrame insPt)
-  (InsertAllNsACHRoomS (MoveInsertPositionUtils insPt -45500 47000) systemNum nsRoomCleanAirData)
+  (InsertAllNsACHRoomS (MoveInsertPositionUtils insPt -45500 47000) systemNum nsRoomCleanAirData nsSysPIDData)
   (InsertNsCAHAirConditionUnit (MoveInsertPositionUtils insPt -78000 32000) systemNum nsSystemCleanAirData nsSysRefrigeratingData nsSysPIDData)
+  (princ nsSysPIDData)(princ)
 )
 
 ; 2021-06-04
@@ -567,7 +568,8 @@
 ;;;-------------------------------------------------------------------------;;;
 ; Generate All Room Graph
 ; 2021-06-01
-(defun InsertAllNsACHRoomS (insPt systemNum roomDictList / totalNum num insPtList) 
+(defun InsertAllNsACHRoomS (insPt systemNum roomDictList nsSysPIDData / totalNum num insPtList highEfficiencyAirInlet) 
+  (setq highEfficiencyAirInlet (GetListPairValueUtils "highEfficiencyAirInlet" nsSysPIDData))
   (setq totalNum (1+ (/ (length roomDictList) 7)))
   (setq num 1)
   (mapcar '(lambda (x) 
@@ -577,7 +579,7 @@
               (GenerateLineUtils (MoveInsertPositionUtils insPt -6100 8500) (MoveInsertPositionUtils insPt 43350 8500) "0DataFlow-NsNT-DUCT-E.A")
               (mapcar '(lambda (xx yy) 
                          (InsertOneNsACHRoomS yy "NsCAH-Room-S" xx)
-                         (InsertNsCAHSupplyAirUnit (MoveInsertPositionUtils yy 2000 6000) xx systemNum)
+                         (InsertNsCAHSupplyAirUnit (MoveInsertPositionUtils yy 2000 6000) xx systemNum highEfficiencyAirInlet)
                          (InsertNsCAHInstrument (MoveInsertPositionUtils yy 3600 5600) systemNum)
                          (InsertNsCARoomPositiveAirRate (MoveInsertPositionUtils yy 500 0) systemNum)
                          (InsertNsCAHClipWallStrategy (MoveInsertPositionUtils yy 4250 0) xx systemNum)
@@ -617,8 +619,8 @@
 )
 
 ; 2021-06-02
-(defun InsertNsCAHSupplyAirUnit (insPt oneRoomDictList systemNum / nsCAHValveDictList) 
-  (InsertNsCAHHEPA insPt systemNum)
+(defun InsertNsCAHSupplyAirUnit (insPt oneRoomDictList systemNum highEfficiencyAirInlet / nsCAHValveDictList) 
+  (InsertNsCAHHEPA insPt systemNum highEfficiencyAirInlet)
   (setq nsCAHValveDictList (GetCAHSupplyAirRateValveDictList oneRoomDictList))
   (InsertNsCAHValve (MoveInsertPositionUtils insPt 0 1300) "NsCAH-RE-CAV-Venturi" nsCAHValveDictList)
   (InsertNsCAHDuctSA (MoveInsertPositionUtils insPt 0 1300) "0DataFlow-NsNT-DUCT-S.A")
@@ -626,8 +628,8 @@
 
 ; 2021-06-02
 ; 高效送风口
-(defun InsertNsCAHHEPA (insPt systemNum /) 
-  (InsertBlockUtils insPt "NsCAH-RE-HEPA" "0DataFlow-NsNT-LET-HEPA" (list (cons 1 systemNum) (cons 2 "H13")))
+(defun InsertNsCAHHEPA (insPt systemNum highEfficiencyAirInlet /) 
+  (InsertBlockUtils insPt "NsCAH-RE-HEPA" "0DataFlow-NsNT-LET-HEPA" (list (cons 1 systemNum) (cons 2 highEfficiencyAirInlet)))
 )
 
 ; 2021-06-02
