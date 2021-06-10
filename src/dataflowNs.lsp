@@ -595,11 +595,26 @@
 
 ; 2021-06-01
 (defun InsertOneNsACHRoomS (insPt blockName oneRoomDictList /) 
+  (setq oneRoomDictList (UpdateRoomDictList oneRoomDictList))
   (InsertBlockByNoPropertyUtils insPt blockName "0DataFlow-NsNT-ROOM")
   (ModifyMultiplePropertyForOneBlockUtils (entlast) 
     (mapcar '(lambda (x) (strcase (car x))) oneRoomDictList)
     (mapcar '(lambda (x) (cadr x)) oneRoomDictList)
   )
+)
+
+; 2021-06-10
+(defun UpdateRoomDictList (oneRoomDictList /) 
+  (setq oneRoomDictList 
+    (subst 
+      (list "roomPressure" (strcat (GetListPairValueUtils "roomPressure" oneRoomDictList) "Pa") )
+      (assoc "roomPressure" oneRoomDictList)
+      oneRoomDictList)
+  )
+  (subst 
+    (list "cleanGrade" (strcat (GetListPairValueUtils "cleanGrade" oneRoomDictList) "¼¶") )
+    (assoc "cleanGrade" oneRoomDictList)
+    oneRoomDictList)
 )
 
 ; 2021-06-02
