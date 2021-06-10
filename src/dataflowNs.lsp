@@ -568,8 +568,10 @@
 ;;;-------------------------------------------------------------------------;;;
 ; Generate All Room Graph
 ; 2021-06-01
-(defun InsertAllNsACHRoomS (insPt systemNum roomDictList nsSysPIDData / totalNum num insPtList highEfficiencyAirInlet) 
+(defun InsertAllNsACHRoomS (insPt systemNum roomDictList nsSysPIDData / totalNum num insPtList highEfficiencyAirInlet supplyAirValveType returnAirValveType) 
   (setq highEfficiencyAirInlet (GetListPairValueUtils "highEfficiencyAirInlet" nsSysPIDData))
+  (setq supplyAirValveType (GetListPairValueUtils "supplyAirValveType" nsSysPIDData))
+  (setq returnAirValveType (GetListPairValueUtils "returnAirValveType" nsSysPIDData))
   (setq totalNum (1+ (/ (length roomDictList) 7)))
   (setq num 1)
   (mapcar '(lambda (x) 
@@ -579,10 +581,10 @@
               (GenerateLineUtils (MoveInsertPositionUtils insPt -6100 8500) (MoveInsertPositionUtils insPt 43350 8500) "0DataFlow-NsNT-DUCT-E.A")
               (mapcar '(lambda (xx yy) 
                          (InsertOneNsACHRoomS yy "NsCAH-Room-S" xx)
-                         (InsertNsCAHSupplyAirUnit (MoveInsertPositionUtils yy 2000 6000) xx systemNum highEfficiencyAirInlet)
+                         (InsertNsCAHSupplyAirUnit (MoveInsertPositionUtils yy 2000 6000) xx systemNum highEfficiencyAirInlet supplyAirValveType)
                          (InsertNsCAHInstrument (MoveInsertPositionUtils yy 3600 5600) systemNum)
                          (InsertNsCARoomPositiveAirRate (MoveInsertPositionUtils yy 500 0) systemNum)
-                         (InsertNsCAHClipWallStrategy (MoveInsertPositionUtils yy 4250 0) xx systemNum)
+                         (InsertNsCAHClipWallStrategy (MoveInsertPositionUtils yy 4250 0) xx systemNum returnAirValveType)
                       ) 
                 x
                 insPtList
@@ -619,10 +621,10 @@
 )
 
 ; 2021-06-02
-(defun InsertNsCAHSupplyAirUnit (insPt oneRoomDictList systemNum highEfficiencyAirInlet / nsCAHValveDictList) 
+(defun InsertNsCAHSupplyAirUnit (insPt oneRoomDictList systemNum highEfficiencyAirInlet supplyAirValveType / nsCAHValveDictList) 
   (InsertNsCAHHEPA insPt systemNum highEfficiencyAirInlet)
-  (setq nsCAHValveDictList (GetCAHSupplyAirRateValveDictList oneRoomDictList))
-  (InsertNsCAHValve (MoveInsertPositionUtils insPt 0 1300) "NsCAH-RE-CAV-Venturi" nsCAHValveDictList)
+  (setq nsCAHValveDictList (GetCAHSupplyAirRateValveDictList oneRoomDictList supplyAirValveType))
+  (InsertNsCAHValve (MoveInsertPositionUtils insPt 0 1300) (GetNsCAHAirValveBlockNameEnums supplyAirValveType) nsCAHValveDictList)
   (InsertNsCAHDuctSA (MoveInsertPositionUtils insPt 0 1300) "0DataFlow-NsNT-DUCT-S.A")
 )
 
@@ -651,26 +653,26 @@
 )
 
 ; 2021-06-02
-(defun InsertNsCAHClipWallStrategy (insPt oneRoomDictList systemNum /) 
+(defun InsertNsCAHClipWallStrategy (insPt oneRoomDictList systemNum returnAirValveType /) 
   (cond 
-    ((> (GetListPairValueUtils "roomExhaustAirRate" oneRoomDictList) 0) (InsertNsCAHExhaustAirUnit insPt oneRoomDictList systemNum))
-    ((> (GetListPairValueUtils "roomReturnAirRate" oneRoomDictList) 0) (InsertNsCAHReturnAirUnit insPt oneRoomDictList systemNum))
+    ((> (GetListPairValueUtils "roomExhaustAirRate" oneRoomDictList) 0) (InsertNsCAHExhaustAirUnit insPt oneRoomDictList systemNum returnAirValveType))
+    ((> (GetListPairValueUtils "roomReturnAirRate" oneRoomDictList) 0) (InsertNsCAHReturnAirUnit insPt oneRoomDictList systemNum returnAirValveType))
   )
 )
 
 ; 2021-06-02
-(defun InsertNsCAHExhaustAirUnit (insPt oneRoomDictList systemNum / nsCAHValveDictList) 
+(defun InsertNsCAHExhaustAirUnit (insPt oneRoomDictList systemNum returnAirValveType / nsCAHValveDictList) 
   (InsertNsCAHExhaustClipWall insPt systemNum)
-  (setq nsCAHValveDictList (GetCAHExhaustAirRateValveDictList oneRoomDictList))
-  (InsertNsCAHValve (MoveInsertPositionUtils insPt 0 7300) "NsCAH-RE-VAV-Venturi" nsCAHValveDictList)
+  (setq nsCAHValveDictList (GetCAHExhaustAirRateValveDictList oneRoomDictList returnAirValveType))
+  (InsertNsCAHValve (MoveInsertPositionUtils insPt 0 7300) (GetNsCAHAirValveBlockNameEnums returnAirValveType) nsCAHValveDictList)
   (InsertNsCAHDuctEA (MoveInsertPositionUtils insPt 0 7300) "0DataFlow-NsNT-DUCT-E.A")
 )
 
 ; 2021-06-02
-(defun InsertNsCAHReturnAirUnit (insPt oneRoomDictList systemNum / nsCAHValveDictList) 
+(defun InsertNsCAHReturnAirUnit (insPt oneRoomDictList systemNum returnAirValveType / nsCAHValveDictList) 
   (InsertNsCAHReturnClipWall insPt systemNum)
-  (setq nsCAHValveDictList (GetCAHReturnAirRateValveDictList oneRoomDictList))
-  (InsertNsCAHValve (MoveInsertPositionUtils insPt 0 7300) "NsCAH-RE-VAV-Venturi" nsCAHValveDictList)
+  (setq nsCAHValveDictList (GetCAHReturnAirRateValveDictList oneRoomDictList returnAirValveType))
+  (InsertNsCAHValve (MoveInsertPositionUtils insPt 0 7300) (GetNsCAHAirValveBlockNameEnums returnAirValveType) nsCAHValveDictList)
   (InsertNsCAHDuctRA (MoveInsertPositionUtils insPt 0 7300) "0DataFlow-NsNT-DUCT-R.A")
 )
 
@@ -731,29 +733,32 @@
 )
 
 ; 2021-06-02
-(defun GetCAHSupplyAirRateValveDictList (oneRoomDictList /)
+(defun GetCAHSupplyAirRateValveDictList (oneRoomDictList supplyAirValveType /)
   (append 
     (list (list "systemNum" (GetListPairValueUtils "systemNum" oneRoomDictList)))
     (list (list "CMH" (vl-princ-to-string (GetListPairValueUtils "roomSupplyAirRate" oneRoomDictList))))
     (list (list "TAG" "CAV0101"))
+    (list (list "VALVE_TYPE" supplyAirValveType))
   )
 )
 
 ; 2021-06-02
-(defun GetCAHExhaustAirRateValveDictList (oneRoomDictList /)
+(defun GetCAHExhaustAirRateValveDictList (oneRoomDictList returnAirValveType /)
   (append 
     (list (list "systemNum" (GetListPairValueUtils "systemNum" oneRoomDictList)))
     (list (list "CMH" (vl-princ-to-string (GetListPairValueUtils "roomExhaustAirRate" oneRoomDictList))))
     (list (list "TAG" "VAV0101"))
+    (list (list "VALVE_TYPE" returnAirValveType))
   )
 )
 
 ; 2021-06-02
-(defun GetCAHReturnAirRateValveDictList (oneRoomDictList /)
+(defun GetCAHReturnAirRateValveDictList (oneRoomDictList returnAirValveType /)
   (append 
     (list (list "systemNum" (GetListPairValueUtils "systemNum" oneRoomDictList)))
     (list (list "CMH" (vl-princ-to-string (GetListPairValueUtils "roomReturnAirRate" oneRoomDictList))))
     (list (list "TAG" "VAV0101"))
+    (list (list "VALVE_TYPE" returnAirValveType))
   )
 )
 
