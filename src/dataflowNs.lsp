@@ -965,7 +965,7 @@
     (list "LS" "LS_FLOW")
     (list systemLSDiameter systemLSFlowRate)
   )
-  (InsertNsCAHAHULsInstrumentUnit insPt systemNum)
+  (InsertNsCAHAHULsInstrumentUnit insPt systemNum nsSysPIDData)
   (InsertBlockUtils (MoveInsertPositionUtils insPt -250 500) "NsCAH-AHU-Pipe-SC" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
   (ModifyMultiplePropertyForOneBlockUtils (entlast) 
     (list "DIAMETER")
@@ -1030,8 +1030,13 @@
 )
 
 ; 2021-06-04
-(defun InsertNsCAHAHULsInstrumentUnit (insPt systemNum /) 
-  (InsertNsCAHRightInstrumentUnit (MoveInsertPositionUtils insPt 250 4050) "NsCAH-InstrumentL" systemNum "PG")
+; refactored at 2021-06-10
+(defun InsertNsCAHAHULsInstrumentUnit (insPt systemNum nsSysPIDData / steamSupplyPressType) 
+  (setq steamSupplyPressType (GetListPairValueUtils "steamSupplyPressType" nsSysPIDData))
+  (cond 
+    ((wcmatch steamSupplyPressType "就地") (InsertNsCAHRightInstrumentUnit (MoveInsertPositionUtils insPt 250 3950) "NsCAH-InstrumentL" systemNum "PG"))
+    ((wcmatch steamSupplyPressType "集中") (InsertNsCAHRightInstrumentUnit (MoveInsertPositionUtils insPt 250 3950) "NsCAH-InstrumentP" systemNum "PI"))
+  )
   (InsertNsCAHRightInstrumentUnit (MoveInsertPositionUtils insPt 555 6400) "NsCAH-InstrumentP" systemNum "MOV")
 )
 
