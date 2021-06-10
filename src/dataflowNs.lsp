@@ -501,8 +501,7 @@
   (setq systemNum (GetListPairValueUtils "systemNum" nsSystemCleanAirData))
   (InsertNSACHDrawFrame insPt)
   (InsertAllNsACHRoomS (MoveInsertPositionUtils insPt -45500 47000) systemNum nsRoomCleanAirData)
-  (InsertNsCAHAirConditionUnitTypeOne (MoveInsertPositionUtils insPt -78000 32000) systemNum nsSystemCleanAirData nsSysRefrigeratingData)
-  ; (princ nsSysPIDData)(princ)
+  (InsertNsCAHAirConditionUnitTypeOne (MoveInsertPositionUtils insPt -78000 32000) systemNum nsSystemCleanAirData nsSysRefrigeratingData nsSysPIDData)
 )
 
 ; 2021-06-04
@@ -759,7 +758,7 @@
 ;;;-------------------------------------------------------------------------;;;
 ; Generate Air Condition Unit
 ; 2021-06-04
-(defun InsertNsCAHAirConditionUnitTypeOne (insPt systemNum nsSystemCleanAirData sysRefrigeratingData /) 
+(defun InsertNsCAHAirConditionUnitTypeOne (insPt systemNum nsSystemCleanAirData sysRefrigeratingData nsSysPIDData /) 
   (InsertNsCAHAHUExhaustAir (MoveInsertPositionUtils insPt 13000 17500) systemNum nsSystemCleanAirData)
   (InsertNsCAHAHUOutdoorAir insPt systemNum nsSystemCleanAirData)
   (setq insPt (MoveInsertPositionUtils insPt 1500 0))
@@ -783,6 +782,71 @@
   (setq insPt (MoveInsertPositionUtils insPt 1500 0))
   (InsertNsCAHAHUSupplyAir insPt systemNum nsSystemCleanAirData)
   ; (princ sysRefrigeratingData)(princ)
+  (princ (GetOneNsCAHUnitForm nsSysPIDData))(princ)
+)
+
+; 2021-06-09
+(defun InsertOneNsCAHnUnitStrategy (unitName /)
+  (cond 
+    ((= unitName "NsCAH-AHU-OutdoorAir") 1500)
+    ((= unitName "NsCAH-AHU-FabricRough") 1500)
+    ((= unitName "NsCAH-AHU-HotWaterHeat") 2000)
+    ((= unitName "NsCAH-AHU-ReturnAir") 1500)
+    ((= unitName "NsCAH-AHU-SurfaceCooler") 2000)
+    ((= unitName "NsCAH-AHU-SteamHeat") 2000)
+    ((= unitName "NsCAH-AHU-SteamHumidify") 2000)
+    ((= unitName "NsCAH-AHU-FanSection-Level") 4000)
+    ((= unitName "NsCAH-AHU-MeanFlowAir") 1500)
+    ((= unitName "NsCAH-AHU-SupplyAir") 1500)
+  )
+)
+
+; 2021-06-10
+; ((1 . NsCAH-AHU-OutdoorAir) (2 . NsCAH-AHU-PlateRough) (3 . NsCAH-AHU-ReturnAir) (4 . NsCAH-AHU-MediumEfficiency) (5 . NsCAH-AHU-SurfaceCooler) (6 . NsCAH-AHU-SteamHeat) (7 . NsCAH-AHU-SteamHumidify) (8 . NsCAH-AHU-FanSection-Level) (9 . NsCAH-AHU-MeanFlowAir) (10 . NsCAH-AHU-HighMediumEfficiency) (11 . NsCAH-AHU-SupplyAir))
+(defun GetOneNsCAHUnitForm (nsSysPIDData /) 
+  (mapcar '(lambda (x) 
+             (cons (car x) (NsCAHChUnitNameToUnitNameEnums (cadr x)))
+           ) 
+    ; ready to modify
+    (cadr (car (GetNsCAHUnitFormsDictList nsSysPIDData)))
+  )
+)
+
+; ((1 新风段) (2 板式粗效段) (3 中效段) (4 蒸汽加热段) (5 热水加热段) (6 蒸汽加热段) (7 蒸汽加湿段) (8 水平风机段) (9 均流段) (10 高中效段) (11 送风段))
+; sort by numId
+;(vl-sort testList '(lambda (x y) (< (car x) (car y))))
+; 2021-06-10
+(defun GetNsCAHUnitFormsDictList (nsSysPIDData /) 
+  (mapcar '(lambda (x) 
+             (list 
+                (car x) 
+                (mapcar '(lambda (xx) 
+                          (StrToListUtils xx "-")
+                        ) 
+                  (cadr x)
+                )
+             )
+           ) 
+    (GetNsCAHUnitForms nsSysPIDData)
+  )
+)
+
+; 2021-06-10
+; ready to refactor 机组形式的中文名映射为英文 key
+(defun GetNsCAHUnitForms (nsSysPIDData /) 
+  (mapcar '(lambda (x) 
+             (list (car (GetNsCAHUnitFormsList (cadr x))) (cdr (GetNsCAHUnitFormsList (cadr x))))
+           ) 
+    (vl-remove-if-not '(lambda (x) 
+                        (and (wcmatch (car x) "unit*") (/= (cadr x) "")))      
+      nsSysPIDData
+    )
+  )
+)
+
+; 2021-06-10
+(defun GetNsCAHUnitFormsList (nsCAHUnitFormsString /) 
+  (DeleteLastItemUtils (StrToListUtils nsCAHUnitFormsString "#"))
 )
 
 ; 2021-06-04
