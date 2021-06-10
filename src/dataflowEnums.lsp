@@ -422,3 +422,20 @@
     ((= chUnitName "顶部出风风机段") "NsCAH-AHU-FanSection-Top")
   )
 )
+
+; 2021-06-10
+(defun GetNsCAHAirValveBlockNameEnums (chUnitName /)
+  (cond 
+    ((= chUnitName "对开多叶风量调节阀") "NsCAH-RE-OMD")
+    ((= chUnitName "电动对开多叶风量调节阀") "NsCAH-RE-EOMD")
+    ((= chUnitName "文丘里定风量阀") "NsCAH-RE-CAV-Venturi")
+    ((= chUnitName "文丘里双稳态定风量阀") "NsCAH-RE-CAV-Venturi")
+    ((= chUnitName "EN定风量阀") "NsCAH-RE-CAV-TROX")
+    ((= chUnitName "EN双稳态定风量阀") "NsCAH-RE-CAV-TROX")
+    ((= chUnitName "RN定风量阀") "NsCAH-RE-CAV-TROX")
+    ((= chUnitName "RN双稳态定风量阀") "NsCAH-RE-CAV-TROX")
+    ((= chUnitName "文丘里变风量阀") "NsCAH-RE-VAV-Venturi")
+    ((= chUnitName "TVT变风量阀") "NsCAH-RE-VAV-TROX")
+    ((= chUnitName "TVR变风量阀") "NsCAH-RE-VAV-TROX")
+  )
+)
