@@ -33,8 +33,8 @@
 
 ; 2021-05-31
 (defun GetNsCAHModulesPath (/ result)
-  (setq result "D:\\dataflowcad\\allBlocks\\NsCAHBlocks.dwg")
-  ; (setq result "\\\\192.168.1.38\\dataflow\\allBlocks\\NsCAHBlocks.dwg")
+  ; (setq result "D:\\dataflowcad\\allBlocks\\NsCAHBlocks.dwg")
+  (setq result "\\\\192.168.1.38\\dataflow\\allBlocks\\NsCAHBlocks.dwg")
 )
 
 ; 2021-03-17
