@@ -782,7 +782,7 @@
 (defun InsertOneNsCAHnUnitStrategy (unitName insPt systemNum nsSystemCleanAirData sysRefrigeratingData nsSysPIDData /)
   (cond 
     ((= unitName "NsCAH-AHU-OutdoorAir") (InsertNsCAHAHUOutdoorAir insPt systemNum nsSystemCleanAirData))
-    ((wcmatch unitName "NsCAH-AHU-*Rough") (InsertNsCAHAHUFilterUnit insPt systemNum unitName))
+    ((wcmatch unitName "NsCAH-AHU-*Rough") (InsertNsCAHAHUFilterUnit insPt systemNum unitName nsSysPIDData))
     ((= unitName "NsCAH-AHU-HotWaterHeat") (InsertNsCAHAHUHotWater insPt systemNum sysRefrigeratingData nsSysPIDData))
     ((= unitName "NsCAH-AHU-ReturnAir") (InsertNsCAHAHUReturnAir insPt systemNum nsSystemCleanAirData))
     ((= unitName "NsCAH-AHU-SurfaceCooler") (InsertNsCAHAHUSurfaceCooler insPt systemNum sysRefrigeratingData nsSysPIDData))
@@ -790,7 +790,7 @@
     ((= unitName "NsCAH-AHU-SteamHumidify") (InsertNsCAHAHUSteamHumidify insPt systemNum sysRefrigeratingData))
     ((= unitName "NsCAH-AHU-FanSection-Level") (InsertNsCAHAHUFanSectionLevel insPt systemNum))
     ((= unitName "NsCAH-AHU-MeanFlowAir") (InsertNsCAHAHUMeanFlowAir insPt systemNum))
-    ((wcmatch unitName "NsCAH-AHU-*Efficiency") (InsertNsCAHAHUFilterUnit insPt systemNum unitName))
+    ((wcmatch unitName "NsCAH-AHU-*Efficiency") (InsertNsCAHAHUFilterUnit insPt systemNum unitName nsSysPIDData))
     ((= unitName "NsCAH-AHU-SupplyAir") (InsertNsCAHAHUSupplyAir insPt systemNum nsSystemCleanAirData))
   )
 )
@@ -869,7 +869,7 @@
 ; 2021-06-04
 (defun InsertNsCAHAHUMediumEfficiency (insPt systemNum / ) 
   (InsertBlockUtils insPt "NsCAH-AHU-MediumEfficiency" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum))) 
-  (InsertNsCAHAHUBottomPDIA insPt systemNum)
+  (InsertNsCAHAHUBottomPDStrategy insPt systemNum)
 )
 
 ; 2021-06-04
@@ -887,15 +887,35 @@
 )
 
 ; 2021-06-04
-(defun InsertNsCAHAHUBottomPDIA (insPt systemNum / ) 
+; refactored at 2021-06-10
+(defun InsertNsCAHAHUBottomPDStrategy (insPt systemNum filterPdType / ) 
   (GenerateLineUtils (MoveInsertPositionUtils insPt -625 -200) (MoveInsertPositionUtils insPt 625 -200) "0DataFlow-NsNT-INSTRUMENT")
   (GenerateLineUtils (MoveInsertPositionUtils insPt -625 -200) (MoveInsertPositionUtils insPt -625 1200) "0DataFlow-NsNT-INSTRUMENT")
   (GenerateLineUtils (MoveInsertPositionUtils insPt 625 -200) (MoveInsertPositionUtils insPt 625 1200) "0DataFlow-NsNT-INSTRUMENT")
-  (InsertNsCAHDownInstrumentUnit (MoveInsertPositionUtils insPt 0 -200) "NsCAH-InstrumentP" systemNum "PDIA")
+  (cond 
+    ((wcmatch filterPdType "集中（有高位报警）") (InsertNsCAHAHUBottomPDIA (MoveInsertPositionUtils insPt 0 -200) systemNum))
+    ((wcmatch filterPdType "集中（无高位报警）") (InsertNsCAHAHUBottomPDI (MoveInsertPositionUtils insPt 0 -200) systemNum))
+    ((wcmatch filterPdType "就地") (InsertNsCAHAHUBottomPDG (MoveInsertPositionUtils insPt 0 -200) systemNum))
+  )
+)
+
+; 2021-06-10
+(defun InsertNsCAHAHUBottomPDIA (insPt systemNum / ) 
+  (InsertNsCAHDownInstrumentUnit insPt "NsCAH-InstrumentP" systemNum "PDIA")
   (ModifyMultiplePropertyForOneBlockUtils (entlast) 
     (list "HALARM")
     (list "H")
   )  
+)
+
+; 2021-06-10
+(defun InsertNsCAHAHUBottomPDI (insPt systemNum / ) 
+  (InsertNsCAHDownInstrumentUnit insPt "NsCAH-InstrumentP" systemNum "PDI") 
+)
+
+; 2021-06-10
+(defun InsertNsCAHAHUBottomPDG (insPt systemNum / ) 
+  (InsertNsCAHDownInstrumentUnit insPt "NsCAH-InstrumentL" systemNum "PDG") 
 )
 
 ; 2021-06-04
@@ -1114,10 +1134,11 @@
 
 ; 2021-06-10
 ; refacotred at 2021-06-04
-(defun InsertNsCAHAHUFilterUnit (insPt systemNum blockName / ) 
+(defun InsertNsCAHAHUFilterUnit (insPt systemNum blockName nsSysPIDData / filterPdType) 
   (InsertBlockUtils insPt blockName "0DataFlow-NsNT-AHU" (list (cons 1 systemNum))) 
   (setq insPt (MoveInsertPositionUtils insPt (/ (GetNsCAHUnitWidthEnums blockName) 2) 0))
-  (InsertNsCAHAHUBottomPDIA insPt systemNum)
+  (setq filterPdType (GetListPairValueUtils "filterPdType" nsSysPIDData))
+  (InsertNsCAHAHUBottomPDStrategy insPt systemNum filterPdType)
 )
 
 ; 2021-06-03
