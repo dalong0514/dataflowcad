@@ -2656,7 +2656,7 @@
 
 ; 2021-03-29
 ; Custom function that returns the entity name of a specific dictionary entry 
-(defun GetDictEntityNameByKeyEntryUtils (dictionaryEntity dKeyEntry / entityData dKeyEntry dEntityName cnt) 
+(defun GetDictEntityNameByKeyEntryUtils (dictionaryEntity dKeyEntry / entityData dEntityName cnt) 
   (setq entityData (entget dictionaryEntity)) 
   (setq dEntityName nil) 
   (setq cnt 0) 

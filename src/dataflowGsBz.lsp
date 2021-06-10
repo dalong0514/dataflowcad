@@ -732,7 +732,7 @@
 )
 
 ; refactored at 2021-03-10
-(defun GenerateGsBzEquipTag (lcEquipData insPt / itemData equipTagData equipGraphData blockPropertyNameList insPt allGsBzEquipBlockNameList) 
+(defun GenerateGsBzEquipTag (lcEquipData insPt / itemData equipTagData equipGraphData blockPropertyNameList allGsBzEquipBlockNameList) 
   (setq allGsBzEquipBlockNameList (GetAllGsBzEquipBlockNameList))
   (VerifyGsBzEquipLayer)
   (VerifyGsBzEquipTagLayer)

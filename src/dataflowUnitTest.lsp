@@ -476,7 +476,7 @@
 ;    ALL instances of pattern instead of just the first one.
 ; Argument: String to alter.
 ; Return: Altered string.
-(defun DL:ReplaceAllSubst (newSubst pattern string / pattern)
+(defun DL:ReplaceAllSubst (newSubst pattern string /)
     (while (vl-string-search pattern string)
         (setq
             string
