@@ -976,7 +976,7 @@
 ; 2021-06-04
 ; refacotred at 2021-06-10
 (defun InsertNsCAHAHUSurfaceCooler (insPt systemNum sysRefrigeratingData nsSysPIDData / 
-                                    systemLWDiameter systemLWFlowRate systemLWSFlowRate systemLWDiameterInfo systemLWRFlowRate) 
+                                    systemLWDiameter systemLWFlowRate systemLWSFlowRate systemLWSDiameter systemLWRFlowRate) 
   (InsertBlockUtils insPt "NsCAH-AHU-SurfaceCooler" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum))) 
   (setq insPt (MoveInsertPositionUtils insPt (/ (GetNsCAHUnitWidthEnums "NsCAH-AHU-SurfaceCooler") 2) 0))
   (setq systemLWDiameter (vl-princ-to-string (GetListPairValueUtils "summerRefrigerationCoolHeatPipeDiameter" sysRefrigeratingData)))
@@ -987,20 +987,21 @@
                             systemLWFlowRate
                             "m3/h"
                           ))
-  (setq systemLWDiameterInfo (strcat "LWS DN" systemLWDiameter))
+  (setq systemLWSDiameter (strcat "LWS DN" systemLWDiameter))
   (setq systemLWRFlowRate (strcat 
                             (GetListPairValueUtils "coldWaterReturnMinTemperature" sysRefrigeratingData)
                             "℃ "
                             systemLWFlowRate
                             "m3/h"
                           ))
+  (setq systemLWRDiameter (strcat "LWR DN" systemLWDiameter))
   ; refacotred at 2021-06-10
   (InsertNsCAHHWLWUnit (MoveInsertPositionUtils insPt 250 500) "NsCAH-AHU-Pipe-LW" nsSysPIDData systemLWDiameter systemNum)
   (ModifyMultiplePropertyForOneBlockUtils (entlast) 
     (list "LWS" "LWS_FLOW" "LWR" "LWR_FLOW")
-    (list systemLWDiameterInfo systemLWSFlowRate systemLWDiameterInfo systemLWRFlowRate)
+    (list systemLWSDiameter systemLWSFlowRate systemLWRDiameter systemLWRFlowRate)
   )
-  (InsertNsCAHAHUHwLwInstrumentUnit insPt systemNum)
+  (InsertNsCAHAHUHwLwInstrumentUnit insPt systemNum nsSysPIDData)
 )
 
 ; 2021-06-10
@@ -1035,11 +1036,28 @@
 )
 
 ; 2021-06-04
-(defun InsertNsCAHAHUHwLwInstrumentUnit (insPt systemNum /) 
-  (InsertNsCAHRightInstrumentUnit (MoveInsertPositionUtils insPt 250 4850) "NsCAH-InstrumentL" systemNum "PG")
-  (InsertNsCAHRightInstrumentUnit (MoveInsertPositionUtils insPt 250 4050) "NsCAH-InstrumentL" systemNum "TG")
-  (InsertNsCAHLeftInstrumentUnit (MoveInsertPositionUtils insPt -250 4850) "NsCAH-InstrumentL" systemNum "PG")
-  (InsertNsCAHLeftInstrumentUnit (MoveInsertPositionUtils insPt -250 4050) "NsCAH-InstrumentL" systemNum "TG")
+; refactored at 2021-06-10
+(defun InsertNsCAHAHUHwLwInstrumentUnit (insPt systemNum nsSysPIDData / waterSupplyTempType waterSupplyPressType waterReturnTempType waterReturnPressType) 
+  (setq waterSupplyTempType (GetListPairValueUtils "waterSupplyTempType" nsSysPIDData))
+  (setq waterSupplyPressType (GetListPairValueUtils "waterSupplyPressType" nsSysPIDData))
+  (setq waterReturnTempType (GetListPairValueUtils "waterReturnTempType" nsSysPIDData))
+  (setq waterReturnPressType (GetListPairValueUtils "waterReturnPressType" nsSysPIDData))
+  (cond 
+    ((wcmatch waterSupplyTempType "就地") (InsertNsCAHRightInstrumentUnit (MoveInsertPositionUtils insPt 250 3950) "NsCAH-InstrumentL" systemNum "TG"))
+    ((wcmatch waterSupplyTempType "集中") (InsertNsCAHRightInstrumentUnit (MoveInsertPositionUtils insPt 250 3950) "NsCAH-InstrumentP" systemNum "TI"))
+  )
+  (cond 
+    ((wcmatch waterSupplyPressType "就地") (InsertNsCAHRightInstrumentUnit (MoveInsertPositionUtils insPt 250 4850) "NsCAH-InstrumentL" systemNum "PG"))
+    ((wcmatch waterSupplyPressType "集中") (InsertNsCAHRightInstrumentUnit (MoveInsertPositionUtils insPt 250 4850) "NsCAH-InstrumentP" systemNum "PI"))
+  )
+  (cond 
+    ((wcmatch waterReturnTempType "就地") (InsertNsCAHLeftInstrumentUnit (MoveInsertPositionUtils insPt -250 3950) "NsCAH-InstrumentL" systemNum "TG"))
+    ((wcmatch waterReturnTempType "集中") (InsertNsCAHLeftInstrumentUnit (MoveInsertPositionUtils insPt -250 3950) "NsCAH-InstrumentP" systemNum "TI"))
+  )
+  (cond 
+    ((wcmatch waterReturnPressType "就地") (InsertNsCAHLeftInstrumentUnit (MoveInsertPositionUtils insPt -250 4850) "NsCAH-InstrumentL" systemNum "PG"))
+    ((wcmatch waterReturnPressType "集中") (InsertNsCAHLeftInstrumentUnit (MoveInsertPositionUtils insPt -250 4850) "NsCAH-InstrumentP" systemNum "PI"))
+  )
   (InsertNsCAHLargeRightInstrumentUnit (MoveInsertPositionUtils insPt -250 7100) "NsCAH-InstrumentP" systemNum "MOV")
 )
 
@@ -1104,7 +1122,7 @@
 
 ; 2021-06-03
 (defun InsertNsCAHAHUHotWater (insPt systemNum sysRefrigeratingData nsSysPIDData / 
-                               systemHWDiameter systemHWFlowRate systemHWSFlowRate systemHWDiameterInfo systemHWRFlowRate) 
+                               systemHWDiameter systemHWFlowRate systemHWSFlowRate systemHWSDiameter systemHWRFlowRate systemHWRDiameter) 
   (InsertBlockUtils insPt "NsCAH-AHU-HotWaterHeat" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum))) 
   (setq insPt (MoveInsertPositionUtils insPt (/ (GetNsCAHUnitWidthEnums "NsCAH-AHU-HotWaterHeat") 2) 0))
   (setq systemHWDiameter (vl-princ-to-string (GetListPairValueUtils "outdoorAirPreheatCoolHeatPipeDiameter" sysRefrigeratingData)))
@@ -1115,20 +1133,21 @@
                             systemHWFlowRate
                             "m3/h"
                           ))
-  (setq systemHWDiameterInfo (strcat "HWS DN" systemHWDiameter))
+  (setq systemHWSDiameter (strcat "HWS DN" systemHWDiameter))
   (setq systemHWRFlowRate (strcat 
                             (GetListPairValueUtils "hotWaterReturnTemperature" sysRefrigeratingData)
                             "℃ "
                             systemHWFlowRate
                             "m3/h"
                           ))
+  (setq systemHWRDiameter (strcat "HWR DN" systemHWDiameter))
   ; refacotred at 2021-06-10
   (InsertNsCAHHWLWUnit (MoveInsertPositionUtils insPt 250 500) "NsCAH-AHU-Pipe-HW" nsSysPIDData systemHWDiameter systemNum)
   (ModifyMultiplePropertyForOneBlockUtils (entlast) 
     (list "HWS" "HWS_FLOW" "HWR" "HWR_FLOW")
-    (list systemHWDiameterInfo systemHWSFlowRate systemHWDiameterInfo systemHWRFlowRate)
+    (list systemHWSDiameter systemHWSFlowRate systemHWRDiameter systemHWRFlowRate)
   ) 
-  (InsertNsCAHAHUHwLwInstrumentUnit insPt systemNum)
+  (InsertNsCAHAHUHwLwInstrumentUnit insPt systemNum nsSysPIDData)
   (InsertNsCAHDownInstrumentLengthUnit (MoveInsertPositionUtils insPt 800 1000) "NsCAH-InstrumentP" systemNum "TMI" 1200)
 )
 
