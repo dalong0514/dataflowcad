@@ -786,6 +786,7 @@
     ((= unitName "NsCAH-AHU-HotWaterHeat") (InsertNsCAHAHUHotWater insPt systemNum sysRefrigeratingData nsSysPIDData))
     ((= unitName "NsCAH-AHU-ReturnAir") (InsertNsCAHAHUReturnAir insPt systemNum nsSystemCleanAirData))
     ((= unitName "NsCAH-AHU-SurfaceCooler") (InsertNsCAHAHUSurfaceCooler insPt systemNum sysRefrigeratingData nsSysPIDData))
+    ((= unitName "NsCAH-AHU-SteamPreHeat") (InsertNsCAHAHUSteamPreHeat insPt systemNum sysRefrigeratingData))
     ((= unitName "NsCAH-AHU-SteamHeat") (InsertNsCAHAHUSteamHeat insPt systemNum sysRefrigeratingData))
     ((= unitName "NsCAH-AHU-SteamHumidify") (InsertNsCAHAHUSteamHumidify insPt systemNum sysRefrigeratingData))
     ((= unitName "NsCAH-AHU-FanSection-Level") (InsertNsCAHAHUFanSectionLevel insPt systemNum))
@@ -802,7 +803,7 @@
              (cons (car x) (NsCAHChUnitNameToUnitNameEnums (cadr x)))
            ) 
     ; ready to refactor 回风净化空调机组 全新风净化空调机组
-    (GetListPairValueUtils "全新风净化空调机组" (GetNsCAHUnitFormsDictList nsSysPIDData))
+    (GetListPairValueUtils "回风净化空调机组" (GetNsCAHUnitFormsDictList nsSysPIDData))
   )
 )
 
@@ -985,6 +986,31 @@
   )
 )
 
+; 2021-06-10
+(defun InsertNsCAHAHUSteamPreHeat (insPt systemNum sysRefrigeratingData / systemLSDiameter systemLSFlowRate) 
+  (InsertBlockUtils insPt "NsCAH-AHU-SteamPreHeat" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum))) 
+  (setq insPt (MoveInsertPositionUtils insPt (/ (GetNsCAHUnitWidthEnums "NsCAH-AHU-SteamPreHeat") 2) 0))
+  (setq systemLSDiameter (strcat "LS DN" (vl-princ-to-string (GetListPairValueUtils "outdoorAirPreheatSteamPipeDiameter" sysRefrigeratingData))))
+  (setq systemLSFlowRate (strcat 
+                            (GetListPairValueUtils "steamHeatingPressure" sysRefrigeratingData)
+                            "MPa "
+                            (vl-princ-to-string (GetListPairValueUtils "outdoorAirPreheatSteamRate" sysRefrigeratingData))
+                            "kg/h"
+                          ))
+  (InsertBlockUtils (MoveInsertPositionUtils insPt -250 2500) "NsCAH-AHU-Pipe-LS" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
+  (MirrorBlockUtils (entlast))
+  (ModifyMultiplePropertyForOneBlockUtils (entlast) 
+    (list "LS" "LS_FLOW")
+    (list systemLSDiameter systemLSFlowRate)
+  )
+  (InsertNsCAHAHUPreHeatLsInstrumentUnit insPt systemNum nsSysPIDData)
+  (InsertBlockUtils (MoveInsertPositionUtils insPt 250 500) "NsCAH-AHU-Pipe-SC" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
+  (ModifyMultiplePropertyForOneBlockUtils (entlast) 
+    (list "DIAMETER")
+    (list "SC DN20")
+  )
+)
+
 ; 2021-06-04
 ; refacotred at 2021-06-10
 (defun InsertNsCAHAHUSurfaceCooler (insPt systemNum sysRefrigeratingData nsSysPIDData / 
@@ -1050,6 +1076,16 @@
     ((wcmatch steamSupplyPressType "集中") (InsertNsCAHRightInstrumentUnit (MoveInsertPositionUtils insPt 250 3950) "NsCAH-InstrumentP" systemNum "PI"))
   )
   (InsertNsCAHRightInstrumentUnit (MoveInsertPositionUtils insPt 555 6400) "NsCAH-InstrumentP" systemNum "MOV")
+)
+
+; 2021-06-10
+(defun InsertNsCAHAHUPreHeatLsInstrumentUnit (insPt systemNum nsSysPIDData / steamSupplyPressType) 
+  (setq steamSupplyPressType (GetListPairValueUtils "steamSupplyPressType" nsSysPIDData))
+  (cond 
+    ((wcmatch steamSupplyPressType "就地") (InsertNsCAHLeftInstrumentUnit (MoveInsertPositionUtils insPt -250 3950) "NsCAH-InstrumentL" systemNum "PG"))
+    ((wcmatch steamSupplyPressType "集中") (InsertNsCAHLeftInstrumentUnit (MoveInsertPositionUtils insPt -250 3950) "NsCAH-InstrumentP" systemNum "PI"))
+  )
+  (InsertNsCAHLeftInstrumentUnit (MoveInsertPositionUtils insPt -850 6400) "NsCAH-InstrumentP" systemNum "MOV")
 )
 
 ; 2021-06-04
