@@ -820,12 +820,29 @@
 
 ; refactored at 2021-06-11
 (defun GetBsGCTTankDictData ()
-  (ReadCSVFileToDictDataUtils "D:\\dataflowcad\\bsdata\\bsGCTTankMainData.txt")
+  (vl-remove-if-not '(lambda (x) 
+                      (= (GetDottedPairValueUtils "updateStatus" x) "ÊÇ") 
+                    ) 
+    (ReadCSVFileToDictDataUtils "D:\\dataflowcad\\bsdata\\bsGCTTankMainData.txt")
+  ) 
 )
 
 ; refactored at 2021-06-11
 (defun GetBsGCTHeaterDictData ()
-  (ReadCSVFileToDictDataUtils "D:\\dataflowcad\\bsdata\\bsGCTHeaterMainData.txt")
+  (vl-remove-if-not '(lambda (x) 
+                      (= (GetDottedPairValueUtils "updateStatus" x) "ÊÇ") 
+                    ) 
+    (ReadCSVFileToDictDataUtils "D:\\dataflowcad\\bsdata\\bsGCTHeaterMainData.txt")
+  ) 
+)
+
+; refactored at 2021-06-11
+(defun GetBsGCTProjectDictData ()
+  (ReadCSVFileToDictDataUtils "D:\\dataflowcad\\bsdata\\bsGCTProjectData.txt")
+)
+
+(defun c:foo ()
+  (GetBsGCTProjectDictData)
 )
 
 ; 2021-04-20
