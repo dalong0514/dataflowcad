@@ -206,7 +206,7 @@
   (if (= dataType "GsBzEquip") 
     (setq fileDir "D:\\dataflowcad\\data\\gsBzEquipData.csv")
   )
-  (ReadDataFromCSVUtils fileDir)
+  (ReadDataFromCSVTrimFirstRowUtils fileDir)
 )
 
 ; 2021-04-24
@@ -214,7 +214,7 @@
   (cond 
     ((= dataType "KsInstallMaterial") (setq fileDir "D:\\dataflowcad\\ksdata\\installMaterialData.csv"))
   )
-  (ReadDataFromCSVUtils fileDir)
+  (ReadDataFromCSVTrimFirstRowUtils fileDir)
 )
 
 ; Read and Write Gs Data

@@ -2150,6 +2150,12 @@
   (close filePtr) 
 )
 
+; rename funciton at 2021-06-11
+(defun ReadDataFromCSVTrimFirstRowUtils (fileDir / filePtr i textLine resultList)
+  (cdr (ReadDataFromCSVUtils fileDir))
+)
+
+; 2021-06-11
 (defun ReadDataFromCSVUtils (fileDir / filePtr i textLine resultList)
   (setq filePtr (open fileDir "r"))
   (if filePtr 
@@ -2162,7 +2168,6 @@
     )
   )
   (close filePtr)
-  (setq resultList (cdr resultList))
   (RemoveFirstCharOfItemInListUtils resultList)
 )
 

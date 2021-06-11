@@ -128,7 +128,7 @@
 ; refactored at 2021-05-19
 (defun ReadNsDataFromFileStrategy (dataType /)
   (cond 
-    ((= dataType "NsEquip") (ReadDataFromCSVUtils "D:\\dataflowcad\\nsdata\\tempEquip.csv"))
+    ((= dataType "NsEquip") (ReadDataFromCSVTrimFirstRowUtils "D:\\dataflowcad\\nsdata\\tempEquip.csv"))
     ((= dataType "nsCleanAir") (ReadDataFromFileByEncodeUtils "D:\\dataflowcad\\tempdata\\nsCleanAir.json"))
   )
 )

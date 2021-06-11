@@ -810,7 +810,7 @@
   (if (= dataType "BsGCT") 
     (setq fileDir "D:\\dataflowcad\\bsdata\\bsGCT.csv")
   )
-  (ReadDataFromCSVUtils fileDir)
+  (ReadDataFromCSVTrimFirstRowUtils fileDir)
 )
 
 ; 2021-04-19
