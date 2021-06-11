@@ -851,29 +851,9 @@
   (car (ReadCSVFileToDictDataUtils "D:\\dataflowcad\\bsdata\\bsGCTProjectData.txt"))
 )
 
-; 2021-04-20
-(defun GetBsGCTTankNozzleDictData () 
-  (mapcar '(lambda (y) 
-              (mapcar '(lambda (xx yy) 
-                         (cons xx yy)
-                      ) 
-                (GetBsGCTNozzleKeysData)
-                y
-              )
-           ) 
-    (GetBsGCTNozzleData)
-  )
-)
-
-; 2021-04-19
-(defun GetBsGCTNozzleData () 
-  (mapcar '(lambda (x) (cdr x)) 
-    (vl-remove-if-not '(lambda (x) 
-                        (= (car x) "Nozzle") 
-                      ) 
-      (GetBsGCTImportedList)
-    )  
-  ) 
+; refactored at 2021-06-11
+(defun GetBsGCTTankNozzleDictData ()
+  (ReadCSVFileToDictDataUtils "D:\\dataflowcad\\bsdata\\bsGCTNozzleData.txt")
 )
 
 ; 2021-04-20
