@@ -86,8 +86,14 @@
 (defun InsertBsGCTDrawFrame (insPt dataType bsGCTProjectDictData /) 
   (InsertBlockByNoPropertyUtils insPt "BsGCTDrawFrame" "0DataFlow-BsFrame")
   (InsertBlockByScaleUtils insPt "title.equip.2017" "0DataFlow-BsFrame" (list (cons 4 "工程图")) 5)
-  (setq bsGCTProjectDictData (append bsGCTProjectDictData 
-                                     (list (cons "Speci" "设备") (cons "Scale" "1:5") (cons "EquipNAME" dataType) (cons "AuthD" ""))))
+  (setq bsGCTProjectDictData 
+         (append bsGCTProjectDictData 
+                (mapcar '(lambda (x y) 
+                          (cons x y)
+                        ) 
+                  '("PROJECT2L1" "PROJECT2L2")
+                  (SplitProjectInfoToTwoLineUtils (GetDottedPairValueUtils "PROJECT" bsGCTProjectDictData)))
+                (list (cons "Speci" "设备") (cons "Scale" "1:5") (cons "EquipNAME" dataType) (cons "AuthD" "") (cons "PROJECT1" ""))))
   (ModifyMultiplePropertyForOneBlockUtils (entlast) 
     (mapcar '(lambda (x) (car x)) bsGCTProjectDictData)
     (mapcar '(lambda (x) (cdr x)) bsGCTProjectDictData)
@@ -842,10 +848,6 @@
 ; refactored at 2021-06-11
 (defun GetBsGCTProjectDictData ()
   (car (ReadCSVFileToDictDataUtils "D:\\dataflowcad\\bsdata\\bsGCTProjectData.txt"))
-)
-
-(defun c:foo ()
-  (GetBsGCTProjectDictData)
 )
 
 ; 2021-04-20

@@ -2384,6 +2384,11 @@
   (atoi (RegExpReplace originNumber "([^0-9]*)([0-9]+)([^0-9]*)" "$2" nil nil))
 )
 
+; 2021-06-11
+(defun SplitProjectInfoToTwoLineUtils (projectName /) 
+  (SplitStrToListByIndexUtils projectName 42)
+)
+
 ; Extract Data Utils
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;

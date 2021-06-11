@@ -156,7 +156,7 @@
 ; 2021-04-26
 (defun RepairNsEquipProjectInfoList (nsEquipProjectInfoList /) 
   (append 
-    (SplitStrToListByIndexUtils (car nsEquipProjectInfoList) 42)
+    (SplitProjectInfoToTwoLineUtils (car nsEquipProjectInfoList))
     (cdr nsEquipProjectInfoList)
   )
 )
