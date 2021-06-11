@@ -82,13 +82,17 @@
 )
 
 ; 2021-04-17
-(defun InsertBsGCTDrawFrame (insPt dataType /) 
+(defun InsertBsGCTDrawFrame (insPt dataType bsGCTProjectDictData /) 
   (InsertBlockByNoPropertyUtils insPt "BsGCTDrawFrame" "0DataFlow-BsFrame")
   (InsertBlockByScaleUtils insPt "title.equip.2017" "0DataFlow-BsFrame" (list (cons 4 "工程图")) 5)
+  ; (ModifyMultiplePropertyForOneBlockUtils (entlast) 
+  ;   (list "Speci" "Scale" "EquipNAME")
+  ;   (list "设备" "1:5" dataType)
+  ; )  
   (ModifyMultiplePropertyForOneBlockUtils (entlast) 
-    (list "Speci" "Scale" "EquipNAME")
-    (list "设备" "1:5" dataType)
-  )  
+    (mapcar '(lambda (x) (car x)) bsGCTProjectDictData)
+    (mapcar '(lambda (x) (cdr x)) bsGCTProjectDictData)
+  )
   (InsertBlockByScaleUtils (MoveInsertPositionUtils insPt 0 230) "revisions.2017" "0DataFlow-BsFrame" (list (cons 2 "1")) 5)
   (InsertBlockByNoPropertyByScaleUtils (MoveInsertPositionUtils insPt 0 355) "intercheck.2017" "0DataFlow-BsFrame" 5)
   (InsertBlockByNoPropertyByScaleUtils (MoveInsertPositionUtils insPt 0 540) "stamp2.2017" "0DataFlow-BsFrame" 5)
@@ -838,7 +842,7 @@
 
 ; refactored at 2021-06-11
 (defun GetBsGCTProjectDictData ()
-  (ReadCSVFileToDictDataUtils "D:\\dataflowcad\\bsdata\\bsGCTProjectData.txt")
+  (car (ReadCSVFileToDictDataUtils "D:\\dataflowcad\\bsdata\\bsGCTProjectData.txt"))
 )
 
 (defun c:foo ()
@@ -1127,7 +1131,8 @@
 
 ; 2021-04-17
 ; refacotred at 2021-05-07
-(defun InsertOneBsGCTTank (insPt oneTankData tankPressureElementList tankOtherRequestList tankStandardList tankHeadStyleList tankHeadMaterialList allBsGCTSupportDictData / 
+(defun InsertOneBsGCTTank (insPt oneTankData tankPressureElementList tankOtherRequestList tankStandardList tankHeadStyleList tankHeadMaterialList 
+                           allBsGCTSupportDictData bsGCTProjectDictData / 
                            equipTag bsGCTType barrelRadius barrelHalfHeight thickNess headThickNess straightEdgeHeight equipType) 
   (setq equipTag (GetDottedPairValueUtils "TAG" oneTankData))
   ; (setq bsGCTType (strcat (GetDottedPairValueUtils "BSGCT_TYPE" oneTankData) "-" equipTag))
@@ -1140,7 +1145,7 @@
   (setq headThickNess (GetDottedPairValueUtils "HEAD_THICKNESS" oneTankData))
   (setq straightEdgeHeight 25)
   (setq equipType (GetBsGCTEquipTypeStrategy (GetDottedPairValueUtils "equipType" oneTankData)))
-  (InsertBsGCTDrawFrame insPt equipTag)
+  (InsertBsGCTDrawFrame insPt equipTag bsGCTProjectDictData)
   (InsertBsGCTEquipTableStrategy insPt bsGCTType oneTankData tankStandardList tankHeadStyleList 
                            tankHeadMaterialList tankPressureElementList tankOtherRequestList equipType)
   ; thickNess param refactored at 2021-04-21
@@ -1150,8 +1155,8 @@
 
 ; 2021-05-27
 (defun InsertOneBsGCTHeater (insPt oneHeaterData heaterPressureElementList heaterOtherRequestList heaterStandardList heaterHeadStyleList 
-                             heaterHeadMaterialList allBsGCTSupportDictData / equipTag bsGCTType barrelRadius barrelHalfHeight exceedLength thickNess 
-                             headThickNess straightEdgeHeight equipType) 
+                             heaterHeadMaterialList allBsGCTSupportDictData bsGCTProjectDictData / 
+                             equipTag bsGCTType barrelRadius barrelHalfHeight exceedLength thickNess headThickNess straightEdgeHeight equipType) 
   (setq equipTag (GetDottedPairValueUtils "TAG" oneHeaterData))
   ; use equipTag as the label for data
   (setq bsGCTType equipTag)
@@ -1164,7 +1169,7 @@
   (setq headThickNess (GetDottedPairValueUtils "HEAD_THICKNESS" oneHeaterData))
   (setq straightEdgeHeight 25)
   (setq equipType (GetBsGCTEquipTypeStrategy (GetDottedPairValueUtils "equipType" oneHeaterData)))
-  (InsertBsGCTDrawFrame insPt equipTag)
+  (InsertBsGCTDrawFrame insPt equipTag bsGCTProjectDictData)
   (InsertBsGCTEquipTableStrategy insPt bsGCTType oneHeaterData heaterStandardList heaterHeadStyleList 
                            heaterHeadMaterialList heaterPressureElementList heaterOtherRequestList equipType)
   (InsertBsGCTHeaterGraphyStrategy (MoveInsertPositionUtils insPt -2915 1600) 
@@ -1390,7 +1395,7 @@
 
 ; 2021-04-17
 ; refactored at 2021-05-25
-(defun InsertAllBsGCTTank (insPt bsGCTImportedList allBsGCTSupportDictData / allBsGCTTankDictData tankPressureElementList 
+(defun InsertAllBsGCTTank (insPt bsGCTImportedList allBsGCTSupportDictData bsGCTProjectDictData / allBsGCTTankDictData tankPressureElementList 
                            tankOtherRequestList tankStandardList tankHeadStyleList tankHeadMaterialList insPtList) 
   (setq allBsGCTTankDictData (GetBsGCTTankDictData))
   (setq tankPressureElementList (GetBsGCTTankPressureElementDictData bsGCTImportedList))
@@ -1400,7 +1405,7 @@
   (setq tankHeadMaterialList (GetBsGCTTankHeadMaterialData bsGCTImportedList)) 
   (setq insPtList (GetInsertPtListByXMoveUtils insPt (GenerateSortedNumByList allBsGCTTankDictData 0) 5200))
   (mapcar '(lambda (x y) 
-            (InsertOneBsGCTTank x y tankPressureElementList tankOtherRequestList tankStandardList tankHeadStyleList tankHeadMaterialList allBsGCTSupportDictData) 
+            (InsertOneBsGCTTank x y tankPressureElementList tankOtherRequestList tankStandardList tankHeadStyleList tankHeadMaterialList allBsGCTSupportDictData bsGCTProjectDictData) 
           ) 
     insPtList
     allBsGCTTankDictData 
@@ -1408,7 +1413,7 @@
 )
 
 ; 2021-05-25
-(defun InsertAllBsGCTHeater (insPt bsGCTImportedList allBsGCTSupportDictData / allBsGCTHeaterDictData heaterPressureElementList 
+(defun InsertAllBsGCTHeater (insPt bsGCTImportedList allBsGCTSupportDictData bsGCTProjectDictData / allBsGCTHeaterDictData heaterPressureElementList 
                            heaterOtherRequestList heaterStandardList heaterHeadStyleList heaterHeadMaterialList insPtList) 
   (setq allBsGCTHeaterDictData (GetBsGCTHeaterDictData))
   (setq heaterPressureElementList (GetBsGCTHeaterPressureElementDictData bsGCTImportedList))
@@ -1418,7 +1423,7 @@
   (setq heaterHeadMaterialList (GetBsGCTHeaterHeadMaterialData bsGCTImportedList)) 
   (setq insPtList (GetInsertPtListByXMoveUtils insPt (GenerateSortedNumByList allBsGCTHeaterDictData 0) 5200))
   (mapcar '(lambda (x y) 
-            (InsertOneBsGCTHeater x y heaterPressureElementList heaterOtherRequestList heaterStandardList heaterHeadStyleList heaterHeadMaterialList allBsGCTSupportDictData) 
+            (InsertOneBsGCTHeater x y heaterPressureElementList heaterOtherRequestList heaterStandardList heaterHeadStyleList heaterHeadMaterialList allBsGCTSupportDictData bsGCTProjectDictData) 
           ) 
     insPtList
     allBsGCTHeaterDictData 
@@ -1428,14 +1433,14 @@
 
 ; 2021-05-25
 ; refactored at 2021-06-11
-(defun InsertAllBsGCTMacro (/ insPt bsGCTImportedList allBsGCTTankDictData tankPressureElementList 
-                           tankOtherRequestList tankStandardList tankHeadStyleList tankHeadMaterialList allBsGCTSupportDictData insPtList) 
+(defun InsertAllBsGCTMacro (/ insPt bsGCTImportedList allBsGCTSupportDictData bsGCTProjectDictData) 
   (VerifyAllBsGCTSymbol)
   (setq insPt (getpoint "\n拾取工程图插入点："))
   (setq bsGCTImportedList (GetBsGCTImportedList))
   (setq allBsGCTSupportDictData (GetAllBsGCTSupportDictData bsGCTImportedList))
-  (InsertAllBsGCTTank insPt bsGCTImportedList allBsGCTSupportDictData)
-  (InsertAllBsGCTHeater (MoveInsertPositionUtils insPt 0 -4000) bsGCTImportedList allBsGCTSupportDictData)
+  (setq bsGCTProjectDictData (GetBsGCTProjectDictData))
+  (InsertAllBsGCTTank insPt bsGCTImportedList allBsGCTSupportDictData bsGCTProjectDictData)
+  (InsertAllBsGCTHeater (MoveInsertPositionUtils insPt 0 -4000) bsGCTImportedList allBsGCTSupportDictData bsGCTProjectDictData)
 )
 
 ; 2021-04-21
