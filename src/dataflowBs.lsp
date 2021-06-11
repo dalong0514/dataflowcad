@@ -61,6 +61,16 @@
 ;;;-------------------------------------------------------------------------;;;
 ; Generate BsGCT - Tank
 
+; 2021-06-11
+(defun VerifyAllBsGCTSymbol ()
+  (if (= *bsGCTSymbolStatus* nil) 
+    (progn 
+      (VerifyBsGCTBlockLayerText)
+      (setq *bsGCTSymbolStatus* T) 
+    )
+  )
+)
+
 ; 2021-04-17
 (defun VerifyBsGCTBlockLayerText ()
   (VerifyBsTextStyleByName "DataFlow")
@@ -1452,9 +1462,10 @@
 )
 
 ; 2021-05-25
+; refactored at 2021-06-11
 (defun InsertAllBsGCTMacro (/ insPt bsGCTImportedList allBsGCTTankDictData tankPressureElementList 
                            tankOtherRequestList tankStandardList tankHeadStyleList tankHeadMaterialList allBsGCTSupportDictData insPtList) 
-  (VerifyBsGCTBlockLayerText)
+  (VerifyAllBsGCTSymbol)
   (setq insPt (getpoint "\n拾取工程图插入点："))
   (setq bsGCTImportedList (GetBsGCTImportedList))
   (setq allBsGCTSupportDictData (GetAllBsGCTSupportDictData bsGCTImportedList))
