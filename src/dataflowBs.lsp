@@ -82,13 +82,12 @@
 )
 
 ; 2021-04-17
+; refactored at 2021-06-11
 (defun InsertBsGCTDrawFrame (insPt dataType bsGCTProjectDictData /) 
   (InsertBlockByNoPropertyUtils insPt "BsGCTDrawFrame" "0DataFlow-BsFrame")
   (InsertBlockByScaleUtils insPt "title.equip.2017" "0DataFlow-BsFrame" (list (cons 4 "工程图")) 5)
-  ; (ModifyMultiplePropertyForOneBlockUtils (entlast) 
-  ;   (list "Speci" "Scale" "EquipNAME")
-  ;   (list "设备" "1:5" dataType)
-  ; )  
+  (setq bsGCTProjectDictData (append bsGCTProjectDictData 
+                                     (list (cons "Speci" "设备") (cons "Scale" "1:5") (cons "EquipNAME" dataType) (cons "AuthD" ""))))
   (ModifyMultiplePropertyForOneBlockUtils (entlast) 
     (mapcar '(lambda (x) (car x)) bsGCTProjectDictData)
     (mapcar '(lambda (x) (cdr x)) bsGCTProjectDictData)
