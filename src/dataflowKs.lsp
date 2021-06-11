@@ -392,7 +392,7 @@
     (if (= 3 status) 
       (progn 
         (setq dataType (GetTempExportedDataTypeByindexStrategy "Ks" exportDataType))
-        (setq importedDataList (StrListToListListUtils (ReadKsDataFromCSVStrategy dataType)))
+        (setq importedDataList (CSVStrListToListListUtils (ReadKsDataFromCSVStrategy dataType)))
         (setq importMsgBtnStatus 1) 
       )
     )

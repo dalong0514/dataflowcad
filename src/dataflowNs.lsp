@@ -178,7 +178,7 @@
 
 ; refacotered at 2021-04-25
 (defun GetNsEquipImportedList ()
-  (StrListToListListUtils (ReadNsDataFromFileStrategy "NsEquip"))
+  (CSVStrListToListListUtils (ReadNsDataFromFileStrategy "NsEquip"))
 )
 
 ; 2021-04-25
@@ -1274,13 +1274,4 @@
 (defun InsertNsCAHLargeRightInstrumentUnit (insPt blockName systemNum functionCode / ) 
   (GenerateLineUtils insPt (MoveInsertPositionUtils insPt 800 -700) "0DataFlow-NsNT-INSTRUMENT")
   (InsertBlockUtils (MoveInsertPositionUtils insPt 1200 -700) blockName "0DataFlow-NsNT-INSTRUMENT" (list (cons 1 systemNum) (cons 2 functionCode)))
-)
-
-
-(defun c:foo (/ insPt)
-  ; (setq insPt (getpoint "\n ∞»°PID≤Â»Îµ„£∫"))
-  ; (length (ChunkListByKeyNameUtils (GetAllNsCleanAirData) "systemNum"))
-  ; (car (GetAllNsCleanAirData))
-  ; (InsertNsCAHDuct insPt)
-  (GetSysRefrigeratingData (cdr (car (GetAllNsCleanAirData))))
 )

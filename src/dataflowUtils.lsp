@@ -1584,11 +1584,17 @@
   )
 )
 
-(defun StrListToListListUtils (strList / resultList)
-  (foreach item strList 
-    (setq resultList (append resultList (list (StrToListUtils item ","))))
-  )
-  resultList
+; refactored at 2021-06-11
+(defun CSVStrListToListListUtils (strList / resultList)
+  ; (foreach item strList 
+  ;   (setq resultList (append resultList (list (StrToListUtils item ","))))
+  ; )
+  ; resultList
+  (mapcar '(lambda (x) 
+             (StrToListUtils x ",")
+           ) 
+    strList
+  ) 
 )
 
 ; 2021-02-26
@@ -2150,8 +2156,25 @@
   (close filePtr) 
 )
 
+; 2021-06-11
+(defun ReadCSVFileToDictDataUtils (fileDir / allData keyList dataList)
+  (setq allData (CSVStrListToListListUtils (ReadDataFromCSVUtils fileDir)))
+  (setq keyList (car allData))
+  (setq dataList (cdr allData))
+  (mapcar '(lambda (x) 
+              (mapcar '(lambda (xx yy) 
+                         (cons xx yy)
+                      ) 
+                keyList
+                x
+              )
+           ) 
+    dataList
+  )
+)
+
 ; rename funciton at 2021-06-11
-(defun ReadDataFromCSVTrimFirstRowUtils (fileDir / filePtr i textLine resultList)
+(defun ReadDataFromCSVTrimFirstRowUtils (fileDir /)
   (cdr (ReadDataFromCSVUtils fileDir))
 )
 

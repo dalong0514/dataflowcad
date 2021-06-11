@@ -815,66 +815,17 @@
 
 ; 2021-04-19
 (defun GetBsGCTImportedList ()
-  (StrListToListListUtils (ReadBsDataFromCSVStrategy "BsGCT"))
+  (CSVStrListToListListUtils (ReadBsDataFromCSVStrategy "BsGCT"))
 )
 
-; 2021-04-19
-(defun GetTankBsGCTDesignData () 
-  (mapcar '(lambda (x) 
-             (cons (cadr x) (list x))
-           ) 
-    (vl-remove-if-not '(lambda (x) 
-                        (= (car x) "Tank") 
-                      ) 
-      (GetBsGCTImportedList)
-    ) 
-  )  
+; refactored at 2021-06-11
+(defun GetBsGCTTankDictData ()
+  (ReadCSVFileToDictDataUtils "D:\\dataflowcad\\bsdata\\bsGCTTankMainData.txt")
 )
 
-; 2021-04-19
-(defun GetBsGCTTankData (bsGCTImportedList /) 
-  (vl-remove-if-not '(lambda (x) 
-                      (= (car x) "Tank") 
-                    ) 
-    bsGCTImportedList
-  ) 
-)
-
-; 2021-05-25
-(defun GetBsGCTHeaterData (bsGCTImportedList /) 
-  (vl-remove-if-not '(lambda (x) 
-                      (= (car x) "Heater") 
-                    ) 
-    bsGCTImportedList
-  ) 
-)
-
-; 2021-04-19
-(defun GetBsGCTTankDictData (bsGCTImportedList /) 
-  (mapcar '(lambda (y) 
-              (mapcar '(lambda (xx yy) 
-                         (cons xx yy)
-                      ) 
-                (GetBsGCTTankMainKeysData bsGCTImportedList)
-                y
-              )
-           ) 
-    (GetBsGCTTankData bsGCTImportedList)
-  )
-)
-
-; 2021-05-25
-(defun GetBsGCTHeaterDictData (bsGCTImportedList /) 
-  (mapcar '(lambda (y) 
-              (mapcar '(lambda (xx yy) 
-                         (cons xx yy)
-                      ) 
-                (GetBsGCTHeaterMainKeysData bsGCTImportedList)
-                y
-              )
-           ) 
-    (GetBsGCTHeaterData bsGCTImportedList)
-  )
+; refactored at 2021-06-11
+(defun GetBsGCTHeaterDictData ()
+  (ReadCSVFileToDictDataUtils "D:\\dataflowcad\\bsdata\\bsGCTHeaterMainData.txt")
 )
 
 ; 2021-04-20
@@ -1023,9 +974,6 @@
     )  
   ) 
 )
-
-
-
 
 ; 2021-05-25
 (defun GetBsGCTHeaterHeadStyleData (bsGCTImportedList /) 
@@ -1427,7 +1375,7 @@
 ; refactored at 2021-05-25
 (defun InsertAllBsGCTTank (insPt bsGCTImportedList allBsGCTSupportDictData / allBsGCTTankDictData tankPressureElementList 
                            tankOtherRequestList tankStandardList tankHeadStyleList tankHeadMaterialList insPtList) 
-  (setq allBsGCTTankDictData (GetBsGCTTankDictData bsGCTImportedList))
+  (setq allBsGCTTankDictData (GetBsGCTTankDictData))
   (setq tankPressureElementList (GetBsGCTTankPressureElementDictData bsGCTImportedList))
   (setq tankOtherRequestList (GetBsGCTTankOtherRequestData bsGCTImportedList)) 
   (setq tankStandardList (GetBsGCTTankStandardData bsGCTImportedList)) 
@@ -1445,7 +1393,7 @@
 ; 2021-05-25
 (defun InsertAllBsGCTHeater (insPt bsGCTImportedList allBsGCTSupportDictData / allBsGCTHeaterDictData heaterPressureElementList 
                            heaterOtherRequestList heaterStandardList heaterHeadStyleList heaterHeadMaterialList insPtList) 
-  (setq allBsGCTHeaterDictData (GetBsGCTHeaterDictData bsGCTImportedList))
+  (setq allBsGCTHeaterDictData (GetBsGCTHeaterDictData))
   (setq heaterPressureElementList (GetBsGCTHeaterPressureElementDictData bsGCTImportedList))
   (setq heaterOtherRequestList (GetBsGCTHeaterOtherRequestData bsGCTImportedList)) 
   (setq heaterStandardList (GetBsGCTHeaterStandardData bsGCTImportedList)) 
@@ -1562,7 +1510,7 @@
   (DeleteBsGCTTableByEquipTagListUtils equipTagList)
   (DeleteBsGCTPolyLineAndTextByEquipTagListUtils equipTagList)
   (setq bsGCTImportedList (GetBsGCTImportedList))
-  (setq allBsGCTTankDictData (GetBsGCTTankDictData bsGCTImportedList))
+  (setq allBsGCTTankDictData (GetBsGCTTankDictData))
   ; filter the updated data
   (setq allBsGCTTankDictData (FilterUpdatedBsGCTTankDictData allBsGCTTankDictData equipTagList))
   (setq tankPressureElementList (GetBsGCTTankPressureElementDictData bsGCTImportedList))

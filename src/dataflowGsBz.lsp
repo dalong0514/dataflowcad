@@ -996,7 +996,7 @@
         (setq sortedTypeResult (GetsortedTypeByindex sortedType))
         (princ dataType)
         (setq importedDataList 
-               (StrListToListListUtils (ReadGsDataFromCSVStrategy dataType)))
+               (CSVStrListToListListUtils (ReadGsDataFromCSVStrategy dataType)))
         (setq importMsgBtnStatus 1)
       )
     )
@@ -1156,7 +1156,7 @@
     (if (= 3 status) 
       (progn 
         (setq importedDataList 
-               (GetImportedGsBzEquipDataList (StrListToListListUtils (ReadGsDataFromCSVStrategy "GsBzEquip"))))
+               (GetImportedGsBzEquipDataList (CSVStrListToListListUtils (ReadGsDataFromCSVStrategy "GsBzEquip"))))
         (setq importMsgBtnStatus 1)
       )
     )
