@@ -1222,15 +1222,15 @@
 ; refacotred at 2021-05-07
 ; refactored at 2021-05-18
 (defun InsertGCTOneBsVerticalTankTable (insPt bsGCTType oneTankData tankStandardList tankHeadStyleList tankHeadMaterialList 
-                                tankPressureElementList tankOtherRequestList / designParamDictList leftInsPt rightInsPt) 
-  ; split oneTankData to Two Parts
-  (setq designParamDictList (cadr (SplitLDictListByDictKeyUtils "SERVIVE_LIFE" oneTankData)))
+                                tankPressureElementList tankOtherRequestList / leftInsPt rightInsPt) 
+  ; split oneTankData to Two Parts - no need to split 2021-06-11
+  ; (setq designParamDictList (cadr (SplitLDictListByDictKeyUtils "SERVIVE_LIFE" oneTankData)))
   (setq leftInsPt (MoveInsertPositionUtils insPt -900 2870))
   (setq rightInsPt (MoveInsertPositionUtils insPt -450 2870))
   (InsertBsGCTDataHeader leftInsPt bsGCTType)
   ; the height of BsGCTDataHeader is 50
   (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 -50))
-  (InsertBsGCTDesignParam leftInsPt bsGCTType designParamDictList "BsGCTTableDesignParam")
+  (InsertBsGCTDesignParam leftInsPt bsGCTType oneTankData "BsGCTTableDesignParam")
   ; the height of BsGCTTankDesignParam is 840
   (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 -840))
   (InsertBsGCTPressureElement leftInsPt bsGCTType tankPressureElementList)
@@ -1258,15 +1258,15 @@
 ; 2021-05-16
 ; refactored at 2021-05-18
 (defun InsertGCTOneBsHorizontalTankTable (insPt bsGCTType oneTankData tankStandardList tankHeadStyleList tankHeadMaterialList 
-                                tankPressureElementList tankOtherRequestList / designParamDictList leftInsPt rightInsPt) 
+                                tankPressureElementList tankOtherRequestList / leftInsPt rightInsPt) 
   ; split oneTankData to Two Parts
-  (setq designParamDictList (cadr (SplitLDictListByDictKeyUtils "SERVIVE_LIFE" oneTankData)))
+  ; (setq designParamDictList (cadr (SplitLDictListByDictKeyUtils "SERVIVE_LIFE" oneTankData)))
   (setq leftInsPt (MoveInsertPositionUtils insPt -900 2870))
   (setq rightInsPt (MoveInsertPositionUtils insPt -450 2870))
   (InsertBsGCTDataHeader leftInsPt bsGCTType)
   ; the height of BsGCTDataHeader is 50
   (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 -50))
-  (InsertBsGCTDesignParam leftInsPt bsGCTType designParamDictList "BsGCTTableHorizontalTankDesignParam")
+  (InsertBsGCTDesignParam leftInsPt bsGCTType oneTankData "BsGCTTableHorizontalTankDesignParam")
   ; the height of BsGCTTankDesignParam is 920
   (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 -920))
   (InsertBsGCTPressureElement leftInsPt bsGCTType tankPressureElementList)
@@ -1293,15 +1293,15 @@
 
 ; 2021-05-25
 (defun InsertGCTOneBsHeaterTable (insPt bsGCTType oneHeaterData heaterStandardList heaterHeadStyleList heaterHeadMaterialList 
-                                heaterPressureElementList heaterOtherRequestList / designParamDictList leftInsPt rightInsPt) 
+                                heaterPressureElementList heaterOtherRequestList / leftInsPt rightInsPt) 
   ; split oneHeaterData to Two Parts
-  (setq designParamDictList (cadr (SplitLDictListByDictKeyUtils "SERVIVE_LIFE" oneHeaterData)))
+  ; (setq designParamDictList (cadr (SplitLDictListByDictKeyUtils "SERVIVE_LIFE" oneHeaterData)))
   (setq leftInsPt (MoveInsertPositionUtils insPt -900 2870))
   (setq rightInsPt (MoveInsertPositionUtils insPt -450 2870))
   (InsertBsGCTDataHeader leftInsPt bsGCTType)
   ; the height of BsGCTDataHeader is 50
   (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 -50))
-  (InsertBsGCTDesignParam leftInsPt bsGCTType designParamDictList "BsGCTTableDesignParam-Heater")
+  (InsertBsGCTDesignParam leftInsPt bsGCTType oneHeaterData "BsGCTTableDesignParam-Heater")
   ; the height of BsGCTTankDesignParam is 960
   (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 -960))
   (InsertBsGCTPressureElement leftInsPt bsGCTType heaterPressureElementList)

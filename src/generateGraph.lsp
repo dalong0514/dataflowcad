@@ -40,8 +40,8 @@
 ; 2021-03-17
 ; refactored at 2021-04-22
 (defun GetBsModulesPath (/ result)
-  ; (setq result "D:\\dataflowcad\\allBlocks\\BsGCTBlocks.dwg")
-  (setq result "\\\\192.168.1.38\\dataflow\\allBlocks\\BsGCTBlocks.dwg")
+  (setq result "D:\\dataflowcad\\allBlocks\\BsGCTBlocks.dwg")
+  ; (setq result "\\\\192.168.1.38\\dataflow\\allBlocks\\BsGCTBlocks.dwg")
 )
 
 ; 2021-03-03
