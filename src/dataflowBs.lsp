@@ -503,20 +503,15 @@
 )
 
 ; 2021-04-22
+; refactored at 2021-06-12
 (defun InsertBsGCTAnnotation (insPt blockInsPt lineInsPt dataType fristText secondText drawFrameScale /) 
-  (InsertTwoLinesAnnotationUtils blockInsPt "BsGCTGraphAnnotation" "0DataFlow-BsGCT" 
-    dataType fristText secondText drawFrameScale)
+  (InsertBlockByScaleUtils blockInsPt "BsGCTGraphAnnotation" "0DataFlow-BsGCT" 
+    (list (cons 0 dataType) (cons 1 fristText) (cons 2 secondText)) drawFrameScale)
   (GenerateLineUtils 
     lineInsPt
     insPt
     "0DataFlow-BsGCT"
   )  
-)
-
-; 2021-04-22
-(defun InsertTwoLinesAnnotationUtils (insPt blockName layerName dataType fristText secondText drawFrameScale /) 
-  (InsertBlockByScaleUtils insPt blockName layerName 
-    (list (cons 0 dataType) (cons 1 fristText) (cons 2 secondText)) drawFrameScale)
 )
 
 ; 2021-04-19
