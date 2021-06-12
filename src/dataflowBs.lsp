@@ -479,39 +479,39 @@
 )
 
 ; 2021-04-22
+; refactored at 2021-06-12
 (defun InsertBsGCTDownLeftAnnotation (insPt dataType fristText secondText drawFrameScale /) 
-  (InsertBsGCTAnnotation insPt (MoveInsertPositionUtils insPt -130 -100) (MoveInsertPositionUtils insPt -50 -100) 
-    dataType fristText secondText drawFrameScale) 
-)
-
-; 2021-04-22
-(defun InsertBsGCTDownRightAnnotation (insPt dataType fristText secondText drawFrameScale /) 
-  (InsertBsGCTAnnotation insPt (MoveInsertPositionUtils insPt 130 -100) (MoveInsertPositionUtils insPt 50 -100) 
-    dataType fristText secondText drawFrameScale) 
-)
-
-; 2021-04-22
-(defun InsertBsGCTUpLeftAnnotation (insPt dataType fristText secondText drawFrameScale /) 
-  (InsertBsGCTAnnotation insPt (MoveInsertPositionUtils insPt -130 100) (MoveInsertPositionUtils insPt -50 100) 
-    dataType fristText secondText drawFrameScale) 
-)
-
-; 2021-04-22
-(defun InsertBsGCTUpRightAnnotation (insPt dataType fristText secondText drawFrameScale /) 
-  (InsertBsGCTAnnotation insPt (MoveInsertPositionUtils insPt 130 100) (MoveInsertPositionUtils insPt 50 100) 
-    dataType fristText secondText drawFrameScale) 
+  (InsertBsGCTAnnotation (MoveInsertPositionUtils insPt (* drawFrameScale -10) (* drawFrameScale -10)) dataType fristText secondText drawFrameScale) 
+  (GenerateLineUtils insPt (MoveInsertPositionUtils insPt (* drawFrameScale -10) (* drawFrameScale -10)) "0DataFlow-BsGCT")  
 )
 
 ; 2021-04-22
 ; refactored at 2021-06-12
-(defun InsertBsGCTAnnotation (insPt blockInsPt lineInsPt dataType fristText secondText drawFrameScale /) 
-  (InsertBlockByScaleUtils blockInsPt "BsGCTGraphAnnotation" "0DataFlow-BsGCT" 
+(defun InsertBsGCTDownRightAnnotation (insPt dataType fristText secondText drawFrameScale /) 
+  (InsertBsGCTAnnotation (MoveInsertPositionUtils insPt (* drawFrameScale 10) (* drawFrameScale -10)) dataType fristText secondText drawFrameScale) 
+  (MirrorBlockUtils (entlast))
+  (GenerateLineUtils insPt (MoveInsertPositionUtils insPt (* drawFrameScale 10) (* drawFrameScale -10)) "0DataFlow-BsGCT")  
+)
+
+; 2021-04-22
+; refactored at 2021-06-12
+(defun InsertBsGCTUpLeftAnnotation (insPt dataType fristText secondText drawFrameScale /) 
+  (InsertBsGCTAnnotation (MoveInsertPositionUtils insPt (* drawFrameScale -10) (* drawFrameScale 10)) dataType fristText secondText drawFrameScale) 
+  (GenerateLineUtils insPt (MoveInsertPositionUtils insPt (* drawFrameScale -10) (* drawFrameScale 10)) "0DataFlow-BsGCT")   
+)
+
+; 2021-04-22
+; refactored at 2021-06-12
+(defun InsertBsGCTUpRightAnnotation (insPt dataType fristText secondText drawFrameScale /) 
+  (InsertBsGCTAnnotation (MoveInsertPositionUtils insPt (* drawFrameScale 10) (* drawFrameScale 10)) dataType fristText secondText drawFrameScale) 
+  (GenerateLineUtils insPt (MoveInsertPositionUtils insPt (* drawFrameScale 10) (* drawFrameScale 10)) "0DataFlow-BsGCT")  
+)
+
+; 2021-04-22
+; refactored at 2021-06-12
+(defun InsertBsGCTAnnotation (insPt dataType fristText secondText drawFrameScale /) 
+  (InsertBlockByScaleUtils insPt "BsGCTGraphAnnotation" "0DataFlow-BsGCT" 
     (list (cons 0 dataType) (cons 1 fristText) (cons 2 secondText)) drawFrameScale)
-  (GenerateLineUtils 
-    lineInsPt
-    insPt
-    "0DataFlow-BsGCT"
-  )  
 )
 
 ; 2021-04-19
