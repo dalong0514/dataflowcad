@@ -816,16 +816,9 @@
 )
 
 ; 2021-04-19
-(defun ReadBsDataFromCSVStrategy (dataType / fileDir)
-  (if (= dataType "BsGCT") 
-    (setq fileDir "D:\\dataflowcad\\bsdata\\bsGCT.csv")
-  )
-  (ReadDataFromCSVTrimFirstRowUtils fileDir)
-)
-
-; 2021-04-19
-(defun GetBsGCTImportedList ()
-  (CSVStrListToListListUtils (ReadBsDataFromCSVStrategy "BsGCT"))
+; refactored at 2021-06-11
+(defun GetBsGCTImportedList () 
+  (CSVStrListToListListUtils (ReadDataFromCSVUtils "D:\\dataflowcad\\bsdata\\bsGCT.csv"))
 )
 
 ; refactored at 2021-06-11
