@@ -84,7 +84,7 @@
 ; 2021-04-17
 ; refactored at 2021-06-11
 (defun InsertBsGCTDrawFrame (insPt dataType bsGCTProjectDictData drawFrameScale /) 
-  (InsertBlockByNoPropertyUtils insPt "BsGCTDrawFrame" "0DataFlow-BsFrame")
+  (InsertBlockByNoPropertyByScaleUtils insPt "BsGCTDrawFrame" "0DataFlow-BsFrame" drawFrameScale)
   (InsertBlockByScaleUtils insPt "title.equip.2017" "0DataFlow-BsFrame" (list (cons 4 "¹¤³ÌÍ¼")) drawFrameScale)
   (setq bsGCTProjectDictData 
          (append bsGCTProjectDictData 
@@ -111,6 +111,7 @@
 
 ; 2021-04-17
 ; refactored at - 2021-04-20
+; refactored at 2021-06-12 drawFrameScale
 (defun InsertBsGCTDesignParam (insPt dataType designParamDictList blockName drawFrameScale /) 
   (InsertBlockByScaleUtils insPt blockName "0DataFlow-BsGCT" (list (cons 0 dataType)) drawFrameScale)
   (ModifyMultiplePropertyForOneBlockUtils (entlast) 
@@ -121,17 +122,19 @@
 
 ; refactored at 2021-04-20
 ; refactored at 2021-05-25
-(defun InsertBsGCTDesignStandard (insPt dataType blockName tankStandardList /) 
-  (InsertBlockUtils insPt blockName "0DataFlow-BsGCT" (list (cons 0 dataType)))
-  (InsertBsGCTTankStandardText (MoveInsertPositionUtils insPt 20 -80) tankStandardList dataType)
+; refactored at 2021-06-12 drawFrameScale
+(defun InsertBsGCTDesignStandard (insPt dataType blockName tankStandardList drawFrameScale /) 
+  (InsertBlockByScaleUtils insPt blockName "0DataFlow-BsGCT" (list (cons 0 dataType)) drawFrameScale)
+  (InsertBsGCTTankStandardText (MoveInsertPositionUtils insPt (* drawFrameScale 4) (* drawFrameScale -16)) tankStandardList dataType drawFrameScale)
 )
 
 ; 2021-04-20
 ; refactored at 2021-05-18
-(defun InsertBsGCTTankStandardText (insPt tankStandardList dataType / i) 
+; refactored at 2021-06-12 drawFrameScale
+(defun InsertBsGCTTankStandardText (insPt tankStandardList dataType drawFrameScale / i) 
   (setq i 0)
   (repeat (length tankStandardList)
-    (GenerateLevelLeftTextUtils (MoveInsertPositionUtils insPt 0 (* -30 i)) (nth i tankStandardList) "0DataFlow-BsText" 20 0.7) 
+    (GenerateLevelLeftTextUtils (MoveInsertPositionUtils insPt 0 (* (* drawFrameScale -6) i)) (nth i tankStandardList) "0DataFlow-BsText" (* drawFrameScale 4) 0.7) 
     ; bind equipTag to Xdata - 2021-05-13
     (BindDataFlowXDataToObjectUtils (entlast) dataType)
     (setq i (1+ i))
@@ -139,42 +142,48 @@
 )
 
 ; refactored at 2021-04-20
-(defun InsertBsGCTRequirement (insPt dataType blockName tankHeadStyleList tankHeadMaterialList /) 
-  (InsertBlockUtils insPt blockName "0DataFlow-BsGCT" (list (cons 0 dataType)))
-  (InsertBsGCTRequirementTextStrategy insPt dataType blockName tankHeadStyleList tankHeadMaterialList)
+; refactored at 2021-06-12 drawFrameScale
+(defun InsertBsGCTRequirement (insPt dataType blockName tankHeadStyleList tankHeadMaterialList drawFrameScale /) 
+  (InsertBlockByScaleUtils insPt blockName "0DataFlow-BsGCT" (list (cons 0 dataType)) drawFrameScale)
+  (InsertBsGCTRequirementTextStrategy insPt dataType blockName tankHeadStyleList tankHeadMaterialList drawFrameScale)
 )
 
 ; 2021-05-25
-(defun InsertBsGCTRequirementTextStrategy (insPt dataType blockName tankHeadStyleList tankHeadMaterialList /)
+; refactored at 2021-06-12 drawFrameScale
+(defun InsertBsGCTRequirementTextStrategy (insPt dataType blockName tankHeadStyleList tankHeadMaterialList drawFrameScale /)
   (cond 
-    ((= blockName "BsGCTTableRequirement") (InsertBsGCTTankRequirementText insPt dataType tankHeadStyleList tankHeadMaterialList))
-    ((= blockName "BsGCTTableRequirement-Heater") (InsertBsGCTHeaterRequirementText insPt dataType tankHeadStyleList tankHeadMaterialList))
+    ((= blockName "BsGCTTableRequirement") (InsertBsGCTTankRequirementText insPt dataType tankHeadStyleList tankHeadMaterialList drawFrameScale))
+    ((= blockName "BsGCTTableRequirement-Heater") (InsertBsGCTHeaterRequirementText insPt dataType tankHeadStyleList tankHeadMaterialList drawFrameScale))
   )
 )
 
 ; 2021-05-25
-(defun InsertBsGCTTankRequirementText (insPt dataType tankHeadStyleList tankHeadMaterialList /)
-  (InsertBsGCTEquipHeadStyleText (MoveInsertPositionUtils insPt 55 -100) tankHeadStyleList dataType)
-  (InsertBsGCTEquipHeadMaterialText (MoveInsertPositionUtils insPt 55 -240) tankHeadMaterialList dataType)
+; refactored at 2021-06-12 drawFrameScale
+(defun InsertBsGCTTankRequirementText (insPt dataType tankHeadStyleList tankHeadMaterialList drawFrameScale /)
+  (InsertBsGCTEquipHeadStyleText (MoveInsertPositionUtils insPt (* drawFrameScale 11) (* drawFrameScale -20)) tankHeadStyleList dataType drawFrameScale)
+  (InsertBsGCTEquipHeadMaterialText (MoveInsertPositionUtils insPt (* drawFrameScale 11) (* drawFrameScale -48)) tankHeadMaterialList dataType drawFrameScale)
 )
 
 ; 2021-05-25
-(defun InsertBsGCTHeaterRequirementText (insPt dataType tankHeadStyleList tankHeadMaterialList /)
-  (InsertBsGCTEquipHeadStyleText (MoveInsertPositionUtils insPt 55 -80) tankHeadStyleList dataType)
-  (InsertBsGCTEquipHeadMaterialText (MoveInsertPositionUtils insPt 55 -200) tankHeadMaterialList dataType)
+; refactored at 2021-06-12 drawFrameScale
+(defun InsertBsGCTHeaterRequirementText (insPt dataType tankHeadStyleList tankHeadMaterialList drawFrameScale /)
+  (InsertBsGCTEquipHeadStyleText (MoveInsertPositionUtils insPt (* drawFrameScale 11) (* drawFrameScale -16)) tankHeadStyleList dataType drawFrameScale)
+  (InsertBsGCTEquipHeadMaterialText (MoveInsertPositionUtils insPt (* drawFrameScale 11) (* drawFrameScale -40)) tankHeadMaterialList dataType drawFrameScale)
 )
 
 ; 2021-05-25
-(defun InsertBsGCTInspectData (insPt dataType blockName oneEquipData /) 
+; refactored at 2021-06-12 drawFrameScale
+(defun InsertBsGCTInspectData (insPt dataType blockName oneEquipData drawFrameScale /) 
   (cond 
-    ((= blockName "BsGCTTableInspectData-TankA") (InsertBsGCTTankInspectData insPt dataType blockName oneEquipData))
-    ((= blockName "BsGCTTableInspectData-Heater") (InsertBsGCTHeaterInspectData insPt dataType blockName oneEquipData))
+    ((= blockName "BsGCTTableInspectData-TankA") (InsertBsGCTTankInspectData insPt dataType blockName oneEquipData drawFrameScale))
+    ((= blockName "BsGCTTableInspectData-Heater") (InsertBsGCTHeaterInspectData insPt dataType blockName oneEquipData drawFrameScale))
   )
 )
 
 ; 2021-05-25
-(defun InsertBsGCTHeaterInspectData (insPt dataType blockName oneHeaterData / inspectDictData) 
-  (InsertBlockUtils insPt blockName "0DataFlow-BsGCT" (list (cons 0 dataType)))
+; refactored at 2021-06-12 drawFrameScale
+(defun InsertBsGCTHeaterInspectData (insPt dataType blockName oneHeaterData drawFrameScale / inspectDictData) 
+  (InsertBlockByScaleUtils insPt blockName "0DataFlow-BsGCT" (list (cons 0 dataType)) drawFrameScale)
   (setq inspectDictData (append 
                           (GetBsGCTInspectDictData (GetDottedPairValueUtils "SHELL_INSPECT_RATE" oneHeaterData) "SHELL_BARREL_")
                           (GetBsGCTInspectDictData (GetDottedPairValueUtils "BARREL_INSPECT_RATE" oneHeaterData) "BARREL_")
@@ -187,9 +196,10 @@
 
 ; 2021-05-07
 ; refactored at 2021-05-11
-(defun InsertBsGCTTankInspectData (insPt dataType blockName oneTankData / inspectDictData) 
+; refactored at 2021-06-12 drawFrameScale
+(defun InsertBsGCTTankInspectData (insPt dataType blockName oneTankData drawFrameScale / inspectDictData) 
   ; BsGCTTableInspectData-TankA or BsGCTTableInspectData-TankB, ready for the whole logic 2021-05-11
-  (InsertBlockUtils insPt blockName "0DataFlow-BsGCT" (list (cons 0 dataType)))
+  (InsertBlockByScaleUtils insPt blockName "0DataFlow-BsGCT" (list (cons 0 dataType)) drawFrameScale)
   (setq inspectDictData (append 
                           (GetBsGCTInspectDictData (GetDottedPairValueUtils "BARREL_INSPECT_RATE" oneTankData) "BARREL_")
                           (GetBsGCTInspectDictData (GetDottedPairValueUtils "HEAD_INSPECT_RATE" oneTankData) "HEAD_")
@@ -199,8 +209,9 @@
 )
 
 ; 2021-05-07
-(defun InsertBsGCTTestData (insPt dataType blockName oneEquipData / testDictData) 
-  (InsertBlockUtils insPt blockName "0DataFlow-BsGCT" (list (cons 0 dataType)))
+; refactored at 2021-06-12 drawFrameScale
+(defun InsertBsGCTTestData (insPt dataType blockName oneEquipData drawFrameScale / testDictData) 
+  (InsertBlockByScaleUtils insPt blockName "0DataFlow-BsGCT" (list (cons 0 dataType)) drawFrameScale)
   (setq testDictData (GetBsGCTTestDictData oneEquipData))
   (ModifyBlockPropertiesByDictDataUtils (entlast) testDictData)
 )
@@ -217,10 +228,12 @@
 )
 
 ; 2021-04-20
-(defun InsertBsGCTEquipHeadStyleText (insPt tankHeadStyleList dataType / i) 
+; refactored at 2021-06-12 drawFrameScale
+(defun InsertBsGCTEquipHeadStyleText (insPt tankHeadStyleList dataType drawFrameScale / i) 
   (setq i 0)
   (repeat (length tankHeadStyleList)
-    (GenerateLevelLeftTextUtils (MoveInsertPositionUtils insPt 0 (* -30 i)) (nth i tankHeadStyleList) "0DataFlow-BsText" 20 0.7) 
+    ; textheight is 4 for 1:1 scale
+    (GenerateLevelLeftTextUtils (MoveInsertPositionUtils insPt 0 (* (* drawFrameScale -6) i)) (nth i tankHeadStyleList) "0DataFlow-BsText" (* drawFrameScale 4) 0.7) 
     ; bind equipTag to Xdata - 2021-05-13
     (BindDataFlowXDataToObjectUtils (entlast) dataType)
     (setq i (1+ i))
@@ -228,10 +241,11 @@
 )
 
 ; 2021-04-20
-(defun InsertBsGCTEquipHeadMaterialText (insPt tankHeadMaterialList dataType / i) 
+; refactored at 2021-06-12 drawFrameScale
+(defun InsertBsGCTEquipHeadMaterialText (insPt tankHeadMaterialList dataType drawFrameScale / i) 
   (setq i 0)
   (repeat (length tankHeadMaterialList)
-    (GenerateLevelLeftTextUtils (MoveInsertPositionUtils insPt 0 (* -30 i)) (nth i tankHeadMaterialList) "0DataFlow-BsText" 20 0.7) 
+    (GenerateLevelLeftTextUtils (MoveInsertPositionUtils insPt 0 (* (* drawFrameScale -6) i)) (nth i tankHeadMaterialList) "0DataFlow-BsText" (* drawFrameScale 4) 0.7) 
     ; bind equipTag to Xdata - 2021-05-13
     (BindDataFlowXDataToObjectUtils (entlast) dataType)
     (setq i (1+ i))
@@ -239,16 +253,18 @@
 )
 
 ; 2021-04-17
-(defun InsertBsGCTPressureElement (insPt dataType tankPressureElementList / i) 
-  (InsertBlockUtils insPt "BsGCTTablePressureElement" "0DataFlow-BsGCT" (list (cons 0 dataType)))
-  (InsertBsGCTPressureElementRow (MoveInsertPositionUtils insPt 0 -80) dataType tankPressureElementList)
+; refactored at 2021-06-12 drawFrameScale
+(defun InsertBsGCTPressureElement (insPt dataType tankPressureElementList drawFrameScale / i) 
+  (InsertBlockByScaleUtils insPt "BsGCTTablePressureElement" "0DataFlow-BsGCT" (list (cons 0 dataType)) drawFrameScale)
+  (InsertBsGCTPressureElementRow (MoveInsertPositionUtils insPt 0 (* drawFrameScale -16)) dataType tankPressureElementList drawFrameScale)
 )
 
 ; 2021-04-17
-(defun InsertBsGCTPressureElementRow (insPt dataType tankPressureElementList / i) 
+; refactored at 2021-06-12 drawFrameScale
+(defun InsertBsGCTPressureElementRow (insPt dataType tankPressureElementList drawFrameScale / i) 
   (setq i 0)
   (repeat (length tankPressureElementList)
-    (InsertBlockUtils (MoveInsertPositionUtils insPt 0 (* -40 i)) "BsGCTTablePressureElementRow" "0DataFlow-BsGCT" (list (cons 0 dataType)))
+    (InsertBlockByScaleUtils (MoveInsertPositionUtils insPt 0 (* (* drawFrameScale -8) i)) "BsGCTTablePressureElementRow" "0DataFlow-BsGCT" (list (cons 0 dataType)) drawFrameScale)
     (ModifyMultiplePropertyForOneBlockUtils (entlast) 
       (mapcar '(lambda (x) (car x)) (nth i tankPressureElementList))
       (mapcar '(lambda (x) (cdr x)) (nth i tankPressureElementList))
@@ -258,27 +274,31 @@
   ; bind equipTag to Xdata - 2021-05-13
   (GeneratePolyLineUtils 
     insPt
-    (MoveInsertPositionUtils insPt 0 (- 0 (* 40 (length tankPressureElementList)))) 
-    "0DataFlow-BsGCT" 3.6) 
+    (MoveInsertPositionUtils insPt 0 (GetNegativeNumberUtils (* (* drawFrameScale 8) (length tankPressureElementList)))) 
+    ; the lineWith is 0.72 for 1:1 scale
+    "0DataFlow-BsGCT" (* drawFrameScale 0.72)) 
   (BindDataFlowXDataToObjectUtils (entlast) dataType)
 )
 
 ; 2021-04-17
 ; refactored at 2021-05-18
-(defun InsertBsGCTOtherRequest (insPt dataType tankOtherRequestList otherRequestHeght /) 
-  (InsertBlockUtils insPt "BsGCTTableOtherRequest" "0DataFlow-BsGCT" (list (cons 0 dataType)))
+; refactored at 2021-06-12 drawFrameScale
+(defun InsertBsGCTOtherRequest (insPt dataType tankOtherRequestList otherRequestHeght drawFrameScale /) 
+  (InsertBlockByScaleUtils insPt "BsGCTTableOtherRequest" "0DataFlow-BsGCT" (list (cons 0 dataType)) drawFrameScale)
   (SetDynamicBlockPropertyValueUtils 
     (GetLastVlaObjectUtils) 
     (list (cons "TOTALHEIGHT" otherRequestHeght))
   ) 
-  (InsertBsGCTTankOtherRequestText (MoveInsertPositionUtils insPt 40 -65) tankOtherRequestList dataType)
+  (InsertBsGCTTankOtherRequestText (MoveInsertPositionUtils insPt (* drawFrameScale 8) (* drawFrameScale -13)) tankOtherRequestList dataType drawFrameScale)
 )
 
 ; 2021-04-17
-(defun InsertBsGCTTankOtherRequestText (insPt tankOtherRequestList dataType / i) 
+; refactored at 2021-06-12 drawFrameScale
+(defun InsertBsGCTTankOtherRequestText (insPt tankOtherRequestList dataType drawFrameScale / i) 
   (setq i 0)
   (repeat (length tankOtherRequestList)
-    (GenerateLevelLeftTextUtils (MoveInsertPositionUtils insPt 0 (* -30 i)) (nth i tankOtherRequestList) "0DataFlow-BsText" 20 0.7) 
+    ; textheight is 4 for 1:1 scale
+    (GenerateLevelLeftTextUtils (MoveInsertPositionUtils insPt 0 (* (* drawFrameScale -6) i)) (nth i tankOtherRequestList) "0DataFlow-BsText" (* drawFrameScale 4) 0.7) 
     ; bind equipTag to Xdata - 2021-05-13
     (BindDataFlowXDataToObjectUtils (entlast) dataType)
     (setq i (1+ i))
@@ -286,19 +306,21 @@
 )
 
 ; 2021-04-17
-(defun InsertBsGCTNozzleTable (insPt dataType oneTankData / oneBsGCTTankNozzleDictData) 
+; refactored at 2021-06-12 drawFrameScale
+(defun InsertBsGCTNozzleTable (insPt dataType oneTankData drawFrameScale / oneBsGCTTankNozzleDictData) 
   (setq oneBsGCTTankNozzleDictData (GetOneBsGCTTankNozzleDictData (GetDottedPairValueUtils "TAG" oneTankData)))
-  (InsertBlockUtils insPt "BsGCTTableNozzleTableHeader" "0DataFlow-BsGCT" (list (cons 0 dataType)))
+  (InsertBlockByScaleUtils insPt "BsGCTTableNozzleTableHeader" "0DataFlow-BsGCT" (list (cons 0 dataType)) drawFrameScale)
   (if (/= oneBsGCTTankNozzleDictData nil) 
-    (InsertBsGCTNozzleTableRow (MoveInsertPositionUtils insPt 0 -130) dataType oneBsGCTTankNozzleDictData)
+    (InsertBsGCTNozzleTableRow (MoveInsertPositionUtils insPt 0 (* drawFrameScale -26)) dataType oneBsGCTTankNozzleDictData drawFrameScale)
   )
 )
 
 ; 2021-04-17
-(defun InsertBsGCTNozzleTableRow (insPt dataType oneBsGCTTankNozzleDictData / i) 
+; refactored at 2021-06-12 drawFrameScale
+(defun InsertBsGCTNozzleTableRow (insPt dataType oneBsGCTTankNozzleDictData drawFrameScale / i) 
   (setq i 0)
   (repeat (length oneBsGCTTankNozzleDictData)
-    (InsertBlockUtils (MoveInsertPositionUtils insPt 0 (* -40 i)) "BsGCTTableNozzleTableRow" "0DataFlow-BsGCT" (list (cons 0 dataType)))
+    (InsertBlockByScaleUtils (MoveInsertPositionUtils insPt 0 (* (* drawFrameScale -8) i)) "BsGCTTableNozzleTableRow" "0DataFlow-BsGCT" (list (cons 0 dataType)) drawFrameScale)
     (ModifyMultiplePropertyForOneBlockUtils (entlast) 
       (mapcar '(lambda (x) (car x)) (nth i oneBsGCTTankNozzleDictData))
       (mapcar '(lambda (x) (cdr x)) (nth i oneBsGCTTankNozzleDictData))
@@ -307,14 +329,15 @@
   ) 
   ; bind equipTag to Xdata - 2021-05-13
   (GeneratePolyLineUtils 
-    (MoveInsertPositionUtils insPt 0 (- 0 (* 40 (length oneBsGCTTankNozzleDictData)))) 
-    (MoveInsertPositionUtils insPt 900 (- 0 (* 40 (length oneBsGCTTankNozzleDictData)))) 
-    "0DataFlow-BsGCT" 3.6)
+    (MoveInsertPositionUtils insPt 0 (GetNegativeNumberUtils (* (* drawFrameScale 8) (length oneBsGCTTankNozzleDictData)))) 
+    (MoveInsertPositionUtils insPt (* drawFrameScale 180) (GetNegativeNumberUtils (* (* drawFrameScale 8) (length oneBsGCTTankNozzleDictData)))) 
+    ; the lineWith is 0.72 for 1:1 scale
+    "0DataFlow-BsGCT" (* drawFrameScale 0.72))
   (BindDataFlowXDataToObjectUtils (entlast) dataType)
   (GeneratePolyLineUtils 
     insPt
-    (MoveInsertPositionUtils insPt 0 (- 0 (* 40 (length oneBsGCTTankNozzleDictData)))) 
-    "0DataFlow-BsGCT" 3.6) 
+    (MoveInsertPositionUtils insPt 0 (GetNegativeNumberUtils (* (* drawFrameScale 8) (length oneBsGCTTankNozzleDictData)))) 
+    "0DataFlow-BsGCT" (* drawFrameScale 0.72)) 
   (BindDataFlowXDataToObjectUtils (entlast) dataType)
 )
 
@@ -1212,26 +1235,26 @@
   (InsertBsGCTDesignParam leftInsPt bsGCTType oneTankData "BsGCTTableDesignParam" drawFrameScale)
   ; the height of BsGCTTankDesignParam is 840
   (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 -840))
-  (InsertBsGCTPressureElement leftInsPt bsGCTType tankPressureElementList)
+  (InsertBsGCTPressureElement leftInsPt bsGCTType tankPressureElementList drawFrameScale)
   ; the height of BsGCTPressureElement is [length of tankPressureElementList, add 2]
   (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 (- 0 (* 40 (+ (length tankPressureElementList) 2)))))
-  (InsertBsGCTOtherRequest leftInsPt bsGCTType tankOtherRequestList 270)
+  (InsertBsGCTOtherRequest leftInsPt bsGCTType tankOtherRequestList 270 drawFrameScale)
   ; the height of BsGCTOtherRequest is 270
   (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 -270))
-  (InsertBsGCTNozzleTable leftInsPt bsGCTType oneTankData)
+  (InsertBsGCTNozzleTable leftInsPt bsGCTType oneTankData drawFrameScale)
   ; insert tabe in right position
   ; the height of BsGCTDataHeader is 50
   (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 -50))
-  (InsertBsGCTDesignStandard rightInsPt bsGCTType "BsGCTTableDesignStandard" tankStandardList)
+  (InsertBsGCTDesignStandard rightInsPt bsGCTType "BsGCTTableDesignStandard" tankStandardList drawFrameScale)
   ; the height of BsGCTVerticalTankDesignStandard is 200
   (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 -200))
-  (InsertBsGCTRequirement rightInsPt bsGCTType "BsGCTTableRequirement" tankHeadStyleList tankHeadMaterialList)
+  (InsertBsGCTRequirement rightInsPt bsGCTType "BsGCTTableRequirement" tankHeadStyleList tankHeadMaterialList drawFrameScale)
   ; the height of BsGCTRequirement is 320
   (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 -320))
-  (InsertBsGCTInspectData rightInsPt bsGCTType "BsGCTTableInspectData-TankA" oneTankData)
+  (InsertBsGCTInspectData rightInsPt bsGCTType "BsGCTTableInspectData-TankA" oneTankData drawFrameScale)
   ; the height of BsGCTTankInspectData is 160
   (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 -160))
-  (InsertBsGCTTestData rightInsPt bsGCTType "BsGCTTableTestData" oneTankData)
+  (InsertBsGCTTestData rightInsPt bsGCTType "BsGCTTableTestData" oneTankData drawFrameScale)
 )
 
 ; 2021-05-16
@@ -1248,26 +1271,26 @@
   (InsertBsGCTDesignParam leftInsPt bsGCTType oneTankData "BsGCTTableHorizontalTankDesignParam" drawFrameScale)
   ; the height of BsGCTTankDesignParam is 920
   (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 -920))
-  (InsertBsGCTPressureElement leftInsPt bsGCTType tankPressureElementList)
+  (InsertBsGCTPressureElement leftInsPt bsGCTType tankPressureElementList drawFrameScale)
   ; the height of BsGCTPressureElement is [length of tankPressureElementList, add 2]
   (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 (- 0 (* 40 (+ (length tankPressureElementList) 2)))))
-  (InsertBsGCTOtherRequest leftInsPt bsGCTType tankOtherRequestList 400)
+  (InsertBsGCTOtherRequest leftInsPt bsGCTType tankOtherRequestList 400 drawFrameScale)
   ; the height of BsGCTOtherRequest is 400
   (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 -400))
-  (InsertBsGCTNozzleTable leftInsPt bsGCTType oneTankData)
+  (InsertBsGCTNozzleTable leftInsPt bsGCTType oneTankData drawFrameScale)
   ; insert tabe in right position
   ; the height of BsGCTDataHeader is 50
   (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 -50))
-  (InsertBsGCTDesignStandard rightInsPt bsGCTType "BsGCTTableHorizontalTankDesignStandard" tankStandardList)
+  (InsertBsGCTDesignStandard rightInsPt bsGCTType "BsGCTTableHorizontalTankDesignStandard" tankStandardList drawFrameScale)
   ; the height of BsGCTHorizontalTankDesignStandard is 280
   (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 -280))
-  (InsertBsGCTRequirement rightInsPt bsGCTType "BsGCTTableRequirement" tankHeadStyleList tankHeadMaterialList)
+  (InsertBsGCTRequirement rightInsPt bsGCTType "BsGCTTableRequirement" tankHeadStyleList tankHeadMaterialList drawFrameScale)
   ; the height of BsGCTRequirement is 320
   (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 -320))
-  (InsertBsGCTInspectData rightInsPt bsGCTType "BsGCTTableInspectData-TankA" oneTankData)
+  (InsertBsGCTInspectData rightInsPt bsGCTType "BsGCTTableInspectData-TankA" oneTankData drawFrameScale)
   ; the height of BsGCTTankInspectData is 160
   (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 -160))
-  (InsertBsGCTTestData rightInsPt bsGCTType "BsGCTTableTestData" oneTankData)
+  (InsertBsGCTTestData rightInsPt bsGCTType "BsGCTTableTestData" oneTankData drawFrameScale)
 )
 
 ; 2021-05-25
@@ -1283,26 +1306,26 @@
   (InsertBsGCTDesignParam leftInsPt bsGCTType oneHeaterData "BsGCTTableDesignParam-Heater" drawFrameScale)
   ; the height of BsGCTTankDesignParam is 960
   (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 -960))
-  (InsertBsGCTPressureElement leftInsPt bsGCTType heaterPressureElementList)
+  (InsertBsGCTPressureElement leftInsPt bsGCTType heaterPressureElementList drawFrameScale)
   ; the height of BsGCTPressureElement is [length of tankPressureElementList, add 2]
   (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 (- 0 (* 40 (+ (length heaterPressureElementList) 2)))))
-  (InsertBsGCTOtherRequest leftInsPt bsGCTType heaterOtherRequestList 350)
+  (InsertBsGCTOtherRequest leftInsPt bsGCTType heaterOtherRequestList 350 drawFrameScale)
   ; the height of BsGCTOtherRequest is 350
   (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 -350))
-  (InsertBsGCTNozzleTable leftInsPt bsGCTType oneHeaterData)
+  (InsertBsGCTNozzleTable leftInsPt bsGCTType oneHeaterData drawFrameScale)
   ; insert tabe in right position
   ; the height of BsGCTDataHeader is 50
   (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 -50))
-  (InsertBsGCTDesignStandard rightInsPt bsGCTType "BsGCTTableDesignStandard-Heater" heaterStandardList)
+  (InsertBsGCTDesignStandard rightInsPt bsGCTType "BsGCTTableDesignStandard-Heater" heaterStandardList drawFrameScale)
   ; the height of BsGCTHorizontalTankDesignStandard is 240
   (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 -240))
-  (InsertBsGCTRequirement rightInsPt bsGCTType "BsGCTTableRequirement-Heater" heaterHeadStyleList heaterHeadMaterialList)
+  (InsertBsGCTRequirement rightInsPt bsGCTType "BsGCTTableRequirement-Heater" heaterHeadStyleList heaterHeadMaterialList drawFrameScale)
   ; the height of BsGCTRequirement is 280
   (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 -280))
-  (InsertBsGCTInspectData rightInsPt bsGCTType "BsGCTTableInspectData-Heater" oneHeaterData)
+  (InsertBsGCTInspectData rightInsPt bsGCTType "BsGCTTableInspectData-Heater" oneHeaterData drawFrameScale)
   ; the height of BsGCTTankInspectData is 240
   (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 -240))
-  (InsertBsGCTTestData rightInsPt bsGCTType "BsGCTTableTestData-Heater" oneHeaterData)
+  (InsertBsGCTTestData rightInsPt bsGCTType "BsGCTTableTestData-Heater" oneHeaterData drawFrameScale)
 )
 
 ; 2021-05-16
