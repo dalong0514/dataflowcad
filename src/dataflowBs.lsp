@@ -99,9 +99,9 @@
     (mapcar '(lambda (x) (car x)) bsGCTProjectDictData)
     (mapcar '(lambda (x) (cdr x)) bsGCTProjectDictData)
   )
-  (InsertBlockByScaleUtils (MoveInsertPositionUtils insPt 0 230) "revisions.2017" "0DataFlow-BsFrame" (list (cons 2 "1")) 5)
-  (InsertBlockByNoPropertyByScaleUtils (MoveInsertPositionUtils insPt 0 355) "intercheck.2017" "0DataFlow-BsFrame" 5)
-  (InsertBlockByNoPropertyByScaleUtils (MoveInsertPositionUtils insPt 0 540) "stamp2.2017" "0DataFlow-BsFrame" 5)
+  (InsertBlockByScaleUtils (MoveInsertPositionUtils insPt 0 (* drawFrameScale 46)) "revisions.2017" "0DataFlow-BsFrame" (list (cons 2 "1")) drawFrameScale)
+  (InsertBlockByNoPropertyByScaleUtils (MoveInsertPositionUtils insPt 0 (* drawFrameScale 71)) "intercheck.2017" "0DataFlow-BsFrame" drawFrameScale)
+  (InsertBlockByNoPropertyByScaleUtils (MoveInsertPositionUtils insPt 0 (* drawFrameScale 108)) "stamp2.2017" "0DataFlow-BsFrame" drawFrameScale)
 )
 
 ; 2021-04-17
@@ -1132,7 +1132,8 @@
 (defun InsertOneBsGCTTank (insPt oneTankData tankPressureElementList tankOtherRequestList tankStandardList tankHeadStyleList tankHeadMaterialList 
                            allBsGCTSupportDictData bsGCTProjectDictData / 
                            drawFrameScale equipTag bsGCTType barrelRadius barrelHalfHeight thickNess headThickNess straightEdgeHeight equipType) 
-  (setq drawFrameScale 8)
+  ; (setq drawFrameScale 8)
+  (setq drawFrameScale (atoi (GetDottedPairValueUtils "drawFrameScale" oneTankData)))
   (setq equipTag (GetDottedPairValueUtils "TAG" oneTankData))
   ; (setq bsGCTType (strcat (GetDottedPairValueUtils "BSGCT_TYPE" oneTankData) "-" equipTag))
   ; refacotred at 2021-05-07 use equipTag as the label for data
@@ -1156,7 +1157,8 @@
 (defun InsertOneBsGCTHeater (insPt oneHeaterData heaterPressureElementList heaterOtherRequestList heaterStandardList heaterHeadStyleList 
                              heaterHeadMaterialList allBsGCTSupportDictData bsGCTProjectDictData / 
                              drawFrameScale equipTag bsGCTType barrelRadius barrelHalfHeight exceedLength thickNess headThickNess straightEdgeHeight equipType) 
-  (setq drawFrameScale 8)
+  ; (setq drawFrameScale 8)
+  (setq drawFrameScale (atoi (GetDottedPairValueUtils "drawFrameScale" oneHeaterData)))
   (setq equipTag (GetDottedPairValueUtils "TAG" oneHeaterData))
   ; use equipTag as the label for data
   (setq bsGCTType equipTag)
