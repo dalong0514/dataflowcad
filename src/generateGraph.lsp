@@ -401,6 +401,24 @@
   (princ)
 )
 
+; 2021-06-12
+; level is 0, vertical is 1.57[PI/2]
+(defun InsertBlockByScaleByRotateUtils (insPt blockName layerName propertyDictList scale rotate / acadObj curDoc insertionPnt modelSpace blockRefObj blockAttributes)
+  (setq acadObj (vlax-get-acad-object))
+  (setq curDoc (vla-get-activedocument acadObj)) 
+  (setq insertionPnt (vlax-3d-point insPt))
+  (setq modelSpace (vla-get-ModelSpace curDoc))
+  (setq blockRefObj (vla-InsertBlock modelSpace insertionPnt blockName scale scale scale rotate))
+  (vlax-put-property blockRefObj 'Layer layerName)
+  (setq blockAttributes (vlax-variant-value (vla-GetAttributes blockRefObj)))
+  (mapcar '(lambda (x) 
+            (vla-put-TextString (vlax-safearray-get-element blockAttributes (car x)) (cdr x))
+          ) 
+    propertyDictList
+  ) 
+  (princ)
+)
+
 ; 2021-03-11
 ; Isomerism function for InsertBlockUtils, need no propertyDictList
 (defun InsertBlockByNoPropertyUtils (insPt blockName layerName / acadObj curDoc insertionPnt modelSpace blockRefObj)
