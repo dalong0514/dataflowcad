@@ -2390,11 +2390,12 @@
 )
 
 ; 2021-06-12
-; ready to refactor
-(defun GetPrecisionRealUtils (originString /) 
+; @return String
+; unit test compeleted
+(defun GetTwoPrecisionRealUtils (originString /) 
   ; (rtos 1.5 2 2)
   (RegExpReplace 
-    (+ (atof originString) 0.001)
+    (vl-princ-to-string (+ (atof (vl-princ-to-string originString)) 0.004))
     "(\\d+\.\\d\\d).*" "$1" nil nil)
 )
 

@@ -56,7 +56,17 @@
   (GetBsGCTTankEquipTypeStrategyTest)
   (GetBsGCTStraightEdgeHeightTest)
   (ExtractIntegerFromStringUtilsTest)
+  (GetTwoPrecisionRealUtilsTest)
   (DL:PrintTestResults (DL:CountBooleans *testList*))
+)
+
+; 2021-06-12
+(defun GetTwoPrecisionRealUtilsTest () 
+  (AssertEqual 'GetTwoPrecisionRealUtils (list "1.5") "1.50")
+  (AssertEqual 'GetTwoPrecisionRealUtils (list 1.46) "1.46")
+  (AssertEqual 'GetTwoPrecisionRealUtils (list "1.42") "1.42")
+  (AssertEqual 'GetTwoPrecisionRealUtils (list 1.366) "1.37")
+  (AssertEqual 'GetTwoPrecisionRealUtils (list "1.323") "1.32")
 )
 
 ; 2021-06-10
