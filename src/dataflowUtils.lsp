@@ -2389,6 +2389,15 @@
   (SplitStrToListByIndexUtils projectName 42)
 )
 
+; 2021-06-12
+; ready to refactor
+(defun GetPrecisionRealUtils (originString /) 
+  ; (rtos 1.5 2 2)
+  (RegExpReplace 
+    (+ (atof originString) 0.001)
+    "(\\d+\.\\d\\d).*" "$1" nil nil)
+)
+
 ; Extract Data Utils
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
