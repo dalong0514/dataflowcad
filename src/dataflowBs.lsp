@@ -1132,7 +1132,7 @@
 (defun InsertOneBsGCTTank (insPt oneTankData tankPressureElementList tankOtherRequestList tankStandardList tankHeadStyleList tankHeadMaterialList 
                            allBsGCTSupportDictData bsGCTProjectDictData / 
                            drawFrameScale equipTag bsGCTType barrelRadius barrelHalfHeight thickNess headThickNess straightEdgeHeight equipType) 
-  (setq drawFrameScale 5)
+  (setq drawFrameScale 8)
   (setq equipTag (GetDottedPairValueUtils "TAG" oneTankData))
   ; (setq bsGCTType (strcat (GetDottedPairValueUtils "BSGCT_TYPE" oneTankData) "-" equipTag))
   ; refacotred at 2021-05-07 use equipTag as the label for data
@@ -1147,8 +1147,8 @@
   (InsertBsGCTDrawFrame insPt equipTag bsGCTProjectDictData drawFrameScale)
   (InsertBsGCTEquipTableStrategy insPt bsGCTType oneTankData tankStandardList tankHeadStyleList 
                            tankHeadMaterialList tankPressureElementList tankOtherRequestList equipType drawFrameScale)
-  ; thickNess param refactored at 2021-04-21
-  (InsertBsGCTTankGraphyStrategy (MoveInsertPositionUtils insPt -2915 1600) 
+  ; thickNess param refactored at 2021-04-21 ; Graph insPt updated by drawFrameScale - 2021-06-12
+  (InsertBsGCTTankGraphyStrategy (MoveInsertPositionUtils insPt (* drawFrameScale -583) (* drawFrameScale 280)) 
     barrelRadius barrelHalfHeight thickNess headThickNess bsGCTType straightEdgeHeight equipType allBsGCTSupportDictData)
 )
 
@@ -1156,7 +1156,7 @@
 (defun InsertOneBsGCTHeater (insPt oneHeaterData heaterPressureElementList heaterOtherRequestList heaterStandardList heaterHeadStyleList 
                              heaterHeadMaterialList allBsGCTSupportDictData bsGCTProjectDictData / 
                              drawFrameScale equipTag bsGCTType barrelRadius barrelHalfHeight exceedLength thickNess headThickNess straightEdgeHeight equipType) 
-  (setq drawFrameScale 5)
+  (setq drawFrameScale 8)
   (setq equipTag (GetDottedPairValueUtils "TAG" oneHeaterData))
   ; use equipTag as the label for data
   (setq bsGCTType equipTag)
@@ -1172,7 +1172,8 @@
   (InsertBsGCTDrawFrame insPt equipTag bsGCTProjectDictData drawFrameScale)
   (InsertBsGCTEquipTableStrategy insPt bsGCTType oneHeaterData heaterStandardList heaterHeadStyleList 
                            heaterHeadMaterialList heaterPressureElementList heaterOtherRequestList equipType drawFrameScale)
-  (InsertBsGCTHeaterGraphyStrategy (MoveInsertPositionUtils insPt -2915 1600) 
+  ; Graph insPt updated by drawFrameScale - 2021-06-12
+  (InsertBsGCTHeaterGraphyStrategy (MoveInsertPositionUtils insPt (* drawFrameScale -583) (* drawFrameScale 280)) 
     barrelRadius barrelHalfHeight exceedLength thickNess headThickNess bsGCTType straightEdgeHeight equipType allBsGCTSupportDictData)
 )
 
@@ -1227,33 +1228,34 @@
                                 tankPressureElementList tankOtherRequestList drawFrameScale / leftInsPt rightInsPt) 
   ; split oneTankData to Two Parts - no need to split 2021-06-11
   ; (setq designParamDictList (cadr (SplitLDictListByDictKeyUtils "SERVIVE_LIFE" oneTankData)))
-  (setq leftInsPt (MoveInsertPositionUtils insPt -900 2870))
-  (setq rightInsPt (MoveInsertPositionUtils insPt -450 2870))
+  (setq leftInsPt (MoveInsertPositionUtils insPt (* drawFrameScale -180) (* drawFrameScale 574)))
+  (setq rightInsPt (MoveInsertPositionUtils insPt (* drawFrameScale -90) (* drawFrameScale 574)))
   (InsertBsGCTDataHeader leftInsPt bsGCTType drawFrameScale)
-  ; the height of BsGCTDataHeader is 50
-  (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 -50))
+  ; the height of BsGCTDataHeader is 50 ; height is 10 for 1:1 - refactored at 2021-06-12
+  (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 (* drawFrameScale -10)))
   (InsertBsGCTDesignParam leftInsPt bsGCTType oneTankData "BsGCTTableDesignParam" drawFrameScale)
-  ; the height of BsGCTTankDesignParam is 840
-  (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 -840))
+  ; the height of BsGCTTankDesignParam is 840 ; height is 168 for 1:1 - refactored at 2021-06-12
+  (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 (* drawFrameScale -168)))
   (InsertBsGCTPressureElement leftInsPt bsGCTType tankPressureElementList drawFrameScale)
   ; the height of BsGCTPressureElement is [length of tankPressureElementList, add 2]
-  (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 (- 0 (* 40 (+ (length tankPressureElementList) 2)))))
-  (InsertBsGCTOtherRequest leftInsPt bsGCTType tankOtherRequestList 270 drawFrameScale)
-  ; the height of BsGCTOtherRequest is 270
-  (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 -270))
+  (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 (GetNegativeNumberUtils (* (* drawFrameScale 8) (+ (length tankPressureElementList) 2)))))
+  ; the total height of tankOtherRequestList is 54 for 1:1 scale
+  (InsertBsGCTOtherRequest leftInsPt bsGCTType tankOtherRequestList (* drawFrameScale 54) drawFrameScale)
+  ; the height of BsGCTOtherRequest is 270 ; height is 168 for 1:1 - refactored at 2021-06-12
+  (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 (* drawFrameScale -54)))
   (InsertBsGCTNozzleTable leftInsPt bsGCTType oneTankData drawFrameScale)
   ; insert tabe in right position
-  ; the height of BsGCTDataHeader is 50
-  (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 -50))
+  ; the height of BsGCTDataHeader is 50 ; height is 10 for 1:1 - refactored at 2021-06-12
+  (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 (* drawFrameScale -10)))
   (InsertBsGCTDesignStandard rightInsPt bsGCTType "BsGCTTableDesignStandard" tankStandardList drawFrameScale)
-  ; the height of BsGCTVerticalTankDesignStandard is 200
-  (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 -200))
+  ; the height of BsGCTVerticalTankDesignStandard is 200 ; height is 40 for 1:1 - refactored at 2021-06-12
+  (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 (* drawFrameScale -40)))
   (InsertBsGCTRequirement rightInsPt bsGCTType "BsGCTTableRequirement" tankHeadStyleList tankHeadMaterialList drawFrameScale)
-  ; the height of BsGCTRequirement is 320
-  (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 -320))
+  ; the height of BsGCTRequirement is 320 ; height is 64 for 1:1 - refactored at 2021-06-12
+  (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 (* drawFrameScale -64)))
   (InsertBsGCTInspectData rightInsPt bsGCTType "BsGCTTableInspectData-TankA" oneTankData drawFrameScale)
-  ; the height of BsGCTTankInspectData is 160
-  (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 -160))
+  ; the height of BsGCTTankInspectData is 160 ; height is 32 for 1:1 - refactored at 2021-06-12
+  (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 (* drawFrameScale -32)))
   (InsertBsGCTTestData rightInsPt bsGCTType "BsGCTTableTestData" oneTankData drawFrameScale)
 )
 
@@ -1263,33 +1265,34 @@
                                 tankPressureElementList tankOtherRequestList drawFrameScale / leftInsPt rightInsPt) 
   ; split oneTankData to Two Parts
   ; (setq designParamDictList (cadr (SplitLDictListByDictKeyUtils "SERVIVE_LIFE" oneTankData)))
-  (setq leftInsPt (MoveInsertPositionUtils insPt -900 2870))
-  (setq rightInsPt (MoveInsertPositionUtils insPt -450 2870))
+  (setq leftInsPt (MoveInsertPositionUtils insPt (* drawFrameScale -180) (* drawFrameScale 574)))
+  (setq rightInsPt (MoveInsertPositionUtils insPt (* drawFrameScale -90) (* drawFrameScale 574)))
   (InsertBsGCTDataHeader leftInsPt bsGCTType drawFrameScale)
-  ; the height of BsGCTDataHeader is 50
-  (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 -50))
+  ; the height of BsGCTDataHeader is 50 ; height is 10 for 1:1 - refactored at 2021-06-12
+  (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 (* drawFrameScale -10)))
   (InsertBsGCTDesignParam leftInsPt bsGCTType oneTankData "BsGCTTableHorizontalTankDesignParam" drawFrameScale)
-  ; the height of BsGCTTankDesignParam is 920
-  (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 -920))
+  ; the height of BsGCTTankDesignParam is 920 ; height is 184 for 1:1 - refactored at 2021-06-12
+  (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 (* drawFrameScale -184)))
   (InsertBsGCTPressureElement leftInsPt bsGCTType tankPressureElementList drawFrameScale)
   ; the height of BsGCTPressureElement is [length of tankPressureElementList, add 2]
-  (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 (- 0 (* 40 (+ (length tankPressureElementList) 2)))))
-  (InsertBsGCTOtherRequest leftInsPt bsGCTType tankOtherRequestList 400 drawFrameScale)
-  ; the height of BsGCTOtherRequest is 400
-  (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 -400))
+  (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 (GetNegativeNumberUtils (* (* drawFrameScale 8) (+ (length tankPressureElementList) 2)))))
+  ; the total height of tankOtherRequestList is 80 for 1:1 scale
+  (InsertBsGCTOtherRequest leftInsPt bsGCTType tankOtherRequestList (* drawFrameScale 80) drawFrameScale)
+  ; the height of BsGCTOtherRequest is 400 ; height is 80 for 1:1 - refactored at 2021-06-12
+  (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 (* drawFrameScale -80)))
   (InsertBsGCTNozzleTable leftInsPt bsGCTType oneTankData drawFrameScale)
   ; insert tabe in right position
-  ; the height of BsGCTDataHeader is 50
-  (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 -50))
+  ; the height of BsGCTDataHeader is 50 ; height is 10 for 1:1 - refactored at 2021-06-12
+  (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 (* drawFrameScale -10)))
   (InsertBsGCTDesignStandard rightInsPt bsGCTType "BsGCTTableHorizontalTankDesignStandard" tankStandardList drawFrameScale)
-  ; the height of BsGCTHorizontalTankDesignStandard is 280
-  (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 -280))
+  ; the height of BsGCTHorizontalTankDesignStandard is 280 ; height is 56 for 1:1 - refactored at 2021-06-12
+  (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 (* drawFrameScale -56)))
   (InsertBsGCTRequirement rightInsPt bsGCTType "BsGCTTableRequirement" tankHeadStyleList tankHeadMaterialList drawFrameScale)
-  ; the height of BsGCTRequirement is 320
-  (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 -320))
+  ; the height of BsGCTRequirement is 320 ; height is 64 for 1:1 - refactored at 2021-06-12
+  (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 (* drawFrameScale -64)))
   (InsertBsGCTInspectData rightInsPt bsGCTType "BsGCTTableInspectData-TankA" oneTankData drawFrameScale)
-  ; the height of BsGCTTankInspectData is 160
-  (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 -160))
+  ; the height of BsGCTTankInspectData is 160 ; height is 32 for 1:1 - refactored at 2021-06-12
+  (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 (* drawFrameScale -32)))
   (InsertBsGCTTestData rightInsPt bsGCTType "BsGCTTableTestData" oneTankData drawFrameScale)
 )
 
@@ -1298,33 +1301,33 @@
                                 heaterPressureElementList heaterOtherRequestList drawFrameScale / leftInsPt rightInsPt) 
   ; split oneHeaterData to Two Parts
   ; (setq designParamDictList (cadr (SplitLDictListByDictKeyUtils "SERVIVE_LIFE" oneHeaterData)))
-  (setq leftInsPt (MoveInsertPositionUtils insPt -900 2870))
-  (setq rightInsPt (MoveInsertPositionUtils insPt -450 2870))
+  (setq leftInsPt (MoveInsertPositionUtils insPt (* drawFrameScale -180) (* drawFrameScale 574)))
+  (setq rightInsPt (MoveInsertPositionUtils insPt (* drawFrameScale -90) (* drawFrameScale 574)))
   (InsertBsGCTDataHeader leftInsPt bsGCTType drawFrameScale)
-  ; the height of BsGCTDataHeader is 50
-  (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 -50))
+  ; the height of BsGCTDataHeader is 50 ; height is 10 for 1:1 - refactored at 2021-06-12
+  (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 (* drawFrameScale -10)))
   (InsertBsGCTDesignParam leftInsPt bsGCTType oneHeaterData "BsGCTTableDesignParam-Heater" drawFrameScale)
-  ; the height of BsGCTTankDesignParam is 960
-  (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 -960))
+  ; the height of BsGCTTankDesignParam is 960 ; height is 192 for 1:1 - refactored at 2021-06-12
+  (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 (* drawFrameScale -192)))
   (InsertBsGCTPressureElement leftInsPt bsGCTType heaterPressureElementList drawFrameScale)
   ; the height of BsGCTPressureElement is [length of tankPressureElementList, add 2]
-  (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 (- 0 (* 40 (+ (length heaterPressureElementList) 2)))))
-  (InsertBsGCTOtherRequest leftInsPt bsGCTType heaterOtherRequestList 350 drawFrameScale)
-  ; the height of BsGCTOtherRequest is 350
-  (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 -350))
+  (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 (GetNegativeNumberUtils (* (* drawFrameScale 8) (+ (length heaterPressureElementList) 2)))))
+  (InsertBsGCTOtherRequest leftInsPt bsGCTType heaterOtherRequestList (* drawFrameScale 70) drawFrameScale)
+  ; the height of BsGCTOtherRequest is 350 ; the total height of tankOtherRequestList is 70 for 1:1 scale
+  (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 (* drawFrameScale -70)))
   (InsertBsGCTNozzleTable leftInsPt bsGCTType oneHeaterData drawFrameScale)
   ; insert tabe in right position
-  ; the height of BsGCTDataHeader is 50
-  (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 -50))
+  ; the height of BsGCTDataHeader is 50 ; height is 10 for 1:1 - refactored at 2021-06-12
+  (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 (* drawFrameScale -10)))
   (InsertBsGCTDesignStandard rightInsPt bsGCTType "BsGCTTableDesignStandard-Heater" heaterStandardList drawFrameScale)
-  ; the height of BsGCTHorizontalTankDesignStandard is 240
-  (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 -240))
+  ; the height of BsGCTHorizontalTankDesignStandard is 240 ; height is 48 for 1:1 - refactored at 2021-06-12
+  (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 (* drawFrameScale -48)))
   (InsertBsGCTRequirement rightInsPt bsGCTType "BsGCTTableRequirement-Heater" heaterHeadStyleList heaterHeadMaterialList drawFrameScale)
-  ; the height of BsGCTRequirement is 280
-  (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 -280))
+  ; the height of BsGCTRequirement is 280 ; height is 56 for 1:1 - refactored at 2021-06-12
+  (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 (* drawFrameScale -56)))
   (InsertBsGCTInspectData rightInsPt bsGCTType "BsGCTTableInspectData-Heater" oneHeaterData drawFrameScale)
-  ; the height of BsGCTTankInspectData is 240
-  (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 -240))
+  ; the height of BsGCTTankInspectData is 240 ; height is 48 for 1:1 - refactored at 2021-06-12
+  (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 (* drawFrameScale -48)))
   (InsertBsGCTTestData rightInsPt bsGCTType "BsGCTTableTestData-Heater" oneHeaterData drawFrameScale)
 )
 
@@ -1410,7 +1413,7 @@
   (setq tankStandardList (GetBsGCTTankStandardData bsGCTImportedList)) 
   (setq tankHeadStyleList (GetBsGCTTankHeadStyleData bsGCTImportedList)) 
   (setq tankHeadMaterialList (GetBsGCTTankHeadMaterialData bsGCTImportedList)) 
-  (setq insPtList (GetInsertPtListByXMoveUtils insPt (GenerateSortedNumByList allBsGCTTankDictData 0) 5200))
+  (setq insPtList (GetInsertPtListByXMoveUtils insPt (GenerateSortedNumByList allBsGCTTankDictData 0) 10000))
   (mapcar '(lambda (x y) 
             (InsertOneBsGCTTank x y tankPressureElementList tankOtherRequestList tankStandardList tankHeadStyleList tankHeadMaterialList allBsGCTSupportDictData bsGCTProjectDictData) 
           ) 
@@ -1447,7 +1450,7 @@
   (setq allBsGCTSupportDictData (GetAllBsGCTSupportDictData bsGCTImportedList))
   (setq bsGCTProjectDictData (GetBsGCTProjectDictData))
   (InsertAllBsGCTTank insPt bsGCTImportedList allBsGCTSupportDictData bsGCTProjectDictData)
-  (InsertAllBsGCTHeater (MoveInsertPositionUtils insPt 0 -4000) bsGCTImportedList allBsGCTSupportDictData bsGCTProjectDictData)
+  (InsertAllBsGCTHeater (MoveInsertPositionUtils insPt 0 -10000) bsGCTImportedList allBsGCTSupportDictData bsGCTProjectDictData)
 )
 
 ; 2021-04-21
