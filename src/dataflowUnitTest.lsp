@@ -57,7 +57,15 @@
   (GetBsGCTStraightEdgeHeightTest)
   (ExtractIntegerFromStringUtilsTest)
   (GetTwoPrecisionRealUtilsTest)
+  (IsRealStringUtilsTest)
   (DL:PrintTestResults (DL:CountBooleans *testList*))
+)
+
+; 2021-06-12
+(defun IsRealStringUtilsTest () 
+  (AssertEqual 'IsRealStringUtils (list "1.5") T)
+  (AssertEqual 'IsRealStringUtils (list "/") nil)
+  (AssertEqual 'IsRealStringUtils (list "") nil)
 )
 
 ; 2021-06-12

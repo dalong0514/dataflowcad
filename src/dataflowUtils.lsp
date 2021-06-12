@@ -2244,34 +2244,46 @@
 ;;;-------------------------------------------------------------------------;;;
 ; Bool Function Utils
 
-(defun IsGsLcBlockPipePropertyDictUtils (blockPropertyDict / result)
+; refactored at 2021-06-12
+(defun IsGsLcBlockPipePropertyDictUtils (blockPropertyDict /)
   (if (and (/= (assoc "pipenum" blockPropertyDict) nil) (/= (assoc "from" blockPropertyDict) nil) )
-    (setq result T)
+    T
   )
 )
 
-(defun IsGsLcBlockEquipmentPropertyDictUtils (blockPropertyDict / result)
+; refactored at 2021-06-12
+(defun IsGsLcBlockEquipmentPropertyDictUtils (blockPropertyDict /)
   (if (and (/= (assoc "species" blockPropertyDict) nil) (/= (assoc "weight" blockPropertyDict) nil) )
-    (setq result T)
+    T
   )
 )
 
-(defun IsGsLcBlockInstrumentPropertyDictUtils (blockPropertyDict / result)
+; refactored at 2021-06-12
+(defun IsGsLcBlockInstrumentPropertyDictUtils (blockPropertyDict /)
   (if (and (/= (assoc "function" blockPropertyDict) nil) (/= (assoc "sort" blockPropertyDict) nil) )
-    (setq result T)
+    T
   )
 )
 
 ; 2021-03-29
-(defun IsListDataTypeUtils (data / result)
+; refactored at 2021-06-12
+(defun IsListDataTypeUtils (data /)
   (if (= (type data) 'LIST) 
     T
   )
 )
 
 ; 2021-03-29
-(defun IsStringDataTypeUtils (data / result)
+; refactored at 2021-06-12
+(defun IsStringDataTypeUtils (data /)
   (if (= (type data) 'STR) 
+    T
+  )
+)
+
+; 2021-06-12
+(defun IsRealStringUtils (originString /)
+  (if (/= (atof originString) 0.0) 
     T
   )
 )
