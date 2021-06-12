@@ -1305,6 +1305,7 @@
   ; (setq designParamDictList (cadr (SplitLDictListByDictKeyUtils "SERVIVE_LIFE" oneHeaterData)))
   (setq leftInsPt (MoveInsertPositionUtils insPt (* drawFrameScale -180) (* drawFrameScale 574)))
   (setq rightInsPt (MoveInsertPositionUtils insPt (* drawFrameScale -90) (* drawFrameScale 574)))
+  (setq leftNozzleInsPt (MoveInsertPositionUtils insPt (* drawFrameScale -360) (* drawFrameScale 574)))
   (InsertBsGCTDataHeader leftInsPt bsGCTType drawFrameScale)
   ; the height of BsGCTDataHeader is 50 ; height is 10 for 1:1 - refactored at 2021-06-12
   (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 (* drawFrameScale -10)))
@@ -1317,7 +1318,8 @@
   (InsertBsGCTOtherRequest leftInsPt bsGCTType heaterOtherRequestList (* drawFrameScale 70) drawFrameScale)
   ; the height of BsGCTOtherRequest is 350 ; the total height of tankOtherRequestList is 70 for 1:1 scale
   (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 (* drawFrameScale -70)))
-  (InsertBsGCTNozzleTable leftInsPt bsGCTType oneHeaterData drawFrameScale)
+  ; Nozzle Table put the left zone - refactored at - 2021-06-12
+  (InsertBsGCTNozzleTable leftNozzleInsPt bsGCTType oneHeaterData drawFrameScale)
   ; insert tabe in right position
   ; the height of BsGCTDataHeader is 50 ; height is 10 for 1:1 - refactored at 2021-06-12
   (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 (* drawFrameScale -10)))
