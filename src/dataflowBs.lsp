@@ -209,11 +209,23 @@
 )
 
 ; 2021-05-07
-; refactored at 2021-06-12 drawFrameScale
+; refactored at 2021-06-12 drawFrameScale and setPrecision
 (defun InsertBsGCTTestData (insPt dataType blockName oneEquipData drawFrameScale / testDictData) 
   (InsertBlockByScaleUtils insPt blockName "0DataFlow-BsGCT" (list (cons 0 dataType)) drawFrameScale)
-  (setq testDictData (GetBsGCTTestDictData oneEquipData))
+  (setq testDictData (SetTestDictDataTwoPrecision (GetBsGCTTestDictData oneEquipData)))
   (ModifyBlockPropertiesByDictDataUtils (entlast) testDictData)
+)
+
+; 2021-06-12
+(defun SetTestDictDataTwoPrecision (testDictData /)
+  (mapcar '(lambda (x) 
+             (if (IsRealStringUtils (cdr x))
+               (setq testDictData (subst (cons (car x) (GetTwoPrecisionRealUtils (cdr x))) x testDictData))
+             )
+           ) 
+    testDictData
+  )
+  testDictData
 )
 
 ; 2021-05-07
