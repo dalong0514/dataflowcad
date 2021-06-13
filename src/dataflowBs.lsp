@@ -27,14 +27,14 @@
 )
 
 ; 2021-05-07
+; refactored at 2021-06-12
 (defun GetBsGCTInspectDictDataStrategy (inspectRate /) 
   (cond 
     ((= inspectRate "20%") 
      (list (cons "INSPECT_RATE" "20%") (cons "INSPECT_GRADE" "AB") (cons "INSPECT_STANDARD" "NB/T47013.2-2015") (cons "INSPECT_QUALIFIED" "RT-¢ó")))
     ((= inspectRate "100%") 
      (list (cons "INSPECT_RATE" "100%") (cons "INSPECT_GRADE" "AB") (cons "INSPECT_STANDARD" "NB/T47013.2-2015") (cons "INSPECT_QUALIFIED" "RT-¢ò")))
-    ((= inspectRate "/") 
-     (list (cons "INSPECT_RATE" "/") (cons "INSPECT_GRADE" "/") (cons "INSPECT_STANDARD" "/") (cons "INSPECT_QUALIFIED" "/")))
+    (T (list (cons "INSPECT_RATE" "/") (cons "INSPECT_GRADE" "/") (cons "INSPECT_STANDARD" "/") (cons "INSPECT_QUALIFIED" "/")))
   )
 )
 
@@ -173,17 +173,17 @@
 
 ; 2021-05-25
 ; refactored at 2021-06-12 drawFrameScale
-(defun InsertBsGCTInspectData (insPt dataType blockName oneEquipData drawFrameScale /) 
+(defun InsertBsGCTInspectDataStrategy (insPt dataType blockName oneEquipData drawFrameScale /) 
   (cond 
-    ((= blockName "BsGCTTableInspectData-TankA") (InsertBsGCTTankInspectData insPt dataType blockName oneEquipData drawFrameScale))
-    ((= blockName "BsGCTTableInspectData-Heater") (InsertBsGCTHeaterInspectData insPt dataType blockName oneEquipData drawFrameScale))
+    ((= blockName "Tank") (InsertBsGCTTankInspectData insPt dataType oneEquipData drawFrameScale))
+    ((= blockName "Heater") (InsertBsGCTHeaterInspectData insPt dataType oneEquipData drawFrameScale))
   )
 )
 
 ; 2021-05-25
 ; refactored at 2021-06-12 drawFrameScale
-(defun InsertBsGCTHeaterInspectData (insPt dataType blockName oneHeaterData drawFrameScale / inspectDictData) 
-  (InsertBlockByScaleUtils insPt blockName "0DataFlow-BsGCT" (list (cons 0 dataType)) drawFrameScale)
+(defun InsertBsGCTHeaterInspectData (insPt dataType oneHeaterData drawFrameScale / inspectDictData) 
+  (InsertBlockByScaleUtils insPt "BsGCTTableInspectData-Heater" "0DataFlow-BsGCT" (list (cons 0 dataType)) drawFrameScale)
   (setq inspectDictData (append 
                           (GetBsGCTInspectDictData (GetDottedPairValueUtils "SHELL_INSPECT_RATE" oneHeaterData) "SHELL_BARREL_")
                           (GetBsGCTInspectDictData (GetDottedPairValueUtils "BARREL_INSPECT_RATE" oneHeaterData) "BARREL_")
@@ -197,9 +197,13 @@
 ; 2021-05-07
 ; refactored at 2021-05-11
 ; refactored at 2021-06-12 drawFrameScale
-(defun InsertBsGCTTankInspectData (insPt dataType blockName oneTankData drawFrameScale / inspectDictData) 
+(defun InsertBsGCTTankInspectData (insPt dataType oneTankData drawFrameScale / inspectDictData barrelDiameter) 
   ; BsGCTTableInspectData-TankA or BsGCTTableInspectData-TankB, ready for the whole logic 2021-05-11
-  (InsertBlockByScaleUtils insPt blockName "0DataFlow-BsGCT" (list (cons 0 dataType)) drawFrameScale)
+  (setq barrelDiameter (atoi (GetDottedPairValueUtils "barrelDiameter" oneTankData)))
+  (cond 
+    ((<= barrelDiameter 1200) (InsertBlockByScaleUtils insPt "BsGCTTableInspectData-TankB" "0DataFlow-BsGCT" (list (cons 0 dataType)) drawFrameScale))
+    (T (InsertBlockByScaleUtils insPt "BsGCTTableInspectData-TankA" "0DataFlow-BsGCT" (list (cons 0 dataType)) drawFrameScale))
+  )
   (setq inspectDictData (append 
                           (GetBsGCTInspectDictData (GetDottedPairValueUtils "BARREL_INSPECT_RATE" oneTankData) "BARREL_")
                           (GetBsGCTInspectDictData (GetDottedPairValueUtils "HEAD_INSPECT_RATE" oneTankData) "HEAD_")
@@ -1149,7 +1153,7 @@
   ; (setq bsGCTType (strcat (GetDottedPairValueUtils "BSGCT_TYPE" oneTankData) "-" equipTag))
   ; refacotred at 2021-05-07 use equipTag as the label for data
   (setq bsGCTType equipTag)
-  (setq barrelRadius (GetHalfNumberUtils (atoi (GetDottedPairValueUtils "barrelRadius" oneTankData))))
+  (setq barrelRadius (GetHalfNumberUtils (atoi (GetDottedPairValueUtils "barrelDiameter" oneTankData))))
   (setq barrelHalfHeight (GetHalfNumberUtils (atoi (GetDottedPairValueUtils "barrelHeight" oneTankData))))
   (setq thickNess (atoi (GetDottedPairValueUtils "BARREL_THICKNESS" oneTankData)))
   ; do not convert to int frist 2021-04-23
@@ -1173,7 +1177,7 @@
   (setq equipTag (GetDottedPairValueUtils "TAG" oneHeaterData))
   ; use equipTag as the label for data
   (setq bsGCTType equipTag)
-  (setq barrelRadius (GetHalfNumberUtils (atoi (GetDottedPairValueUtils "barrelRadius" oneHeaterData))))
+  (setq barrelRadius (GetHalfNumberUtils (atoi (GetDottedPairValueUtils "barrelDiameter" oneHeaterData))))
   ; refactored at - 2021-05-30 tube length for drawing tube
   (setq barrelHalfHeight (GetHalfNumberUtils (atoi (GetDottedPairValueUtils "barrelHeight" oneHeaterData))))
   (setq exceedLength (atoi (GetDottedPairValueUtils "EXCEED_LENGTH" oneHeaterData)))
@@ -1266,7 +1270,7 @@
   (InsertBsGCTRequirement rightInsPt bsGCTType "BsGCTTableRequirement" tankHeadStyleList tankHeadMaterialList drawFrameScale)
   ; the height of BsGCTRequirement is 320 ; height is 64 for 1:1 - refactored at 2021-06-12
   (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 (* drawFrameScale -64)))
-  (InsertBsGCTInspectData rightInsPt bsGCTType "BsGCTTableInspectData-TankA" oneTankData drawFrameScale)
+  (InsertBsGCTInspectDataStrategy rightInsPt bsGCTType "Tank" oneTankData drawFrameScale)
   ; the height of BsGCTTankInspectData is 160 ; height is 32 for 1:1 - refactored at 2021-06-12
   (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 (* drawFrameScale -32)))
   (InsertBsGCTTestData rightInsPt bsGCTType "BsGCTTableTestData" oneTankData drawFrameScale)
@@ -1303,7 +1307,7 @@
   (InsertBsGCTRequirement rightInsPt bsGCTType "BsGCTTableRequirement" tankHeadStyleList tankHeadMaterialList drawFrameScale)
   ; the height of BsGCTRequirement is 320 ; height is 64 for 1:1 - refactored at 2021-06-12
   (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 (* drawFrameScale -64)))
-  (InsertBsGCTInspectData rightInsPt bsGCTType "BsGCTTableInspectData-TankA" oneTankData drawFrameScale)
+  (InsertBsGCTInspectDataStrategy rightInsPt bsGCTType "Tank" oneTankData drawFrameScale)
   ; the height of BsGCTTankInspectData is 160 ; height is 32 for 1:1 - refactored at 2021-06-12
   (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 (* drawFrameScale -32)))
   (InsertBsGCTTestData rightInsPt bsGCTType "BsGCTTableTestData" oneTankData drawFrameScale)
@@ -1340,7 +1344,7 @@
   (InsertBsGCTRequirement rightInsPt bsGCTType "BsGCTTableRequirement-Heater" heaterHeadStyleList heaterHeadMaterialList drawFrameScale)
   ; the height of BsGCTRequirement is 280 ; height is 56 for 1:1 - refactored at 2021-06-12
   (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 (* drawFrameScale -56)))
-  (InsertBsGCTInspectData rightInsPt bsGCTType "BsGCTTableInspectData-Heater" oneHeaterData drawFrameScale)
+  (InsertBsGCTInspectDataStrategy rightInsPt bsGCTType "Heater" oneHeaterData drawFrameScale)
   ; the height of BsGCTTankInspectData is 240 ; height is 48 for 1:1 - refactored at 2021-06-12
   (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 (* drawFrameScale -48)))
   (InsertBsGCTTestData rightInsPt bsGCTType "BsGCTTableTestData-Heater" oneHeaterData drawFrameScale)
