@@ -201,6 +201,10 @@
   (ModifyBlockPropertiesByDictDataUtils (entlast) inspectDictData)
 )
 
+
+
+
+
 ; 2021-05-07
 ; refactored at 2021-05-11
 ; refactored at 2021-06-12 drawFrameScale
