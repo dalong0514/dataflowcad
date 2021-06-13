@@ -192,18 +192,14 @@
     (T (InsertBlockByScaleUtils insPt "BsGCTTableInspectData-HeaterA" "0DataFlow-BsGCT" (list (cons 0 dataType)) drawFrameScale))
   )
   (setq inspectDictData (append 
-                          (GetBsGCTInspectDictData (GetDottedPairValueUtils "SHELL_INSPECT_RATE" oneHeaterData) "SHELL_BARREL_")
-                          (GetBsGCTInspectDictData (GetDottedPairValueUtils "BARREL_INSPECT_RATE" oneHeaterData) "BARREL_")
-                          (GetBsGCTInspectDictData (GetDottedPairValueUtils "HEAD_INSPECT_RATE" oneHeaterData) "HEAD_")
+                          (GetBsGCTHeaterBarrelInspectDictData shellWeldJoint (GetDottedPairValueUtils "SHELL_INSPECT_RATE" oneHeaterData))
+                          (GetBsGCTBarrelInspectDictData tubeWeldJoint (GetDottedPairValueUtils "BARREL_INSPECT_RATE" oneHeaterData))
+                          (GetBsGCTBarrelInspectDictData tubeWeldJoint (GetDottedPairValueUtils "HEAD_INSPECT_RATE" oneHeaterData))
                           (GetBsGCTInspectDictData (GetDottedPairValueUtils "CD_INSPECT_RATE" oneHeaterData) "CD_")
                           (GetBsGCTInspectDictData (GetDottedPairValueUtils "HEATER_INSPECT_RATE" oneHeaterData) "HEATER_")
                         ))
   (ModifyBlockPropertiesByDictDataUtils (entlast) inspectDictData)
 )
-
-
-
-
 
 ; 2021-05-07
 ; refactored at 2021-05-11
@@ -218,11 +214,57 @@
     (T (InsertBlockByScaleUtils insPt "BsGCTTableInspectData-TankA" "0DataFlow-BsGCT" (list (cons 0 dataType)) drawFrameScale))
   )
   (setq inspectDictData (append 
-                          (GetBsGCTInspectDictData (GetDottedPairValueUtils "BARREL_INSPECT_RATE" oneTankData) "BARREL_")
-                          (GetBsGCTInspectDictData (GetDottedPairValueUtils "HEAD_INSPECT_RATE" oneTankData) "HEAD_")
+                          (GetBsGCTBarrelInspectDictData weldJoint (GetDottedPairValueUtils "BARREL_INSPECT_RATE" oneTankData))
+                          (GetBsGCTHeadInspectDictData weldJoint (GetDottedPairValueUtils "HEAD_INSPECT_RATE" oneTankData))
                           (GetBsGCTInspectDictData (GetDottedPairValueUtils "CD_INSPECT_RATE" oneTankData) "CD_")
                         ))
   (ModifyBlockPropertiesByDictDataUtils (entlast) inspectDictData)
+)
+
+; 2021-06-13
+(defun GetBsGCTHeaterBarrelInspectDictData (shellWeldJoint barrelInspectRate /) 
+  (if (/= barrelInspectRate "") 
+    (GetBsGCTInspectDictData barrelInspectRate "SHELL_BARREL_")
+    (GetBsGCTInspectDictData (GetBsInspectRateByWeldJointEnums shellWeldJoint) "SHELL_BARREL_")
+  )
+)
+
+; 2021-06-13
+(defun GetBsGCTBarrelInspectDictData (weldJoint barrelInspectRate /) 
+  (if (/= barrelInspectRate "") 
+    (GetBsGCTInspectDictData barrelInspectRate "BARREL_")
+    (GetBsGCTInspectDictData (GetBsBarrelInspectRate weldJoint) "BARREL_")
+  )
+)
+
+; 2021-06-13
+(defun GetBsGCTHeadInspectDictData (weldJoint barrelInspectRate /) 
+  (if (/= barrelInspectRate "") 
+    (GetBsGCTInspectDictData barrelInspectRate "HEAD_")
+    (GetBsGCTInspectDictData (GetBsHeadInspectRate weldJoint) "HEAD_")
+  )
+)
+
+; 2021-06-13
+; unit test compeleted
+(defun GetBsBarrelInspectRate (weldJoint /)
+  (GetBsInspectRateByWeldJointEnums (GetBsBarrelWeldJoint weldJoint))
+)
+
+; 2021-06-13
+; unit test compeleted
+(defun GetBsBarrelWeldJoint (weldJoint /)
+  (RegExpReplace weldJoint "(.*)/(.*)" "$1" nil nil)
+)
+
+; 2021-06-13
+(defun GetBsHeadInspectRate (weldJoint /)
+  (GetBsInspectRateByWeldJointEnums (GetBsHeadWeldJoint weldJoint))
+)
+
+; 2021-06-13
+(defun GetBsHeadWeldJoint (weldJoint /)
+  (RegExpReplace weldJoint "(.*)/(.*)" "$2" nil nil)
 )
 
 ; 2021-05-07

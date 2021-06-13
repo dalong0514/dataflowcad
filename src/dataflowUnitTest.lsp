@@ -58,7 +58,21 @@
   (ExtractIntegerFromStringUtilsTest)
   (GetTwoPrecisionRealUtilsTest)
   (IsRealStringUtilsTest)
+  (GetBsBarrelWeldJointTest)
+  (GetBsBarrelInspectRateTest)
   (DL:PrintTestResults (DL:CountBooleans *testList*))
+)
+
+; 2021-06-13
+(defun GetBsBarrelInspectRateTest () 
+  (AssertEqual 'GetBsBarrelInspectRate (list "1.0/0.85") "100%")
+  (AssertEqual 'GetBsBarrelInspectRate (list "0.85/1.0") "20%")
+)
+
+; 2021-06-13
+(defun GetBsBarrelWeldJointTest () 
+  (AssertEqual 'GetBsBarrelWeldJoint (list "1.0/0.85") "1.0")
+  (AssertEqual 'GetBsBarrelWeldJoint (list "0.85/1.0") "0.85")
 )
 
 ; 2021-06-12
