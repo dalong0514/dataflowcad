@@ -182,8 +182,15 @@
 
 ; 2021-05-25
 ; refactored at 2021-06-12 drawFrameScale
-(defun InsertBsGCTHeaterInspectData (insPt dataType oneHeaterData drawFrameScale / inspectDictData) 
-  (InsertBlockByScaleUtils insPt "BsGCTTableInspectData-Heater" "0DataFlow-BsGCT" (list (cons 0 dataType)) drawFrameScale)
+; refactored at 2021-06-13
+(defun InsertBsGCTHeaterInspectData (insPt dataType oneHeaterData drawFrameScale / inspectDictData tubeWeldJoint shellWeldJoint) 
+  (setq barrelDiameter (atoi (GetDottedPairValueUtils "barrelDiameter" oneHeaterData)))
+  (setq tubeWeldJoint (GetDottedPairValueUtils "TUBE_WELD_JOINT" oneHeaterData))
+  (setq shellWeldJoint (GetDottedPairValueUtils "SHELL_WELD_JOINT" oneHeaterData))
+  (cond 
+    ((<= barrelDiameter 1200) (InsertBlockByScaleUtils insPt "BsGCTTableInspectData-HeaterB" "0DataFlow-BsGCT" (list (cons 0 dataType)) drawFrameScale))
+    (T (InsertBlockByScaleUtils insPt "BsGCTTableInspectData-HeaterA" "0DataFlow-BsGCT" (list (cons 0 dataType)) drawFrameScale))
+  )
   (setq inspectDictData (append 
                           (GetBsGCTInspectDictData (GetDottedPairValueUtils "SHELL_INSPECT_RATE" oneHeaterData) "SHELL_BARREL_")
                           (GetBsGCTInspectDictData (GetDottedPairValueUtils "BARREL_INSPECT_RATE" oneHeaterData) "BARREL_")
@@ -197,9 +204,11 @@
 ; 2021-05-07
 ; refactored at 2021-05-11
 ; refactored at 2021-06-12 drawFrameScale
-(defun InsertBsGCTTankInspectData (insPt dataType oneTankData drawFrameScale / inspectDictData barrelDiameter) 
+; refactored at 2021-06-13
+(defun InsertBsGCTTankInspectData (insPt dataType oneTankData drawFrameScale / inspectDictData barrelDiameter weldJoint) 
   ; BsGCTTableInspectData-TankA or BsGCTTableInspectData-TankB, ready for the whole logic 2021-05-11
   (setq barrelDiameter (atoi (GetDottedPairValueUtils "barrelDiameter" oneTankData)))
+  (setq weldJoint (GetDottedPairValueUtils "WELD_JOINT" oneTankData))
   (cond 
     ((<= barrelDiameter 1200) (InsertBlockByScaleUtils insPt "BsGCTTableInspectData-TankB" "0DataFlow-BsGCT" (list (cons 0 dataType)) drawFrameScale))
     (T (InsertBlockByScaleUtils insPt "BsGCTTableInspectData-TankA" "0DataFlow-BsGCT" (list (cons 0 dataType)) drawFrameScale))

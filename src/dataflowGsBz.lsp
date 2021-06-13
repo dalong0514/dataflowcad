@@ -114,7 +114,7 @@
   (setq insPt (getpoint "\n选取房间块插入点："))
   (VerifyGsBzBlockByName "GsCleanAir")
   (VerifyGsBzCleanAirLayer)
-  (InsertBlockUtils insPt "GsCleanAir" "0DataFlow-GsBzCleanAirCondition" (list (cons 2 "C01")))
+  (InsertBlockByNoPropertyUtils insPt "GsCleanAir" "0DataFlow-GsBzCleanAirCondition")
 )
 
 ; 2021-03-09
