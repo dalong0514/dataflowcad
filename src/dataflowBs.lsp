@@ -928,6 +928,15 @@
   ) 
 )
 
+; 2021-06-14
+(defun GetBsGCTReactorDictData ()
+  (vl-remove-if-not '(lambda (x) 
+                      (= (GetDottedPairValueUtils "updateStatus" x) "是") 
+                    ) 
+    (ReadCSVFileToDictDataUtils "D:\\dataflowcad\\bsdata\\bsGCTReactorMainData.txt")
+  ) 
+)
+
 ; refactored at 2021-06-11
 (defun GetBsGCTProjectDictData ()
   (car (ReadCSVFileToDictDataUtils "D:\\dataflowcad\\bsdata\\bsGCTProjectData.txt"))
@@ -1165,7 +1174,7 @@
   (setq thickNess (atoi (GetDottedPairValueUtils "BARREL_THICKNESS" oneTankData)))
   ; do not convert to int frist 2021-04-23
   (setq headThickNess (GetDottedPairValueUtils "HEAD_THICKNESS" oneTankData))
-  (setq straightEdgeHeight 25)
+  (setq straightEdgeHeight (GetBsGCTStraightEdgeHeightEnums barrelRadius))
   (setq equipType (GetBsGCTEquipTypeStrategy (GetDottedPairValueUtils "equipType" oneTankData)))
   (InsertBsGCTDrawFrame insPt equipTag bsGCTProjectDictData drawFrameScale)
   (InsertBsGCTEquipTableStrategy insPt bsGCTType oneTankData tankStandardList tankHeadStyleList 
@@ -1179,7 +1188,6 @@
 (defun InsertOneBsGCTHeater (insPt oneHeaterData heaterPressureElementList heaterOtherRequestList heaterStandardList heaterHeadStyleList 
                              heaterHeadMaterialList allBsGCTSupportDictData bsGCTProjectDictData / 
                              drawFrameScale equipTag bsGCTType barrelRadius barrelHalfHeight exceedLength thickNess headThickNess straightEdgeHeight equipType) 
-  ; (setq drawFrameScale 8)
   (setq drawFrameScale (atoi (GetDottedPairValueUtils "drawFrameScale" oneHeaterData)))
   (setq equipTag (GetDottedPairValueUtils "TAG" oneHeaterData))
   ; use equipTag as the label for data
@@ -1191,7 +1199,7 @@
   (setq thickNess (atoi (GetDottedPairValueUtils "BARREL_THICKNESS" oneHeaterData)))
   ; do not convert to int frist 2021-04-23
   (setq headThickNess (GetDottedPairValueUtils "HEAD_THICKNESS" oneHeaterData))
-  (setq straightEdgeHeight 25)
+  (setq straightEdgeHeight (GetBsGCTStraightEdgeHeightEnums barrelRadius))
   (setq equipType (GetBsGCTEquipTypeStrategy (GetDottedPairValueUtils "equipType" oneHeaterData)))
   (InsertBsGCTDrawFrame insPt equipTag bsGCTProjectDictData drawFrameScale)
   (InsertBsGCTEquipTableStrategy insPt bsGCTType oneHeaterData heaterStandardList heaterHeadStyleList 
@@ -1201,14 +1209,31 @@
     barrelRadius barrelHalfHeight exceedLength thickNess headThickNess bsGCTType straightEdgeHeight equipType allBsGCTSupportDictData drawFrameScale)
 )
 
-; 2021-05-19
-; 标准封头的直边段高度，小于等于 2000 直径的是 25mm，大于 2000 直径的是 40mm
-(defun GetBsGCTStraightEdgeHeight (barrelRadius /)
-  (cond 
-    ((<= barrelRadius 1000) 25)
-    ((> barrelRadius 1000) 40)
-    (T 25)
-  )
+; 2021-06-14
+(defun InsertOneBsGCTReactor (insPt oneReactorData heaterPressureElementList heaterOtherRequestList heaterStandardList heaterHeadStyleList 
+                             heaterHeadMaterialList allBsGCTSupportDictData bsGCTProjectDictData / 
+                             drawFrameScale equipTag bsGCTType barrelRadius barrelHalfHeight thickNess headThickNess straightEdgeHeight equipType) 
+  (setq drawFrameScale (atoi (GetDottedPairValueUtils "drawFrameScale" oneReactorData)))
+  (setq equipTag (GetDottedPairValueUtils "TAG" oneReactorData))
+  ; use equipTag as the label for data
+  (setq bsGCTType equipTag)
+  (setq barrelRadius (GetHalfNumberUtils (atoi (GetDottedPairValueUtils "barrelDiameter" oneReactorData))))
+  ; refactored at - 2021-05-30 tube length for drawing tube
+  (setq barrelHalfHeight (GetHalfNumberUtils (atoi (GetDottedPairValueUtils "barrelHeight" oneReactorData))))
+  (setq thickNess (atoi (GetDottedPairValueUtils "BARREL_THICKNESS" oneReactorData)))
+  ; do not convert to int frist 2021-04-23
+  (setq headThickNess (GetDottedPairValueUtils "HEAD_THICKNESS" oneReactorData))
+  (setq straightEdgeHeight (GetBsGCTStraightEdgeHeightEnums barrelRadius))
+  (setq equipType (GetBsGCTEquipTypeStrategy (GetDottedPairValueUtils "equipType" oneReactorData)))
+  
+  
+  (princ equipType)
+  (InsertBsGCTDrawFrame insPt equipTag bsGCTProjectDictData drawFrameScale)
+  (InsertBsGCTEquipTableStrategy insPt bsGCTType oneReactorData heaterStandardList heaterHeadStyleList 
+                           heaterHeadMaterialList heaterPressureElementList heaterOtherRequestList equipType drawFrameScale)
+  ; Graph insPt updated by drawFrameScale - 2021-06-12
+  ; (InsertBsGCTHeaterGraphyStrategy (MoveInsertPositionUtils insPt (* drawFrameScale -583) (* drawFrameScale 280)) 
+  ;   barrelRadius barrelHalfHeight exceedLength thickNess headThickNess bsGCTType straightEdgeHeight equipType allBsGCTSupportDictData drawFrameScale)
 )
 
 ; 2021-05-13
@@ -1357,6 +1382,43 @@
   (InsertBsGCTTestData rightInsPt bsGCTType "BsGCTTableTestData-Heater" oneHeaterData drawFrameScale)
 )
 
+; 2021-06-14
+(defun InsertGCTOneBsReactorTable (insPt bsGCTType oneReactorData heaterStandardList heaterHeadStyleList heaterHeadMaterialList 
+                                heaterPressureElementList heaterOtherRequestList drawFrameScale / leftInsPt rightInsPt) 
+  ; split oneReactorData to Two Parts
+  ; (setq designParamDictList (cadr (SplitLDictListByDictKeyUtils "SERVIVE_LIFE" oneReactorData)))
+  (setq leftInsPt (MoveInsertPositionUtils insPt (* drawFrameScale -180) (* drawFrameScale 574)))
+  (setq rightInsPt (MoveInsertPositionUtils insPt (* drawFrameScale -90) (* drawFrameScale 574)))
+  (setq leftNozzleInsPt (MoveInsertPositionUtils insPt (* drawFrameScale -360) (* drawFrameScale 574)))
+  (InsertBsGCTDataHeader leftInsPt bsGCTType drawFrameScale)
+  ; the height of BsGCTDataHeader is 50 ; height is 10 for 1:1 - refactored at 2021-06-12
+  (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 (* drawFrameScale -10)))
+  (InsertBsGCTDesignParam leftInsPt bsGCTType oneReactorData "BsGCTTableDesignParam-Reactor" drawFrameScale)
+  ; the height of BsGCTTankDesignParam is 960 ; height is 192 for 1:1 - refactored at 2021-06-12
+  (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 (* drawFrameScale -192)))
+  ; (InsertBsGCTPressureElement leftInsPt bsGCTType heaterPressureElementList drawFrameScale)
+  ; ; the height of BsGCTPressureElement is [length of tankPressureElementList, add 2]
+  ; (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 (GetNegativeNumberUtils (* (* drawFrameScale 8) (+ (length heaterPressureElementList) 2)))))
+  ; (InsertBsGCTOtherRequest leftInsPt bsGCTType heaterOtherRequestList (* drawFrameScale 70) drawFrameScale)
+  ; ; the height of BsGCTOtherRequest is 350 ; the total height of tankOtherRequestList is 70 for 1:1 scale
+  ; (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 (* drawFrameScale -70)))
+  ; ; Nozzle Table put the left zone - refactored at - 2021-06-12
+  ; (InsertBsGCTNozzleTable leftNozzleInsPt bsGCTType oneReactorData drawFrameScale)
+  ; ; insert tabe in right position
+  ; ; the height of BsGCTDataHeader is 50 ; height is 10 for 1:1 - refactored at 2021-06-12
+  ; (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 (* drawFrameScale -10)))
+  ; (InsertBsGCTDesignStandard rightInsPt bsGCTType "BsGCTTableDesignStandard" heaterStandardList drawFrameScale 48)
+  ; ; the height of BsGCTHorizontalTankDesignStandard is 240 ; height is 48 for 1:1 - refactored at 2021-06-12
+  ; (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 (* drawFrameScale -48)))
+  ; (InsertBsGCTRequirement rightInsPt bsGCTType "BsGCTTableRequirement-Heater" heaterHeadStyleList heaterHeadMaterialList drawFrameScale)
+  ; ; the height of BsGCTRequirement is 280 ; height is 56 for 1:1 - refactored at 2021-06-12
+  ; (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 (* drawFrameScale -56)))
+  ; (InsertBsGCTInspectDataStrategy rightInsPt bsGCTType "Heater" oneReactorData drawFrameScale)
+  ; ; the height of BsGCTTankInspectData is 240 ; height is 48 for 1:1 - refactored at 2021-06-12
+  ; (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 (* drawFrameScale -48)))
+  ; (InsertBsGCTTestData rightInsPt bsGCTType "BsGCTTableTestData-Heater" oneReactorData drawFrameScale)
+)
+
 ; 2021-05-16
 ; unit compeleted
 (defun GetBsGCTEquipTypeStrategy (equipType /)
@@ -1365,6 +1427,7 @@
     ((RegexpTestUtils equipType "卧式双椭.*" nil) "horizontalTank")
     ((RegexpTestUtils equipType "立式换热.*" nil) "verticalHeater")
     ((RegexpTestUtils equipType "卧式换热.*" nil) "horizontalHeater")
+    ((RegexpTestUtils equipType ".*反应.*" nil) "reactor")
   )
 )
 
@@ -1394,6 +1457,15 @@
      ))
     ((or (= equipType "verticalHeater") (= equipType "horizontalHeater")) 
      (InsertGCTOneBsHeaterTable insPt bsGCTType oneEquipData 
+       (FilterListListByFirstItemUtils equipStandardList "Heater") 
+       (FilterListListByFirstItemUtils equipHeadStyleList "Heater") 
+       (FilterListListByFirstItemUtils equipHeadMaterialList "Heater")                    
+       equipPressureElementList 
+       (FilterListListByFirstItemUtils equipOtherRequestList "Heater") 
+       drawFrameScale
+     ))
+    ((= equipType "reactor") 
+     (InsertGCTOneBsReactorTable insPt bsGCTType oneEquipData 
        (FilterListListByFirstItemUtils equipStandardList "Heater") 
        (FilterListListByFirstItemUtils equipHeadStyleList "Heater") 
        (FilterListListByFirstItemUtils equipHeadMaterialList "Heater")                    
@@ -1466,7 +1538,28 @@
     insPtList
     allBsGCTHeaterDictData 
   ) 
-  (princ)
+)
+
+; 2021-06-14
+(defun InsertAllBsGCTReactor (insPt bsGCTImportedList allBsGCTSupportDictData bsGCTProjectDictData / allBsGCTReactorDictData heaterPressureElementList 
+                           heaterOtherRequestList heaterStandardList heaterHeadStyleList heaterHeadMaterialList insPtList) 
+  (setq allBsGCTReactorDictData (GetBsGCTReactorDictData))
+  
+  
+  (setq heaterPressureElementList (GetBsGCTHeaterPressureElementDictData bsGCTImportedList))
+  (setq heaterOtherRequestList (GetBsGCTHeaterOtherRequestData bsGCTImportedList)) 
+  (setq heaterStandardList (GetBsGCTHeaterStandardData bsGCTImportedList)) 
+  (setq heaterHeadStyleList (GetBsGCTHeaterHeadStyleData bsGCTImportedList)) 
+  (setq heaterHeadMaterialList (GetBsGCTHeaterHeadMaterialData bsGCTImportedList)) 
+  
+  
+  (setq insPtList (GetInsertPtListByXMoveUtils insPt (GenerateSortedNumByList allBsGCTReactorDictData 0) 10000))
+  (mapcar '(lambda (x y) 
+            (InsertOneBsGCTReactor x y heaterPressureElementList heaterOtherRequestList heaterStandardList heaterHeadStyleList heaterHeadMaterialList allBsGCTSupportDictData bsGCTProjectDictData) 
+          ) 
+    insPtList
+    allBsGCTReactorDictData 
+  ) 
 )
 
 ; 2021-05-25
@@ -1479,6 +1572,7 @@
   (setq bsGCTProjectDictData (GetBsGCTProjectDictData))
   (InsertAllBsGCTTank insPt bsGCTImportedList allBsGCTSupportDictData bsGCTProjectDictData)
   (InsertAllBsGCTHeater (MoveInsertPositionUtils insPt 0 -10000) bsGCTImportedList allBsGCTSupportDictData bsGCTProjectDictData)
+  (InsertAllBsGCTReactor (MoveInsertPositionUtils insPt 0 -20000) bsGCTImportedList allBsGCTSupportDictData bsGCTProjectDictData)
 )
 
 ; 2021-04-21

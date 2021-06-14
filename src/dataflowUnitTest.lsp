@@ -54,7 +54,7 @@
   (SplitListListByIndexUtilsTest)
   (SplitLDictListByDictKeyUtilsTest)
   (GetBsGCTTankEquipTypeStrategyTest)
-  (GetBsGCTStraightEdgeHeightTest)
+  (GetBsGCTStraightEdgeHeightEnumsTest)
   (ExtractIntegerFromStringUtilsTest)
   (GetTwoPrecisionRealUtilsTest)
   (IsRealStringUtilsTest)
@@ -98,9 +98,9 @@
 )
 
 ; 2021-05-16
-(defun GetBsGCTStraightEdgeHeightTest () 
-  (AssertEqual 'GetBsGCTStraightEdgeHeight (list 800) 25)
-  (AssertEqual 'GetBsGCTStraightEdgeHeight (list 1500) 40)
+(defun GetBsGCTStraightEdgeHeightEnumsTest () 
+  (AssertEqual 'GetBsGCTStraightEdgeHeightEnums (list 800) 25)
+  (AssertEqual 'GetBsGCTStraightEdgeHeightEnums (list 1500) 40)
 )
 
 ; 2021-05-16
