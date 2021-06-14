@@ -95,10 +95,7 @@
                   (SplitProjectInfoToTwoLineUtils (GetDottedPairValueUtils "PROJECT" bsGCTProjectDictData)))
                 (list (cons "Speci" "…Ë±∏") (cons "Scale" (strcat "1:" (vl-princ-to-string drawFrameScale))) 
                       (cons "EquipNAME" dataType) (cons "AuthD" "") (cons "PROJECT1" ""))))
-  (ModifyMultiplePropertyForOneBlockUtils (entlast) 
-    (mapcar '(lambda (x) (car x)) bsGCTProjectDictData)
-    (mapcar '(lambda (x) (cdr x)) bsGCTProjectDictData)
-  )
+  (ModifyBlockPropertyByDictDataUtils (entlast) bsGCTProjectDictData)
   (InsertBlockByScaleUtils (MoveInsertPositionUtils insPt 0 (* drawFrameScale 46)) "revisions.2017" "0DataFlow-BsFrame" (list (cons 2 "1")) drawFrameScale)
   (InsertBlockByNoPropertyByScaleUtils (MoveInsertPositionUtils insPt 0 (* drawFrameScale 71)) "intercheck.2017" "0DataFlow-BsFrame" drawFrameScale)
   (InsertBlockByNoPropertyByScaleUtils (MoveInsertPositionUtils insPt 0 (* drawFrameScale 108)) "stamp2.2017" "0DataFlow-BsFrame" drawFrameScale)
@@ -114,17 +111,16 @@
 ; refactored at 2021-06-12 drawFrameScale
 (defun InsertBsGCTDesignParam (insPt dataType designParamDictList blockName drawFrameScale /) 
   (InsertBlockByScaleUtils insPt blockName "0DataFlow-BsGCT" (list (cons 0 dataType)) drawFrameScale)
-  (ModifyMultiplePropertyForOneBlockUtils (entlast) 
-    (mapcar '(lambda (x) (car x)) designParamDictList)
-    (mapcar '(lambda (x) (cdr x)) designParamDictList)
-  )
+  (ModifyBlockPropertyByDictDataUtils (entlast) designParamDictList)
 )
 
 ; refactored at 2021-04-20
 ; refactored at 2021-05-25
 ; refactored at 2021-06-12 drawFrameScale
-(defun InsertBsGCTDesignStandard (insPt dataType blockName tankStandardList drawFrameScale /) 
+; refactored at 2021-06-13 frameHeight
+(defun InsertBsGCTDesignStandard (insPt dataType blockName tankStandardList drawFrameScale frameHeight /) 
   (InsertBlockByScaleUtils insPt blockName "0DataFlow-BsGCT" (list (cons 0 dataType)) drawFrameScale)
+  (SetOneDynamicBlockPropertyValueUtils (GetLastVlaObjectUtils) "HEIGHT" (* drawFrameScale frameHeight))
   (InsertBsGCTTankStandardText (MoveInsertPositionUtils insPt (* drawFrameScale 4) (* drawFrameScale -16)) tankStandardList dataType drawFrameScale)
 )
 
@@ -198,7 +194,7 @@
                           (GetBsGCTInspectDictData (GetDottedPairValueUtils "CD_INSPECT_RATE" oneHeaterData) "CD_")
                           (GetBsGCTInspectDictData (GetDottedPairValueUtils "HEATER_INSPECT_RATE" oneHeaterData) "HEATER_")
                         ))
-  (ModifyBlockPropertiesByDictDataUtils (entlast) inspectDictData)
+  (ModifyBlockPropertyByDictDataUtils (entlast) inspectDictData)
 )
 
 ; 2021-05-07
@@ -218,7 +214,7 @@
                           (GetBsGCTHeadInspectDictData weldJoint (GetDottedPairValueUtils "HEAD_INSPECT_RATE" oneTankData))
                           (GetBsGCTInspectDictData (GetDottedPairValueUtils "CD_INSPECT_RATE" oneTankData) "CD_")
                         ))
-  (ModifyBlockPropertiesByDictDataUtils (entlast) inspectDictData)
+  (ModifyBlockPropertyByDictDataUtils (entlast) inspectDictData)
 )
 
 ; 2021-06-13
@@ -272,7 +268,7 @@
 (defun InsertBsGCTTestData (insPt dataType blockName oneEquipData drawFrameScale / testDictData) 
   (InsertBlockByScaleUtils insPt blockName "0DataFlow-BsGCT" (list (cons 0 dataType)) drawFrameScale)
   (setq testDictData (SetTestDictDataTwoPrecision (GetBsGCTTestDictData oneEquipData)))
-  (ModifyBlockPropertiesByDictDataUtils (entlast) testDictData)
+  (ModifyBlockPropertyByDictDataUtils (entlast) testDictData)
 )
 
 ; 2021-06-12
@@ -1275,7 +1271,7 @@
   ; insert tabe in right position
   ; the height of BsGCTDataHeader is 50 ; height is 10 for 1:1 - refactored at 2021-06-12
   (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 (* drawFrameScale -10)))
-  (InsertBsGCTDesignStandard rightInsPt bsGCTType "BsGCTTableDesignStandard" tankStandardList drawFrameScale)
+  (InsertBsGCTDesignStandard rightInsPt bsGCTType "BsGCTTableDesignStandard" tankStandardList drawFrameScale 40)
   ; the height of BsGCTVerticalTankDesignStandard is 200 ; height is 40 for 1:1 - refactored at 2021-06-12
   (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 (* drawFrameScale -40)))
   (InsertBsGCTRequirement rightInsPt bsGCTType "BsGCTTableRequirement" tankHeadStyleList tankHeadMaterialList drawFrameScale)
@@ -1312,7 +1308,7 @@
   ; insert tabe in right position
   ; the height of BsGCTDataHeader is 50 ; height is 10 for 1:1 - refactored at 2021-06-12
   (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 (* drawFrameScale -10)))
-  (InsertBsGCTDesignStandard rightInsPt bsGCTType "BsGCTTableHorizontalTankDesignStandard" tankStandardList drawFrameScale)
+  (InsertBsGCTDesignStandard rightInsPt bsGCTType "BsGCTTableDesignStandard" tankStandardList drawFrameScale 56)
   ; the height of BsGCTHorizontalTankDesignStandard is 280 ; height is 56 for 1:1 - refactored at 2021-06-12
   (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 (* drawFrameScale -56)))
   (InsertBsGCTRequirement rightInsPt bsGCTType "BsGCTTableRequirement" tankHeadStyleList tankHeadMaterialList drawFrameScale)
@@ -1349,7 +1345,7 @@
   ; insert tabe in right position
   ; the height of BsGCTDataHeader is 50 ; height is 10 for 1:1 - refactored at 2021-06-12
   (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 (* drawFrameScale -10)))
-  (InsertBsGCTDesignStandard rightInsPt bsGCTType "BsGCTTableDesignStandard-Heater" heaterStandardList drawFrameScale)
+  (InsertBsGCTDesignStandard rightInsPt bsGCTType "BsGCTTableDesignStandard" heaterStandardList drawFrameScale 48)
   ; the height of BsGCTHorizontalTankDesignStandard is 240 ; height is 48 for 1:1 - refactored at 2021-06-12
   (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 (* drawFrameScale -48)))
   (InsertBsGCTRequirement rightInsPt bsGCTType "BsGCTTableRequirement-Heater" heaterHeadStyleList heaterHeadMaterialList drawFrameScale)

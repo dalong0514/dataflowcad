@@ -1251,7 +1251,7 @@
 )
 
 ; 2021-05-07
-(defun ModifyBlockPropertiesByDictDataUtils (entityName dictData /)
+(defun ModifyBlockPropertyByDictDataUtils (entityName dictData /)
   (ModifyMultiplePropertyForOneBlockUtils entityName 
     (mapcar '(lambda (x) (car x)) dictData)
     (mapcar '(lambda (x) (cdr x)) dictData)
