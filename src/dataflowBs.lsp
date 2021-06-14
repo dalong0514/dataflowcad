@@ -379,7 +379,7 @@
 ; 2021-04-17
 ; refactored at 2021-06-12 drawFrameScale
 (defun InsertBsGCTNozzleTable (insPt dataType oneTankData drawFrameScale / oneBsGCTTankNozzleDictData) 
-  (setq oneBsGCTTankNozzleDictData (GetOneBsGCTTankNozzleDictData (GetDottedPairValueUtils "TAG" oneTankData)))
+  (setq oneBsGCTTankNozzleDictData (GetBsGCTOneEquipNozzleDictData (GetDottedPairValueUtils "TAG" oneTankData)))
   (InsertBlockByScaleUtils insPt "BsGCTTableNozzleTableHeader" "0DataFlow-BsGCT" (list (cons 0 dataType)) drawFrameScale)
   (if (/= oneBsGCTTankNozzleDictData nil) 
     (InsertBsGCTNozzleTableRow (MoveInsertPositionUtils insPt 0 (* drawFrameScale -26)) dataType oneBsGCTTankNozzleDictData drawFrameScale)
@@ -419,7 +419,7 @@
   ; refactored at 2021-05-06 straightEdgeHeight is 25
   (setq newBarrelHalfHeight (+ barrelHalfHeight straightEdgeHeight)) 
   (setq nozzleOffset 100)
-  (setq oneBsGCTEquipSupportDictData (GetOneBsGCTTankSupportDictData dataType allBsGCTSupportDictData))
+  (setq oneBsGCTEquipSupportDictData (GetBsGCTOneEquipSupportDictData dataType allBsGCTSupportDictData))
   (setq legSupportHeight (atoi (GetDottedPairValueUtils "SUPPORT_HEIGHT" oneBsGCTEquipSupportDictData)))
   (GenerateDoubleLineEllipseHeadUtils (MoveInsertPositionUtils insPt 0 newBarrelHalfHeight) 
     barrelRadius "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" 1 thickNess straightEdgeHeight)
@@ -445,7 +445,7 @@
   ; refactored at 2021-05-06 straightEdgeHeight is 25
   (setq newBarrelHalfHeight (+ barrelHalfHeight straightEdgeHeight)) 
   (setq nozzleOffset 100)
-  (setq oneBsGCTEquipSupportDictData (GetOneBsGCTTankSupportDictData dataType allBsGCTSupportDictData))
+  (setq oneBsGCTEquipSupportDictData (GetBsGCTOneEquipSupportDictData dataType allBsGCTSupportDictData))
   (setq saddleSupportOffset (atoi (GetDottedPairValueUtils "SUPPORT_POSITION" oneBsGCTEquipSupportDictData)))
   (setq saddleSupportHeight (atoi (GetDottedPairValueUtils "SUPPORT_HEIGHT" oneBsGCTEquipSupportDictData)))
   ; [insPt barrelRadius entityLayer centerLineLayer directionStatus thickNess straightEdgeHeight]
@@ -475,7 +475,7 @@
   ; different from tank, tube length subtract EXCEED_LENGTH - 2021-5-27 refactored at 2021-05-30
   (setq barrelHalfHeight (- barrelHalfHeight exceedLength))
   (setq nozzleOffset 100)
-  (setq oneBsGCTEquipSupportDictData (GetOneBsGCTTankSupportDictData dataType allBsGCTSupportDictData))
+  (setq oneBsGCTEquipSupportDictData (GetBsGCTOneEquipSupportDictData dataType allBsGCTSupportDictData))
   (setq totalFlangeHeight (GetBsGCTHeaterFlangeTotalHeight barrelRadius))
   (setq newBarrelHalfHeight (+ barrelHalfHeight straightEdgeHeight totalFlangeHeight))
   (GenerateDoubleLineEllipseHeadUtils (MoveInsertPositionUtils insPt 0 newBarrelHalfHeight) 
@@ -938,17 +938,35 @@
 )
 
 ; refactored at 2021-06-11
-(defun GetBsGCTTankNozzleDictData ()
+(defun GetBsGCTAllNozzleDictData ()
   (ReadCSVFileToDictDataUtils "D:\\dataflowcad\\bsdata\\bsGCTNozzleData.txt")
 )
 
+; refactored at 2021-06-11
+(defun GetBsGCTAllSupportDictData ()
+  (ReadCSVFileToDictDataUtils "D:\\dataflowcad\\bsdata\\bsGCTSupportData.txt")
+)
+
 ; 2021-04-20
-(defun GetOneBsGCTTankNozzleDictData (tankTag /) 
+; rename function at 2021-06-14
+(defun GetBsGCTOneEquipNozzleDictData (tankTag /) 
   (mapcar '(lambda (x) (cdr x)) 
     (vl-remove-if-not '(lambda (x) 
                         (= (GetDottedPairValueUtils "TAG" x) tankTag) 
                       ) 
-      (GetBsGCTTankNozzleDictData)
+      (GetBsGCTAllNozzleDictData)
+    )  
+  ) 
+)
+
+; 2021-04-20
+; rename function at 2021-06-14
+(defun GetBsGCTOneEquipSupportDictData (tankTag allBsGCTSupportDictData /) 
+  (car 
+    (vl-remove-if-not '(lambda (x) 
+                        (= (GetDottedPairValueUtils "TAG" x) tankTag) 
+                      ) 
+      allBsGCTSupportDictData
     )  
   ) 
 )
@@ -1133,68 +1151,6 @@
       )  
     ) 
   )
-)
-
-; 2021-04-23
-(defun GetBsGCTNozzleKeysData () 
-  (cdr 
-    (car 
-      (vl-remove-if-not '(lambda (x) 
-                          (= (car x) "NozzleKeys") 
-                        ) 
-        (GetBsGCTImportedList)
-      )  
-    ) 
-  ) 
-)
-
-; 2021-04-20
-(defun GetOneBsGCTTankSupportDictData (tankTag allBsGCTSupportDictData /) 
-  (car 
-    (vl-remove-if-not '(lambda (x) 
-                        (= (GetDottedPairValueUtils "TAG" x) tankTag) 
-                      ) 
-      allBsGCTSupportDictData
-    )  
-  ) 
-)
-
-; 2021-04-20
-(defun GetAllBsGCTSupportDictData (bsGCTImportedList /) 
-  (mapcar '(lambda (y) 
-              (mapcar '(lambda (xx yy) 
-                         (cons xx yy)
-                      ) 
-                (GetBsGCTSupportKeysData bsGCTImportedList)
-                y
-              )
-           ) 
-    (GetAllBsGCTSupportData bsGCTImportedList)
-  )
-)
-
-; 2021-05-18
-(defun GetBsGCTSupportKeysData (bsGCTImportedList /) 
-  (cdr 
-    (car 
-      (vl-remove-if-not '(lambda (x) 
-                          (= (car x) "SupportKeys") 
-                        ) 
-        bsGCTImportedList
-      )  
-    ) 
-  ) 
-)
-
-; 2021-04-19
-(defun GetAllBsGCTSupportData (bsGCTImportedList /) 
-  (mapcar '(lambda (x) (cdr x)) 
-    (vl-remove-if-not '(lambda (x) 
-                        (= (car x) "Support") 
-                      ) 
-      bsGCTImportedList
-    )  
-  ) 
 )
 
 ; 2021-04-17
@@ -1523,7 +1479,7 @@
   (VerifyAllBsGCTSymbol)
   (setq insPt (getpoint "\n拾取工程图插入点："))
   (setq bsGCTImportedList (GetBsGCTImportedList))
-  (setq allBsGCTSupportDictData (GetAllBsGCTSupportDictData bsGCTImportedList))
+  (setq allBsGCTSupportDictData (GetBsGCTAllSupportDictData))
   (setq bsGCTProjectDictData (GetBsGCTProjectDictData))
   (InsertAllBsGCTTank insPt bsGCTImportedList allBsGCTSupportDictData bsGCTProjectDictData)
   (InsertAllBsGCTHeater (MoveInsertPositionUtils insPt 0 -10000) bsGCTImportedList allBsGCTSupportDictData bsGCTProjectDictData)
