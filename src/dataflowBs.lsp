@@ -324,10 +324,11 @@
 
 ; 2021-05-07
 ; refacotred at 2021-05-25
+; refacotred at 2021-06-15
 (defun GetBsGCTTestDictData (oneEquipData /)
   (vl-remove-if-not '(lambda (x) 
                        (member (car x) 
-                               '("TEST_PRESSURE" "AIR_TEST_PRESSURE" "HEAT_TREAT" "SHELL_WATER_TEST_PRESSURE" "TUBE_WATER_TEST_PRESSURE" "SHELL_AIR_TEST_PRESSURE" "TUBE_AIR_TEST_PRESSURE")) 
+                               '("TEST_PRESSURE" "AIR_TEST_PRESSURE" "HEAT_TREAT" "SHELL_WATER_TEST_PRESSURE" "TUBE_WATER_TEST_PRESSURE" "SHELL_AIR_TEST_PRESSURE" "TUBE_AIR_TEST_PRESSURE" "JACKET_WATER_TEST_PRESSURE" "JACKET_AIR_TEST_PRESSURE" "BARREL_WATER_TEST_PRESSURE" "BARREL_AIR_TEST_PRESSURE")) 
                     ) 
     oneEquipData
   )
@@ -1370,7 +1371,7 @@
   (InsertBsGCTTestData rightInsPt bsGCTType "BsGCTTableTestData-Heater" oneHeaterData drawFrameScale)
 )
 
-; 2021-06-14
+; 2021-06-15
 (defun InsertGCTOneBsReactorTable (insPt bsGCTType oneReactorData standardList heaterHeadStyleList heaterHeadMaterialList 
                                 heaterPressureElementList heaterOtherRequestList drawFrameScale / leftInsPt rightInsPt) 
   ; split oneReactorData to Two Parts
@@ -1402,9 +1403,9 @@
   ; the height of BsGCTRequirement is 320 ; height is 64 for 1:1 - refactored at 2021-06-12
   (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 (* drawFrameScale -64)))
   (InsertBsGCTInspectDataStrategy rightInsPt bsGCTType "Reactor" oneReactorData drawFrameScale)
-  ; ; the height of BsGCTTankInspectData is 240 ; height is 48 for 1:1 - refactored at 2021-06-12
-  ; (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 (* drawFrameScale -48)))
-  ; (InsertBsGCTTestData rightInsPt bsGCTType "BsGCTTableTestData-Heater" oneReactorData drawFrameScale)
+  ; the height of BsGCTTankInspectData is 280(1:5) ; height is 56 for 1:1 - refactored at 2021-06-12
+  (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 (* drawFrameScale -56)))
+  (InsertBsGCTTestData rightInsPt bsGCTType "BsGCTTableTestData-Reactor" oneReactorData drawFrameScale)
 )
 
 ; 2021-05-16
