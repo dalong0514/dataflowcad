@@ -1311,9 +1311,10 @@
   ; the height of BsGCTPressureElement is [length of tankPressureElementList, add 2]
   (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 (GetNegativeNumberUtils (* (* drawFrameScale 8) (+ (length tankPressureElementList) 2)))))
   ; the total height of tankOtherRequestList is 80 for 1:1 scale
-  (InsertBsGCTOtherRequest leftInsPt bsGCTType tankOtherRequestList (* drawFrameScale 80) drawFrameScale)
   ; the height of BsGCTOtherRequest is 400 ; height is 80 for 1:1 - refactored at 2021-06-12
-  (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 (* drawFrameScale -80)))
+  ; self-calculate the height of BsGCTOtherRequest 2021-06-15
+  (InsertBsGCTOtherRequest leftInsPt bsGCTType tankOtherRequestList (* drawFrameScale (+ (* (length tankOtherRequestList) 6) 15)) drawFrameScale)
+  (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 (* drawFrameScale (GetNegativeNumberUtils (+ (* (length tankOtherRequestList) 6) 15)))))
   (InsertBsGCTNozzleTable leftInsPt bsGCTType oneTankData drawFrameScale)
   ; insert tabe in right position
   ; the height of BsGCTDataHeader is 50 ; height is 10 for 1:1 - refactored at 2021-06-12
@@ -1347,9 +1348,9 @@
   (InsertBsGCTPressureElement leftInsPt bsGCTType heaterPressureElementList drawFrameScale)
   ; the height of BsGCTPressureElement is [length of tankPressureElementList, add 2]
   (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 (GetNegativeNumberUtils (* (* drawFrameScale 8) (+ (length heaterPressureElementList) 2)))))
-  (InsertBsGCTOtherRequest leftInsPt bsGCTType heaterOtherRequestList (* drawFrameScale 70) drawFrameScale)
   ; the height of BsGCTOtherRequest is 350 ; the total height of tankOtherRequestList is 70 for 1:1 scale
-  (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 (* drawFrameScale -70)))
+  ; self-calculate the height of BsGCTOtherRequest 2021-06-15
+  (InsertBsGCTOtherRequest leftInsPt bsGCTType heaterOtherRequestList (* drawFrameScale (+ (* (length heaterOtherRequestList) 6) 15)) drawFrameScale)
   ; Nozzle Table put the left zone - refactored at - 2021-06-12
   (InsertBsGCTNozzleTable leftNozzleInsPt bsGCTType oneHeaterData drawFrameScale)
   ; insert tabe in right position
@@ -1382,15 +1383,16 @@
   ; the height of BsGCTTankDesignParam is 1040(1:5) ; height is 208 for 1:1 - refactored at 2021-06-12
   (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 (* drawFrameScale -208)))
   (InsertBsGCTPressureElement leftInsPt bsGCTType reactorPressureElementList drawFrameScale)
-  ; ; the height of BsGCTPressureElement is [length of tankPressureElementList, add 2]
-  ; (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 (GetNegativeNumberUtils (* (* drawFrameScale 8) (+ (length reactorPressureElementList) 2)))))
-  ; (InsertBsGCTOtherRequest leftInsPt bsGCTType reactorOtherRequestList (* drawFrameScale 70) drawFrameScale)
-  ; ; the height of BsGCTOtherRequest is 350 ; the total height of tankOtherRequestList is 70 for 1:1 scale
-  ; (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 (* drawFrameScale -70)))
-  ; ; Nozzle Table put the left zone - refactored at - 2021-06-12
-  ; (InsertBsGCTNozzleTable leftNozzleInsPt bsGCTType oneReactorData drawFrameScale)
-  ; ; insert tabe in right position
-  ; ; the height of BsGCTDataHeader is 50 ; height is 10 for 1:1 - refactored at 2021-06-12
+  ; the height of BsGCTPressureElement is [length of tankPressureElementList, add 2]
+  (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 (GetNegativeNumberUtils (* (* drawFrameScale 8) (+ (length reactorPressureElementList) 2)))))
+  ; the height of BsGCTOtherRequest is 350 ; the total height of tankOtherRequestList is 70 for 1:1 scale
+  ; self-calculate the height of BsGCTOtherRequest 2021-06-15
+  (InsertBsGCTOtherRequest leftInsPt bsGCTType reactorOtherRequestList (* drawFrameScale (+ (* (length reactorOtherRequestList) 6) 15)) drawFrameScale)
+  (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 (* drawFrameScale -70)))
+  ; Nozzle Table put the left zone - refactored at - 2021-06-12
+  (InsertBsGCTNozzleTable leftNozzleInsPt bsGCTType oneReactorData drawFrameScale)
+  ; insert tabe in right position
+  ; the height of BsGCTDataHeader is 50 ; height is 10 for 1:1 - refactored at 2021-06-12
   (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 (* drawFrameScale -10)))
   (InsertBsGCTDesignStandard rightInsPt bsGCTType "BsGCTTableDesignStandard" standardList drawFrameScale 48)
   ; the height of BsGCTHorizontalTankDesignStandard is 240 ; height is 48 for 1:1 - refactored at 2021-06-12
@@ -1431,7 +1433,7 @@
        ; equipHeadMaterialList
        (FilterBsGCTTextDataByTypeNumAndJointWeld equipRequirementList (GetDottedPairValueUtils "requirementType" oneEquipData) "焊接材料") 
        (FilterBsGCTPressureElementByTypeNum equipPressureElementList (GetDottedPairValueUtils "pressureElementType" oneEquipData))
-       (FilterListListByFirstItemUtils equipOtherRequestList "verticalTank") 
+       (FilterBsGCTTextDataByTypeNum equipOtherRequestList (GetDottedPairValueUtils "otherRequestType" oneEquipData))
        drawFrameScale
      ))
     ((= equipType "horizontalTank") 
@@ -1440,7 +1442,7 @@
        (FilterBsGCTTextDataByTypeNumAndJointWeld equipRequirementList (GetDottedPairValueUtils "requirementType" oneEquipData) "接头形式") 
        (FilterBsGCTTextDataByTypeNumAndJointWeld equipRequirementList (GetDottedPairValueUtils "requirementType" oneEquipData) "焊接材料")              
        (FilterBsGCTPressureElementByTypeNum equipPressureElementList (GetDottedPairValueUtils "pressureElementType" oneEquipData)) 
-       (FilterListListByFirstItemUtils equipOtherRequestList "horizontalTank") 
+       (FilterBsGCTTextDataByTypeNum equipOtherRequestList (GetDottedPairValueUtils "otherRequestType" oneEquipData))
        drawFrameScale
      ))
     ((or (= equipType "verticalHeater") (= equipType "horizontalHeater")) 
@@ -1449,7 +1451,7 @@
        (FilterBsGCTTextDataByTypeNumAndJointWeld equipRequirementList (GetDottedPairValueUtils "requirementType" oneEquipData) "接头形式") 
        (FilterBsGCTTextDataByTypeNumAndJointWeld equipRequirementList (GetDottedPairValueUtils "requirementType" oneEquipData) "焊接材料")            
        (FilterBsGCTPressureElementByTypeNum equipPressureElementList (GetDottedPairValueUtils "pressureElementType" oneEquipData)) 
-       (FilterListListByFirstItemUtils equipOtherRequestList "Heater") 
+       (FilterBsGCTTextDataByTypeNum equipOtherRequestList (GetDottedPairValueUtils "otherRequestType" oneEquipData))
        drawFrameScale
      ))
     ((= equipType "reactor") 
@@ -1458,7 +1460,7 @@
        (FilterBsGCTTextDataByTypeNumAndJointWeld equipRequirementList (GetDottedPairValueUtils "requirementType" oneEquipData) "接头形式") 
        (FilterBsGCTTextDataByTypeNumAndJointWeld equipRequirementList (GetDottedPairValueUtils "requirementType" oneEquipData) "焊接材料") 
        (FilterBsGCTPressureElementByTypeNum equipPressureElementList (GetDottedPairValueUtils "pressureElementType" oneEquipData))
-       (FilterListListByFirstItemUtils equipOtherRequestList "Heater") 
+       (FilterBsGCTTextDataByTypeNum equipOtherRequestList (GetDottedPairValueUtils "otherRequestType" oneEquipData))
        drawFrameScale
      ))
   )
@@ -1502,9 +1504,6 @@
   ) 
 )
 
-
-
-
 ; 2021-05-25
 (defun InsertBsGCTHeaterGraphyStrategy (insPt barrelRadius barrelHalfHeight exceedLength thickNess headThickNess bsGCTType 
                                         straightEdgeHeight equipType allBsGCTSupportDictData drawFrameScale /)
@@ -1540,18 +1539,10 @@
                            allBsGCTTankDictData tankPressureElementList 
                            tankOtherRequestList tankStandardList tankRequirementList insPtList) 
   (setq allBsGCTTankDictData (GetBsGCTTankDictData))
-  
-  
-  ; (setq tankPressureElementList (GetBsGCTTankPressureElementDictData bsGCTImportedList))
-  
   (setq tankStandardList (GetBsGCTTankAssembleData allStandardDictData)) 
   (setq tankRequirementList (GetBsGCTTankAssembleData allRequirementDictData)) 
   (setq tankPressureElementList (GetBsGCTTankAssembleData allPressureElementDictData)) 
-  (setq tankOtherRequestList (GetBsGCTTankOtherRequestData bsGCTImportedList))
-  
-  
-  
-
+  (setq tankOtherRequestList (GetBsGCTTankAssembleData allOtherRequestDictData))
   (setq insPtList (GetInsertPtListByXMoveUtils insPt (GenerateSortedNumByList allBsGCTTankDictData 0) 10000))
   (mapcar '(lambda (x y) 
             (InsertOneBsGCTTank x y tankPressureElementList tankOtherRequestList tankStandardList tankRequirementList allBsGCTSupportDictData bsGCTProjectDictData) 
@@ -1567,12 +1558,10 @@
                              allBsGCTHeaterDictData heaterPressureElementList 
                              heaterOtherRequestList heaterStandardList heaterRequirementList insPtList) 
   (setq allBsGCTHeaterDictData (GetBsGCTHeaterDictData))
-  (setq heaterOtherRequestList (GetBsGCTHeaterOtherRequestData bsGCTImportedList)) 
   (setq heaterStandardList (GetBsGCTHeaterAssembleData allStandardDictData)) 
   (setq heaterPressureElementList (GetBsGCTHeaterAssembleData allPressureElementDictData))
   (setq heaterRequirementList (GetBsGCTHeaterAssembleData allRequirementDictData)) 
-  
-  
+  (setq heaterOtherRequestList (GetBsGCTHeaterAssembleData allOtherRequestDictData)) 
   (setq insPtList (GetInsertPtListByXMoveUtils insPt (GenerateSortedNumByList allBsGCTHeaterDictData 0) 10000))
   (mapcar '(lambda (x y) 
             (InsertOneBsGCTHeater x y heaterPressureElementList heaterOtherRequestList heaterStandardList heaterRequirementList allBsGCTSupportDictData bsGCTProjectDictData) 
@@ -1588,13 +1577,10 @@
                               allBsGCTReactorDictData reactorPressureElementList 
                               reactorOtherRequestList reactorStandardList reactorRequirementList insPtList) 
   (setq allBsGCTReactorDictData (GetBsGCTReactorDictData))
-  
-  (setq reactorOtherRequestList (GetBsGCTHeaterOtherRequestData bsGCTImportedList)) 
   (setq reactorStandardList (GetBsGCTReactorAssembleData allStandardDictData)) 
   (setq reactorRequirementList (GetBsGCTReactorAssembleData allRequirementDictData))
   (setq reactorPressureElementList (GetBsGCTReactorAssembleData allPressureElementDictData))
-  
-
+  (setq reactorOtherRequestList (GetBsGCTReactorAssembleData allOtherRequestDictData)) 
   (setq insPtList (GetInsertPtListByXMoveUtils insPt (GenerateSortedNumByList allBsGCTReactorDictData 0) 10000))
   (mapcar '(lambda (x y) 
             (InsertOneBsGCTReactor x y reactorPressureElementList reactorOtherRequestList reactorStandardList reactorRequirementList allBsGCTSupportDictData bsGCTProjectDictData) 
