@@ -445,6 +445,29 @@
   (BindDataFlowXDataToObjectUtils (entlast) dataType)
 )
 
+; 2021-06-15
+(defun InsertBsGCTReactorGraphy (insPt barrelRadius barrelHalfHeight thickNess headThickNess dataType straightEdgeHeight 
+                                      allBsGCTSupportDictData drawFrameScale / newBarrelHalfHeight nozzleOffset oneBsGCTEquipSupportDictData) 
+  ; refactored at 2021-05-06 straightEdgeHeight is 25
+  (setq newBarrelHalfHeight (+ barrelHalfHeight straightEdgeHeight)) 
+  (setq nozzleOffset 100)
+  (setq oneBsGCTEquipSupportDictData (GetBsGCTOneEquipSupportDictData dataType allBsGCTSupportDictData))
+  (GenerateDoubleLineEllipseHeadUtils (MoveInsertPositionUtils insPt 0 newBarrelHalfHeight) 
+    barrelRadius "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" 1 thickNess straightEdgeHeight)
+  (GenerateReactorUpHeadNozzle 
+    (MoveInsertPositionUtils insPt 0 (+ newBarrelHalfHeight (/ barrelRadius 2) thickNess)) 
+    (+ barrelRadius thickNess) dataType nozzleOffset thickNess)
+  (GenerateVerticalDoubleLineBarrelUtils insPt barrelRadius newBarrelHalfHeight "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" thickNess)
+  ; refactored at 2021-05-27
+  (GenerateBsGCTVerticalTankCenterLine insPt newBarrelHalfHeight barrelRadius thickNess)
+  (GenerateDoubleLineEllipseHeadUtils (MoveInsertPositionUtils insPt 0 (- 0 newBarrelHalfHeight)) 
+    barrelRadius "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" -1 thickNess straightEdgeHeight)
+  (GenerateDownllipseHeadNozzle (MoveInsertPositionUtils insPt 0 (- 0 newBarrelHalfHeight (/ barrelRadius 2) thickNess)) dataType)
+  (InsertBsGCTLugSupport insPt dataType oneBsGCTEquipSupportDictData thickNess barrelRadius barrelHalfHeight drawFrameScale)
+  (InsertBsGCTVerticalTankBarrelDimension insPt barrelRadius barrelHalfHeight thickNess straightEdgeHeight)
+  (InsertBsGCTVerticalTankAnnotation insPt dataType barrelRadius headThickNess straightEdgeHeight drawFrameScale)
+)
+
 ; 2021-04-18
 (defun InsertBsGCTVerticalTankGraphy (insPt barrelRadius barrelHalfHeight thickNess headThickNess dataType straightEdgeHeight 
                                       allBsGCTSupportDictData drawFrameScale / 
@@ -468,7 +491,6 @@
     dataType legSupportHeight drawFrameScale)
   (InsertBsGCTVerticalTankBarrelDimension insPt barrelRadius barrelHalfHeight thickNess straightEdgeHeight)
   (InsertBsGCTVerticalTankAnnotation insPt dataType barrelRadius headThickNess straightEdgeHeight drawFrameScale)
-  (princ)
 )
 
 ; 2021-05-18
@@ -722,6 +744,16 @@
     (MoveInsertPositionUtils rightNozzleinsPt 0 150) 
     (MoveInsertPositionUtils insPt (- 0 (GetXHalfDistanceForTwoPoint insPt rightNozzleinsPt)) 200) 
     "R<>") 
+)
+
+; 2021-06-15
+(defun GenerateReactorUpHeadNozzle (insPt barrelRadius dataType nozzleOffset thickNess / yOffset leftNozzleinsPt rightNozzleinsPt) 
+  (setq yOffset (- (GetYByXForEllipseUtils barrelRadius (- barrelRadius nozzleOffset)) (/ barrelRadius 2)))
+  (setq leftNozzleinsPt (MoveInsertPositionUtils insPt (- 0 (- barrelRadius nozzleOffset thickNess)) yOffset))
+  (setq rightNozzleinsPt (MoveInsertPositionUtils insPt (- barrelRadius nozzleOffset thickNess) yOffset))
+  (InsertBlockUtils leftNozzleinsPt "BsGCTGraphNozzle" "0DataFlow-BsThickLine" (list (cons 0 dataType)))
+  (InsertBlockUtils rightNozzleinsPt "BsGCTGraphNozzle" "0DataFlow-BsThickLine" (list (cons 0 dataType)))
+  (InsertBsGCTTankNozzleDimension insPt leftNozzleinsPt rightNozzleinsPt)
 )
 
 ; 2021-04-19
@@ -1217,8 +1249,8 @@
   (InsertBsGCTEquipTableStrategy insPt bsGCTType oneReactorData reactorStandardList reactorRequirementList 
                           reactorPressureElementList reactorOtherRequestList equipType drawFrameScale)
   ; Graph insPt updated by drawFrameScale - 2021-06-12
-  ; (InsertBsGCTHeaterGraphyStrategy (MoveInsertPositionUtils insPt (* drawFrameScale -583) (* drawFrameScale 280)) 
-  ;   barrelRadius barrelHalfHeight exceedLength thickNess headThickNess bsGCTType straightEdgeHeight equipType allBsGCTSupportDictData drawFrameScale)
+  (InsertBsGCTReactorGraphy (MoveInsertPositionUtils insPt (* drawFrameScale -583) (* drawFrameScale 280)) 
+    barrelRadius barrelHalfHeight thickNess headThickNess bsGCTType straightEdgeHeight allBsGCTSupportDictData drawFrameScale)
 )
 
 ; 2021-05-13
