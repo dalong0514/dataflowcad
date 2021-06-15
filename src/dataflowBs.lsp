@@ -178,11 +178,33 @@
 
 ; 2021-05-25
 ; refactored at 2021-06-12 drawFrameScale
+; refactored at 2021-06-15 Reactor
 (defun InsertBsGCTInspectDataStrategy (insPt dataType blockName oneEquipData drawFrameScale /) 
   (cond 
     ((= blockName "Tank") (InsertBsGCTTankInspectData insPt dataType oneEquipData drawFrameScale))
     ((= blockName "Heater") (InsertBsGCTHeaterInspectData insPt dataType oneEquipData drawFrameScale))
+    ((= blockName "Reactor") (InsertBsGCTReactorInspectData insPt dataType oneEquipData drawFrameScale))
   )
+)
+
+; 2021-06-15
+(defun InsertBsGCTReactorInspectData (insPt dataType oneHeaterData drawFrameScale / inspectDictData barrelWeldJoint jacketWeldJoint) 
+  (setq barrelDiameter (atoi (GetDottedPairValueUtils "barrelDiameter" oneHeaterData)))
+  (setq barrelWeldJoint (GetDottedPairValueUtils "BARREL_WELD_JOINT" oneHeaterData))
+  (setq jacketWeldJoint (GetDottedPairValueUtils "JACKET_WELD_JOINT" oneHeaterData))
+  (if (<= barrelDiameter 1200) 
+    (InsertBlockByScaleUtils insPt "BsGCTTableInspectData-ReactorB" "0DataFlow-BsGCT" (list (cons 0 dataType)) drawFrameScale) 
+    (InsertBlockByScaleUtils insPt "BsGCTTableInspectData-ReactorA" "0DataFlow-BsGCT" (list (cons 0 dataType)) drawFrameScale)
+  )
+  (setq inspectDictData (append 
+                          (GetBsGCTReactorJacketInspectDictData jacketWeldJoint (GetDottedPairValueUtils "JACKET_INSPECT_RATE" oneHeaterData))
+                          (GetBsGCTBarrelInspectDictData barrelWeldJoint (GetDottedPairValueUtils "BARREL_INSPECT_RATE" oneHeaterData))
+                          (GetBsGCTHeadInspectDictData barrelWeldJoint (GetDottedPairValueUtils "HEAD_INSPECT_RATE" oneHeaterData))
+                          (GetBsGCTInspectDictData (GetDottedPairValueUtils "CD_INSPECT_RATE" oneHeaterData) "CD_")
+                          (GetBsGCTInspectDictData (GetDottedPairValueUtils "CLOSED_RING_INSPECT_RATE" oneHeaterData) "CLOSED_RING_")
+                          (GetBsGCTInspectDictData (GetDottedPairValueUtils "RIGID_RING_INSPECT_RATE" oneHeaterData) "RIGID_RING_")
+                        ))
+  (ModifyBlockPropertyByDictDataUtils (entlast) inspectDictData)
 )
 
 ; 2021-05-25
@@ -192,14 +214,14 @@
   (setq barrelDiameter (atoi (GetDottedPairValueUtils "barrelDiameter" oneHeaterData)))
   (setq tubeWeldJoint (GetDottedPairValueUtils "TUBE_WELD_JOINT" oneHeaterData))
   (setq shellWeldJoint (GetDottedPairValueUtils "SHELL_WELD_JOINT" oneHeaterData))
-  (cond 
-    ((<= barrelDiameter 1200) (InsertBlockByScaleUtils insPt "BsGCTTableInspectData-HeaterB" "0DataFlow-BsGCT" (list (cons 0 dataType)) drawFrameScale))
-    (T (InsertBlockByScaleUtils insPt "BsGCTTableInspectData-HeaterA" "0DataFlow-BsGCT" (list (cons 0 dataType)) drawFrameScale))
+  (if (<= barrelDiameter 1200) 
+    (InsertBlockByScaleUtils insPt "BsGCTTableInspectData-HeaterB" "0DataFlow-BsGCT" (list (cons 0 dataType)) drawFrameScale)
+    (InsertBlockByScaleUtils insPt "BsGCTTableInspectData-HeaterA" "0DataFlow-BsGCT" (list (cons 0 dataType)) drawFrameScale)
   )
   (setq inspectDictData (append 
                           (GetBsGCTHeaterBarrelInspectDictData shellWeldJoint (GetDottedPairValueUtils "SHELL_INSPECT_RATE" oneHeaterData))
                           (GetBsGCTBarrelInspectDictData tubeWeldJoint (GetDottedPairValueUtils "BARREL_INSPECT_RATE" oneHeaterData))
-                          (GetBsGCTBarrelInspectDictData tubeWeldJoint (GetDottedPairValueUtils "HEAD_INSPECT_RATE" oneHeaterData))
+                          (GetBsGCTHeadInspectDictData tubeWeldJoint (GetDottedPairValueUtils "HEAD_INSPECT_RATE" oneHeaterData))
                           (GetBsGCTInspectDictData (GetDottedPairValueUtils "CD_INSPECT_RATE" oneHeaterData) "CD_")
                           (GetBsGCTInspectDictData (GetDottedPairValueUtils "HEATER_INSPECT_RATE" oneHeaterData) "HEATER_")
                         ))
@@ -214,9 +236,9 @@
   ; BsGCTTableInspectData-TankA or BsGCTTableInspectData-TankB, ready for the whole logic 2021-05-11
   (setq barrelDiameter (atoi (GetDottedPairValueUtils "barrelDiameter" oneTankData)))
   (setq weldJoint (GetDottedPairValueUtils "WELD_JOINT" oneTankData))
-  (cond 
-    ((<= barrelDiameter 1200) (InsertBlockByScaleUtils insPt "BsGCTTableInspectData-TankB" "0DataFlow-BsGCT" (list (cons 0 dataType)) drawFrameScale))
-    (T (InsertBlockByScaleUtils insPt "BsGCTTableInspectData-TankA" "0DataFlow-BsGCT" (list (cons 0 dataType)) drawFrameScale))
+  (if (<= barrelDiameter 1200) 
+    (InsertBlockByScaleUtils insPt "BsGCTTableInspectData-TankB" "0DataFlow-BsGCT" (list (cons 0 dataType)) drawFrameScale)
+    (InsertBlockByScaleUtils insPt "BsGCTTableInspectData-TankA" "0DataFlow-BsGCT" (list (cons 0 dataType)) drawFrameScale)
   )
   (setq inspectDictData (append 
                           (GetBsGCTBarrelInspectDictData weldJoint (GetDottedPairValueUtils "BARREL_INSPECT_RATE" oneTankData))
@@ -224,6 +246,14 @@
                           (GetBsGCTInspectDictData (GetDottedPairValueUtils "CD_INSPECT_RATE" oneTankData) "CD_")
                         ))
   (ModifyBlockPropertyByDictDataUtils (entlast) inspectDictData)
+)
+
+; 2021-06-15
+(defun GetBsGCTReactorJacketInspectDictData (weldJoint barrelInspectRate /) 
+  (if (/= barrelInspectRate "") 
+    (GetBsGCTInspectDictData barrelInspectRate "JACKET_")
+    (GetBsGCTInspectDictData (GetBsInspectRateByWeldJointEnums weldJoint) "JACKET_")
+  )
 )
 
 ; 2021-06-13
@@ -1369,9 +1399,9 @@
   ; the height of BsGCTHorizontalTankDesignStandard is 240 ; height is 48 for 1:1 - refactored at 2021-06-12
   (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 (* drawFrameScale -48)))
   (InsertBsGCTRequirement rightInsPt bsGCTType "BsGCTTableRequirement-Reactor" heaterHeadStyleList heaterHeadMaterialList drawFrameScale)
-  ; ; the height of BsGCTRequirement is 280 ; height is 56 for 1:1 - refactored at 2021-06-12
-  ; (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 (* drawFrameScale -56)))
-  ; (InsertBsGCTInspectDataStrategy rightInsPt bsGCTType "Heater" oneReactorData drawFrameScale)
+  ; the height of BsGCTRequirement is 320 ; height is 64 for 1:1 - refactored at 2021-06-12
+  (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 (* drawFrameScale -64)))
+  (InsertBsGCTInspectDataStrategy rightInsPt bsGCTType "Reactor" oneReactorData drawFrameScale)
   ; ; the height of BsGCTTankInspectData is 240 ; height is 48 for 1:1 - refactored at 2021-06-12
   ; (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 (* drawFrameScale -48)))
   ; (InsertBsGCTTestData rightInsPt bsGCTType "BsGCTTableTestData-Heater" oneReactorData drawFrameScale)
