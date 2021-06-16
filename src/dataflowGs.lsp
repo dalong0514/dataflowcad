@@ -2055,14 +2055,15 @@
 )
 
 ; refactored at 2021-05-02
+; refactored at 2021-06-16
 (defun GetNumberedPropertyValueListStrategy (dictList dataType dataChildrenType /) 
   (if (= dataType "Instrument") 
     (progn 
       (setq dictList (GetInstrumentChildrenTypeList dictList dataType dataChildrenType))
       (mapcar '(lambda (x) 
-                (strcat (cdr (assoc (nth 1  (numberedPropertyNameListStrategy dataType)) x)) 
-                  (cdr (assoc (car (numberedPropertyNameListStrategy dataType)) x))
-                )
+                (strcat (GetDottedPairValueUtils (nth 1 (numberedPropertyNameListStrategy dataType)) x) 
+                  "-"
+                  (GetDottedPairValueUtils (car (numberedPropertyNameListStrategy dataType)) x))
               ) 
         dictList
       ) 
@@ -2082,9 +2083,10 @@
 )
 
 ; 2021-05-02
+; refactored at 2021-06-16
 (defun GetNumberedPropertyValueList (dictList dataType /) 
   (mapcar '(lambda (x) 
-            (cdr (assoc (car (numberedPropertyNameListStrategy dataType)) x))
+             (GetDottedPairValueUtils (car (numberedPropertyNameListStrategy dataType)) x)
           ) 
     dictList
   )
@@ -2111,7 +2113,7 @@
 )
 
 (defun GetNumberGsLcDataModeChNameList ()
-  '("按流程图号" "不按流程图号" "仪表编号按设备位号")
+  '("按流程图号" "不按流程图号" "仪表编号按设备位号" "改进版不按流程图号")
 )
 
 (defun enhancedNumberByBox (dataTypeList tileName / dcl_id dataType numberMode numberDirection status selectedPropertyName 
@@ -2201,6 +2203,7 @@
         (setq entityNameList (GetEntityNameListBySSUtils ss))
         (setq propertyValueDictList (GetPropertyDictListByPropertyNameList entityNameList (numberedPropertyNameListStrategy selectedDataType)))
         (setq matchedList (GetNumberedPropertyValueListStrategy propertyValueDictList selectedDataType "Instrument"))
+        ; (princ matchedList)(princ)
         (setq sslen (length matchedList))
       )
     )
