@@ -693,15 +693,25 @@
 
 ; 2021-04-18
 ; directionStatus: dxfcode 210: 1 up, -1 down
-(defun GenerateSingleLineEllipseHeadUtils (insPt barrelRadius entityLayer centerLineLayer directionStatus thickNess straightEdgeHeight /)
+(defun GenerateSingleLineVerticalEllipseHeadUtils (insPt barrelRadius entityLayer centerLineLayer directionStatus thickNess straightEdgeHeight /)
   ; ratio dxf 40: Ratio of minor axis to major axis
   (GenerateEllipseUtils insPt entityLayer (+ barrelRadius thickNess) directionStatus (/ (float (+ (/ barrelRadius 2) thickNess)) (+ barrelRadius thickNess)))
+  (GenerateEllipseHeadVerticalLineUtils insPt (+ barrelRadius thickNess) entityLayer directionStatus)
   (GenerateVerticalEllipseHeadCenterLineUtils insPt (+ barrelRadius thickNess) entityLayer centerLineLayer directionStatus straightEdgeHeight)
+)
+
+; 2021-06-16
+; directionStatus: dxfcode 210: 1 up, -1 down
+(defun GenerateSingleLineHorizontalEllipseHeadUtils (insPt barrelRadius entityLayer centerLineLayer directionStatus thickNess straightEdgeHeight /)
+  ; ratio dxf 40: Ratio of minor axis to major axis
+  (GenerateHorizontalEllipseUtils insPt entityLayer (+ barrelRadius thickNess) directionStatus (/ (float (+ (/ barrelRadius 2) thickNess)) (+ barrelRadius thickNess)))
+  (GenerateEllipseHeadHorizontalLineUtils insPt (+ barrelRadius thickNess) entityLayer directionStatus)
+  (GenerateHorizontalEllipseHeadCenterLineUtils insPt (+ barrelRadius thickNess) entityLayer centerLineLayer directionStatus straightEdgeHeight)
 )
 
 ; 2021-04-18
 ; directionStatus: dxfcode 210: 1 up, -1 down
-(defun GenerateDoubleLineEllipseHeadUtils (insPt barrelRadius entityLayer centerLineLayer directionStatus thickNess straightEdgeHeight /)
+(defun GenerateDoubleLineVerticalEllipseHeadUtils (insPt barrelRadius entityLayer centerLineLayer directionStatus thickNess straightEdgeHeight /)
   (GenerateEllipseUtils insPt entityLayer barrelRadius directionStatus 0.5)
   ; ratio dxf 40: Ratio of minor axis to major axis
   (GenerateEllipseUtils insPt entityLayer (+ barrelRadius thickNess) directionStatus (/ (float (+ (/ barrelRadius 2) thickNess)) (+ barrelRadius thickNess)))
@@ -787,8 +797,8 @@
 
 ; 2021-04-18
 ; refactored at 2021-06-16
-(defun GenerateSingleLineBarrelUtils (insPt barrelRadius barrelHalfHeight entityLayer centerLineLayer thickNess /)
-  ; inner diameter - shortline
+(defun GenerateVerticalSingleLineBarrelUtils (insPt barrelRadius barrelHalfHeight entityLayer centerLineLayer thickNess /)
+  ; inner diameter - dotted line
   (GenerateLineByLineScaleUtils 
     (MoveInsertPositionUtils insPt (GetNegativeNumberUtils barrelRadius) 100) 
     (MoveInsertPositionUtils insPt (GetNegativeNumberUtils barrelRadius) -100)
@@ -801,7 +811,7 @@
     "0DataFlow-BsDottedLine"
     300
   ) 
-  ; outer diameter - long line
+  ; outer diameter
   (GenerateLineUtils 
     (MoveInsertPositionUtils insPt (- 0 barrelRadius thickNess) barrelHalfHeight) 
     (MoveInsertPositionUtils insPt (- 0 barrelRadius thickNess) (GetNegativeNumberUtils barrelHalfHeight))
@@ -838,6 +848,35 @@
     (MoveInsertPositionUtils insPt (+ barrelRadius thickNess) (GetNegativeNumberUtils barrelHalfHeight))
     entityLayer
   )  
+)
+
+; 2021-06-15
+(defun GenerateHorizontalSingleLineBarrelUtils (insPt barrelRadius barrelHalfHeight entityLayer centerLineLayer thickNess /) 
+  ; inner diameter - dotted line
+  (GenerateLineByLineScaleUtils 
+    (MoveInsertPositionUtils insPt -100 (GetNegativeNumberUtils barrelRadius)) 
+    (MoveInsertPositionUtils insPt 100 (GetNegativeNumberUtils barrelRadius))
+    "0DataFlow-BsDottedLine"
+    300
+  ) 
+  (GenerateLineByLineScaleUtils 
+    (MoveInsertPositionUtils insPt 100 barrelRadius) 
+    (MoveInsertPositionUtils insPt -100 barrelRadius)
+    "0DataFlow-BsDottedLine"
+    300
+  ) 
+  ; outer diameter
+  (GenerateLineUtils 
+    (MoveInsertPositionUtils insPt barrelHalfHeight (- 0 barrelRadius thickNess)) 
+    (MoveInsertPositionUtils insPt (GetNegativeNumberUtils barrelHalfHeight) (- 0 barrelRadius thickNess))
+    entityLayer
+  ) 
+  (GenerateLineUtils 
+    (MoveInsertPositionUtils insPt barrelHalfHeight (+ barrelRadius thickNess)) 
+    (MoveInsertPositionUtils insPt (GetNegativeNumberUtils barrelHalfHeight) (+ barrelRadius thickNess))
+    entityLayer
+  )  
+  (princ)
 )
 
 ; 2021-05-18
