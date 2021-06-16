@@ -982,12 +982,6 @@
   (InsertVerticalRotatedDimensionUtils scaleFactor firstInsPt secondInsPt textInsPt "0DataFlow-BsDimension" "DataFlow-BsGCT" textOverrideContent 3)
 )
 
-; 2021-04-19
-; refactored at 2021-06-11
-(defun GetBsGCTImportedList () 
-  (CSVStrListToListListUtils (ReadDataFromCSVUtils "D:\\dataflowcad\\bsdata\\bsGCT.csv"))
-)
-
 ; refactored at 2021-06-11
 (defun GetBsGCTTankDictData ()
   (vl-remove-if-not '(lambda (x) 
@@ -1575,7 +1569,7 @@
 ; 2021-04-17
 ; refactored at 2021-05-25
 ; refactored at 2021-06-15
-(defun InsertAllBsGCTTank (insPt bsGCTImportedList allBsGCTSupportDictData bsGCTProjectDictData 
+(defun InsertAllBsGCTTank (insPt allBsGCTSupportDictData bsGCTProjectDictData 
                            allPressureElementDictData allStandardDictData allRequirementDictData allOtherRequestDictData / 
                            allBsGCTTankDictData tankPressureElementList 
                            tankOtherRequestList tankStandardList tankRequirementList insPtList) 
@@ -1594,7 +1588,7 @@
 )
 
 ; 2021-05-25
-(defun InsertAllBsGCTHeater (insPt bsGCTImportedList allBsGCTSupportDictData bsGCTProjectDictData 
+(defun InsertAllBsGCTHeater (insPt allBsGCTSupportDictData bsGCTProjectDictData 
                              allPressureElementDictData allStandardDictData allRequirementDictData allOtherRequestDictData / 
                              allBsGCTHeaterDictData heaterPressureElementList 
                              heaterOtherRequestList heaterStandardList heaterRequirementList insPtList) 
@@ -1613,7 +1607,7 @@
 )
 
 ; 2021-06-14
-(defun InsertAllBsGCTReactor (insPt bsGCTImportedList allBsGCTSupportDictData bsGCTProjectDictData 
+(defun InsertAllBsGCTReactor (insPt allBsGCTSupportDictData bsGCTProjectDictData 
                               allPressureElementDictData allStandardDictData allRequirementDictData allOtherRequestDictData / 
                               allBsGCTReactorDictData reactorPressureElementList 
                               reactorOtherRequestList reactorStandardList reactorRequirementList insPtList) 
@@ -1634,24 +1628,21 @@
 ; 2021-05-25
 ; refactored at 2021-06-11
 ; refactored at 2021-06-15
-(defun InsertAllBsGCTMacro (/ insPt bsGCTImportedList allBsGCTSupportDictData bsGCTProjectDictData 
+(defun InsertAllBsGCTMacro (/ insPt allBsGCTSupportDictData bsGCTProjectDictData 
                             allPressureElementDictData allStandardDictData allRequirementDictData allOtherRequestDictData) 
   (VerifyAllBsGCTSymbol)
   (setq insPt (getpoint "\n拾取工程图插入点："))
-  (setq bsGCTImportedList (GetBsGCTImportedList))
   (setq allBsGCTSupportDictData (GetBsGCTAllSupportDictData))
   (setq bsGCTProjectDictData (GetBsGCTProjectDictData))
   (setq allPressureElementDictData (GetBsGCTAllPressureElementDictData))
   (setq allStandardDictData (GetBsGCTAllStandardDictData))
   (setq allRequirementDictData (GetBsGCTAllRequirementDictData))
   (setq allOtherRequestDictData (GetBsGCTAllOtherRequestDictData))
-  
-  (InsertAllBsGCTTank insPt bsGCTImportedList allBsGCTSupportDictData bsGCTProjectDictData 
-    allPressureElementDictData allStandardDictData allRequirementDictData allOtherRequestDictData)
-  (InsertAllBsGCTHeater (MoveInsertPositionUtils insPt 0 -10000) bsGCTImportedList allBsGCTSupportDictData bsGCTProjectDictData 
-    allPressureElementDictData allStandardDictData allRequirementDictData allOtherRequestDictData)
-  (InsertAllBsGCTReactor (MoveInsertPositionUtils insPt 0 -20000) bsGCTImportedList allBsGCTSupportDictData bsGCTProjectDictData 
-    allPressureElementDictData allStandardDictData allRequirementDictData allOtherRequestDictData)
+  (InsertAllBsGCTTank insPt allBsGCTSupportDictData bsGCTProjectDictData allPressureElementDictData allStandardDictData allRequirementDictData allOtherRequestDictData)
+  (InsertAllBsGCTHeater (MoveInsertPositionUtils insPt 0 -10000) 
+    allBsGCTSupportDictData bsGCTProjectDictData allPressureElementDictData allStandardDictData allRequirementDictData allOtherRequestDictData)
+  (InsertAllBsGCTReactor (MoveInsertPositionUtils insPt 0 -20000) 
+    allBsGCTSupportDictData bsGCTProjectDictData allPressureElementDictData allStandardDictData allRequirementDictData allOtherRequestDictData)
 )
 
 ; 2021-04-21
@@ -1738,13 +1729,11 @@
 
 ; 2021-05-13
 ; refacotred at 2021-06-15
-(defun UpdateBsGCTTankByEquipTag (equipTagList equipPositionList / 
-                                  bsGCTImportedList allBsGCTTankDictData allPressureElementDictData allStandardDictData allRequirementDictData allOtherRequestDictData
-                                  tankPressureElementList tankOtherRequestList tankStandardList tankRequirementList insPtList) 
+(defun UpdateBsGCTTankByEquipTag (equipTagList equipPositionList / allBsGCTTankDictData allPressureElementDictData allStandardDictData 
+                                  allRequirementDictData allOtherRequestDictData tankPressureElementList tankOtherRequestList tankStandardList tankRequirementList insPtList) 
   (VerifyBsGCTBlockLayerText)
   (DeleteBsGCTTableByEquipTagListUtils equipTagList)
   (DeleteBsGCTPolyLineAndTextByEquipTagListUtils equipTagList)
-  (setq bsGCTImportedList (GetBsGCTImportedList))
   (setq allBsGCTTankDictData (GetBsGCTTankDictData))
   ; filter the updated data
   (setq allBsGCTTankDictData (FilterUpdatedBsGCTTankDictData allBsGCTTankDictData equipTagList))
@@ -1754,13 +1743,10 @@
   (setq allRequirementDictData (GetBsGCTAllRequirementDictData))
   (setq allOtherRequestDictData (GetBsGCTAllOtherRequestDictData))
   
-  (setq tankPressureElementList (GetBsGCTTankPressureElementDictData bsGCTImportedList))
-  (setq tankOtherRequestList (GetBsGCTTankOtherRequestData bsGCTImportedList)) 
-  
-  
+  (setq tankPressureElementList (GetBsGCTTankAssembleData allPressureElementDictData))
+  (setq tankOtherRequestList (GetBsGCTTankAssembleData allOtherRequestDictData)) 
   (setq tankStandardList (GetBsGCTTankAssembleData allStandardDictData)) 
   (setq tankRequirementList (GetBsGCTTankAssembleData allRequirementDictData)) 
-  
   
   (mapcar '(lambda (x y) 
             (UpdateOneBsTankGCT x y tankPressureElementList tankOtherRequestList tankStandardList tankRequirementList) 
