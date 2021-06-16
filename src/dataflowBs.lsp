@@ -1297,7 +1297,7 @@
 (defun InsertGCTOneBsVerticalTankTable (insPt bsGCTType oneTankData tankStandardList tankHeadStyleList tankHeadMaterialList 
                                 tankPressureElementList tankOtherRequestList drawFrameScale / leftInsPt rightInsPt) 
   ; split oneTankData to Two Parts - no need to split 2021-06-11
-  ; (setq designParamDictList (cadr (SplitLDictListByDictKeyUtils "SERVIVE_LIFE" oneTankData)))
+  ; (setq designParamDictList (cadr (SplitDictListByDictKeyUtils "SERVIVE_LIFE" oneTankData)))
   (setq leftInsPt (MoveInsertPositionUtils insPt (* drawFrameScale -180) (* drawFrameScale 574)))
   (setq rightInsPt (MoveInsertPositionUtils insPt (* drawFrameScale -90) (* drawFrameScale 574)))
   (InsertBsGCTDataHeader leftInsPt bsGCTType drawFrameScale)
@@ -1334,7 +1334,7 @@
 (defun InsertGCTOneBsHorizontalTankTable (insPt bsGCTType oneTankData tankStandardList tankHeadStyleList tankHeadMaterialList 
                                 tankPressureElementList tankOtherRequestList drawFrameScale / leftInsPt rightInsPt) 
   ; split oneTankData to Two Parts
-  ; (setq designParamDictList (cadr (SplitLDictListByDictKeyUtils "SERVIVE_LIFE" oneTankData)))
+  ; (setq designParamDictList (cadr (SplitDictListByDictKeyUtils "SERVIVE_LIFE" oneTankData)))
   (setq leftInsPt (MoveInsertPositionUtils insPt (* drawFrameScale -180) (* drawFrameScale 574)))
   (setq rightInsPt (MoveInsertPositionUtils insPt (* drawFrameScale -90) (* drawFrameScale 574)))
   (InsertBsGCTDataHeader leftInsPt bsGCTType drawFrameScale)
@@ -1371,7 +1371,7 @@
 (defun InsertGCTOneBsHeaterTable (insPt bsGCTType oneHeaterData heaterStandardList heaterHeadStyleList heaterHeadMaterialList 
                                 heaterPressureElementList heaterOtherRequestList drawFrameScale / leftInsPt rightInsPt) 
   ; split oneHeaterData to Two Parts
-  ; (setq designParamDictList (cadr (SplitLDictListByDictKeyUtils "SERVIVE_LIFE" oneHeaterData)))
+  ; (setq designParamDictList (cadr (SplitDictListByDictKeyUtils "SERVIVE_LIFE" oneHeaterData)))
   (setq leftInsPt (MoveInsertPositionUtils insPt (* drawFrameScale -180) (* drawFrameScale 574)))
   (setq rightInsPt (MoveInsertPositionUtils insPt (* drawFrameScale -90) (* drawFrameScale 574)))
   (setq leftNozzleInsPt (MoveInsertPositionUtils insPt (* drawFrameScale -360) (* drawFrameScale 574)))
@@ -1408,7 +1408,7 @@
 (defun InsertGCTOneBsReactorTable (insPt bsGCTType oneReactorData standardList reactorHeadStyleList reactorHeadMaterialList 
                                 reactorPressureElementList reactorOtherRequestList drawFrameScale / leftInsPt rightInsPt) 
   ; split oneReactorData to Two Parts
-  ; (setq designParamDictList (cadr (SplitLDictListByDictKeyUtils "SERVIVE_LIFE" oneReactorData)))
+  ; (setq designParamDictList (cadr (SplitDictListByDictKeyUtils "SERVIVE_LIFE" oneReactorData)))
   (setq leftInsPt (MoveInsertPositionUtils insPt (* drawFrameScale -180) (* drawFrameScale 574)))
   (setq rightInsPt (MoveInsertPositionUtils insPt (* drawFrameScale -90) (* drawFrameScale 574)))
   (setq leftNozzleInsPt (MoveInsertPositionUtils insPt (* drawFrameScale -360) (* drawFrameScale 574)))

@@ -1771,7 +1771,7 @@
 
 ; 2021-04-21
 ; Unit Test Compeleted
-(defun SplitLDictListByDictKeyUtils (dictKey originList / r) 
+(defun SplitDictListByDictKeyUtils (dictKey originList / r) 
   (setq originList 
     (vl-member-if '(lambda (y) (setq r (cons y r)) (equal dictKey (car y))) 
                     originList)
@@ -1827,7 +1827,7 @@
 )
 
 ; 2021-06-04
-(defun ChunkListByKeyNameUtils (listData keyName / keyList resultList) 
+(defun ChunkListListByKeyNameUtils (listData keyName / keyList resultList) 
   (setq keyList 
     (DeduplicateForListUtils 
       (mapcar '(lambda (x) (GetListPairValueUtils keyName x)) listData) 
@@ -1840,6 +1840,31 @@
                 (cons item 
                   (vl-remove-if-not '(lambda (x) 
                                       (= item (GetListPairValueUtils keyName x))
+                                    ) 
+                    listData
+                  ) 
+                ) 
+              )
+           )
+    )
+  )
+  resultList
+)
+
+; 2021-06-16
+(defun ChunkDictListByKeyNameUtils (listData keyName / keyList resultList) 
+  (setq keyList 
+    (DeduplicateForListUtils 
+      (mapcar '(lambda (x) (GetDottedPairValueUtils keyName x)) listData) 
+    ) 
+  )  
+  (foreach item keyList
+    (setq resultList 
+           (append resultList 
+              (list 
+                (cons item 
+                  (vl-remove-if-not '(lambda (x) 
+                                      (= item (GetDottedPairValueUtils keyName x))
                                     ) 
                     listData
                   ) 

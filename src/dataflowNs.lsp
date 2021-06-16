@@ -481,7 +481,7 @@
 
 ; 2021-05-31
 (defun GetAllNsCleanAirData () 
-  (ChunkListByKeyNameUtils 
+  (ChunkListListByKeyNameUtils 
     (mapcar '(lambda (x) (JsonToListUtils x)) 
       (ReadNsDataFromFileStrategy "nsCleanAir")
     ) 

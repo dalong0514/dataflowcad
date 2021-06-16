@@ -2113,7 +2113,7 @@
 )
 
 (defun GetNumberGsLcDataModeChNameList ()
-  '("按流程图号" "不按流程图号" "仪表编号按设备位号" "改进版不按流程图号")
+  '("按流程图号" "不按流程图号" "仪表编号按设备位号")
 )
 
 (defun enhancedNumberByBox (dataTypeList tileName / dcl_id dataType numberMode numberDirection status selectedPropertyName 
@@ -2203,7 +2203,6 @@
         (setq entityNameList (GetEntityNameListBySSUtils ss))
         (setq propertyValueDictList (GetPropertyDictListByPropertyNameList entityNameList (numberedPropertyNameListStrategy selectedDataType)))
         (setq matchedList (GetNumberedPropertyValueListStrategy propertyValueDictList selectedDataType "Instrument"))
-        ; (princ matchedList)(princ)
         (setq sslen (length matchedList))
       )
     )
@@ -2211,7 +2210,7 @@
     (if (= 3 status)
       (progn 
         (setq codeNameList (GetCodeNameListStrategy propertyValueDictList selectedDataType))
-        (setq numberedDataList (GetNumberedDataListStrategy propertyValueDictList selectedDataType codeNameList numberMode startNumberString))
+        (setq numberedDataList (GetNumberedDataListStrategy propertyValueDictList selectedDataType codeNameList numberMode startNumberString numberDirection))
         (setq matchedList (GetNumberedListStrategy numberedDataList selectedDataType))
         (setq confirmList matchedList)
       )
@@ -2254,6 +2253,7 @@
 )
 
 ; 2021-05-02
+; ready to delete 2021-06-16
 (defun GetSSByNumberDirectionStrategy (numberDirection ss /) 
   (cond 
     ((= numberDirection "0") (SortSelectionSetByRowColumn ss))
@@ -2262,10 +2262,10 @@
 )
 
 ; refactored at 2021-05-02
-(defun GetNumberedDataListStrategy (propertyValueDictList dataType codeNameList numberMode startNumberString / childrenData childrenDataList numberedList) 
+(defun GetNumberedDataListStrategy (propertyValueDictList dataType codeNameList numberMode startNumberString numberDirection / childrenData childrenDataList numberedList) 
   (cond 
     ((or (= dataType "Pipe") (= dataType "Equipment") ) 
-      (GetPipeAndEquipChildrenDataList propertyValueDictList dataType codeNameList numberMode startNumberString)
+      (GetPipeAndEquipChildrenDataList propertyValueDictList dataType codeNameList numberMode startNumberString numberDirection)
     )
     ((= dataType "Instrument") 
       (GetInstrumentChildrenDataList propertyValueDictList dataType numberMode startNumberString)
@@ -2613,7 +2613,12 @@
   (list childrenDataList numberedList)
 )
 
-(defun GetPipeAndEquipChildrenDataList (propertyValueDictList dataType codeNameList numberMode startNumberString / childrenData childrenDataList numberedList) 
+; refactored at 2021-06-16
+(defun GetPipeAndEquipChildrenDataList (propertyValueDictList dataType codeNameList numberMode startNumberString numberDirection / 
+                                        childrenData childrenDataList numberedList sortedPropertyValueDictList) 
+  (setq sortedPropertyValueDictList (GetSortedPropertyValueDictList propertyValueDictList numberDirection))
+  ; (princ sortedPropertyValueDictList)(princ)
+  ; (princ propertyValueDictList)(princ)
   (cond 
     ((= numberMode "0") 
       (progn 
@@ -2621,10 +2626,11 @@
         (setq numberedList (cadr (GetPipeAndEquipChildrenDataListByDrawNum propertyValueDictList dataType codeNameList)))
       )
     )
+    ; yellow hat - 2021-06-16
     ((= numberMode "1") 
       (progn 
-        (setq childrenDataList (car (GetPipeAndEquipChildrenDataListByNoDrawNum propertyValueDictList dataType codeNameList)))
-        (setq numberedList (cadr (GetPipeAndEquipChildrenDataListByNoDrawNum propertyValueDictList dataType codeNameList)))
+        (setq childrenDataList (car (GetPipeAndEquipChildrenDataListByNoDrawNum sortedPropertyValueDictList dataType codeNameList)))
+        (setq numberedList (cadr (GetPipeAndEquipChildrenDataListByNoDrawNum sortedPropertyValueDictList dataType codeNameList)))
       )
     )
   )
@@ -2702,6 +2708,56 @@
     (GetUniqueDrawNumList propertyValueDictList)
   )
   (list childrenDataList numberedList)
+)
+
+; refactored at 2021-06-16
+(defun GetSortedPropertyValueDictList (propertyValueDictList numberDirection /) 
+  (cond 
+    ((= numberDirection "0") (GetYDirectionSortedPropertyValueDictList propertyValueDictList))
+    ((= numberDirection "1") (GetXDirectionSortedPropertyValueDictList propertyValueDictList))
+  )
+)
+
+; refactored at 2021-06-16
+(defun GetXDirectionSortedPropertyValueDictList (propertyValueDictList / resultList) 
+  ; (vl-sort (ChunkDictListByKeyNameUtils propertyValueDictList "DRAWNUM") '(lambda (x y) (< (car x) (car y))))
+  (mapcar '(lambda (x) 
+             (setq resultList 
+                    (append resultList 
+                      ; sorted by X direction
+                        (vl-sort (cdr x) 
+                                '(lambda (x y) 
+                                    (< 
+                                      (car (GetEntityPositionByEntityNameUtils (handent (GetDottedPairValueUtils "entityhandle" x)))) 
+                                      (car (GetEntityPositionByEntityNameUtils (handent (GetDottedPairValueUtils "entityhandle" y))))))
+                        )
+                    )
+             )
+            ) 
+    (vl-sort (ChunkDictListByKeyNameUtils propertyValueDictList "DRAWNUM") '(lambda (x y) (< (car x) (car y))))
+  ) 
+  resultList
+)
+
+; refactored at 2021-06-16
+(defun GetYDirectionSortedPropertyValueDictList (propertyValueDictList / resultList) 
+  ; (vl-sort (ChunkDictListByKeyNameUtils propertyValueDictList "DRAWNUM") '(lambda (x y) (< (car x) (car y))))
+  (mapcar '(lambda (x) 
+             (setq resultList 
+                    (append resultList 
+                      ; sorted by X direction
+                        (vl-sort (cdr x) 
+                                '(lambda (x y) 
+                                    (> 
+                                      (cadr (GetEntityPositionByEntityNameUtils (handent (GetDottedPairValueUtils "entityhandle" x)))) 
+                                      (cadr (GetEntityPositionByEntityNameUtils (handent (GetDottedPairValueUtils "entityhandle" y))))))
+                        )
+                    )
+             )
+            ) 
+    (vl-sort (ChunkDictListByKeyNameUtils propertyValueDictList "DRAWNUM") '(lambda (x y) (< (car x) (car y))))
+  ) 
+  resultList
 )
 
 (defun GetGsCleanAirCodeNameByNumberModeStrategy (originString numberMode startNumberString dataType /) 
