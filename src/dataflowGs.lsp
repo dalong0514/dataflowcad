@@ -2262,13 +2262,14 @@
 )
 
 ; refactored at 2021-05-02
+; refactored at 2021-06-16
 (defun GetNumberedDataListStrategy (propertyValueDictList dataType codeNameList numberMode startNumberString numberDirection / childrenData childrenDataList numberedList) 
   (cond 
     ((or (= dataType "Pipe") (= dataType "Equipment") ) 
       (GetPipeAndEquipChildrenDataList propertyValueDictList dataType codeNameList numberMode startNumberString numberDirection)
     )
     ((= dataType "Instrument") 
-      (GetInstrumentChildrenDataList propertyValueDictList dataType numberMode startNumberString)
+      (GetInstrumentChildrenDataList propertyValueDictList dataType numberMode startNumberString numberDirection)
     )
     ((or (= dataType "GsCleanAir") (= dataType "FireFightHPipe") (= dataType "GsBzEquip")) 
       (GetGsCleanAirRoomNumDataList propertyValueDictList dataType codeNameList numberMode startNumberString)
@@ -2354,7 +2355,9 @@
     "TZ[~CV]*" "PZ[~CV]*" "LZ[~CV]*" "FZ[~CV]*" "WZ[~CV]*" "AZ[~CV]*" "XZV*" "TZ[CV]*" "PZ[CV]*" "LZ[CV]*" "FZ[CV]*" "WZ[CV]*" "AZ[CV]*")
 )
 
-(defun GetInstrumentChildrenDataList (propertyValueDictList dataType numberMode startNumberString / instrumentTypeMatchList childrenData childrenDataList numberedList) 
+(defun GetInstrumentChildrenDataList (propertyValueDictList dataType numberMode startNumberString numberDirection / 
+                                      instrumentTypeMatchList childrenData childrenDataList numberedList sortedPropertyValueDictList) 
+  (setq sortedPropertyValueDictList (GetSortedPropertyValueDictList propertyValueDictList numberDirection))
   (cond 
     ((= numberMode "0") 
       (progn 
@@ -2365,8 +2368,8 @@
     )
     ((= numberMode "1") 
       (progn 
-        (setq childrenDataList (car (GetInstrumentChildrenDataListByNoDrawNum propertyValueDictList dataType)))
-        (setq numberedList (cadr (GetInstrumentChildrenDataListByNoDrawNum propertyValueDictList dataType)))
+        (setq childrenDataList (car (GetInstrumentChildrenDataListByNoDrawNum sortedPropertyValueDictList dataType)))
+        (setq numberedList (cadr (GetInstrumentChildrenDataListByNoDrawNum sortedPropertyValueDictList dataType)))
         (GetNumberedKsChildrenDataListByNoDrawNum childrenDataList numberedList startNumberString)
       )
     )
