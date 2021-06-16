@@ -2428,9 +2428,9 @@
   
   (setq filePath "D:\\dataflowcad\\allBlocks\\GsBzBlocks.dwg")
   (setq externalDoc (GetdocumentobjectUtils filePath))
-  ;(GetVlaObjectPropertyAndMethodUtils externalDoc)
+  ;(VlaGetObjectPropertyAndMethodUtils externalDoc)
   (setq externalModelSpace (vla-get-ModelSpace externalDoc))
-  ;(GetVlaObjectPropertyAndMethodUtils modelSpace)
+  ;(VlaGetObjectPropertyAndMethodUtils modelSpace)
   
   
   (setq objCollection (vlax-make-safearray vlax-vbObject (cons 0 (- (vla-get-Count externalModelSpace) 1)))
@@ -2452,7 +2452,7 @@
   (setq filePath "D:\\dataflowcad\\allBlocks\\GsBzBlocks.dwg")
   (setq externalDoc (GetdocumentobjectUtils filePath))
   (setq modelSpace (vla-get-ModelSpace externalDoc))
-  ;(GetVlaObjectPropertyAndMethodUtils modelSpace)
+  ;(VlaGetObjectPropertyAndMethodUtils modelSpace)
   ;; the handle of each object found.
   (vlax-for entry modelSpace
     (setq resultList (append resultList (list (vla-get-Handle entry))))
@@ -2551,7 +2551,7 @@
 )
 
 ; 2021-03-09
-(defun GetVlaObjectPropertyAndMethodUtils (VlaObject /)
+(defun VlaGetObjectPropertyAndMethodUtils (VlaObject /)
   (vlax-dump-object VlaObject T)
 )
 

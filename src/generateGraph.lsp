@@ -453,8 +453,10 @@
   (list (+ (car insPt) xOffset) (+ (cadr insPt) yOffset))
 )
 
+; AcDbAlignedDimension
+; AcDbRotatedDimension
 ; 2021-04-19
-(defun InsertAlignedDimensionUtils (firstInsPt secondInsPt textInsPt layerName dimensionStyleName textOverrideContent / 
+(defun InsertAlignedDimensionUtils (scaleFactor firstInsPt secondInsPt textInsPt layerName dimensionStyleName textOverrideContent textHeight / 
                                     acadObj curDoc first3DInsPt second3DInsPt text3DInsPt modelSpace dimObj)
   (setq acadObj (vlax-get-acad-object))
   (setq curDoc (vla-get-activedocument acadObj)) 
@@ -468,8 +470,43 @@
   (vlax-put-property dimObj 'Layer layerName)
   (vlax-put-property dimObj 'StyleName dimensionStyleName)
   (vlax-put-property dimObj 'TextOverride textOverrideContent)
-  ; (GetVlaObjectPropertyAndMethodUtils dimObj)
-  (princ)
+  (vlax-put-property dimObj 'TextHeight textHeight)
+  ; scaleFactor must put the last, do not know why 2021-06-16
+  (vlax-put-property dimObj 'ScaleFactor scaleFactor)
+  ; (VlaGetObjectPropertyAndMethodUtils dimObj)
+  ; (VlaGetEntityPropertyAndMethodBySelectUtils)
+)
+
+; 2021-06-16
+(defun InsertRotatedDimensionUtils (scaleFactor dimensioRotate firstInsPt secondInsPt textInsPt layerName dimensionStyleName textOverrideContent textHeight / 
+                                    acadObj curDoc first3DInsPt second3DInsPt text3DInsPt modelSpace dimObj)
+  (setq acadObj (vlax-get-acad-object))
+  (setq curDoc (vla-get-activedocument acadObj)) 
+  (setq first3DInsPt (vlax-3d-point firstInsPt) 
+        second3DInsPt (vlax-3d-point secondInsPt)
+        text3DInsPt (vlax-3d-point textInsPt)
+  )
+  (setq modelSpace (vla-get-ModelSpace curDoc))
+  ;; Create an aligned dimension object in model space
+  (setq dimObj (vla-AddDimRotated modelSpace first3DInsPt second3DInsPt text3DInsPt dimensioRotate))
+  (vlax-put-property dimObj 'ScaleFactor scaleFactor)
+  (vlax-put-property dimObj 'Layer layerName)
+  (vlax-put-property dimObj 'StyleName dimensionStyleName)
+  (vlax-put-property dimObj 'TextOverride textOverrideContent)
+  (vlax-put-property dimObj 'TextHeight textHeight)
+  ; scaleFactor must put the last, do not know why 2021-06-16
+  (vlax-put-property dimObj 'ScaleFactor scaleFactor)
+  ; (VlaGetObjectPropertyAndMethodUtils dimObj)
+)
+
+; 2021-06-16
+(defun InsertHorizontalRotatedDimensionUtils (scaleFactor firstInsPt secondInsPt textInsPt layerName dimensionStyleName textOverrideContent textHeight /)
+  (InsertRotatedDimensionUtils scaleFactor 0 firstInsPt secondInsPt textInsPt layerName dimensionStyleName textOverrideContent textHeight)
+)
+
+; 2021-06-16
+(defun InsertVerticalRotatedDimensionUtils (scaleFactor firstInsPt secondInsPt textInsPt layerName dimensionStyleName textOverrideContent textHeight /)
+  (InsertRotatedDimensionUtils scaleFactor (* PI 0.5) firstInsPt secondInsPt textInsPt layerName dimensionStyleName textOverrideContent textHeight)
 )
 
 ; Utils Functon in GenerateGraph
@@ -482,7 +519,7 @@
 ; Generate CAD Graph Utils Function 
 
 ; 2021-02-02
-(defun GenerateVerticallyTextByPositionAndContent (insPt textContent textLayer textHeight /)
+(defun GenerateVerticalTextByPositionAndContent (insPt textContent textLayer textHeight /)
   (entmake (list (cons 0 "TEXT") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 textLayer) (cons 100 "AcDbText") 
                   (cons 10 insPt) (cons 11 '(0.0 0.0 0.0)) (cons 40 textHeight) (cons 1 textContent) (cons 50 1.5708) (cons 41 0.7) (cons 51 0.0) 
                   (cons 7 "DataFlow") (cons 71 0) (cons 72 0) (cons 73 0) (cons 210 '(0.0 0.0 1.0)) (cons 100 "AcDbText") 
