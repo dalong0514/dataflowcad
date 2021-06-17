@@ -409,6 +409,12 @@ enhancedNumberBox : dialog {
       } 
       : spacer { width = 2; } 
       : button { 
+        key = "btnAllSelect"; 
+        label = "È«²¿Ñ¡Ôñ"; 
+        is_default = "true"; 
+      } 
+      : spacer { width = 2; }
+      : button { 
         key = "btnPreviewNumber"; 
         label = "Ô¤ÀÀ±àºÅ"; 
         is_default = "true"; 

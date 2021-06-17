@@ -2129,6 +2129,7 @@
     (action_tile "btnSelect" "(done_dialog 2)")
     (action_tile "btnPreviewNumber" "(done_dialog 3)")
     (action_tile "btnComfirmNumber" "(done_dialog 4)")
+    (action_tile "btnAllSelect" "(done_dialog 5)")
     (mode_tile "dataType" 2)
     (mode_tile "numberMode" 2)
     (mode_tile "numberDirection" 2)
@@ -2199,6 +2200,18 @@
         (setq selectedDataType (nth (atoi dataType) dataTypeList))
         (setq ss (GetBlockSSBySelectByDataTypeUtils selectedDataType))
         ; 2021-05-02 sort by numberDirecion
+        (setq ss (GetSSByNumberDirectionStrategy numberDirection ss)) 
+        (setq entityNameList (GetEntityNameListBySSUtils ss))
+        (setq propertyValueDictList (GetPropertyDictListByPropertyNameList entityNameList (numberedPropertyNameListStrategy selectedDataType)))
+        (setq matchedList (GetNumberedPropertyValueListStrategy propertyValueDictList selectedDataType "Instrument"))
+        (setq sslen (length matchedList))
+      )
+    )
+    ; all select button
+    (if (= 5 status)
+      (progn 
+        (setq selectedDataType (nth (atoi dataType) dataTypeList))
+        (setq ss (GetAllBlockSSByDataTypeUtils selectedDataType))
         (setq ss (GetSSByNumberDirectionStrategy numberDirection ss)) 
         (setq entityNameList (GetEntityNameListBySSUtils ss))
         (setq propertyValueDictList (GetPropertyDictListByPropertyNameList entityNameList (numberedPropertyNameListStrategy selectedDataType)))
