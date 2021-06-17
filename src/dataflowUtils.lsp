@@ -985,6 +985,13 @@
   (cdr (assoc 10 (entget entityName)))
 )
 
+; 2021-06-17
+(defun GetEntityPositionListByEntityNameListUtils (entityNameList /) 
+  (mapcar '(lambda (x) (GetEntityPositionByEntityNameUtils x)) 
+    entityNameList
+  )
+)
+
 ; 2021-01-28
 (defun GetTextEntityContentBySelectUtils ()
   (cdr (assoc 1 (entget (car (GetEntityNameListBySSUtils (GetTextSSBySelectUtils))))))
