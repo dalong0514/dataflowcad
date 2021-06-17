@@ -2162,7 +2162,7 @@
       (setq numberMode "1")
     )
     (if (= nil numberDirection)
-      (setq numberDirection "1")
+      (setq numberDirection "0")
     )
     (if (= nil startNumberString)
       (setq startNumberString "")
