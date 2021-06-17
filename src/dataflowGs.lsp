@@ -2113,7 +2113,7 @@
 )
 
 (defun GetNumberGsLcDataModeChNameList ()
-  '("按流程图号" "不按流程图号" "仪表编号按设备位号")
+  '("按流程图号" "不按流程图号" "仪表编号按设备位号" "不按图号-制剂流程一分为两版")
 )
 
 (defun enhancedNumberByBox (dataTypeList tileName / dcl_id dataType numberMode numberDirection status selectedPropertyName 

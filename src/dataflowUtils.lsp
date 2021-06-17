@@ -850,12 +850,14 @@
   (setq jsonPropertyString (strcat "{" jsonPropertyString "}"))
 )
 
+; refactored at 2021-06-17
 (defun ExtractBlockPropertyToJsonStringByClassUtils (entityName propertyNameList classDict / jsonPropertyString)
   (setq jsonPropertyString 
     (apply 'strcat 
       (mapcar '(lambda (x) 
                  ; replace , by £¬for get the nomal csv data - 2020-12-31
-                (strcat "\"" (strcase (car x) T) "\": \"" (StringSubstUtils "£¬" "," (cdr x)) "\",")
+                 ; refactored at 2021-06-17
+                (strcat "\"" (strcase (car x) T) "\": \"" (RepaireStringForWriteJson (cdr x)) "\",")
               ) 
         ; remove the first item (entityhandle) and add the item (class)
         (cons classDict (cdr (GetPropertyDictListForOneBlockByPropertyNameList entityName propertyNameList)))
@@ -864,6 +866,14 @@
   )
   (setq jsonPropertyString (RemoveLastNumCharForStringUtils jsonPropertyString 1))
   (setq jsonPropertyString (strcat "{" jsonPropertyString "}"))
+)
+
+; 2021-06-17
+(defun RepaireStringForWriteJson (originString / result) 
+  (setq result (StringSubstUtils "£¬" "," originString))
+  (setq result (StringSubstUtils "" "\'" result))
+  (setq result (StringSubstUtils "" "\"" result))
+  result
 )
 
 (defun WriteAPropertyValueToTextUtils (propertyName propertyNamePair entx f /)
