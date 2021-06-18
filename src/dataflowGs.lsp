@@ -2100,8 +2100,12 @@
 )
 
 ; refactored at 2021-04-09
-(defun EnhancedNumberMacro ()
-  (enhancedNumberByBox (GetEnhancedNumberDataTypeList) "enhancedNumberBox")
+; refactored at 2021-06-18 can not simplify because linked to numberLayoutData
+(defun EnhancedNumberMacro (/ dataTypeList dataTypeChNameList dataModeChNameList)
+  (setq dataTypeList (GetEnhancedNumberDataTypeList))
+  (setq dataTypeChNameList (GetEnhancedNumberDataTypeChNameList))
+  (setq dataModeChNameList (GetNumberGsLcDataModeChNameList))
+  (enhancedNumberByBox dataTypeList dataTypeChNameList dataModeChNameList "enhancedNumberBox")
 )
 
 (defun GetEnhancedNumberDataTypeList ()
@@ -2116,7 +2120,7 @@
   '("按流程图号" "不按流程图号" "仪表编号按设备位号" "不按图号-制剂流程一分为两版")
 )
 
-(defun enhancedNumberByBox (dataTypeList tileName / dcl_id dataType numberMode numberDirection status selectedPropertyName 
+(defun enhancedNumberByBox (dataTypeList dataTypeChNameList dataModeChNameList tileName / dcl_id dataType numberMode numberDirection status selectedPropertyName 
                             selectedDataType ss sslen matchedList confirmList propertyValueDictList entityNameList 
                             modifyMessageStatus numberedDataList numberedList codeNameList startNumberString propertyValueDictListForNewDraw)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\dcl\\" "dataflow.dcl")))
@@ -2141,12 +2145,12 @@
     (progn 
       (start_list "dataType" 3)
       (mapcar '(lambda (x) (add_list x)) 
-                (GetEnhancedNumberDataTypeChNameList)
+                dataTypeChNameList
       )
       (end_list)
       (start_list "numberMode" 3)
       (mapcar '(lambda (x) (add_list x)) 
-                (GetNumberGsLcDataModeChNameList)
+                dataModeChNameList
       )
       (end_list)
       (start_list "numberDirection" 3)
