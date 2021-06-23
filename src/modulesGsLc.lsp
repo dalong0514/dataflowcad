@@ -1,4 +1,4 @@
-;冯大龙编于 2020-2021 年
+; 冯大龙开发于 2020-2021 年
 (if (= *comLibraryStatus* nil) 
   (progn 
     (vl-load-com)
