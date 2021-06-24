@@ -1572,8 +1572,7 @@
 ; refactored at 2021-06-15
 (defun InsertAllBsGCTTank (insPt allBsGCTSupportDictData bsGCTProjectDictData 
                            allPressureElementDictData allStandardDictData allRequirementDictData allOtherRequestDictData / 
-                           allBsGCTTankDictData tankPressureElementList 
-                           tankOtherRequestList tankStandardList tankRequirementList insPtList) 
+                           allBsGCTTankDictData tankPressureElementList tankOtherRequestList tankStandardList tankRequirementList insPtList) 
   (setq allBsGCTTankDictData (GetBsGCTTankDictData))
   (setq tankStandardList (GetBsGCTTankAssembleData allStandardDictData)) 
   (setq tankRequirementList (GetBsGCTTankAssembleData allRequirementDictData)) 
@@ -1626,9 +1625,28 @@
   ) 
 )
 
+; 2021-06-24
+(defun InsertAllBsGCTColumn (insPt allBsGCTSupportDictData bsGCTProjectDictData 
+                           allPressureElementDictData allStandardDictData allRequirementDictData allOtherRequestDictData / 
+                           allBsGCTTankDictData tankPressureElementList tankOtherRequestList tankStandardList tankRequirementList insPtList) 
+  (setq allBsGCTTankDictData (GetBsGCTTankDictData))
+  (setq tankStandardList (GetBsGCTTankAssembleData allStandardDictData)) 
+  (setq tankRequirementList (GetBsGCTTankAssembleData allRequirementDictData)) 
+  (setq tankPressureElementList (GetBsGCTTankAssembleData allPressureElementDictData)) 
+  (setq tankOtherRequestList (GetBsGCTTankAssembleData allOtherRequestDictData))
+  (setq insPtList (GetInsertPtListByXMoveUtils insPt (GenerateSortedNumByList allBsGCTTankDictData 0) 10000))
+  (mapcar '(lambda (x y) 
+            (InsertOneBsGCTTank x y tankPressureElementList tankOtherRequestList tankStandardList tankRequirementList allBsGCTSupportDictData bsGCTProjectDictData) 
+          ) 
+    insPtList
+    allBsGCTTankDictData 
+  ) 
+)
+
 ; 2021-05-25
 ; refactored at 2021-06-11
-; refactored at 2021-06-15
+; refactored at 2021-06-15 Reactor
+; refactored at 2021-06-24 Column
 (defun InsertAllBsGCTMacro (/ insPt allBsGCTSupportDictData bsGCTProjectDictData 
                             allPressureElementDictData allStandardDictData allRequirementDictData allOtherRequestDictData) 
   (VerifyAllBsGCTSymbol)
@@ -1643,6 +1661,8 @@
   (InsertAllBsGCTHeater (MoveInsertPositionUtils insPt 0 -10000) 
     allBsGCTSupportDictData bsGCTProjectDictData allPressureElementDictData allStandardDictData allRequirementDictData allOtherRequestDictData)
   (InsertAllBsGCTReactor (MoveInsertPositionUtils insPt 0 -20000) 
+    allBsGCTSupportDictData bsGCTProjectDictData allPressureElementDictData allStandardDictData allRequirementDictData allOtherRequestDictData)
+  (InsertAllBsGCTColumn (MoveInsertPositionUtils insPt 0 -30000) 
     allBsGCTSupportDictData bsGCTProjectDictData allPressureElementDictData allStandardDictData allRequirementDictData allOtherRequestDictData)
 )
 
