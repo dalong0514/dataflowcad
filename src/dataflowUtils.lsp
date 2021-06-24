@@ -3160,9 +3160,23 @@
 )
 
 ; 2021-04-14
-(defun GetProjectInfoUtils (/ ss allDrawLabelData)
-  (setq ss (SortSelectionSetByXYZ (GetAllBlockSSByDataTypeUtils "DrawLabel")))
-  (setq allDrawLabelData (GetAllPropertyDictForOneBlock (car (GetEntityNameListBySSUtils ss))))
+; refactored at 2021-06-24
+(defun GetProjectInfoUtils (/ allDrawLabelData)
+  (setq allDrawLabelData 
+    (car 
+      (vl-remove-if-not '(lambda (x) 
+                          (and 
+                            (GetDottedPairValueUtils "dwgno" x)
+                            (or 
+                              (GetDottedPairValueUtils "project1" x)
+                              (GetDottedPairValueUtils "project2l1" x)
+                            )
+                          ) 
+                        ) 
+        (GetBlockAllPropertyDictListUtils (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "DrawLabel")))
+      )
+    )
+  )
   (list 
     (cons "projectNum" (ExtractProjectNumUtils (GetDottedPairValueUtils "dwgno" allDrawLabelData)))
     (cons "monomerNum" (ExtractMonomerNumUtils (GetDottedPairValueUtils "dwgno" allDrawLabelData)))
