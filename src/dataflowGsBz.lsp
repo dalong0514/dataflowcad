@@ -180,13 +180,13 @@
 
 ; refactored at 2021-05-02
 (defun GetNumberGsBzDataTypeList ()
-  '("GsBzEquip" "GsCleanAir")
+  '("GsBzEquip" "GsCleanAir" "GsComfortAir")
   ; '("GsCleanAir" "FireFightHPipe")
 )
 
 ; refactored at 2021-05-02
 (defun GetNumberGsBzDataTypeChNameList ()
-  '("布置图设备位号" "洁净空调")
+  '("布置图设备位号" "洁净空调" "舒适性空调")
   ; '("洁净空调" "给排水消防立管")
 )
 

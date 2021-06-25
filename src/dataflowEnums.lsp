@@ -11,7 +11,7 @@
 ; Gs Enums
 
 (defun GetSyncFlowBlockNameList ()
-  '("InstrumentL" "InstrumentP" "InstrumentSIS" "Centrifuge" "CustomEquip" "Heater" "Pump" "Reactor" "Tank" "Vacuum" "OuterPipeLeft" "OuterPipeRight" "OuterPipeDoubleArrow" "GsCleanAir")
+  '("InstrumentL" "InstrumentP" "InstrumentSIS" "Centrifuge" "CustomEquip" "Heater" "Pump" "Reactor" "Tank" "Vacuum" "OuterPipeLeft" "OuterPipeRight" "OuterPipeDoubleArrow" "GsCleanAir" "GsComfortAir")
 )
 
 ; refactored at 2021-04-08
@@ -47,6 +47,7 @@
     ((= dataType "Centrifuge") (GetCentrifugePropertyNameList))
     ((= dataType "CustomEquip") (GetCustomEquipPropertyNameList))
     ((= dataType "GsCleanAir") (GetGsCleanAirPropertyNameList))
+    ((= dataType "GsComfortAir") (GetGsComfortAirPropertyNameList))
     ((= dataType "KsInstallMaterial") (GetKsInstallMaterialPropertyNameList))
     ; default List
     (T '("TAG"))
@@ -76,6 +77,7 @@
     ((= dataType "Centrifuge") (GetCentrifugePropertyChNameList))
     ((= dataType "CustomEquip") (GetCustomEquipPropertyChNameList))
     ((= dataType "GsCleanAir") (GetGsCleanAirPropertyChNameList))
+    ((= dataType "GsComfortAir") (GetGsComfortAirPropertyChNameList))
   ) 
 )
 
@@ -177,6 +179,33 @@
 
 (defun GetGsCleanAirPropertyChNameList ()
   '("房间名称" "房间编号" "洁净等级" "房间吊顶高度" "房间面积" "室压" "房间人数" "房间夏季温度" "房间冬季温度" "温度控制精度" "房间夏季相对湿度" "房间冬季相对湿度" "湿度控制精度" "职业暴露等级" "电热设备功率" "电热设备有无排风" "电热设备有无保温" "电动设备功率" "电动设备效率" "其他设备表面面积" "其他设备表面温度" "敞开水面表面面积" "敞开水面表面温度" "设备是否连续排风" "设备排风量" "是否连续排湿除味" "排湿除味排风率" "除尘排风粉尘量" "除尘排风排风率" "是否事故排风" "事故通风介质" "层流保护区域" "层流保护面积" "监控温度" "监控相对湿度" "监控压差" "备注" "系统编号" "所在楼层" "是否防爆区")
+)
+
+; 2021-06-25
+(defun GetGsComfortAirPropertyNameList () 
+  (mapcar '(lambda (x) (strcase x)) 
+    (vl-remove-if-not '(lambda (x) 
+                        (not (member x '("entityhandle" "version")))
+                      ) 
+      (GetBlockPropertyNameListByEntityNameUtils (ssname (GetAllBlockSSByDataTypeUtils "GsComfortAir") 0))
+    )
+  )
+)
+
+; 2021-06-25
+(defun GetGsComfortAirPropertyChNameList ()
+  '("房间编号" "房间名称" "房间面积" "防爆等级" "生产类别" "工作班数" "每班操作人数" "房间夏季温度" "房间冬季温度" "房间夏季相对湿度" "房间冬季相对湿度" "发热设备表面积" "发热设备表面温度" "设备发热量" "设备同时运转电机总功率" "有害气体或或灰尘名称" "有害气体或或灰尘名数量" "散湿量" "事故排风设备位号" "正负压要求" "备注")
+)
+
+; 2021-06-25
+(defun GetGsComfortAirPropertyChNameStirng ()
+  (apply 'strcat 
+    (mapcar '(lambda (x) 
+              (strcat x ",")
+            ) 
+      (GetGsComfortAirPropertyChNameList)
+    ) 
+  )
 )
 
 ; 2021-03-09

@@ -117,9 +117,19 @@
 
 (defun WriteGsCleanAirDataToCSVByEntityNameListUtils (entityNameList / fileDir firstRow propertyNameList)
   (setq fileDir "D:\\dataflowcad\\data\\gsCleanAirData.csv")
+  ; ready to refactor like WriteGsComfortAirDataToCSVByEntityNameListUtils
   (setq firstRow "数据ID,房间名称,房间编号,洁净等级,房间吊顶高度,房间面积,室压,房间人数,夏季温度,冬季温度,温度控制精度,夏季相对湿度,冬季相对湿度,湿度控制精度,职业暴露等级,电热设备功率,电热设备有无排风,电热设备有无保温,电动设备功率,电动设备效率,其他设备表面面积,其他设备表面温度,敞开水面表面面积,敞开水面表面温度,设备是否连续排风,设备排风量,是否连续排湿除味,排湿除味排风率,除尘排风粉尘量,除尘排风排风率,是否事故排风,事故通风介质,层流保护区域,层流保护面积,监控温度,监控相对湿度,监控压差,备注,系统编号,所在楼层,是否在防爆区,")
   ; the sort of  property must be consistency with the sort of block in CAD
   (setq propertyNameList (GetGsCleanAirPropertyNameList))
+  (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList "0")
+)
+
+; 2021-06-25
+(defun WriteGsComfortAirDataToCSVByEntityNameListUtils (entityNameList / fileDir firstRow propertyNameList)
+  (setq fileDir "D:\\dataflowcad\\data\\gsComfortAirData.csv")
+  (setq firstRow (strcat "数据ID," (GetGsComfortAirPropertyChNameStirng)))
+  ; the sort of  property must be consistency with the sort of block in CAD
+  (setq propertyNameList (GetGsComfortAirPropertyNameList))
   (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList "0")
 )
 
@@ -152,6 +162,7 @@
     ((= dataType "Centrifuge") (WriteCentrifugeDataToCSVByEntityNameListUtils entityNameList))
     ((= dataType "CustomEquip") (WriteCustomEquipDataToCSVByEntityNameListUtils entityNameList))
     ((= dataType "GsCleanAir") (WriteGsCleanAirDataToCSVByEntityNameListUtils entityNameList))
+    ((= dataType "GsComfortAir") (WriteGsComfortAirDataToCSVByEntityNameListUtils entityNameList))
     ((= dataType "GsBzEquip") (WriteGsBzEquipDataToCSVByEntityNameListUtils entityNameList))
     ((= dataType "KsInstallMaterial") (WriteKsInstallMaterialDataToCSVByEntityNameListUtils entityNameList))
     ((= dataType "Equipment") 
@@ -169,42 +180,22 @@
   (princ)
 )
 
-(defun ReadGsDataFromCSVStrategy (dataType / fileDir)
-  (if (= dataType "Pipe") 
-    (setq fileDir "D:\\dataflowcad\\data\\pipeData.csv")
-  )
-  (if (= dataType "Instrument") 
-    (setq fileDir "D:\\dataflowcad\\data\\instrumentData.csv")
-  )
-  (if (= dataType "Reactor") 
-    (setq fileDir "D:\\dataflowcad\\data\\reactorData.csv")
-  )
-  (if (= dataType "Tank") 
-    (setq fileDir "D:\\dataflowcad\\data\\tankData.csv")
-  )
-  (if (= dataType "Heater") 
-    (setq fileDir "D:\\dataflowcad\\data\\heaterData.csv")
-  )
-  (if (= dataType "Pump") 
-    (setq fileDir "D:\\dataflowcad\\data\\pumpData.csv")
-  )
-  (if (= dataType "Vacuum") 
-    (setq fileDir "D:\\dataflowcad\\data\\vacuumData.csv")
-  )
-  (if (= dataType "Centrifuge") 
-    (setq fileDir "D:\\dataflowcad\\data\\centrifugeData.csv")
-  )
-  (if (= dataType "CustomEquip") 
-    (setq fileDir "D:\\dataflowcad\\data\\customEquipData.csv")
-  )
-  (if (= dataType "GsCleanAir") 
-    (setq fileDir "D:\\dataflowcad\\data\\gsCleanAirData.csv")
-  ) 
-  (if (= dataType "commonBlock") 
-    (setq fileDir "D:\\dataflowcad\\data\\commonData.csv")
-  ) 
-  (if (= dataType "GsBzEquip") 
-    (setq fileDir "D:\\dataflowcad\\data\\gsBzEquipData.csv")
+; refactored at 2021-06-25
+(defun ReadGsDataFromCSVStrategy (dataType / fileDir) 
+  (cond 
+    ((= dataType "Pipe") (setq fileDir "D:\\dataflowcad\\data\\pipeData.csv"))
+    ((= dataType "Instrument") (setq fileDir "D:\\dataflowcad\\data\\instrumentData.csv"))
+    ((= dataType "Reactor") (setq fileDir "D:\\dataflowcad\\data\\reactorData.csv"))
+    ((= dataType "Tank") (setq fileDir "D:\\dataflowcad\\data\\tankData.csv"))
+    ((= dataType "Heater") (setq fileDir "D:\\dataflowcad\\data\\heaterData.csv"))
+    ((= dataType "Pump") (setq fileDir "D:\\dataflowcad\\data\\pumpData.csv"))
+    ((= dataType "Vacuum") (setq fileDir "D:\\dataflowcad\\data\\vacuumData.csv"))
+    ((= dataType "Centrifuge") (setq fileDir "D:\\dataflowcad\\data\\centrifugeData.csv"))
+    ((= dataType "CustomEquip") (setq fileDir "D:\\dataflowcad\\data\\customEquipData.csv"))
+    ((= dataType "GsCleanAir") (setq fileDir "D:\\dataflowcad\\data\\gsCleanAirData.csv"))
+    ((= dataType "GsComfortAir") (setq fileDir "D:\\dataflowcad\\data\\gsComfortAirData.csv"))
+    ((= dataType "commonBlock") (setq fileDir "D:\\dataflowcad\\data\\commonData.csv"))
+    ((= dataType "GsBzEquip") (setq fileDir "D:\\dataflowcad\\data\\gsBzEquipData.csv"))
   )
   (ReadDataFromCSVTrimFirstRowUtils fileDir)
 )
@@ -234,15 +225,15 @@
 
 ; 2021-04-09
 (defun ExportGsDataMacro (/ dataTypeList dataTypeChNameList)
-  (setq dataTypeList '("Pipe" "Equipment" "InstrumentAndEquipmentAndPipe" "Equipment" "OuterPipe" "GsCleanAir"))
-  (setq dataTypeChNameList '("管道数据" "设备数据" "仪表数据" "电气数据" "外管数据" "洁净空调")) 
+  (setq dataTypeList '("Pipe" "Equipment" "InstrumentAndEquipmentAndPipe" "Equipment" "OuterPipe" "GsCleanAir" "GsComfortAir"))
+  (setq dataTypeChNameList '("管道数据" "设备数据" "仪表数据" "电气数据" "外管数据" "洁净空调" "舒适性空调")) 
   (ExportTempDataByBox "exportTempDataBox" dataTypeList dataTypeChNameList "Gs")
 )
 
 ; 2021-04-09
 (defun ExportGsDataMacroV2 (/ dataTypeList dataTypeChNameList)
-  (setq dataTypeList '("Pipe" "Equipment" "InstrumentAndEquipmentAndPipe" "Electric" "OuterPipe" "GsCleanAir"))
-  (setq dataTypeChNameList '("管道数据" "设备数据" "仪表数据" "电气数据" "外管数据" "洁净空调")) 
+  (setq dataTypeList '("Pipe" "Equipment" "InstrumentAndEquipmentAndPipe" "Electric" "OuterPipe" "GsCleanAir" "GsComfortAir"))
+  (setq dataTypeChNameList '("管道数据" "设备数据" "仪表数据" "电气数据" "外管数据" "洁净空调" "舒适性空调")) 
   (ExportCADDataByBox "exportCADDataBox" dataTypeList dataTypeChNameList "Gs")
 )
 
@@ -255,6 +246,7 @@
     ((= dataType "Electric") (GetGsEquipmentJsonListData ss))
     ((= dataType "OuterPipe") (ExtractOuterPipeToJsonList))
     ((= dataType "GsCleanAir") (ExtractBlockPropertyToJsonListStrategy ss "GsCleanAir"))
+    ((= dataType "GsComfortAir") (ExtractBlockPropertyToJsonListStrategy ss "GsComfortAir"))
   ) 
 )
 
@@ -293,8 +285,8 @@
 
 ; 2021-04-09
 (defun ExportBlockPropertyDataMacro (/ dataTypeList dataTypeChNameList)
-  (setq dataTypeList '("Pipe" "Equipment" "Instrument" "Electric" "OuterPipe" "GsCleanAir"))
-  (setq dataTypeChNameList '("管道数据" "设备数据" "仪表数据" "电气数据" "外管数据" "洁净空调数据"))
+  (setq dataTypeList '("Pipe" "Equipment" "Instrument" "Electric" "OuterPipe" "GsCleanAir" "GsComfortAir"))
+  (setq dataTypeChNameList '("管道数据" "设备数据" "仪表数据" "电气数据" "外管数据" "洁净空调数据" "舒适性空调数据"))
   (ExportBlockProperty dataTypeList dataTypeChNameList)
 )
 
@@ -358,25 +350,17 @@
   (princ)
 )
 
+; refactored at 2021-06-25
 (defun ExportDataByDataType (fileName dataType /) 
-  (if (= dataType "Pipe") 
-    (ExportPipeData fileName)
+  (cond 
+    ((= dataType "Pipe") (ExportPipeData fileName))
+    ((= dataType "Equipment") (ExportEquipmentData fileName))
+    ((= dataType "Instrument") (ExportInstrumentData fileName))
+    ((= dataType "Electric") (ExportEquipmentData fileName))
+    ((= dataType "OuterPipe") (ExportOuterPipeData fileName))
+    ((= dataType "GsCleanAir") (ExportGsCleanAirData fileName))
+    ((= dataType "GsComfortAir") (ExportGsComfortAirData fileName))
   )
-  (if (= dataType "Equipment") 
-    (ExportEquipmentData fileName)
-  )
-  (if (= dataType "Instrument") 
-    (ExportInstrumentData fileName)
-  )
-  (if (= dataType "Electric") 
-    (ExportEquipmentData fileName)
-  )
-  (if (= dataType "OuterPipe") 
-    (ExportOuterPipeData fileName)
-  )
-  (if (= dataType "GsCleanAir") 
-    (ExportGsCleanAirData fileName)
-  ) 
 )
 
 (defun GetExportDataFileDir (fileName / currentDir fileDir)
@@ -428,6 +412,11 @@
 (defun ExportGsCleanAirData (fileName / fileDir)
   (setq fileDir (GetExportDataFileDir fileName))
   (WriteDataListToFileUtils fileDir (ExtractBlockPropertyToJsonList "GsCleanAir"))
+)
+
+(defun ExportGsComfortAirData (fileName / fileDir)
+  (setq fileDir (GetExportDataFileDir fileName))
+  (WriteDataListToFileUtils fileDir (ExtractBlockPropertyToJsonList "GsComfortAir"))
 )
 
 ; the macro for extract data
@@ -534,6 +523,7 @@
     ((= dataType "CustomEquip") (cons "data_class" "custom"))
     ((= dataType "OuterPipe") (cons "data_class" "outerpipe"))
     ((= dataType "GsCleanAir") (cons "data_class" "gscleanair"))
+    ((= dataType "GsComfortAir") (cons "data_class" "gscomfortair"))
     ((= dataType "KsInstallMaterial") (cons "data_class" "ksinstallmaterial"))
   )
 )
@@ -1333,13 +1323,13 @@
 )
 
 (defun GetTempExportedDataTypeChNameList ()
-  '("管道" "仪表" "所有设备" "反应釜" "输送泵" "储罐" "换热器" "离心机" "真空泵" "自定义设备" "洁净空凋条件")
+  '("管道" "仪表" "所有设备" "反应釜" "输送泵" "储罐" "换热器" "离心机" "真空泵" "自定义设备" "洁净空凋条件" "舒适性空凋条件")
 )
 
 ; unit test compeleted
-(defun GetTempExportedDataTypeByindex (index / result)
-  (setq result (nth (atoi index) '("Pipe" "Instrument" "Equipment" "Reactor" "Pump" "Tank" "Heater" "Centrifuge" "Vacuum" "CustomEquip" "GsCleanAir")))
-  result
+; refactored at 2021-06-25
+(defun GetTempExportedDataTypeByindex (index /)
+  (nth (atoi index) '("Pipe" "Instrument" "Equipment" "Reactor" "Pump" "Tank" "Heater" "Centrifuge" "Vacuum" "CustomEquip" "GsCleanAir" "GsComfortAir"))
 )
 
 (defun filterAndModifyBlockPropertyByBox (propertyNameList tileName dataType / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList importedList confirmList blockDataList entityNameList viewPropertyName previewDataList importedDataList exportMsgBtnStatus importMsgBtnStatus modifyMsgBtnStatus)
@@ -1571,6 +1561,7 @@
   resultList
 )
 
+; ready to to refactor 2021-06-25
 (defun GetImportedDataListIndexByPropertyName (propertyName dataType / propertyNameList importedDataListIndex resultList)
   (if (= dataType "Pipe") 
     (progn 
@@ -1629,6 +1620,12 @@
   (if (= dataType "GsCleanAir") 
     (progn 
       (setq propertyNameList (GetGsCleanAirPropertyNameList))
+      (setq importedDataListIndex (GenerateSortedNumByList propertyNameList 1))
+    )
+  )
+  (if (= dataType "GsComfortAir") 
+    (progn 
+      (setq propertyNameList (GetGsComfortAirPropertyNameList))
       (setq importedDataListIndex (GenerateSortedNumByList propertyNameList 1))
     )
   )
@@ -1814,6 +1811,7 @@
     ((= dataType "CustomEquip") '("TAG" "DRAWNUM"))
     ((= dataType "Equipment") '("TAG" "DRAWNUM"))
     ((= dataType "GsCleanAir") '("ROOM_NUM"))
+    ((= dataType "GsComfortAir") '("ROOM_NUM"))
     ((= dataType "FireFightHPipe") '("PIPENUM"))  ; 2021-02-03
     ((= dataType "GsBzEquip") '("TAG"))  ; 2021-05-02
   )
@@ -2351,7 +2349,7 @@
     ((= dataType "Instrument") 
       (GetInstrumentChildrenDataList propertyValueDictList dataType numberMode startNumberString numberDirection entityNameList)
     )
-    ((or (= dataType "GsCleanAir") (= dataType "FireFightHPipe") (= dataType "GsBzEquip")) 
+    ((or (= dataType "GsCleanAir") (= dataType "GsComfortAir") (= dataType "FireFightHPipe") (= dataType "GsBzEquip")) 
       (GetGsCleanAirRoomNumDataList propertyValueDictList dataType codeNameList numberMode startNumberString)
     )
   )
@@ -2387,9 +2385,10 @@
 )
 
 ; 2021-02-03
+; refactored at 2021-06-25
 (defun GetLayoutCodeNameStrategy (dataType /)
   (cond 
-    ((= dataType "GsCleanAir") 
+    ((or (= dataType "GsCleanAir") (= dataType "GsComfortAir")) 
       (GetGsCleanAirCodeName (cdr (assoc "ROOM_NUM" x)))
     )
     ((= dataType "FireFightHPipe") 
@@ -2867,9 +2866,10 @@
   resultList
 )
 
+; refactored at 2021-06-25
 (defun GetGsCleanAirCodeNameByNumberModeStrategy (originString numberMode startNumberString dataType /) 
   (cond 
-    ((= dataType "GsCleanAir") 
+    ((or (= dataType "GsCleanAir") (= dataType "GsComfortAir"))
      (GetGsCleanAirCodeNameByNumberMode originString numberMode startNumberString))
     ((= dataType "GsBzEquip") 
      (GetGsBzEquipTagNameByNumberMode originString numberMode startNumberString))
@@ -2910,9 +2910,10 @@
   ) 
 )
 
+; refactored at 2021-06-25
 (defun GetNumberedListStrategy (numberedDataList dataType / resultList) 
   (cond 
-    ((or (= dataType "Pipe") (= dataType "Equipment") (= dataType "GsCleanAir") (= dataType "FireFightHPipe") (= dataType "GsBzEquip"))
+    ((or (= dataType "Pipe") (= dataType "Equipment") (= dataType "GsCleanAir") (= dataType "GsComfortAir") (= dataType "FireFightHPipe") (= dataType "GsBzEquip"))
       (GetPipeAndEquipNumberedList numberedDataList dataType)
     )
     ((= dataType "Instrument") (GetInstrumentNumberedList numberedDataList dataType))
@@ -2991,17 +2992,16 @@
 )
 
 ; refactored at 2021-05-02
+; refactored at 2021-06-25
 (defun GetCodeNameListStrategy (propertyValueDictList dataType / propertyName dataList resultList) 
   (setq propertyName (car (numberedPropertyNameListStrategy dataType)))
   (setq dataList (GetValueListByOneKeyUtils propertyValueDictList propertyName)) 
-  (if (= dataType "Pipe") 
-    (setq resultList (GetPipeCodeNameList dataList))
-  ) 
-  (if (or (= dataType "Equipment") (= dataType "Instrument")) ; 2021-02-03
-    (setq resultList (GetEquipmentCodeNameList dataList))
-  ) 
-  (if (or (= dataType "GsCleanAir") (= dataType "FireFightHPipe") (= dataType "GsBzEquip")) ; 2021-02-03
-    (setq resultList (GetGsCleanAirCodeNameList dataList))
+  (cond 
+    ((= dataType "Pipe") (setq resultList (GetPipeCodeNameList dataList)))
+    ((or (= dataType "Equipment") (= dataType "Instrument")) 
+     (setq resultList (GetEquipmentCodeNameList dataList)))
+    ((or (= dataType "GsCleanAir") (= dataType "GsComfortAir") (= dataType "FireFightHPipe") (= dataType "GsBzEquip")) 
+     (setq resultList (GetGsCleanAirCodeNameList dataList)))
   )
   (DeduplicateForListUtils resultList)
 )
