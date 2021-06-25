@@ -104,6 +104,19 @@
 ;;;-------------------------------------------------------------------------;;;
 ; Generate GsBzBlocks
 
+; 2021-06-25
+(defun c:InsertBlockGsBzComfortAir () 
+  (ExecuteFunctionAfterVerifyDateUtils 'InsertBlockGsBzComfortAirMacro '())
+)
+
+; 2021-06-25
+(defun InsertBlockGsBzComfortAirMacro (/ insPt) 
+  (setq insPt (getpoint "\n选取房间块插入点："))
+  (VerifyGsBzBlockByName "GsComfortAir")
+  (VerifyGsBzComfortAirLayer)
+  (InsertBlockByNoPropertyUtils insPt "GsComfortAir" "0DataFlow-GsBzComfortAirCondition")
+)
+
 ; refactored at 2021-04-09
 (defun c:InsertBlockGsBzCleanAir () 
   (ExecuteFunctionAfterVerifyDateUtils 'InsertBlockGsBzCleanAirMacro '())
@@ -115,6 +128,12 @@
   (VerifyGsBzBlockByName "GsCleanAir")
   (VerifyGsBzCleanAirLayer)
   (InsertBlockByNoPropertyUtils insPt "GsCleanAir" "0DataFlow-GsBzCleanAirCondition")
+)
+
+; 2021-06-25
+(defun VerifyGsBzComfortAirLayer () 
+  (VerifyGsBzLayerByName "0DataFlow-GsBzComfortAirCondition")
+  (VerifyGsBzLayerByName "0DataFlow-GsBzComfortAirConditionComment")
 )
 
 ; 2021-03-09
