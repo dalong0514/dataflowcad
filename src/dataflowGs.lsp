@@ -229,7 +229,7 @@
 
 ; refactored at 2021-04-09
 (defun c:exportGsData ()
-  (ExecuteFunctionAfterVerifyDateUtils 'ExportGsDataMacroV2 '())
+  (ExecuteFunctionAfterVerifyDateUtils 'ExportGsDataMacro '())
 )
 
 ; 2021-04-09
