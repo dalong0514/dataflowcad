@@ -857,7 +857,7 @@
       (mapcar '(lambda (x) 
                  ; replace , by £¬for get the nomal csv data - 2020-12-31
                  ; refactored at 2021-06-17
-                (strcat "\"" (strcase (car x) T) "\": \"" (RepaireStringForWriteJson (cdr x)) "\",")
+                (strcat "\"" (strcase (car x) T) "\": \"" (RepaireStringForWriteUtils (cdr x)) "\",")
               ) 
         ; remove the first item (entityhandle) and add the item (class)
         (cons classDict (cdr (GetPropertyDictListForOneBlockByPropertyNameList entityName propertyNameList)))
@@ -869,7 +869,8 @@
 )
 
 ; 2021-06-17
-(defun RepaireStringForWriteJson (originString / result) 
+; rename at 2021-06-25
+(defun RepaireStringForWriteUtils (originString / result) 
   (setq result (StringSubstUtils "£¬" "," originString))
   (setq result (StringSubstUtils "" "\'" result))
   (setq result (StringSubstUtils "" "\"" result))
@@ -1057,12 +1058,14 @@
   ) 
 )
 
+; refacotred at 2021-06-25
 (defun GetCSVPropertyStringByEntityName (entityName propertyNameList apostrMode / csvPropertyString propertyValueList)
   (setq csvPropertyString "")
   (setq propertyValueList (GetApostrPropertyValueListStrategy entityName propertyNameList apostrMode))
   ; replace , by £¬for get the nomal csv data - 2020-12-31
+  ; refactor to RepaireStringForWriteUtils - 2021-06-25
   (mapcar '(lambda (x) 
-             (setq csvPropertyString (strcat csvPropertyString (StringSubstUtils "£¬" "," x) ","))
+             (setq csvPropertyString (strcat csvPropertyString (RepaireStringForWriteUtils x) ","))
            ) 
     propertyValueList
   )
