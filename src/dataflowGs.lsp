@@ -1003,12 +1003,12 @@
 
 ; refactored at 2021-04-09
 (defun c:modifyCommonBlockProperty ()
-  (ExecuteFunctionAfterVerifyDateUtils 'modifyCommonBlockPropertyByBox '("modifyBlockPropertyBox"))
+  (ExecuteFunctionAfterVerifyDateUtils 'modifyCommonBlockPropertyMacro '("modifyBlockPropertyBox"))
 )
 
 ; refactored at 2021-04-09
 (defun c:modifyAllBlockProperty ()
-  (ExecuteFunctionAfterVerifyDateUtils 'filterAndModifyBlockPropertyByBoxV2 '("filterAndModifyPropertyBox"))
+  (ExecuteFunctionAfterVerifyDateUtils 'modifyAllBlockPropertyMacro '("filterAndModifyPropertyBox"))
 )
 
 ; refactored at 2021-04-09
@@ -1120,7 +1120,7 @@
   (alert index)(princ)
 )
 
-(defun modifyCommonBlockPropertyByBox (tileName / dcl_id status ss sslen entityNameList importedDataList entityHandle propertyNameList exportMsgBtnStatus importMsgBtnStatus modifyMsgBtnStatus blockName)
+(defun modifyCommonBlockPropertyMacro (tileName / dcl_id status ss sslen entityNameList importedDataList entityHandle propertyNameList exportMsgBtnStatus importMsgBtnStatus modifyMsgBtnStatus blockName)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\dcl\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -1207,7 +1207,7 @@
   (princ)
 )
 
-(defun filterAndModifyBlockPropertyByBoxV2 (tileName / dcl_id exportDataType viewPropertyName dataType importedDataList selectedName propertyNameList status ss confirmList entityNameList exportMsgBtnStatus importMsgBtnStatus comfirmMsgBtnStatus modifyMsgBtnStatus)
+(defun modifyAllBlockPropertyMacro (tileName / dcl_id exportDataType viewPropertyName dataType importedDataList selectedName propertyNameList status ss confirmList entityNameList exportMsgBtnStatus importMsgBtnStatus comfirmMsgBtnStatus modifyMsgBtnStatus)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\dcl\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
