@@ -1658,8 +1658,9 @@
 )
 
 ; 2021-02-02
+; refactored at 2021-06-25
 (defun TranforCoordinateToPolarUtils (insPt /)
-  (polar (list (car insPt) 0 0) 0.785398 (cadr insPt))
+  (polar (list (car insPt) 0 0) (/ PI 4) (cadr insPt))
 )
 
 ; 2021-02-03
