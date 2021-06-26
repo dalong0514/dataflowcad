@@ -24,13 +24,8 @@
       (vl-cmdf "\\")
   )
   (setq pipeHeight (getstring "\n设定管道底标高（单位m）："))
-  (SetGsPGPipeHeight (entlast) 38 (atof pipeHeight))
+  (SetPLGraphHeightUtils (entlast) (atof pipeHeight))
   (princ "管道绘制完成！")(princ)
-)
-
-; 2021-06-23
-(defun SetGsPGPipeHeight (entityName DXFcode pipeHeight /)
-  (SetDXFValueUtils entityName DXFcode pipeHeight)
 )
 
 ;;;-------------------------------------------------------------------------;;;

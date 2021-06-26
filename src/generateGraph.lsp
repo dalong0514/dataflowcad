@@ -407,7 +407,27 @@
 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
-; Utils Functon in GenerateGraph
+; Set CAD Graph Value Utils Function 
+
+
+; 2021-06-23
+; refactored at 2021-06-26
+(defun SetPLGraphHeightUtils (entityName pipeHeight /)
+  (SetDXFValueUtils entityName 38 pipeHeight)
+)
+
+
+
+
+
+; Set CAD Graph Value Utils Function 
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+
+
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+; Generate CAD Graph Utils Function 
 
 ; 2021-03-08
 (defun InsertBlockUtils (insPt blockName layerName propertyDictList / acadObj curDoc insertionPnt modelSpace blockRefObj blockAttributes)
@@ -575,14 +595,7 @@
   (InsertRotatedDimensionUtils scaleFactor (* PI 0.5) firstInsPt secondInsPt textInsPt layerName dimensionStyleName textOverrideContent textHeight)
 )
 
-; Utils Functon in GenerateGraph
-;;;-------------------------------------------------------------------------;;;
-;;;-------------------------------------------------------------------------;;;
 
-
-;;;-------------------------------------------------------------------------;;;
-;;;-------------------------------------------------------------------------;;;
-; Generate CAD Graph Utils Function 
 
 ; 2021-02-02
 (defun GenerateVerticalTextByPositionAndContent (insPt textContent textLayer textHeight /)
@@ -1170,6 +1183,9 @@
 ; Calculate CAD Graph Utils Function 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
+
+
+
 
 ;;;-------------------------------------------------------------------------;;;
 ; Generate SS Object in CAD
