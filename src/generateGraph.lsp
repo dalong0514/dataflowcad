@@ -10,6 +10,12 @@
 ;;;-------------------------------------------------------------------------;;;
 ; Steal Gs AutoCAD Modules
 
+; 2021-06-26
+(defun GetJsBzModulesPath (/ result)
+  (setq result "D:\\dataflowcad\\allBlocks\\JsBzBlocks.dwg")
+  ; (setq result "\\\\192.168.1.38\\dataflow\\allBlocks\\JsBzBlocks.dwg")
+)
+
 ; 2021-03-03
 ; refactored at 2021-04-22
 (defun GetGsLcModulesPath (/ result)
@@ -42,6 +48,42 @@
 (defun GetBsModulesPath (/ result)
   ; (setq result "D:\\dataflowcad\\allBlocks\\BsGCTBlocks.dwg")
   (setq result "\\\\192.168.1.38\\dataflow\\allBlocks\\BsGCTBlocks.dwg")
+)
+
+; 2021-06-26
+(defun StealJsBzBlockByNameList (blockNameList /)
+  (Steal (GetJsBzModulesPath) 
+    (list 
+      (list "Blocks" blockNameList)
+    )
+  ) 
+)
+
+; 2021-06-26
+(defun StealJsBzLayerByNameList (layerNameList /)
+  (Steal (GetJsBzModulesPath) 
+    (list 
+      (list "Layers" layerNameList)
+    )
+  ) 
+)
+
+; 2021-06-26
+(defun StealJsBzTextStyleByNameList (textStyleNameList /)
+  (Steal (GetJsBzModulesPath) 
+    (list 
+      (list "Text Styles" textStyleNameList)
+    )
+  ) 
+)
+
+; 2021-06-26
+(defun StealJsBzDimensionStyleByNameList (dimensionStyleNameList /)
+  (Steal (GetJsBzModulesPath) 
+    (list 
+      (list "Dimension Styles" dimensionStyleNameList)
+    )
+  ) 
 )
 
 ; 2021-03-03
@@ -213,6 +255,30 @@
       (list "Dimension Styles" dimensionStyleNameList)
     )
   ) 
+)
+
+
+
+
+; 2021-06-26
+(defun VerifyJsBzBlockByName (blockName /) 
+  (if (= (tblsearch "BLOCK" blockName) nil) 
+    (StealJsBzBlockByNameList (list blockName))
+  )
+)
+
+; 2021-06-26
+(defun VerifyJsBzLayerByName (layerName /) 
+  (if (= (tblsearch "LAYER" layerName) nil) 
+    (StealJsBzLayerByNameList (list layerName))
+  )
+)
+
+; 2021-06-26
+(defun VerifyJsBzTextStyleByName (textStyleName /) 
+  (if (= (tblsearch "STYLE" textStyleName) nil) 
+    (StealJsBzTextStyleByNameList (list textStyleName))
+  )
 )
 
 ; 2021-03-03
