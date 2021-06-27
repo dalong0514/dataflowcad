@@ -52,57 +52,70 @@
 )
 
 ; 2021-06-26
-(defun CalculateVentingAreaMacro () 
-  (foreach item (GetJsVentingGraphFloorsList) 
-    (mapcar '(lambda (x) 
-                (UpdateOneFloorGsBzEquipGraphyPostiontData 
-                  x
-                  (GetDottedPairValueUtils item (GetAllFloorGsBzLevelAxisoTwoPointData))
-                  (GetDottedPairValueUtils item (GetAllFloorGsBzVerticalAxisoTwoPointData))
-                )
-             ) 
-      (GetDottedPairValueUtils item (GetAllFloorJsVentingGraphyDictListData))
-    ) 
+(defun CalculateVentingAreaMacro (/ entityName) 
+  (setq entityName (car (GetEntityNameListBySSUtils (ssget '((0 . "LWPOLYLINE") (8 . "0DataFlow-JSVentingArea"))))))
+  (GetJSVentingRegionLengthWidth entityName)
+)
+
+; 2021-06-27
+; bug will appear when length=width because vl-sort will de-duplication
+(defun GetJSVentingRegionLengthWidth (entityName / xyValues) 
+  (setq xyValues (GetMinMaxXYValuesUtils (GetJSColumnPositionForVenting entityName)))
+  (vl-sort 
+    (list 
+      (- (nth 1 xyValues) (nth 0 xyValues))
+      (- (nth 3 xyValues) (nth 2 xyValues))
+    )
+    '>
   )
 )
 
-; 2021-06-26
-(defun GetJsVentingGraphFloorsList ()
-  (mapcar '(lambda (x) (car x)) 
-    (GetAllFloorJsVentingGraphyDictListData)
-  )   
+; 2021-06-27
+(defun GetJSColumnPositionForVenting (entityName / filterRegion) 
+  (setq filterRegion (GetMinMaxXYValuesUtils (GetAllPointForPolyLineUtils (entget entityName))))
+  (vl-remove-if-not '(lambda (x) 
+                       (IsPositionInTheRegionUtils x (car filterRegion) (cadr filterRegion) (caddr filterRegion) (cadddr filterRegion)) 
+                     ) 
+    (GetAllJSDrawColumnPosition)
+  )    
 )
 
-; 2021-06-26
-(defun GetAllFloorJsVentingGraphyDictListData () 
-  (ChunkListByColumnIndexUtils (GetAllJsBzVentingGraphDictListData) 0) 
-)
-
-; 2021-04-09
-(defun GetAllJsBzVentingGraphDictListData () 
-  (mapcar '(lambda (x) 
-             (list (car x) 
-                   (GetDottedPairValueUtils -1 (cadr x))
-                   (GetDottedPairValueUtils 10 (cadr x))
-             )
-           ) 
-    (GetStrategyEntityDataByDrawFrame (GetAllJsVentingGraphData))
-  ) 
+(defun c:foo ()
+  (CalculateVentingAreaMacro)
 )
 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
 ; Utils Function
 
-; 2021-04-09
+; 2021-06-26
 (defun GetAllJsVentingGraphData () 
   (GetSelectedEntityDataUtils (ssget "X" '((0 . "LWPOLYLINE") (8 . "0DataFlow-JSVentingArea"))))
 )
 
-(defun c:foo ()
-  (GetAllFloorGsBzLevelAxisoTwoPointData)
+; 2021-06-27
+(defun GetAllPointForPolyLineUtils (entityData /)
+  (mapcar '(lambda (x) 
+             (cdr x)
+           ) 
+    (vl-remove-if-not '(lambda (x) 
+                        (= (car x) 10)
+                      ) 
+      entityData
+    ) 
+  ) 
 )
 
+; 2021-06-27
+; PositionList: ((10 0.0 16600.0) (10 70100.0 7100.0) (10 0.0 0.0) (10 0.0 16600.0))
+(defun GetMinMaxXYValuesUtils (PositionList /) 
+  (list 
+    (car (car (vl-sort PositionList '(lambda (x y) (< (car x) (car y))))))
+    (car (car (vl-sort PositionList '(lambda (x y) (> (car x) (car y))))))
+    (cadr (car (vl-sort PositionList '(lambda (x y) (< (cadr x) (cadr y))))))
+    (cadr (car (vl-sort PositionList '(lambda (x y) (> (cadr x) (cadr y))))))
+  )
+)
 
 ; Utils Function
 ;;;-------------------------------------------------------------------------;;;
