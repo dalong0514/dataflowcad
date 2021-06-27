@@ -565,29 +565,30 @@
 
 ; 2021-02-28
 (defun GetAllStrategyCopyEntityData () 
-  (GetStrategyEntityData (GetAllCopyEntityData))
+  (GetStrategyEntityDataByDrawFrame (GetAllCopyEntityData))
 )
 
 ; 2021-02-28
 (defun GetStrategyCopyEntityData () 
-  (GetStrategyEntityData (GetCopyEntityData))
+  (GetStrategyEntityDataByDrawFrame (GetCopyEntityData))
 )
 
 ; 2021-02-27
-(defun GetStrategyEntityData (copyEntityData / resultList) 
+; Draw Frame may not be A0, ready to refactor 2021-06-27
+(defun GetStrategyEntityDataByDrawFrame (copyEntityData / resultList) 
     (foreach item (FilterJSDrawLabelData) 
-    (mapcar '(lambda (x) 
-              (if (and 
-                    (> (cadr (assoc 10 x)) (car (cadr item))) 
-                    (< (cadr (assoc 10 x)) (+ (car (cadr item)) 126150)) 
-                    (< (caddr (assoc 10 x)) (cadr (cadr item)))
-                    (> (caddr (assoc 10 x)) (- (cadr (cadr item)) 89100))
-                  )
-                (setq resultList (append resultList (list (list (car item) x))))
-              )
-            ) 
-      copyEntityData
-    ) 
+      (mapcar '(lambda (x) 
+                (if (and 
+                      (> (cadr (assoc 10 x)) (car (cadr item))) 
+                      (< (cadr (assoc 10 x)) (+ (car (cadr item)) 126150)) 
+                      (< (caddr (assoc 10 x)) (cadr (cadr item)))
+                      (> (caddr (assoc 10 x)) (- (cadr (cadr item)) 89100))
+                    )
+                  (setq resultList (append resultList (list (list (car item) x))))
+                )
+              ) 
+        copyEntityData
+      ) 
   ) 
   resultList
 )
@@ -1343,7 +1344,7 @@
                    (GetDottedPairValueUtils 10 (cadr x))
              )
            ) 
-    (GetStrategyEntityData (GetAllGsBzAxisoData))
+    (GetStrategyEntityDataByDrawFrame (GetAllGsBzAxisoData))
   ) 
 )
 
@@ -1508,7 +1509,7 @@
                    (GetDottedPairValueUtils 10 (cadr x))
              )
            ) 
-    (GetStrategyEntityData (GetAllGsBzEquipGraphyData))
+    (GetStrategyEntityDataByDrawFrame (GetAllGsBzEquipGraphyData))
   ) 
 )
 

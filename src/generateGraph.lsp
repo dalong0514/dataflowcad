@@ -416,9 +416,10 @@
   (SetDXFValueUtils entityName 38 pipeHeight)
 )
 
-
-
-
+; 2021-06-26
+(defun SetGraphLayerUtils (entityName layerName /)
+  (SetDXFValueUtils entityName 8 layerName)
+)
 
 ; Set CAD Graph Value Utils Function 
 ;;;-------------------------------------------------------------------------;;;
