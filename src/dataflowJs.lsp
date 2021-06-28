@@ -48,21 +48,69 @@
 ; 2021-06-23
 ; PL in DataFlow
 (defun c:JsCalculateVentingArea () 
-  (ExecuteFunctionAfterVerifyDateUtils 'CalculateVentingAreaMacro '())
+  (ExecuteFunctionAfterVerifyDateUtils 'CalculateVentingAreaByBox '("calculateVentingAreaBox"))
 )
 
-; 2021-06-26
-(defun CalculateVentingAreaMacro (/ entityName acadObject ventingHeight ventingPerimeter ventingVolume ventingLength ventingWidth ventingAspectRatio) 
+; 2021-06-28
+(defun CalculateVentingAreaByBox (tileName / dcl_id status ventingRatio aspectRatio ventingRatioStatus)
+  (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\dcl\\" "dataflowJs.dcl")))
+  (setq status 2)
+  (while (>= status 2)
+    ; Create the dialog box
+    (new_dialog tileName dcl_id "" '(-1 -1))
+    ; Added the actions to the Cancel and Pick Point button
+    (action_tile "cancel" "(done_dialog 0)")
+    (action_tile "btnSelect" "(done_dialog 2)")
+    (action_tile "btnCalculate" "(done_dialog 3)")
+    ; the default value of input box
+    (mode_tile "ventingRatio" 2)
+    (action_tile "ventingRatio" "(setq ventingRatio $value)")
+    (progn
+      (start_list "ventingRatio" 3)
+      (mapcar '(lambda (x) (add_list x)) 
+                '("0.11" "0.25"))
+      (end_list) 
+    ) 
+    ; init the default data of text
+    (if (= nil ventingRatio)
+      (setq ventingRatio "0")
+    ) 
+    (if (= ventingRatioStatus 1)
+      (set_tile "aspectRatioMsg" (strcat "³¤¾¶±È£º" (vl-princ-to-string aspectRatio)))
+    ) 
+    (set_tile "ventingRatio" ventingRatio)
+    ; insert button
+    (if (= 2 (setq status (start_dialog)))
+      (progn 
+        (setq aspectRatio (CalculateVentingAreaMacro))
+        (setq ventingRatioStatus 1)
+      )
+    )
+    ; all select button
+    (if (= 3 status)
+      (progn 
+        (princ "dalong")
+      )
+    )
+  )
+  (unload_dialog dcl_id)
+  (princ)
+)
+
+; (VlaGetEntityPropertyAndMethodBySelectUtils)
+; 2021-06-28
+(defun CalculateVentingAreaMacro (/ entityName acadObject ventingHeight ventingPerimeter ventingArea ventingVolume ventingLength ventingWidth ventingAspectRatio) 
   (setq entityName (car (GetEntityNameListBySSUtils (ssget '((0 . "LWPOLYLINE") (8 . "0DataFlow-JSVentingArea"))))))
   (setq acadObject (vlax-ename->vla-object entityName))
-  (setq ventingHeight (vlax-get-property acadObject 'Length))
-  (setq ventingPerimeter (vlax-get-property acadObject 'Elevation))
+  (setq ventingHeight (* (vlax-get-property acadObject 'Elevation) 1000))
+  (setq ventingPerimeter (vlax-get-property acadObject 'Length))
+  (setq ventingArea (vlax-get-property acadObject 'Area))
+  
   (setq ventingVolume (* ventingHeight ventingPerimeter))
   (setq ventingLength (car (GetJSVentingRegionLengthWidth entityName)))
   (setq ventingWidth (cadr (GetJSVentingRegionLengthWidth entityName)))
   (setq ventingAspectRatio (GetVentingAspectRatio ventingHeight ventingLength ventingWidth))
-  (princ ventingAspectRatio)(princ)
-  
+  ; (princ ventingAspectRatio)(princ)
 )
 
 ; 2021-06-28
@@ -92,11 +140,6 @@
                      ) 
     (GetAllJSDrawColumnPosition)
   )    
-)
-
-(defun c:foo ()
-  (CalculateVentingAreaMacro)
-  ; (VlaGetEntityPropertyAndMethodBySelectUtils)
 )
 
 ;;;-------------------------------------------------------------------------;;;
