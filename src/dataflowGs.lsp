@@ -220,20 +220,20 @@
 
 ; refactored at 2021-04-09
 (defun c:exportGsData ()
-  (ExecuteFunctionAfterVerifyDateUtils 'ExportGsDataMacro '())
+  (ExecuteFunctionAfterVerifyDateUtils 'ExportGsDataMacroV2 '())
 )
 
 ; 2021-04-09
 (defun ExportGsDataMacro (/ dataTypeList dataTypeChNameList)
-  (setq dataTypeList '("Pipe" "Equipment" "InstrumentAndEquipmentAndPipe" "Equipment" "OuterPipe" "GsCleanAir" "GsComfortAir"))
-  (setq dataTypeChNameList '("管道数据" "设备数据" "仪表数据" "电气数据" "外管数据" "洁净空调" "舒适性空调")) 
+  (setq dataTypeList '("Pipe" "Equipment" "InstrumentAndEquipmentAndPipe" "Equipment" "OuterPipe" "GsCleanAir" "GsComfortAir" "InstrumentAndEquipmentAndPipe"))
+  (setq dataTypeChNameList '("管道数据" "设备数据" "仪表数据" "电气数据" "外管数据" "洁净空调" "舒适性空调" "设备条件")) 
   (ExportTempDataByBox "exportTempDataBox" dataTypeList dataTypeChNameList "Gs")
 )
 
 ; 2021-04-09
 (defun ExportGsDataMacroV2 (/ dataTypeList dataTypeChNameList)
-  (setq dataTypeList '("Pipe" "Equipment" "InstrumentAndEquipmentAndPipe" "Electric" "OuterPipe" "GsCleanAir" "GsComfortAir"))
-  (setq dataTypeChNameList '("管道数据" "设备数据" "仪表数据" "电气数据" "外管数据" "洁净空调" "舒适性空调")) 
+  (setq dataTypeList '("Pipe" "Equipment" "InstrumentAndEquipmentAndPipe" "Electric" "OuterPipe" "GsCleanAir" "GsComfortAir" "InstrumentAndEquipmentAndPipe"))
+  (setq dataTypeChNameList '("管道数据" "设备数据" "仪表数据" "电气数据" "外管数据" "洁净空调" "舒适性空调" "设备条件")) 
   (ExportCADDataByBox "exportCADDataBox" dataTypeList dataTypeChNameList "Gs")
 )
 
