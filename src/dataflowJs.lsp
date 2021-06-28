@@ -52,14 +52,23 @@
 )
 
 ; 2021-06-26
-(defun CalculateVentingAreaMacro (/ entityName acadObject ventingHeight ventingPerimeter ventingVolume) 
+(defun CalculateVentingAreaMacro (/ entityName acadObject ventingHeight ventingPerimeter ventingVolume ventingLength ventingWidth ventingAspectRatio) 
   (setq entityName (car (GetEntityNameListBySSUtils (ssget '((0 . "LWPOLYLINE") (8 . "0DataFlow-JSVentingArea"))))))
   (setq acadObject (vlax-ename->vla-object entityName))
   (setq ventingHeight (vlax-get-property acadObject 'Length))
   (setq ventingPerimeter (vlax-get-property acadObject 'Elevation))
   (setq ventingVolume (* ventingHeight ventingPerimeter))
-  (princ ventingVolume)
-  (GetJSVentingRegionLengthWidth entityName)
+  (setq ventingLength (car (GetJSVentingRegionLengthWidth entityName)))
+  (setq ventingWidth (cadr (GetJSVentingRegionLengthWidth entityName)))
+  (setq ventingAspectRatio (GetVentingAspectRatio ventingHeight ventingLength ventingWidth))
+  (princ ventingAspectRatio)(princ)
+  
+)
+
+; 2021-06-28
+(defun GetVentingAspectRatio (ventingHeight ventingLength ventingWidth / crossSectionPerimeter) 
+  (setq crossSectionPerimeter (* (+ ventingHeight ventingWidth) 2))
+  (/ (* ventingLength crossSectionPerimeter) (* (* ventingHeight ventingWidth) 4))
 )
 
 ; 2021-06-27
