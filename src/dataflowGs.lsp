@@ -3283,7 +3283,7 @@
 
 ; 2021-04-15
 (defun GetAllInstrumentPipeEquipData () 
-  (GetSelectedEntityDataUtils (GetAllInstrumentPipeEquipSSUtils))
+  (GetEntityDataBySSUtils (GetAllInstrumentPipeEquipSSUtils))
 )
 
 ; 2021-04-15
@@ -3572,7 +3572,7 @@
 
 ; 2021-04-28
 (defun GetGsLcPipeAndEquipData (ss /) 
-  (GetSelectedEntityDataUtils ss)
+  (GetEntityDataBySSUtils ss)
 )
 
 ; 2021-05-08

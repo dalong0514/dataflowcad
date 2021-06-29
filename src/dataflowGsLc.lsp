@@ -212,7 +212,7 @@
                    (GetDottedPairValueUtils 10 (cadr x))
              )
            ) 
-    (GetGsLcStrategyEntityData (GetSelectedEntityDataUtils (GetAllEquipmentSSUtils)))
+    (GetGsLcStrategyEntityData (GetEntityDataBySSUtils (GetAllEquipmentSSUtils)))
   ) 
 )
 

@@ -154,6 +154,33 @@
   (princ)
 )
 
+(defun c:foo (/ entityName)
+  ; (setq entityName (car (GetEntityNameListBySSUtils (ssget '((0 . "LWPOLYLINE") (8 . "0DataFlow-JSVentingArea"))))))
+  ; (ProcessJSVentingAxisoDictData entityName)
+  (GetJSAntiVentingEntityData)
+  
+)
+
+; 2021-06-29
+(defun GetJSAntiVentingEntityData ()
+  (GetEntityDataBySSUtils (GetJSAntiVentingSS))
+)
+
+; 2021-06-29
+(defun GetJSAntiVentingSS () 
+    (ssget '( 
+        (-4 . "<OR")
+          (0 . "LINE")
+          (0 . "INSERT")
+        (-4 . "OR>") 
+        (-4 . "<OR")
+          (8 . "WALL")
+          (8 . "COLUMN")
+        (-4 . "OR>")
+      )
+    )
+)
+
 ; 2021-06-29
 ; ready to refactor
 (defun GetThreeSectionVentingAspectRatio (ventingAxisoDictData ventingHeight ventingLength ventingWidth / fristAxisPt sencondAxisPt) 
@@ -279,18 +306,13 @@
   ) 
 )
 
-(defun c:foo (/ entityName)
-  (setq entityName (car (GetEntityNameListBySSUtils (ssget '((0 . "LWPOLYLINE") (8 . "0DataFlow-JSVentingArea"))))))
-  (ProcessJSVentingAxisoDictData entityName)
-)
-
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
 ; Utils Function
 
 ; 2021-06-26
 (defun GetAllJsVentingGraphData () 
-  (GetSelectedEntityDataUtils (ssget "X" '((0 . "LWPOLYLINE") (8 . "0DataFlow-JSVentingArea"))))
+  (GetEntityDataBySSUtils (ssget "X" '((0 . "LWPOLYLINE") (8 . "0DataFlow-JSVentingArea"))))
 )
 
 ; 2021-06-27

@@ -1351,7 +1351,7 @@
 ; 2021-04-08
 ; rename at 2021-06-29
 (defun GetAllJsAxisoData () 
-  (GetSelectedEntityDataUtils (ssget "X" '((0 . "INSERT") (2 . "_AXISO"))))
+  (GetEntityDataBySSUtils (ssget "X" '((0 . "INSERT") (2 . "_AXISO"))))
 )
 
 ; 2021-04-08
@@ -1424,7 +1424,7 @@
 
 ; 2021-04-09
 (defun GetAllGsBzEquipGraphyData () 
-  (GetSelectedEntityDataUtils (GetAllGsBzEquipGraphySSUtils))
+  (GetEntityDataBySSUtils (GetAllGsBzEquipGraphySSUtils))
 )
 
 ; 2021-05-14

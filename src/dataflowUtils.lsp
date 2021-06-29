@@ -155,7 +155,7 @@
   (read (vl-list->string (reverse newData)))
 )
 
-(defun GetSelectedEntityDataUtils (ss /)
+(defun GetEntityDataBySSUtils (ss /)
   (mapcar '(lambda (x) (entget x)) 
     (GetEntityNameListBySSUtils ss)
   )
@@ -174,7 +174,7 @@
 ; refactored at 2021-03-08
 (defun GetOneEntityDataUtils ()
   ;(entget (car (entsel)))
-  (car (GetSelectedEntityDataUtils (ssget)))
+  (car (GetEntityDataBySSUtils (ssget)))
 )
 
 (defun GetBlockNameBySelectUtils (/ entityName) 
@@ -773,7 +773,7 @@
                 x
               ) 
            ) 
-    (GetSelectedEntityDataUtils ss) 
+    (GetEntityDataBySSUtils ss) 
   )
 )
 
