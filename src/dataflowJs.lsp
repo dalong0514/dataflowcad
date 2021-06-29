@@ -52,7 +52,7 @@
 )
 
 ; 2021-06-28
-(defun CalculateVentingAreaByBox (tileName / dcl_id status ventingRatio aspectRatio ventingRatioStatus)
+(defun CalculateVentingAreaByBox (tileName / dcl_id status entityName ventingRatio ventingHeight ventingHeightInt ventingRegionLengthWidth aspectRatio ventingRatioStatus)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\dcl\\" "dataflowJs.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -64,7 +64,9 @@
     (action_tile "btnCalculate" "(done_dialog 3)")
     ; the default value of input box
     (mode_tile "ventingRatio" 2)
+    (mode_tile "ventingHeight" 2)
     (action_tile "ventingRatio" "(setq ventingRatio $value)")
+    (action_tile "ventingHeight" "(setq ventingHeight $value)")
     (progn
       (start_list "ventingRatio" 3)
       (mapcar '(lambda (x) (add_list x)) 
@@ -75,21 +77,28 @@
     (if (= nil ventingRatio)
       (setq ventingRatio "0")
     ) 
+    (if (= nil ventingHeight)
+      (setq ventingHeight "")
+    ) 
     (if (= ventingRatioStatus 1)
       (set_tile "aspectRatioMsg" (strcat "³¤¾¶±È£º" (vl-princ-to-string aspectRatio)))
     ) 
     (set_tile "ventingRatio" ventingRatio)
-    ; insert button
+    (set_tile "ventingHeight" ventingHeight)
+    ; select button
     (if (= 2 (setq status (start_dialog)))
       (progn 
-        (setq aspectRatio (CalculateVentingAreaMacro))
+        (setq entityName (car (GetEntityNameListBySSUtils (ssget '((0 . "LWPOLYLINE") (8 . "0DataFlow-JSVentingArea"))))))
+        (setq ventingRegionLengthWidth (GetJSVentingRegionLengthWidth entityName))
+        (setq ventingHeightInt (* (atof ventingHeight) 1000))
+        (setq aspectRatio (GetVentingAspectRatio ventingHeightInt (car ventingRegionLengthWidth) (cadr ventingRegionLengthWidth)))
         (setq ventingRatioStatus 1)
       )
     )
     ; all select button
     (if (= 3 status)
       (progn 
-        (princ "dalong")
+        (princ ventingHeight)
       )
     )
   )
@@ -99,8 +108,7 @@
 
 ; (VlaGetEntityPropertyAndMethodBySelectUtils)
 ; 2021-06-28
-(defun CalculateVentingAreaMacro (/ entityName acadObject ventingHeight ventingPerimeter ventingArea ventingVolume ventingLength ventingWidth ventingAspectRatio) 
-  (setq entityName (car (GetEntityNameListBySSUtils (ssget '((0 . "LWPOLYLINE") (8 . "0DataFlow-JSVentingArea"))))))
+(defun CalculateVentingAreaMacro (entityName / acadObject ventingHeight ventingPerimeter ventingArea ventingVolume ventingLength ventingWidth ventingAspectRatio) 
   (setq acadObject (vlax-ename->vla-object entityName))
   (setq ventingHeight (* (vlax-get-property acadObject 'Elevation) 1000))
   (setq ventingPerimeter (vlax-get-property acadObject 'Length))
@@ -139,7 +147,47 @@
                        (IsPositionInTheRegionUtils x (car filterRegion) (cadr filterRegion) (caddr filterRegion) (cadddr filterRegion)) 
                      ) 
     (GetAllJSDrawColumnPosition)
-  )    
+  ) 
+)
+
+; 2021-06-29
+(defun ProcessJSVentingAxisoDictData (entityName / ventingAxisoDictData baseXPosition) 
+  (setq ventingAxisoDictData (vl-sort (GetJSVentingAxisoDictData entityName) '(lambda (x y) (< (cdr x) (cdr y)))))
+  (setq baseXPosition (cdr (car ventingAxisoDictData)))
+  (mapcar '(lambda (x) 
+             (cons (car x) (- (cdr x) baseXPosition))
+           ) 
+    ventingAxisoDictData
+  ) 
+)
+
+; 2021-06-29
+(defun GetJSVentingAxisoDictData (entityName /) 
+  (mapcar '(lambda (x) 
+             (cons 
+                (GetDottedPairValueUtils "a" (GetAllPropertyDictForOneBlock (GetDottedPairValueUtils -1 x)))
+                (car (GetDottedPairValueUtils 10 x))
+             )
+           ) 
+    (GetJSAxisPositionForVenting entityName)
+  ) 
+)
+
+; 2021-06-29
+(defun GetJSAxisPositionForVenting (entityName / filterRegion) 
+  (setq filterRegion (GetMinMaxXYValuesUtils (GetAllPointForPolyLineUtils (entget entityName))))
+  (vl-remove-if-not '(lambda (x) 
+                       (IsPositionInTheRegionUtils 
+                         (GetDottedPairValueUtils 10 x) 
+                         (car filterRegion) (cadr filterRegion) (cadddr filterRegion) (+ (cadddr filterRegion) 20000)) 
+                     ) 
+    (GetAllJsAxisoData)
+  ) 
+)
+
+(defun c:foo (/ entityName)
+  (setq entityName (car (GetEntityNameListBySSUtils (ssget '((0 . "LWPOLYLINE") (8 . "0DataFlow-JSVentingArea"))))))
+  (ProcessJSVentingAxisoDictData entityName)
 )
 
 ;;;-------------------------------------------------------------------------;;;

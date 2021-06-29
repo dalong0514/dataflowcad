@@ -7,15 +7,28 @@ calculateVentingAreaBox : dialog {
     : column {
       : popup_list { 
         label = "选取泄压比：";
-        edit_width = 50;
+        edit_width = 40;
         key = "ventingRatio"; 
         list = "";
         value = "";
       }
       : spacer { height = 2; } 
+      : row {
+        : text {
+          key = "ventingHeightMsg";
+          label = "泄压分区层高（单位m）：";
+        }
+        : edit_box {
+          key = "ventingHeight";
+          edit_width = 41;
+          mnemonic = "N";
+          value = "";
+        }
+      }
+      : spacer { height = 2; } 
       : text {
         key = "aspectRatioMsg";
-        label = "长径比：";
+        label = "初始长径比：";
       } 
     }
     : spacer { height = 3; } 

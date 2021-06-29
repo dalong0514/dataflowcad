@@ -1344,12 +1344,13 @@
                    (GetDottedPairValueUtils 10 (cadr x))
              )
            ) 
-    (GetStrategyEntityDataByDrawFrame (GetAllGsBzAxisoData))
+    (GetStrategyEntityDataByDrawFrame (GetAllJsAxisoData))
   ) 
 )
 
 ; 2021-04-08
-(defun GetAllGsBzAxisoData () 
+; rename at 2021-06-29
+(defun GetAllJsAxisoData () 
   (GetSelectedEntityDataUtils (ssget "X" '((0 . "INSERT") (2 . "_AXISO"))))
 )
 
