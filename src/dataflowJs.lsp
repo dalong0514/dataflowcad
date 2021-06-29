@@ -86,12 +86,15 @@
     (set_tile "ventingHeight" ventingHeight)
     ; select button
     (if (= 2 (setq status (start_dialog)))
-      (progn 
-        (setq entityName (car (GetEntityNameListBySSUtils (ssget '((0 . "LWPOLYLINE") (8 . "0DataFlow-JSVentingArea"))))))
-        (setq ventingRegionLengthWidth (GetJSVentingRegionLengthWidth entityName))
-        (setq ventingHeightInt (* (atof ventingHeight) 1000))
-        (setq aspectRatio (GetVentingAspectRatio ventingHeightInt (car ventingRegionLengthWidth) (cadr ventingRegionLengthWidth)))
-        (setq ventingRatioStatus 1)
+      (if (= ventingHeight "") 
+        (alert "«Îœ» ‰»Î≤„∏ﬂ£°")
+        (progn 
+          (setq entityName (car (GetEntityNameListBySSUtils (ssget '((0 . "LWPOLYLINE") (8 . "0DataFlow-JSVentingArea"))))))
+          (setq ventingRegionLengthWidth (GetJSVentingRegionLengthWidth entityName))
+          (setq ventingHeightInt (* (atof ventingHeight) 1000))
+          (setq aspectRatio (GetVentingAspectRatio ventingHeightInt (car ventingRegionLengthWidth) (cadr ventingRegionLengthWidth)))
+          (setq ventingRatioStatus 1)
+        )
       )
     )
     ; all select button
