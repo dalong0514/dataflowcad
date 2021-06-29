@@ -30,6 +30,16 @@ calculateVentingAreaBox : dialog {
         key = "aspectRatioMsg";
         label = "初始长径比：";
       } 
+      : spacer { height = 2; } 
+      : text {
+        key = "aspectRatioOneMsg";
+        label = "分区一长径比：";
+      } 
+      : spacer { height = 2; } 
+      : text {
+        key = "aspectRatioTwoMsg";
+        label = "分区二长径比：";
+      } 
     }
     : spacer { height = 3; } 
     : row { 

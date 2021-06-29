@@ -50,8 +50,10 @@
   (ExecuteFunctionAfterVerifyDateUtils 'CalculateVentingAreaByBox '("calculateVentingAreaBox"))
 )
 
-; 2021-06-28
-(defun CalculateVentingAreaByBox (tileName / dcl_id status entityName ventingRatio ventingHeight ventingHeightInt ventingRegionLengthWidth aspectRatio ventingRatioStatus)
+; 2021-06-29
+(defun CalculateVentingAreaByBox (tileName / dcl_id status entityName ventingRatio ventingHeight ventingHeightInt 
+                                  ventingRegionLengthWidth ventingLength ventingWidth aspectRatio ventingAxisoDictData 
+                                  ventingRatioStatus twoSectionVentingAspectRatio threeSectionVentingAspectRatio fristAxis lastAxis)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\dcl\\" "dataflowJs.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -80,7 +82,16 @@
       (setq ventingHeight "")
     ) 
     (if (= ventingRatioStatus 1)
-      (set_tile "aspectRatioMsg" (strcat "长径比：" (vl-princ-to-string aspectRatio)))
+      (set_tile "aspectRatioMsg" (strcat "初始长径比：" (vl-princ-to-string aspectRatio) "  区域：" fristAxis " 轴到 " lastAxis " 轴"))
+    ) 
+    (if (= ventingRatioStatus 2)
+      (progn 
+        (set_tile "aspectRatioMsg" (strcat "初始长径比：" (vl-princ-to-string aspectRatio) "  区域：" fristAxis " 轴到 " lastAxis " 轴"))
+        (set_tile "aspectRatioOneMsg" 
+                  (strcat "分区一长径比：" (vl-princ-to-string (car (cdr twoSectionVentingAspectRatio))) "  区域：" fristAxis " 轴到 " (car twoSectionVentingAspectRatio) " 轴"))
+        (set_tile "aspectRatioTwoMsg" 
+                  (strcat "分区二长径比：" (vl-princ-to-string (cadr (cdr twoSectionVentingAspectRatio))) "  区域：" (car twoSectionVentingAspectRatio) " 轴到 " lastAxis " 轴"))
+      )
     ) 
     (set_tile "ventingRatio" ventingRatio)
     (set_tile "ventingHeight" ventingHeight)
@@ -92,8 +103,32 @@
           (setq entityName (car (GetEntityNameListBySSUtils (ssget '((0 . "LWPOLYLINE") (8 . "0DataFlow-JSVentingArea"))))))
           (setq ventingRegionLengthWidth (GetJSVentingRegionLengthWidth entityName))
           (setq ventingHeightInt (* (atof ventingHeight) 1000))
-          (setq aspectRatio (GetVentingAspectRatio ventingHeightInt (car ventingRegionLengthWidth) (cadr ventingRegionLengthWidth)))
-          (setq ventingRatioStatus 1)
+          (setq ventingLength (car ventingRegionLengthWidth))
+          (setq ventingWidth (cadr ventingRegionLengthWidth))
+          (setq aspectRatio (GetVentingAspectRatio ventingHeightInt ventingLength ventingWidth))
+          (setq ventingAxisoDictData (ProcessJSVentingAxisoDictData entityName))
+          (setq fristAxis (car (car ventingAxisoDictData)))
+          (setq lastAxis (car (car (reverse ventingAxisoDictData))))
+          (if (< aspectRatio 3) 
+            (setq ventingRatioStatus 1)
+            (progn 
+              (setq twoSectionVentingAspectRatio (GetTwoSectionVentingAspectRatio ventingAxisoDictData ventingHeightInt ventingLength ventingWidth))
+              (if (/= twoSectionVentingAspectRatio nil) 
+                (progn 
+                  (setq twoSectionVentingAspectRatio (nth (/ (length twoSectionVentingAspectRatio) 2) twoSectionVentingAspectRatio))
+                  (setq ventingRatioStatus 2)
+                )
+                (progn 
+                  (setq threeSectionVentingAspectRatio (GetThreeSectionVentingAspectRatio ventingAxisoDictData ventingHeightInt ventingLength ventingWidth))
+                  (setq ventingRatioStatus 3)
+                )
+              )
+            )
+          )
+          
+          
+          
+          
         )
       )
     )
@@ -106,6 +141,27 @@
   )
   (unload_dialog dcl_id)
   (princ)
+)
+
+; 2021-06-29
+(defun GetTwoSectionVentingAspectRatio (ventingAxisoDictData ventingHeight ventingLength ventingWidth /) 
+  (vl-remove-if-not '(lambda (x) 
+                       (and 
+                         (< (car (cdr x)) 3)
+                         (< (cadr (cdr x)) 3)
+                       ) 
+                     ) 
+    (mapcar '(lambda (x) 
+              (cons (car x) 
+                  (list 
+                    (GetVentingAspectRatio ventingHeight (cdr x) ventingWidth)
+                    (GetVentingAspectRatio ventingHeight (- ventingLength (cdr x)) ventingWidth)
+                  )
+              )
+            ) 
+      ventingAxisoDictData
+    )
+  )
 )
 
 ; (VlaGetEntityPropertyAndMethodBySelectUtils)
