@@ -56,7 +56,7 @@
 )
 
 ; 2021-06-29
-(defun CalculateVentingAreaByBox (tileName / dcl_id status entityName ventingRatio ventingHeight ventingHeightInt 
+(defun CalculateVentingAreaByBox (tileName / dcl_id status entityName ventingRatio ventingRatioValue ventingHeight ventingHeightInt 
                                   ventingRegionLengthWidth ventingLength ventingWidth aspectRatio ventingArea ventingAxisoDictData 
                                   ventingRatioStatus twoSectionVentingAspectRatio threeSectionVentingAspectRatio fristAxis lastAxis)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\dcl\\" "dataflowJs.dcl")))
@@ -113,15 +113,18 @@
           (setq ventingHeightInt (* (atof ventingHeight) 1000))
           (setq ventingLength (car ventingRegionLengthWidth))
           (setq ventingWidth (cadr ventingRegionLengthWidth))
+          (setq ventingRatioValue (atof (nth (atoi ventingRatio) (GetJSVentingRatio))))
+          
+          
           (setq aspectRatio (GetVentingAspectRatio ventingHeightInt ventingLength ventingWidth))
-          (setq ventingArea (GetJSVentingArea ventingHeightInt ventingLength ventingWidth))
+          (setq ventingArea (GetJSVentingArea ventingHeightInt ventingLength ventingWidth ventingRatioValue))
           (setq ventingAxisoDictData (ProcessJSVentingAxisoDictData entityName))
           (setq fristAxis (car (car ventingAxisoDictData)))
           (setq lastAxis (car (car (reverse ventingAxisoDictData))))
           (if (< aspectRatio 3) 
             (setq ventingRatioStatus 1)
             (progn 
-              (setq twoSectionVentingAspectRatio (GetTwoSectionVentingAspectRatio ventingAxisoDictData ventingHeightInt ventingLength ventingWidth))
+              (setq twoSectionVentingAspectRatio (GetTwoSectionVentingAspectRatio ventingAxisoDictData ventingHeightInt ventingLength ventingWidth ventingRatioValue))
               (if (/= twoSectionVentingAspectRatio nil) 
                 (progn 
                   (setq twoSectionVentingAspectRatio (nth (/ (length twoSectionVentingAspectRatio) 2) twoSectionVentingAspectRatio))
@@ -165,7 +168,7 @@
 )
 
 ; 2021-06-29
-(defun GetTwoSectionVentingAspectRatio (ventingAxisoDictData ventingHeight ventingLength ventingWidth /) 
+(defun GetTwoSectionVentingAspectRatio (ventingAxisoDictData ventingHeight ventingLength ventingWidth ventingRatio /) 
   (vl-remove-if-not '(lambda (x) 
                        (and 
                          (< (car (cdr x)) 3)
@@ -178,8 +181,8 @@
                     (GetVentingAspectRatio ventingHeight (cdr x) ventingWidth)
                     (GetVentingAspectRatio ventingHeight (- ventingLength (cdr x)) ventingWidth)
                     ; calculate VentingArea
-                    (GetJSVentingArea ventingHeight (cdr x) ventingWidth)
-                    (GetJSVentingArea ventingHeight (- ventingLength (cdr x)) ventingWidth)
+                    (GetJSVentingArea ventingHeight (cdr x) ventingWidth ventingRatio)
+                    (GetJSVentingArea ventingHeight (- ventingLength (cdr x)) ventingWidth ventingRatio)
                   )
               )
             ) 
@@ -211,11 +214,11 @@
 
 ; 2021-06-29
 ; unit test completed
-(defun GetJSVentingArea (ventingHeight ventingLength ventingWidth /) 
+(defun GetJSVentingArea (ventingHeight ventingLength ventingWidth ventingRatio /) 
   (setq ventingHeight (/ ventingHeight 1000.0))
   (setq ventingLength (/ ventingLength 1000.0))
   (setq ventingWidth (/ ventingWidth 1000.0))
-  (fix (* 10 0.11 (expt (* ventingHeight ventingLength ventingWidth) (/ 2.0 3))))
+  (fix (* 10 ventingRatio (expt (* ventingHeight ventingLength ventingWidth) (/ 2.0 3))))
 )
 
 ; 2021-06-27

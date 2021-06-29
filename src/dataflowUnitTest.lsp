@@ -66,7 +66,7 @@
 
 ; 2021-05-16
 (defun GetJSVentingAreaTest () 
-  (AssertEqual 'GetJSVentingArea (list 5200 24000 120000) 668)
+  (AssertEqual 'GetJSVentingArea (list 5200 24000 120000 0.11) 668)
 )
 
 ; 2021-06-13
