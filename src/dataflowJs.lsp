@@ -51,8 +51,13 @@
 )
 
 ; 2021-06-29
+(defun GetJSVentingRatio ()
+  '("0.11" "0.25")
+)
+
+; 2021-06-29
 (defun CalculateVentingAreaByBox (tileName / dcl_id status entityName ventingRatio ventingHeight ventingHeightInt 
-                                  ventingRegionLengthWidth ventingLength ventingWidth aspectRatio ventingAxisoDictData 
+                                  ventingRegionLengthWidth ventingLength ventingWidth aspectRatio ventingArea ventingAxisoDictData 
                                   ventingRatioStatus twoSectionVentingAspectRatio threeSectionVentingAspectRatio fristAxis lastAxis)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\dcl\\" "dataflowJs.dcl")))
   (setq status 2)
@@ -71,7 +76,7 @@
     (progn
       (start_list "ventingRatio" 3)
       (mapcar '(lambda (x) (add_list x)) 
-                '("0.11" "0.25"))
+                (GetJSVentingRatio))
       (end_list) 
     ) 
     ; init the default data of text
@@ -82,16 +87,19 @@
       (setq ventingHeight "")
     ) 
     (if (= ventingRatioStatus 1)
-      (set_tile "aspectRatioMsg" (strcat "初始长径比：" (vl-princ-to-string aspectRatio) "  区域：" fristAxis " 轴到 " lastAxis " 轴"))
+      (set_tile "aspectRatioMsg" (strcat "初始长径比：" (vl-princ-to-string aspectRatio) "  区域：" fristAxis " 轴到 " lastAxis " 轴  计算泄压面积：" (vl-princ-to-string ventingArea)))
     ) 
     (if (= ventingRatioStatus 2)
       (progn 
         (set_tile "aspectRatioMsg" (strcat "初始长径比：" (vl-princ-to-string aspectRatio) "  区域：" fristAxis " 轴到 " lastAxis " 轴"))
         (set_tile "aspectRatioOneMsg" 
-                  (strcat "分区一长径比：" (vl-princ-to-string (car (cdr twoSectionVentingAspectRatio))) "  区域：" fristAxis " 轴到 " (car twoSectionVentingAspectRatio) " 轴"))
+                  (strcat "分区一长径比：" (vl-princ-to-string (car (cdr twoSectionVentingAspectRatio))) "  区域：" fristAxis " 轴到 " (car twoSectionVentingAspectRatio) " 轴  计算泄压面积：" (vl-princ-to-string (nth 2 (cdr twoSectionVentingAspectRatio)))))
         (set_tile "aspectRatioTwoMsg" 
-                  (strcat "分区二长径比：" (vl-princ-to-string (cadr (cdr twoSectionVentingAspectRatio))) "  区域：" (car twoSectionVentingAspectRatio) " 轴到 " lastAxis " 轴"))
+                  (strcat "分区二长径比：" (vl-princ-to-string (cadr (cdr twoSectionVentingAspectRatio))) "  区域：" (car twoSectionVentingAspectRatio) " 轴到 " lastAxis " 轴  计算泄压面积：" (vl-princ-to-string (nth 3 (cdr twoSectionVentingAspectRatio)))))
       )
+    ) 
+    (if (= ventingRatioStatus 3)
+      (set_tile "aspectRatioThreeMsg" "两段分区的长径比无法同时小于 3！")
     ) 
     (set_tile "ventingRatio" ventingRatio)
     (set_tile "ventingHeight" ventingHeight)
@@ -106,6 +114,7 @@
           (setq ventingLength (car ventingRegionLengthWidth))
           (setq ventingWidth (cadr ventingRegionLengthWidth))
           (setq aspectRatio (GetVentingAspectRatio ventingHeightInt ventingLength ventingWidth))
+          (setq ventingArea (GetJSVentingArea ventingHeightInt ventingLength ventingWidth))
           (setq ventingAxisoDictData (ProcessJSVentingAxisoDictData entityName))
           (setq fristAxis (car (car ventingAxisoDictData)))
           (setq lastAxis (car (car (reverse ventingAxisoDictData))))
@@ -121,12 +130,11 @@
                 (progn 
                   (setq threeSectionVentingAspectRatio (GetThreeSectionVentingAspectRatio ventingAxisoDictData ventingHeightInt ventingLength ventingWidth))
                   (setq ventingRatioStatus 3)
+                  ; (princ threeSectionVentingAspectRatio)(princ)
                 )
               )
             )
           )
-          
-          
           
           
         )
@@ -135,12 +143,25 @@
     ; all select button
     (if (= 3 status)
       (progn 
-        (princ ventingHeight)
+        (princ (nth (atoi ventingRatio) (GetJSVentingRatio)))
       )
     )
   )
   (unload_dialog dcl_id)
   (princ)
+)
+
+; 2021-06-29
+; ready to refactor
+(defun GetThreeSectionVentingAspectRatio (ventingAxisoDictData ventingHeight ventingLength ventingWidth / fristAxisPt sencondAxisPt) 
+  ; (princ ventingAxisoDictData)(princ)
+  (setq fristAxisPt (nth (/ (length ventingAxisoDictData) 3) ventingAxisoDictData))
+  (setq sencondAxisPt (nth (* (/ (length ventingAxisoDictData) 3) 2) ventingAxisoDictData))
+  (list 
+    (GetVentingAspectRatio ventingHeight (cdr fristAxisPt) ventingWidth)
+    (GetVentingAspectRatio ventingHeight (- (cdr sencondAxisPt) (cdr fristAxisPt)) ventingWidth)
+    (GetVentingAspectRatio ventingHeight (- ventingLength (cdr sencondAxisPt)) ventingWidth)
+  )
 )
 
 ; 2021-06-29
@@ -156,6 +177,9 @@
                   (list 
                     (GetVentingAspectRatio ventingHeight (cdr x) ventingWidth)
                     (GetVentingAspectRatio ventingHeight (- ventingLength (cdr x)) ventingWidth)
+                    ; calculate VentingArea
+                    (GetJSVentingArea ventingHeight (cdr x) ventingWidth)
+                    (GetJSVentingArea ventingHeight (- ventingLength (cdr x)) ventingWidth)
                   )
               )
             ) 
@@ -183,6 +207,15 @@
 (defun GetVentingAspectRatio (ventingHeight ventingLength ventingWidth / crossSectionPerimeter) 
   (setq crossSectionPerimeter (* (+ ventingHeight ventingWidth) 2))
   (/ (* ventingLength crossSectionPerimeter) (* (* ventingHeight ventingWidth) 4))
+)
+
+; 2021-06-29
+; unit test completed
+(defun GetJSVentingArea (ventingHeight ventingLength ventingWidth /) 
+  (setq ventingHeight (/ ventingHeight 1000.0))
+  (setq ventingLength (/ ventingLength 1000.0))
+  (setq ventingWidth (/ ventingWidth 1000.0))
+  (fix (* 10 0.11 (expt (* ventingHeight ventingLength ventingWidth) (/ 2.0 3))))
 )
 
 ; 2021-06-27
@@ -237,7 +270,7 @@
   (vl-remove-if-not '(lambda (x) 
                        (IsPositionInTheRegionUtils 
                          (GetDottedPairValueUtils 10 x) 
-                         (car filterRegion) (cadr filterRegion) (cadddr filterRegion) (+ (cadddr filterRegion) 20000)) 
+                         (car filterRegion) (cadr filterRegion) (cadddr filterRegion) (+ (cadddr filterRegion) 30000)) 
                      ) 
     (GetAllJsAxisoData)
   ) 

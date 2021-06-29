@@ -40,6 +40,12 @@ calculateVentingAreaBox : dialog {
         key = "aspectRatioTwoMsg";
         label = "分区二长径比：";
       } 
+      : spacer { height = 2; } 
+      : text {
+        key = "aspectRatioThreeMsg";
+        alignment = centered; 
+        label = "";
+      } 
     }
     : spacer { height = 3; } 
     : row { 
@@ -47,13 +53,13 @@ calculateVentingAreaBox : dialog {
       alignment = centered; 
       : button { 
         key = "btnSelect"; 
-        label = "拾取分区"; 
+        label = "拾取泄压分区"; 
         is_default = "true"; 
       } 
       : spacer { width = 2; } 
       : button { 
         key = "btnCalculate"; 
-        label = "泄压计算"; 
+        label = "生成泄压简图"; 
         is_default = "true"; 
       } 
       : spacer { width = 2; } 

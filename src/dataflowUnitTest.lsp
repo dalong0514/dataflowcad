@@ -60,7 +60,13 @@
   (IsRealStringUtilsTest)
   (GetBsBarrelWeldJointTest)
   (GetBsBarrelInspectRateTest)
+  (GetJSVentingAreaTest)
   (DL:PrintTestResults (DL:CountBooleans *testList*))
+)
+
+; 2021-05-16
+(defun GetJSVentingAreaTest () 
+  (AssertEqual 'GetJSVentingArea (list 5200 24000 120000) 668)
 )
 
 ; 2021-06-13
