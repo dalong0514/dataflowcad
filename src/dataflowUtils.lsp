@@ -2601,7 +2601,8 @@
 )
 
 ; 2021-05-12
-(defun VlaGetEntityPropertyAndMethodBySelectUtils ()
+; refactored at 2021-06-29
+(defun c:VlaGetEntityPropertyAndMethodBySelectUtils ()
   (vlax-dump-object (VlaGetObjectBySelectUtils) T)
 )
 

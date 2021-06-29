@@ -58,7 +58,8 @@
 ; 2021-06-29
 (defun CalculateVentingAreaByBox (tileName / dcl_id status entityName ventingRatio ventingRatioValue ventingHeight ventingHeightInt 
                                   ventingRegionLengthWidth ventingLength ventingWidth aspectRatio ventingArea ventingAxisoDictData 
-                                  ventingRatioStatus twoSectionVentingAspectRatio threeSectionVentingAspectRatio fristAxis lastAxis)
+                                  ventingRatioStatus twoSectionVentingAspectRatio threeSectionVentingAspectRatio fristAxis lastAxis 
+                                  antiVentingEntityData actualVentingArea)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\dcl\\" "dataflowJs.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -68,6 +69,7 @@
     (action_tile "cancel" "(done_dialog 0)")
     (action_tile "btnSelect" "(done_dialog 2)")
     (action_tile "btnCalculate" "(done_dialog 3)")
+    (action_tile "btnInsert" "(done_dialog 4)")
     ; the default value of input box
     (mode_tile "ventingRatio" 2)
     (mode_tile "ventingHeight" 2)
@@ -114,8 +116,6 @@
           (setq ventingLength (car ventingRegionLengthWidth))
           (setq ventingWidth (cadr ventingRegionLengthWidth))
           (setq ventingRatioValue (atof (nth (atoi ventingRatio) (GetJSVentingRatio))))
-          
-          
           (setq aspectRatio (GetVentingAspectRatio ventingHeightInt ventingLength ventingWidth))
           (setq ventingArea (GetJSVentingArea ventingHeightInt ventingLength ventingWidth ventingRatioValue))
           (setq ventingAxisoDictData (ProcessJSVentingAxisoDictData entityName))
@@ -143,10 +143,18 @@
         )
       )
     )
-    ; all select button
+    ; calculate venting Area
     (if (= 3 status)
       (progn 
-        (princ (nth (atoi ventingRatio) (GetJSVentingRatio)))
+        (setq antiVentingEntityData (GetJSAntiVentingEntityData))
+        (setq actualVentingArea (GetJSActualVentingArea entityName antiVentingEntityData ventingHeight))
+        (princ actualVentingArea)(princ)
+      )
+    )
+    ; insert Venting Draw
+    (if (= 4 status)
+      (progn 
+        (princ "dalong")
       )
     )
   )
@@ -157,8 +165,67 @@
 (defun c:foo (/ entityName)
   ; (setq entityName (car (GetEntityNameListBySSUtils (ssget '((0 . "LWPOLYLINE") (8 . "0DataFlow-JSVentingArea"))))))
   ; (ProcessJSVentingAxisoDictData entityName)
-  (GetJSAntiVentingEntityData)
-  
+  ; (GetJSAntiVentingWallLength (GetJSAntiVentingEntityData))
+  (GetJSAntiVentingTotalLength)
+)
+
+; 2021-06-29
+(defun GetJSActualVentingArea (entityName antiVentingEntityData ventingHeight / ventingPerimeter antiVentingTotalLength) 
+  (setq ventingPerimeter (vlax-get-property (vlax-ename->vla-object entityName) 'Length))
+  (setq antiVentingTotalLength (GetJSAntiVentingTotalLength antiVentingEntityData))
+  (* (atof ventingHeight)  (/ (- ventingPerimeter antiVentingTotalLength) 1000.0))
+)
+
+; 2021-06-29
+(defun GetJSAntiVentingTotalLength (antiVentingEntityData / )
+  (+ 
+    (GetJSAntiVentingColmnLength antiVentingEntityData) 
+    (GetJSAntiVentingWallLength antiVentingEntityData) 
+    ; four corner column
+    2400
+  )
+)
+
+; 2021-06-29
+(defun GetJSAntiVentingColmnLength (antiVentingEntityData /)
+  (apply '+ 
+    (mapcar '(lambda (x) 
+              (GetDottedPairValueUtils 41 x)
+            ) 
+      (GetJSAntiVentingColmnData antiVentingEntityData)
+    ) 
+  )
+)
+
+; 2021-06-29
+(defun GetJSAntiVentingWallLength (antiVentingEntityData /)
+  (apply '+ 
+    (mapcar '(lambda (x) 
+              (vlax-get-property (vlax-ename->vla-object (GetDottedPairValueUtils -1 x)) 'Length)
+            ) 
+      (GetJSAntiVentingWallData antiVentingEntityData)
+    ) 
+  )
+)
+
+; 2021-06-29
+(defun GetJSAntiVentingColmnData (antiVentingEntityData /)
+  (vl-remove-if-not '(lambda (x) 
+                       ; ready to better
+                       (= (GetDottedPairValueUtils 0 x) "INSERT") 
+                     ) 
+    antiVentingEntityData
+  ) 
+)
+
+; 2021-06-29
+(defun GetJSAntiVentingWallData (antiVentingEntityData /)
+  (vl-remove-if-not '(lambda (x) 
+                       ; ready to better
+                       (= (GetDottedPairValueUtils 0 x) "LINE") 
+                     ) 
+    antiVentingEntityData
+  ) 
 )
 
 ; 2021-06-29
@@ -216,21 +283,6 @@
       ventingAxisoDictData
     )
   )
-)
-
-; (VlaGetEntityPropertyAndMethodBySelectUtils)
-; 2021-06-28
-(defun CalculateVentingAreaMacro (entityName / acadObject ventingHeight ventingPerimeter ventingArea ventingVolume ventingLength ventingWidth ventingAspectRatio) 
-  (setq acadObject (vlax-ename->vla-object entityName))
-  (setq ventingHeight (* (vlax-get-property acadObject 'Elevation) 1000))
-  (setq ventingPerimeter (vlax-get-property acadObject 'Length))
-  (setq ventingArea (vlax-get-property acadObject 'Area))
-  
-  (setq ventingVolume (* ventingHeight ventingPerimeter))
-  (setq ventingLength (car (GetJSVentingRegionLengthWidth entityName)))
-  (setq ventingWidth (cadr (GetJSVentingRegionLengthWidth entityName)))
-  (setq ventingAspectRatio (GetVentingAspectRatio ventingHeight ventingLength ventingWidth))
-  ; (princ ventingAspectRatio)(princ)
 )
 
 ; 2021-06-28

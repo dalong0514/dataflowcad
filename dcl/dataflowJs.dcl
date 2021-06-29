@@ -3,7 +3,7 @@ calculateVentingAreaBox : dialog {
   key = "calculateVentingArea";
   : boxed_radio_column {
     key = "updateMethond";
-    width = 80;
+    width = 100;
     : column {
       : popup_list { 
         label = "选取泄压比：";
@@ -59,6 +59,12 @@ calculateVentingAreaBox : dialog {
       : spacer { width = 2; } 
       : button { 
         key = "btnCalculate"; 
+        label = "计算实际泄压"; 
+        is_default = "true"; 
+      } 
+      : spacer { width = 2; } 
+      : button { 
+        key = "btnInsert"; 
         label = "生成泄压简图"; 
         is_default = "true"; 
       } 
