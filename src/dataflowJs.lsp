@@ -32,6 +32,7 @@
 )
 
 ; 2021-06-23
+; refactored at 2021-06-29
 (defun GenerateJsVentingAreaPLMacro (/ pipeHeight) 
   (VerifyAllJsBzSymbol)
   (vl-cmdf "_.pline")
@@ -39,8 +40,6 @@
   (while (= 1 (logand 1 (getvar 'cmdactive)))
       (vl-cmdf "\\")
   )
-  (setq pipeHeight (getstring "\n设定泄爆区层高（单位m）："))
-  (SetPLGraphHeightUtils (entlast) (atof pipeHeight))
   (SetGraphLayerUtils (entlast) "0DataFlow-JsVentingArea")
   (princ "\n泄爆区划分完成！")(princ)
 )
