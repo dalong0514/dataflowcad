@@ -56,9 +56,9 @@
 )
 
 ; 2021-06-29
-(defun CalculateVentingAreaByBox (tileName / dcl_id status entityName ventingRatio ventingRatioValue ventingHeight ventingHeightInt 
+(defun CalculateVentingAreaByBox (tileName / dcl_id status entityName xxyyValues ventingRatio ventingRatioValue ventingHeight ventingHeightInt 
                                   ventingRegionLengthWidth ventingLength ventingWidth aspectRatio ventingArea ventingAxisoDictData 
-                                  ventingRatioStatus twoSectionVentingAspectRatio threeSectionVentingAspectRatio fristAxis lastAxis 
+                                  ventingRatioStatus ventingAreaStatus twoSectionVentingAspectRatio threeSectionVentingAspectRatio fristAxis lastAxis 
                                   antiVentingEntityData actualVentingArea)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\dcl\\" "dataflowJs.dcl")))
   (setq status 2)
@@ -88,8 +88,11 @@
     (if (= nil ventingHeight)
       (setq ventingHeight "")
     ) 
-    (if (= ventingRatioStatus 1)
-      (set_tile "aspectRatioMsg" (strcat "初始长径比：" (vl-princ-to-string aspectRatio) "  区域：" fristAxis " 轴到 " lastAxis " 轴  计算泄压面积：" (vl-princ-to-string ventingArea)))
+    (if (= ventingRatioStatus 1) 
+      (progn 
+        (set_tile "aspectRatioMsg" (strcat "初始长径比：" (vl-princ-to-string aspectRatio) "  区域：" fristAxis " 轴到 " lastAxis " 轴  计算泄压面积：" (vl-princ-to-string ventingArea)))
+        (set_tile "calculateVentingAreaMsg" (strcat "计算泄压面积之和：" (vl-princ-to-string ventingArea)))
+      )
     ) 
     (if (= ventingRatioStatus 2)
       (progn 
@@ -98,10 +101,14 @@
                   (strcat "分区一长径比：" (vl-princ-to-string (car (cdr twoSectionVentingAspectRatio))) "  区域：" fristAxis " 轴到 " (car twoSectionVentingAspectRatio) " 轴  计算泄压面积：" (vl-princ-to-string (nth 2 (cdr twoSectionVentingAspectRatio)))))
         (set_tile "aspectRatioTwoMsg" 
                   (strcat "分区二长径比：" (vl-princ-to-string (cadr (cdr twoSectionVentingAspectRatio))) "  区域：" (car twoSectionVentingAspectRatio) " 轴到 " lastAxis " 轴  计算泄压面积：" (vl-princ-to-string (nth 3 (cdr twoSectionVentingAspectRatio)))))
+        (set_tile "calculateVentingAreaMsg" (strcat "计算泄压面积之和：" (vl-princ-to-string (+ (nth 2 (cdr twoSectionVentingAspectRatio)) (nth 3 (cdr twoSectionVentingAspectRatio))))))
       )
     ) 
     (if (= ventingRatioStatus 3)
       (set_tile "aspectRatioThreeMsg" "两段分区的长径比无法同时小于 3！")
+    ) 
+    (if (= ventingAreaStatus 1)
+      (set_tile "actualVentingAreaMsg" (strcat "实际泄压面积：" (vl-princ-to-string actualVentingArea)))
     ) 
     (set_tile "ventingRatio" ventingRatio)
     (set_tile "ventingHeight" ventingHeight)
@@ -111,6 +118,9 @@
         (alert "请先输入层高！")
         (progn 
           (setq entityName (car (GetEntityNameListBySSUtils (ssget '((0 . "LWPOLYLINE") (8 . "0DataFlow-JSVentingArea"))))))
+          ; (148340.0 172840.0 -588785.0 -572785.0) four corner of the venting region
+          (setq xxyyValues (GetMinMaxXYValuesUtils (GetAllPointForPolyLineUtils (entget entityName))))
+
           (setq ventingRegionLengthWidth (GetJSVentingRegionLengthWidth entityName))
           (setq ventingHeightInt (* (atof ventingHeight) 1000))
           (setq ventingLength (car ventingRegionLengthWidth))
@@ -139,7 +149,6 @@
             )
           )
           
-          
         )
       )
     )
@@ -147,8 +156,8 @@
     (if (= 3 status)
       (progn 
         (setq antiVentingEntityData (GetJSAntiVentingEntityData))
-        (setq actualVentingArea (GetJSActualVentingArea entityName antiVentingEntityData ventingHeight))
-        (princ actualVentingArea)(princ)
+        (setq actualVentingArea (GetJSActualVentingArea entityName antiVentingEntityData ventingHeight xxyyValues))
+        (setq ventingAreaStatus 1)
       )
     )
     ; insert Venting Draw
@@ -170,20 +179,21 @@
 )
 
 ; 2021-06-29
-(defun GetJSActualVentingArea (entityName antiVentingEntityData ventingHeight / ventingPerimeter antiVentingTotalLength) 
+(defun GetJSActualVentingArea (entityName antiVentingEntityData ventingHeight xxyyValues / ventingPerimeter antiVentingTotalLength) 
   (setq ventingPerimeter (vlax-get-property (vlax-ename->vla-object entityName) 'Length))
-  (setq antiVentingTotalLength (GetJSAntiVentingTotalLength antiVentingEntityData))
+  (setq antiVentingTotalLength (GetJSAntiVentingTotalLength antiVentingEntityData xxyyValues))
   (* (atof ventingHeight)  (/ (- ventingPerimeter antiVentingTotalLength) 1000.0))
 )
 
 ; 2021-06-29
-(defun GetJSAntiVentingTotalLength (antiVentingEntityData / )
+(defun GetJSAntiVentingTotalLength (antiVentingEntityData xxyyValues / )
   (+ 
     (GetJSAntiVentingColmnLength antiVentingEntityData) 
-    (GetJSAntiVentingWallLength antiVentingEntityData) 
+    (GetJSAntiVentingWallLength antiVentingEntityData xxyyValues) 
     ; four corner column
     2400
   )
+  (princ (GetJSAntiVentingWallLength antiVentingEntityData xxyyValues) )
 )
 
 ; 2021-06-29
@@ -198,12 +208,12 @@
 )
 
 ; 2021-06-29
-(defun GetJSAntiVentingWallLength (antiVentingEntityData /)
+(defun GetJSAntiVentingWallLength (antiVentingEntityData xxyyValues /)
   (apply '+ 
     (mapcar '(lambda (x) 
               (vlax-get-property (vlax-ename->vla-object (GetDottedPairValueUtils -1 x)) 'Length)
             ) 
-      (GetJSAntiVentingWallData antiVentingEntityData)
+      (GetJSAntiVentingWallData antiVentingEntityData xxyyValues)
     ) 
   )
 )
@@ -219,13 +229,34 @@
 )
 
 ; 2021-06-29
-(defun GetJSAntiVentingWallData (antiVentingEntityData /)
+(defun GetJSAntiVentingWallData (antiVentingEntityData xxyyValues / newXXYYValues)
+  (setq newXXYYValues 
+    (list 
+      (+ (car xxyyValues) 40)
+      (- (cadr xxyyValues) 40)
+      (+ (caddr xxyyValues) 40)
+      (- (cadddr xxyyValues) 40)
+    )
+  )
   (vl-remove-if-not '(lambda (x) 
                        ; ready to better
-                       (= (GetDottedPairValueUtils 0 x) "LINE") 
+                       (IsJSAntiVentingWall x newXXYYValues) 
                      ) 
     antiVentingEntityData
   ) 
+)
+
+; 2021-06-29
+(defun IsJSAntiVentingWall (entityData newXXYYValues /)
+  (and 
+    (= (GetDottedPairValueUtils 0 entityData) "LINE")
+    (or 
+      (< (car (GetDottedPairValueUtils 10 entityData)) (car newXXYYValues))
+      (> (car (GetDottedPairValueUtils 10 entityData)) (cadr newXXYYValues))
+      (< (cadr (GetDottedPairValueUtils 10 entityData)) (caddr newXXYYValues))
+      (> (cadr (GetDottedPairValueUtils 10 entityData)) (cadddr newXXYYValues))
+    )
+  )
 )
 
 ; 2021-06-29
@@ -302,12 +333,13 @@
 
 ; 2021-06-27
 ; bug will appear when length=width because vl-sort will de-duplication
-(defun GetJSVentingRegionLengthWidth (entityName / xyValues) 
-  (setq xyValues (GetMinMaxXYValuesUtils (GetJSColumnPositionForVenting entityName)))
+; refactored at 2021-06-29
+(defun GetJSVentingRegionLengthWidth (entityName / xxyyValues) 
+  (setq xxyyValues (GetMinMaxXYValuesUtils (GetJSColumnPositionForVenting entityName)))
   (vl-sort 
     (list 
-      (- (nth 1 xyValues) (nth 0 xyValues))
-      (- (nth 3 xyValues) (nth 2 xyValues))
+      (- (nth 1 xxyyValues) (nth 0 xxyyValues))
+      (- (nth 3 xxyyValues) (nth 2 xxyyValues))
     )
     '>
   )

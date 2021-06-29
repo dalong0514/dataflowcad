@@ -43,6 +43,17 @@ calculateVentingAreaBox : dialog {
       : spacer { height = 2; } 
       : text {
         key = "aspectRatioThreeMsg";
+        label = "分区三长径比：";
+      } 
+      : spacer { height = 2; } 
+      : text {
+        key = "calculateVentingAreaMsg";
+        alignment = centered; 
+        label = "";
+      } 
+      : spacer { height = 2; } 
+      : text {
+        key = "actualVentingAreaMsg";
         alignment = centered; 
         label = "";
       } 
