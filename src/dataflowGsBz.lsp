@@ -395,12 +395,12 @@
 
 ; 2021-02-26
 (defun GetCopyEntityData () 
-  (ClearEntityDataForCopyUtils (GetJSDrawCopySS))
+  (ProcessEntityDataForCopyUtils (GetJSDrawCopySS))
 )
 
 ; 2021-02-28
 (defun GetAllCopyEntityData () 
-  (ClearEntityDataForCopyUtils (GetAllJSDrawCopySS))
+  (ProcessEntityDataForCopyUtils (GetAllJSDrawCopySS))
 )
 
 ; 2021-03-01

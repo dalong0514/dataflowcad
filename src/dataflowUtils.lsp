@@ -765,7 +765,7 @@
 )
 
 ; refactored at 2021-04-18 - rename function name
-(defun ClearEntityDataForCopyUtils (ss /) 
+(defun ProcessEntityDataForCopyUtils (ss /) 
   (mapcar '(lambda (x) 
               (vl-remove-if-not '(lambda (y) 
                                   (and (/= (car y) -1)  (/= (car y) 330) (/= (car y) 5))
@@ -775,6 +775,15 @@
            ) 
     (GetEntityDataBySSUtils ss) 
   )
+)
+
+; 2021-06-30
+(defun ProcessOneEntityDataForCopyUtils (entityName /) 
+  (vl-remove-if-not '(lambda (y) 
+                      (and (/= (car y) -1)  (/= (car y) 330) (/= (car y) 5))
+                    ) 
+    (entget entityName)
+  ) 
 )
 
 (defun MergeTwoSSUtils (firstSS secondSS / i)

@@ -57,7 +57,7 @@
 
 ; 2021-06-29
 (defun CalculateVentingAreaByBox (tileName / dcl_id status entityName xxyyValues ventingRatio ventingRatioValue ventingHeight ventingHeightInt 
-                                  ventingRegionLengthWidth ventingLength ventingWidth aspectRatio ventingArea ventingAxisoDictData 
+                                  ventingRegionLengthWidth ventingLength ventingWidth aspectRatio ventingArea ventingAxisoDictData ventingVertiacalAxisoDictData  
                                   ventingRatioStatus ventingAreaStatus twoSectionVentingAspectRatio threeSectionVentingAspectRatio fristAxis lastAxis 
                                   antiVentingEntityData actualVentingArea)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\dcl\\" "dataflowJs.dcl")))
@@ -128,7 +128,10 @@
           (setq ventingRatioValue (atof (nth (atoi ventingRatio) (GetJSVentingRatio))))
           (setq aspectRatio (GetVentingAspectRatio ventingHeightInt ventingLength ventingWidth))
           (setq ventingArea (GetJSVentingArea ventingHeightInt ventingLength ventingWidth ventingRatioValue))
-          (setq ventingAxisoDictData (ProcessJSVentingAxisoDictData entityName))
+          (setq ventingAxisoDictData (ProcessJSHorizontialVentingAxisoDictData entityName))
+          (setq ventingVertiacalAxisoDictData (ProcessJSVerticalVentingAxisoDictData entityName))
+          
+          
           (setq fristAxis (car (car ventingAxisoDictData)))
           (setq lastAxis (car (car (reverse ventingAxisoDictData))))
           (if (< aspectRatio 3) 
@@ -163,7 +166,7 @@
     ; insert Venting Draw
     (if (= 4 status)
       (progn 
-        (princ "dalong")
+        (InsertJSVentingRegion entityName xxyyValues 1 ventingAxisoDictData ventingVertiacalAxisoDictData)
       )
     )
   )
@@ -171,11 +174,50 @@
   (princ)
 )
 
-(defun c:foo (/ entityName)
-  ; (setq entityName (car (GetEntityNameListBySSUtils (ssget '((0 . "LWPOLYLINE") (8 . "0DataFlow-JSVentingArea"))))))
-  ; (ProcessJSVentingAxisoDictData entityName)
-  ; (GetJSAntiVentingWallLength (GetJSAntiVentingEntityData))
-  (GetJSAntiVentingTotalLength)
+; 2021-06-30
+(defun InsertJSVentingRegion (entityName xxyyValues scaleFactor ventingAxisoDictData ventingVertiacalAxisoDictData / insPt)
+  (setq insPt (getpoint "\n拾取泄压面简图插入点："))
+  ; return to (0 0 0), and then move to the insPt
+  (setq newEntityData 
+    (MovePolyLineDataByBasePosition 
+      (ProcessOneEntityDataForCopyUtils entityName) 
+      (list (- (car insPt) (car xxyyValues)) (- (cadr insPt) (nth 3 xxyyValues))))
+  )
+  (entmake newEntityData)
+  ;; Scale the polyline
+  (vla-ScaleEntity (vlax-ename->vla-object (entlast)) (vlax-3d-point insPt) scaleFactor)
+  (InsertJSHorizontialAxiso insPt ventingAxisoDictData)
+  (InsertJSVerticalAxiso insPt ventingVertiacalAxisoDictData)
+)
+
+; 2021-06-30
+(defun InsertJSHorizontialAxiso (insPt ventingAxisoDictData /)
+  (mapcar '(lambda (x) 
+            (InsertOneHorizontialJSAxiso insPt x)
+          ) 
+    ventingAxisoDictData
+  )
+)
+
+; 2021-06-30
+(defun InsertJSVerticalAxiso (insPt ventingAxisoDictData /)
+  (mapcar '(lambda (x) 
+            (InsertOneVerticalJSAxiso insPt x)
+          ) 
+    ventingAxisoDictData
+  )
+)
+
+; 2021-06-30
+(defun InsertOneHorizontialJSAxiso (insPt ventingAxisoDict /) 
+  (GenerateLineUtils (MoveInsertPositionUtils insPt (cdr ventingAxisoDict) 800) (MoveInsertPositionUtils insPt (cdr ventingAxisoDict) 2600) "AXIS")
+  (InsertBlockByScaleUtils (MoveInsertPositionUtils insPt (cdr ventingAxisoDict) 3200) "_AXISO" "AXIS" (list (cons 0 (car ventingAxisoDict))) 1200)
+)
+
+; 2021-06-30
+(defun InsertOneVerticalJSAxiso (insPt ventingAxisoDict /) 
+  (GenerateLineUtils (MoveInsertPositionUtils insPt -800 (cdr ventingAxisoDict)) (MoveInsertPositionUtils insPt -2600 (cdr ventingAxisoDict)) "AXIS")
+  (InsertBlockByScaleUtils (MoveInsertPositionUtils insPt -3200 (cdr ventingAxisoDict)) "_AXISO" "AXIS" (list (cons 0 (car ventingAxisoDict))) 1200)
 )
 
 ; 2021-06-29
@@ -356,8 +398,19 @@
 )
 
 ; 2021-06-29
-(defun ProcessJSVentingAxisoDictData (entityName / ventingAxisoDictData baseXPosition) 
-  (setq ventingAxisoDictData (vl-sort (GetJSVentingAxisoDictData entityName) '(lambda (x y) (< (cdr x) (cdr y)))))
+(defun ProcessJSHorizontialVentingAxisoDictData (entityName / ventingAxisoDictData baseXPosition) 
+  (setq ventingAxisoDictData (vl-sort (GetJSHorizontialVentingAxisoDictData entityName) '(lambda (x y) (< (cdr x) (cdr y)))))
+  (setq baseXPosition (cdr (car ventingAxisoDictData)))
+  (mapcar '(lambda (x) 
+             (cons (car x) (- (cdr x) baseXPosition))
+           ) 
+    ventingAxisoDictData
+  ) 
+)
+
+; 2021-06-30
+(defun ProcessJSVerticalVentingAxisoDictData (entityName / ventingAxisoDictData baseXPosition) 
+  (setq ventingAxisoDictData (vl-sort (GetJSVerticalVentingAxisoDictData entityName) '(lambda (x y) (> (cdr x) (cdr y)))))
   (setq baseXPosition (cdr (car ventingAxisoDictData)))
   (mapcar '(lambda (x) 
              (cons (car x) (- (cdr x) baseXPosition))
@@ -367,19 +420,31 @@
 )
 
 ; 2021-06-29
-(defun GetJSVentingAxisoDictData (entityName /) 
+(defun GetJSHorizontialVentingAxisoDictData (entityName /) 
   (mapcar '(lambda (x) 
              (cons 
                 (GetDottedPairValueUtils "a" (GetAllPropertyDictForOneBlock (GetDottedPairValueUtils -1 x)))
                 (car (GetDottedPairValueUtils 10 x))
              )
            ) 
-    (GetJSAxisPositionForVenting entityName)
+    (GetJSHorizontialAxisPositionForVenting entityName)
+  ) 
+)
+
+; 2021-06-30
+(defun GetJSVerticalVentingAxisoDictData (entityName /) 
+  (mapcar '(lambda (x) 
+             (cons 
+                (GetDottedPairValueUtils "a" (GetAllPropertyDictForOneBlock (GetDottedPairValueUtils -1 x)))
+                (cadr (GetDottedPairValueUtils 10 x))
+             )
+           ) 
+    (GetJSVerticalAxisPositionForVenting entityName)
   ) 
 )
 
 ; 2021-06-29
-(defun GetJSAxisPositionForVenting (entityName / filterRegion) 
+(defun GetJSHorizontialAxisPositionForVenting (entityName / filterRegion) 
   (setq filterRegion (GetMinMaxXYValuesUtils (GetAllPointForPolyLineUtils (entget entityName))))
   (vl-remove-if-not '(lambda (x) 
                        (IsPositionInTheRegionUtils 
@@ -388,6 +453,33 @@
                      ) 
     (GetAllJsAxisoData)
   ) 
+)
+
+; 2021-06-30
+(defun GetJSVerticalAxisPositionForVenting (entityName / filterRegion allJsAxisoData resultList) 
+  (setq filterRegion (GetMinMaxXYValuesUtils (GetAllPointForPolyLineUtils (entget entityName))))
+  (setq allJsAxisoData (GetAllJsAxisoData))
+  (setq resultList 
+    (vl-remove-if-not '(lambda (x) 
+                        (IsPositionInTheRegionUtils 
+                          (GetDottedPairValueUtils 10 x) 
+                          (- (car filterRegion) 30000) (car filterRegion) (caddr filterRegion) (cadddr filterRegion)) 
+                      ) 
+      allJsAxisoData
+    ) 
+  )
+  (if (= resultList nil) 
+    (setq resultList 
+      (vl-remove-if-not '(lambda (x) 
+                          (IsPositionInTheRegionUtils 
+                            (GetDottedPairValueUtils 10 x) 
+                            (cadr filterRegion) (+ (cadr filterRegion) 30000) (caddr filterRegion) (cadddr filterRegion)) 
+                        ) 
+        allJsAxisoData
+      ) 
+    )
+  )
+  resultList
 )
 
 ;;;-------------------------------------------------------------------------;;;
