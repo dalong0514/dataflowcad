@@ -134,11 +134,13 @@
           (setq ventingRatioValue (atof (nth (atoi ventingRatio) (GetJSVentingRatio))))
           (setq aspectRatio (GetVentingAspectRatio ventingHeightInt ventingLength ventingWidth))
           (setq ventingArea (GetJSVentingArea ventingHeightInt ventingLength ventingWidth ventingRatioValue))
+          
           (setq ventingAxisoDictData (ProcessJSHorizontialVentingAxisoDictData entityName))
           (setq ventingVertiacalAxisoDictData (ProcessJSVerticalVentingAxisoDictData entityName))
           
           (setq fristAxis (car (car ventingAxisoDictData)))
           (setq lastAxis (car (car (reverse ventingAxisoDictData))))
+          
           (if (< aspectRatio 3) 
             (setq ventingRatioStatus 1)
             (progn 
@@ -169,9 +171,20 @@
       )
     )
     ; insert Venting Draw
-    (if (= 4 status)
+    (if (= 4 status) 
       (progn 
-        (InsertJSVentingRegion entityName xxyyValues (atof ventingDrawScale) ventingAxisoDictData ventingVertiacalAxisoDictData)
+        (setq infoDictList 
+          (list 
+            (cons "ventingRatioValue" ventingRatioValue)
+            (cons "ventingHeight" ventingHeightInt)
+            (cons "ventingLength" ventingLength)
+            (cons "ventingWidth" ventingWidth)
+            (cons "ventingArea" ventingArea)
+            (cons "actualVentingArea" actualVentingArea)
+          )
+        )
+        (InsertJSVentingRegion entityName xxyyValues (atof ventingDrawScale) ventingAxisoDictData ventingVertiacalAxisoDictData 
+          ventingRatioStatus infoDictList)
       )
     )
   )
@@ -180,7 +193,7 @@
 )
 
 ; 2021-06-30
-(defun InsertJSVentingRegion (entityName xxyyValues scaleFactor ventingAxisoDictData ventingVertiacalAxisoDictData / insPt)
+(defun InsertJSVentingRegion (entityName xxyyValues scaleFactor ventingAxisoDictData ventingVertiacalAxisoDictData ventingRatioStatus infoDictList / insPt)
   (setq insPt (getpoint "\n拾取泄压面简图插入点："))
   ; return to (0 0 0), and then move to the insPt
   (setq newEntityData 
@@ -193,15 +206,52 @@
   (vla-ScaleEntity (vlax-ename->vla-object (entlast)) (vlax-3d-point insPt) scaleFactor)
   (InsertJSHorizontialAxiso insPt ventingAxisoDictData scaleFactor)
   (InsertJSVerticalAxiso insPt ventingVertiacalAxisoDictData scaleFactor)
+  (cond 
+    ((= ventingRatioStatus 1) (InsertOneSectionJSVentingText insPt ventingVertiacalAxisoDictData scaleFactor infoDictList))
+    ((= ventingRatioStatus 2) (InsertTwoSectionJSVentingText insPt ventingVertiacalAxisoDictData scaleFactor infoDictList))
+  )
+)
+
+; 2021-06-30
+(defun InsertTwoSectionJSVentingText (insPt ventingAxisoDictData scaleFactor infoDictList / ventingVolume) 
+  (setq ventingVolume 
+    (fix 
+      (CalculateJSVentingVolume 
+        (GetDottedPairValueUtils "ventingHeight" infoDictList) 
+        (GetDottedPairValueUtils "ventingLength" infoDictList) 
+        (GetDottedPairValueUtils "ventingWidth" infoDictList))
+    )
+  )
+  (setq insPt 
+    (MoveInsertPositionUtils insPt 0 (- (* (cdr (car (reverse ventingAxisoDictData))) scaleFactor) 1500)) 
+  )
+  (GenerateLevelLeftTextUtils insPt
+    (strcat "泄压面积计算：10CV%%1402/3%%141=10x" (vl-princ-to-string (GetDottedPairValueUtils "ventingRatioValue" infoDictList)) "x" (vl-princ-to-string ventingVolume) "%%1402/3%%141=" (vl-princ-to-string (GetDottedPairValueUtils "ventingArea" infoDictList)) "平方米，实际泄压面积：" (vl-princ-to-string (fix (GetDottedPairValueUtils "actualVentingArea" infoDictList))) "平方米，满足泄压面积要求")
+    "0DataFlow-Text" 
+    450 0.7)
+)
+
+; 2021-06-30
+(defun InsertOneSectionJSVentingText (insPt ventingAxisoDictData scaleFactor infoDictList / ventingVolume) 
+  (setq ventingVolume 
+    (fix 
+      (CalculateJSVentingVolume 
+        (GetDottedPairValueUtils "ventingHeight" infoDictList) 
+        (GetDottedPairValueUtils "ventingLength" infoDictList) 
+        (GetDottedPairValueUtils "ventingWidth" infoDictList))
+    )
+  )
+  (setq insPt 
+    (MoveInsertPositionUtils insPt 0 (- (* (cdr (car (reverse ventingAxisoDictData))) scaleFactor) 1500)) 
+  )
+  (GenerateLevelLeftTextUtils insPt
+    (strcat "泄压面积计算：10CV%%1402/3%%141=10x" (vl-princ-to-string (GetDottedPairValueUtils "ventingRatioValue" infoDictList)) "x" (vl-princ-to-string ventingVolume) "%%1402/3%%141=" (vl-princ-to-string (GetDottedPairValueUtils "ventingArea" infoDictList)) "平方米，实际泄压面积：" (vl-princ-to-string (fix (GetDottedPairValueUtils "actualVentingArea" infoDictList))) "平方米，满足泄压面积要求")
+    "0DataFlow-Text" 
+    450 0.7)
 )
 
 ; 2021-06-30
 (defun InsertJSHorizontialAxiso (insPt ventingAxisoDictData scaleFactor /)
-  ; (mapcar '(lambda (x) 
-  ;           (InsertOneHorizontialJSAxiso insPt x)
-  ;         ) 
-  ;   ventingAxisoDictData
-  ; )
   (mapcar '(lambda (x) 
             (InsertOneHorizontialJSAxiso insPt x)
           ) 
@@ -215,11 +265,6 @@
 
 ; 2021-06-30
 (defun InsertJSVerticalAxiso (insPt ventingAxisoDictData scaleFactor /)
-  ; (mapcar '(lambda (x) 
-  ;           (InsertOneVerticalJSAxiso insPt x)
-  ;         ) 
-  ;   ventingAxisoDictData
-  ; )
   (mapcar '(lambda (x) 
             (InsertOneVerticalJSAxiso insPt x)
           ) 
@@ -390,10 +435,16 @@
 ; 2021-06-29
 ; unit test completed
 (defun GetJSVentingArea (ventingHeight ventingLength ventingWidth ventingRatio /) 
+  (fix (* 10 ventingRatio (expt (CalculateJSVentingVolume ventingHeight ventingLength ventingWidth) (/ 2.0 3))))
+)
+
+; 2021-06-30
+; return m3
+(defun CalculateJSVentingVolume (ventingHeight ventingLength ventingWidth /)
   (setq ventingHeight (/ ventingHeight 1000.0))
   (setq ventingLength (/ ventingLength 1000.0))
   (setq ventingWidth (/ ventingWidth 1000.0))
-  (fix (* 10 ventingRatio (expt (* ventingHeight ventingLength ventingWidth) (/ 2.0 3))))
+  (* ventingHeight ventingLength ventingWidth)
 )
 
 ; 2021-06-27
