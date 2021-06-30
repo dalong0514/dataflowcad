@@ -57,6 +57,19 @@ calculateVentingAreaBox : dialog {
         alignment = centered; 
         label = "";
       } 
+      : spacer { height = 2; } 
+      : row {
+        : text {
+          key = "ventingDrawScaleMsg";
+          label = "设置泄压简图缩小比例（小数）：";
+        }
+        : edit_box {
+          key = "ventingDrawScale";
+          edit_width = 41;
+          mnemonic = "N";
+          value = "";
+        }
+      }
     }
     : spacer { height = 3; } 
     : row { 

@@ -59,7 +59,7 @@
 (defun CalculateVentingAreaByBox (tileName / dcl_id status entityName xxyyValues ventingRatio ventingRatioValue ventingHeight ventingHeightInt 
                                   ventingRegionLengthWidth ventingLength ventingWidth aspectRatio ventingArea ventingAxisoDictData ventingVertiacalAxisoDictData  
                                   ventingRatioStatus ventingAreaStatus twoSectionVentingAspectRatio threeSectionVentingAspectRatio fristAxis lastAxis 
-                                  antiVentingEntityData actualVentingArea)
+                                  antiVentingEntityData actualVentingArea ventingDrawScale)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\dcl\\" "dataflowJs.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -73,8 +73,10 @@
     ; the default value of input box
     (mode_tile "ventingRatio" 2)
     (mode_tile "ventingHeight" 2)
+    (mode_tile "ventingDrawScale" 2)
     (action_tile "ventingRatio" "(setq ventingRatio $value)")
     (action_tile "ventingHeight" "(setq ventingHeight $value)")
+    (action_tile "ventingDrawScale" "(setq ventingDrawScale $value)")
     (progn
       (start_list "ventingRatio" 3)
       (mapcar '(lambda (x) (add_list x)) 
@@ -87,6 +89,9 @@
     ) 
     (if (= nil ventingHeight)
       (setq ventingHeight "")
+    ) 
+    (if (= nil ventingDrawScale)
+      (setq ventingDrawScale "0.3")
     ) 
     (if (= ventingRatioStatus 1) 
       (progn 
@@ -112,6 +117,7 @@
     ) 
     (set_tile "ventingRatio" ventingRatio)
     (set_tile "ventingHeight" ventingHeight)
+    (set_tile "ventingDrawScale" ventingDrawScale)
     ; select button
     (if (= 2 (setq status (start_dialog)))
       (if (= ventingHeight "") 
@@ -130,7 +136,6 @@
           (setq ventingArea (GetJSVentingArea ventingHeightInt ventingLength ventingWidth ventingRatioValue))
           (setq ventingAxisoDictData (ProcessJSHorizontialVentingAxisoDictData entityName))
           (setq ventingVertiacalAxisoDictData (ProcessJSVerticalVentingAxisoDictData entityName))
-          
           
           (setq fristAxis (car (car ventingAxisoDictData)))
           (setq lastAxis (car (car (reverse ventingAxisoDictData))))
@@ -166,7 +171,7 @@
     ; insert Venting Draw
     (if (= 4 status)
       (progn 
-        (InsertJSVentingRegion entityName xxyyValues 1 ventingAxisoDictData ventingVertiacalAxisoDictData)
+        (InsertJSVentingRegion entityName xxyyValues (atof ventingDrawScale) ventingAxisoDictData ventingVertiacalAxisoDictData)
       )
     )
   )
@@ -186,25 +191,43 @@
   (entmake newEntityData)
   ;; Scale the polyline
   (vla-ScaleEntity (vlax-ename->vla-object (entlast)) (vlax-3d-point insPt) scaleFactor)
-  (InsertJSHorizontialAxiso insPt ventingAxisoDictData)
-  (InsertJSVerticalAxiso insPt ventingVertiacalAxisoDictData)
+  (InsertJSHorizontialAxiso insPt ventingAxisoDictData scaleFactor)
+  (InsertJSVerticalAxiso insPt ventingVertiacalAxisoDictData scaleFactor)
 )
 
 ; 2021-06-30
-(defun InsertJSHorizontialAxiso (insPt ventingAxisoDictData /)
+(defun InsertJSHorizontialAxiso (insPt ventingAxisoDictData scaleFactor /)
+  ; (mapcar '(lambda (x) 
+  ;           (InsertOneHorizontialJSAxiso insPt x)
+  ;         ) 
+  ;   ventingAxisoDictData
+  ; )
   (mapcar '(lambda (x) 
             (InsertOneHorizontialJSAxiso insPt x)
           ) 
-    ventingAxisoDictData
+    (mapcar '(lambda (x) 
+              (cons (car x) (* (cdr x) scaleFactor))
+            ) 
+      ventingAxisoDictData
+    )
   )
 )
 
 ; 2021-06-30
-(defun InsertJSVerticalAxiso (insPt ventingAxisoDictData /)
+(defun InsertJSVerticalAxiso (insPt ventingAxisoDictData scaleFactor /)
+  ; (mapcar '(lambda (x) 
+  ;           (InsertOneVerticalJSAxiso insPt x)
+  ;         ) 
+  ;   ventingAxisoDictData
+  ; )
   (mapcar '(lambda (x) 
             (InsertOneVerticalJSAxiso insPt x)
           ) 
-    ventingAxisoDictData
+    (mapcar '(lambda (x) 
+              (cons (car x) (* (cdr x) scaleFactor))
+            ) 
+      ventingAxisoDictData
+    )
   )
 )
 
