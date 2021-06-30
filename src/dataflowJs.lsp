@@ -56,10 +56,9 @@
 )
 
 ; 2021-06-29
-(defun CalculateVentingAreaByBox (tileName / dcl_id status entityName xxyyValues ventingRatio ventingRatioValue ventingHeight ventingHeightInt 
-                                  ventingRegionLengthWidth ventingLength ventingWidth aspectRatio ventingArea ventingAxisoDictData ventingVertiacalAxisoDictData  
-                                  ventingRatioStatus ventingAreaStatus twoSectionVentingAspectRatio threeSectionVentingAspectRatio fristAxis lastAxis 
-                                  antiVentingEntityData actualVentingArea ventingDrawScale)
+(defun CalculateVentingAreaByBox (tileName / dcl_id status entityName xxyyValues ventingRatio ventingRatioValue ventingHeight ventingHeightInt ventingUnderBeamHeight 
+                                  ventingUnderBeamHeightInt ventingRegionLengthWidth ventingLength ventingWidth aspectRatio ventingArea ventingAxisoDictData ventingVertiacalAxisoDictData ventingRatioStatus ventingAreaStatus twoSectionVentingAspectRatio threeSectionVentingAspectRatio 
+                                  fristAxis lastAxis antiVentingEntityData actualVentingArea ventingDrawScale)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\dcl\\" "dataflowJs.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -73,9 +72,11 @@
     ; the default value of input box
     (mode_tile "ventingRatio" 2)
     (mode_tile "ventingHeight" 2)
+    (mode_tile "ventingUnderBeamHeight" 2)
     (mode_tile "ventingDrawScale" 2)
     (action_tile "ventingRatio" "(setq ventingRatio $value)")
     (action_tile "ventingHeight" "(setq ventingHeight $value)")
+    (action_tile "ventingUnderBeamHeight" "(setq ventingUnderBeamHeight $value)")
     (action_tile "ventingDrawScale" "(setq ventingDrawScale $value)")
     (progn
       (start_list "ventingRatio" 3)
@@ -89,6 +90,9 @@
     ) 
     (if (= nil ventingHeight)
       (setq ventingHeight "")
+    ) 
+    (if (= nil ventingUnderBeamHeight)
+      (setq ventingUnderBeamHeight "")
     ) 
     (if (= nil ventingDrawScale)
       (setq ventingDrawScale "0.3")
@@ -117,6 +121,7 @@
     ) 
     (set_tile "ventingRatio" ventingRatio)
     (set_tile "ventingHeight" ventingHeight)
+    (set_tile "ventingUnderBeamHeight" ventingUnderBeamHeight)
     (set_tile "ventingDrawScale" ventingDrawScale)
     ; select button
     (if (= 2 (setq status (start_dialog)))
@@ -129,6 +134,7 @@
 
           (setq ventingRegionLengthWidth (GetJSVentingRegionLengthWidth entityName))
           (setq ventingHeightInt (* (atof ventingHeight) 1000))
+          (setq ventingUnderBeamHeightInt (* (atof ventingUnderBeamHeight) 1000))
           (setq ventingLength (car ventingRegionLengthWidth))
           (setq ventingWidth (cadr ventingRegionLengthWidth))
           (setq ventingRatioValue (atof (nth (atoi ventingRatio) (GetJSVentingRatio))))
@@ -151,9 +157,10 @@
                   (setq ventingRatioStatus 2)
                 )
                 (progn 
-                  (setq threeSectionVentingAspectRatio (GetThreeSectionVentingAspectRatio ventingAxisoDictData ventingHeightInt ventingLength ventingWidth))
-                  (setq ventingRatioStatus 3)
+                  ; do not process the three sections frist 2021-06-30
+                  ; (setq threeSectionVentingAspectRatio (GetThreeSectionVentingAspectRatio ventingAxisoDictData ventingHeightInt ventingLength ventingWidth))
                   ; (princ threeSectionVentingAspectRatio)(princ)
+                  (setq ventingRatioStatus 3)
                 )
               )
             )
@@ -166,7 +173,7 @@
     (if (= 3 status)
       (progn 
         (setq antiVentingEntityData (GetJSAntiVentingEntityData))
-        (setq actualVentingArea (GetJSActualVentingArea entityName antiVentingEntityData ventingHeight xxyyValues))
+        (setq actualVentingArea (GetJSActualVentingArea entityName antiVentingEntityData ventingUnderBeamHeight xxyyValues))
         (setq ventingAreaStatus 1)
       )
     )
@@ -242,14 +249,14 @@
     (MoveInsertPositionUtils insPt 0 (- (* (cdr (car (reverse ventingAxisoDictData))) scaleFactor) 1500)) 
   )
   (GenerateLevelLeftTextUtils insPt
-    (strcat "泄压面积计算：10CV%%1402/3%%141=10x" (vl-princ-to-string (GetDottedPairValueUtils "ventingRatioValue" infoDictList)) "x" (vl-princ-to-string ventingVolumeOne) "%%1402/3%%141=" (vl-princ-to-string ventingAreaOne) "平方米")
+    (strcat "泄压面积一计算：10CV%%1402/3%%141=10x" (vl-princ-to-string (GetDottedPairValueUtils "ventingRatioValue" infoDictList)) "x" (vl-princ-to-string ventingVolumeOne) "%%1402/3%%141=" (vl-princ-to-string ventingAreaOne) "平方米")
     "0DataFlow-Text" 
     450 0.7)
   (setq newInsPt 
     (MoveInsertPositionUtils insPt 0 -800) 
   )
   (GenerateLevelLeftTextUtils newInsPt
-    (strcat "泄压面积计算：10CV%%1402/3%%141=10x" (vl-princ-to-string (GetDottedPairValueUtils "ventingRatioValue" infoDictList)) "x" (vl-princ-to-string ventingVolumeTwo) "%%1402/3%%141=" (vl-princ-to-string ventingAreaTwo) "平方米")
+    (strcat "泄压面积二计算：10CV%%1402/3%%141=10x" (vl-princ-to-string (GetDottedPairValueUtils "ventingRatioValue" infoDictList)) "x" (vl-princ-to-string ventingVolumeTwo) "%%1402/3%%141=" (vl-princ-to-string ventingAreaTwo) "平方米")
     "0DataFlow-Text" 
     450 0.7)
   (setq newInsPt 

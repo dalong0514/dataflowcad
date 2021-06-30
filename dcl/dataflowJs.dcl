@@ -16,10 +16,23 @@ calculateVentingAreaBox : dialog {
       : row {
         : text {
           key = "ventingHeightMsg";
-          label = "泄压分区层高（单位m）：";
+          label = "泄压分区板底层高（单位m）：";
         }
         : edit_box {
           key = "ventingHeight";
+          edit_width = 41;
+          mnemonic = "N";
+          value = "";
+        }
+      }
+      : spacer { height = 2; } 
+      : row {
+        : text {
+          key = "ventingUnderBeamHeightMsg";
+          label = "泄压分区梁底层高（单位m）：";
+        }
+        : edit_box {
+          key = "ventingUnderBeamHeight";
           edit_width = 41;
           mnemonic = "N";
           value = "";
