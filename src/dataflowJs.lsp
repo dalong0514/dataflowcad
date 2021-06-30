@@ -56,9 +56,19 @@
 )
 
 ; 2021-06-29
-(defun CalculateVentingAreaByBox (tileName / dcl_id status entityName xxyyValues ventingRatio ventingRatioValue ventingHeight ventingHeightInt ventingUnderBeamHeight 
-                                  ventingUnderBeamHeightInt ventingRegionLengthWidth ventingLength ventingWidth aspectRatio ventingArea ventingAxisoDictData ventingVertiacalAxisoDictData ventingRatioStatus ventingAreaStatus twoSectionVentingAspectRatio threeSectionVentingAspectRatio 
-                                  fristAxis lastAxis antiVentingEntityData actualVentingArea ventingDrawScale)
+(defun GetJSVentingSplitMethod ()
+  '("柱网分割" "每0.5m分割")
+)
+
+; 2021-06-29
+(defun GetJSVentingSplitMode ()
+  '("自动分割" "人工分割")
+)
+
+; 2021-06-29
+(defun CalculateVentingAreaByBox (tileName / dcl_id status entityName xxyyValues ventingRatio ventingSplitMethod ventingSplitMode ventingRatioValue ventingHeight ventingHeightInt   
+                                  ventingUnderBeamHeight ventingUnderBeamHeightInt ventingRegionLengthWidth ventingLength ventingWidth aspectRatio ventingArea ventingAxisoDictData ventingVertiacalAxisoDictData ventingRatioStatus ventingAreaStatus twoSectionVentingAspectRatio threeSectionVentingAspectRatio 
+                                  fristAxis lastAxis antiVentingEntityData actualVentingArea ventingDrawScale ventingSplitPoint)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\dcl\\" "dataflowJs.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -71,23 +81,44 @@
     (action_tile "btnInsert" "(done_dialog 4)")
     ; the default value of input box
     (mode_tile "ventingRatio" 2)
-    (mode_tile "ventingHeight" 2)
+    (mode_tile "ventingSplitMethod" 2)
+    (mode_tile "ventingSplitMode" 2)
     (mode_tile "ventingUnderBeamHeight" 2)
     (mode_tile "ventingDrawScale" 2)
+    (mode_tile "ventingSplitPoint" 2)
+    ; the key locaion, mouse stay at the last mode_tile 2021-06-30
+    (mode_tile "ventingHeight" 2)
     (action_tile "ventingRatio" "(setq ventingRatio $value)")
+    (action_tile "ventingSplitMethod" "(setq ventingSplitMethod $value)")
+    (action_tile "ventingSplitMode" "(setq ventingSplitMode $value)")
     (action_tile "ventingHeight" "(setq ventingHeight $value)")
     (action_tile "ventingUnderBeamHeight" "(setq ventingUnderBeamHeight $value)")
     (action_tile "ventingDrawScale" "(setq ventingDrawScale $value)")
+    (action_tile "ventingSplitPoint" "(setq ventingSplitPoint $value)")
     (progn
       (start_list "ventingRatio" 3)
       (mapcar '(lambda (x) (add_list x)) 
                 (GetJSVentingRatio))
+      (end_list) 
+      (start_list "ventingSplitMethod" 3)
+      (mapcar '(lambda (x) (add_list x)) 
+                (GetJSVentingSplitMethod))
+      (end_list) 
+      (start_list "ventingSplitMode" 3)
+      (mapcar '(lambda (x) (add_list x)) 
+                (GetJSVentingSplitMode))
       (end_list) 
     ) 
     ; init the default data of text
     (if (= nil ventingRatio)
       (setq ventingRatio "0")
     ) 
+    (if (= nil ventingSplitMethod)
+      (setq ventingSplitMethod "0")
+    ) 
+    (if (= nil ventingSplitMode)
+      (setq ventingSplitMode "0")
+    )
     (if (= nil ventingHeight)
       (setq ventingHeight "")
     ) 
@@ -97,6 +128,9 @@
     (if (= nil ventingDrawScale)
       (setq ventingDrawScale "0.3")
     ) 
+    (if (= nil ventingSplitPoint)
+      (setq ventingSplitPoint "")
+    )
     (if (= ventingRatioStatus 1) 
       (progn 
         (set_tile "aspectRatioMsg" (strcat "初始长径比：" (vl-princ-to-string aspectRatio) "  区域：" fristAxis " 轴到 " lastAxis " 轴  计算泄压面积：" (vl-princ-to-string ventingArea)))
@@ -120,9 +154,12 @@
       (set_tile "actualVentingAreaMsg" (strcat "实际泄压面积：" (vl-princ-to-string actualVentingArea)))
     ) 
     (set_tile "ventingRatio" ventingRatio)
+    (set_tile "ventingSplitMethod" ventingSplitMethod)
+    (set_tile "ventingSplitMode" ventingSplitMode)
     (set_tile "ventingHeight" ventingHeight)
     (set_tile "ventingUnderBeamHeight" ventingUnderBeamHeight)
     (set_tile "ventingDrawScale" ventingDrawScale)
+    (set_tile "ventingSplitPoint" ventingSplitPoint)
     ; select button
     (if (= 2 (setq status (start_dialog)))
       (if (= ventingHeight "") 
@@ -165,7 +202,6 @@
               )
             )
           )
-          
         )
       )
     )

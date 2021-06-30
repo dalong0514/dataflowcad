@@ -2,39 +2,55 @@ calculateVentingAreaBox : dialog {
   label = "天正设计流数据一体化建筑专业V0.1———泄压面积计算"; 
   key = "calculateVentingArea";
   : boxed_radio_column {
-    key = "updateMethond";
-    width = 100;
+    width = 60;
     : column {
-      : popup_list { 
-        label = "选取泄压比：";
-        edit_width = 40;
-        key = "ventingRatio"; 
-        list = "";
-        value = "";
-      }
-      : spacer { height = 2; } 
       : row {
-        : text {
-          key = "ventingHeightMsg";
-          label = "泄压分区板底层高（单位m）：";
+        : popup_list { 
+          label = "选取泄压比：";
+          key = "ventingRatio"; 
+          list = "";
+          value = "";
         }
-        : edit_box {
-          key = "ventingHeight";
-          edit_width = 41;
-          mnemonic = "N";
+        : spacer { width = 10; } 
+        : popup_list { 
+          label = "分割方式：";
+          key = "ventingSplitMethod"; 
+          list = "";
           value = "";
         }
       }
       : spacer { height = 2; } 
       : row {
-        : text {
-          key = "ventingUnderBeamHeightMsg";
-          label = "泄压分区梁底层高（单位m）：";
-        }
         : edit_box {
+          label = "分区板底层高（单位m）：";
+          edit_width = 20;
+          key = "ventingHeight";
+          value = "";
+          alignment = centered; 
+        }
+        : spacer { width = 5; }  
+        : edit_box {
+          label = "分区梁底层高（单位m）：";
+          edit_width = 20;
           key = "ventingUnderBeamHeight";
-          edit_width = 41;
-          mnemonic = "N";
+          value = "";
+          alignment = centered; 
+        }
+      }
+      : spacer { height = 2; } 
+      : row {
+        : popup_list { 
+          label = "模式：";
+          edit_width = 20;
+          key = "ventingSplitMode"; 
+          list = "";
+          value = "";
+        }
+        : spacer { width = 5; } 
+        : edit_box {
+          label = "切割点（距离分区左上角水平距离，单位m）：";
+          edit_width = 20;
+          key = "ventingSplitPoint";
           value = "";
         }
       }
@@ -56,7 +72,7 @@ calculateVentingAreaBox : dialog {
       : spacer { height = 2; } 
       : text {
         key = "aspectRatioThreeMsg";
-        label = "分区三长径比：";
+        label = "";
       } 
       : spacer { height = 2; } 
       : text {
