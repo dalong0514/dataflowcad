@@ -184,8 +184,10 @@
             (cons "twoSectionVentingAspectRatio" (cdr twoSectionVentingAspectRatio))
           )
         )
-        (InsertJSVentingRegion entityName xxyyValues (atof ventingDrawScale) ventingAxisoDictData ventingVertiacalAxisoDictData 
-          ventingRatioStatus infoDictList)
+        (if (= actualVentingArea nil)
+          (alert "请先计算实际泄压面积！") 
+          (InsertJSVentingRegion entityName xxyyValues (atof ventingDrawScale) ventingAxisoDictData ventingVertiacalAxisoDictData ventingRatioStatus infoDictList)
+        )
       )
     )
   )
