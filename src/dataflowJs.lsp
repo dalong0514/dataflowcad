@@ -52,7 +52,7 @@
 
 ; 2021-06-29
 (defun GetJSVentingRatio ()
-  '("0.11" "0.25")
+  '("0.11" "0.2" "0.25")
 )
 
 ; 2021-06-29
@@ -426,9 +426,20 @@
   (setq fristAxisPt (nth (/ (length ventingAxisoDictData) 3) ventingAxisoDictData))
   (setq sencondAxisPt (nth (* (/ (length ventingAxisoDictData) 3) 2) ventingAxisoDictData))
   (list 
-    (GetVentingAspectRatio ventingHeight (cdr fristAxisPt) ventingWidth)
-    (GetVentingAspectRatio ventingHeight (- (cdr sencondAxisPt) (cdr fristAxisPt)) ventingWidth)
-    (GetVentingAspectRatio ventingHeight (- ventingLength (cdr sencondAxisPt)) ventingWidth)
+    (list 
+      (car fristAxisPt)
+      (car sencondAxisPt)
+    )
+    (list 
+      (GetVentingAspectRatio ventingHeight (cdr fristAxisPt) ventingWidth)
+      (GetVentingAspectRatio ventingHeight (- (cdr sencondAxisPt) (cdr fristAxisPt)) ventingWidth)
+      (GetVentingAspectRatio ventingHeight (- ventingLength (cdr sencondAxisPt)) ventingWidth)
+    )
+    (list 
+      (cdr fristAxisPt)
+      (- (cdr sencondAxisPt) (cdr fristAxisPt))
+      (- ventingLength (cdr sencondAxisPt))
+    )
   )
 )
 
