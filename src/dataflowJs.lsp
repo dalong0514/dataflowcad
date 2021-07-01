@@ -267,9 +267,9 @@
             (cons "ventingLength" (GetDottedPairValueUtils "ventingLength" oneSectionVentingDictList))
             (cons "ventingWidth" (GetDottedPairValueUtils "ventingWidth" oneSectionVentingDictList))
             (cons "ventingArea" (GetDottedPairValueUtils "ventingArea" oneSectionVentingDictList))
+            (cons "twoSectionVentingAspectRatio" (cdr twoSectionVentingAspectRatio))
             (cons "oneSectionActualVentingDictList" oneSectionActualVentingDictList)
             (cons "twoSectionActualVentingDictList" twoSectionActualVentingDictList)
-            (cons "twoSectionVentingAspectRatio" (cdr twoSectionVentingAspectRatio))
             (cons "actualVentingArea" actualVentingArea)
           )
         )
@@ -323,8 +323,11 @@
 
 ; 2021-06-30
 (defun InsertTwoSectionJSVentingText (insPt ventingAxisoDictData scaleFactor infoDictList / 
-                                      twoSectionVentingAspectRatio ventingVolumeOne ventingVolumeTwo ventingAreaOne ventingAreaTwo newInsPt) 
+                                      twoSectionVentingAspectRatio twoSectionActualVentingDictList actualVentingArea 
+                                      ventingVolumeOne ventingVolumeTwo ventingAreaOne ventingAreaTwo firstVentingLength secondVentingLength newInsPt) 
   (setq twoSectionVentingAspectRatio (GetDottedPairValueUtils "twoSectionVentingAspectRatio" infoDictList))
+  (setq twoSectionActualVentingDictList (GetDottedPairValueUtils "twoSectionActualVentingDictList" infoDictList))
+  (setq actualVentingArea (GetDottedPairValueUtils "actualVentingArea" infoDictList))
   (setq ventingVolumeOne 
     (fix 
       (CalculateJSVentingVolume 
@@ -343,31 +346,45 @@
   )
   (setq ventingAreaOne (GetDottedPairValueUtils "firstSectionVentingArea" twoSectionVentingAspectRatio))
   (setq ventingAreaTwo (GetDottedPairValueUtils "secondSectionVentingArea" twoSectionVentingAspectRatio))
+  ; ((firstVentingLength . 44355.0) (secondVentingLength . 32400.0) (firstActualVentingArea . 230.646) (secondActualVentingArea . 168.48) (actualVentingArea . 399.126))
+  (setq firstActualVentingArea (GetDottedPairValueUtils "firstActualVentingArea" twoSectionActualVentingDictList))
+  (setq secondActualVentingArea (GetDottedPairValueUtils "secondActualVentingArea" twoSectionActualVentingDictList))
+  (setq firstVentingLength (GetDottedPairValueUtils "firstVentingLength" twoSectionActualVentingDictList))
+  (setq secondVentingLength (GetDottedPairValueUtils "secondVentingLength" twoSectionActualVentingDictList))
   (setq insPt 
     (MoveInsertPositionUtils insPt 0 (- (* (cdr (car (reverse ventingAxisoDictData))) scaleFactor) 1500)) 
   )
   (GenerateLevelLeftTextUtils insPt
-    (strcat "泄压面积一计算：10CV%%1402/3%%141=10x" (vl-princ-to-string (GetDottedPairValueUtils "ventingRatioValue" infoDictList)) "x" (vl-princ-to-string ventingVolumeOne) "%%1402/3%%141=" (vl-princ-to-string ventingAreaOne) "平方米")
+    (strcat "泄压面积一计算：10CV%%1402/3%%141=10x" (vl-princ-to-string (GetDottedPairValueUtils "ventingRatioValue" infoDictList)) "x" (vl-princ-to-string ventingVolumeOne) "%%1402/3%%141=" (vl-princ-to-string ventingAreaOne) "平方米，实际泄压面积：" (vl-princ-to-string (fix firstActualVentingArea)) "平方米")
     "0DataFlow-Text" 
     450 0.7)
   (setq newInsPt 
     (MoveInsertPositionUtils insPt 0 -800) 
   )
   (GenerateLevelLeftTextUtils newInsPt
-    (strcat "泄压面积二计算：10CV%%1402/3%%141=10x" (vl-princ-to-string (GetDottedPairValueUtils "ventingRatioValue" infoDictList)) "x" (vl-princ-to-string ventingVolumeTwo) "%%1402/3%%141=" (vl-princ-to-string ventingAreaTwo) "平方米")
+    (strcat "泄压面积二计算：10CV%%1402/3%%141=10x" (vl-princ-to-string (GetDottedPairValueUtils "ventingRatioValue" infoDictList)) "x" (vl-princ-to-string ventingVolumeTwo) "%%1402/3%%141=" (vl-princ-to-string ventingAreaTwo) "平方米，实际泄压面积：" (vl-princ-to-string (fix secondActualVentingArea)) "平方米")
     "0DataFlow-Text" 
     450 0.7)
   (setq newInsPt 
     (MoveInsertPositionUtils insPt 0 -1600) 
   )
   (GenerateLevelLeftTextUtils newInsPt
-    (strcat "计算总泄压面积：" (vl-princ-to-string (+ ventingAreaOne ventingAreaTwo)) "平方米，实际总泄压面积：" (vl-princ-to-string (fix (GetDottedPairValueUtils "actualVentingArea" infoDictList))) "平方米，满足泄压面积要求")
+    (strcat "计算总泄压面积：" (vl-princ-to-string (+ ventingAreaOne ventingAreaTwo)) "平方米，实际总泄压面积：" (vl-princ-to-string (fix actualVentingArea)) "平方米，满足泄压面积要求")
+    "0DataFlow-Text" 
+    450 0.7)
+  (setq newInsPt 
+    (MoveInsertPositionUtils insPt 0 -2400) 
+  )
+  (GenerateLevelLeftTextUtils newInsPt
+    (strcat "分区一实际泄压边长：" (vl-princ-to-string (/ firstVentingLength 1000)) "米，分区二实际泄压边长：" (vl-princ-to-string (/ secondVentingLength 1000)) "米")
     "0DataFlow-Text" 
     450 0.7)
 )
 
 ; 2021-06-30
-(defun InsertOneSectionJSVentingText (insPt ventingAxisoDictData scaleFactor infoDictList / ventingVolume) 
+(defun InsertOneSectionJSVentingText (insPt ventingAxisoDictData scaleFactor infoDictList / oneSectionActualVentingDictList ventingTotalLength ventingVolume newInsPt) 
+  (setq oneSectionActualVentingDictList (GetDottedPairValueUtils "oneSectionActualVentingDictList" infoDictList))
+  (setq ventingTotalLength (GetDottedPairValueUtils "ventingTotalLength" oneSectionActualVentingDictList))
   (setq ventingVolume 
     (fix 
       (CalculateJSVentingVolume 
@@ -381,6 +398,13 @@
   )
   (GenerateLevelLeftTextUtils insPt
     (strcat "泄压面积计算：10CV%%1402/3%%141=10x" (vl-princ-to-string (GetDottedPairValueUtils "ventingRatioValue" infoDictList)) "x" (vl-princ-to-string ventingVolume) "%%1402/3%%141=" (vl-princ-to-string (GetDottedPairValueUtils "ventingArea" infoDictList)) "平方米，实际泄压面积：" (vl-princ-to-string (fix (GetDottedPairValueUtils "actualVentingArea" infoDictList))) "平方米，满足泄压面积要求")
+    "0DataFlow-Text" 
+    450 0.7)
+  (setq newInsPt 
+    (MoveInsertPositionUtils insPt 0 -800) 
+  )
+  (GenerateLevelLeftTextUtils newInsPt
+    (strcat "实际泄压边长：" (vl-princ-to-string (/ ventingTotalLength 1000)) "米")
     "0DataFlow-Text" 
     450 0.7)
 )
