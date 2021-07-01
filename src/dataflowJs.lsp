@@ -251,8 +251,10 @@
     ; calculate venting Area
     (if (= 3 status)
       (progn 
-        (setq antiVentingEntityData (GetJSAntiVentingEntityData))
-        (setq actualVentingArea (GetJSActualVentingArea entityName antiVentingEntityData ventingUnderBeamHeight xxyyValues))
+        ; (setq antiVentingEntityData (GetJSAntiVentingEntityData))
+        ; (setq actualVentingArea (GetJSActualVentingAreaV1 entityName antiVentingEntityData ventingUnderBeamHeight xxyyValues))
+        (setq antiVentingEntityData (GetJSVentingEntityData))
+        (setq actualVentingArea (GetJSActualVentingArea entityName antiVentingEntityData ventingUnderBeamHeight))
         (setq ventingAreaStatus 1)
       )
     )
@@ -404,8 +406,89 @@
   (InsertBlockByScaleUtils (MoveInsertPositionUtils insPt -3200 (cdr ventingAxisoDict)) "_AXISO" "AXIS" (list (cons 0 (car ventingAxisoDict))) 1200)
 )
 
+; 2021-06-30
+; add window-ventingWall
+(defun GetJSActualVentingArea (entityName ventingEntityData ventingHeight / ventingTotalLength) 
+  (setq ventingTotalLength (GetJSVentingTotalLength ventingEntityData))
+  (* (atof ventingHeight)  (/ ventingTotalLength 1000.0))
+)
+
+; 2021-06-30
+(defun GetJSVentingTotalLength (ventingEntityData / )
+  (+ 
+    (GetJSVentingWindowLength ventingEntityData) 
+    (GetJSVentingWallLength ventingEntityData) 
+  )
+)
+
+; 2021-06-30
+(defun GetJSVentingEntityData ()
+  (GetEntityDataBySSUtils (GetJSVentingSS))
+)
+
+; 2021-06-30
+(defun GetJSVentingSS () 
+    (ssget '( 
+        (-4 . "<OR")
+          (0 . "LINE")
+          (0 . "INSERT")
+        (-4 . "OR>") 
+        (-4 . "<OR")
+          (8 . "WALL-MOVE")
+          (8 . "WINDOW")
+        (-4 . "OR>")
+      )
+    )
+)
+
+; 2021-06-30
+(defun GetJSVentingWindowLength (ventingEntityData /)
+  (apply '+ 
+    (mapcar '(lambda (x) 
+              (abs (GetDottedPairValueUtils 41 x))
+            ) 
+      (GetJSVentingBlockData ventingEntityData)
+    ) 
+  )
+)
+
+; 2021-06-30
+(defun GetJSVentingWallLength (ventingEntityData /) 
+  (GetHalfNumberUtils 
+    (apply '+ 
+      (mapcar '(lambda (x) 
+                (vlax-get-property (vlax-ename->vla-object (GetDottedPairValueUtils -1 x)) 'Length)
+              ) 
+        (GetJSVentingWallData ventingEntityData)
+      ) 
+    )
+  )
+)
+
+; 2021-06-30
+(defun GetJSVentingBlockData (ventingEntityData /)
+  (vl-remove-if-not '(lambda (x) 
+                       (= (GetDottedPairValueUtils 0 x) "INSERT") 
+                     ) 
+    ventingEntityData
+  ) 
+)
+
+; 2021-06-30
+(defun GetJSVentingWallData (ventingEntityData /)
+  (vl-remove-if-not '(lambda (x) 
+                       (and 
+                         (= (GetDottedPairValueUtils 0 x) "LINE") 
+                         (> (vlax-get-property (vlax-ename->vla-object (GetDottedPairValueUtils -1 x)) 'Length) 150)
+                       )
+                     ) 
+    ventingEntityData
+  ) 
+)
+
 ; 2021-06-29
-(defun GetJSActualVentingArea (entityName antiVentingEntityData ventingHeight xxyyValues / ventingPerimeter antiVentingTotalLength) 
+; Perimeter subtract column-wall
+(defun GetJSActualVentingAreaV1 (entityName antiVentingEntityData ventingHeight xxyyValues / ventingPerimeter antiVentingTotalLength) 
   (setq ventingPerimeter (vlax-get-property (vlax-ename->vla-object entityName) 'Length))
   (setq antiVentingTotalLength (GetJSAntiVentingTotalLength antiVentingEntityData xxyyValues))
   (* (atof ventingHeight)  (/ (- ventingPerimeter antiVentingTotalLength) 1000.0))
@@ -419,7 +502,6 @@
     ; four corner column
     2400
   )
-  (princ (GetJSAntiVentingWallLength antiVentingEntityData xxyyValues) )
 )
 
 ; 2021-06-29
