@@ -33,11 +33,40 @@
 
 ; refactored at 2021-04-09
 (defun MoveJSDrawForVentingMacro () 
-  ; (CADLispMove (GetAllMoveDrawLabelSS) '(0 0 0) '(400000 0 0))
+  (CADLispCopy (GetAllMoveDrawLabelSS) '(0 0 0) '(400000 0 0))
   (CADLispCopy (GetAllCopyDrawLabelSS) '(0 0 0) '(400000 0 0)) 
   (CADLispCopy (GetAllJSAxisSS) '(0 0 0) '(400000 0 0)) 
-  (generateJSDraw (MoveCopyEntityData))
+  (generateJSDraw (MoveAllJSVentingEntityData))
   (alert "移出泄压相关底图成功！") 
+)
+
+; 2021-06-30
+(defun MoveAllJSVentingEntityData () 
+  (MoveCopyEntityDataByBasePosition (GetAllJSVentingEntityData) '(400000 0))
+)
+
+; 2021-06-30
+(defun GetAllJSVentingEntityData () 
+  (ProcessEntityDataForCopyUtils (GetJSDrawFroVentingSS))
+)
+
+; 2021-06-30
+(defun GetJSDrawFroVentingSS () 
+    (ssget "X" '( 
+        (-4 . "<OR")
+          (0 . "LINE")
+          (0 . "INSERT")
+        (-4 . "OR>") 
+        (-4 . "<OR")
+          (8 . "WINDOW")
+          (8 . "COLUMN")
+          (8 . "WALL-MOVE") 
+          (8 . "STAIR") 
+          (8 . "DOOR_FIRE")
+          (8 . "柱*") 
+        (-4 . "OR>")
+      )
+    )
 )
 
 ; 2021-06-26
