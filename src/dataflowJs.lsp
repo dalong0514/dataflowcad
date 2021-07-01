@@ -110,7 +110,7 @@
 
 ; 2021-06-30
 (defun CalculateVentingAreaByBox (tileName / dcl_id status entityName xxyyValues ventingRatio ventingSplitMethod ventingSplitMode ventingRatioValue ventingHeight 
-                                  ventingUnderBeamHeight ventingDrawScale ventingSplitPoint oneSectionVentingDictList aspectRatio ventingAxisoDictData ventingVertiacalAxisoDictData ventingRatioStatus ventingAreaStatus twoSectionVentingAspectRatio fristAxis lastAxis ventingEntityData actualVentingArea)
+                                  ventingUnderBeamHeight ventingDrawScale ventingSplitPoint oneSectionVentingDictList aspectRatio ventingAxisoDictData ventingVertiacalAxisoDictData ventingRatioStatus ventingAreaStatus twoSectionVentingAspectRatio fristAxis lastAxis ventingEntityData oneSectionActualVentingDictList twoSectionActualVentingDictList)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\dcl\\" "dataflowJs.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -175,8 +175,9 @@
     )
     (if (= ventingRatioStatus 1) 
       (progn 
-        (set_tile "aspectRatioMsg" (strcat "初始长径比：" (vl-princ-to-string aspectRatio) "  区域：" fristAxis " 轴到 " lastAxis " 轴  计算泄压面积：" (vl-princ-to-string (GetDottedPairValueUtils "ventingArea" oneSectionVentingDictList))))
+        (set_tile "aspectRatioMsg" (strcat "初始长径比：" (vl-princ-to-string aspectRatio) "  区域：" fristAxis " 轴到 " lastAxis " 轴  计算泄压面积：" (vl-princ-to-string (GetDottedPairValueUtils "ventingArea" oneSectionVentingDictList)) "  实际泄压面积：" (vl-princ-to-string (GetDottedPairValueUtils "actualVentingArea" oneSectionActualVentingDictList)) "  实际泄压边长：" (vl-princ-to-string (GetDottedPairValueUtils "ventingTotalLength" oneSectionActualVentingDictList))))
         (set_tile "calculateVentingAreaMsg" (strcat "计算泄压面积之和：" (vl-princ-to-string (GetDottedPairValueUtils "ventingArea" oneSectionVentingDictList))))
+        (set_tile "actualVentingAreaMsg" (strcat "实际泄压面积之和：" (vl-princ-to-string (GetDottedPairValueUtils "actualVentingArea" oneSectionActualVentingDictList))))
       )
     ) 
     (if (= ventingRatioStatus 2)
@@ -192,9 +193,9 @@
     (if (= ventingRatioStatus 3)
       (set_tile "aspectRatioThreeMsg" "两段分区的长径比无法同时小于 3！")
     ) 
-    (if (= ventingAreaStatus 1)
-      (set_tile "actualVentingAreaMsg" (strcat "实际泄压面积：" (vl-princ-to-string actualVentingArea)))
-    ) 
+    ; (if (= ventingAreaStatus 1)
+    ;   (set_tile "actualVentingAreaMsg" (strcat "实际泄压面积：" (vl-princ-to-string actualVentingArea)))
+    ; ) 
     (set_tile "ventingRatio" ventingRatio)
     (set_tile "ventingSplitMethod" ventingSplitMethod)
     (set_tile "ventingSplitMode" ventingSplitMode)
@@ -245,8 +246,11 @@
         (alert "请先输入梁底层高！")
         (progn 
           (setq ventingEntityData (GetJSVentingEntityData))
-          (setq actualVentingArea (GetJSActualVentingArea entityName ventingEntityData ventingUnderBeamHeight))
-          (setq ventingAreaStatus 1)
+          (cond 
+            ((= ventingRatioStatus 1) (setq oneSectionActualVentingDictList (GetJSOneSectionActualVentingArea entityName ventingEntityData ventingUnderBeamHeight)))
+            ((= ventingRatioStatus 2) (setq twoSectionActualVentingDictList (GetJSTwoSectionActualVentingArea entityName ventingEntityData ventingUnderBeamHeight)))
+            ((= ventingRatioStatus 3) (alert "三个分区暂为开发！")))
+          )
         )
       )
     )
@@ -260,7 +264,8 @@
             (cons "ventingLength" (GetDottedPairValueUtils "ventingLength" oneSectionVentingDictList))
             (cons "ventingWidth" (GetDottedPairValueUtils "ventingWidth" oneSectionVentingDictList))
             (cons "ventingArea" (GetDottedPairValueUtils "ventingArea" oneSectionVentingDictList))
-            (cons "actualVentingArea" actualVentingArea)
+            (cons "oneSectionActualVentingDictList" oneSectionActualVentingDictList)
+            ; (cons "actualVentingArea" actualVentingArea)
             (cons "twoSectionVentingAspectRatio" (cdr twoSectionVentingAspectRatio))
           )
         )
@@ -417,9 +422,24 @@
 
 ; 2021-06-30
 ; add window-ventingWall
-(defun GetJSActualVentingArea (entityName ventingEntityData ventingHeight / ventingTotalLength) 
+(defun GetJSOneSectionActualVentingArea (entityName ventingEntityData ventingHeight / ventingTotalLength actualVentingArea) 
   (setq ventingTotalLength (GetJSVentingTotalLength ventingEntityData))
-  (* (atof ventingHeight)  (/ ventingTotalLength 1000.0))
+  (setq actualVentingArea (* (atof ventingHeight)  (/ ventingTotalLength 1000.0)))
+  (list 
+    (cons "ventingTotalLength" ventingTotalLength)
+    (cons "actualVentingArea" actualVentingArea)
+  )
+)
+
+; 2021-06-30
+; add window-ventingWall
+(defun GetJSTwoSectionActualVentingArea (entityName ventingEntityData ventingHeight / ventingTotalLength actualVentingArea) 
+  (setq ventingTotalLength (GetJSVentingTotalLength ventingEntityData))
+  (setq actualVentingArea (* (atof ventingHeight)  (/ ventingTotalLength 1000.0)))
+  (list 
+    (cons "ventingTotalLength" ventingTotalLength)
+    (cons "actualVentingArea" actualVentingArea)
+  )
 )
 
 ; 2021-06-30
