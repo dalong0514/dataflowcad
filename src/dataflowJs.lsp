@@ -108,10 +108,9 @@
   '("自动分割" "人工分割")
 )
 
-; 2021-06-29
-(defun CalculateVentingAreaByBox (tileName / dcl_id status entityName xxyyValues ventingRatio ventingSplitMethod ventingSplitMode ventingRatioValue ventingHeight ventingHeightInt   
-                                  ventingUnderBeamHeight ventingUnderBeamHeightInt ventingRegionLengthWidth ventingLength ventingWidth aspectRatio ventingArea ventingAxisoDictData ventingVertiacalAxisoDictData ventingRatioStatus ventingAreaStatus twoSectionVentingAspectRatio threeSectionVentingAspectRatio 
-                                  fristAxis lastAxis antiVentingEntityData actualVentingArea ventingDrawScale ventingSplitPoint)
+; 2021-06-30
+(defun CalculateVentingAreaByBox (tileName / dcl_id status entityName xxyyValues ventingRatio ventingSplitMethod ventingSplitMode ventingRatioValue ventingHeight 
+                                  ventingUnderBeamHeight ventingDrawScale ventingSplitPoint oneSectionVentingDictList aspectRatio ventingAxisoDictData ventingVertiacalAxisoDictData ventingRatioStatus ventingAreaStatus twoSectionVentingAspectRatio fristAxis lastAxis ventingEntityData actualVentingArea)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\dcl\\" "dataflowJs.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -176,8 +175,8 @@
     )
     (if (= ventingRatioStatus 1) 
       (progn 
-        (set_tile "aspectRatioMsg" (strcat "初始长径比：" (vl-princ-to-string aspectRatio) "  区域：" fristAxis " 轴到 " lastAxis " 轴  计算泄压面积：" (vl-princ-to-string ventingArea)))
-        (set_tile "calculateVentingAreaMsg" (strcat "计算泄压面积之和：" (vl-princ-to-string ventingArea)))
+        (set_tile "aspectRatioMsg" (strcat "初始长径比：" (vl-princ-to-string aspectRatio) "  区域：" fristAxis " 轴到 " lastAxis " 轴  计算泄压面积：" (vl-princ-to-string (GetDottedPairValueUtils "ventingArea" oneSectionVentingDictList))))
+        (set_tile "calculateVentingAreaMsg" (strcat "计算泄压面积之和：" (vl-princ-to-string (GetDottedPairValueUtils "ventingArea" oneSectionVentingDictList))))
       )
     ) 
     (if (= ventingRatioStatus 2)
@@ -203,34 +202,26 @@
     (set_tile "ventingUnderBeamHeight" ventingUnderBeamHeight)
     (set_tile "ventingDrawScale" ventingDrawScale)
     (set_tile "ventingSplitPoint" ventingSplitPoint)
+    ; ---------------------------------------------------------------------------------------------------------------------------------------;
     ; select button
     (if (= 2 (setq status (start_dialog)))
       (if (= ventingHeight "") 
         (alert "请先输入板底层高！")
         (progn 
+          (setq ventingRatioValue (atof (nth (atoi ventingRatio) (GetJSVentingRatio))))
           (setq entityName (car (GetEntityNameListBySSUtils (ssget '((0 . "LWPOLYLINE") (8 . "0DataFlow-JSVentingArea"))))))
           ; (148340.0 172840.0 -588785.0 -572785.0) four corner of the venting region
           (setq xxyyValues (GetMinMaxXYValuesUtils (GetAllPointForPolyLineUtils (entget entityName))))
-
-          (setq ventingRegionLengthWidth (GetJSVentingRegionLengthWidth entityName))
-          (setq ventingHeightInt (* (atof ventingHeight) 1000))
-          (setq ventingUnderBeamHeightInt (* (atof ventingUnderBeamHeight) 1000))
-          (setq ventingLength (car ventingRegionLengthWidth))
-          (setq ventingWidth (cadr ventingRegionLengthWidth))
-          (setq ventingRatioValue (atof (nth (atoi ventingRatio) (GetJSVentingRatio))))
-          (setq aspectRatio (GetVentingAspectRatio ventingHeightInt ventingLength ventingWidth))
-          (setq ventingArea (GetJSVentingArea ventingHeightInt ventingLength ventingWidth ventingRatioValue))
-          
+          (setq oneSectionVentingDictList (GetJSOneSectionVentingDictList entityName ventingRatioValue ventingHeight))
+          (setq aspectRatio (GetDottedPairValueUtils "aspectRatio" oneSectionVentingDictList))
           (setq ventingAxisoDictData (ProcessJSHorizontialVentingAxisoDictData entityName))
           (setq ventingVertiacalAxisoDictData (ProcessJSVerticalVentingAxisoDictData entityName))
-          
           (setq fristAxis (car (car ventingAxisoDictData)))
           (setq lastAxis (car (car (reverse ventingAxisoDictData))))
-          
           (if (< aspectRatio 3) 
             (setq ventingRatioStatus 1)
             (progn 
-              (setq twoSectionVentingAspectRatio (GetTwoSectionVentingAspectRatio ventingAxisoDictData ventingHeightInt ventingLength ventingWidth ventingRatioValue))
+              (setq twoSectionVentingAspectRatio (GetTwoSectionVentingAspectRatio ventingAxisoDictData oneSectionVentingDictList ventingRatioValue))
               (if (/= twoSectionVentingAspectRatio nil) 
                 (progn 
                   (setq twoSectionVentingAspectRatio (nth (/ (length twoSectionVentingAspectRatio) 2) twoSectionVentingAspectRatio))
@@ -253,8 +244,8 @@
       (if (= ventingUnderBeamHeight "") 
         (alert "请先输入梁底层高！")
         (progn 
-          (setq antiVentingEntityData (GetJSVentingEntityData))
-          (setq actualVentingArea (GetJSActualVentingArea entityName antiVentingEntityData ventingUnderBeamHeight))
+          (setq ventingEntityData (GetJSVentingEntityData))
+          (setq actualVentingArea (GetJSActualVentingArea entityName ventingEntityData ventingUnderBeamHeight))
           (setq ventingAreaStatus 1)
         )
       )
@@ -265,10 +256,10 @@
         (setq infoDictList 
           (list 
             (cons "ventingRatioValue" ventingRatioValue)
-            (cons "ventingHeight" ventingHeightInt)
-            (cons "ventingLength" ventingLength)
-            (cons "ventingWidth" ventingWidth)
-            (cons "ventingArea" ventingArea)
+            (cons "ventingHeight" (GetDottedPairValueUtils "ventingHeight" oneSectionVentingDictList))
+            (cons "ventingLength" (GetDottedPairValueUtils "ventingLength" oneSectionVentingDictList))
+            (cons "ventingWidth" (GetDottedPairValueUtils "ventingWidth" oneSectionVentingDictList))
+            (cons "ventingArea" (GetDottedPairValueUtils "ventingArea" oneSectionVentingDictList))
             (cons "actualVentingArea" actualVentingArea)
             (cons "twoSectionVentingAspectRatio" (cdr twoSectionVentingAspectRatio))
           )
@@ -282,6 +273,23 @@
   )
   (unload_dialog dcl_id)
   (princ)
+)
+
+; 2021-06-30
+(defun GetJSOneSectionVentingDictList (entityName ventingRatioValue ventingHeight / ventingHeightInt ventingRegionLengthWidth ventingLength ventingWidth aspectRatio ventingArea) 
+  (setq ventingHeightInt (* (atof ventingHeight) 1000))
+  (setq ventingRegionLengthWidth (GetJSVentingRegionLengthWidth entityName))
+  (setq ventingLength (car ventingRegionLengthWidth))
+  (setq ventingWidth (cadr ventingRegionLengthWidth))
+  (setq aspectRatio (GetVentingAspectRatio ventingHeightInt ventingLength ventingWidth))
+  (setq ventingArea (GetJSVentingArea ventingHeightInt ventingLength ventingWidth ventingRatioValue))
+  (list 
+    (cons "ventingLength" ventingLength)
+    (cons "ventingWidth" ventingWidth)
+    (cons "aspectRatio" aspectRatio)
+    (cons "ventingArea" ventingArea)
+    (cons "ventingHeight" ventingHeightInt)
+  )
 )
 
 ; 2021-06-30
@@ -613,7 +621,10 @@
 )
 
 ; 2021-06-29
-(defun GetTwoSectionVentingAspectRatio (ventingAxisoDictData ventingHeight ventingLength ventingWidth ventingRatio /) 
+(defun GetTwoSectionVentingAspectRatio (ventingAxisoDictData oneSectionVentingDictList ventingRatio / ventingHeight ventingLength ventingWidth) 
+  (setq ventingHeight (GetDottedPairValueUtils "ventingHeight" oneSectionVentingDictList))
+  (setq ventingLength (GetDottedPairValueUtils "ventingLength" oneSectionVentingDictList))
+  (setq ventingWidth (GetDottedPairValueUtils "ventingWidth" oneSectionVentingDictList))
   (vl-remove-if-not '(lambda (x) 
                        (and 
                          (< (car (cdr x)) 3)
