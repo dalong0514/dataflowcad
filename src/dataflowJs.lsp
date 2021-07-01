@@ -110,7 +110,8 @@
 
 ; 2021-06-30
 (defun CalculateVentingAreaByBox (tileName / dcl_id status entityName xxyyValues ventingRatio ventingSplitMethod ventingSplitMode ventingRatioValue ventingHeight 
-                                  ventingUnderBeamHeight ventingDrawScale ventingSplitPoint oneSectionVentingDictList aspectRatio ventingAxisoDictData ventingVertiacalAxisoDictData ventingRatioStatus twoSectionVentingAspectRatio fristAxis lastAxis ventingEntityData oneSectionActualVentingDictList twoSectionActualVentingDictList actualVentingArea)
+                                  ventingUnderBeamHeight ventingDrawScale ventingSplitPoint oneSectionVentingDictList aspectRatio ventingAxisoDictData ventingVertiacalAxisoDictData 
+                                  ventingSpaceDictData ventingRatioStatus twoSectionVentingAspectRatio fristAxis lastAxis ventingEntityData oneSectionActualVentingDictList twoSectionActualVentingDictList actualVentingArea)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\dcl\\" "dataflowJs.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -218,10 +219,15 @@
           (setq ventingVertiacalAxisoDictData (ProcessJSVerticalVentingAxisoDictData entityName))
           (setq fristAxis (car (car ventingAxisoDictData)))
           (setq lastAxis (car (car (reverse ventingAxisoDictData))))
+          (setq ventingSpaceDictData (GetVentingSpaceDictData xxyyValues))
+          
+          
           (if (< aspectRatio 3) 
             (setq ventingRatioStatus 1)
             (progn 
+
               (setq twoSectionVentingAspectRatio (GetTwoSectionVentingAspectRatio ventingAxisoDictData oneSectionVentingDictList ventingRatioValue))
+              (princ twoSectionVentingAspectRatio)(princ)
               (if (/= twoSectionVentingAspectRatio nil) 
                 (progn 
                   (setq twoSectionVentingAspectRatio (nth (/ (length twoSectionVentingAspectRatio) 2) twoSectionVentingAspectRatio))
@@ -250,8 +256,6 @@
             (progn 
               (setq twoSectionActualVentingDictList (GetJSTwoSectionActualVentingArea entityName ventingEntityData ventingUnderBeamHeight twoSectionVentingAspectRatio xxyyValues))
               (setq actualVentingArea (GetDottedPairValueUtils "actualVentingArea" twoSectionActualVentingDictList))
-              
-              (princ twoSectionActualVentingDictList)(princ)
             )
           )
         )
@@ -282,6 +286,17 @@
   )
   (unload_dialog dcl_id)
   (princ)
+)
+
+; 2021-06-30
+(defun GetVentingSpaceDictData (xxyyValues / firstPonit lastPoint)
+  (setq firstPonit 0)
+  (setq lastPoint (- (cadr xxyyValues) (car xxyyValues)))
+  (repeat (fix (/ lastPoint 500.0))
+    (setq resultList (append resultList (list (cons firstPonit firstPonit))))
+    (setq firstPonit (+ firstPonit 500))
+  ) 
+  resultList
 )
 
 ; 2021-06-30
@@ -805,6 +820,8 @@
   (setq ventingHeight (GetDottedPairValueUtils "ventingHeight" oneSectionVentingDictList))
   (setq ventingLength (GetDottedPairValueUtils "ventingLength" oneSectionVentingDictList))
   (setq ventingWidth (GetDottedPairValueUtils "ventingWidth" oneSectionVentingDictList))
+  ; red hat: must delete the last item, because may generate a negative length 2021-06-30
+  (setq ventingAxisoDictData (reverse (cdr (reverse ventingAxisoDictData))))
   (vl-remove-if-not '(lambda (x) 
                        (and 
                          (< (GetDottedPairValueUtils "firstSectionVentingAspectRatio" (cdr x)) 3)
@@ -815,6 +832,7 @@
               (cons (car x) 
                   (list 
                     (cons "firstSectionVentingAspectRatio" (GetVentingAspectRatio ventingHeight (cdr x) ventingWidth))
+                    ; red hat: must delete the last item, because may generate a negative length 2021-06-30
                     (cons "secondSectionVentingAspectRatio" (GetVentingAspectRatio ventingHeight (- ventingLength (cdr x)) ventingWidth))
                     (cons "firstSectionVentingArea" (GetJSVentingArea ventingHeight (cdr x) ventingWidth ventingRatio))
                     (cons "secondSectionVentingArea" (GetJSVentingArea ventingHeight (- ventingLength (cdr x)) ventingWidth ventingRatio))
@@ -824,14 +842,14 @@
               )
             ) 
       ventingAxisoDictData
-    )
+    )                 
   )
 )
 
 ; 2021-06-28
 (defun GetVentingAspectRatio (ventingHeight ventingLength ventingWidth / crossSectionPerimeter) 
   (setq crossSectionPerimeter (* (+ ventingHeight ventingWidth) 2))
-  (/ (* ventingLength crossSectionPerimeter) (* (* ventingHeight ventingWidth) 4))
+  (/ (* ventingLength crossSectionPerimeter) (* ventingHeight ventingWidth 4))
 )
 
 ; 2021-06-29
