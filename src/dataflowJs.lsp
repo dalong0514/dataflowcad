@@ -26,6 +26,20 @@
   (VerifyJsBzLayerByName "0DataFlow*")
 )
 
+; refactored at 2021-04-09
+(defun c:MoveJSDrawForVenting () 
+  (ExecuteFunctionAfterVerifyDateUtils 'MoveJSDrawForVentingMacro '())
+)
+
+; refactored at 2021-04-09
+(defun MoveJSDrawForVentingMacro () 
+  ; (CADLispMove (GetAllMoveDrawLabelSS) '(0 0 0) '(400000 0 0))
+  (CADLispCopy (GetAllCopyDrawLabelSS) '(0 0 0) '(400000 0 0)) 
+  (CADLispCopy (GetAllJSAxisSS) '(0 0 0) '(400000 0 0)) 
+  (generateJSDraw (MoveCopyEntityData))
+  (alert "移出泄压相关底图成功！") 
+)
+
 ; 2021-06-26
 (defun c:GenerateJsVentingAreaPL () 
   (ExecuteFunctionAfterVerifyDateUtils 'GenerateJsVentingAreaPLMacro '())
