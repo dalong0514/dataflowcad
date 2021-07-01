@@ -220,14 +220,13 @@
           (setq fristAxis (car (car ventingAxisoDictData)))
           (setq lastAxis (car (car (reverse ventingAxisoDictData))))
           (setq ventingSpaceDictData (GetVentingSpaceDictData xxyyValues))
-          
-          
           (if (< aspectRatio 3) 
             (setq ventingRatioStatus 1)
             (progn 
-
-              (setq twoSectionVentingAspectRatio (GetTwoSectionVentingAspectRatio ventingAxisoDictData oneSectionVentingDictList ventingRatioValue))
-              (princ twoSectionVentingAspectRatio)(princ)
+              (cond 
+                ((= ventingSplitMethod "0") (setq twoSectionVentingAspectRatio (GetTwoSectionVentingAspectRatio ventingAxisoDictData oneSectionVentingDictList ventingRatioValue)))
+                ((= ventingSplitMethod "1") (setq twoSectionVentingAspectRatio (GetTwoSectionVentingAspectRatio ventingSpaceDictData oneSectionVentingDictList ventingRatioValue)))
+              )
               (if (/= twoSectionVentingAspectRatio nil) 
                 (progn 
                   (setq twoSectionVentingAspectRatio (nth (/ (length twoSectionVentingAspectRatio) 2) twoSectionVentingAspectRatio))
@@ -289,12 +288,13 @@
 )
 
 ; 2021-06-30
-(defun GetVentingSpaceDictData (xxyyValues / firstPonit lastPoint)
-  (setq firstPonit 0)
+(defun GetVentingSpaceDictData (xxyyValues / i lastPoint resultList)
+  (setq i 1)
   (setq lastPoint (- (cadr xxyyValues) (car xxyyValues)))
-  (repeat (fix (/ lastPoint 500.0))
-    (setq resultList (append resultList (list (cons firstPonit firstPonit))))
-    (setq firstPonit (+ firstPonit 500))
+  (repeat (- (fix (/ lastPoint 500)) 1)
+    ; red hat - dict key must be string 2021-06-30
+    (setq resultList (append resultList (list (cons (vl-princ-to-string (* 500 i)) (* 500 i)))))
+    (setq i (1+ i))
   ) 
   resultList
 )
