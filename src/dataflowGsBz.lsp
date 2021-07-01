@@ -1354,6 +1354,11 @@
   (GetEntityDataBySSUtils (ssget "X" '((0 . "INSERT") (2 . "_AXISO"))))
 )
 
+; 2021-06-30
+(defun GetAllJsColumnData () 
+  (GetEntityDataBySSUtils (ssget "X" '((0 . "INSERT") (8 . "COLUMN"))))
+)
+
 ; 2021-04-08
 (defun GetAllGsBzLevelAxisoData () 
   ; sort from min to max

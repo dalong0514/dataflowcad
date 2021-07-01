@@ -190,6 +190,7 @@
         (set_tile "calculateVentingAreaMsg" (strcat "计算泄压面积之和：" (vl-princ-to-string (+ (GetDottedPairValueUtils "firstSectionVentingArea" (cdr twoSectionVentingAspectRatio)) (GetDottedPairValueUtils "secondSectionVentingArea" (cdr twoSectionVentingAspectRatio))))))
       )
     ) 
+    ; ((firstVentingLength . 44355.0) (secondVentingLength . 32400.0) (firstActualVentingArea . 230.646) (secondActualVentingArea . 168.48) (actualVentingArea . 399.126))
     (if (= ventingRatioStatus 3)
       (set_tile "aspectRatioThreeMsg" "两段分区的长径比无法同时小于 3！")
     ) 
@@ -246,8 +247,10 @@
           )
           (if (= ventingRatioStatus 2) 
             (progn 
-              (setq twoSectionActualVentingDictList (GetJSTwoSectionActualVentingArea entityName ventingEntityData ventingUnderBeamHeight))
+              (setq twoSectionActualVentingDictList (GetJSTwoSectionActualVentingArea entityName ventingEntityData ventingUnderBeamHeight twoSectionVentingAspectRatio xxyyValues))
               (setq actualVentingArea (GetDottedPairValueUtils "actualVentingArea" twoSectionActualVentingDictList))
+              
+              (princ twoSectionActualVentingDictList)(princ)
             )
           )
         )
@@ -432,12 +435,145 @@
 
 ; 2021-06-30
 ; add window-ventingWall
-(defun GetJSTwoSectionActualVentingArea (entityName ventingEntityData ventingHeight / ventingTotalLength actualVentingArea) 
-  (setq ventingTotalLength (GetJSVentingTotalLength ventingEntityData))
-  (setq actualVentingArea (* (atof ventingHeight)  (/ ventingTotalLength 1000.0)))
+(defun GetJSTwoSectionActualVentingArea (entityName ventingEntityData ventingHeight twoSectionVentingAspectRatio xxyyValues / 
+                                         firstSectionSideLength halfColumnLength splitPoint firstVentingLength secondVentingLength 
+                                         firstActualVentingArea secondActualVentingArea actualVentingArea) 
+  (setq firstSectionSideLength (GetDottedPairValueUtils "firstSectionSideLength" (cdr twoSectionVentingAspectRatio)))
+  (setq halfColumnLength (GetJSLeftUpColumnLengthForVenting (car xxyyValues) (cadddr xxyyValues)))
+  (setq splitPoint (+ (car xxyyValues) firstSectionSideLength halfColumnLength))
+  (setq firstVentingLength (GetJSFirstVentingLength ventingEntityData splitPoint))
+  (setq secondVentingLength (GetJSSecondVentingLength ventingEntityData splitPoint))
+  (setq firstActualVentingArea (* (atof ventingHeight)  (/ firstVentingLength 1000.0)))
+  (setq secondActualVentingArea (* (atof ventingHeight)  (/ secondVentingLength 1000.0)))
   (list 
-    (cons "ventingTotalLength" ventingTotalLength)
-    (cons "actualVentingArea" actualVentingArea)
+    (cons "firstVentingLength" firstVentingLength)
+    (cons "secondVentingLength" secondVentingLength)
+    (cons "firstActualVentingArea" firstActualVentingArea)
+    (cons "secondActualVentingArea" secondActualVentingArea)
+    (cons "actualVentingArea" (+ firstActualVentingArea secondActualVentingArea))
+  )
+)
+
+; 2021-06-30
+(defun GetJSSecondVentingLength (ventingEntityData splitPoint / )
+  (+ 
+    (GetJSSecondVentingWindowLength ventingEntityData splitPoint) 
+    (GetJSSecondVentingWallLength ventingEntityData splitPoint) 
+  )
+)
+
+; 2021-06-30
+(defun GetJSSecondVentingWindowLength (ventingEntityData splitPoint /)
+  (apply '+ 
+    (mapcar '(lambda (x) 
+              (abs (GetDottedPairValueUtils 41 x))
+            ) 
+      (vl-remove-if-not '(lambda (x) 
+                          (and 
+                            (= (GetDottedPairValueUtils 0 x) "INSERT")
+                            (> (car (GetDottedPairValueUtils 10 x)) splitPoint)
+                          ) 
+                        ) 
+        ventingEntityData
+      )
+    ) 
+  )
+)
+
+; 2021-06-30
+(defun GetJSSecondVentingWallLength (ventingEntityData splitPoint /) 
+  (GetHalfNumberUtils 
+    (apply '+ 
+      (mapcar '(lambda (x) 
+                (vlax-get-property (vlax-ename->vla-object (GetDottedPairValueUtils -1 x)) 'Length)
+              ) 
+        (GetJSSecondVentingWallData ventingEntityData splitPoint)
+      ) 
+    )
+  )
+)
+
+; 2021-06-30
+(defun GetJSSecondVentingWallData (ventingEntityData splitPoint /)
+  (vl-remove-if-not '(lambda (x) 
+                       (and 
+                         (= (GetDottedPairValueUtils 0 x) "LINE") 
+                         (> (vlax-get-property (vlax-ename->vla-object (GetDottedPairValueUtils -1 x)) 'Length) 150)
+                         (> (car (GetDottedPairValueUtils 10 x)) splitPoint)
+                         (> (car (GetDottedPairValueUtils 11 x)) splitPoint)
+                       )
+                     ) 
+    ventingEntityData
+  ) 
+)
+
+; 2021-06-30
+(defun GetJSFirstVentingLength (ventingEntityData splitPoint / )
+  (+ 
+    (GetJSFirstVentingWindowLength ventingEntityData splitPoint) 
+    (GetJSFirstVentingWallLength ventingEntityData splitPoint) 
+  )
+)
+
+; 2021-06-30
+(defun GetJSFirstVentingWindowLength (ventingEntityData splitPoint /)
+  (apply '+ 
+    (mapcar '(lambda (x) 
+              (abs (GetDottedPairValueUtils 41 x))
+            ) 
+      (vl-remove-if-not '(lambda (x) 
+                          (and 
+                            (= (GetDottedPairValueUtils 0 x) "INSERT")
+                            (< (car (GetDottedPairValueUtils 10 x)) splitPoint)
+                          ) 
+                        ) 
+        ventingEntityData
+      )
+    ) 
+  )
+)
+
+; 2021-06-30
+(defun GetJSFirstVentingWallLength (ventingEntityData splitPoint /) 
+  (GetHalfNumberUtils 
+    (apply '+ 
+      (mapcar '(lambda (x) 
+                (vlax-get-property (vlax-ename->vla-object (GetDottedPairValueUtils -1 x)) 'Length)
+              ) 
+        (GetJSFirstVentingWallData ventingEntityData splitPoint)
+      ) 
+    )
+  )
+)
+
+; 2021-06-30
+(defun GetJSFirstVentingWallData (ventingEntityData splitPoint /)
+  (vl-remove-if-not '(lambda (x) 
+                       (and 
+                         (= (GetDottedPairValueUtils 0 x) "LINE") 
+                         (> (vlax-get-property (vlax-ename->vla-object (GetDottedPairValueUtils -1 x)) 'Length) 150)
+                         (< (car (GetDottedPairValueUtils 10 x)) splitPoint)
+                         (< (car (GetDottedPairValueUtils 11 x)) splitPoint)
+                       )
+                     ) 
+    ventingEntityData
+  ) 
+)
+
+; 2021-06-30
+(defun GetJSLeftUpColumnLengthForVenting (leftPoint upPoint /) 
+  (car 
+    (mapcar '(lambda (x) 
+              (GetHalfNumberUtils (abs (GetDottedPairValueUtils 41 x)))
+            ) 
+      (vl-remove-if-not '(lambda (x) 
+                          (IsPositionInTheRegionUtils 
+                            (GetDottedPairValueUtils 10 x) 
+                            leftPoint (+ leftPoint 1000) (- upPoint 1000) upPoint) 
+                        ) 
+        (GetAllJsColumnData)
+      ) 
+    )
   )
 )
 
