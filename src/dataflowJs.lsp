@@ -110,7 +110,7 @@
 
 ; 2021-06-30
 (defun CalculateVentingAreaByBox (tileName / dcl_id status entityName xxyyValues ventingRatio ventingSplitMethod ventingSplitMode ventingRatioValue ventingHeight 
-                                  ventingUnderBeamHeight ventingDrawScale ventingSplitPoint oneSectionVentingDictList aspectRatio ventingAxisoDictData ventingVertiacalAxisoDictData ventingRatioStatus ventingAreaStatus twoSectionVentingAspectRatio fristAxis lastAxis ventingEntityData oneSectionActualVentingDictList twoSectionActualVentingDictList actualVentingArea)
+                                  ventingUnderBeamHeight ventingDrawScale ventingSplitPoint oneSectionVentingDictList aspectRatio ventingAxisoDictData ventingVertiacalAxisoDictData ventingRatioStatus twoSectionVentingAspectRatio fristAxis lastAxis ventingEntityData oneSectionActualVentingDictList twoSectionActualVentingDictList actualVentingArea)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\dcl\\" "dataflowJs.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -187,15 +187,12 @@
                   (strcat "分区一长径比：" (vl-princ-to-string (GetDottedPairValueUtils "firstSectionVentingAspectRatio" (cdr twoSectionVentingAspectRatio))) "  区域：" fristAxis " 轴到 " (car twoSectionVentingAspectRatio) " 轴  计算泄压面积：" (vl-princ-to-string (GetDottedPairValueUtils "firstSectionVentingArea" (cdr twoSectionVentingAspectRatio)))))
         (set_tile "aspectRatioTwoMsg" 
                   (strcat "分区二长径比：" (vl-princ-to-string (GetDottedPairValueUtils "secondSectionVentingAspectRatio" (cdr twoSectionVentingAspectRatio))) "  区域：" (car twoSectionVentingAspectRatio) " 轴到 " lastAxis " 轴  计算泄压面积：" (vl-princ-to-string (GetDottedPairValueUtils "secondSectionVentingArea" (cdr twoSectionVentingAspectRatio)))))
-        (set_tile "calculateVentingAreaMsg" (strcat "计算泄压面积之和：" (vl-princ-to-string (+ (nth 2 (cdr twoSectionVentingAspectRatio)) (nth 3 (cdr twoSectionVentingAspectRatio))))))
+        (set_tile "calculateVentingAreaMsg" (strcat "计算泄压面积之和：" (vl-princ-to-string (+ (GetDottedPairValueUtils "firstSectionVentingArea" (cdr twoSectionVentingAspectRatio)) (GetDottedPairValueUtils "secondSectionVentingArea" (cdr twoSectionVentingAspectRatio))))))
       )
     ) 
     (if (= ventingRatioStatus 3)
       (set_tile "aspectRatioThreeMsg" "两段分区的长径比无法同时小于 3！")
     ) 
-    ; (if (= ventingAreaStatus 1)
-    ;   (set_tile "actualVentingAreaMsg" (strcat "实际泄压面积：" (vl-princ-to-string actualVentingArea)))
-    ; ) 
     (set_tile "ventingRatio" ventingRatio)
     (set_tile "ventingSplitMethod" ventingSplitMethod)
     (set_tile "ventingSplitMode" ventingSplitMode)
@@ -228,12 +225,7 @@
                   (setq twoSectionVentingAspectRatio (nth (/ (length twoSectionVentingAspectRatio) 2) twoSectionVentingAspectRatio))
                   (setq ventingRatioStatus 2)
                 )
-                (progn 
-                  ; do not process the three sections frist 2021-06-30
-                  ; (setq threeSectionVentingAspectRatio (GetThreeSectionVentingAspectRatio ventingAxisoDictData ventingHeightInt ventingLength ventingWidth))
-                  ; (princ threeSectionVentingAspectRatio)(princ)
-                  (setq ventingRatioStatus 3)
-                )
+                (setq ventingRatioStatus 3)
               )
             )
           )
