@@ -122,15 +122,15 @@
     (action_tile "btnSelect" "(done_dialog 2)")
     (action_tile "btnCalculate" "(done_dialog 3)")
     (action_tile "btnInsert" "(done_dialog 4)")
-    ; the default value of input box
-    (mode_tile "ventingRatio" 2)
-    (mode_tile "ventingSplitMethod" 2)
-    (mode_tile "ventingSplitMode" 2)
-    (mode_tile "ventingUnderBeamHeight" 2)
-    (mode_tile "ventingDrawScale" 2)
-    (mode_tile "ventingSplitPoint" 2)
-    ; the key locaion, mouse stay at the last mode_tile 2021-06-30
+    ; set the mode for tile, 0 for enabled, 1 for Disabled, 2 for Sets focus
+    (mode_tile "ventingRatio" 0)
+    (mode_tile "ventingSplitMethod" 0)
+    (mode_tile "ventingSplitMode" 0)
     (mode_tile "ventingHeight" 2)
+    (mode_tile "ventingUnderBeamHeight" 0)
+    (mode_tile "ventingDrawScale" 0)
+    (mode_tile "ventingSplitPoint" 0)
+    ; the default value of input box
     (action_tile "ventingRatio" "(setq ventingRatio $value)")
     (action_tile "ventingSplitMethod" "(setq ventingSplitMethod $value)")
     (action_tile "ventingSplitMode" "(setq ventingSplitMode $value)")
@@ -206,7 +206,7 @@
     ; select button
     (if (= 2 (setq status (start_dialog)))
       (if (= ventingHeight "") 
-        (alert "请先输入层高！")
+        (alert "请先输入板底层高！")
         (progn 
           (setq entityName (car (GetEntityNameListBySSUtils (ssget '((0 . "LWPOLYLINE") (8 . "0DataFlow-JSVentingArea"))))))
           ; (148340.0 172840.0 -588785.0 -572785.0) four corner of the venting region
@@ -249,13 +249,14 @@
       )
     )
     ; calculate venting Area
-    (if (= 3 status)
-      (progn 
-        ; (setq antiVentingEntityData (GetJSAntiVentingEntityData))
-        ; (setq actualVentingArea (GetJSActualVentingAreaV1 entityName antiVentingEntityData ventingUnderBeamHeight xxyyValues))
-        (setq antiVentingEntityData (GetJSVentingEntityData))
-        (setq actualVentingArea (GetJSActualVentingArea entityName antiVentingEntityData ventingUnderBeamHeight))
-        (setq ventingAreaStatus 1)
+    (if (= 3 status) 
+      (if (= ventingUnderBeamHeight "") 
+        (alert "请先输入梁底层高！")
+        (progn 
+          (setq antiVentingEntityData (GetJSVentingEntityData))
+          (setq actualVentingArea (GetJSActualVentingArea entityName antiVentingEntityData ventingUnderBeamHeight))
+          (setq ventingAreaStatus 1)
+        )
       )
     )
     ; insert Venting Draw
