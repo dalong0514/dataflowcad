@@ -253,7 +253,8 @@
           )
           (if (= ventingRatioStatus 2) 
             (progn 
-              (setq twoSectionActualVentingDictList (GetJSTwoSectionActualVentingArea entityName ventingEntityData ventingUnderBeamHeight twoSectionVentingAspectRatio xxyyValues))
+              (setq twoSectionActualVentingDictList 
+                     (GetJSTwoSectionActualVentingArea entityName ventingEntityData ventingUnderBeamHeight twoSectionVentingAspectRatio xxyyValues ventingSplitMethod))
               (setq actualVentingArea (GetDottedPairValueUtils "actualVentingArea" twoSectionActualVentingDictList))
             )
           )
@@ -475,12 +476,15 @@
 
 ; 2021-06-30
 ; add window-ventingWall
-(defun GetJSTwoSectionActualVentingArea (entityName ventingEntityData ventingHeight twoSectionVentingAspectRatio xxyyValues / 
+(defun GetJSTwoSectionActualVentingArea (entityName ventingEntityData ventingHeight twoSectionVentingAspectRatio xxyyValues ventingSplitMethod / 
                                          firstSectionSideLength halfColumnLength splitPoint firstVentingLength secondVentingLength 
                                          firstActualVentingArea secondActualVentingArea actualVentingArea) 
   (setq firstSectionSideLength (GetDottedPairValueUtils "firstSectionSideLength" (cdr twoSectionVentingAspectRatio)))
   (setq halfColumnLength (GetJSLeftUpColumnLengthForVenting (car xxyyValues) (cadddr xxyyValues)))
-  (setq splitPoint (+ (car xxyyValues) firstSectionSideLength halfColumnLength))
+  (cond 
+    ((= ventingSplitMethod "0") (setq splitPoint (+ (car xxyyValues) firstSectionSideLength halfColumnLength)))
+    ((= ventingSplitMethod "1") (setq splitPoint (+ (car xxyyValues) firstSectionSideLength)))
+  )
   (setq firstVentingLength (GetJSFirstVentingLength ventingEntityData splitPoint))
   (setq secondVentingLength (GetJSSecondVentingLength ventingEntityData splitPoint))
   (setq firstActualVentingArea (* (atof ventingHeight)  (/ firstVentingLength 1000.0)))
