@@ -324,7 +324,7 @@
 
 ; 2021-06-30
 ; refactored at 2021-07-02
-(defun InsertJSVentingRegion (entityName xxyyValues scaleFactor ventingAxisoDictData ventingVertiacalAxisoDictData ventingRatioStatus infoDictList / insPt)
+(defun InsertJSVentingRegion (entityName xxyyValues scaleFactor ventingAxisoDictData ventingVertiacalAxisoDictData ventingRatioStatus infoDictList / insPt newEntityData)
   (setq insPt (getpoint "\n拾取泄压面简图插入点："))
   ; return to (0 0 0), and then move to the insPt
   (setq newEntityData 
@@ -335,12 +335,26 @@
   (entmake newEntityData)
   ;; Scale the polyline
   (vla-ScaleEntity (vlax-ename->vla-object (entlast)) (vlax-3d-point insPt) scaleFactor)
+  (SetGraphLayerUtils (entlast) "0")
+  (if (= ventingRatioStatus 2) 
+    (InsertTwoSectionSplitLine insPt infoDictList scaleFactor)
+  )
   (InsertJSHorizontialAxiso insPt ventingAxisoDictData scaleFactor)
   (InsertJSVerticalAxiso insPt ventingVertiacalAxisoDictData scaleFactor)
   (cond 
     ((= ventingRatioStatus 1) (InsertOneSectionJSVentingText insPt ventingVertiacalAxisoDictData scaleFactor infoDictList))
     ((= ventingRatioStatus 2) (InsertTwoSectionJSVentingText insPt ventingVertiacalAxisoDictData scaleFactor infoDictList))
   )
+)
+
+; 2021-07-02
+(defun InsertTwoSectionSplitLine (insPt infoDictList scaleFactor / twoSectionActualVentingDictList splitDistance ventingWidth)
+  (setq twoSectionActualVentingDictList (GetDottedPairValueUtils "twoSectionActualVentingDictList" infoDictList))
+  (setq splitDistance (GetDottedPairValueUtils "splitDistance" twoSectionActualVentingDictList))
+  (setq ventingWidth (GetDottedPairValueUtils "ventingWidth" infoDictList))
+  (GenerateLineUtils (MoveInsertPositionUtils insPt splitDistance 0) (MoveInsertPositionUtils insPt splitDistance (GetNegativeNumberUtils ventingWidth)) "0")
+  ;; Scale the line
+  (vla-ScaleEntity (vlax-ename->vla-object (entlast)) (vlax-3d-point insPt) scaleFactor)
 )
 
 ; 2021-06-30
@@ -968,8 +982,10 @@
 ; 2021-06-27
 ; bug will appear when length=width because vl-sort will de-duplication
 ; refactored at 2021-06-29
+; the Region is PL or columnZone, ready to comfirm 2021-07-02
 (defun GetJSVentingRegionLengthWidth (entityName / xxyyValues) 
-  (setq xxyyValues (GetMinMaxXYValuesUtils (GetJSColumnPositionForVenting entityName)))
+  ; (setq xxyyValues (GetMinMaxXYValuesUtils (GetJSColumnPositionForVenting entityName)))
+  (setq xxyyValues (GetMinMaxXYValuesUtils (GetAllPointForPolyLineUtils (entget entityName))))
   (vl-sort 
     (list 
       (- (nth 1 xxyyValues) (nth 0 xxyyValues))
