@@ -323,6 +323,7 @@
 )
 
 ; 2021-06-30
+; refactored at 2021-07-02
 (defun InsertJSVentingRegion (entityName xxyyValues scaleFactor ventingAxisoDictData ventingVertiacalAxisoDictData ventingRatioStatus infoDictList / insPt)
   (setq insPt (getpoint "\n拾取泄压面简图插入点："))
   ; return to (0 0 0), and then move to the insPt
@@ -343,6 +344,7 @@
 )
 
 ; 2021-06-30
+; refactored at 2021-07-02
 (defun InsertTwoSectionJSVentingText (insPt ventingAxisoDictData scaleFactor infoDictList / 
                                       twoSectionVentingAspectRatio twoSectionActualVentingDictList actualVentingArea 
                                       ventingVolumeOne ventingVolumeTwo ventingAreaOne ventingAreaTwo firstVentingLength secondVentingLength) 
@@ -393,6 +395,10 @@
     450 0.7)
   (GenerateLevelLeftTextUtils (MoveInsertPositionUtils insPt 0 -3200) 
     (strcat "分区一泄压比：" (vl-princ-to-string (GetDottedPairValueUtils "firstSectionVentingAspectRatio" twoSectionVentingAspectRatio)) "，分区二泄压比：" (vl-princ-to-string (GetDottedPairValueUtils "secondSectionVentingAspectRatio" twoSectionVentingAspectRatio)))
+    "0DataFlow-Text" 
+    450 0.7)
+  (GenerateLevelLeftTextUtils (MoveInsertPositionUtils insPt 0 -4000) 
+    (strcat "分割点离左上角定位点水平距离：" (vl-princ-to-string (/ (GetDottedPairValueUtils "splitDistance" twoSectionActualVentingDictList) 1000)) "米")
     "0DataFlow-Text" 
     450 0.7)
 )
@@ -515,6 +521,7 @@
     (cons "firstActualVentingArea" firstActualVentingArea)
     (cons "secondActualVentingArea" secondActualVentingArea)
     (cons "actualVentingArea" (+ firstActualVentingArea secondActualVentingArea))
+    (cons "splitDistance" (- splitPoint (car xxyyValues)))
   )
 )
 
