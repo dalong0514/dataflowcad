@@ -171,7 +171,7 @@
       (setq ventingDrawScale "0.3")
     ) 
     (if (= nil ventingSplitPoint)
-      (setq ventingSplitPoint "0")
+      (setq ventingSplitPoint "")
     )
     (if (= ventingRatioStatus 1) 
       (progn 
@@ -258,7 +258,7 @@
           (if (= ventingRatioStatus 2) 
             (progn 
               (setq twoSectionActualVentingDictList 
-                (GetJSTwoSectionActualVentingArea entityName ventingEntityData ventingUnderBeamHeight twoSectionVentingAspectRatio xxyyValues ventingSplitMethod))
+                (GetJSTwoSectionActualVentingArea entityName ventingEntityData ventingUnderBeamHeight twoSectionVentingAspectRatio xxyyValues ventingSplitMethod ventingSplitMode))
               (setq actualVentingArea (GetDottedPairValueUtils "actualVentingArea" twoSectionActualVentingDictList))
             )
           )
@@ -480,22 +480,34 @@
 
 ; 2021-06-30
 ; add window-ventingWall
-(defun GetJSTwoSectionActualVentingArea (entityName ventingEntityData ventingHeight twoSectionVentingAspectRatio xxyyValues ventingSplitMethod / 
+(defun GetJSTwoSectionActualVentingArea (entityName ventingEntityData ventingHeight twoSectionVentingAspectRatio xxyyValues ventingSplitMethod ventingSplitMode / 
                                          firstSectionSideLength halfColumnLength splitPoint firstVentingLength secondVentingLength 
                                          firstActualVentingArea secondActualVentingArea actualVentingArea) 
   (setq firstSectionSideLength (GetDottedPairValueUtils "firstSectionSideLength" (cdr twoSectionVentingAspectRatio)))
   (setq halfColumnLength (GetJSLeftUpColumnLengthForVenting (car xxyyValues) (cadddr xxyyValues)))
   (cond 
-    ((= ventingSplitMethod "0") (setq splitPoint (+ (car xxyyValues) firstSectionSideLength halfColumnLength)))
-    ((= ventingSplitMethod "1") (setq splitPoint (+ (car xxyyValues) firstSectionSideLength)))
+    ((and (= ventingSplitMethod "0") (= ventingSplitMode "0")) 
+     (setq splitPoint (+ (car xxyyValues) firstSectionSideLength halfColumnLength)))
+    ((and (= ventingSplitMethod "1") (= ventingSplitMode "0")) 
+     (setq splitPoint (+ (car xxyyValues) firstSectionSideLength)))
+    ((= ventingSplitMode "1") 
+     (setq splitPoint (+ (car xxyyValues) firstSectionSideLength)))
   )
   (cond 
-    ((= ventingSplitMethod "0") (setq firstVentingLength (GetJSFirstVentingLength ventingEntityData splitPoint)))
-    ((= ventingSplitMethod "1") (setq firstVentingLength (+ (GetJSFirstVentingLength ventingEntityData splitPoint) (GetCrossSplitPointVentingWalllength ventingEntityData splitPoint 0))))
+    ((and (= ventingSplitMethod "0") (= ventingSplitMode "0")) 
+     (setq firstVentingLength (GetJSFirstVentingLength ventingEntityData splitPoint)))
+    ((and (= ventingSplitMethod "1") (= ventingSplitMode "0")) 
+     (setq firstVentingLength (+ (GetJSFirstVentingLength ventingEntityData splitPoint) (GetCrossSplitPointVentingWalllength ventingEntityData splitPoint 0))))
+    ((= ventingSplitMode "1") 
+     (setq firstVentingLength (+ (GetJSFirstVentingLength ventingEntityData splitPoint) (GetCrossSplitPointVentingWalllength ventingEntityData splitPoint 0))))
   )
   (cond 
-    ((= ventingSplitMethod "0") (setq secondVentingLength (GetJSSecondVentingLength ventingEntityData splitPoint)))
-    ((= ventingSplitMethod "1") (setq secondVentingLength (+ (GetJSSecondVentingLength ventingEntityData splitPoint) (GetCrossSplitPointVentingWalllength ventingEntityData splitPoint 1))))
+    ((and (= ventingSplitMethod "0") (= ventingSplitMode "0")) 
+     (setq secondVentingLength (GetJSSecondVentingLength ventingEntityData splitPoint)))
+    ((and (= ventingSplitMethod "1") (= ventingSplitMode "0")) 
+     (setq secondVentingLength (+ (GetJSSecondVentingLength ventingEntityData splitPoint) (GetCrossSplitPointVentingWalllength ventingEntityData splitPoint 1))))
+    ((= ventingSplitMode "1") 
+     (setq secondVentingLength (+ (GetJSSecondVentingLength ventingEntityData splitPoint) (GetCrossSplitPointVentingWalllength ventingEntityData splitPoint 1))))
   )
   (setq firstActualVentingArea (* (atof ventingHeight)  (/ firstVentingLength 1000.0)))
   (setq secondActualVentingArea (* (atof ventingHeight)  (/ secondVentingLength 1000.0)))
