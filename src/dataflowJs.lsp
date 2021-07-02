@@ -324,7 +324,8 @@
 
 ; 2021-06-30
 ; refactored at 2021-07-02
-(defun InsertJSVentingRegion (entityName xxyyValues scaleFactor ventingAxisoDictData ventingVertiacalAxisoDictData ventingRatioStatus infoDictList / insPt newEntityData)
+(defun InsertJSVentingRegion (entityName xxyyValues scaleFactor ventingAxisoDictData ventingVertiacalAxisoDictData ventingRatioStatus infoDictList / 
+                              insPt newEntityData halfColumnLength)
   (setq insPt (getpoint "\n拾取泄压面简图插入点："))
   ; return to (0 0 0), and then move to the insPt
   (setq newEntityData 
@@ -339,8 +340,10 @@
   (if (= ventingRatioStatus 2) 
     (InsertTwoSectionSplitLine insPt infoDictList scaleFactor)
   )
-  (InsertJSHorizontialAxiso insPt ventingAxisoDictData scaleFactor)
-  (InsertJSVerticalAxiso insPt ventingVertiacalAxisoDictData scaleFactor)
+  ; modify the position for column - refactored at 2021-07-02
+  (setq halfColumnLength (* (GetJSLeftUpColumnLengthForVenting (car xxyyValues) (cadddr xxyyValues)) scaleFactor))
+  (InsertJSHorizontialAxiso (MoveInsertPositionUtils insPt halfColumnLength 0) ventingAxisoDictData scaleFactor)
+  (InsertJSVerticalAxiso (MoveInsertPositionUtils insPt 0 (GetNegativeNumberUtils halfColumnLength)) ventingVertiacalAxisoDictData scaleFactor)
   (cond 
     ((= ventingRatioStatus 1) (InsertOneSectionJSVentingText insPt ventingVertiacalAxisoDictData scaleFactor infoDictList))
     ((= ventingRatioStatus 2) (InsertTwoSectionJSVentingText insPt ventingVertiacalAxisoDictData scaleFactor infoDictList))
