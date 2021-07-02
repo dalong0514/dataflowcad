@@ -53,6 +53,11 @@ calculateVentingAreaBox : dialog {
           key = "ventingSplitPoint";
           value = "";
         }
+        : button { 
+          key = "btnUpdateCalculateVenting"; 
+          label = "人工切割时更新计算泄压"; 
+          is_default = "true"; 
+        }
       }
       : spacer { height = 2; } 
       : text {
