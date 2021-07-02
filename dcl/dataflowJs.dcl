@@ -2,7 +2,7 @@ calculateVentingAreaBox : dialog {
   label = "天正设计流数据一体化建筑专业V0.1———泄压面积计算"; 
   key = "calculateVentingArea";
   : boxed_radio_column {
-    width = 120;
+    width = 140;
     : column {
       : row {
         : popup_list { 
@@ -94,7 +94,7 @@ calculateVentingAreaBox : dialog {
         }
         : edit_box {
           key = "ventingDrawScale";
-          edit_width = 41;
+          edit_width = 20;
           mnemonic = "N";
           value = "";
         }

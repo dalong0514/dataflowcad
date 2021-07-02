@@ -185,9 +185,9 @@
       (progn 
         (set_tile "aspectRatioMsg" (strcat "初始长径比：" (vl-princ-to-string aspectRatio) "  区域：" fristAxis " 轴到 " lastAxis " 轴"))
         (set_tile "aspectRatioOneMsg" 
-                  (strcat "分区一长径比：" (vl-princ-to-string (GetDottedPairValueUtils "firstSectionVentingAspectRatio" (cdr twoSectionVentingAspectRatio))) "  区域：" fristAxis " 轴到 " (car twoSectionVentingAspectRatio) " 轴  计算泄压面积：" (vl-princ-to-string (GetDottedPairValueUtils "firstSectionVentingArea" (cdr twoSectionVentingAspectRatio))) "  分区一实际泄压面积：" (vl-princ-to-string (GetDottedPairValueUtils "firstActualVentingArea" twoSectionActualVentingDictList)) "  分区一实际泄压边长：" (vl-princ-to-string (GetDottedPairValueUtils "firstVentingLength" twoSectionActualVentingDictList))))
+                  (strcat "分区一长径比：" (vl-princ-to-string (GetDottedPairValueUtils "firstSectionVentingAspectRatio" (cdr twoSectionVentingAspectRatio))) "  区域：" fristAxis " 轴到 " (car twoSectionVentingAspectRatio) " 轴（米）  计算泄压面积：" (vl-princ-to-string (GetDottedPairValueUtils "firstSectionVentingArea" (cdr twoSectionVentingAspectRatio))) "  分区一实际泄压面积：" (vl-princ-to-string (GetDottedPairValueUtils "firstActualVentingArea" twoSectionActualVentingDictList)) "  分区一实际泄压边长：" (vl-princ-to-string (GetDottedPairValueUtils "firstVentingLength" twoSectionActualVentingDictList))))
         (set_tile "aspectRatioTwoMsg" 
-                  (strcat "分区二长径比：" (vl-princ-to-string (GetDottedPairValueUtils "secondSectionVentingAspectRatio" (cdr twoSectionVentingAspectRatio))) "  区域：" (car twoSectionVentingAspectRatio) " 轴到 " lastAxis " 轴  计算泄压面积：" (vl-princ-to-string (GetDottedPairValueUtils "secondSectionVentingArea" (cdr twoSectionVentingAspectRatio))) "  分区二实际泄压面积：" (vl-princ-to-string (GetDottedPairValueUtils "secondActualVentingArea" twoSectionActualVentingDictList)) "  分区二实际泄压边长：" (vl-princ-to-string (GetDottedPairValueUtils "secondVentingLength" twoSectionActualVentingDictList))))
+                  (strcat "分区二长径比：" (vl-princ-to-string (GetDottedPairValueUtils "secondSectionVentingAspectRatio" (cdr twoSectionVentingAspectRatio))) "  区域：" (car twoSectionVentingAspectRatio) " 轴（米）到 " lastAxis " 轴  计算泄压面积：" (vl-princ-to-string (GetDottedPairValueUtils "secondSectionVentingArea" (cdr twoSectionVentingAspectRatio))) "  分区二实际泄压面积：" (vl-princ-to-string (GetDottedPairValueUtils "secondActualVentingArea" twoSectionActualVentingDictList)) "  分区二实际泄压边长：" (vl-princ-to-string (GetDottedPairValueUtils "secondVentingLength" twoSectionActualVentingDictList))))
         (set_tile "calculateVentingAreaMsg" (strcat "计算泄压面积之和：" (vl-princ-to-string (+ (GetDottedPairValueUtils "firstSectionVentingArea" (cdr twoSectionVentingAspectRatio)) (GetDottedPairValueUtils "secondSectionVentingArea" (cdr twoSectionVentingAspectRatio))))))
         (set_tile "actualVentingAreaMsg" (strcat "实际泄压面积之和：" (vl-princ-to-string actualVentingArea)))
       )
@@ -293,7 +293,7 @@
   (setq lastPoint (- (cadr xxyyValues) (car xxyyValues)))
   (repeat (- (fix (/ lastPoint 500)) 1)
     ; red hat - dict key must be string 2021-06-30
-    (setq resultList (append resultList (list (cons (vl-princ-to-string (* 500 i)) (* 500 i)))))
+    (setq resultList (append resultList (list (cons (vl-princ-to-string (/ (* 500 i) 1000.0)) (* 500 i)))))
     (setq i (1+ i))
   ) 
   resultList
