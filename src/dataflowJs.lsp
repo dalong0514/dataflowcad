@@ -485,8 +485,14 @@
     ((= ventingSplitMethod "0") (setq splitPoint (+ (car xxyyValues) firstSectionSideLength halfColumnLength)))
     ((= ventingSplitMethod "1") (setq splitPoint (+ (car xxyyValues) firstSectionSideLength)))
   )
-  (setq firstVentingLength (GetJSFirstVentingLength ventingEntityData splitPoint))
-  (setq secondVentingLength (GetJSSecondVentingLength ventingEntityData splitPoint))
+  (cond 
+    ((= ventingSplitMethod "0") (setq firstVentingLength (GetJSFirstVentingLength ventingEntityData splitPoint)))
+    ((= ventingSplitMethod "1") (setq firstVentingLength (+ (GetJSFirstVentingLength ventingEntityData splitPoint) (GetCrossSplitPointVentingWalllength ventingEntityData splitPoint 0))))
+  )
+  (cond 
+    ((= ventingSplitMethod "0") (setq secondVentingLength (GetJSSecondVentingLength ventingEntityData splitPoint)))
+    ((= ventingSplitMethod "1") (setq secondVentingLength (+ (GetJSSecondVentingLength ventingEntityData splitPoint) (GetCrossSplitPointVentingWalllength ventingEntityData splitPoint 1))))
+  )
   (setq firstActualVentingArea (* (atof ventingHeight)  (/ firstVentingLength 1000.0)))
   (setq secondActualVentingArea (* (atof ventingHeight)  (/ secondVentingLength 1000.0)))
   (list 
@@ -587,6 +593,54 @@
         (GetJSFirstVentingWallData ventingEntityData splitPoint)
       ) 
     )
+  )
+)
+
+; 2021-07-02
+(defun GetCrossSplitPointVentingWalllength (ventingEntityData splitPoint splitMode / filteredVentingWallData result)
+  (setq filteredVentingWallData (FilteredCrossSplitVentingWallData ventingEntityData splitPoint))
+  (if (/= filteredVentingWallData nil) 
+    (setq result 
+      (apply '+ 
+        (mapcar '(lambda (x) 
+                   (cond 
+                     ; the key is split Mode
+                     ((= splitMode 0) (- splitPoint (car (vl-sort x '<))))
+                     ((= splitMode 1) (- (car (vl-sort x '>)) splitPoint))
+                   )
+                ) 
+          filteredVentingWallData
+        ) 
+      )
+    )
+    (setq result 0)
+  )
+  (GetHalfNumberUtils result)
+)
+
+; 2021-07-02
+(defun FilteredCrossSplitVentingWallData (ventingEntityData splitPoint /) 
+  (mapcar '(lambda (x) 
+            (list (car (GetDottedPairValueUtils 10 x)) (car (GetDottedPairValueUtils 11 x)))
+          ) 
+    (vl-remove-if-not '(lambda (x) 
+                        (and 
+                          (= (GetDottedPairValueUtils 0 x) "LINE") 
+                          (> (vlax-get-property (vlax-ename->vla-object (GetDottedPairValueUtils -1 x)) 'Length) 150)
+                          (or 
+                            (and 
+                              (< (car (GetDottedPairValueUtils 10 x)) splitPoint)
+                              (> (car (GetDottedPairValueUtils 11 x)) splitPoint)
+                            )
+                            (and 
+                              (> (car (GetDottedPairValueUtils 10 x)) splitPoint)
+                              (< (car (GetDottedPairValueUtils 11 x)) splitPoint)
+                            )
+                          )
+                        )
+                      ) 
+      ventingEntityData
+    ) 
   )
 )
 
