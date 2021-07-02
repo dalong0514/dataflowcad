@@ -110,8 +110,7 @@
 
 ; 2021-06-30
 (defun CalculateVentingAreaByBox (tileName / dcl_id status entityName xxyyValues ventingRatio ventingSplitMethod ventingSplitMode ventingRatioValue ventingHeight 
-                                  ventingUnderBeamHeight ventingDrawScale ventingSplitPoint oneSectionVentingDictList aspectRatio ventingAxisoDictData ventingVertiacalAxisoDictData 
-                                  ventingSpaceDictData ventingRatioStatus twoSectionVentingAspectRatio fristAxis lastAxis ventingEntityData oneSectionActualVentingDictList twoSectionActualVentingDictList actualVentingArea)
+                                  ventingUnderBeamHeight ventingDrawScale ventingSplitPoint splitDistance oneSectionVentingDictList aspectRatio ventingAxisoDictData ventingVertiacalAxisoDictData ventingSpaceDictData ventingRatioStatus twoSectionVentingAspectRatio fristAxis lastAxis ventingEntityData oneSectionActualVentingDictList twoSectionActualVentingDictList actualVentingArea)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\dcl\\" "dataflowJs.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -172,7 +171,7 @@
       (setq ventingDrawScale "0.3")
     ) 
     (if (= nil ventingSplitPoint)
-      (setq ventingSplitPoint "")
+      (setq ventingSplitPoint "0")
     )
     (if (= ventingRatioStatus 1) 
       (progn 
@@ -209,6 +208,7 @@
       (if (= ventingHeight "") 
         (alert "«Îœ» ‰»Î∞Âµ◊≤„∏ﬂ£°")
         (progn 
+          (setq splitDistance (* (atof ventingSplitPoint) 1000))
           (setq ventingRatioValue (atof (nth (atoi ventingRatio) (GetJSVentingRatio))))
           (setq entityName (car (GetEntityNameListBySSUtils (ssget '((0 . "LWPOLYLINE") (8 . "0DataFlow-JSVentingArea"))))))
           ; (148340.0 172840.0 -588785.0 -572785.0) four corner of the venting region
@@ -224,8 +224,12 @@
             (setq ventingRatioStatus 1)
             (progn 
               (cond 
-                ((= ventingSplitMethod "0") (setq twoSectionVentingAspectRatio (GetTwoSectionVentingAspectRatio ventingAxisoDictData oneSectionVentingDictList ventingRatioValue)))
-                ((= ventingSplitMethod "1") (setq twoSectionVentingAspectRatio (GetTwoSectionVentingAspectRatio ventingSpaceDictData oneSectionVentingDictList ventingRatioValue)))
+                ((and (= ventingSplitMethod "0") (= ventingSplitMode "0")) 
+                 (setq twoSectionVentingAspectRatio (GetTwoSectionVentingAspectRatio ventingAxisoDictData oneSectionVentingDictList ventingRatioValue)))
+                ((and (= ventingSplitMethod "1") (= ventingSplitMode "0")) 
+                 (setq twoSectionVentingAspectRatio (GetTwoSectionVentingAspectRatio ventingSpaceDictData oneSectionVentingDictList ventingRatioValue)))
+                ((= ventingSplitMode "1") 
+                 (setq twoSectionVentingAspectRatio (GetTwoSectionVentingAspectRatioByDistance splitDistance oneSectionVentingDictList ventingRatioValue)))
               )
               (if (/= twoSectionVentingAspectRatio nil) 
                 (progn 
@@ -254,7 +258,7 @@
           (if (= ventingRatioStatus 2) 
             (progn 
               (setq twoSectionActualVentingDictList 
-                     (GetJSTwoSectionActualVentingArea entityName ventingEntityData ventingUnderBeamHeight twoSectionVentingAspectRatio xxyyValues ventingSplitMethod))
+                (GetJSTwoSectionActualVentingArea entityName ventingEntityData ventingUnderBeamHeight twoSectionVentingAspectRatio xxyyValues ventingSplitMethod))
               (setq actualVentingArea (GetDottedPairValueUtils "actualVentingArea" twoSectionActualVentingDictList))
             )
           )
@@ -901,6 +905,25 @@
             ) 
       ventingAxisoDictData
     )                 
+  )
+)
+
+; 2021-07-02
+(defun GetTwoSectionVentingAspectRatioByDistance (splitDistance oneSectionVentingDictList ventingRatio / ventingHeight ventingLength ventingWidth) 
+  (setq ventingHeight (GetDottedPairValueUtils "ventingHeight" oneSectionVentingDictList))
+  (setq ventingLength (GetDottedPairValueUtils "ventingLength" oneSectionVentingDictList))
+  (setq ventingWidth (GetDottedPairValueUtils "ventingWidth" oneSectionVentingDictList))
+  (list 
+    (cons (vl-princ-to-string (/ splitDistance 1000) )
+        (list 
+          (cons "firstSectionVentingAspectRatio" (GetVentingAspectRatio ventingHeight splitDistance ventingWidth))
+          (cons "secondSectionVentingAspectRatio" (GetVentingAspectRatio ventingHeight (- ventingLength splitDistance) ventingWidth))
+          (cons "firstSectionVentingArea" (GetJSVentingArea ventingHeight splitDistance ventingWidth ventingRatio))
+          (cons "secondSectionVentingArea" (GetJSVentingArea ventingHeight (- ventingLength splitDistance) ventingWidth ventingRatio))
+          (cons "firstSectionSideLength" splitDistance)
+          (cons "secondSectionSideLength" (- ventingLength splitDistance))
+        )
+    )
   )
 )
 
