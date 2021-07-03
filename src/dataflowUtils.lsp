@@ -13,7 +13,7 @@
   (if (/= (type (vl-catch-all-apply 'ReadDataFromFileUtils (list fileDir))) 'VL-CATCH-ALL-APPLY-ERROR) 
     (mapcar '(lambda (x) (atoi x)) (ReadDataFromFileUtils fileDir))
     ; offline - set the verify date 20210601
-    '(20210601 20210815)
+    '(20210701 20210815)
   ) 
 )
 
@@ -25,16 +25,17 @@
 ; 2021-04-09
 ; very importance for me, convert a function to the parameter for another function
 (defun ExecuteFunctionAfterVerifyDateUtils (functionName argumentList / result)
-  ; (if (and (> *dataflowDate* (car (GetVerifyDataFromServer))) (< *dataflowDate* (cadr (GetVerifyDataFromServer))) )
-  ;   (progn 
-  ;     (setq result (vl-catch-all-apply functionName argumentList))
-  ;     (if (= (type result) 'VL-CATCH-ALL-APPLY-ERROR) 
-  ;       (vl-catch-all-error-message result)
-  ;     )
-  ;   )
-  ;   (alert "用户未注册，请于管理员联系！")
-  ; ) 
-  (setq result (vl-catch-all-apply functionName argumentList))
+  (if (and (> *dataflowDate* (car (GetVerifyDataFromServer))) (< *dataflowDate* (cadr (GetVerifyDataFromServer))) )
+    (progn 
+      (setq result (vl-catch-all-apply functionName argumentList))
+      (if (= (type result) 'VL-CATCH-ALL-APPLY-ERROR) 
+        (vl-catch-all-error-message result)
+      )
+    )
+    (alert "用户未注册，请于管理员联系！")
+  ) 
+  
+  ; (setq result (vl-catch-all-apply functionName argumentList))
 )
 
 ; 2021-04-20
