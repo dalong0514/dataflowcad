@@ -1557,7 +1557,7 @@
 (defun UpdateOneFloorGsBzEquipGraphyPostiontData (equipData oneFloorGsBzLevelAxisoTwoPointData oneFloorGsBzVerticalAxisoTwoPointData /)
   (mapcar '(lambda (x) 
             (mapcar '(lambda (y) 
-                        (if (IsPositionInTheRegionUtils (nth 2 equipData) (car (nth 2 x)) (cadr (nth 2 x)) (car (nth 2 y)) (cadr (nth 2 y))) 
+                        (if (IsPositionInRegionByFourPointUtils (nth 2 equipData) (car (nth 2 x)) (cadr (nth 2 x)) (car (nth 2 y)) (cadr (nth 2 y))) 
                           ; (strcat (nth 1 x) "#" (nth 1 y))
                           ; (cadr equipData)
                           (ModifyMultiplePropertyForOneBlockUtils 

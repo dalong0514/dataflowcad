@@ -725,7 +725,7 @@
               (GetHalfNumberUtils (abs (GetDottedPairValueUtils 41 x)))
             ) 
       (vl-remove-if-not '(lambda (x) 
-                          (IsPositionInTheRegionUtils 
+                          (IsPositionInRegionByFourPointUtils 
                             (GetDottedPairValueUtils 10 x) 
                             leftPoint (+ leftPoint 1000) (- upPoint 1000) upPoint) 
                         ) 
@@ -776,16 +776,100 @@
 )
 
 ; 2021-06-30
+; refactored at 2021-07-04
 (defun GetJSVentingWallLength (ventingEntityData /) 
-  (GetHalfNumberUtils 
-    (apply '+ 
-      (mapcar '(lambda (x) 
-                (vlax-get-property (vlax-ename->vla-object (GetDottedPairValueUtils -1 x)) 'Length)
-              ) 
-        (GetJSVentingWallData ventingEntityData)
-      ) 
+  (- 
+    (GetHalfNumberUtils 
+      (apply '+ 
+        (mapcar '(lambda (x) 
+                  (vlax-get-property (vlax-ename->vla-object (GetDottedPairValueUtils -1 x)) 'Length)
+                ) 
+          (FilterJSVentingWallData ventingEntityData)
+        ) 
+      )
     )
+    (GetRepairJSVentingWallLength ventingEntityData)
   )
+)
+
+; 2021-07-04
+(defun GetRepairJSVentingWallLength (ventingEntityData /) 
+  (apply '+ 
+    (mapcar '(lambda (x) 
+              (car x)
+            ) 
+      (GetRepairJSVentingWallData ventingEntityData)
+    ) 
+  )
+)
+
+; 2021-07-04
+(defun GetRepairJSVentingWallData (ventingEntityData / resultList) 
+  (mapcar '(lambda (x) 
+            (mapcar '(lambda (xx) 
+                      (if (or 
+                            (IsPointOnHorizontialLineUtils (cdr xx) (GetDottedPairValueUtils 10 x) (GetDottedPairValueUtils 11 x)) 
+                            (IsPointOnVerticalLineUtils (cdr xx) (GetDottedPairValueUtils 10 x) (GetDottedPairValueUtils 11 x)) 
+                          )
+                        (if (not (member xx resultList))
+                          (setq resultList (append resultList (list xx)))
+                        )
+                      )
+                    ) 
+              (GetJSVentingColumnLengthPoistionDict ventingEntityData)
+            ) 
+          ) 
+    (FilterJSVentingWallData ventingEntityData)
+  ) 
+  resultList
+  ; (vl-sort resultList '(lambda (x y) (< (car x) (car y)))) ; sort to deduplicate only valid for list
+  ; (apply '+ resultList)
+)
+
+; 2021-07-04
+(defun RepairJSVentingWallLengthV1 (ventingEntityData / resultList) 
+  (mapcar '(lambda (x) 
+            (mapcar '(lambda (xx) 
+                      (if (IsPositionInRegionUtils (GetDottedPairValueUtils 11 x) xx) 
+                        ; the key is 30 redundancy, recover now
+                        ; 冗余度导致双线泄压墙只有一根可以落在柱范围内，所以自处捕获的长度无需除以2
+                        (setq resultList (append resultList (list (GetHalfNumberUtils (- (cadr xx) (car xx) -60)))))
+                      )
+                      (if (IsPositionInRegionUtils (GetDottedPairValueUtils 10 x) xx) 
+                        (setq resultList (append resultList (list (GetHalfNumberUtils (- (cadr xx) (car xx) -60)))))
+                      )
+                    ) 
+              (GetJSVentingColumnRegionList ventingEntityData)
+            ) 
+          ) 
+    (FilterJSVentingWallData ventingEntityData)
+  ) 
+  (apply '+ resultList)
+)
+
+; 2021-07-04
+(defun GetJSVentingColumnRegionList (ventingEntityData / halfColumnLength) 
+  (mapcar '(lambda (x) 
+             ; the key is 30 redundancy, recover later
+            (setq halfColumnLength (- (GetHalfNumberUtils (GetDottedPairValueUtils 41 x)) 30))
+            (list 
+              (- (car (GetDottedPairValueUtils 10 x)) halfColumnLength)
+              (+ (car (GetDottedPairValueUtils 10 x)) halfColumnLength)
+              (- (cadr (GetDottedPairValueUtils 10 x)) halfColumnLength)
+              (+ (cadr (GetDottedPairValueUtils 10 x)) halfColumnLength)
+            )
+          ) 
+    (FilterJSVentingColumnData ventingEntityData)
+  ) 
+)
+
+; 2021-07-04
+(defun GetJSVentingColumnLengthPoistionDict (ventingEntityData /) 
+  (mapcar '(lambda (x) 
+            (cons (GetDottedPairValueUtils 41 x) (GetDottedPairValueUtils 10 x))
+           )
+    (FilterJSVentingColumnData ventingEntityData)
+  ) 
 )
 
 ; 2021-06-30
@@ -809,7 +893,7 @@
 )
 
 ; 2021-06-30
-(defun GetJSVentingWallData (ventingEntityData /)
+(defun FilterJSVentingWallData (ventingEntityData /)
   (vl-remove-if-not '(lambda (x) 
                        (and 
                          (= (GetDottedPairValueUtils 0 x) "LINE") 
@@ -1026,7 +1110,7 @@
 (defun GetJSColumnPositionForVenting (entityName / filterRegion) 
   (setq filterRegion (GetMinMaxXYValuesUtils (GetAllPointForPolyLineUtils (entget entityName))))
   (vl-remove-if-not '(lambda (x) 
-                       (IsPositionInTheRegionUtils x (car filterRegion) (cadr filterRegion) (caddr filterRegion) (cadddr filterRegion)) 
+                       (IsPositionInRegionByFourPointUtils x (car filterRegion) (cadr filterRegion) (caddr filterRegion) (cadddr filterRegion)) 
                      ) 
     (GetAllJSDrawColumnPosition)
   ) 
@@ -1082,7 +1166,7 @@
 (defun GetJSHorizontialAxisPositionForVenting (entityName / filterRegion) 
   (setq filterRegion (GetMinMaxXYValuesUtils (GetAllPointForPolyLineUtils (entget entityName))))
   (vl-remove-if-not '(lambda (x) 
-                       (IsPositionInTheRegionUtils 
+                       (IsPositionInRegionByFourPointUtils 
                          (GetDottedPairValueUtils 10 x) 
                          (car filterRegion) (cadr filterRegion) (cadddr filterRegion) (+ (cadddr filterRegion) 30000)) 
                      ) 
@@ -1096,7 +1180,7 @@
   (setq allJsAxisoData (GetAllJsAxisoData))
   (setq resultList 
     (vl-remove-if-not '(lambda (x) 
-                        (IsPositionInTheRegionUtils 
+                        (IsPositionInRegionByFourPointUtils 
                           (GetDottedPairValueUtils 10 x) 
                           (- (car filterRegion) 30000) (car filterRegion) (caddr filterRegion) (cadddr filterRegion)) 
                       ) 
@@ -1106,7 +1190,7 @@
   (if (= resultList nil) 
     (setq resultList 
       (vl-remove-if-not '(lambda (x) 
-                          (IsPositionInTheRegionUtils 
+                          (IsPositionInRegionByFourPointUtils 
                             (GetDottedPairValueUtils 10 x) 
                             (cadr filterRegion) (+ (cadr filterRegion) 30000) (caddr filterRegion) (cadddr filterRegion)) 
                         ) 

@@ -2355,12 +2355,51 @@
 )
 
 ; 2021-04-09
-(defun IsPositionInTheRegionUtils (position firstX secondX firstY secondY /) 
+; rename at 2021-07-04
+(defun IsPositionInRegionByFourPointUtils (position firstX secondX firstY secondY /) 
   (and 
     (> (car position) firstX) 
     (< (car position) secondX) 
     (> (cadr position) firstY) 
     (< (cadr position) secondY) 
+  )
+)
+
+; 2021-07-04
+(defun IsPositionInRegionUtils (position pointList /) 
+  (and 
+    (> (car position) (car pointList)) 
+    (< (car position) (cadr pointList)) 
+    (> (cadr position) (caddr pointList)) 
+    (< (cadr position) (cadddr pointList)) 
+  )
+)
+
+; 2021-07-04
+(defun IsPointOnHorizontialLineUtils (pointPosition firstEndPosition secondEndPosition /) 
+  (or 
+    (and 
+      (> (car pointPosition) (car firstEndPosition)) 
+      (< (car pointPosition) (car secondEndPosition)) 
+    )
+    (and 
+      (< (car pointPosition) (car firstEndPosition)) 
+      (> (car pointPosition) (car secondEndPosition)) 
+    )
+  )
+)
+
+; 2021-07-04
+(defun IsPointOnVerticalLineUtils (pointPosition firstEndPosition secondEndPosition /) 
+  (or 
+    (and 
+      (> (cadr pointPosition) (cadr firstEndPosition)) 
+      (< (cadr pointPosition) (cadr secondEndPosition)) 
+    )
+    (and 
+      (< (cadr pointPosition) (cadr firstEndPosition)) 
+      (> (cadr pointPosition) (cadr secondEndPosition)) 
+    )
   )
 )
 
