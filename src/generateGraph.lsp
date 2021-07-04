@@ -12,8 +12,8 @@
 
 ; 2021-06-26
 (defun GetJsBzModulesPath (/ result)
-  (setq result "D:\\dataflowcad\\allBlocks\\JsBzBlocks.dwg")
-  ; (setq result "\\\\192.168.1.38\\dataflow\\allBlocks\\JsBzBlocks.dwg")
+  ; (setq result "D:\\dataflowcad\\allBlocks\\JsBzBlocks.dwg")
+  (setq result "\\\\192.168.1.38\\dataflow\\allBlocks\\JsBzBlocks.dwg")
 )
 
 ; 2021-03-03
