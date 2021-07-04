@@ -579,6 +579,7 @@
       (vl-remove-if-not '(lambda (x) 
                           (and 
                             (= (GetDottedPairValueUtils 0 x) "INSERT")
+                            (= (GetDottedPairValueUtils 8 x) "WINDOW")
                             (> (car (GetDottedPairValueUtils 10 x)) splitPoint)
                           ) 
                         ) 
@@ -632,6 +633,7 @@
       (vl-remove-if-not '(lambda (x) 
                           (and 
                             (= (GetDottedPairValueUtils 0 x) "INSERT")
+                            (= (GetDottedPairValueUtils 8 x) "WINDOW")
                             (< (car (GetDottedPairValueUtils 10 x)) splitPoint)
                           ) 
                         ) 
@@ -743,11 +745,11 @@
 
 ; 2021-06-30
 (defun GetJSVentingEntityData ()
-  (GetEntityDataBySSUtils (GetJSVentingSS))
+  (GetEntityDataBySSUtils (GetJScalculateVentingSS))
 )
 
 ; 2021-06-30
-(defun GetJSVentingSS () 
+(defun GetJScalculateVentingSS () 
     (ssget '( 
         (-4 . "<OR")
           (0 . "LINE")
@@ -756,6 +758,7 @@
         (-4 . "<OR")
           (8 . "WALL-MOVE")
           (8 . "WINDOW")
+          (8 . "COLUMN")
         (-4 . "OR>")
       )
     )
@@ -767,7 +770,7 @@
     (mapcar '(lambda (x) 
               (abs (GetDottedPairValueUtils 41 x))
             ) 
-      (GetJSVentingBlockData ventingEntityData)
+      (FilterJSVentingWindowData ventingEntityData)
     ) 
   )
 )
@@ -786,9 +789,20 @@
 )
 
 ; 2021-06-30
-(defun GetJSVentingBlockData (ventingEntityData /)
+(defun FilterJSVentingWindowData (ventingEntityData /)
   (vl-remove-if-not '(lambda (x) 
                        (= (GetDottedPairValueUtils 0 x) "INSERT") 
+                       (= (GetDottedPairValueUtils 8 x) "WINDOW") 
+                     ) 
+    ventingEntityData
+  ) 
+)
+
+; 2021-07-04
+(defun FilterJSVentingColumnData (ventingEntityData /)
+  (vl-remove-if-not '(lambda (x) 
+                       (= (GetDottedPairValueUtils 0 x) "INSERT") 
+                       (= (GetDottedPairValueUtils 8 x) "COLUMN") 
                      ) 
     ventingEntityData
   ) 
@@ -830,7 +844,7 @@
     (mapcar '(lambda (x) 
               (GetDottedPairValueUtils 41 x)
             ) 
-      (GetJSAntiVentingColmnData antiVentingEntityData)
+      (FilterJSVentingColumnData antiVentingEntityData)
     ) 
   )
 )
@@ -844,16 +858,6 @@
       (GetJSAntiVentingWallData antiVentingEntityData xxyyValues)
     ) 
   )
-)
-
-; 2021-06-29
-(defun GetJSAntiVentingColmnData (antiVentingEntityData /)
-  (vl-remove-if-not '(lambda (x) 
-                       ; ready to better
-                       (= (GetDottedPairValueUtils 0 x) "INSERT") 
-                     ) 
-    antiVentingEntityData
-  ) 
 )
 
 ; 2021-06-29
