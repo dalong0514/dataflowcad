@@ -590,15 +590,19 @@
 )
 
 ; 2021-06-30
+; refactored at 2021-07-04
 (defun GetJSSecondVentingWallLength (ventingEntityData splitPoint /) 
-  (GetHalfNumberUtils 
-    (apply '+ 
-      (mapcar '(lambda (x) 
-                (vlax-get-property (vlax-ename->vla-object (GetDottedPairValueUtils -1 x)) 'Length)
-              ) 
-        (GetJSSecondVentingWallData ventingEntityData splitPoint)
-      ) 
+  (- 
+    (GetHalfNumberUtils 
+      (apply '+ 
+        (mapcar '(lambda (x) 
+                  (vlax-get-property (vlax-ename->vla-object (GetDottedPairValueUtils -1 x)) 'Length)
+                ) 
+          (GetJSSecondVentingWallData ventingEntityData splitPoint)
+        ) 
+      )
     )
+    (GetRepairJSSecondVentingWallLength ventingEntityData splitPoint)
   )
 )
 
@@ -644,16 +648,60 @@
 )
 
 ; 2021-06-30
+; refactored at 2021-07-04
 (defun GetJSFirstVentingWallLength (ventingEntityData splitPoint /) 
-  (GetHalfNumberUtils 
-    (apply '+ 
-      (mapcar '(lambda (x) 
-                (vlax-get-property (vlax-ename->vla-object (GetDottedPairValueUtils -1 x)) 'Length)
-              ) 
-        (GetJSFirstVentingWallData ventingEntityData splitPoint)
-      ) 
+  (- 
+    (GetHalfNumberUtils 
+      (apply '+ 
+        (mapcar '(lambda (x) 
+                  (vlax-get-property (vlax-ename->vla-object (GetDottedPairValueUtils -1 x)) 'Length)
+                ) 
+          (GetJSFirstVentingWallData ventingEntityData splitPoint)
+        ) 
+      )
     )
+    (GetRepairJSFirstVentingWallLength ventingEntityData splitPoint)
   )
+)
+
+; 2021-07-04
+(defun GetRepairJSFirstVentingWallLength (ventingEntityData splitPoint /) 
+  (apply '+ 
+    (mapcar '(lambda (x) 
+              (car x)
+            ) 
+      (GetRepairJSFirstVentingWallData ventingEntityData splitPoint)
+    ) 
+  )
+)
+
+; 2021-07-04
+(defun GetRepairJSFirstVentingWallData (ventingEntityData splitPoint /) 
+  (vl-remove-if-not '(lambda (x) 
+            (< (car (cdr x)) splitPoint)
+          ) 
+    (GetRepairJSVentingWallData ventingEntityData)
+  ) 
+)
+
+; 2021-07-04
+(defun GetRepairJSSecondVentingWallLength (ventingEntityData splitPoint /) 
+  (apply '+ 
+    (mapcar '(lambda (x) 
+              (car x)
+            ) 
+      (GetRepairJSSecondVentingWallData ventingEntityData splitPoint)
+    ) 
+  )
+)
+
+; 2021-07-04
+(defun GetRepairJSSecondVentingWallData (ventingEntityData splitPoint /) 
+  (vl-remove-if-not '(lambda (x) 
+            (> (car (cdr x)) splitPoint)
+          ) 
+    (GetRepairJSVentingWallData ventingEntityData)
+  ) 
 )
 
 ; 2021-07-02
