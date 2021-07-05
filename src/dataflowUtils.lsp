@@ -2650,6 +2650,11 @@
   (vlax-dump-object (vlax-ename->vla-object entityName) T)
 )
 
+; 2021-07-05
+(defun VlaGetPolyLineAreaUtils (entityName /)
+  (vlax-get-property (vlax-ename->vla-object entityName) 'Area)
+)
+
 ; 2021-05-12
 ; refactored at 2021-06-29
 (defun c:VlaGetEntityPropertyAndMethodBySelectUtils ()

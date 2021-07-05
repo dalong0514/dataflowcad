@@ -215,6 +215,10 @@
           ; (148340.0 172840.0 -588785.0 -572785.0) four corner of the venting region
           (setq xxyyValues (GetMinMaxXYValuesUtils (GetAllPointForPolyLineUtils (entget entityName))))
           (setq oneSectionVentingDictList (GetJSOneSectionVentingDictList entityName ventingRatioValue ventingHeight))
+          
+          
+          
+          
           (setq aspectRatio (GetDottedPairValueUtils "aspectRatio" oneSectionVentingDictList))
           (setq ventingAxisoDictData (ProcessJSHorizontialVentingAxisoDictData entityName))
           (setq ventingVertiacalAxisoDictData (ProcessJSVerticalVentingAxisoDictData entityName))
@@ -326,20 +330,29 @@
 )
 
 ; 2021-06-30
-(defun GetJSOneSectionVentingDictList (entityName ventingRatioValue ventingHeight / ventingHeightInt ventingRegionLengthWidth ventingLength ventingWidth aspectRatio ventingArea) 
+(defun GetJSOneSectionVentingDictList (entityName ventingRatioValue ventingHeight / 
+                                       ventingHeightInt ventingRegionLengthWidth ventingLength ventingWidth aspectRatio ventingArea ventingPolyLineArea) 
   (setq ventingHeightInt (* (atof ventingHeight) 1000))
   (setq ventingRegionLengthWidth (GetJSVentingRegionLengthWidth entityName))
   (setq ventingLength (car ventingRegionLengthWidth))
   (setq ventingWidth (cadr ventingRegionLengthWidth))
   (setq aspectRatio (GetVentingAspectRatio ventingHeightInt ventingLength ventingWidth))
-  (setq ventingArea (GetJSVentingArea ventingHeightInt ventingLength ventingWidth ventingRatioValue))
+  ; refactored at 2021-07-05
+  (setq ventingPolyLineArea (GetJSPolyLineAreaUtils entityName))
+  (setq ventingArea (GetJSVentingAreaV2 ventingHeightInt ventingPolyLineArea ventingRatioValue))
   (list 
     (cons "ventingLength" ventingLength)
     (cons "ventingWidth" ventingWidth)
     (cons "aspectRatio" aspectRatio)
     (cons "ventingArea" ventingArea)
     (cons "ventingHeight" ventingHeightInt)
+    (cons "ventingPolyLineArea" ventingPolyLineArea)
   )
+)
+
+; 2021-07-05
+(defun GetJSPolyLineAreaUtils (entityName /)
+  (/ (VlaGetPolyLineAreaUtils entityName) 1000000.0)
 )
 
 ; 2021-06-30
@@ -1129,6 +1142,18 @@ refacotr at 2021-07-05
 ; unit test completed
 (defun GetJSVentingArea (ventingHeight ventingLength ventingWidth ventingRatio /) 
   (fix (* 10 ventingRatio (expt (CalculateJSVentingVolume ventingHeight ventingLength ventingWidth) (/ 2.0 3))))
+)
+
+; 2021-07-05
+(defun GetJSVentingAreaV2 (ventingHeight ventingPolyLineArea ventingRatio /) 
+  (fix (* 10 ventingRatio (expt (CalculateJSVentingVolumeV2 ventingHeight ventingPolyLineArea) (/ 2.0 3))))
+)
+
+; 2021-07-05
+; return m3
+(defun CalculateJSVentingVolumeV2 (ventingHeight ventingPolyLineArea /)
+  (setq ventingHeight (/ ventingHeight 1000.0))
+  (* ventingHeight ventingPolyLineArea)
 )
 
 ; 2021-06-30
