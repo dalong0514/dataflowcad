@@ -215,10 +215,6 @@
           ; (148340.0 172840.0 -588785.0 -572785.0) four corner of the venting region
           (setq xxyyValues (GetMinMaxXYValuesUtils (GetAllPointForPolyLineUtils (entget entityName))))
           (setq oneSectionVentingDictList (GetJSOneSectionVentingDictList entityName ventingRatioValue ventingHeight))
-          
-          
-          
-          
           (setq aspectRatio (GetDottedPairValueUtils "aspectRatio" oneSectionVentingDictList))
           (setq ventingAxisoDictData (ProcessJSHorizontialVentingAxisoDictData entityName))
           (setq ventingVertiacalAxisoDictData (ProcessJSVerticalVentingAxisoDictData entityName))
@@ -239,6 +235,8 @@
               (if (/= twoSectionVentingAspectRatio nil) 
                 (progn 
                   (setq twoSectionVentingAspectRatio (nth (/ (length twoSectionVentingAspectRatio) 2) twoSectionVentingAspectRatio))
+                  (setq twoSectionVentingAspectRatio 
+                         (RepairTwoSectionVentingAspectRatio twoSectionVentingAspectRatio entityName xxyyValues (* (atof ventingHeight) 1000) ventingRatioValue))
                   (setq ventingRatioStatus 2)
                 )
                 (setq ventingRatioStatus 3)
@@ -281,6 +279,7 @@
             (cons "ventingLength" (GetDottedPairValueUtils "ventingLength" oneSectionVentingDictList))
             (cons "ventingWidth" (GetDottedPairValueUtils "ventingWidth" oneSectionVentingDictList))
             (cons "ventingArea" (GetDottedPairValueUtils "ventingArea" oneSectionVentingDictList))
+            (cons "ventingVolume" (GetDottedPairValueUtils "ventingVolume" oneSectionVentingDictList))
             (cons "twoSectionVentingAspectRatio" (cdr twoSectionVentingAspectRatio))
             (cons "oneSectionActualVentingDictList" oneSectionActualVentingDictList)
             (cons "twoSectionActualVentingDictList" twoSectionActualVentingDictList)
@@ -331,7 +330,7 @@
 
 ; 2021-06-30
 (defun GetJSOneSectionVentingDictList (entityName ventingRatioValue ventingHeight / 
-                                       ventingHeightInt ventingRegionLengthWidth ventingLength ventingWidth aspectRatio ventingArea ventingPolyLineArea) 
+                                       ventingHeightInt ventingRegionLengthWidth ventingLength ventingWidth aspectRatio ventingArea ventingPolyLineArea ventingVolume) 
   (setq ventingHeightInt (* (atof ventingHeight) 1000))
   (setq ventingRegionLengthWidth (GetJSVentingRegionLengthWidth entityName))
   (setq ventingLength (car ventingRegionLengthWidth))
@@ -340,6 +339,7 @@
   ; refactored at 2021-07-05
   (setq ventingPolyLineArea (GetJSPolyLineAreaUtils entityName))
   (setq ventingArea (GetJSVentingAreaV2 ventingHeightInt ventingPolyLineArea ventingRatioValue))
+  (setq ventingVolume (fix (CalculateJSVentingVolumeV2 ventingHeightInt ventingPolyLineArea)))
   (list 
     (cons "ventingLength" ventingLength)
     (cons "ventingWidth" ventingWidth)
@@ -347,6 +347,7 @@
     (cons "ventingArea" ventingArea)
     (cons "ventingHeight" ventingHeightInt)
     (cons "ventingPolyLineArea" ventingPolyLineArea)
+    (cons "ventingVolume" ventingVolume)
   )
 )
 
@@ -401,22 +402,9 @@
   (setq twoSectionVentingAspectRatio (GetDottedPairValueUtils "twoSectionVentingAspectRatio" infoDictList))
   (setq twoSectionActualVentingDictList (GetDottedPairValueUtils "twoSectionActualVentingDictList" infoDictList))
   (setq actualVentingArea (GetDottedPairValueUtils "actualVentingArea" infoDictList))
-  (setq ventingVolumeOne 
-    (fix 
-      (CalculateJSVentingVolume 
-        (GetDottedPairValueUtils "ventingHeight" infoDictList) 
-        (GetDottedPairValueUtils "firstSectionSideLength" twoSectionVentingAspectRatio)
-        (GetDottedPairValueUtils "ventingWidth" infoDictList))
-    )
-  )
-  (setq ventingVolumeTwo 
-    (fix 
-      (CalculateJSVentingVolume 
-        (GetDottedPairValueUtils "ventingHeight" infoDictList) 
-        (GetDottedPairValueUtils "secondSectionSideLength" twoSectionVentingAspectRatio)
-        (GetDottedPairValueUtils "ventingWidth" infoDictList))
-    )
-  )
+  ; refactored at 2021-07-05
+  (setq ventingVolumeOne (GetDottedPairValueUtils "ventingVolumeOne" twoSectionVentingAspectRatio))
+  (setq ventingVolumeTwo (GetDottedPairValueUtils "ventingVolumeTwo" twoSectionVentingAspectRatio))
   (setq ventingAreaOne (GetDottedPairValueUtils "firstSectionVentingArea" twoSectionVentingAspectRatio))
   (setq ventingAreaTwo (GetDottedPairValueUtils "secondSectionVentingArea" twoSectionVentingAspectRatio))
   ; ((firstVentingLength . 44355.0) (secondVentingLength . 32400.0) (firstActualVentingArea . 230.646) (secondActualVentingArea . 168.48) (actualVentingArea . 399.126))
@@ -457,14 +445,7 @@
 (defun InsertOneSectionJSVentingText (insPt ventingAxisoDictData scaleFactor infoDictList / oneSectionActualVentingDictList ventingTotalLength ventingVolume) 
   (setq oneSectionActualVentingDictList (GetDottedPairValueUtils "oneSectionActualVentingDictList" infoDictList))
   (setq ventingTotalLength (GetDottedPairValueUtils "ventingTotalLength" oneSectionActualVentingDictList))
-  (setq ventingVolume 
-    (fix 
-      (CalculateJSVentingVolume 
-        (GetDottedPairValueUtils "ventingHeight" infoDictList) 
-        (GetDottedPairValueUtils "ventingLength" infoDictList) 
-        (GetDottedPairValueUtils "ventingWidth" infoDictList))
-    )
-  )
+  (setq ventingVolume (GetDottedPairValueUtils "ventingVolume" infoDictList))
   (setq insPt 
     (MoveInsertPositionUtils insPt 0 (- (* (cdr (car (reverse ventingAxisoDictData))) scaleFactor) 1500)) 
   )
@@ -1113,7 +1094,81 @@ refacotr at 2021-07-05
   )
 )
 
+; 2021-07-05
+(defun RepairTwoSectionVentingAspectRatio (twoSectionVentingAspectRatio entityName xxyyValues ventingHeight ventingRatio / 
+                                           axiosKey insPt splitDistance polyLineEntityName lineEntityName twoSectionVentingPolyLineArea firstSectionVentingArea secondSectionVentingArea ventingVolumeOne ventingVolumeTwo)
+  (setq axiosKey (car twoSectionVentingAspectRatio))
+  (setq twoSectionVentingAspectRatio (cdr twoSectionVentingAspectRatio))
+  (setq splitDistance (GetDottedPairValueUtils "firstSectionSideLength" twoSectionVentingAspectRatio))
+  (CADLispCopy (GetSSByOneEntityNameUtils entityName) '(0 0 0) '(200000 0 0))
+  (setq polyLineEntityName (entlast))
+  (setq insPt (MoveInsertPositionUtils (list (car xxyyValues) (cadddr xxyyValues) 0) 200000 0))
+  (GenerateLineUtils (MoveInsertPositionUtils insPt splitDistance 0) (MoveInsertPositionUtils insPt splitDistance -40000) "0")
+  (setq lineEntityName (entlast))
+  (setq twoSectionVentingPolyLineArea (GetTwoSectionVentingPolyLineArea lineEntityName polyLineEntityName))
+  (setq firstSectionVentingArea (GetJSVentingAreaV2 ventingHeight (GetDottedPairValueUtils "firstSectionPolyLineArea" twoSectionVentingPolyLineArea) ventingRatio))
+  (setq secondSectionVentingArea (GetJSVentingAreaV2 ventingHeight (GetDottedPairValueUtils "secondSectionPolyLineArea" twoSectionVentingPolyLineArea) ventingRatio))
+  (setq twoSectionVentingAspectRatio 
+    (subst 
+      (cons "firstSectionVentingArea" firstSectionVentingArea)
+      (assoc "firstSectionVentingArea" twoSectionVentingAspectRatio)
+      twoSectionVentingAspectRatio)   
+  )
+  (setq twoSectionVentingAspectRatio 
+    (subst 
+      (cons "secondSectionVentingArea" secondSectionVentingArea)
+      (assoc "secondSectionVentingArea" twoSectionVentingAspectRatio)
+      twoSectionVentingAspectRatio)   
+  )
+  (setq ventingVolumeOne (fix (CalculateJSVentingVolumeV2 ventingHeight (GetDottedPairValueUtils "firstSectionPolyLineArea" twoSectionVentingPolyLineArea))))
+  (setq ventingVolumeTwo (fix (CalculateJSVentingVolumeV2 ventingHeight (GetDottedPairValueUtils "secondSectionPolyLineArea" twoSectionVentingPolyLineArea))))
+  (setq twoSectionVentingAspectRatio 
+    (append
+      twoSectionVentingAspectRatio
+      (list 
+        (cons "ventingVolumeOne" ventingVolumeOne)
+        (cons "ventingVolumeTwo" ventingVolumeTwo)
+      )
+    )   
+  )
+  (entdel lineEntityName)
+  (entdel polyLineEntityName)
+  (cons axiosKey twoSectionVentingAspectRatio)
+)
+
+; 2021-07-05
+(defun GetTwoSectionVentingPolyLineArea (lineEntityName polyLineEntityName / totalPolyLineArea firstSectionPolyLineArea secondSectionPolyLineArea)
+  (setq totalPolyLineArea (GetJSPolyLineAreaUtils polyLineEntityName))
+  (TrimJSVentingPolyLine lineEntityName polyLineEntityName)
+  (setq secondSectionPolyLineArea (GetJSPolyLineAreaUtils polyLineEntityName))
+  (setq firstSectionPolyLineArea (- totalPolyLineArea secondSectionPolyLineArea))
+  (list 
+    (cons "totalPolyLineArea" totalPolyLineArea) 
+    (cons "firstSectionPolyLineArea" firstSectionPolyLineArea) 
+    (cons "secondSectionPolyLineArea" secondSectionPolyLineArea)
+  )
+)
+
+; 2021-07-05
+(defun TrimJSVentingPolyLine (lineEntityName polyLineEntityName / lineSS polySS)
+  (setq lineSS (GetSSByOneEntityNameUtils lineEntityName))
+  (setq polySS (GetSSByOneEntityNameUtils polyLineEntityName))
+  (CADLispTrim lineSS polySS)
+  
+)
+
+(defun GetSSByOneEntityNameUtils (entityName /)
+  (ssadd entityName (ssadd))
+)
+
+
+
+
+
+
 ; 2021-07-02
+
+
 (defun GetTwoSectionVentingAspectRatioByDistance (splitDistance oneSectionVentingDictList ventingRatio / ventingHeight ventingLength ventingWidth) 
   (setq ventingHeight (GetDottedPairValueUtils "ventingHeight" oneSectionVentingDictList))
   (setq ventingLength (GetDottedPairValueUtils "ventingLength" oneSectionVentingDictList))

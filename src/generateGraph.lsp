@@ -596,8 +596,6 @@
   (InsertRotatedDimensionUtils scaleFactor (* PI 0.5) firstInsPt secondInsPt textInsPt layerName dimensionStyleName textOverrideContent textHeight)
 )
 
-
-
 ; 2021-02-02
 (defun GenerateVerticalTextByPositionAndContent (insPt textContent textLayer textHeight /)
   (entmake (list (cons 0 "TEXT") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 textLayer) (cons 100 "AcDbText") 
@@ -1144,6 +1142,12 @@
 ; the DXFCode of 41 is -1 for mirroring the block
 (defun MirrorBlockUtils (entityName /)
   (SetDXFValueUtils entityName 41 -1)
+)
+
+; 2021-07-05
+(defun ClosePolylineUtils (entityName /)
+  (vla-put-closed (vlax-ename->vla-object entityName) :vlax-true)
+  (princ)
 )
 
 ; Generate CAD Graph Utils Function 

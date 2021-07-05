@@ -2185,6 +2185,11 @@
   (command "_.copy" ss firstPoint "" secondPoint "")
 )
 
+; 2021-07-05
+(defun CADLispTrim (firstSS secondSS /)
+  (command "_.trim" firstSS "" secondSS "")
+)
+
 ; 2021-06-23
 ; (defun CADLispPline ()
 ;   (command "_.pline")
