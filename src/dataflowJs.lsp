@@ -767,7 +767,8 @@
 )
 
 ; 2021-06-30
-(defun GetJSLeftUpColumnLengthForVenting (leftPoint upPoint /) 
+refacotr at 2021-07-05
+(defun GetJSLeftUpColumnLengthForVenting (leftPoint upPoint /)   
   (car 
     (mapcar '(lambda (x) 
               (GetHalfNumberUtils (abs (GetDottedPairValueUtils 41 x)))
@@ -775,7 +776,8 @@
       (vl-remove-if-not '(lambda (x) 
                           (IsPositionInRegionByFourPointUtils 
                             (GetDottedPairValueUtils 10 x) 
-                            leftPoint (+ leftPoint 1000) (- upPoint 1000) upPoint) 
+                            ; red hat, refacotr at 2021-07-05
+                            (- leftPoint 1000) (+ leftPoint 1000) (- upPoint 1000) (+ upPoint 1000)) 
                         ) 
         (GetAllJsColumnData)
       ) 

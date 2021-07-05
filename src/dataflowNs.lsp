@@ -761,7 +761,7 @@
   )
 )
 
-;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------------------------------------------------------------;;;
 ; Generate Air Condition Unit
 ; 2021-06-04
 ; refactored at 2021-06-10
@@ -1274,4 +1274,25 @@
 (defun InsertNsCAHLargeRightInstrumentUnit (insPt blockName systemNum functionCode / ) 
   (GenerateLineUtils insPt (MoveInsertPositionUtils insPt 800 -700) "0DataFlow-NsNT-INSTRUMENT")
   (InsertBlockUtils (MoveInsertPositionUtils insPt 1200 -700) blockName "0DataFlow-NsNT-INSTRUMENT" (list (cons 1 systemNum) (cons 2 functionCode)))
+)
+
+
+;;;-------------------------------------------------------------------------------------------------------------------------------;;;
+; Get Room Area
+
+; 2021-06-26
+(defun c:GenerateNsRoomAreaPL () 
+  (ExecuteFunctionAfterVerifyDateUtils 'GenerateJsVentingAreaPLMacro '())
+)
+
+; 2021-07-05
+(defun GenerateNsRoomAreaPLMacro (/ pipeHeight) 
+  (VerifyAllJsBzSymbol)
+  (vl-cmdf "_.pline")
+  ; the key code for the function
+  (while (= 1 (logand 1 (getvar 'cmdactive)))
+      (vl-cmdf "\\")
+  )
+  (SetGraphLayerUtils (entlast) "0DataFlow-JsVentingArea")
+  (princ "\n泄爆区划分完成！")(princ)
 )
