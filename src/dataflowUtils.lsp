@@ -2193,12 +2193,25 @@
   (command "_.trim" firstSS "" secondSS "")
 )
 
-; 2021-06-23
-; (defun CADLispPline ()
-;   (command "_.pline")
+; 2021-07-06
+(defun CADLispBo (ss ptList /)
+  ; (command "._-Boundary" "_a" "_b" "_n" ssMine "" "" "_non" pt "")
+  ; (command "._-Boundary" "_a" "_b" "_n" ssMine "" "" "_non" pt1 pt2 "")
+  (mapcar '(lambda (x) 
+            (command "._-Boundary" "_a" "_b" "_n" ss "" "" "_non" x "")
+           ) 
+    ptList
+  )
+  (princ)
+)
+
+; (defun c:foo (/ ss pt1 pt2 ptList)
+;   (setq ss (ssget))
+;   (setq pt1 (getpoint "\nPick internal point: "))
+;   (setq pt2 (getpoint "\nPick internal point: "))
+;   (setq ptList (list pt1 pt2))
+;   (CADLispBo ss ptList)
 ; )
-
-
 
 ; Redefining AutoCAD Commands
 ;;;-------------------------------------------------------------------------;;;
