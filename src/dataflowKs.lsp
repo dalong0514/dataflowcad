@@ -94,6 +94,13 @@
 )
 
 ; 2021-03-22
+(defun GetAllNsBlockSSByDataTypeUtils (dataType /) 
+  (cond 
+    ((= dataType "NsCleanAir") (GetAllBlockSSByDataTypeUtils "NsCleanAir"))
+  ) 
+)
+
+; 2021-03-22
 (defun GetKsJsonListDataByDataType (ss dataType /) 
   (cond 
     ((= dataType "KsInstallMaterial") (ExtractBlockPropertyToJsonListStrategy ss dataType))
@@ -386,9 +393,9 @@
         ; refactored at 2021-07-06
         (setq dataType (GetTempExportedDataTypeByindexStrategy dataClass exportDataType))
         ; (setq dataType (GetTempExportedDataTypeByindexStrategy "Ks" exportDataType))
-        (setq ss (GetAllKsBlockSSByDataTypeUtils dataType))
+        (setq ss (GetAllBlockSSByDataTypeStrategyUtils dataClass dataType))
         (setq entityNameList (GetEntityNameListBySSUtils ss))
-        (WriteDataToCSVByEntityNameListStrategy entityNameList dataType)
+        (WriteDataFlowToCSVStrategy dataClass entityNameList dataType)
         (setq exportMsgBtnStatus 1) 
       )
     )
@@ -396,7 +403,7 @@
     (if (= 3 status) 
       (progn 
         (setq dataType (GetTempExportedDataTypeByindexStrategy dataClass exportDataType))
-        (setq importedDataList (CSVStrListToListListUtils (ReadKsDataFromCSVStrategy dataType)))
+        (setq importedDataList (CSVStrListToListListUtils (ReadDataFlowDataFromCSVStrategy dataClass dataType)))
         (setq importMsgBtnStatus 1) 
       )
     )
@@ -405,7 +412,7 @@
       (progn 
         (if (/= importedDataList nil) 
           (progn 
-            (ModifyPropertyValueByEntityHandleUtils importedDataList (GetCSVPropertyNameListStrategy dataType))
+            (ModifyPropertyValueByEntityHandleUtils importedDataList (GetPropertyNameListStrategy dataType))
             (setq modifyMsgBtnStatus 1)
           )
           (setq importMsgBtnStatus 3)

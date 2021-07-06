@@ -1312,7 +1312,7 @@
                       (fix (+ 0.5 (GetNsRoomAreaByRoomPolyLine (GetDottedPairValueUtils 10 (entget x)) roomAreaPLDictList)))))
             )
           ) 
-    (GetEntityNameListBySSUtils (GetAllGsCleanAirSSUtils))
+    (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "NsCleanAir"))
   ) 
   (alert "提取房间面积完成！")
 )
@@ -1354,11 +1354,6 @@
 ; Update Ns Data
 
 ; 2021-07-06
-(defun c:SetNsRoomSystem ()
-  (ExecuteFunctionAfterVerifyDateUtils 'UpdateDataStrategyByBoxUtils '("updateDataFlowDataBox" "Ns"))
-)
-
-; 2021-07-06
 (defun c:UpdateNsData ()
   (ExecuteFunctionAfterVerifyDateUtils 'UpdateDataStrategyByBoxUtils '("updateDataFlowDataBox" "Ns"))
 )
@@ -1370,5 +1365,13 @@
 
 ; 2021-03-24
 (defun GetNsTempExportedDataTypeByindex (index /)
-  (nth (atoi index) '("GsCleanAir"))
+  (nth (atoi index) '("NsCleanAir"))
+)
+
+;;;-------------------------------------------------------------------------------------------------------------------------------;;;
+; Set Ns Room SystemNum
+
+; 2021-07-06
+(defun c:SetNsRoomSystem ()
+  (ExecuteFunctionAfterVerifyDateUtils 'UpdateDataStrategyByBoxUtils '("updateDataFlowDataBox" "Ns"))
 )

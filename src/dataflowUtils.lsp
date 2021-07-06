@@ -643,11 +643,6 @@
   (ssget '((0 . "INSERT") (2 . "FireFightHPipe")))
 )
 
-; 2021-07-06
-(defun GetAllGsCleanAirSSUtils ()
-  (ssget "X" '((0 . "INSERT") (2 . "GsCleanAir")))
-)
-
 ; refactored at 2021-04-15
 (defun GetBlockSSBySelectByDataTypeUtils (dataType / ss) 
   (cond 
@@ -681,6 +676,7 @@
     ((= dataType "PublicPipeUpArrow") (ssget '((0 . "INSERT") (2 . "PublicPipeUpArrow")))) 
     ((= dataType "PublicPipeDownArrow") (ssget '((0 . "INSERT") (2 . "PublicPipeDownArrow"))))
     ((= dataType "GsCleanAir") (ssget '((0 . "INSERT") (2 . "GsCleanAir"))))
+    ((= dataType "NsCleanAir") (ssget '((0 . "INSERT") (2 . "GsCleanAir"))))
     ((= dataType "GsComfortAir") (ssget '((0 . "INSERT") (2 . "GsComfortAir"))))
     ((= dataType "PipeClassChange") (ssget '((0 . "INSERT") (2 . "PipeClassChange"))))
     ((= dataType "Reducer") (ssget '((0 . "INSERT") (2 . "Reducer"))))
@@ -721,6 +717,7 @@
     ((= dataType "PublicPipeUpArrow") (ssget "X" '((0 . "INSERT") (2 . "PublicPipeUpArrow")))) 
     ((= dataType "PublicPipeDownArrow") (ssget "X" '((0 . "INSERT") (2 . "PublicPipeDownArrow"))))
     ((= dataType "GsCleanAir") (ssget "X" '((0 . "INSERT") (2 . "GsCleanAir"))))
+    ((= dataType "NsCleanAir") (ssget "X" '((0 . "INSERT") (2 . "GsCleanAir"))))
     ((= dataType "GsComfortAir") (ssget "X" '((0 . "INSERT") (2 . "GsComfortAir"))))
     ((= dataType "PipeClassChange") (ssget "X" '((0 . "INSERT") (2 . "PipeClassChange"))))
     ((= dataType "Reducer") (ssget "X" '((0 . "INSERT") (2 . "Reducer"))))
@@ -3016,6 +3013,7 @@
   (cond 
     ((= classType "Gs") (GetAllBlockSSByDataTypeUtils dataType))
     ((= classType "Ks") (GetAllKsBlockSSByDataTypeUtils dataType))
+    ((= classType "Ns") (GetAllNsBlockSSByDataTypeUtils dataType))
   ) 
 )
 

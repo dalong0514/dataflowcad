@@ -49,15 +49,7 @@
     ((= dataType "GsCleanAir") (GetGsCleanAirPropertyNameList))
     ((= dataType "GsComfortAir") (GetGsComfortAirPropertyNameList))
     ((= dataType "KsInstallMaterial") (GetKsInstallMaterialPropertyNameList))
-    ; default List
-    (T '("TAG"))
-  ) 
-)
-
-; 2021-03-24
-(defun GetCSVPropertyNameListStrategy (dataType /) 
-  (cond 
-    ((= dataType "KsInstallMaterial") (GetCSVKsInstallMaterialPropertyNameList))
+    ((= dataType "NsCleanAir") (GetGsCleanAirPropertyNameList))
     ; default List
     (T '("TAG"))
   ) 
@@ -77,6 +69,7 @@
     ((= dataType "Centrifuge") (GetCentrifugePropertyChNameList))
     ((= dataType "CustomEquip") (GetCustomEquipPropertyChNameList))
     ((= dataType "GsCleanAir") (GetGsCleanAirPropertyChNameList))
+    ((= dataType "NsCleanAir") (GetGsCleanAirPropertyChNameList))
     ((= dataType "GsComfortAir") (GetGsComfortAirPropertyChNameList))
   ) 
 )
@@ -181,6 +174,17 @@
   '("房间名称" "房间编号" "洁净等级" "房间吊顶高度" "房间面积" "室压" "房间人数" "房间夏季温度" "房间冬季温度" "温度控制精度" "房间夏季相对湿度" "房间冬季相对湿度" "湿度控制精度" "职业暴露等级" "电热设备功率" "电热设备有无排风" "电热设备有无保温" "电动设备功率" "电动设备效率" "其他设备表面面积" "其他设备表面温度" "敞开水面表面面积" "敞开水面表面温度" "设备是否连续排风" "设备排风量" "是否连续排湿除味" "排湿除味排风率" "除尘排风粉尘量" "除尘排风排风率" "是否事故排风" "事故通风介质" "层流保护区域" "层流保护面积" "监控温度" "监控相对湿度" "监控压差" "备注" "系统编号" "所在楼层" "是否防爆区")
 )
 
+; 2021-07-06
+(defun GetGsCleanAirPropertyChNameStirng ()
+  (apply 'strcat 
+    (mapcar '(lambda (x) 
+              (strcat x ",")
+            ) 
+      (GetGsCleanAirPropertyChNameList)
+    ) 
+  )
+)
+
 ; 2021-06-25
 (defun GetGsComfortAirPropertyNameList () 
   (mapcar '(lambda (x) (strcase x)) 
@@ -218,16 +222,11 @@
   '("VERSION" "TAG" "GSBZTYPE" "SPECIES" "VOLUME" "FLOORHEIGHT" "XPOSITION" "YPOSITION" "EMPTYWEIGHT" "STATICLOAD" "DYNAMICLOAD" "SUPPORMETHOD" "HOLEMETHOD" "BASEMETHOD" "COMMENT" "OPTION")
 )
 
-; 2021-03-22
-(defun GetKsInstallMaterialPropertyNameList ()
-  '("STANDARDNUM" "MATERIALTYPE" "SPECIFICATION" "MATERIAL" "NUM" "MULTIPLE" "KSTYPE" "COMMENT")
-)
-
 ; 2021-03-24
-(defun GetCSVKsInstallMaterialPropertyNameList ()
-  '("SERIALID" "STANDARDNUM" "MATERIALTYPE" "SPECIFICATION" "MATERIAL" "NUM" "MULTIPLE" "KSTYPE" "COMMENT")
+; refactored at 2021-07-06
+(defun GetKsInstallMaterialPropertyNameList ()
+  '("SERIALID" "STANDARDNUM" "MATERIALTYPE" "SPECIFICATION" "MATERIAL" "NUM" "MULTIPLE" "KSTYPE" "OPTION")
 )
-
 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
