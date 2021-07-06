@@ -643,6 +643,11 @@
   (ssget '((0 . "INSERT") (2 . "FireFightHPipe")))
 )
 
+; 2021-07-06
+(defun GetAllGsCleanAirSSUtils ()
+  (ssget "X" '((0 . "INSERT") (2 . "GsCleanAir")))
+)
+
 ; refactored at 2021-04-15
 (defun GetBlockSSBySelectByDataTypeUtils (dataType / ss) 
   (cond 

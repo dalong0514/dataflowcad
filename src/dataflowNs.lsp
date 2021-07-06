@@ -1280,18 +1280,13 @@
 ;;;-------------------------------------------------------------------------------------------------------------------------------;;;
 ; Get Room Area
 
-; 2021-06-26
-(defun c:ExtractNsRoomArea () 
-  (ExecuteFunctionAfterVerifyDateUtils 'GenerateJsVentingAreaPLMacro '())
-)
-
-; 2021-06-26
+; 2021-07-06
 (defun c:GenerateNsRoomAreaPL () 
   (ExecuteFunctionAfterVerifyDateUtils 'GenerateNsRoomAreaPLMacro '())
 )
 
-; 2021-07-05
-(defun GenerateNsRoomAreaPLMacro (/ pipeHeight) 
+; 2021-07-06
+(defun GenerateNsRoomAreaPLMacro () 
   (VerifyNsBzLayerByName "0DataFlow-NsRoomArea")
   (vl-cmdf "_.pline")
   ; the key code for the function
@@ -1302,3 +1297,55 @@
   (princ "\n绘制房间完成！")
 )
 
+; 2021-07-06
+(defun c:ExtractNsRoomArea () 
+  (ExecuteFunctionAfterVerifyDateUtils 'ExtractNsRoomAreaMacro '())
+)
+
+; 2021-07-06
+(defun ExtractNsRoomAreaMacro (/ roomAreaPLDictList) 
+  (setq roomAreaPLDictList (GetMinMaxXYValuesListForAreaPL))
+  (mapcar '(lambda (x) 
+            (ModifyMultiplePropertyForOneBlockUtils x 
+              (list "ROOM_AREA")
+              (list (vl-princ-to-string 
+                      (fix (+ 0.5 (GetNsRoomAreaByRoomPolyLine (GetDottedPairValueUtils 10 (entget x)) roomAreaPLDictList)))))
+            )
+          ) 
+    (GetEntityNameListBySSUtils (GetAllGsCleanAirSSUtils))
+  ) 
+  (alert "提取房间面积完成！")
+)
+
+; 2021-07-06
+(defun GetNsRoomAreaByRoomPolyLine (blockPoint roomAreaPLDictList / roomPLEntityName result) 
+  (setq roomPLEntityName 
+    (car 
+      (car 
+        (vl-remove-if-not '(lambda (x) 
+                  (IsPositionInRegionUtils blockPoint (cdr x))
+                ) 
+          roomAreaPLDictList
+        ) 
+      )
+    )
+  )
+  (if (/= roomPLEntityName nil) 
+    (setq result (/ (VlaGetPolyLineAreaUtils roomPLEntityName) 1000000.0))
+    (setq result 0)
+  )
+)
+
+; 2021-07-06
+(defun GetMinMaxXYValuesListForAreaPL () 
+  (mapcar '(lambda (x) 
+            (cons x (GetMinMaxXYValuesUtils (GetAllPointForPolyLineUtils (entget x))))
+          ) 
+    (GetEntityNameListBySSUtils (GetAllNSRoomAreaPLSS))
+  ) 
+)
+
+; 2021-07-06
+(defun GetAllNSRoomAreaPLSS () 
+  (ssget "X" '((0 . "LWPOLYLINE") (8 . "0DataFlow-NsRoomArea")))
+)
