@@ -1281,18 +1281,24 @@
 ; Get Room Area
 
 ; 2021-06-26
-(defun c:GenerateNsRoomAreaPL () 
+(defun c:ExtractNsRoomArea () 
   (ExecuteFunctionAfterVerifyDateUtils 'GenerateJsVentingAreaPLMacro '())
+)
+
+; 2021-06-26
+(defun c:GenerateNsRoomAreaPL () 
+  (ExecuteFunctionAfterVerifyDateUtils 'GenerateNsRoomAreaPLMacro '())
 )
 
 ; 2021-07-05
 (defun GenerateNsRoomAreaPLMacro (/ pipeHeight) 
-  (VerifyAllJsBzSymbol)
+  (VerifyNsBzLayerByName "0DataFlow-NsRoomArea")
   (vl-cmdf "_.pline")
   ; the key code for the function
   (while (= 1 (logand 1 (getvar 'cmdactive)))
       (vl-cmdf "\\")
   )
-  (SetGraphLayerUtils (entlast) "0DataFlow-JsVentingArea")
-  (princ "\n泄爆区划分完成！")(princ)
+  (SetGraphLayerUtils (entlast) "0DataFlow-NsRoomArea")
+  (princ "\n绘制房间完成！")
 )
+

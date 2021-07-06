@@ -34,7 +34,8 @@
     )
     (alert "用户未注册，请于管理员联系！")
   ) 
-  
+  ; remove the 'nil' output in the end - refactored at 2021-07-06
+  (princ)
   ; (setq result (vl-catch-all-apply functionName argumentList))
 )
 
