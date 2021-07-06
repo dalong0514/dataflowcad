@@ -208,6 +208,14 @@
   (ReadDataFromCSVTrimFirstRowUtils fileDir)
 )
 
+; 2021-07-06
+(defun ReadNsDataFromCSVStrategy (dataType / fileDir)
+  (cond 
+    ((= dataType "NsCleanAir") (setq fileDir "D:\\dataflowcad\\nsdata\\nsCleanAir.csv"))
+  )
+  (ReadDataFromCSVTrimFirstRowUtils fileDir)
+)
+
 ; Read and Write Gs Data
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;

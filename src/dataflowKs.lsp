@@ -306,13 +306,14 @@
 
 ; refactored at 2021-04-09
 (defun c:UpdateKsData ()
-  (ExecuteFunctionAfterVerifyDateUtils 'UpdatekDataStrategyByBoxUtils '("updateDataFlowDataBox" "Ks"))
+  (ExecuteFunctionAfterVerifyDateUtils 'UpdateDataStrategyByBoxUtils '("updateDataFlowDataBox" "Ks"))
 )
 
 ; 2021-03-24
 (defun GetTempExportedDataTypeChNameListStrategy (dataClass /) 
   (cond 
     ((= dataClass "Ks") (GetKsTempExportedDataTypeChNameList))
+    ((= dataClass "Ns") (GetNsTempExportedDataTypeChNameList))
   )
 )
 
@@ -320,6 +321,7 @@
 (defun GetTempExportedDataTypeByindexStrategy (dataClass index /) 
   (cond 
     ((= dataClass "Ks") (GetKsTempExportedDataTypeByindex index))
+    ((= dataClass "Ns") (GetNsTempExportedDataTypeByindex index))
   ) 
 )
 
@@ -333,7 +335,7 @@
   (nth (atoi index) '("KsInstallMaterial"))
 )
 
-(defun UpdatekDataStrategyByBoxUtils (tileName dataClass / dcl_id exportDataType dataType importedDataList selectedName propertyNameList status ss confirmList entityNameList exportMsgBtnStatus importMsgBtnStatus comfirmMsgBtnStatus modifyMsgBtnStatus)
+(defun UpdateDataStrategyByBoxUtils (tileName dataClass / dcl_id exportDataType dataType importedDataList selectedName propertyNameList status ss confirmList entityNameList exportMsgBtnStatus importMsgBtnStatus comfirmMsgBtnStatus modifyMsgBtnStatus)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\dcl\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -381,7 +383,9 @@
     ; export data button
     (if (= 2 (setq status (start_dialog)))
       (progn 
-        (setq dataType (GetTempExportedDataTypeByindexStrategy "Ks" exportDataType))
+        ; refactored at 2021-07-06
+        (setq dataType (GetTempExportedDataTypeByindexStrategy dataClass exportDataType))
+        ; (setq dataType (GetTempExportedDataTypeByindexStrategy "Ks" exportDataType))
         (setq ss (GetAllKsBlockSSByDataTypeUtils dataType))
         (setq entityNameList (GetEntityNameListBySSUtils ss))
         (WriteDataToCSVByEntityNameListStrategy entityNameList dataType)
@@ -391,7 +395,7 @@
     ; import data button
     (if (= 3 status) 
       (progn 
-        (setq dataType (GetTempExportedDataTypeByindexStrategy "Ks" exportDataType))
+        (setq dataType (GetTempExportedDataTypeByindexStrategy dataClass exportDataType))
         (setq importedDataList (CSVStrListToListListUtils (ReadKsDataFromCSVStrategy dataType)))
         (setq importMsgBtnStatus 1) 
       )

@@ -1349,3 +1349,26 @@
 (defun GetAllNSRoomAreaPLSS () 
   (ssget "X" '((0 . "LWPOLYLINE") (8 . "0DataFlow-NsRoomArea")))
 )
+
+;;;-------------------------------------------------------------------------------------------------------------------------------;;;
+; Update Ns Data
+
+; 2021-07-06
+(defun c:SetNsRoomSystem ()
+  (ExecuteFunctionAfterVerifyDateUtils 'UpdateDataStrategyByBoxUtils '("updateDataFlowDataBox" "Ns"))
+)
+
+; 2021-07-06
+(defun c:UpdateNsData ()
+  (ExecuteFunctionAfterVerifyDateUtils 'UpdateDataStrategyByBoxUtils '("updateDataFlowDataBox" "Ns"))
+)
+
+; 2021-03-24
+(defun GetNsTempExportedDataTypeChNameList ()
+  '("½à¾»¿Õµò·¿¼ä")
+)
+
+; 2021-03-24
+(defun GetNsTempExportedDataTypeByindex (index /)
+  (nth (atoi index) '("GsCleanAir"))
+)
