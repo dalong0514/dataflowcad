@@ -142,11 +142,12 @@
 )
 
 ; 2021-03-24
+; refactored at 2021-07-07
 (defun WriteKsInstallMaterialDataToCSVByEntityNameListUtils (entityNameList / fileDir firstRow propertyNameList)
   (setq fileDir "D:\\dataflowcad\\ksdata\\installMaterialData.csv")
-  (setq firstRow "数据ID,序号,图号及标准号,名称,材料规格,材质,数量,倍数,仪表类型,备注,")
+  (setq firstRow (strcat "数据ID," (GetKsInstallMaterialPropertyChNameStirng)))
   ; the sort of  property must be consistency with the sort of block in CAD
-  (setq propertyNameList (GetCSVKsInstallMaterialPropertyNameList))
+  (setq propertyNameList (GetKsInstallMaterialPropertyNameList))
   (WriteDataToCSVByEntityNameListUtils entityNameList fileDir firstRow propertyNameList "0")
 )
 

@@ -225,7 +225,23 @@
 ; 2021-03-24
 ; refactored at 2021-07-06
 (defun GetKsInstallMaterialPropertyNameList ()
-  '("SERIALID" "STANDARDNUM" "MATERIALTYPE" "SPECIFICATION" "MATERIAL" "NUM" "MULTIPLE" "KSTYPE" "OPTION")
+  '("SERIALID" "STANDARDNUM" "MATERIALTYPE" "SPECIFICATION" "MATERIAL" "NUM" "MULTIPLE" "KSTYPE" "COMMENT" "OPTION")
+)
+
+; 2021-07-07
+(defun GetKsInstallMaterialPropertyChNameList ()
+  '("序号" "图号及标准号" "名称" "材料规格" "材质" "数量" "倍数" "仪表类型" "备注" "备用属性")
+)
+
+; 2021-07-07
+(defun GetKsInstallMaterialPropertyChNameStirng ()
+  (apply 'strcat 
+    (mapcar '(lambda (x) 
+              (strcat x ",")
+            ) 
+      (GetKsInstallMaterialPropertyChNameList)
+    ) 
+  )
 )
 
 ;;;-------------------------------------------------------------------------;;;
