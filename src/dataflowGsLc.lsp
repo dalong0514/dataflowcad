@@ -1121,26 +1121,33 @@
 )
 
 ; refactored at 2021-04-09
-(defun GenerateJoinDrawArrowMacro (/ pipeSS pipeData insPt entityNameList)
+; refactored at 2021-07-07
+(defun GenerateJoinDrawArrowMacro (/ pipeEntityNameList insPt insPtList pipeData)
   (VerifyGsLcBlockByName "JoinDrawArrowTo")
   (VerifyGsLcBlockByName "JoinDrawArrowFrom")
   (VerifyGsLcLayerByName "0DataFlow-GsLcJoinDrawArrow")
   (prompt "\n选择生成接图箭头的边界管道：")
-  (setq pipeSS (GetPipeSSBySelectUtils))
-  (setq pipeData (GetAllPropertyDictForOneBlock (car (GetEntityNameListBySSUtils pipeSS))))
+  (setq pipeEntityNameList (GetEntityNameListBySSUtils (GetPipeSSBySelectUtils)))
   (setq insPt (getpoint "\n选取接图箭头的插入点："))
-  (GenerateJoinDrawArrowToElement insPt 
-    ; add the Equip ChName - 2021-03-30
-    (strcat "去" (cdr (assoc "to" pipeData)) (GetEquipChNameByEquipTag (cdr (assoc "to" pipeData)))) 
-    (GetRelatedEquipDrawNum (GetRelatedEquipDataByTag (cdr (assoc "to" pipeData))))
-    (cdr (assoc "entityhandle" pipeData)) 
-  )
-  (GenerateJoinDrawArrowFromElement (MoveInsertPositionUtils insPt 20 0)
-    (cdr (assoc "pipenum" pipeData)) 
-    ; add the Equip ChName - 2021-03-30
-    (strcat "自" (cdr (assoc "from" pipeData)) (GetEquipChNameByEquipTag (cdr (assoc "from" pipeData))))
-    (GetRelatedEquipDrawNum (GetRelatedEquipDataByTag (cdr (assoc "from" pipeData))))
-    (cdr (assoc "entityhandle" pipeData)) 
+  (setq insPtList (GetInsertPtListByYMoveUtils insPt (GenerateSortedNumByList pipeEntityNameList 0) -11))
+  (mapcar '(lambda (x y) 
+             (setq pipeData (GetAllPropertyDictForOneBlock x))
+              (GenerateJoinDrawArrowToElement y 
+                ; add the Equip ChName - 2021-03-30
+                (strcat "去" (cdr (assoc "to" pipeData)) (GetEquipChNameByEquipTag (cdr (assoc "to" pipeData)))) 
+                (GetRelatedEquipDrawNum (GetRelatedEquipDataByTag (cdr (assoc "to" pipeData))))
+                (cdr (assoc "entityhandle" pipeData)) 
+              )
+              (GenerateJoinDrawArrowFromElement (MoveInsertPositionUtils y 20 0)
+                (cdr (assoc "pipenum" pipeData)) 
+                ; add the Equip ChName - 2021-03-30
+                (strcat "自" (cdr (assoc "from" pipeData)) (GetEquipChNameByEquipTag (cdr (assoc "from" pipeData))))
+                (GetRelatedEquipDrawNum (GetRelatedEquipDataByTag (cdr (assoc "from" pipeData))))
+                (cdr (assoc "entityhandle" pipeData)) 
+              )
+          ) 
+    pipeEntityNameList
+    insPtList
   ) 
   (princ)
 )
