@@ -535,14 +535,13 @@
 )
 
 ; refactored at 2021-04-09
+; refactored at 2021-07-07
 (defun InsertBlockPipeArrowLeftMacro (/ ss insPt) 
   (prompt "\n选取设备块和管道块：")
   (setq ss (GetBlockSSBySelectByDataTypeUtils "EquipmentAndPipe"))
   (setq insPt (getpoint "\n选取水平管道插入点："))
   (InsertGsLcBlockPipe insPt "PipeArrowLeft")
-  (ModifyMultiplePropertyForOneBlockUtils (entlast) 
-    '("PIPENUM" "VERSION" "SUBSTANCE" "TEMP" "PRESSURE" "FROM")  
-    (GetGsLcBlockPipePropertyValueList ss)) 
+  (ModifyBlockPropertyByDictDataUtils (entlast) (GetGsLcBlockPipePropertyDictList ss)) 
 )
 
 ; refactored at 2021-04-09
@@ -551,14 +550,35 @@
 )
 
 ; refactored at 2021-04-09
+; refactored at 2021-07-07
 (defun InsertBlockPipeArrowUpMacro (/ ss insPt) 
   (prompt "\n选取设备块和管道块：")
   (setq ss (GetBlockSSBySelectByDataTypeUtils "EquipmentAndPipe")) 
   (setq insPt (getpoint "\n选取垂直管道插入点："))
   (InsertGsLcBlockPipe insPt "PipeArrowUp")
-  (ModifyMultiplePropertyForOneBlockUtils (entlast) 
-    '("PIPENUM" "VERSION" "SUBSTANCE" "TEMP" "PRESSURE" "FROM")  
-    (GetGsLcBlockPipePropertyValueList ss)) 
+  (ModifyBlockPropertyByDictDataUtils (entlast) (GetGsLcBlockPipePropertyDictList ss)) 
+)
+
+; 2021-03-11
+; refactored at 2021-07-07
+(defun GetGsLcBlockPipePropertyDictList (ss / sourceData equipmentData pipeData resultList)
+  (setq sourceData (GetBlockAllPropertyDictListUtils (GetEntityNameListBySSUtils ss)))
+  (setq equipmentData (car (FilterBlockEquipmentDataUtils sourceData)))
+  (setq pipeData (car (FilterBlockPipeDataUtils sourceData)))
+  (if (and (/= equipmentData nil)  (/= pipeData nil))
+    (setq resultList 
+      (list 
+        (cons "VERSION" (GetDottedPairValueUtils "entityhandle" equipmentData))
+        (cons "PIPENUM" (GetDottedPairValueUtils "pipenum" pipeData))
+        (cons "SUBSTANCE" (GetDottedPairValueUtils "substance" equipmentData))
+        (cons "TEMP" (GetDottedPairValueUtils "temp" equipmentData))
+        (cons "PRESSURE" (GetDottedPairValueUtils "pressure" equipmentData))
+        (cons "FROM" (GetDottedPairValueUtils "tag" equipmentData))
+      )
+    ) 
+    (alert "必须选择一个设备和一个管道数据！")
+  )
+  resultList
 )
 
 ; refactored at 2021-03-11
@@ -566,24 +586,6 @@
   (VerifyGsLcBlockByName blockName)
   (VerifyGsLcPipeLayer)
   (InsertBlockByNoPropertyUtils insPt blockName "0DataFlow-GsLcPipe")
-)
-
-; 2021-03-11
-(defun GetGsLcBlockPipePropertyValueList (ss / sourceData equipmentData pipeData resultList)
-  (setq sourceData (GetBlockAllPropertyDictListUtils (GetEntityNameListBySSUtils ss)))
-  (setq equipmentData (FilterBlockEquipmentDataUtils sourceData))
-  (setq pipeData (FilterBlockPipeDataUtils sourceData))
-  (if (/= equipmentData nil) 
-      (mapcar '(lambda (x) 
-                (setq resultList (append resultList (list (cdr (assoc x (car equipmentData))))))
-              ) 
-        '("entityhandle" "substance" "temp" "pressure" "tag")
-      ) 
-  )
-  (if (/= pipeData nil) 
-    (setq resultList (cons (cdr (assoc "pipenum" (car pipeData))) resultList))
-  ) 
-  resultList
 )
 
 ; 2021-03-07
