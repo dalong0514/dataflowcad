@@ -769,11 +769,12 @@
 )
 
 ; 2021-05-08
+; refactored at 2021-07-07
 (defun ModifyGsLcPipeEndData (entityNameList endData /)
   (mapcar '(lambda (x) 
             (ModifyMultiplePropertyForOneBlockUtils x 
-              (list "VERSION" "TO") 
-              (list (car endData) (cdr endData)))
+              (list "TO") 
+              (list (cdr endData)))
           ) 
     entityNameList
   )
