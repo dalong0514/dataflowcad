@@ -1280,6 +1280,15 @@
 ;;;-------------------------------------------------------------------------------------------------------------------------------;;;
 ; Get Room Area
 
+;; 2021-07-07
+(defun AutoGenerateNsRoomAreaPL (/ ss pt1 pt2 ptList)
+  (setq ss (ssget))
+  (setq pt1 (getpoint "\nPick internal point: "))
+  (setq pt2 (getpoint "\nPick internal point: "))
+  (setq ptList (list pt1 pt2))
+  (CADLispBo ss ptList)
+)
+
 ; 2021-07-06
 (defun c:GenerateNsRoomAreaPL () 
   (ExecuteFunctionAfterVerifyDateUtils 'GenerateNsRoomAreaPLMacro '())

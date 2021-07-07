@@ -2205,14 +2205,6 @@
   (princ)
 )
 
-; (defun c:foo (/ ss pt1 pt2 ptList)
-;   (setq ss (ssget))
-;   (setq pt1 (getpoint "\nPick internal point: "))
-;   (setq pt2 (getpoint "\nPick internal point: "))
-;   (setq ptList (list pt1 pt2))
-;   (CADLispBo ss ptList)
-; )
-
 ; Redefining AutoCAD Commands
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
