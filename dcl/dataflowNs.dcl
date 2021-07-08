@@ -34,7 +34,7 @@ SetNsRoomSystemBox : dialog {
   label = "天正设计流数据一体化工艺V0.3———划分房间系统"; 
   key = "SetNsRoomSystem";
   : boxed_radio_column {
-    width = 80;
+    width = 50;
     : edit_box {
       label = "填写系统编号：";
       edit_width = 20;
@@ -43,11 +43,24 @@ SetNsRoomSystemBox : dialog {
       alignment = centered; 
     }
     : spacer { height = 1; }
-    : text {
-      key = "sysColorMsg";
-      label = "系统颜色：";
-    } 
-    : spacer { height = 1; }
+    : row { 
+      : text {
+        key = "sysColorMsg";
+        label = "系统颜色：";
+      } 
+      : image {
+        key = "sysColor";
+        height = 1.0;
+        width = 1.0;
+        // color = 3;
+      }
+      : button { 
+        key = "btnSelectColor"; 
+        label = "选择颜色"; 
+        is_default = "true"; 
+      } 
+    }
+    : spacer { width = 1; } 
     : text {
       key = "exportBtnMsg";
       label = "导出数据状态：";
@@ -59,12 +72,6 @@ SetNsRoomSystemBox : dialog {
       : button { 
         key = "btnSelect"; 
         label = "选取"; 
-        is_default = "true"; 
-      } 
-      : spacer { width = 1; } 
-      : button { 
-        key = "btnAllSelect"; 
-        label = "全选"; 
         is_default = "true"; 
       } 
       : spacer { width = 1; } 

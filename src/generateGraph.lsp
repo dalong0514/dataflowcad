@@ -33,8 +33,8 @@
 ; 2021-03-17
 ; refactored at 2021-04-22
 (defun GetNsBzModulesPath (/ result)
-  ; (setq result "D:\\dataflowcad\\allBlocks\\NsBzBlocks.dwg")
-  (setq result "\\\\192.168.1.38\\dataflow\\allBlocks\\NsBzBlocks.dwg")
+  (setq result "D:\\dataflowcad\\allBlocks\\NsBzBlocks.dwg")
+  ; (setq result "\\\\192.168.1.38\\dataflow\\allBlocks\\NsBzBlocks.dwg")
 )
 
 ; 2021-05-31
@@ -414,6 +414,11 @@
 ; refactored at 2021-06-26
 (defun SetPLGraphHeightUtils (entityName pipeHeight /)
   (SetDXFValueUtils entityName 38 pipeHeight)
+)
+
+; 2021-07-08
+(defun SetGraphColorUtils (entityName colorID /)
+  (SetDXFValueUtils entityName 62 colorID)
 )
 
 ; 2021-06-26

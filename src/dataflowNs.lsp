@@ -1359,6 +1359,11 @@
   (ssget "X" '((0 . "LWPOLYLINE") (8 . "0DataFlow-NsRoomArea")))
 )
 
+; 2021-07-06
+(defun GetNSRoomAreaPLSSBySelect () 
+  (ssget '((0 . "LWPOLYLINE") (8 . "0DataFlow-NsRoomArea")))
+)
+
 ;;;-------------------------------------------------------------------------------------------------------------------------------;;;
 ; Update Ns Data
 
@@ -1386,7 +1391,7 @@
 )
 
 ; 2021-07-08
-(defun SetNsRoomSystemByBox (tileName / dcl_id status roomSysNum msgStatus ss sslen)
+(defun SetNsRoomSystemByBox (tileName / dcl_id status roomSysNum msgStatus sysColor ss sslen)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\dcl\\" "dataflowNs.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -1395,20 +1400,28 @@
     ; Add the actions to the button
     (action_tile "cancel" "(done_dialog 0)")
     (action_tile "btnSelect" "(done_dialog 2)")
-    (action_tile "btnAllSelect" "(done_dialog 3)") 
+    (action_tile "btnSelectColor" "(done_dialog 3)") 
     (action_tile "btnExportData" "(done_dialog 4)") 
     (mode_tile "roomSysNum" 2)
     (action_tile "roomSysNum" "(setq roomSysNum $value)")
-    
-    
-    ; init the default value list box
     (if (= nil roomSysNum)
       (setq roomSysNum "")
     )
-    (if (= msgStatus 1)
-      (set_tile "sysColorMsg" "系统颜色：")
+    (if (= nil sysColor)
+      (setq sysColor 4)
     )
-    (if (= msgStatus 2)
+    (progn
+      (start_image "sysColor")
+      (fill_image
+        0
+        0
+        (dimx_tile "sysColor")
+        (dimy_tile "sysColor")
+        sysColor
+      )
+      (end_image)
+    )
+    (if (= msgStatus 1)
       (set_tile "sysColorMsg" "导出数据状态：已完成")
     )
     (if (/= sslen nil)
@@ -1418,14 +1431,14 @@
     ; select button
     (if (= 2 (setq status (start_dialog))) 
       (progn 
-        (princ "da")
+        (setq ss (GetBlockSSBySelectByDataTypeUtils "NsCleanAir"))
+        (setq sslen (sslength ss)) 
+        (SetNsRoomAreaPLColor ss sysColor)
       )
     )
     ; All select button
     (if (= 3 status) 
-      (progn 
-        (princ "da")
-      )
+      (setq sysColor (acad_colordlg 0))
     ) 
     ; export data button
     (if (= 4 status) 
@@ -1436,4 +1449,13 @@
   )
   (unload_dialog dcl_id)
   (princ)
+)
+
+; 2021-07-06
+(defun SetNsRoomAreaPLColor (ss colorId /) 
+  (mapcar '(lambda (x) 
+            (SetGraphColorUtils x colorId)
+          ) 
+    (GetEntityNameListBySSUtils ss)
+  ) 
 )
