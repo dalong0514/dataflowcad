@@ -1662,8 +1662,8 @@
     allBsGCTSupportDictData bsGCTProjectDictData allPressureElementDictData allStandardDictData allRequirementDictData allOtherRequestDictData)
   (InsertAllBsGCTReactor (MoveInsertPositionUtils insPt 0 -20000) 
     allBsGCTSupportDictData bsGCTProjectDictData allPressureElementDictData allStandardDictData allRequirementDictData allOtherRequestDictData)
-  (InsertAllBsGCTColumn (MoveInsertPositionUtils insPt 0 -30000) 
-    allBsGCTSupportDictData bsGCTProjectDictData allPressureElementDictData allStandardDictData allRequirementDictData allOtherRequestDictData)
+  ; (InsertAllBsGCTColumn (MoveInsertPositionUtils insPt 0 -30000) 
+  ;   allBsGCTSupportDictData bsGCTProjectDictData allPressureElementDictData allStandardDictData allRequirementDictData allOtherRequestDictData)
 )
 
 ; 2021-04-21
