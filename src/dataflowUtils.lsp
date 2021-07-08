@@ -46,10 +46,11 @@
 )
 
 ; 2021-07-07
+;; refactored at 2021-07-08
 (defun RemoveEducationJSMacro ()
   (arxload "D:\\dataflowcad\\remove-education.arx")
   (dictremove (namedobjdict) "ACAD_DGNLINESTYLECOMP")
-  (PurgeAllUtils)
+  ; (PurgeAllUtils)
 )
 
 ; 2021-04-20
