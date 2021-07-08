@@ -1380,7 +1380,60 @@
 ;;;-------------------------------------------------------------------------------------------------------------------------------;;;
 ; Set Ns Room SystemNum
 
-; 2021-07-06
+; 2021-07-08
 (defun c:SetNsRoomSystem ()
-  (ExecuteFunctionAfterVerifyDateUtils 'UpdateDataStrategyByBoxUtils '("updateDataFlowDataBox" "Ns"))
+  (ExecuteFunctionAfterVerifyDateUtils 'SetNsRoomSystemByBox '("SetNsRoomSystemBox"))
+)
+
+; 2021-07-08
+(defun SetNsRoomSystemByBox (tileName / dcl_id status roomSysNum msgStatus ss sslen)
+  (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\dcl\\" "dataflowNs.dcl")))
+  (setq status 2)
+  (while (>= status 2)
+    ; Create the dialog box
+    (new_dialog tileName dcl_id "" '(-1 -1))
+    ; Add the actions to the button
+    (action_tile "cancel" "(done_dialog 0)")
+    (action_tile "btnSelect" "(done_dialog 2)")
+    (action_tile "btnAllSelect" "(done_dialog 3)") 
+    (action_tile "btnExportData" "(done_dialog 4)") 
+    (mode_tile "roomSysNum" 2)
+    (action_tile "roomSysNum" "(setq roomSysNum $value)")
+    
+    
+    ; init the default value list box
+    (if (= nil roomSysNum)
+      (setq roomSysNum "")
+    )
+    (if (= msgStatus 1)
+      (set_tile "sysColorMsg" "系统颜色：")
+    )
+    (if (= msgStatus 2)
+      (set_tile "sysColorMsg" "导出数据状态：已完成")
+    )
+    (if (/= sslen nil)
+      (set_tile "exportDataNumMsg" (strcat "导出数据数量： " (rtos sslen)))
+    )
+    (set_tile "roomSysNum" roomSysNum)
+    ; select button
+    (if (= 2 (setq status (start_dialog))) 
+      (progn 
+        (princ "da")
+      )
+    )
+    ; All select button
+    (if (= 3 status) 
+      (progn 
+        (princ "da")
+      )
+    ) 
+    ; export data button
+    (if (= 4 status) 
+      (progn 
+        (princ "da")
+      )
+    ) 
+  )
+  (unload_dialog dcl_id)
+  (princ)
 )

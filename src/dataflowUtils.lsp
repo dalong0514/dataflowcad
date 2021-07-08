@@ -39,6 +39,12 @@
   (setq result (vl-catch-all-apply functionName argumentList))
 )
 
+; 2021-04-20
+(defun c:PurgeAllDataMacro () 
+  (ExecuteFunctionAfterVerifyDateUtils 'PurgeAllUtils '())
+  (princ "\n清理完成！")(princ)
+)
+
 ; 2021-07-07
 (defun c:RemoveEducationJS () 
   (ExecuteFunctionAfterVerifyDateUtils 'RemoveEducationJSMacro '())
