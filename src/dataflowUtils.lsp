@@ -1121,6 +1121,19 @@
   )
 )
 
+; 2021-07-08
+(defun GetPropertyNameListForOneBlock (entityName / entityData entx resultList)
+  (setq entityData (entget entityName))
+  ; get the property information
+  (setq entx (entget (entnext (cdr (assoc -1 entityData)))))
+  (while (= "ATTRIB" (cdr (assoc 0 entx)))
+    (setq resultList (append resultList (list (cdr (assoc 2 entx)))))
+    ; get the next property information
+    (setq entx (entget (entnext (cdr (assoc -1 entx)))))
+  )
+  resultList
+)
+
 (defun GetPropertyValueListForOneBlockByPropertyNameList (entityName propertyNameList / allPropertyValue resultList) 
   (setq allPropertyValue (GetAllPropertyDictForOneBlock entityName))
   ; add the entityhandle property default

@@ -1161,6 +1161,7 @@
   (alert index)(princ)
 )
 
+; refactored at 2021-07-08
 (defun modifyCommonBlockPropertyMacro (tileName / dcl_id status ss sslen entityNameList importedDataList entityHandle propertyNameList exportMsgBtnStatus importMsgBtnStatus modifyMsgBtnStatus blockName)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\dcl\\" "dataflow.dcl")))
   (setq status 2)
@@ -1228,8 +1229,9 @@
         (if (/= importedDataList nil) 
           (progn 
             (setq entityHandle (car (car importedDataList)))
-            (setq propertyNameList (GetBlockPropertyNameListByEntityNameUtils (handent entityHandle)))
-            (ModifyPropertyValueByEntityHandleUtils importedDataList (GetUpperCaseForListUtils (cdr propertyNameList)))
+            ; refactored at 2021-07-08
+            (setq propertyNameList (GetPropertyNameListForOneBlock (handent entityHandle)))
+            (ModifyPropertyValueByEntityHandleUtils importedDataList propertyNameList)
             (setq modifyMsgBtnStatus 1)
           )
           (setq importMsgBtnStatus 2)
