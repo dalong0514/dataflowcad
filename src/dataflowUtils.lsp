@@ -696,6 +696,7 @@
     ((= dataType "FireFightHPipe") (ssget '((0 . "INSERT") (2 . "FireFightHPipe")))) 
     ((= dataType "GsBzEquip") (ssget '((0 . "INSERT") (2 . "GsBz*"))))
     ((= dataType "EquipTag") (ssget '((0 . "INSERT") (2 . "EquipTag"))))
+    ((= dataType "GsToEquipRequire") (GetInstrumentPipeEquipSSBySelectUtils))
   ) 
 )
 
@@ -737,6 +738,7 @@
     ((= dataType "FireFightPipe") (ssget "X" '((0 . "INSERT") (2 . "FireFightHPipe")))) 
     ((= dataType "GsBzEquip") (ssget "X" '((0 . "INSERT") (2 . "GsBz*"))))
     ((= dataType "EquipTag") (ssget "X" '((0 . "INSERT") (2 . "EquipTag")))) 
+    ((= dataType "GsToEquipRequire") (GetAllInstrumentPipeEquipSSUtils))
   )
 )
 
@@ -3161,6 +3163,7 @@
     ((= dataType "GsCleanAir") "GsCleanAir")
     ((= dataType "GsComfortAir") "GsComfortAir")
     ((= dataType "KsInstallMaterial") "KsInstallMaterial")
+    ((= dataType "GsToEquipRequire") "GsToEquipRequire")
   )  
 )
 
