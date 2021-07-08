@@ -62,8 +62,8 @@ SetNsRoomSystemBox : dialog {
     }
     : spacer { width = 1; } 
     : text {
-      key = "exportBtnMsg";
-      label = "导出数据状态：";
+      key = "selectNumMsg";
+      label = "选择的数据数量：";
     } 
     : spacer { height = 4; }
     : row { 
@@ -75,12 +75,6 @@ SetNsRoomSystemBox : dialog {
         is_default = "true"; 
       } 
       : spacer { width = 1; } 
-      : button { 
-        key = "btnExportData"; 
-        label = "导出"; 
-        is_default = "true"; 
-      } 
-      : spacer { width = 1; }  
       cancel_button; 
     }
     : spacer { height = 3; } 

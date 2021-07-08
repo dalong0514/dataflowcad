@@ -1401,7 +1401,6 @@
     (action_tile "cancel" "(done_dialog 0)")
     (action_tile "btnSelect" "(done_dialog 2)")
     (action_tile "btnSelectColor" "(done_dialog 3)") 
-    (action_tile "btnExportData" "(done_dialog 4)") 
     (mode_tile "roomSysNum" 2)
     (action_tile "roomSysNum" "(setq roomSysNum $value)")
     (if (= nil roomSysNum)
@@ -1421,11 +1420,8 @@
       )
       (end_image)
     )
-    (if (= msgStatus 1)
-      (set_tile "sysColorMsg" "导出数据状态：已完成")
-    )
     (if (/= sslen nil)
-      (set_tile "exportDataNumMsg" (strcat "导出数据数量： " (rtos sslen)))
+      (set_tile "selectNumMsg" (strcat "选择的数据数量： " (rtos sslen)))
     )
     (set_tile "roomSysNum" roomSysNum)
     ; select button
@@ -1433,28 +1429,23 @@
       (progn 
         (setq ss (GetBlockSSBySelectByDataTypeUtils "NsCleanAir"))
         (setq sslen (sslength ss)) 
-        (SetNsRoomAreaPLColor ss sysColor)
+        (SetNsRoomSystemNumAndColor ss sysColor roomSysNum)
       )
     )
-    ; All select button
+    ; color select button
     (if (= 3 status) 
       (setq sysColor (acad_colordlg 0))
-    ) 
-    ; export data button
-    (if (= 4 status) 
-      (progn 
-        (princ "da")
-      )
-    ) 
+    )  
   )
   (unload_dialog dcl_id)
   (princ)
 )
 
-; 2021-07-06
-(defun SetNsRoomAreaPLColor (ss colorId /) 
+; 2021-07-08
+(defun SetNsRoomSystemNumAndColor (ss colorId roomSysNum /) 
   (mapcar '(lambda (x) 
-            (SetGraphColorUtils x colorId)
+            (ModifyOneBlockColorUtils x colorId)
+            (ModifyOnePropertyForOneBlockUtils x "SYSTEM_NUM" roomSysNum)
           ) 
     (GetEntityNameListBySSUtils ss)
   ) 

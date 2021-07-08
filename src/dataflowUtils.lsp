@@ -1286,6 +1286,50 @@
   (mapcar '(lambda (x y) (strcat x y)) firstList secondList)
 )
 
+; 2021-07-08
+(defun ModifyBlockColorBySSUtils (SS C / K BLK CBL CBL2 EE ACL ALY NLY NCL NEWE)
+  (SETQ K 0)
+  (WHILE (< K (SSLENGTH SS))
+    (setq CBL (tblsearch "BLOCK" (CDR (ASSOC 2 (ENTGET (SETQ BLK (SSNAME SS K)))))))
+    (SETQ CBL2 (CDR (ASSOC -2 CBL)))
+    (WHILE (BOUNDP 'CBL2)
+      (SETQ EE (ENTGET CBL2))
+      ;Update layer value
+        (SETQ NCL (CONS 62 C))
+      (SETQ ACL (ASSOC 62 EE))
+      (IF (= ACL nil)
+        (SETQ NEWE (APPEND EE (LIST NCL)))
+        (SETQ NEWE (SUBST NCL ACL EE))
+      );if
+      (ENTMOD NEWE)
+      (SETQ CBL2 (ENTNEXT CBL2))
+    );end while
+    (ENTUPD BLK)
+    (SETQ K (1+ K))
+  );end while
+  (princ)
+);end updblkcl
+
+; 2021-07-08
+(defun ModifyOneBlockColorUtils (entityName C / BLK CBL CBL2 EE ACL ALY NLY NCL NEWE)
+  (setq CBL (tblsearch "BLOCK" (CDR (ASSOC 2 (ENTGET (SETQ BLK entityName))))))
+  (SETQ CBL2 (CDR (ASSOC -2 CBL)))
+  (WHILE (BOUNDP 'CBL2)
+    (SETQ EE (ENTGET CBL2))
+    ;Update layer value
+    (SETQ NCL (CONS 62 C))
+    (SETQ ACL (ASSOC 62 EE))
+    (IF (= ACL nil)
+      (SETQ NEWE (APPEND EE (LIST NCL)))
+      (SETQ NEWE (SUBST NCL ACL EE))
+    );if
+    (ENTMOD NEWE)
+    (SETQ CBL2 (ENTNEXT CBL2))
+  );end while
+  (ENTUPD BLK)
+  (princ)
+);end updblkcl
+
 (defun ModifyOnePropertyForOneBlockUtils (entityName modifiedPropertyName newPropertyValue / entityData entx propertyName)
   (setq entityData (entget entityName))
   ; get attribute data of block
