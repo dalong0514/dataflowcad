@@ -1330,6 +1330,27 @@
   (entupd entityName)
 );end updblkcl
 
+; 2021-07-09
+(defun GetOneBlockColorUtils (entityName C / BLK CBL CBL2 EE ACL ALY NLY NCL NEWE)
+  (setq CBL (tblsearch "BLOCK" (GetDottedPairValueUtils 2 (entget entityName))))
+  (SETQ CBL2 (CDR (ASSOC -2 CBL)))
+  (WHILE (BOUNDP 'CBL2)
+    (SETQ EE (ENTGET CBL2))
+    ;Update layer value
+    (SETQ NCL (CONS 62 C))
+    (SETQ ACL (ASSOC 62 EE))
+    (IF (= ACL nil)
+      (SETQ NEWE (APPEND EE (LIST NCL)))
+      (SETQ NEWE (SUBST NCL ACL EE))
+    );if
+    (ENTMOD NEWE)
+    (SETQ CBL2 (ENTNEXT CBL2))
+  );end while
+);end updblkcl
+
+
+
+
 (defun ModifyOnePropertyForOneBlockUtils (entityName modifiedPropertyName newPropertyValue / entityData entx propertyName)
   (setq entityData (entget entityName))
   ; get attribute data of block
