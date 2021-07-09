@@ -1407,7 +1407,7 @@
       (setq roomSysNum "")
     )
     (if (= nil sysColor)
-      (setq sysColor 4)
+      (setq sysColor 7)
     )
     (progn
       (start_image "sysColor")

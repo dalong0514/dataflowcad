@@ -1311,8 +1311,9 @@
 );end updblkcl
 
 ; 2021-07-08
+; refactored at 2021-07-09
 (defun ModifyOneBlockColorUtils (entityName C / BLK CBL CBL2 EE ACL ALY NLY NCL NEWE)
-  (setq CBL (tblsearch "BLOCK" (CDR (ASSOC 2 (ENTGET (SETQ BLK entityName))))))
+  (setq CBL (tblsearch "BLOCK" (GetDottedPairValueUtils 2 (entget entityName))))
   (SETQ CBL2 (CDR (ASSOC -2 CBL)))
   (WHILE (BOUNDP 'CBL2)
     (SETQ EE (ENTGET CBL2))
@@ -1326,8 +1327,7 @@
     (ENTMOD NEWE)
     (SETQ CBL2 (ENTNEXT CBL2))
   );end while
-  (ENTUPD BLK)
-  (princ)
+  (entupd entityName)
 );end updblkcl
 
 (defun ModifyOnePropertyForOneBlockUtils (entityName modifiedPropertyName newPropertyValue / entityData entx propertyName)
