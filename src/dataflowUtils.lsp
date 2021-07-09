@@ -2037,6 +2037,22 @@
   resultList
 )
 
+; 2021-07-09
+(defun GetSSByOneEntityNameUtils (entityName /)
+  (ssadd entityName (ssadd))
+)
+
+; 2021-07-09
+(defun GetSSByEntityNameListUtils (entityNameList / result)
+  (setq result (ssadd))
+  (mapcar '(lambda (x) 
+             (setq result (ssadd x result))
+           ) 
+    entityNameList 
+  )
+  result
+)
+
 ; Utils Function 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;

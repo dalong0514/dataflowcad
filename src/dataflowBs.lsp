@@ -376,7 +376,7 @@
     (setq i (1+ i))
   ) 
   ; bind equipTag to Xdata - 2021-05-13
-  (GeneratePolyLineUtils 
+  (GenerateTwoPointPolyLineUtils 
     insPt
     (MoveInsertPositionUtils insPt 0 (GetNegativeNumberUtils (* (* drawFrameScale 8) (length tankPressureElementList)))) 
     ; the lineWith is 0.72 for 1:1 scale
@@ -432,13 +432,13 @@
     (setq i (1+ i))
   ) 
   ; bind equipTag to Xdata - 2021-05-13
-  (GeneratePolyLineUtils 
+  (GenerateTwoPointPolyLineUtils 
     (MoveInsertPositionUtils insPt 0 (GetNegativeNumberUtils (* (* drawFrameScale 8) (length oneBsGCTTankNozzleDictData)))) 
     (MoveInsertPositionUtils insPt (* drawFrameScale 180) (GetNegativeNumberUtils (* (* drawFrameScale 8) (length oneBsGCTTankNozzleDictData)))) 
     ; the lineWith is 0.72 for 1:1 scale
     "0DataFlow-BsGCT" (* drawFrameScale 0.72))
   (BindDataFlowXDataToObjectUtils (entlast) dataType)
-  (GeneratePolyLineUtils 
+  (GenerateTwoPointPolyLineUtils 
     insPt
     (MoveInsertPositionUtils insPt 0 (GetNegativeNumberUtils (* (* drawFrameScale 8) (length oneBsGCTTankNozzleDictData)))) 
     "0DataFlow-BsGCT" (* drawFrameScale 0.72)) 

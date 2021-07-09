@@ -1468,3 +1468,33 @@
     (GetEntityNameListBySSUtils ss)
   ) 
 )
+
+; 2021-07-06
+(defun c:InsertAllNsRoomColorBox () 
+  (ExecuteFunctionAfterVerifyDateUtils 'InsertAllNsRoomColorBoxMacro '())
+)
+
+; 2021-07-09
+(defun InsertAllNsRoomColorBoxMacro () 
+  (VerifyNsBzLayerByName "0DataFlow-NsRoomSystemBox")
+  (mapcar '(lambda (x) 
+            (InsertNsRoomColorBox x)
+          ) 
+    (GetEntityPositionListByEntityNameListUtils (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "NsCleanAir")))
+  ) 
+  (alert "供划分系统用的辅助方框生成完成！")
+)
+
+; 2021-07-09
+(defun InsertNsRoomColorBox (insPt / ss) 
+  (setq ss (ssadd))
+  (GenerateTwoPointPolyLineUtils (MoveInsertPositionUtils insPt -400 250) (MoveInsertPositionUtils insPt -400 -250) "0DataFlow-NsRoomSystemBox" 40)
+  (setq ss (ssadd (entlast) ss))
+  (GenerateTwoPointPolyLineUtils (MoveInsertPositionUtils insPt 400 250) (MoveInsertPositionUtils insPt 400 -250) "0DataFlow-NsRoomSystemBox" 40)
+  (setq ss (ssadd (entlast) ss))
+  (GenerateTwoPointPolyLineUtils (MoveInsertPositionUtils insPt -400 250) (MoveInsertPositionUtils insPt 400 250) "0DataFlow-NsRoomSystemBox" 40)
+  (setq ss (ssadd (entlast) ss))
+  (GenerateTwoPointPolyLineUtils (MoveInsertPositionUtils insPt -400 -250) (MoveInsertPositionUtils insPt 400 -250) "0DataFlow-NsRoomSystemBox" 40)
+  (setq ss (ssadd (entlast) ss))
+  (JoinPolylineUtils ss)
+)

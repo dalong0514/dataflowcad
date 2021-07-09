@@ -1157,18 +1157,7 @@ refacotr at 2021-07-05
   
 )
 
-(defun GetSSByOneEntityNameUtils (entityName /)
-  (ssadd entityName (ssadd))
-)
-
-
-
-
-
-
 ; 2021-07-02
-
-
 (defun GetTwoSectionVentingAspectRatioByDistance (splitDistance oneSectionVentingDictList ventingRatio / ventingHeight ventingLength ventingWidth) 
   (setq ventingHeight (GetDottedPairValueUtils "ventingHeight" oneSectionVentingDictList))
   (setq ventingLength (GetDottedPairValueUtils "ventingLength" oneSectionVentingDictList))

@@ -776,7 +776,7 @@
 
 ; 2021-04-18
 ; dxf color (cons 62 3) - green
-(defun GeneratePolyLineUtils (firstPt secondPt entityLayer lineWidth /)
+(defun GenerateTwoPointPolyLineUtils (firstPt secondPt entityLayer lineWidth /)
   (entmake 
     (list (cons 0 "LWPOLYLINE") (cons 100 "AcDbEntity") (cons 67 0) (cons 8 entityLayer) (cons 100 "AcDbPolyline") 
           (cons 90 2) (cons 70 0) (cons 43 lineWidth) (cons 38 0.0) (cons 39 0.0) 
@@ -784,6 +784,53 @@
           (cons 10 secondPt) (cons 40 lineWidth) (cons 41 lineWidth) (cons 42 0.0) (cons 91 0) 
           (cons 210 '(0.0 0.0 1.0))
     ))
+  (princ)
+)
+
+; 2021-07-09
+; fail to achieve, ready to refactor
+(defun GeneratePolyLineUtils (insPtList entityLayer lineWidth / dataList) 
+  (setq dataList 
+    (append (GetPolyLineBasicElement entityLayer lineWidth) (apply 'list insPtList))
+  )
+  (entmake dataList)
+)
+
+; 2021-07-09
+(defun GetPolyLineBasicElement (entityLayer lineWidth /)
+  (entmake 
+    (list (cons 0 "LWPOLYLINE") (cons 100 "AcDbEntity") (cons 67 0) (cons 8 entityLayer) (cons 100 "AcDbPolyline") 
+          (cons 90 2) (cons 70 0) (cons 43 lineWidth) (cons 38 0.0) (cons 39 0.0) 
+          (cons 210 '(0.0 0.0 1.0))
+    ))
+)
+
+(defun AddPolyline (/ acadObj doc points)
+  ;; This example creates a polyline in model space.
+  (setq acadObj (vlax-get-acad-object))
+  (setq doc (vla-get-ActiveDocument acadObj))
+  ;; Define the 2D polyline points
+  (setq points (vlax-make-safearray vlax-vbDouble '(0 . 14)))
+  (vlax-safearray-fill points '(1 1 0
+                                1 2 0
+                                2 2 0
+                                3 2 0
+                                4 4 0
+                                )
+  )
+  ;; Create a lightweight Polyline object in model space
+  (setq modelSpace (vla-get-ModelSpace doc))
+  (setq plineObj (vla-AddPolyline modelSpace points))
+)
+
+;; Polyline Join  -  Lee Mac
+;; Attempts to join all lines, arcs and polylines in a selection.
+(defun JoinPolylineUtils (ss / var val) 
+  (setq var '(cmdecho peditaccept)
+        val  (mapcar 'getvar var)
+  )
+  (mapcar '(lambda (a b c) (if a (setvar b c))) val var '(0 1))
+  (command "_.pedit" "_m" ss "" "_j" "" "")
   (princ)
 )
 
