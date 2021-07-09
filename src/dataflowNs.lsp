@@ -1455,7 +1455,9 @@
   (setq entityName (car (GetEntityNameListBySSUtils (GetBlockSSBySelectByDataTypeUtils "NsCleanAir"))))
   (list 
     (cons "roomSysNum" (VlaGetBlockPropertyValueUtils entityName "SYSTEM_NUM"))
-    (cons "sysColor" (GetOneBlockColorUtils entityName))
+    ; (cons "sysColor" (GetOneBlockColorUtils entityName))
+    ; refactored at 2021-07-09
+    (cons "sysColor" (GetNsRoomColorBoxColor entityName))
   )
 )
 
@@ -1468,6 +1470,30 @@
     (GetEntityNameListBySSUtils ss)
   ) 
 )
+
+; 2021-07-08
+(defun GetNsRoomColorBoxColor (entityName / roomInsPt roomColorBoxData) 
+  (setq roomInsPt (GetEntityPositionByEntityNameUtils entityName))
+  (setq roomColorBoxList 
+    (vl-remove-if-not '(lambda (x) 
+              (IsPositionInRegionUtils roomInsPt (GetMinMaxXYValuesUtils (GetAllPointForPolyLineUtils (entget x))))
+            ) 
+      (GetEntityNameListBySSUtils (GetAllNsRoomColorBoxSS))
+    ) 
+  )
+  (if (/= roomColorBoxList nil) 
+    (setq colorId (GetDottedPairValueUtils 62 (entget (car roomColorBoxList))))
+    (setq colorId 0)
+  )
+)
+
+; 2021-03-16
+(defun GetAllNsRoomColorBoxSS ()
+  (ssget "X" (list (cons 0 "LWPOLYLINE") (cons 8 "0DataFlow-NsRoomSystemBox")))
+)
+
+;;;-------------------------------------------------------------------------------------------------------------------------------;;;
+; InsertAllNsRoomColorBox
 
 ; 2021-07-06
 (defun c:InsertAllNsRoomColorBox () 
