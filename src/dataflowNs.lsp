@@ -1391,7 +1391,7 @@
 )
 
 ; 2021-07-08
-(defun SetNsRoomSystemByBox (tileName / dcl_id status roomSysNum msgStatus sysColor ss sslen)
+(defun SetNsRoomSystemByBox (tileName / dcl_id status roomSysNumColorDictList roomSysNum sysColor msgStatus ss sslen)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\dcl\\" "dataflowNs.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -1439,7 +1439,11 @@
     )  
     ; extract sysNum button
     (if (= 4 status) 
-      (setq roomSysNum (GetNsRoomSystemNumBySelect))
+      (progn 
+        (setq roomSysNumColorDictList (GetNsRoomSystemNumAndColor))
+        (setq roomSysNum (GetDottedPairValueUtils "roomSysNum" roomSysNumColorDictList))
+        (setq sysColor (GetDottedPairValueUtils "sysColor" roomSysNumColorDictList))
+      )
     ) 
   )
   (unload_dialog dcl_id)
@@ -1447,9 +1451,12 @@
 )
 
 ; 2021-07-09
-(defun GetNsRoomSystemNumBySelect (/ entityName) 
+(defun GetNsRoomSystemNumAndColor (/ entityName) 
   (setq entityName (car (GetEntityNameListBySSUtils (GetBlockSSBySelectByDataTypeUtils "NsCleanAir"))))
-  (VlaGetBlockPropertyValueUtils entityName "SYSTEM_NUM")
+  (list 
+    (cons "roomSysNum" (VlaGetBlockPropertyValueUtils entityName "SYSTEM_NUM"))
+    (cons "sysColor" (GetOneBlockColorUtils entityName))
+  )
 )
 
 ; 2021-07-08
