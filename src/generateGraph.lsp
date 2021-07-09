@@ -33,8 +33,8 @@
 ; 2021-03-17
 ; refactored at 2021-04-22
 (defun GetNsBzModulesPath (/ result)
-  ; (setq result "D:\\dataflowcad\\allBlocks\\NsBzBlocks.dwg")
-  (setq result "\\\\192.168.1.38\\dataflow\\allBlocks\\NsBzBlocks.dwg")
+  (setq result "D:\\dataflowcad\\allBlocks\\NsBzBlocks.dwg")
+;   (setq result "\\\\192.168.1.38\\dataflow\\allBlocks\\NsBzBlocks.dwg")
 )
 
 ; 2021-05-31
