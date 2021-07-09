@@ -951,7 +951,7 @@
                             "kg/h"
                           ))
   (InsertBlockUtils (MoveInsertPositionUtils insPt 550 2500) "NsCAH-AHU-Pipe-LS" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
-  (SetDynamicBlockPropertyValueUtils 
+  (VlaSetDynamicBlockPropertyValueUtils 
     (GetLastVlaObjectUtils) 
     (list (cons "PIPELENGTH" 3100))
   ) 
@@ -978,7 +978,7 @@
                             "kg/h"
                           ))
   (InsertBlockUtils (MoveInsertPositionUtils insPt 250 2500) "NsCAH-AHU-Pipe-LS" "0DataFlow-NsNT-AHU" (list (cons 1 systemNum)))
-  (SetDynamicBlockPropertyValueUtils 
+  (VlaSetDynamicBlockPropertyValueUtils 
     (GetLastVlaObjectUtils) 
     (list (cons "PIPELENGTH" 1400))
   ) 
@@ -1401,6 +1401,7 @@
     (action_tile "cancel" "(done_dialog 0)")
     (action_tile "btnSelect" "(done_dialog 2)")
     (action_tile "btnSelectColor" "(done_dialog 3)") 
+    (action_tile "btnExtractSysNum" "(done_dialog 4)") 
     (mode_tile "roomSysNum" 2)
     (action_tile "roomSysNum" "(setq roomSysNum $value)")
     (if (= nil roomSysNum)
@@ -1436,9 +1437,19 @@
     (if (= 3 status) 
       (setq sysColor (acad_colordlg 0))
     )  
+    ; extract sysNum button
+    (if (= 4 status) 
+      (setq roomSysNum (GetNsRoomSystemNumBySelect))
+    ) 
   )
   (unload_dialog dcl_id)
   (princ)
+)
+
+; 2021-07-09
+(defun GetNsRoomSystemNumBySelect (/ entityName) 
+  (setq entityName (car (GetEntityNameListBySSUtils (GetBlockSSBySelectByDataTypeUtils "NsCleanAir"))))
+  (VlaGetBlockPropertyValueUtils entityName "SYSTEM_NUM")
 )
 
 ; 2021-07-08

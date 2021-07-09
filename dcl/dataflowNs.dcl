@@ -35,12 +35,20 @@ SetNsRoomSystemBox : dialog {
   key = "SetNsRoomSystem";
   : boxed_radio_column {
     width = 50;
-    : edit_box {
-      label = "填写系统编号：";
-      edit_width = 20;
-      key = "roomSysNum";
-      value = "";
-      alignment = centered; 
+    : row { 
+      : edit_box {
+        label = "填写系统编号：";
+        edit_width = 15;
+        key = "roomSysNum";
+        value = "";
+        alignment = centered; 
+      }
+      : spacer { height = 1; }
+      : button { 
+        key = "btnExtractSysNum"; 
+        label = "提取系统编号及颜色"; 
+        is_default = "true"; 
+      } 
     }
     : spacer { height = 1; }
     : row { 
@@ -54,9 +62,10 @@ SetNsRoomSystemBox : dialog {
         width = 1.0;
         // color = 3;
       }
+      : spacer { height = 2; }
       : button { 
         key = "btnSelectColor"; 
-        label = "选择颜色"; 
+        label = "设置系统颜色"; 
         is_default = "true"; 
       } 
     }

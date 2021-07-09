@@ -1157,7 +1157,7 @@
   resultList
 )
 
-(defun GetOnePropertyValueForOneBlockByPropertyName (entityName propertyName / allPropertyValue) 
+(defun GetOnePropertyValueForOneBlockUtils (entityName propertyName / allPropertyValue) 
   (setq allPropertyValue (GetAllPropertyDictForOneBlock entityName))
   (cdr (assoc (strcase propertyName T) allPropertyValue))
 )
@@ -2790,7 +2790,7 @@
 ;; Returns the value of a Dynamic Block property (if present)
 ;; blk - [vla] VLA Dynamic Block Reference object
 ;; prp - [str] Dynamic Block property name (case-insensitive)
-(defun GetOneDynamicBlockPropertyValueUtils (blk prp /)
+(defun VlaGetOneDynamicBlockPropertyValueUtils (blk prp /)
   (setq prp (strcase prp))
   (vl-some '(lambda (x) (if (= prp (strcase (vla-get-propertyname x))) (vlax-get x 'value)))
     (vlax-invoke blk 'getdynamicblockproperties)
@@ -2804,7 +2804,7 @@
 ;; prp - [str] Dynamic Block property name (case-insensitive)
 ;; val - [any] New value for property
 ;; Returns: [any] New value if successful, else nil
-(defun SetOneDynamicBlockPropertyValueUtils (blk prp val /)
+(defun VlaSetOneDynamicBlockPropertyValueUtils (blk prp val /)
   (setq prp (strcase prp))
   (vl-some
     '(lambda ( x )
@@ -2824,7 +2824,7 @@
 ;; Returns an association list of Dynamic Block properties & values.
 ;; blk - [vla] VLA Dynamic Block Reference object
 ;; Returns: [lst] Association list of ((<prop> . <value>) ... )
-(defun GetDynamicBlockPropertyValueUtils (blk /)
+(defun VlaGetDynamicBlockPropertyValueUtils (blk /)
   (mapcar '(lambda (x) (cons (vla-get-propertyname x) (vlax-get x 'value)))
     (vlax-invoke blk 'getdynamicblockproperties)
   )
@@ -2836,7 +2836,7 @@
 ;; blk - [vla] VLA Dynamic Block Reference object
 ;; lst - [lst] Association list of ((<Property> . <Value>) ... )
 ;; Returns: nil
-(defun SetDynamicBlockPropertyValueUtils (blk lst / itm)
+(defun VlaSetDynamicBlockPropertyValueUtils (blk lst / itm)
   (setq lst (mapcar '(lambda (x) (cons (strcase (car x)) (cdr x))) lst))
   (foreach x (vlax-invoke blk 'getdynamicblockproperties)
     (if (setq itm (assoc (strcase (vla-get-propertyname x)) lst))

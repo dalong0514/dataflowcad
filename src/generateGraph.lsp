@@ -1091,7 +1091,7 @@
 ; 2021-05-27
 (defun GenerateBsGCTFlangeUpBarrel (insPt dataType blockName outerDiameter flangeBarrelHeight rotate /)
   (InsertBlockByRotateUtils insPt "BsGCTGraphRectangleBottomBase" "0DataFlow-BsThickLine" (list (cons 0 dataType)) rotate)
-  (SetDynamicBlockPropertyValueUtils 
+  (VlaSetDynamicBlockPropertyValueUtils 
     (GetLastVlaObjectUtils) 
     (list (cons "LENGTH" outerDiameter) (cons "WIDTH" flangeBarrelHeight))
   ) 
@@ -1100,12 +1100,12 @@
 ; 2021-05-27
 (defun GenerateBsGCTFlangeDoubleRaised (insPt dataType blockName barrelDiameter rotate directionStatus /)
   (InsertBlockByRotateUtils insPt "BsGCTGraphRectangleBottomBase" "0DataFlow-BsThickLine" (list (cons 0 dataType)) rotate)
-  (SetDynamicBlockPropertyValueUtils 
+  (VlaSetDynamicBlockPropertyValueUtils 
     (GetLastVlaObjectUtils) 
     (list (cons "LENGTH" (+ barrelDiameter 55)) (cons "WIDTH" 3))
   ) 
   (InsertBlockByRotateUtils (MoveInsertPositionUtils insPt 0 (* directionStatus 3)) "BsGCTGraphRectangleBottomBase" "0DataFlow-BsThickLine" (list (cons 0 dataType)) rotate)
-  (SetDynamicBlockPropertyValueUtils 
+  (VlaSetDynamicBlockPropertyValueUtils 
     (GetLastVlaObjectUtils) 
     (list (cons "LENGTH" (+ barrelDiameter 55)) (cons "WIDTH" 3))
   )
@@ -1114,7 +1114,7 @@
 ; 2021-05-26
 (defun GenerateBsGCTFlangeNeck (insPt dataType blockName outerDiameter flangeNeckHeight rotate /)
   (InsertBlockByRotateUtils insPt blockName "0DataFlow-BsThickLine" (list (cons 0 dataType)) rotate)
-  (SetDynamicBlockPropertyValueUtils 
+  (VlaSetDynamicBlockPropertyValueUtils 
     (GetLastVlaObjectUtils) 
     (list (cons "DIAMETER" outerDiameter) (cons "HEIGHT" flangeNeckHeight))
   ) 
@@ -1124,7 +1124,7 @@
 (defun GenerateBsGCTNeckFlange (insPt dataType blockName outerDiameter thickNess flangeHeight rotate / heaterDiameter)
   (setq heaterDiameter (- outerDiameter (* thickNess 2)))
   (InsertBlockByRotateUtils insPt blockName "0DataFlow-BsThickLine" (list (cons 0 dataType)) rotate)
-  (SetDynamicBlockPropertyValueUtils 
+  (VlaSetDynamicBlockPropertyValueUtils 
     (GetLastVlaObjectUtils) 
     (list 
       (cons "DIAMETER" outerDiameter) 
@@ -1137,7 +1137,7 @@
 ; 2021-05-27
 (defun GenerateBsGCTNeckFlangeBlot (insPt dataType blockName flangeHeight /)
   (InsertBlockUtils insPt blockName "0DataFlow-BsThickLine" (list (cons 0 dataType)))
-  (SetDynamicBlockPropertyValueUtils 
+  (VlaSetDynamicBlockPropertyValueUtils 
     (GetLastVlaObjectUtils) 
     (list (cons "BLOT_LENGTH" (* (+ flangeHeight 50) 2)))
   ) 

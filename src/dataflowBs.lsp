@@ -120,7 +120,7 @@
 ; refactored at 2021-06-13 frameHeight
 (defun InsertBsGCTDesignStandard (insPt dataType blockName tankStandardList drawFrameScale frameHeight /) 
   (InsertBlockByScaleUtils insPt blockName "0DataFlow-BsGCT" (list (cons 0 dataType)) drawFrameScale)
-  (SetOneDynamicBlockPropertyValueUtils (GetLastVlaObjectUtils) "HEIGHT" (* drawFrameScale frameHeight))
+  (VlaSetOneDynamicBlockPropertyValueUtils (GetLastVlaObjectUtils) "HEIGHT" (* drawFrameScale frameHeight))
   (InsertBsGCTTankStandardText (MoveInsertPositionUtils insPt (* drawFrameScale 4) (* drawFrameScale -16)) tankStandardList dataType drawFrameScale)
 )
 
@@ -389,7 +389,7 @@
 ; refactored at 2021-06-12 drawFrameScale
 (defun InsertBsGCTOtherRequest (insPt dataType tankOtherRequestList otherRequestHeght drawFrameScale /) 
   (InsertBlockByScaleUtils insPt "BsGCTTableOtherRequest" "0DataFlow-BsGCT" (list (cons 0 dataType)) drawFrameScale)
-  (SetDynamicBlockPropertyValueUtils 
+  (VlaSetDynamicBlockPropertyValueUtils 
     (GetLastVlaObjectUtils) 
     (list (cons "TOTALHEIGHT" otherRequestHeght))
   ) 
@@ -551,7 +551,7 @@
 ; 2021-05-30
 (defun GenerateBsGCTHeaterTube (insPt dataType blockName tubeDiameter tubeLength /)
   (InsertBlockUtils insPt "BsGCTGraphHeaterTube" blockName (list (cons 0 dataType)))
-  (SetDynamicBlockPropertyValueUtils 
+  (VlaSetDynamicBlockPropertyValueUtils 
     (GetLastVlaObjectUtils) 
     (list (cons "TUBE_DIAMETER" tubeDiameter) (cons "TUBE_LENGTH" tubeLength))
   ) 
@@ -774,7 +774,7 @@
 ; 2021-04-18
 (defun InsertBsGCTLegSupport (insPt dataType legHeight drawFrameScale / groundPlateInsPt) 
   (InsertBlockUtils insPt "BsGCTGraphLegSupport-A2" "0DataFlow-BsThickLine" (list (cons 0 dataType)))
-  (SetDynamicBlockPropertyValueUtils 
+  (VlaSetDynamicBlockPropertyValueUtils 
     (GetLastVlaObjectUtils) 
     (list (cons "LEG_HEIGHT" legHeight))
   ) 
@@ -827,7 +827,7 @@
 (defun InsertBsGCTLeftLugSupport (insPt supportType dataType oneBsGCTEquipSupportDictData thickNess /) 
   (InsertBlockUtils insPt supportType "0DataFlow-BsThickLine" (list (cons 0 dataType)))
   ; ready to refactor
-  (SetDynamicBlockPropertyValueUtils 
+  (VlaSetDynamicBlockPropertyValueUtils 
     (GetLastVlaObjectUtils) 
     (list (cons "THICKNESS" thickNess))
   ) 
@@ -837,7 +837,7 @@
 (defun InsertBsGCRightLugSupport (insPt supportType dataType oneBsGCTEquipSupportDictData thickNess /) 
   (InsertBlockUtils insPt supportType "0DataFlow-BsThickLine" (list (cons 0 dataType)))
   ; ready to refactor
-  (SetDynamicBlockPropertyValueUtils 
+  (VlaSetDynamicBlockPropertyValueUtils 
     (GetLastVlaObjectUtils) 
     (list (cons "THICKNESS" thickNess))
   ) 
@@ -850,7 +850,7 @@
 (defun InsertBsGCTRightSaddleSupport (insPt dataType saddleHeight oneBsGCTEquipSupportDictData barrelRadius drawFrameScale / supportType groundPlateInsPt) 
   (setq supportType (GetSaddleSupportTypeUtils oneBsGCTEquipSupportDictData barrelRadius))
   (InsertBlockUtils insPt supportType "0DataFlow-BsThickLine" (list (cons 0 dataType)))
-  (SetDynamicBlockPropertyValueUtils 
+  (VlaSetDynamicBlockPropertyValueUtils 
     (GetLastVlaObjectUtils) 
     (list (cons "SADDLE_HEIGHT" saddleHeight))
   ) 
@@ -872,7 +872,7 @@
 (defun InsertBsGCTLeftSaddleSupport (insPt dataType saddleHeight oneBsGCTEquipSupportDictData barrelRadius drawFrameScale / supportType groundPlateInsPt) 
   (setq supportType (GetSaddleSupportTypeUtils oneBsGCTEquipSupportDictData barrelRadius))
   (InsertBlockUtils insPt supportType "0DataFlow-BsThickLine" (list (cons 0 dataType)))
-  (SetDynamicBlockPropertyValueUtils 
+  (VlaSetDynamicBlockPropertyValueUtils 
     (GetLastVlaObjectUtils) 
     (list (cons "SADDLE_HEIGHT" saddleHeight))
   ) 

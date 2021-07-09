@@ -1225,7 +1225,7 @@
   ;(VerifyGsLcBlockByName blockName)
   (VerifyGsLcPipeLayer)
   (InsertBlockByNoPropertyUtils insPt blockName "0DataFlow-GsLcPipe")
-  (SetDynamicBlockPropertyValueUtils 
+  (VlaSetDynamicBlockPropertyValueUtils 
     (GetLastVlaObjectUtils) 
     (list (cons "DN" "PN16 DN40") (cons "_H" "L=100"))
   )

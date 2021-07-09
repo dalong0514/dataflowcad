@@ -267,7 +267,7 @@
   (mapcar '(lambda (x) 
              (InsertBlockByNoPropertyUtils x "GsBzColumnCenterLine" "COLUMN")
              ; could set the dynamic block property
-              ; (SetDynamicBlockPropertyValueUtils 
+              ; (VlaSetDynamicBlockPropertyValueUtils 
               ;   (GetLastVlaObjectUtils) 
               ;   (list (cons "XDistance" 800) (cons "YDistance" 800))
               ; )        
@@ -1585,7 +1585,7 @@
 ; 2021-05-28
 (defun GenerateGSBzReactorGraphBarrel (insPt reactorRadius jacketRadius nozzleRadius nozzleAngle /) 
   (InsertBlockUtils insPt "GSBzGraphReactor" "0DataFlow-GsBzEquip" (list (cons 1 "")))
-  (SetDynamicBlockPropertyValueUtils 
+  (VlaSetDynamicBlockPropertyValueUtils 
     (GetLastVlaObjectUtils) 
     (list 
       (cons "DIAMETER" (rtos reactorRadius)) 
@@ -1600,7 +1600,7 @@
 ; 2021-05-28
 (defun GenerateGSBzReactorGraphLugSupport (insPt reactorDiameter blotDiameter lugAngle /) 
   (InsertBlockByRotateUtils insPt "GSBzGraphLugSupportTopView-A6" "0DataFlow-GsBzEquip" (list (cons 1 "")) lugAngle)
-  (SetDynamicBlockPropertyValueUtils 
+  (VlaSetDynamicBlockPropertyValueUtils 
     (GetLastVlaObjectUtils) 
     (list 
       (cons "LUG_DIAMETER_X" (rtos reactorDiameter)) 
