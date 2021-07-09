@@ -1464,25 +1464,42 @@
 ; 2021-07-08
 (defun SetNsRoomSystemNumAndColor (ss colorId roomSysNum /) 
   (mapcar '(lambda (x) 
-            (ModifyOneBlockColorUtils x colorId)
+             ; refactored at 2021-07-09
+            (SetNsRoomColorBoxColor x colorId)
+            ; (ModifyOneBlockColorUtils x colorId)
             (ModifyOnePropertyForOneBlockUtils x "SYSTEM_NUM" roomSysNum)
           ) 
     (GetEntityNameListBySSUtils ss)
   ) 
 )
 
-; 2021-07-08
-(defun GetNsRoomColorBoxColor (entityName / roomInsPt roomColorBoxData) 
+; 2021-07-09
+(defun SetNsRoomColorBoxColor (entityName colorId / roomInsPt roomColorBoxData) 
   (setq roomInsPt (GetEntityPositionByEntityNameUtils entityName))
-  (setq roomColorBoxList 
+  (setq roomColorBoxData 
     (vl-remove-if-not '(lambda (x) 
               (IsPositionInRegionUtils roomInsPt (GetMinMaxXYValuesUtils (GetAllPointForPolyLineUtils (entget x))))
             ) 
       (GetEntityNameListBySSUtils (GetAllNsRoomColorBoxSS))
     ) 
   )
-  (if (/= roomColorBoxList nil) 
-    (setq colorId (GetDottedPairValueUtils 62 (entget (car roomColorBoxList))))
+  (if (/= roomColorBoxData nil) 
+    (SetDXFValueUtils (car roomColorBoxData) 62 colorId)
+  )
+)
+
+; 2021-07-09
+(defun GetNsRoomColorBoxColor (entityName / roomInsPt roomColorBoxData) 
+  (setq roomInsPt (GetEntityPositionByEntityNameUtils entityName))
+  (setq roomColorBoxData 
+    (vl-remove-if-not '(lambda (x) 
+              (IsPositionInRegionUtils roomInsPt (GetMinMaxXYValuesUtils (GetAllPointForPolyLineUtils (entget x))))
+            ) 
+      (GetEntityNameListBySSUtils (GetAllNsRoomColorBoxSS))
+    ) 
+  )
+  (if (/= roomColorBoxData nil) 
+    (setq colorId (GetDottedPairValueUtils 62 (entget (car roomColorBoxData))))
     (setq colorId 0)
   )
 )
