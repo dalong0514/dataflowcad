@@ -1,5 +1,5 @@
 importNsEquipTableBox : dialog {
-  label = "天正设计流数据一体化暖通V0.3———导入设备一览表"; 
+  label = "天正设计流数据一体化暖通V0.4———导入设备一览表"; 
   key = "importNsEquipTable";
   : boxed_radio_column {
     key = "showOriginDataBox";
@@ -31,7 +31,7 @@ importNsEquipTableBox : dialog {
 
 // 2021-07-08
 SetNsRoomSystemBox : dialog {
-  label = "天正设计流数据一体化工艺V0.3———划分房间系统"; 
+  label = "天正设计流数据一体化暖通V0.4———划分房间系统"; 
   key = "SetNsRoomSystem";
   : boxed_radio_column {
     width = 50;
