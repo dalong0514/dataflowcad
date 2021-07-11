@@ -443,13 +443,13 @@
 ;;;-------------------------------------------------------------------------;;;
 ; Generate Hatch  
 ; 2021-07-11
-(defun InsertHatchUtils (entityName layerName scaleFactor / 
-                         insertionPnt acadObj curDoc modelSpace patternName patternType bAssociativity hatchObj outerLoop) 
+(defun InsertHatchUtils (entityName patternName layerName scaleFactor / 
+                         insertionPnt acadObj curDoc modelSpace patternType bAssociativity hatchObj outerLoop) 
   (setq acadObj (vlax-get-acad-object))
   (setq curDoc (vla-get-activedocument acadObj)) 
   (setq modelSpace (vla-get-ModelSpace curDoc))
   ;; Define the hatch
-  (setq patternName "ANSI38")
+  ; (setq patternName "ANSI38")
   (setq patternType acHatchPatternTypePredefined)
   (setq bAssociativity :vlax-true)
   ;; Create the associative Hatch object in model space 

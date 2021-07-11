@@ -1606,7 +1606,7 @@
 (defun InsertAllNsRoomHatchMacro () 
   (VerifyNsBzLayerByName "0DataFlow-NsRoomSystemHatch")
   (mapcar '(lambda (x) 
-            (InsertHatchUtils x "0DataFlow-NsRoomSystemHatch" 50)
+            (InsertHatchUtils x "ANSI31" "0DataFlow-NsRoomSystemHatch" 50)
           ) 
     (GetEntityNameListBySSUtils (GetAllNSRoomAreaPLSS))
   ) 
