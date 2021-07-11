@@ -1328,20 +1328,28 @@
 )
 
 ; 2021-07-06
-(defun GetNsRoomAreaByRoomPolyLine (blockPoint roomAreaPLDictList / roomPLEntityName result) 
-  (setq roomPLEntityName 
-    (car 
-      (car 
+; refactored at 2021-07-11
+(defun GetNsRoomAreaByRoomPolyLine (blockPoint roomAreaPLDictList / roomPLEntityNameList roomPLAreaList result) 
+  (setq roomPLEntityNameList 
+    (mapcar '(lambda (x) 
+              (car x)
+            ) 
         (vl-remove-if-not '(lambda (x) 
                   (IsPositionInRegionUtils blockPoint (cdr x))
                 ) 
           roomAreaPLDictList
-        ) 
-      )
-    )
+        )
+    ) 
   )
-  (if (/= roomPLEntityName nil) 
-    (setq result (/ (VlaGetPolyLineAreaUtils roomPLEntityName) 1000000.0))
+  (setq roomPLAreaList 
+    (mapcar '(lambda (x) 
+              (/ (VlaGetPolyLineAreaUtils x) 1000000.0)
+            ) 
+      roomPLEntityNameList
+    ) 
+  )
+  (if (/= roomPLAreaList nil) 
+    (setq result (car (vl-sort roomPLAreaList '<)))
     (setq result 0)
   )
 )
