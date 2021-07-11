@@ -1452,14 +1452,56 @@
 )
 
 ; 2021-07-09
-(defun GetNsRoomSystemNumAndColor (/ entityName) 
-  (setq entityName (car (GetEntityNameListBySSUtils (GetBlockSSBySelectByDataTypeUtils "NsCleanAir"))))
+; refactored at 2021-07-11
+(defun GetNsRoomSystemNumAndColor (/ roomAndHatchEntityData roomEntityData hatchEntityData) 
+  (setq roomAndHatchEntityData (GetEntityDataBySSUtils (GetNsRoomAndHatchSSBySelect)))
+  (setq roomEntityData (FilterNsRoomEntityData roomAndHatchEntityData))
+  (setq hatchEntityData (FilterNsRoomHatchEntityData roomAndHatchEntityData))
   (list 
-    (cons "roomSysNum" (VlaGetBlockPropertyValueUtils entityName "SYSTEM_NUM"))
-    ; (cons "sysColor" (GetOneBlockColorUtils entityName))
-    ; refactored at 2021-07-09
-    (cons "sysColor" (GetNsRoomColorBoxColor entityName))
+    (cons "roomSysNum" (VlaGetBlockPropertyValueUtils (GetDottedPairValueUtils -1 roomEntityData) "SYSTEM_NUM"))
+    (cons "sysColor" (GetDottedPairValueUtils 62 hatchEntityData))
   )
+)
+
+(defun c:foo ()
+  (GetEntityDataBySSUtils (GetNsRoomAndHatchSSBySelect))
+)
+
+; 2021-07-11
+(defun FilterNsRoomEntityData (roomAndHatchEntityData /) 
+  (car 
+    (vl-remove-if-not '(lambda (x) 
+              (= (GetDottedPairValueUtils 0 x) "INSERT")
+            ) 
+      roomAndHatchEntityData
+    ) 
+  )
+)
+
+; 2021-07-11
+(defun FilterNsRoomHatchEntityData (roomAndHatchEntityData /) 
+  (car 
+    (vl-remove-if-not '(lambda (x) 
+              (= (GetDottedPairValueUtils 0 x) "HATCH")
+            ) 
+      roomAndHatchEntityData
+    ) 
+  )
+)
+
+; 2021-07-11
+(defun GetNsRoomAndHatchSSBySelect () 
+    (ssget '( 
+        (-4 . "<OR")
+          (0 . "HATCH")
+          (0 . "INSERT")
+        (-4 . "OR>") 
+        (-4 . "<OR")
+          (8 . "0DataFlow-NsRoomSystemHatch")
+          (8 . "0DataFlow-GsBzCleanAirCondition")
+        (-4 . "OR>")
+      )
+    )
 )
 
 ; 2021-07-08
