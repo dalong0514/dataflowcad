@@ -1,4 +1,4 @@
-;·ë´óÁú±àÓÚ 2020-2021 Äê
+;¡¤??¨®?¨²¡À¨¤?? 2020-2021 ?¨º
 (if (= *comLibraryStatus* nil) 
   (progn 
     (vl-load-com)
@@ -426,6 +426,11 @@
   (SetDXFValueUtils entityName 8 layerName)
 )
 
+; 2021-07-11
+(defun SetGraphScaleFactorUtils (entityName scaleFactor /)
+  (SetDXFValueUtils entityName 41 layerName)
+)
+
 ; Set CAD Graph Value Utils Function 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
@@ -438,40 +443,27 @@
 ;;;-------------------------------------------------------------------------;;;
 ; Generate Hatch  
 ; 2021-07-11
-(defun InsertHatchUtils (entityName layerName / 
-                         insertionPnt acadObj curDoc modelSpace patternName patternType bAssociativity hatchObj col1 col2 center radius) 
+(defun InsertHatchUtils (entityName layerName scaleFactor / 
+                         insertionPnt acadObj curDoc modelSpace patternName patternType bAssociativity hatchObj outerLoop) 
   (setq acadObj (vlax-get-acad-object))
   (setq curDoc (vla-get-activedocument acadObj)) 
   (setq modelSpace (vla-get-ModelSpace curDoc))
   ;; Define the hatch
-  (setq patternName "CYLINDER")
-  (setq patternType acPreDefinedGradient)
+  (setq patternName "ANSI38")
+  (setq patternType acHatchPatternTypePredefined)
   (setq bAssociativity :vlax-true)
   ;; Create the associative Hatch object in model space 
-  (setq hatchObj (vla-AddHatch modelSpace patternType patternName bAssociativity acGradientObject))
-  (setq col1 (vlax-create-object (strcat "AutoCAD.AcCmColor." (substr (getvar "ACADVER") 1 2))))
-  (setq col2 (vlax-create-object (strcat "AutoCAD.AcCmColor." (substr (getvar "ACADVER") 1 2))))
-  (vla-SetRGB col1 255 0 0)
-  (vla-SetRGB col2 0 255 0)
-  (vla-put-GradientColor1 hatchObj col1)
-  (vla-put-GradientColor2 hatchObj col2)
-  
+  (setq hatchObj (vla-AddHatch modelSpace patternType patternName bAssociativity))
   ;; Create the outer boundary for the hatch (by entityName)
   (setq outerLoop (vlax-make-safearray vlax-vbObject '(0 . 0)))
   (vlax-safearray-put-element outerLoop 0 (vlax-ename->vla-object entityName))
-  
   ;; Append the outerboundary to the hatch object, and display the hatch
   (vla-AppendOuterLoop hatchObj outerLoop)
-  (vla-Evaluate hatchObj)
-  (vla-Regen doc :vlax-true)
-
-  (vlax-release-object col1)
-  (vlax-release-object col2)
-  (princ)
-)
-
-(defun c:foo ()
-  (InsertHatchUtils (car (GetEntityNameListBySSUtils (ssget))) "0")
+  (vlax-put-property hatchObj 'Layer layerName)
+  (vlax-put-property hatchObj 'PatternScale scaleFactor)
+  (vlax-put-property hatchObj 'PatternSpace scaleFactor)
+  ;; the CAD command RE
+  ; (vla-Regen curDoc :vlax-true)
 )
 
 ;;;-------------------------------------------------------------------------;;;
@@ -710,8 +702,8 @@
 )
 
 ; directionStatus: dxfcode 50; 0.0 Level - 1.57 Vertical
-; hiddenStatus dxfcode 70; 0 ¿É¼û - 1 Òþ²Ø
-; moveStatus: dxfcode 280; 1 ¹Ì¶¨ - 0 ¿ÉÒÆ¶¯
+; hiddenStatus dxfcode 70; 0 ???? - 1 ????
+; moveStatus: dxfcode 280; 1 ???¡§ - 0 ??????
 (defun GenerateCenterBlockAttribute (insPt propertyName propertyValue blockLayer textHeight directionStatus hiddenStatus moveStatus /)
   (entmake 
     (list (cons 0 "ATTRIB") (cons 100 "AcDbEntity") (cons 67 0) (cons 410 "Model") (cons 8 blockLayer) (cons 100 "AcDbText") 
@@ -795,7 +787,7 @@
 )
 
 ; 2021-06-02
-; firstAngle secondAngle ½à¾»¿ÕµòÓÒ²à°ëÔ² (50 . 4.71239) (51 . 1.5708)
+; firstAngle secondAngle ?¨¤?????¨°???¨¤¡ã??? (50 . 4.71239) (51 . 1.5708)
 (defun GenerateArcUtils (insPt entityLayer radius firstAngle secondAngle /)
   (entmake (list (cons 0 "ARC") (cons 100 "AcDbEntity") (cons 67 0) (cons 8 entityLayer) (cons 100 "AcDbCircle") 
                   (cons 10 insPt) (cons 40 radius) (cons 210 '(0.0 0.0 1.0)) (cons 100 "AcDbArc") (cons 50 firstAngle) (cons 51 secondAngle)
