@@ -69,7 +69,15 @@ SetNsRoomSystemBox : dialog {
         is_default = "true"; 
       } 
     }
-    : spacer { width = 1; } 
+    : spacer { height = 1; } 
+    : popup_list { 
+      label = "填充图案选择：";
+      edit_width = 23;
+      key = "hatchPatternName"; 
+      list = "";
+      value = "";
+    }
+    : spacer { height = 1; } 
     : text {
       key = "selectNumMsg";
       label = "选择的数据数量：";

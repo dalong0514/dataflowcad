@@ -1392,7 +1392,7 @@
 )
 
 ; 2021-07-08
-(defun SetNsRoomSystemByBox (tileName / dcl_id status roomSysNumColorDictList roomSysNum sysColor msgStatus ss sslen)
+(defun SetNsRoomSystemByBox (tileName / dcl_id status roomSysNumColorDictList roomSysNum sysColor msgStatus ss sslen hatchPatternName patternName)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\dcl\\" "dataflowNs.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -1405,11 +1405,22 @@
     (action_tile "btnExtractSysNum" "(done_dialog 4)") 
     (mode_tile "roomSysNum" 2)
     (action_tile "roomSysNum" "(setq roomSysNum $value)")
+    (action_tile "hatchPatternName" "(setq hatchPatternName $value)")
+    ; init the value of listbox
+    (progn
+      (start_list "hatchPatternName" 3)
+      (mapcar '(lambda (x) (add_list x)) 
+                (GetRoomHatchPatternName))
+      (end_list)
+    )
     (if (= nil roomSysNum)
       (setq roomSysNum "")
     )
     (if (= nil sysColor)
       (setq sysColor 7)
+    )
+    (if (= nil hatchPatternName)
+      (setq hatchPatternName "0")
     )
     (progn
       (start_image "sysColor")
@@ -1426,12 +1437,14 @@
       (set_tile "selectNumMsg" (strcat "选择的数据数量： " (rtos sslen)))
     )
     (set_tile "roomSysNum" roomSysNum)
+    (set_tile "hatchPatternName" hatchPatternName)
     ; select button
     (if (= 2 (setq status (start_dialog))) 
       (progn 
+        (setq patternName (nth (atoi hatchPatternName) (GetRoomHatchPatternName)))
         (setq ss (GetNsRoomAndHatchSSBySelect))
         (setq sslen (sslength ss)) 
-        (SetNsRoomSystemNumAndColor ss sysColor roomSysNum)
+        (SetNsRoomSystemNumAndColor ss sysColor roomSysNum patternName)
       )
     )
     ; color select button
@@ -1444,11 +1457,18 @@
         (setq roomSysNumColorDictList (GetNsRoomSystemNumAndColor))
         (setq roomSysNum (GetDottedPairValueUtils "roomSysNum" roomSysNumColorDictList))
         (setq sysColor (GetDottedPairValueUtils "sysColor" roomSysNumColorDictList))
+        (setq patternName (GetDottedPairValueUtils "patternName" roomSysNumColorDictList))
+        (setq hatchPatternName (vl-princ-to-string (GetIndexforSearchMemberInListUtils patternName (GetRoomHatchPatternName))))
       )
     ) 
   )
   (unload_dialog dcl_id)
   (princ)
+)
+
+; 2021-07-11
+(defun GetRoomHatchPatternName ()
+  '("ANSI31" "ANSI32" "ANSI33" "ANSI34" "ANSI35" "ANSI36" "ANSI37" "ANSI38")
 )
 
 ; 2021-07-09
@@ -1460,6 +1480,7 @@
   (list 
     (cons "roomSysNum" (VlaGetBlockPropertyValueUtils (GetDottedPairValueUtils -1 roomEntityData) "SYSTEM_NUM"))
     (cons "sysColor" (GetDottedPairValueUtils 62 hatchEntityData))
+    (cons "patternName" (GetDottedPairValueUtils 2 hatchEntityData))
   )
 )
 
@@ -1506,7 +1527,7 @@
 
 ; 2021-07-08
 ; refactored at 2021-07-11
-(defun SetNsRoomSystemNumAndColor (ss colorId roomSysNum / roomAndHatchEntityData) 
+(defun SetNsRoomSystemNumAndColor (ss colorId roomSysNum patternName / roomAndHatchEntityData) 
   (setq roomAndHatchEntityData (GetEntityDataBySSUtils ss))
   (mapcar '(lambda (x) 
             (ModifyOnePropertyForOneBlockUtils (GetDottedPairValueUtils -1 x) "SYSTEM_NUM" roomSysNum)
@@ -1519,6 +1540,7 @@
   ) 
   (mapcar '(lambda (x) 
             (SetDXFValueUtils (GetDottedPairValueUtils -1 x) 62 colorId)
+            (SetDXFValueUtils (GetDottedPairValueUtils -1 x) 2 patternName)
           ) 
     (vl-remove-if-not '(lambda (x) 
               (= (GetDottedPairValueUtils 0 x) "HATCH")
