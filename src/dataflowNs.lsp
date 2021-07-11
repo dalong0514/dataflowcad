@@ -1630,18 +1630,34 @@
   (JoinPolylineUtils ss)
 )
 
-; 2021-07-06
+; 2021-07-11
 (defun c:InsertAllNsRoomHatch () 
   (ExecuteFunctionAfterVerifyDateUtils 'InsertAllNsRoomHatchMacro '())
 )
 
-; 2021-07-09
+; 2021-07-11
 (defun InsertAllNsRoomHatchMacro () 
   (VerifyNsBzLayerByName "0DataFlow-NsRoomSystemHatch")
   (mapcar '(lambda (x) 
             (InsertHatchUtils x "ANSI31" "0DataFlow-NsRoomSystemHatch" 50)
           ) 
     (GetEntityNameListBySSUtils (GetAllNSRoomAreaPLSS))
+  ) 
+  (alert "房间系统填充图案生成完成！")
+)
+
+; 2021-07-11
+(defun c:InsertNsRoomHatchBySelect () 
+  (ExecuteFunctionAfterVerifyDateUtils 'InsertNsRoomHatchBySelectMacro '())
+)
+
+; 2021-07-11
+(defun InsertNsRoomHatchBySelectMacro () 
+  (VerifyNsBzLayerByName "0DataFlow-NsRoomSystemHatch")
+  (mapcar '(lambda (x) 
+            (InsertHatchUtils x "ANSI31" "0DataFlow-NsRoomSystemHatch" 50)
+          ) 
+    (GetEntityNameListBySSUtils (GetNSRoomAreaPLSSBySelect))
   ) 
   (alert "房间系统填充图案生成完成！")
 )
