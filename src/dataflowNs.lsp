@@ -1411,6 +1411,7 @@
     (action_tile "btnSelect" "(done_dialog 2)")
     (action_tile "btnSelectColor" "(done_dialog 3)") 
     (action_tile "btnExtractSysNum" "(done_dialog 4)") 
+    (action_tile "btnConfirm" "(done_dialog 5)") 
     (mode_tile "roomSysNum" 2)
     (action_tile "roomSysNum" "(setq roomSysNum $value)")
     (action_tile "hatchPatternName" "(setq hatchPatternName $value)")
@@ -1452,7 +1453,6 @@
         (setq patternName (nth (atoi hatchPatternName) (GetRoomHatchPatternName)))
         (setq ss (GetNsRoomAndHatchSSBySelect))
         (setq sslen (sslength ss)) 
-        (SetNsRoomSystemNumAndColor ss sysColor roomSysNum patternName)
       )
     )
     ; color select button
@@ -1469,6 +1469,9 @@
         (setq hatchPatternName (vl-princ-to-string (GetIndexforSearchMemberInListUtils patternName (GetRoomHatchPatternName))))
       )
     ) 
+    (if (= 5 status) 
+      (SetNsRoomSystemNumAndColor ss sysColor roomSysNum patternName)
+    ) 
   )
   (unload_dialog dcl_id)
   (princ)
@@ -1476,7 +1479,7 @@
 
 ; 2021-07-11
 (defun GetRoomHatchPatternName ()
-  '("ANSI31" "ANSI32" "ANSI33" "ANSI34" "ANSI35" "ANSI36" "ANSI37" "ANSI38")
+  '("ANSI31" "ANSI32" "ANSI33" "ANSI34" "ANSI35" "ANSI36" "ANSI37" "ANSI38" "BRASS" "BOX" "BRICK" "CLAY" "BRSTONE" "CORK" "CROSS" "DASH" "DOTS" "GRASS" "HEX")
 )
 
 ; 2021-07-09

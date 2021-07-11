@@ -92,6 +92,12 @@ SetNsRoomSystemBox : dialog {
         is_default = "true"; 
       } 
       : spacer { width = 1; } 
+      : button { 
+        key = "btnConfirm"; 
+        label = "х╥хо"; 
+        is_default = "true"; 
+      } 
+      : spacer { width = 1; } 
       cancel_button; 
     }
     : spacer { height = 3; } 
