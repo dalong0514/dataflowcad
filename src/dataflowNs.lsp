@@ -1511,7 +1511,7 @@
 )
 
 ;;;-------------------------------------------------------------------------------------------------------------------------------;;;
-; InsertAllNsRoomColorBox
+; InsertAllNsRoomColorBox And InsertAllNsRoomHatch
 
 ; 2021-07-06
 (defun c:InsertAllNsRoomColorBox () 
@@ -1541,4 +1541,20 @@
   (GenerateTwoPointPolyLineUtils (MoveInsertPositionUtils insPt -400 -250) (MoveInsertPositionUtils insPt 400 -250) "0DataFlow-NsRoomSystemBox" 40)
   (setq ss (ssadd (entlast) ss))
   (JoinPolylineUtils ss)
+)
+
+; 2021-07-06
+(defun c:InsertAllNsRoomHatch () 
+  (ExecuteFunctionAfterVerifyDateUtils 'InsertAllNsRoomHatchMacro '())
+)
+
+; 2021-07-09
+(defun InsertAllNsRoomHatchMacro () 
+  (VerifyNsBzLayerByName "0DataFlow-NsRoomSystemHatch")
+  (mapcar '(lambda (x) 
+            (InsertHatchUtils x "0DataFlow-NsRoomSystemHatch" 50)
+          ) 
+    (GetEntityNameListBySSUtils (GetAllNSRoomAreaPLSS))
+  ) 
+  (alert "房间系统填充图案生成完成！")
 )
