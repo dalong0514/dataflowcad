@@ -435,6 +435,47 @@
 ;;;-------------------------------------------------------------------------;;;
 ; Generate CAD Graph Utils Function 
 
+;;;-------------------------------------------------------------------------;;;
+; Generate Hatch  
+; 2021-07-11
+(defun InsertHatchUtils (entityName layerName / 
+                         insertionPnt acadObj curDoc modelSpace patternName patternType bAssociativity hatchObj col1 col2 center radius) 
+  (setq acadObj (vlax-get-acad-object))
+  (setq curDoc (vla-get-activedocument acadObj)) 
+  (setq modelSpace (vla-get-ModelSpace curDoc))
+  ;; Define the hatch
+  (setq patternName "CYLINDER")
+  (setq patternType acPreDefinedGradient)
+  (setq bAssociativity :vlax-true)
+  ;; Create the associative Hatch object in model space 
+  (setq hatchObj (vla-AddHatch modelSpace patternType patternName bAssociativity acGradientObject))
+  (setq col1 (vlax-create-object (strcat "AutoCAD.AcCmColor." (substr (getvar "ACADVER") 1 2))))
+  (setq col2 (vlax-create-object (strcat "AutoCAD.AcCmColor." (substr (getvar "ACADVER") 1 2))))
+  (vla-SetRGB col1 255 0 0)
+  (vla-SetRGB col2 0 255 0)
+  (vla-put-GradientColor1 hatchObj col1)
+  (vla-put-GradientColor2 hatchObj col2)
+  
+  ;; Create the outer boundary for the hatch (by entityName)
+  (setq outerLoop (vlax-make-safearray vlax-vbObject '(0 . 0)))
+  (vlax-safearray-put-element outerLoop 0 (vlax-ename->vla-object entityName))
+  
+  ;; Append the outerboundary to the hatch object, and display the hatch
+  (vla-AppendOuterLoop hatchObj outerLoop)
+  (vla-Evaluate hatchObj)
+  (vla-Regen doc :vlax-true)
+
+  (vlax-release-object col1)
+  (vlax-release-object col2)
+  (princ)
+)
+
+(defun c:foo ()
+  (InsertHatchUtils (car (GetEntityNameListBySSUtils (ssget))) "0")
+)
+
+;;;-------------------------------------------------------------------------;;;
+; Generate Block  
 ; 2021-03-08
 (defun InsertBlockUtils (insPt blockName layerName propertyDictList / acadObj curDoc insertionPnt modelSpace blockRefObj blockAttributes)
   (setq acadObj (vlax-get-acad-object))
