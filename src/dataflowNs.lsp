@@ -1312,13 +1312,14 @@
 )
 
 ; 2021-07-06
+; refactored at 2021-07-11
 (defun ExtractNsRoomAreaMacro (/ roomAreaPLDictList) 
   (setq roomAreaPLDictList (GetMinMaxXYValuesListForAreaPL))
   (mapcar '(lambda (x) 
             (ModifyMultiplePropertyForOneBlockUtils x 
               (list "ROOM_AREA")
               (list (vl-princ-to-string 
-                      (fix (+ 0.5 (GetNsRoomAreaByRoomPolyLine (GetDottedPairValueUtils 10 (entget x)) roomAreaPLDictList)))))
+                      (fix (+ 0.999999 (GetNsRoomAreaByRoomPolyLine (GetDottedPairValueUtils 10 (entget x)) roomAreaPLDictList)))))
             )
           ) 
     (GetEntityNameListBySSUtils (GetAllBlockSSByDataTypeUtils "NsCleanAir"))
