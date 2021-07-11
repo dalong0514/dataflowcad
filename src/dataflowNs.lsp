@@ -1429,7 +1429,7 @@
     ; select button
     (if (= 2 (setq status (start_dialog))) 
       (progn 
-        (setq ss (GetBlockSSBySelectByDataTypeUtils "NsCleanAir"))
+        (setq ss (GetNsRoomAndHatchSSBySelect))
         (setq sslen (sslength ss)) 
         (SetNsRoomSystemNumAndColor ss sysColor roomSysNum)
       )
@@ -1505,14 +1505,26 @@
 )
 
 ; 2021-07-08
-(defun SetNsRoomSystemNumAndColor (ss colorId roomSysNum /) 
+; refactored at 2021-07-11
+(defun SetNsRoomSystemNumAndColor (ss colorId roomSysNum / roomAndHatchEntityData) 
+  (setq roomAndHatchEntityData (GetEntityDataBySSUtils ss))
   (mapcar '(lambda (x) 
-             ; refactored at 2021-07-09
-            (SetNsRoomColorBoxColor x colorId)
-            ; (ModifyOneBlockColorUtils x colorId)
-            (ModifyOnePropertyForOneBlockUtils x "SYSTEM_NUM" roomSysNum)
+            (ModifyOnePropertyForOneBlockUtils (GetDottedPairValueUtils -1 x) "SYSTEM_NUM" roomSysNum)
           ) 
-    (GetEntityNameListBySSUtils ss)
+    (vl-remove-if-not '(lambda (x) 
+              (= (GetDottedPairValueUtils 0 x) "INSERT")
+            ) 
+      roomAndHatchEntityData
+    ) 
+  ) 
+  (mapcar '(lambda (x) 
+            (SetDXFValueUtils (GetDottedPairValueUtils -1 x) 62 colorId)
+          ) 
+    (vl-remove-if-not '(lambda (x) 
+              (= (GetDottedPairValueUtils 0 x) "HATCH")
+            ) 
+      roomAndHatchEntityData
+    ) 
   ) 
 )
 
