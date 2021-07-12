@@ -1342,6 +1342,31 @@
   colorId
 )
 
+; 2021-07-12
+(defun ModifyPropertyTextWidthForOneBlockUtils (entityName modifiedPropertyName PropertyWidth / entityData entx propertyName)
+  (setq entityData (entget entityName))
+  ; get attribute data of block
+  (setq entx (entget (entnext (cdr (assoc -1 entityData)))))
+  (while (= "ATTRIB" (cdr (assoc 0 entx)))
+    (setq propertyName (cdr (assoc 2 entx)))
+    (if (= propertyName modifiedPropertyName)
+      (SetDXFValueByEntityDataUtils entx 41 PropertyWidth)
+    )
+    ; get the next property information
+    (setq entx (entget (entnext (cdr (assoc -1 entx)))))
+  )
+  (entupd entityName)
+)
+
+;; 2021-07-12
+(defun ModifyBlockPropertyTextWidthUtils (entityNameList blockPropertyName propertyTextWidth /)
+  (mapcar '(lambda (x) 
+             (ModifyPropertyTextWidthForOneBlockUtils x blockPropertyName propertyTextWidth)
+          ) 
+    entityNameList
+  ) 
+)
+
 (defun ModifyOnePropertyForOneBlockUtils (entityName modifiedPropertyName newPropertyValue / entityData entx propertyName)
   (setq entityData (entget entityName))
   ; get attribute data of block

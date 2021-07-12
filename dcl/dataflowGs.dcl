@@ -1,5 +1,5 @@
 importGsEquipDataBox : dialog {
-  label = "天正设计流数据一体化工艺V2.0———导入设备位号及设备图形"; 
+  label = "天正设计流数据一体化工艺V2.3———导入设备位号及设备图形"; 
   key = "importGsEquipData";
   : boxed_radio_column {
     key = "showOriginDataBox";
@@ -55,7 +55,7 @@ importGsEquipDataBox : dialog {
 }
 
 updateGsBzEquipGraphBox : dialog {
-  label = "天正设计流数据一体化工艺V2.0———更新布置图设备图形"; 
+  label = "天正设计流数据一体化工艺V2.3———更新布置图设备图形"; 
   key = "updateGsBzEquipGraph";
   : boxed_radio_column {
     key = "showOriginDataBox";
@@ -104,7 +104,7 @@ updateGsBzEquipGraphBox : dialog {
 }
 
 UpdateAllPublicPipeFromToDataBox : dialog {
-  label = "天正设计流数据一体化工艺V2.0———一键获取公共工程管道来去向数据"; 
+  label = "天正设计流数据一体化工艺V2.3———一键获取公共工程管道来去向数据"; 
   key = "UpdateAllPublicPipeFromToData";
   : boxed_radio_column {
     key = "showOriginDataBox";
@@ -187,5 +187,81 @@ UpdateAllPublicPipeFromToDataBox : dialog {
       cancel_button; 
     }
     : spacer { height = 3; } 
+  }
+}
+
+// 2021-07-12
+ModifyBlockPropertyWidthByBox : dialog {
+  label = "天正设计流数据一体化工艺V2.3———修改数据流块属性字宽"; 
+  key = "modifyBlockPropertyWidth";
+  : row {
+    : boxed_radio_column {
+      width = 80;
+      height = 2;
+      : popup_list { 
+        label = "选择要修改的数据类型：";
+        edit_width = 29;
+        key = "exportDataType"; 
+        list = "";
+        value = "";
+      }
+      : spacer { height = 1; }
+      : popup_list { 
+        label = "块属性名：";
+        edit_width = 29;
+        key = "blockPropertyName"; 
+        list = "";
+        value = "";
+      }
+      : spacer { height = 1; }
+      : row {
+        : text {
+          key = "propertyWidthText";
+          label = "设置属性字体宽度：";
+        }
+        : edit_box {
+          key = "propertyTextWidth";
+          edit_width = 30;
+          mnemonic = "N";
+          value = "";
+        }
+      }
+      : spacer { height = 1; }
+
+      : text {
+        key = "exportDataNumMsg";
+        label = "选择数据数量：";
+      } 
+      : spacer { height = 1; }
+      : text {
+        key = "exportBtnMsg";
+        label = "修改数据状态：";
+      } 
+      : spacer { height = 4; }
+      : row { 
+        fixed_width = true; 
+        alignment = centered; 
+        : button { 
+          key = "btnSelect"; 
+          label = "选取"; 
+          is_default = "true"; 
+        } 
+        : spacer { width = 1; } 
+        : button { 
+          key = "btnAllSelect"; 
+          label = "全选"; 
+          is_default = "true"; 
+        } 
+        : spacer { width = 1; } 
+        : button { 
+          key = "btnExportData"; 
+          label = "修改"; 
+          is_default = "true"; 
+        } 
+        : spacer { width = 1; }  
+        cancel_button; 
+      }
+      : spacer { height = 3; } 
+    }
   }
 }

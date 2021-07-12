@@ -1495,10 +1495,6 @@
   )
 )
 
-(defun c:foo ()
-  (GetEntityDataBySSUtils (GetNsRoomAndHatchSSBySelect))
-)
-
 ; 2021-07-11
 (defun FilterNsRoomEntityData (roomAndHatchEntityData /) 
   (car 

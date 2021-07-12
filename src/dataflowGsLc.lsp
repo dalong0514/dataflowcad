@@ -1209,6 +1209,137 @@
 ;;;-------------------------------------------------------------------------;;;
 
 
+;;;-------------------------------------------------------------------------;;;
+; Modify DataFlow Block
+
+;; 2021-07-12
+(defun c:ModifyBlockPropertyWidth ()
+  (ExecuteFunctionAfterVerifyDateUtils 'ModifyBlockPropertyWidthByBox '("ModifyBlockPropertyWidthByBox"))
+)
+
+(defun GetModifyBlockPropertyWidthDataTypeList ()
+  '("Instrument" "Pipe")
+)
+
+(defun GetModifyBlockPropertyWidthDataTypeChNameList ()
+  '("仪表数据" "管道数据")
+)
+
+(defun GetPropertyChNameListStrategyForModifyWidth (dataTypeId /) 
+  (cond 
+    ((= dataTypeId "0") (GetInstrumentPropertyChNameListForModifyWidth))
+    ((= dataTypeId "1") (GetPipePropertyChNameListForModifyWidth))
+  )
+)
+
+(defun GetPropertyNameListStrategyForModifyWidth (dataTypeId /) 
+  (cond 
+    ((= dataTypeId "0") (GetInstrumentPropertyNameListForModifyWidth))
+    ((= dataTypeId "1") (GetPipePropertyNameListForModifyWidth))
+  )
+)
+
+(defun GetInstrumentPropertyNameListForModifyWidth ()
+  '("TAG" "FUNCTION" "SUBSTANCE" "TEMP" "PRESSURE" "SORT" "LOCATION")
+)
+
+(defun GetInstrumentPropertyChNameListForModifyWidth ()
+  '("仪表位号" "仪表功能代号" "工作介质" "工作温度" "工作压力" "仪表类型" "所在位置")
+)
+
+(defun GetPipePropertyNameListForModifyWidth ()
+  '("PIPENUM" "SUBSTANCE" "TEMP" "PRESSURE" "PHASE" "FROM" "TO")
+)
+
+(defun GetPipePropertyChNameListForModifyWidth ()
+  '("管道编号" "工作介质" "工作温度" "工作压力" "相态" "管道起点" "管道终点")
+)
+
+; 2021-07-12
+(defun ModifyBlockPropertyWidthByBox (tileName / dcl_id status dataTypeList exportDataType dataType propertyTextWidth blockPropertyName exportMsgBtnStatus ss sslen dataList) 
+  (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\dcl\\" "dataflowGs.dcl")))
+  (setq status 2)
+  (setq dataTypeList (GetModifyBlockPropertyWidthDataTypeList))
+  (while (>= status 2)
+    ; Create the dialog box
+    (new_dialog tileName dcl_id "" '(-1 -1))
+    ; Add the actions to the button
+    (action_tile "cancel" "(done_dialog 0)")
+    (action_tile "btnSelect" "(done_dialog 2)")
+    (action_tile "btnAllSelect" "(done_dialog 3)") 
+    (action_tile "btnExportData" "(done_dialog 4)") 
+    ; Set the default value
+    (mode_tile "propertyTextWidth" 2)
+    (action_tile "exportDataType" "(setq exportDataType $value)")
+    (action_tile "blockPropertyName" "(setq blockPropertyName $value)")
+    (action_tile "propertyTextWidth" "(setq propertyTextWidth $value)")
+    ; init the default value list box
+    (if (= nil exportDataType)
+      (setq exportDataType "0")
+    )
+    (if (= nil blockPropertyName)
+      (setq blockPropertyName "0")
+    )
+    (if (= nil propertyTextWidth)
+      (setq propertyTextWidth "0.6")
+    )
+    (if (/= exportMsgBtnStatus nil)
+      (set_tile "exportDataType" exportDataType)
+    )
+    (if (= exportMsgBtnStatus 1)
+      (set_tile "exportBtnMsg" "修改数据状态：已完成")
+    )
+    (if (/= sslen nil)
+      (set_tile "exportDataNumMsg" (strcat "导出数据数量： " (rtos sslen)))
+    )
+    (progn
+      (start_list "exportDataType" 3)
+      (mapcar '(lambda (x) (add_list x)) 
+                (GetModifyBlockPropertyWidthDataTypeChNameList))
+      (end_list)
+      (start_list "blockPropertyName" 3)
+      (mapcar '(lambda (x) (add_list x)) 
+                (GetPropertyChNameListStrategyForModifyWidth exportDataType))
+      (end_list)
+    )
+    (set_tile "exportDataType" exportDataType)
+    (set_tile "blockPropertyName" blockPropertyName)
+    (set_tile "propertyTextWidth" propertyTextWidth)
+    ; select button
+    (if (= 2 (setq status (start_dialog))) 
+      (progn 
+        (setq dataType (nth (atoi exportDataType) dataTypeList))
+        (setq ss (GetBlockSSBySelectByDataTypeUtils dataType))
+        (setq sslen (sslength ss)) 
+      )
+    )
+    ; All select button
+    (if (= 3 status) 
+      (progn 
+        (setq dataType (nth (atoi exportDataType) dataTypeList))
+        (setq ss (GetAllBlockSSByDataTypeUtils dataType))
+        (setq sslen (sslength ss)) 
+      )
+    ) 
+    ; confirm modify data button
+    (if (= 4 status) 
+      (progn 
+        (princ (nth (atoi blockPropertyName) (GetPropertyNameListStrategyForModifyWidth exportDataType)))
+        (ModifyBlockPropertyTextWidthUtils 
+          (GetEntityNameListBySSUtils ss) 
+          (nth (atoi blockPropertyName) (GetPropertyNameListStrategyForModifyWidth exportDataType))
+          (atof propertyTextWidth)) 
+        (setq exportMsgBtnStatus 1)
+      )
+    ) 
+  )
+  (unload_dialog dcl_id)
+  (princ)
+)
+
+; Modify DataFlow Block
+;;;-------------------------------------------------------------------------;;;
+
 
 ;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
