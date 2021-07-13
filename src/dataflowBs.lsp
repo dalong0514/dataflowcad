@@ -1230,12 +1230,10 @@
   (InsertBsGCTDrawFrame insPt equipTag bsGCTProjectDictData drawFrameScale)
   (setq oneEquipNozzleDictData (GetBsGCTOneEquipNozzleDictDataV2 equipTag allNozzleDictData))
   (InsertBsGCTEquipTableStrategy insPt bsGCTType oneTankData tankStandardList tankRequirementList 
-    tankPressureElementList tankOtherRequestList equipType drawFrameScale)
+    tankPressureElementList tankOtherRequestList equipType drawFrameScale oneEquipNozzleDictData)
   ; thickNess param refactored at 2021-04-21 ; Graph insPt updated by drawFrameScale - 2021-06-12
   (InsertBsGCTTankGraphyStrategy (MoveInsertPositionUtils insPt (* drawFrameScale -583) (* drawFrameScale 280)) 
     barrelRadius barrelHalfHeight thickNess headThickNess bsGCTType straightEdgeHeight equipType allBsGCTSupportDictData drawFrameScale)
-  
-  
 )
 
 ; 2021-05-27
@@ -1258,7 +1256,7 @@
   (InsertBsGCTDrawFrame insPt equipTag bsGCTProjectDictData drawFrameScale)
   (setq oneEquipNozzleDictData (GetBsGCTOneEquipNozzleDictDataV2 equipTag allNozzleDictData))
   (InsertBsGCTEquipTableStrategy insPt bsGCTType oneHeaterData heaterStandardList heaterRequirementList 
-                           heaterPressureElementList heaterOtherRequestList equipType drawFrameScale)
+                           heaterPressureElementList heaterOtherRequestList equipType drawFrameScale oneEquipNozzleDictData)
   ; Graph insPt updated by drawFrameScale - 2021-06-12
   (InsertBsGCTHeaterGraphyStrategy (MoveInsertPositionUtils insPt (* drawFrameScale -583) (* drawFrameScale 280)) 
     barrelRadius barrelHalfHeight exceedLength thickNess headThickNess bsGCTType straightEdgeHeight equipType allBsGCTSupportDictData drawFrameScale)
@@ -1283,22 +1281,25 @@
   (InsertBsGCTDrawFrame insPt equipTag bsGCTProjectDictData drawFrameScale)
   (setq oneEquipNozzleDictData (GetBsGCTOneEquipNozzleDictDataV2 equipTag allNozzleDictData))
   (InsertBsGCTEquipTableStrategy insPt bsGCTType oneReactorData reactorStandardList reactorRequirementList 
-                          reactorPressureElementList reactorOtherRequestList equipType drawFrameScale)
+                          reactorPressureElementList reactorOtherRequestList equipType drawFrameScale oneEquipNozzleDictData)
   ; Graph insPt updated by drawFrameScale - 2021-06-12
   (InsertBsGCTReactorGraphy (MoveInsertPositionUtils insPt (* drawFrameScale -583) (* drawFrameScale 280)) 
     barrelRadius barrelHalfHeight thickNess headThickNess bsGCTType straightEdgeHeight allBsGCTSupportDictData drawFrameScale)
 )
 
 ; 2021-05-13
-(defun UpdateOneBsTankGCT (insPt oneTankData tankPressureElementList tankOtherRequestList tankStandardList tankRequirementList / 
-                          drawFrameScale equipTag bsGCTType equipType) 
+(defun UpdateOneBsTankGCT (insPt oneTankData tankPressureElementList tankOtherRequestList tankStandardList tankRequirementList allNozzleDictData / 
+                          drawFrameScale equipTag bsGCTType equipType oneEquipNozzleDictData) 
   (setq drawFrameScale 5)
   (setq equipTag (GetDottedPairValueUtils "TAG" oneTankData))
   (setq bsGCTType equipTag)
   ; (setq insPt (GetGCTFramePositionByEquipTag equipTag))
   (setq equipType (GetBsGCTEquipTypeStrategy (GetDottedPairValueUtils "equipType" oneTankData)))
+  ;; 2021-07-13
+  (setq oneEquipNozzleDictData (GetBsGCTOneEquipNozzleDictDataV2 equipTag allNozzleDictData))
+  
   (InsertBsGCTEquipTableStrategy insPt bsGCTType oneTankData tankStandardList tankRequirementList 
-                          tankPressureElementList tankOtherRequestList equipType drawFrameScale)
+                          tankPressureElementList tankOtherRequestList equipType drawFrameScale oneEquipNozzleDictData)
   (princ)
 )
 
@@ -1490,7 +1491,7 @@
 ; refactored at 2021-05-18
 ; refactored at 2021-05-25 equipHeadStyleList equipHeadMaterialList => equipRequirementList
 (defun InsertBsGCTEquipTableStrategy (insPt bsGCTType oneEquipData equipStandardList equipRequirementList 
-                                      equipPressureElementList equipOtherRequestList equipType drawFrameScale /)
+                                      equipPressureElementList equipOtherRequestList equipType drawFrameScale oneEquipNozzleDictData /)
   (cond 
     ((= equipType "verticalTank") 
      (InsertGCTOneBsVerticalTankTable insPt bsGCTType oneEquipData 
@@ -1790,7 +1791,7 @@
 ; 2021-05-13
 ; refacotred at 2021-06-15
 (defun UpdateBsGCTTankByEquipTag (equipTagList equipPositionList / allBsGCTTankDictData allPressureElementDictData allStandardDictData 
-                                  allRequirementDictData allOtherRequestDictData tankPressureElementList tankOtherRequestList tankStandardList tankRequirementList insPtList) 
+                                  allRequirementDictData allOtherRequestDictData allNozzleDictData tankPressureElementList tankOtherRequestList tankStandardList tankRequirementList) 
   (VerifyBsGCTBlockLayerText)
   (DeleteBsGCTTableByEquipTagListUtils equipTagList)
   (DeleteBsGCTPolyLineAndTextByEquipTagListUtils equipTagList)
@@ -1802,14 +1803,14 @@
   (setq allStandardDictData (GetBsGCTAllStandardDictData))
   (setq allRequirementDictData (GetBsGCTAllRequirementDictData))
   (setq allOtherRequestDictData (GetBsGCTAllOtherRequestDictData))
+  (setq allNozzleDictData (GetBsGCTAllNozzleDictData))
   
   (setq tankPressureElementList (GetBsGCTTankAssembleData allPressureElementDictData))
   (setq tankOtherRequestList (GetBsGCTTankAssembleData allOtherRequestDictData)) 
   (setq tankStandardList (GetBsGCTTankAssembleData allStandardDictData)) 
   (setq tankRequirementList (GetBsGCTTankAssembleData allRequirementDictData)) 
-  
   (mapcar '(lambda (x y) 
-            (UpdateOneBsTankGCT x y tankPressureElementList tankOtherRequestList tankStandardList tankRequirementList) 
+            (UpdateOneBsTankGCT x y tankPressureElementList tankOtherRequestList tankStandardList tankRequirementList allNozzleDictData) 
           ) 
     equipPositionList
     allBsGCTTankDictData 
