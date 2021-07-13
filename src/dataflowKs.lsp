@@ -426,6 +426,22 @@
 )
 
 ;;;-------------------------------------------------------------------------;;;
+; Insert KsInstallMaterial Block
+
+; 2021-07-13
+(defun c:InsertBlockKsInstallMaterial ()
+  (ExecuteFunctionAfterVerifyDateUtils 'InsertBlockKsInstallMaterialMacro '())
+)
+
+; refactored at 2021-07-07
+(defun InsertBlockKsInstallMaterialMacro (/ ss insPt) 
+  (setq insPt (getpoint "\n统计安装材料块的插入点："))
+  (VerifyKsBlockByName "KsInstallMaterial")
+  (VerifyKsLayerByName "0DataFlow-KsInstallMaterial")
+  (InsertBlockByNoPropertyUtils insPt "KsInstallMaterial" "0DataFlow-KsInstallMaterial")
+)
+
+;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
 ; Utils Functon in Ks
 

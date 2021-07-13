@@ -10,6 +10,12 @@
 ;;;-------------------------------------------------------------------------;;;
 ; Steal Gs AutoCAD Modules
 
+; 2021-07-13
+(defun GetKsModulesPath (/ result)
+  ; (setq result "D:\\dataflowcad\\allBlocks\\KsBlocks.dwg")
+  (setq result "\\\\192.168.1.38\\dataflow\\allBlocks\\KsBlocks.dwg")
+)
+
 ; 2021-06-26
 (defun GetJsBzModulesPath (/ result)
   ; (setq result "D:\\dataflowcad\\allBlocks\\JsBzBlocks.dwg")
@@ -48,6 +54,44 @@
 (defun GetBsModulesPath (/ result)
   ; (setq result "D:\\dataflowcad\\allBlocks\\BsGCTBlocks.dwg")
   (setq result "\\\\192.168.1.38\\dataflow\\allBlocks\\BsGCTBlocks.dwg")
+)
+
+
+
+; 2021-07-13
+(defun StealKsBlockByNameList (blockNameList /)
+  (Steal (GetKsModulesPath) 
+    (list 
+      (list "Blocks" blockNameList)
+    )
+  ) 
+)
+
+; 2021-07-13
+(defun StealKsLayerByNameList (layerNameList /)
+  (Steal (GetKsModulesPath) 
+    (list 
+      (list "Layers" layerNameList)
+    )
+  ) 
+)
+
+; 2021-07-13
+(defun StealKsTextStyleByNameList (textStyleNameList /)
+  (Steal (GetKsModulesPath) 
+    (list 
+      (list "Text Styles" textStyleNameList)
+    )
+  ) 
+)
+
+; 2021-07-13
+(defun StealKsDimensionStyleByNameList (dimensionStyleNameList /)
+  (Steal (GetKsModulesPath) 
+    (list 
+      (list "Dimension Styles" dimensionStyleNameList)
+    )
+  ) 
 )
 
 ; 2021-06-26
@@ -259,6 +303,27 @@
 
 
 
+
+; 2021-07-13
+(defun VerifyKsBlockByName (blockName /) 
+  (if (= (tblsearch "BLOCK" blockName) nil) 
+    (StealKsBlockByNameList (list blockName))
+  )
+)
+
+; 2021-07-13
+(defun VerifyKsLayerByName (layerName /) 
+  (if (= (tblsearch "LAYER" layerName) nil) 
+    (StealKsLayerByNameList (list layerName))
+  )
+)
+
+; 2021-07-13
+(defun VerifyKsTextStyleByName (textStyleName /) 
+  (if (= (tblsearch "STYLE" textStyleName) nil) 
+    (StealKsTextStyleByNameList (list textStyleName))
+  )
+)
 
 ; 2021-06-26
 (defun VerifyJsBzBlockByName (blockName /) 
