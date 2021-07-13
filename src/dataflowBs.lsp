@@ -411,11 +411,10 @@
 
 ; 2021-04-17
 ; refactored at 2021-06-12 drawFrameScale
-(defun InsertBsGCTNozzleTable (insPt dataType oneTankData drawFrameScale / oneBsGCTTankNozzleDictData) 
-  (setq oneBsGCTTankNozzleDictData (GetBsGCTOneEquipNozzleDictData (GetDottedPairValueUtils "TAG" oneTankData)))
+(defun InsertBsGCTNozzleTable (insPt dataType oneTankData drawFrameScale oneEquipNozzleDictData /) 
   (InsertBlockByScaleUtils insPt "BsGCTTableNozzleTableHeader" "0DataFlow-BsGCT" (list (cons 0 dataType)) drawFrameScale)
-  (if (/= oneBsGCTTankNozzleDictData nil) 
-    (InsertBsGCTNozzleTableRow (MoveInsertPositionUtils insPt 0 (* drawFrameScale -26)) dataType oneBsGCTTankNozzleDictData drawFrameScale)
+  (if (/= oneEquipNozzleDictData nil) 
+    (InsertBsGCTNozzleTableRow (MoveInsertPositionUtils insPt 0 (* drawFrameScale -26)) dataType oneEquipNozzleDictData drawFrameScale)
   )
 )
 
@@ -1043,18 +1042,8 @@
 
 ; 2021-04-20
 ; rename function at 2021-06-14
-; refactored at 2021-07-14
-(defun GetBsGCTOneEquipNozzleDictData (tankTag /) 
-  (mapcar '(lambda (x) (cdr x)) 
-    (vl-remove-if-not '(lambda (x) 
-                        (= (GetDottedPairValueUtils "TAG" x) tankTag) 
-                      ) 
-      (GetBsGCTAllNozzleDictData)
-    )  
-  ) 
-)
-
-(defun GetBsGCTOneEquipNozzleDictDataV2 (tankTag allNozzleDictData /) 
+; refactored at 2021-07-13
+(defun GetBsGCTOneEquipNozzleDictData (tankTag allNozzleDictData /) 
   (mapcar '(lambda (x) (cdr x)) 
     (vl-remove-if-not '(lambda (x) 
                         (= (GetDottedPairValueUtils "TAG" x) tankTag) 
@@ -1228,7 +1217,7 @@
   (setq straightEdgeHeight (GetBsGCTStraightEdgeHeightEnums barrelRadius))
   (setq equipType (GetBsGCTEquipTypeStrategy (GetDottedPairValueUtils "equipType" oneTankData)))
   (InsertBsGCTDrawFrame insPt equipTag bsGCTProjectDictData drawFrameScale)
-  (setq oneEquipNozzleDictData (GetBsGCTOneEquipNozzleDictDataV2 equipTag allNozzleDictData))
+  (setq oneEquipNozzleDictData (GetBsGCTOneEquipNozzleDictData equipTag allNozzleDictData))
   (InsertBsGCTEquipTableStrategy insPt bsGCTType oneTankData tankStandardList tankRequirementList 
     tankPressureElementList tankOtherRequestList equipType drawFrameScale oneEquipNozzleDictData)
   ; thickNess param refactored at 2021-04-21 ; Graph insPt updated by drawFrameScale - 2021-06-12
@@ -1254,7 +1243,7 @@
   (setq straightEdgeHeight (GetBsGCTStraightEdgeHeightEnums barrelRadius))
   (setq equipType (GetBsGCTEquipTypeStrategy (GetDottedPairValueUtils "equipType" oneHeaterData)))
   (InsertBsGCTDrawFrame insPt equipTag bsGCTProjectDictData drawFrameScale)
-  (setq oneEquipNozzleDictData (GetBsGCTOneEquipNozzleDictDataV2 equipTag allNozzleDictData))
+  (setq oneEquipNozzleDictData (GetBsGCTOneEquipNozzleDictData equipTag allNozzleDictData))
   (InsertBsGCTEquipTableStrategy insPt bsGCTType oneHeaterData heaterStandardList heaterRequirementList 
                            heaterPressureElementList heaterOtherRequestList equipType drawFrameScale oneEquipNozzleDictData)
   ; Graph insPt updated by drawFrameScale - 2021-06-12
@@ -1279,7 +1268,7 @@
   (setq straightEdgeHeight (GetBsGCTStraightEdgeHeightEnums barrelRadius))
   (setq equipType (GetBsGCTEquipTypeStrategy (GetDottedPairValueUtils "equipType" oneReactorData)))
   (InsertBsGCTDrawFrame insPt equipTag bsGCTProjectDictData drawFrameScale)
-  (setq oneEquipNozzleDictData (GetBsGCTOneEquipNozzleDictDataV2 equipTag allNozzleDictData))
+  (setq oneEquipNozzleDictData (GetBsGCTOneEquipNozzleDictData equipTag allNozzleDictData))
   (InsertBsGCTEquipTableStrategy insPt bsGCTType oneReactorData reactorStandardList reactorRequirementList 
                           reactorPressureElementList reactorOtherRequestList equipType drawFrameScale oneEquipNozzleDictData)
   ; Graph insPt updated by drawFrameScale - 2021-06-12
@@ -1296,7 +1285,7 @@
   ; (setq insPt (GetGCTFramePositionByEquipTag equipTag))
   (setq equipType (GetBsGCTEquipTypeStrategy (GetDottedPairValueUtils "equipType" oneTankData)))
   ;; 2021-07-13
-  (setq oneEquipNozzleDictData (GetBsGCTOneEquipNozzleDictDataV2 equipTag allNozzleDictData))
+  (setq oneEquipNozzleDictData (GetBsGCTOneEquipNozzleDictData equipTag allNozzleDictData))
   
   (InsertBsGCTEquipTableStrategy insPt bsGCTType oneTankData tankStandardList tankRequirementList 
                           tankPressureElementList tankOtherRequestList equipType drawFrameScale oneEquipNozzleDictData)
@@ -1328,7 +1317,7 @@
 ; refacotred at 2021-05-07
 ; refactored at 2021-05-18
 (defun InsertGCTOneBsVerticalTankTable (insPt bsGCTType oneTankData tankStandardList tankHeadStyleList tankHeadMaterialList 
-                                tankPressureElementList tankOtherRequestList drawFrameScale / leftInsPt rightInsPt) 
+                                tankPressureElementList tankOtherRequestList drawFrameScale oneEquipNozzleDictData / leftInsPt rightInsPt) 
   ; split oneTankData to Two Parts - no need to split 2021-06-11
   ; (setq designParamDictList (cadr (SplitDictListByDictKeyUtils "SERVIVE_LIFE" oneTankData)))
   (setq leftInsPt (MoveInsertPositionUtils insPt (* drawFrameScale -180) (* drawFrameScale 574)))
@@ -1346,7 +1335,7 @@
   (InsertBsGCTOtherRequest leftInsPt bsGCTType tankOtherRequestList (* drawFrameScale 54) drawFrameScale)
   ; the height of BsGCTOtherRequest is 270 ; height is 168 for 1:1 - refactored at 2021-06-12
   (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 (* drawFrameScale -54)))
-  (InsertBsGCTNozzleTable leftInsPt bsGCTType oneTankData drawFrameScale)
+  (InsertBsGCTNozzleTable leftInsPt bsGCTType oneTankData drawFrameScale oneEquipNozzleDictData)
   ; insert tabe in right position
   ; the height of BsGCTDataHeader is 50 ; height is 10 for 1:1 - refactored at 2021-06-12
   (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 (* drawFrameScale -10)))
@@ -1365,7 +1354,7 @@
 ; 2021-05-16
 ; refactored at 2021-05-18
 (defun InsertGCTOneBsHorizontalTankTable (insPt bsGCTType oneTankData tankStandardList tankHeadStyleList tankHeadMaterialList 
-                                tankPressureElementList tankOtherRequestList drawFrameScale / leftInsPt rightInsPt) 
+                                tankPressureElementList tankOtherRequestList drawFrameScale oneEquipNozzleDictData / leftInsPt rightInsPt) 
   ; split oneTankData to Two Parts
   ; (setq designParamDictList (cadr (SplitDictListByDictKeyUtils "SERVIVE_LIFE" oneTankData)))
   (setq leftInsPt (MoveInsertPositionUtils insPt (* drawFrameScale -180) (* drawFrameScale 574)))
@@ -1384,7 +1373,7 @@
   ; self-calculate the height of BsGCTOtherRequest 2021-06-15
   (InsertBsGCTOtherRequest leftInsPt bsGCTType tankOtherRequestList (* drawFrameScale (+ (* (length tankOtherRequestList) 6) 15)) drawFrameScale)
   (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 (* drawFrameScale (GetNegativeNumberUtils (+ (* (length tankOtherRequestList) 6) 15)))))
-  (InsertBsGCTNozzleTable leftInsPt bsGCTType oneTankData drawFrameScale)
+  (InsertBsGCTNozzleTable leftInsPt bsGCTType oneTankData drawFrameScale oneEquipNozzleDictData)
   ; insert tabe in right position
   ; the height of BsGCTDataHeader is 50 ; height is 10 for 1:1 - refactored at 2021-06-12
   (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 (* drawFrameScale -10)))
@@ -1402,7 +1391,7 @@
 
 ; 2021-05-25
 (defun InsertGCTOneBsHeaterTable (insPt bsGCTType oneHeaterData heaterStandardList heaterHeadStyleList heaterHeadMaterialList 
-                                heaterPressureElementList heaterOtherRequestList drawFrameScale / leftInsPt rightInsPt) 
+                                heaterPressureElementList heaterOtherRequestList drawFrameScale oneEquipNozzleDictData / leftInsPt rightInsPt) 
   ; split oneHeaterData to Two Parts
   ; (setq designParamDictList (cadr (SplitDictListByDictKeyUtils "SERVIVE_LIFE" oneHeaterData)))
   (setq leftInsPt (MoveInsertPositionUtils insPt (* drawFrameScale -180) (* drawFrameScale 574)))
@@ -1421,7 +1410,7 @@
   ; self-calculate the height of BsGCTOtherRequest 2021-06-15
   (InsertBsGCTOtherRequest leftInsPt bsGCTType heaterOtherRequestList (* drawFrameScale (+ (* (length heaterOtherRequestList) 6) 15)) drawFrameScale)
   ; Nozzle Table put the left zone - refactored at - 2021-06-12
-  (InsertBsGCTNozzleTable leftNozzleInsPt bsGCTType oneHeaterData drawFrameScale)
+  (InsertBsGCTNozzleTable leftNozzleInsPt bsGCTType oneHeaterData drawFrameScale oneEquipNozzleDictData)
   ; insert tabe in right position
   ; the height of BsGCTDataHeader is 50 ; height is 10 for 1:1 - refactored at 2021-06-12
   (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 (* drawFrameScale -10)))
@@ -1439,7 +1428,7 @@
 
 ; 2021-06-15
 (defun InsertGCTOneBsReactorTable (insPt bsGCTType oneReactorData standardList reactorHeadStyleList reactorHeadMaterialList 
-                                reactorPressureElementList reactorOtherRequestList drawFrameScale / leftInsPt rightInsPt) 
+                                reactorPressureElementList reactorOtherRequestList drawFrameScale oneEquipNozzleDictData / leftInsPt rightInsPt) 
   ; split oneReactorData to Two Parts
   ; (setq designParamDictList (cadr (SplitDictListByDictKeyUtils "SERVIVE_LIFE" oneReactorData)))
   (setq leftInsPt (MoveInsertPositionUtils insPt (* drawFrameScale -180) (* drawFrameScale 574)))
@@ -1459,7 +1448,7 @@
   (InsertBsGCTOtherRequest leftInsPt bsGCTType reactorOtherRequestList (* drawFrameScale (+ (* (length reactorOtherRequestList) 6) 15)) drawFrameScale)
   (setq leftInsPt (MoveInsertPositionUtils leftInsPt 0 (* drawFrameScale -70)))
   ; Nozzle Table put the left zone - refactored at - 2021-06-12
-  (InsertBsGCTNozzleTable leftNozzleInsPt bsGCTType oneReactorData drawFrameScale)
+  (InsertBsGCTNozzleTable leftNozzleInsPt bsGCTType oneReactorData drawFrameScale oneEquipNozzleDictData)
   ; insert tabe in right position
   ; the height of BsGCTDataHeader is 50 ; height is 10 for 1:1 - refactored at 2021-06-12
   (setq rightInsPt (MoveInsertPositionUtils rightInsPt 0 (* drawFrameScale -10)))
@@ -1504,6 +1493,7 @@
        (FilterBsGCTPressureElementByTypeNum equipPressureElementList (GetDottedPairValueUtils "pressureElementType" oneEquipData))
        (FilterBsGCTTextDataByTypeNum equipOtherRequestList (GetDottedPairValueUtils "otherRequestType" oneEquipData))
        drawFrameScale
+       oneEquipNozzleDictData
      ))
     ((= equipType "horizontalTank") 
      (InsertGCTOneBsHorizontalTankTable insPt bsGCTType oneEquipData 
@@ -1513,6 +1503,7 @@
        (FilterBsGCTPressureElementByTypeNum equipPressureElementList (GetDottedPairValueUtils "pressureElementType" oneEquipData)) 
        (FilterBsGCTTextDataByTypeNum equipOtherRequestList (GetDottedPairValueUtils "otherRequestType" oneEquipData))
        drawFrameScale
+       oneEquipNozzleDictData
      ))
     ((or (= equipType "verticalHeater") (= equipType "horizontalHeater")) 
      (InsertGCTOneBsHeaterTable insPt bsGCTType oneEquipData 
@@ -1522,6 +1513,7 @@
        (FilterBsGCTPressureElementByTypeNum equipPressureElementList (GetDottedPairValueUtils "pressureElementType" oneEquipData)) 
        (FilterBsGCTTextDataByTypeNum equipOtherRequestList (GetDottedPairValueUtils "otherRequestType" oneEquipData))
        drawFrameScale
+       oneEquipNozzleDictData
      ))
     ((= equipType "reactor") 
      (InsertGCTOneBsReactorTable insPt bsGCTType oneEquipData 
@@ -1531,6 +1523,7 @@
        (FilterBsGCTPressureElementByTypeNum equipPressureElementList (GetDottedPairValueUtils "pressureElementType" oneEquipData))
        (FilterBsGCTTextDataByTypeNum equipOtherRequestList (GetDottedPairValueUtils "otherRequestType" oneEquipData))
        drawFrameScale
+       oneEquipNozzleDictData
      ))
   )
 )
