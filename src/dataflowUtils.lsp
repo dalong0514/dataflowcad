@@ -41,6 +41,8 @@
 
 ; 2021-04-20
 (defun c:PurgeAllDataMacro () 
+  ; get information from wangyun[IT]
+  (dictremove (namedobjdict) "ACAD_DGNLINESTYLECOMP")
   (ExecuteFunctionAfterVerifyDateUtils 'PurgeAllUtils '())
   (princ "\n清理完成！")(princ)
 )
