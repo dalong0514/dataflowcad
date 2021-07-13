@@ -1213,7 +1213,7 @@
 ; refacotred at 2021-05-07
 (defun InsertOneBsGCTTank (insPt oneTankData tankPressureElementList tankOtherRequestList tankStandardList tankRequirementList 
                            allBsGCTSupportDictData bsGCTProjectDictData allNozzleDictData / 
-                           drawFrameScale equipTag bsGCTType barrelRadius barrelHalfHeight thickNess headThickNess straightEdgeHeight equipType) 
+                           drawFrameScale equipTag bsGCTType barrelRadius barrelHalfHeight thickNess headThickNess straightEdgeHeight equipType oneEquipNozzleDictData) 
   ; (setq drawFrameScale 8)
   (setq drawFrameScale (atoi (GetDottedPairValueUtils "drawFrameScale" oneTankData)))
   (setq equipTag (GetDottedPairValueUtils "TAG" oneTankData))
@@ -1228,17 +1228,20 @@
   (setq straightEdgeHeight (GetBsGCTStraightEdgeHeightEnums barrelRadius))
   (setq equipType (GetBsGCTEquipTypeStrategy (GetDottedPairValueUtils "equipType" oneTankData)))
   (InsertBsGCTDrawFrame insPt equipTag bsGCTProjectDictData drawFrameScale)
+  (setq oneEquipNozzleDictData (GetBsGCTOneEquipNozzleDictDataV2 equipTag allNozzleDictData))
   (InsertBsGCTEquipTableStrategy insPt bsGCTType oneTankData tankStandardList tankRequirementList 
     tankPressureElementList tankOtherRequestList equipType drawFrameScale)
   ; thickNess param refactored at 2021-04-21 ; Graph insPt updated by drawFrameScale - 2021-06-12
   (InsertBsGCTTankGraphyStrategy (MoveInsertPositionUtils insPt (* drawFrameScale -583) (* drawFrameScale 280)) 
     barrelRadius barrelHalfHeight thickNess headThickNess bsGCTType straightEdgeHeight equipType allBsGCTSupportDictData drawFrameScale)
+  
+  
 )
 
 ; 2021-05-27
 (defun InsertOneBsGCTHeater (insPt oneHeaterData heaterPressureElementList heaterOtherRequestList heaterStandardList heaterRequirementList
                              allBsGCTSupportDictData bsGCTProjectDictData allNozzleDictData / 
-                             drawFrameScale equipTag bsGCTType barrelRadius barrelHalfHeight exceedLength thickNess headThickNess straightEdgeHeight equipType) 
+                             drawFrameScale equipTag bsGCTType barrelRadius barrelHalfHeight exceedLength thickNess headThickNess straightEdgeHeight equipType oneEquipNozzleDictData) 
   (setq drawFrameScale (atoi (GetDottedPairValueUtils "drawFrameScale" oneHeaterData)))
   (setq equipTag (GetDottedPairValueUtils "TAG" oneHeaterData))
   ; use equipTag as the label for data
@@ -1253,6 +1256,7 @@
   (setq straightEdgeHeight (GetBsGCTStraightEdgeHeightEnums barrelRadius))
   (setq equipType (GetBsGCTEquipTypeStrategy (GetDottedPairValueUtils "equipType" oneHeaterData)))
   (InsertBsGCTDrawFrame insPt equipTag bsGCTProjectDictData drawFrameScale)
+  (setq oneEquipNozzleDictData (GetBsGCTOneEquipNozzleDictDataV2 equipTag allNozzleDictData))
   (InsertBsGCTEquipTableStrategy insPt bsGCTType oneHeaterData heaterStandardList heaterRequirementList 
                            heaterPressureElementList heaterOtherRequestList equipType drawFrameScale)
   ; Graph insPt updated by drawFrameScale - 2021-06-12
@@ -1263,7 +1267,7 @@
 ; 2021-06-15
 (defun InsertOneBsGCTReactor (insPt oneReactorData reactorPressureElementList reactorOtherRequestList reactorStandardList reactorRequirementList 
                              allBsGCTSupportDictData bsGCTProjectDictData allNozzleDictData / 
-                             drawFrameScale equipTag bsGCTType barrelRadius barrelHalfHeight thickNess headThickNess straightEdgeHeight equipType) 
+                             drawFrameScale equipTag bsGCTType barrelRadius barrelHalfHeight thickNess headThickNess straightEdgeHeight equipType oneEquipNozzleDictData) 
   (setq drawFrameScale (atoi (GetDottedPairValueUtils "drawFrameScale" oneReactorData)))
   (setq equipTag (GetDottedPairValueUtils "TAG" oneReactorData))
   ; use equipTag as the label for data
@@ -1277,6 +1281,7 @@
   (setq straightEdgeHeight (GetBsGCTStraightEdgeHeightEnums barrelRadius))
   (setq equipType (GetBsGCTEquipTypeStrategy (GetDottedPairValueUtils "equipType" oneReactorData)))
   (InsertBsGCTDrawFrame insPt equipTag bsGCTProjectDictData drawFrameScale)
+  (setq oneEquipNozzleDictData (GetBsGCTOneEquipNozzleDictDataV2 equipTag allNozzleDictData))
   (InsertBsGCTEquipTableStrategy insPt bsGCTType oneReactorData reactorStandardList reactorRequirementList 
                           reactorPressureElementList reactorOtherRequestList equipType drawFrameScale)
   ; Graph insPt updated by drawFrameScale - 2021-06-12
