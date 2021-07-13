@@ -771,12 +771,13 @@
 )
 
 ; 2021-05-08
-; refactored at 2021-07-07
+; refactored at 2021-07-07 delete the binded dataId
+; refactored at 2021-07-13 recover the binded dataId, do not effect the function [UpdatePipeDataFromEquip]
 (defun ModifyGsLcPipeEndData (entityNameList endData /)
   (mapcar '(lambda (x) 
             (ModifyMultiplePropertyForOneBlockUtils x 
-              (list "TO") 
-              (list (cdr endData)))
+              (list "VERSION" "TO") 
+              (list (car endData) (cdr endData)))
           ) 
     entityNameList
   )
