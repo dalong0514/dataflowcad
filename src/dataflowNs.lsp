@@ -1286,7 +1286,7 @@
   (setq pt1 (getpoint "\nPick internal point: "))
   (setq pt2 (getpoint "\nPick internal point: "))
   (setq ptList (list pt1 pt2))
-  (CADLispBo ss ptList)
+  (CADLispBoUtils ss ptList)
 )
 
 ; 2021-07-06

@@ -33,9 +33,9 @@
 
 ; refactored at 2021-04-09
 (defun MoveJSDrawForVentingMacro () 
-  (CADLispCopy (GetAllMoveDrawLabelSS) '(0 0 0) '(400000 0 0))
-  (CADLispCopy (GetAllCopyDrawLabelSS) '(0 0 0) '(400000 0 0)) 
-  (CADLispCopy (GetAllJSAxisSS) '(0 0 0) '(400000 0 0)) 
+  (CADLispCopyUtils (GetAllMoveDrawLabelSS) '(0 0 0) '(400000 0 0))
+  (CADLispCopyUtils (GetAllCopyDrawLabelSS) '(0 0 0) '(400000 0 0)) 
+  (CADLispCopyUtils (GetAllJSAxisSS) '(0 0 0) '(400000 0 0)) 
   (generateJSDraw (MoveAllJSVentingEntityData))
   (alert "移出泄压相关底图成功！") 
 )
@@ -1100,7 +1100,7 @@ refacotr at 2021-07-05
   (setq axiosKey (car twoSectionVentingAspectRatio))
   (setq twoSectionVentingAspectRatio (cdr twoSectionVentingAspectRatio))
   (setq splitDistance (GetDottedPairValueUtils "firstSectionSideLength" twoSectionVentingAspectRatio))
-  (CADLispCopy (GetSSByOneEntityNameUtils entityName) '(0 0 0) '(200000 0 0))
+  (CADLispCopyUtils (GetSSByOneEntityNameUtils entityName) '(0 0 0) '(200000 0 0))
   (setq polyLineEntityName (entlast))
   (setq insPt (MoveInsertPositionUtils (list (car xxyyValues) (cadddr xxyyValues) 0) 200000 0))
   (GenerateLineUtils (MoveInsertPositionUtils insPt splitDistance 0) (MoveInsertPositionUtils insPt splitDistance -40000) "0")
@@ -1153,7 +1153,7 @@ refacotr at 2021-07-05
 (defun TrimJSVentingPolyLine (lineEntityName polyLineEntityName / lineSS polySS)
   (setq lineSS (GetSSByOneEntityNameUtils lineEntityName))
   (setq polySS (GetSSByOneEntityNameUtils polyLineEntityName))
-  (CADLispTrim lineSS polySS)
+  (CADLispTrimUtils lineSS polySS)
   
 )
 

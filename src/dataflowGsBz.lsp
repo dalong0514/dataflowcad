@@ -251,9 +251,9 @@
 
 ; refactored at 2021-04-09
 (defun MoveJSDrawMacro () 
-  (CADLispMove (GetAllMoveDrawLabelSS) '(0 0 0) '(400000 0 0))
-  (CADLispCopy (GetAllCopyDrawLabelSS) '(0 0 0) '(400000 0 0)) 
-  (CADLispCopy (GetAllJSAxisSS) '(0 0 0) '(400000 0 0)) 
+  (CADLispMoveUtils (GetAllMoveDrawLabelSS) '(0 0 0) '(400000 0 0))
+  (CADLispCopyUtils (GetAllCopyDrawLabelSS) '(0 0 0) '(400000 0 0)) 
+  (CADLispCopyUtils (GetAllJSAxisSS) '(0 0 0) '(400000 0 0)) 
   (generateJSDraw (MoveCopyEntityData))
   ; refactored at 2021-05-11
   (insertAllGsBzColumnCenterLine)
@@ -747,7 +747,7 @@
     (GenerateGsBzEquipTag lcEquipData insPt)
     (alert "请先提取流程设备数据！") 
   )
-  (PurgeAllUtils)
+  (CADLispPurgeAllBlockUtils)
   (princ)
 )
 
@@ -939,7 +939,7 @@
 (defun c:ImportGsBzEquipData ()
   (ExecuteFunctionAfterVerifyDateUtils 'ImportEquipDataStrategyByBox '("importGsEquipDataBox" "GsBzData"))
   ; refactored at 2021-04-12
-  (PurgeAllUtils)
+  (CADLispPurgeAllBlockUtils)
 )
 
 ; 2021-03-11

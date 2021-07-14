@@ -26,6 +26,7 @@
 ; very importance for me, convert a function to the parameter for another function
 (defun ExecuteFunctionAfterVerifyDateUtils (functionName argumentList / result) 
   ; (setq result (vl-catch-all-apply functionName argumentList))
+  
   (if (and (> *dataflowDate* (car (GetVerifyDataFromServer))) (< *dataflowDate* (cadr (GetVerifyDataFromServer))) )
     (progn 
       (setq result (vl-catch-all-apply functionName argumentList))
@@ -40,10 +41,9 @@
 )
 
 ; 2021-04-20
+; refactored at 2021-07-13
 (defun c:PurgeAllDataMacro () 
-  ; get information from wangyun[IT]
-  (dictremove (namedobjdict) "ACAD_DGNLINESTYLECOMP")
-  (ExecuteFunctionAfterVerifyDateUtils 'PurgeAllUtils '())
+  (ExecuteFunctionAfterVerifyDateUtils 'CADLispPurgeAllUtils '())
   (princ "\n清理完成！")(princ)
 )
 
@@ -58,7 +58,7 @@
 (defun RemoveEducationJSMacro ()
   (arxload "D:\\dataflowcad\\remove-education.arx")
   (dictremove (namedobjdict) "ACAD_DGNLINESTYLECOMP")
-  ; (PurgeAllUtils)
+  ; (CADLispPurgeAllUtils)
 )
 
 ; 2021-04-20
@@ -1950,14 +1950,6 @@
   (getvar "dwgprefix")
 )
 
-; 2021-04-02
-(defun PurgeAllUtils (/ acadObj doc)
-  ;; This example removes all unused named references from the database
-  (setq acadObj (vlax-get-acad-object))
-  (setq doc (vla-get-ActiveDocument acadObj))
-  (vla-PurgeAll doc) 
-)
-
 ; 2021-04-08
 (defun ChunkListByColumnIndexUtils (listData keyIndex / keyList resultList) 
   (setq keyList 
@@ -2315,22 +2307,22 @@
 ; Redefining AutoCAD Commands
 
 ; 2021-03-02
-(defun CADLispMove (ss firstPoint secondPoint /)
+(defun CADLispMoveUtils (ss firstPoint secondPoint /)
   (command "_.move" ss firstPoint "" secondPoint "")
 )
 
 ; 2021-03-02
-(defun CADLispCopy (ss firstPoint secondPoint /)
+(defun CADLispCopyUtils (ss firstPoint secondPoint /)
   (command "_.copy" ss firstPoint "" secondPoint "")
 )
 
 ; 2021-07-05
-(defun CADLispTrim (firstSS secondSS /)
+(defun CADLispTrimUtils (firstSS secondSS /)
   (command "_.trim" firstSS "" secondSS "")
 )
 
 ; 2021-07-06
-(defun CADLispBo (ss ptList /)
+(defun CADLispBoUtils (ss ptList /)
   ; (command "._-Boundary" "_a" "_b" "_n" ssMine "" "" "_non" pt "")
   ; (command "._-Boundary" "_a" "_b" "_n" ssMine "" "" "_non" pt1 pt2 "")
   (mapcar '(lambda (x) 
@@ -2339,6 +2331,22 @@
     ptList
   )
   (princ)
+)
+
+; 2021-04-02
+; rename at 2021-07-13
+(defun CADLispPurgeAllBlockUtils (/ acadObj doc)
+  ;; This example removes all unused named references from the database
+  (setq acadObj (vlax-get-acad-object))
+  (setq doc (vla-get-ActiveDocument acadObj))
+  (vla-PurgeAll doc) 
+)
+
+; 2021-07-13
+(defun CADLispPurgeAllUtils ()
+  ; get information from wangyun[IT]
+  (dictremove (namedobjdict) "ACAD_DGNLINESTYLECOMP")
+  (command "_.purge" "A" "*" "N")
 )
 
 ; Redefining AutoCAD Commands
