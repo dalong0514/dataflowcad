@@ -464,14 +464,22 @@
 ; 2021-04-19
 ; refactored at 2021-07-14
 (defun GenerateUpEllipseHeadNozzle (insPt barrelRadius dataType thickNess drawFrameScale upLeftNozzleDictData upRightNozzleDictData /) 
-  (GenerateOneUpLeftHeadNozzle insPt barrelRadius dataType upLeftNozzleDictData drawFrameScale)
-  (GenerateOneUpRightHeadNozzle insPt barrelRadius dataType upRightNozzleDictData drawFrameScale)
+  (if (/= upLeftNozzleDictData nil) 
+    (GenerateOneUpLeftHeadNozzle insPt barrelRadius dataType upLeftNozzleDictData drawFrameScale)
+  )
+  (if (/= upRightNozzleDictData nil) 
+    (GenerateOneUpRightHeadNozzle insPt barrelRadius dataType upRightNozzleDictData drawFrameScale)
+  )
 )
 
 ; refactored at 2021-07-14
 (defun GenerateDownEllipseHeadNozzle (insPt barrelRadius dataType thickNess drawFrameScale downLeftNozzleDictData downRightNozzleDictData /) 
-  (GenerateOneDownLeftHeadNozzle insPt barrelRadius dataType downLeftNozzleDictData drawFrameScale)
-  (GenerateOneDownRightHeadNozzle insPt barrelRadius dataType downRightNozzleDictData drawFrameScale)
+  (if (/= downLeftNozzleDictData nil) 
+    (GenerateOneDownLeftHeadNozzle insPt barrelRadius dataType downLeftNozzleDictData drawFrameScale)
+  )
+  (if (/= downRightNozzleDictData nil) 
+    (GenerateOneDownRightHeadNozzle insPt barrelRadius dataType downRightNozzleDictData drawFrameScale)
+  )
 )
 
 ; 2021-07-14
@@ -533,7 +541,7 @@
 ; 2021-07-14
 (defun GetOneEquipUpLeftHeadNozzleDictData (oneEquipNozzleDictData /)
   (vl-remove-if-not '(lambda (x) 
-                       (and (= (GetDottedPairValueUtils "POSITION" x) "¹Þ¶¥" ) (= (GetDottedPairValueUtils "LEFT_RIGHT" x) "×ó²à" ))
+                       (and (= (GetDottedPairValueUtils "POSITION" x) "¶¥²¿" ) (= (GetDottedPairValueUtils "LEFT_RIGHT" x) "×ó²à" ))
                     ) 
     oneEquipNozzleDictData
   )
@@ -542,7 +550,7 @@
 ; 2021-07-14
 (defun GetOneEquipUpRightHeadNozzleDictData (oneEquipNozzleDictData /)
   (vl-remove-if-not '(lambda (x) 
-                       (and (= (GetDottedPairValueUtils "POSITION" x) "¹Þ¶¥" ) (= (GetDottedPairValueUtils "LEFT_RIGHT" x) "ÓÒ²à" ))
+                       (and (= (GetDottedPairValueUtils "POSITION" x) "¶¥²¿" ) (= (GetDottedPairValueUtils "LEFT_RIGHT" x) "ÓÒ²à" ))
                     ) 
     oneEquipNozzleDictData
   )
@@ -551,7 +559,7 @@
 ; 2021-07-14
 (defun GetOneEquipDownLeftHeadNozzleDictData (oneEquipNozzleDictData /)
   (vl-remove-if-not '(lambda (x) 
-                       (and (= (GetDottedPairValueUtils "POSITION" x) "¹Þµ×" ) (= (GetDottedPairValueUtils "LEFT_RIGHT" x) "×ó²à" ))
+                       (and (= (GetDottedPairValueUtils "POSITION" x) "µ×²¿" ) (= (GetDottedPairValueUtils "LEFT_RIGHT" x) "×ó²à" ))
                     ) 
     oneEquipNozzleDictData
   )
@@ -560,7 +568,7 @@
 ; 2021-07-14
 (defun GetOneEquipDownRightHeadNozzleDictData (oneEquipNozzleDictData /)
   (vl-remove-if-not '(lambda (x) 
-                       (and (= (GetDottedPairValueUtils "POSITION" x) "¹Þµ×" ) (= (GetDottedPairValueUtils "LEFT_RIGHT" x) "ÓÒ²à" ))
+                       (and (= (GetDottedPairValueUtils "POSITION" x) "µ×²¿" ) (= (GetDottedPairValueUtils "LEFT_RIGHT" x) "ÓÒ²à" ))
                     ) 
     oneEquipNozzleDictData
   )
@@ -569,7 +577,7 @@
 ; 2021-07-14
 (defun GetOneEquipSideLeftNozzleDictData (oneEquipNozzleDictData /)
   (vl-remove-if-not '(lambda (x) 
-                       (and (= (GetDottedPairValueUtils "POSITION" x) "¹Þ±Ú" ) (= (GetDottedPairValueUtils "LEFT_RIGHT" x) "×ó²à" ))
+                       (and (= (GetDottedPairValueUtils "POSITION" x) "²àÃæ" ) (= (GetDottedPairValueUtils "LEFT_RIGHT" x) "×ó²à" ))
                     ) 
     oneEquipNozzleDictData
   )
@@ -578,7 +586,7 @@
 ; 2021-07-14
 (defun GetOneEquipSideRightNozzleDictData (oneEquipNozzleDictData /)
   (vl-remove-if-not '(lambda (x) 
-                       (and (= (GetDottedPairValueUtils "POSITION" x) "¹Þ±Ú" ) (= (GetDottedPairValueUtils "LEFT_RIGHT" x) "ÓÒ²à" ))
+                       (and (= (GetDottedPairValueUtils "POSITION" x) "²àÃæ" ) (= (GetDottedPairValueUtils "LEFT_RIGHT" x) "ÓÒ²à" ))
                     ) 
     oneEquipNozzleDictData
   )
