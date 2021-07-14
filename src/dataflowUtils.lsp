@@ -47,20 +47,6 @@
   (princ "\n清理完成！")(princ)
 )
 
-; 2021-07-07
-(defun c:RemoveEducationJS () 
-  (ExecuteFunctionAfterVerifyDateUtils 'RemoveEducationJSMacro '())
-  (alert "去教育版成功，请保存文件！")
-)
-
-; 2021-07-07
-;; refactored at 2021-07-08
-(defun RemoveEducationJSMacro ()
-  (arxload "D:\\dataflowcad\\remove-education.arx")
-  (dictremove (namedobjdict) "ACAD_DGNLINESTYLECOMP")
-  ; (CADLispPurgeAllUtils)
-)
-
 ; 2021-04-20
 (defun c:RemoveEducation () 
   (ExecuteFunctionAfterVerifyDateUtils 'RemoveEducationMacro '())
