@@ -531,10 +531,29 @@
              (setq nozzleInsPt (MoveInsertPositionUtils insPt (GetNegativeNumberUtils nozzlePositionRadius) yOffset))
              (InsertBlockUtils nozzleInsPt "BsGCTGraphNozzle" "0DataFlow-BsThickLine" (list (cons 0 equipTag)))
              (if (> nozzlePositionRadius 0) (setq nozzleLeftInsPt nozzleInsPt))
+            ;  (princ (cdr x))(princ)
+             (InsertBsGTCUpNozzleTag insPt nozzleInsPt equipTag (cdr x) drawFrameScale)
           ) 
     (ChunkDictListByKeyNameUtils upLeftNozzleDictData "POSITION_OFFSET")
   ) 
   (InsertBsGCTUpLeftNozzleDimension insPt nozzleLeftInsPt drawFrameScale)
+)
+
+; 2021-07-14
+(defun InsertBsGTCUpNozzleTag (baseInsPt nozzleInsPt equipTag nozzleDictData drawFrameScale / insPtList)
+  (setq insPtList (GetInsertPtListByXMoveUtils nozzleInsPt (GenerateSortedNumByList nozzleDictData 0) (* 6 drawFrameScale)))
+  (GenerateLineUtils (MoveInsertPositionUtils nozzleInsPt 0 150) (list (car nozzleInsPt) (+ (cadr baseInsPt) (- 300 (* 2.5 drawFrameScale))) 0) "0")
+  (mapcar '(lambda (x y) 
+             (InsertBlockByScaleUtils 
+               ; get the insert point for nozzle
+               (list (car x) (+ (cadr baseInsPt) 300) 0)
+               "BsGCTGraphNozzleTag" 
+               "0DataFlow-BsText" 
+               (list (cons 0 equipTag) (cons 1 (GetDottedPairValueUtils "SYMBOL" y))) drawFrameScale)
+          ) 
+    insPtList
+    nozzleDictData
+  ) 
 )
 
 ; 2021-07-14
@@ -545,6 +564,7 @@
              (setq nozzleInsPt (MoveInsertPositionUtils insPt nozzlePositionRadius yOffset))
              (InsertBlockUtils nozzleInsPt "BsGCTGraphNozzle" "0DataFlow-BsThickLine" (list (cons 0 equipTag)))
              (if (> nozzlePositionRadius 0) (setq nozzleRightInsPt nozzleInsPt))
+             (InsertBsGTCUpNozzleTag insPt nozzleInsPt equipTag (cdr x) drawFrameScale)
           ) 
     (ChunkDictListByKeyNameUtils upRightNozzleDictData "POSITION_OFFSET")
   )  
@@ -934,7 +954,7 @@
     ;; the length of nozzle is 150
     (MoveInsertPositionUtils leftNozzleinsPt 0 150) 
     (MoveInsertPositionUtils insPt 0 150) 
-    (MoveInsertPositionUtils insPt (- 0 (GetXHalfDistanceForTwoPoint insPt leftNozzleinsPt)) 300) 
+    (MoveInsertPositionUtils insPt (- 0 (GetXHalfDistanceForTwoPoint insPt leftNozzleinsPt)) 200) 
     "R<>")
 )
 
@@ -943,7 +963,7 @@
   (InsertBsGCTHorizontalRotatedDimension drawFrameScale
     (MoveInsertPositionUtils insPt 0 150) 
     (MoveInsertPositionUtils rightNozzleinsPt 0 150) 
-    (MoveInsertPositionUtils insPt (- 0 (GetXHalfDistanceForTwoPoint insPt rightNozzleinsPt)) 300) 
+    (MoveInsertPositionUtils insPt (- 0 (GetXHalfDistanceForTwoPoint insPt rightNozzleinsPt)) 200) 
     "R<>") 
 )
 
@@ -952,7 +972,7 @@
   (InsertBsGCTHorizontalRotatedDimension drawFrameScale
     (MoveInsertPositionUtils leftNozzleinsPt 0 -150) 
     (MoveInsertPositionUtils insPt 0 -150) 
-    (MoveInsertPositionUtils insPt (- 0 (GetXHalfDistanceForTwoPoint insPt leftNozzleinsPt)) -300) 
+    (MoveInsertPositionUtils insPt (- 0 (GetXHalfDistanceForTwoPoint insPt leftNozzleinsPt)) -200) 
     "R<>")
 )
 
@@ -961,7 +981,7 @@
   (InsertBsGCTHorizontalRotatedDimension drawFrameScale
     (MoveInsertPositionUtils insPt 0 -150) 
     (MoveInsertPositionUtils rightNozzleinsPt 0 -150) 
-    (MoveInsertPositionUtils insPt (- 0 (GetXHalfDistanceForTwoPoint insPt rightNozzleinsPt)) -300) 
+    (MoveInsertPositionUtils insPt (- 0 (GetXHalfDistanceForTwoPoint insPt rightNozzleinsPt)) -200) 
     "R<>") 
 )
 
