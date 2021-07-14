@@ -446,7 +446,7 @@
 
 ; 2021-06-15
 (defun InsertBsGCTReactorGraphy (insPt barrelRadius barrelHalfHeight thickNess headThickNess dataType straightEdgeHeight 
-                                      allBsGCTSupportDictData drawFrameScale / newBarrelHalfHeight nozzleOffset oneBsGCTEquipSupportDictData) 
+                                      allBsGCTSupportDictData drawFrameScale oneEquipNozzleDictData / newBarrelHalfHeight nozzleOffset oneBsGCTEquipSupportDictData) 
   ; refactored at 2021-05-06 straightEdgeHeight is 25
   (setq newBarrelHalfHeight (+ barrelHalfHeight straightEdgeHeight)) 
   (setq nozzleOffset 100)
@@ -1222,7 +1222,7 @@
     tankPressureElementList tankOtherRequestList equipType drawFrameScale oneEquipNozzleDictData)
   ; thickNess param refactored at 2021-04-21 ; Graph insPt updated by drawFrameScale - 2021-06-12
   (InsertBsGCTTankGraphyStrategy (MoveInsertPositionUtils insPt (* drawFrameScale -583) (* drawFrameScale 280)) 
-    barrelRadius barrelHalfHeight thickNess headThickNess bsGCTType straightEdgeHeight equipType allBsGCTSupportDictData drawFrameScale)
+    barrelRadius barrelHalfHeight thickNess headThickNess bsGCTType straightEdgeHeight equipType allBsGCTSupportDictData drawFrameScale oneEquipNozzleDictData)
 )
 
 ; 2021-05-27
@@ -1248,7 +1248,7 @@
                            heaterPressureElementList heaterOtherRequestList equipType drawFrameScale oneEquipNozzleDictData)
   ; Graph insPt updated by drawFrameScale - 2021-06-12
   (InsertBsGCTHeaterGraphyStrategy (MoveInsertPositionUtils insPt (* drawFrameScale -583) (* drawFrameScale 280)) 
-    barrelRadius barrelHalfHeight exceedLength thickNess headThickNess bsGCTType straightEdgeHeight equipType allBsGCTSupportDictData drawFrameScale)
+    barrelRadius barrelHalfHeight exceedLength thickNess headThickNess bsGCTType straightEdgeHeight equipType allBsGCTSupportDictData drawFrameScale oneEquipNozzleDictData)
 )
 
 ; 2021-06-15
@@ -1273,7 +1273,7 @@
                           reactorPressureElementList reactorOtherRequestList equipType drawFrameScale oneEquipNozzleDictData)
   ; Graph insPt updated by drawFrameScale - 2021-06-12
   (InsertBsGCTReactorGraphy (MoveInsertPositionUtils insPt (* drawFrameScale -583) (* drawFrameScale 280)) 
-    barrelRadius barrelHalfHeight thickNess headThickNess bsGCTType straightEdgeHeight allBsGCTSupportDictData drawFrameScale)
+    barrelRadius barrelHalfHeight thickNess headThickNess bsGCTType straightEdgeHeight allBsGCTSupportDictData drawFrameScale oneEquipNozzleDictData)
 )
 
 ; 2021-05-13
@@ -1568,7 +1568,7 @@
 
 ; 2021-05-25
 (defun InsertBsGCTHeaterGraphyStrategy (insPt barrelRadius barrelHalfHeight exceedLength thickNess headThickNess bsGCTType 
-                                        straightEdgeHeight equipType allBsGCTSupportDictData drawFrameScale /)
+                                        straightEdgeHeight equipType allBsGCTSupportDictData drawFrameScale oneEquipNozzleDictData /)
   (cond 
     ((= equipType "verticalHeater") 
      (InsertBsGCTVerticalHeaterGraphy insPt barrelRadius barrelHalfHeight exceedLength thickNess headThickNess 
@@ -1581,7 +1581,7 @@
 
 ; 2021-05-11
 (defun InsertBsGCTTankGraphyStrategy (insPt barrelRadius barrelHalfHeight thickNess headThickNess bsGCTType 
-                                      straightEdgeHeight equipType allBsGCTSupportDictData drawFrameScale /)
+                                      straightEdgeHeight equipType allBsGCTSupportDictData drawFrameScale oneEquipNozzleDictData /)
   (cond 
     ((= equipType "verticalTank") 
      (InsertBsGCTVerticalTankGraphy insPt barrelRadius barrelHalfHeight thickNess headThickNess 
