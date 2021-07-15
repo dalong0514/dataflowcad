@@ -3504,7 +3504,7 @@
           )
         )
       )
-      (alert (strcat nullAreaMsg "房间面积（房间室压）不能为空！"))
+      (alert (strcat nullAreaMsg "洁净房间面积（房间室压）不能为空！"))
       (setq verifyStatus 0)
     )
   )
@@ -3546,6 +3546,114 @@
     (cons "verifier" (ExtractProjectNumUtils (GetDottedPairValueUtils "appr" allDrawLabelData)))
     (cons "approver" (ExtractProjectNumUtils (GetDottedPairValueUtils "authd" allDrawLabelData)))
   )
+)
+
+; Export All Type Data Utils Function
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+
+
+;;;-------------------------------------------------------------------------;;;
+;;;-------------------------------------------------------------------------;;;
+; Update All Type Data Utils Function
+
+;; 2021-07-15
+(defun UpdateDataStrategyByBoxUtils (tileName dataClass / dcl_id status exportDataType dataType importedDataList ss sslen entityNameList 
+                                     exportMsgBtnStatus importMsgBtnStatus  modifyMsgBtnStatus)
+  (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\dcl\\" "dataflow.dcl")))
+  (setq status 2)
+  (while (>= status 2)
+    ; Create the dialog box
+    (new_dialog tileName dcl_id "" '(-1 -1))
+    ; Added the actions to the Cancel and Pick Point button
+    (action_tile "cancel" "(done_dialog 0)")
+    (action_tile "btnSelect" "(done_dialog 2)")
+    (action_tile "btnAllSelect" "(done_dialog 3)")
+    (action_tile "btnExportData" "(done_dialog 4)")
+    (action_tile "btnImportData" "(done_dialog 5)")
+    (action_tile "btnModify" "(done_dialog 6)")
+    (action_tile "exportDataType" "(setq exportDataType $value)")
+    ; init the value of listbox
+    (progn
+      (start_list "exportDataType" 3)
+      (mapcar '(lambda (x) (add_list x)) 
+                (GetTempExportedDataTypeChNameListStrategy dataClass))
+      (end_list)
+    )
+    ; init the default data of text
+    (if (= nil exportDataType)
+      (setq exportDataType "0")
+    )
+    ; Display the number of selected ss
+    (if (/= sslen nil)
+      (set_tile "exportDataNumMsg" (strcat "导出数据数量： " (rtos sslen)))
+    )
+    (if (= exportMsgBtnStatus 1)
+      (set_tile "exportBtnMsg" "导出数据状态：已完成")
+    )
+    (if (= importMsgBtnStatus 1)
+      (set_tile "importBtnMsg" "导入数据状态：已完成")
+    )
+    (if (= importMsgBtnStatus 2)
+      (set_tile "importBtnMsg" "导入数据状态：不能所有设备一起导入")
+    ) 
+    (if (= importMsgBtnStatus 3)
+      (set_tile "importBtnMsg" "请先导入数据！")
+    ) 
+    (if (= modifyMsgBtnStatus 1)
+      (set_tile "modifyBtnMsg" "修改CAD数据状态：已完成")
+    ) 
+    (set_tile "exportDataType" exportDataType)
+    ; select button
+    (if (= 2 (setq status (start_dialog)))
+      (progn 
+        ; refactored at 2021-07-06
+        (setq dataType (GetTempExportedDataTypeByindexStrategy dataClass exportDataType))
+        (setq ss (GetBlockSSBySelectByDataTypeStrategyUtils dataClass dataType))
+        (setq sslen (sslength ss)) 
+      )
+    )
+    ; all select button
+    (if (= 3 status) 
+      (progn 
+        ; refactored at 2021-07-06
+        (setq dataType (GetTempExportedDataTypeByindexStrategy dataClass exportDataType))
+        (setq ss (GetAllBlockSSByDataTypeStrategyUtils dataClass dataType))
+        (setq sslen (sslength ss)) 
+      )
+    )
+    ; export data button
+    (if (= 4 status) 
+      (progn 
+        (setq entityNameList (GetEntityNameListBySSUtils ss))
+        (WriteDataFlowToCSVStrategy dataClass entityNameList dataType)
+        (setq exportMsgBtnStatus 1) 
+      )
+    )
+    ; import data button
+    (if (= 5 status) 
+      (progn 
+        (setq dataType (GetTempExportedDataTypeByindexStrategy dataClass exportDataType))
+        (setq importedDataList (CSVStrListToListListUtils (ReadDataFlowDataFromCSVStrategy dataClass dataType)))
+        (setq importMsgBtnStatus 1) 
+      )
+    )
+    ; modify button
+    (if (= 6 status) 
+      (progn 
+        (if (/= importedDataList nil) 
+          (progn 
+            (ModifyPropertyValueByEntityHandleUtils importedDataList (GetPropertyNameListStrategy dataType))
+            (setq modifyMsgBtnStatus 1)
+          )
+          (setq importMsgBtnStatus 3)
+        )
+      ) 
+    )
+  )
+  (setq importedList nil)
+  (unload_dialog dcl_id)
+  (princ)
 )
 
 ; Export All Type Data Utils Function
