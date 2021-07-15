@@ -3385,7 +3385,9 @@
 )
 
 ; 2021-04-11
-(defun ExportCADDataByBox (tileName dataTypeList dataTypeChNameList classType / dcl_id status fileName exportDataType dataType exportMsgBtnStatus ss sslen dataList)
+; refactored at 2021-07-15
+(defun ExportCADDataByBox (tileName dataTypeList dataTypeChNameList classType / 
+                           dcl_id status fileName exportDataType dataType exportMsgBtnStatus ss sslen dataList verifyStatus)
   (setq dcl_id (load_dialog (strcat "D:\\dataflowcad\\dcl\\" "dataflow.dcl")))
   (setq status 2)
   (while (>= status 2)
@@ -3417,7 +3419,10 @@
       (set_tile "exportBtnMsg" "导出数据状态：已完成")
     )
     (if (= exportMsgBtnStatus 2)
-      (set_tile "exportBtnMsg" "请先选择要导的数据！")
+      (set_tile "exportBtnMsg" "导出数据状态：请先选择要导的数据！")
+    )
+    (if (= exportMsgBtnStatus 3)
+      (set_tile "exportBtnMsg" "导出数据状态：有数据不能为空！")
     )
     (if (/= sslen nil)
       (set_tile "exportDataNumMsg" (strcat "导出数据数量： " (rtos sslen)))
@@ -3445,8 +3450,10 @@
     (if (= 4 status) 
       (progn 
         (setq fileName (GetFileNameByDataTypeStrategy dataType))
+        (setq verifyStatus (VerifyDataBeforeExport dataType ss))
         (cond 
           ((= dataList nil) (setq exportMsgBtnStatus 2))
+          ((= verifyStatus 0) (setq exportMsgBtnStatus 3))
           (T (progn 
               (ExportCADBlockDataUtils fileName dataList)
               (setq exportMsgBtnStatus 1)
@@ -3457,6 +3464,50 @@
   )
   (unload_dialog dcl_id)
   (princ)
+)
+
+; 2021-07-15
+(defun VerifyDataBeforeExport (dataType ss / verifyStatus)
+  (cond 
+    ((= dataType "NsCleanAir") (setq verifyStatus (VerifyNsCleanAirDataBeforeExport ss)))
+    (T (setq verifyStatus 1))
+  ) 
+  verifyStatus
+)
+
+; 2021-07-15
+(defun VerifyNsCleanAirDataBeforeExport (ss / roomData nullAreaMsg verifyStatus)
+  
+  (setq roomData 
+    (vl-remove-if-not '(lambda (x) 
+        (and 
+          (/= (GetDottedPairValueUtils "clean_grade" x) "")
+          (or 
+            (= (GetDottedPairValueUtils "room_area" x) "")
+            (= (GetDottedPairValueUtils "room_area" x) "0")
+          )
+        ) 
+      ) 
+      (GetBlockAllPropertyDictListUtils (GetEntityNameListBySSUtils ss))
+    )
+  )
+  (if (= roomData nil) 
+    (setq verifyStatus 1)
+    (progn 
+      (setq nullAreaMsg 
+        (apply 'strcat 
+          (mapcar '(lambda (x) 
+              (strcat (GetDottedPairValueUtils "room_num" x) "/")
+            ) 
+            roomData
+          )
+        )
+      )
+      (alert (strcat nullAreaMsg "房间面积不能为空！"))
+      (setq verifyStatus 0)
+    )
+  )
+  verifyStatus
 )
 
 ; 2021-04-14
