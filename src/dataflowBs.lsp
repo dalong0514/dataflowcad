@@ -540,23 +540,6 @@
 )
 
 ; 2021-07-14
-(defun InsertBsGTCUpNozzleTag (baseInsPt nozzleInsPt equipTag nozzleDictData drawFrameScale / insPtList)
-  (setq insPtList (GetInsertPtListByXMoveUtils nozzleInsPt (GenerateSortedNumByList nozzleDictData 0) (* 6 drawFrameScale)))
-  (GenerateLineUtils (MoveInsertPositionUtils nozzleInsPt 0 150) (list (car nozzleInsPt) (+ (cadr baseInsPt) (- 300 (* 2.5 drawFrameScale))) 0) "0")
-  (mapcar '(lambda (x y) 
-             (InsertBlockByScaleUtils 
-               ; get the insert point for nozzle
-               (list (car x) (+ (cadr baseInsPt) 300) 0)
-               "BsGCTGraphNozzleTag" 
-               "0DataFlow-BsText" 
-               (list (cons 0 equipTag) (cons 1 (GetDottedPairValueUtils "SYMBOL" y))) drawFrameScale)
-          ) 
-    insPtList
-    nozzleDictData
-  ) 
-)
-
-; 2021-07-14
 (defun GenerateOneUpRightHeadNozzle (insPt barrelRadius equipTag upRightNozzleDictData drawFrameScale / nozzlePositionRadius yOffset nozzleInsPt nozzleRightInsPt) 
   (mapcar '(lambda (x) 
              (setq nozzlePositionRadius (GetHalfNumberUtils (atoi (GetDottedPairValueUtils "POSITION_OFFSET" (car (cdr x))))))
@@ -579,6 +562,7 @@
              (setq nozzleInsPt (MoveInsertPositionUtils insPt (GetNegativeNumberUtils nozzlePositionRadius) (GetNegativeNumberUtils yOffset)))
              (InsertBlockByRotateUtils nozzleInsPt "BsGCTGraphNozzle" "0DataFlow-BsThickLine" (list (cons 0 dataType)) PI)
              (if (> nozzlePositionRadius 0) (setq nozzleLeftInsPt nozzleInsPt))
+             (InsertBsGTCDownNozzleTag insPt nozzleInsPt equipTag (cdr x) drawFrameScale)
           ) 
     (ChunkDictListByKeyNameUtils downLeftNozzleDictData "POSITION_OFFSET")
   ) 
@@ -593,10 +577,45 @@
              (setq nozzleInsPt (MoveInsertPositionUtils insPt nozzlePositionRadius (GetNegativeNumberUtils yOffset)))
              (InsertBlockByRotateUtils nozzleInsPt "BsGCTGraphNozzle" "0DataFlow-BsThickLine" (list (cons 0 dataType)) PI)
              (if (> nozzlePositionRadius 0) (setq nozzleRightInsPt nozzleInsPt))
+             (InsertBsGTCDownNozzleTag insPt nozzleInsPt equipTag (cdr x) drawFrameScale)
           ) 
     (ChunkDictListByKeyNameUtils downRightNozzleDictData "POSITION_OFFSET")
   )  
   (InsertBsGCTDownRightNozzleDimension insPt nozzleRightInsPt drawFrameScale)
+)
+
+; 2021-07-15
+(defun InsertBsGTCDownNozzleTag (baseInsPt nozzleInsPt equipTag nozzleDictData drawFrameScale / insPtList)
+  (setq insPtList (GetInsertPtListByXMoveUtils nozzleInsPt (GenerateSortedNumByList nozzleDictData 0) (* 6 drawFrameScale)))
+  (GenerateLineUtils (MoveInsertPositionUtils nozzleInsPt 0 -150) (list (car nozzleInsPt) (- (cadr baseInsPt) (- 300 (* 2.5 drawFrameScale))) 0) "0")
+  (mapcar '(lambda (x y) 
+             (InsertBlockByScaleUtils 
+               ; get the insert point for nozzle
+               (list (car x) (- (cadr baseInsPt) 300) 0)
+               "BsGCTGraphNozzleTag" 
+               "0DataFlow-BsText" 
+               (list (cons 0 equipTag) (cons 1 (GetDottedPairValueUtils "SYMBOL" y))) drawFrameScale)
+          ) 
+    insPtList
+    nozzleDictData
+  ) 
+)
+
+; 2021-07-14
+(defun InsertBsGTCUpNozzleTag (baseInsPt nozzleInsPt equipTag nozzleDictData drawFrameScale / insPtList)
+  (setq insPtList (GetInsertPtListByXMoveUtils nozzleInsPt (GenerateSortedNumByList nozzleDictData 0) (* 6 drawFrameScale)))
+  (GenerateLineUtils (MoveInsertPositionUtils nozzleInsPt 0 150) (list (car nozzleInsPt) (+ (cadr baseInsPt) (- 300 (* 2.5 drawFrameScale))) 0) "0")
+  (mapcar '(lambda (x y) 
+             (InsertBlockByScaleUtils 
+               ; get the insert point for nozzle
+               (list (car x) (+ (cadr baseInsPt) 300) 0)
+               "BsGCTGraphNozzleTag" 
+               "0DataFlow-BsText" 
+               (list (cons 0 equipTag) (cons 1 (GetDottedPairValueUtils "SYMBOL" y))) drawFrameScale)
+          ) 
+    insPtList
+    nozzleDictData
+  ) 
 )
 
 ; 2021-07-14
