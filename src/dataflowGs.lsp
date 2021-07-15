@@ -287,20 +287,6 @@
 )
 
 ; 2021-04-07
-(defun GetGsJsonListDataByDataType (ss dataType /) 
-  (cond 
-    ((= dataType "Pipe") (ExtractBlockPropertyToJsonListStrategy ss "Pipe"))
-    ((= dataType "Equipment") (GetGsEquipmentJsonListData ss))
-    ((= dataType "InstrumentAndEquipmentAndPipe") (GetGsInstrumentJsonListData ss))
-    ((= dataType "Electric") (GetGsEquipmentJsonListData ss))
-    ((= dataType "OuterPipe") (ExtractOuterPipeToJsonList))
-    ((= dataType "GsCleanAir") (ExtractBlockPropertyToJsonListStrategy ss "GsCleanAir"))
-    ((= dataType "GsComfortAir") (ExtractBlockPropertyToJsonListStrategy ss "GsComfortAir"))
-    ((= dataType "GsToEquipRequire") (GetGsInstrumentJsonListData ss))
-  ) 
-)
-
-; 2021-04-07
 (defun GetGsInstrumentJsonListData (ss /)
   (append (ExtractBlockPropertyToJsonListStrategy ss "InstrumentP")
           (ExtractBlockPropertyToJsonListStrategy ss "InstrumentSIS")

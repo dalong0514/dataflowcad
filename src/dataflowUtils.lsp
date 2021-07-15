@@ -3128,18 +3128,22 @@
 ; Export All Type Data Utils Function
 
 ; 2021-04-07
+; refactored at 2021-07-15
 (defun GetDataByDataTypeStrategyUtils (ss classType dataType /) 
   (cond 
     ((= classType "Gs") (GetGsJsonListDataByDataType ss dataType))
     ((= classType "Ks") (GetKsJsonListDataByDataType ss dataType))
+    ((= classType "Ns") (GetNsJsonListDataByDataType ss dataType))
   ) 
 )
 
 ; 2021-04-07
+; refactored at 2021-07-15
 (defun GetBlockSSBySelectByDataTypeStrategyUtils (classType dataType /) 
   (cond 
     ((= classType "Gs") (GetBlockSSBySelectByDataTypeUtils dataType))
     ((= classType "Ks") (GetKsBlockSSBySelectByDataTypeUtils dataType))
+    ((= classType "Ns") (GetNsBlockSSBySelectByDataTypeUtils dataType))
   )
 )
 
@@ -3151,6 +3155,66 @@
     ((= classType "Ns") (GetAllNsBlockSSByDataTypeUtils dataType))
   ) 
 )
+
+; 2021-03-22
+(defun GetKsBlockSSBySelectByDataTypeUtils (dataType /) 
+  (cond 
+    ((= dataType "KsInstallMaterial") (GetKsInstallMaterialSSBySelectUtils))
+  )
+)
+
+; 2021-03-22
+(defun GetNsBlockSSBySelectByDataTypeUtils (dataType /) 
+  (cond 
+    ((= dataType "NsCleanAir") (ssget '((0 . "INSERT") (2 . "GsCleanAir"))))
+  )
+)
+
+; 2021-03-22
+(defun GetAllKsBlockSSByDataTypeUtils (dataType /) 
+  (cond 
+    ((= dataType "KsInstallMaterial") (GetAllKsInstallMaterialSSUtils))
+  ) 
+)
+
+; 2021-03-22
+(defun GetAllNsBlockSSByDataTypeUtils (dataType /) 
+  (cond 
+    ((= dataType "NsCleanAir") (ssget "X" '((0 . "INSERT") (2 . "GsCleanAir"))))
+  ) 
+)
+
+; 2021-04-07
+; refactored at 2021-07-15
+(defun GetGsJsonListDataByDataType (ss dataType /) 
+  (cond 
+    ((= dataType "Pipe") (ExtractBlockPropertyToJsonListStrategy ss dataType))
+    ((= dataType "Equipment") (GetGsEquipmentJsonListData ss))
+    ((= dataType "InstrumentAndEquipmentAndPipe") (GetGsInstrumentJsonListData ss))
+    ((= dataType "Electric") (GetGsEquipmentJsonListData ss))
+    ((= dataType "OuterPipe") (ExtractOuterPipeToJsonList))
+    ((= dataType "GsCleanAir") (ExtractBlockPropertyToJsonListStrategy ss dataType))
+    ((= dataType "GsComfortAir") (ExtractBlockPropertyToJsonListStrategy ss dataType))
+    ((= dataType "GsToEquipRequire") (GetGsInstrumentJsonListData ss))
+  ) 
+)
+
+; 2021-03-22
+(defun GetKsJsonListDataByDataType (ss dataType /) 
+  (cond 
+    ((= dataType "KsInstallMaterial") (ExtractBlockPropertyToJsonListStrategy ss dataType))
+  ) 
+)
+
+; 2021-07-12
+(defun GetNsJsonListDataByDataType (ss dataType /) 
+  (cond 
+    ((= dataType "NsCleanAir") (ExtractBlockPropertyToJsonListStrategy ss dataType))
+  ) 
+)
+
+; Export All Type Data Utils Function
+;;;-------------------------------------------------------------------------;;;
 
 ; 2021-03-22
 (defun ExtractBlockPropertyToJsonListStrategy (ss dataType / entityNameList propertyNameList classDict resultList) 

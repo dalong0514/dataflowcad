@@ -11,6 +11,21 @@
 )
 
 ;;;-------------------------------------------------------------------------;;;
+; Export Ns Data
+
+; 2021-07-15
+(defun c:exportNsData () 
+  (ExecuteFunctionAfterVerifyDateUtils 'ExportNsDataMacro '())
+)
+
+; 2021-07-15
+(defun ExportNsDataMacro (/ dataTypeList dataTypeChNameList)
+  (setq dataTypeList '("NsCleanAir"))
+  (setq dataTypeChNameList '("½à¾»¿Õµ÷"))
+  (ExportCADDataByBox "exportCADDataBox" dataTypeList dataTypeChNameList "Ns")
+)
+
+;;;-------------------------------------------------------------------------;;;
 ;;;-------------------------------------------------------------------------;;;
 ; Generate NsEquipListTable
 

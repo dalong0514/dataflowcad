@@ -80,34 +80,6 @@
 )
 
 ; 2021-03-22
-(defun GetKsBlockSSBySelectByDataTypeUtils (dataType /) 
-  (cond 
-    ((= dataType "KsInstallMaterial") (GetKsInstallMaterialSSBySelectUtils))
-  )
-)
-
-; 2021-03-22
-(defun GetAllKsBlockSSByDataTypeUtils (dataType /) 
-  (cond 
-    ((= dataType "KsInstallMaterial") (GetAllKsInstallMaterialSSUtils))
-  ) 
-)
-
-; 2021-03-22
-(defun GetAllNsBlockSSByDataTypeUtils (dataType /) 
-  (cond 
-    ((= dataType "NsCleanAir") (GetAllBlockSSByDataTypeUtils "NsCleanAir"))
-  ) 
-)
-
-; 2021-03-22
-(defun GetKsJsonListDataByDataType (ss dataType /) 
-  (cond 
-    ((= dataType "KsInstallMaterial") (ExtractBlockPropertyToJsonListStrategy ss dataType))
-  ) 
-)
-
-; 2021-03-22
 (defun GetKSInstallMaterialDrawPositionList () 
   (GetAllDrawLabelPositionListUtils)
 )
