@@ -139,8 +139,10 @@
 )
 
 ; 2021-04-14
+; refactored at 2021-07-15
 (defun ExtractMonomerNumUtilsTest () 
-  (AssertEqual 'ExtractMonomerNumUtils (list "S20C14-23-04-01") "23")
+  (AssertEqual 'ExtractMonomerNumUtils (list "S18104GS-23-04-01") "23")
+  (AssertEqual 'ExtractMonomerNumUtils (list "S20D10GC-02-06") "02")
 )
 
 ; 2021-04-14

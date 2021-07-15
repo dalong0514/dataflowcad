@@ -2596,9 +2596,10 @@
 )
 
 ; 2021-04-14
+; refactored at 2021-07-15
 ; unit test compeleted
 (defun ExtractMonomerNumUtils (projectInfo /)
-  (RegExpReplace projectInfo "(.*)-(.*)-(.*)-(.*).*" "$2" nil nil)
+  (RegExpReplace projectInfo "(.*)[a-zA-Z][a-zA-Z]-([0-9][0-9])-.*$" "$2" nil nil)
 )
 
 ; 2021-03-08
