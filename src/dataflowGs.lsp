@@ -543,27 +543,6 @@
   resultList
 )
 
-; refactored at 2021-05-08
-(defun GetClassDictStrategy (dataType /) 
-  (cond 
-    ((= dataType "InstrumentP") (cons "data_class" "concentrated"))
-    ((= dataType "InstrumentL") (cons "data_class" "location"))
-    ((= dataType "InstrumentSIS") (cons "data_class" "sis"))
-    ((= dataType "Pipe") (cons "data_class" "pipeline"))
-    ((= dataType "Reactor") (cons "data_class" "reactor"))
-    ((= dataType "Tank") (cons "data_class" "tank"))
-    ((= dataType "Heater") (cons "data_class" "heater"))
-    ((= dataType "Pump") (cons "data_class" "pump"))
-    ((= dataType "Vacuum") (cons "data_class" "vacuum"))
-    ((= dataType "Centrifuge") (cons "data_class" "centrifuge"))
-    ((= dataType "CustomEquip") (cons "data_class" "custom"))
-    ((= dataType "OuterPipe") (cons "data_class" "outerpipe"))
-    ((= dataType "GsCleanAir") (cons "data_class" "gscleanair"))
-    ((= dataType "GsComfortAir") (cons "data_class" "gscomfortair"))
-    ((= dataType "KsInstallMaterial") (cons "data_class" "ksinstallmaterial"))
-  )
-)
-
 (defun ExtractOuterPipeToJsonList (/ outerPipeJsonList pipeSS pipeEntityNameList pipePropertyNameList outerPipeSS outerPipeEntityNameList 
                                    outerPipePropertyNameList outerPipePipeNumList pipeList selectedPipeEntityNameList selectedPipeList resultList) 
   (setq outerPipeJsonList (ExtractBlockPropertyToJsonList "OuterPipe"))

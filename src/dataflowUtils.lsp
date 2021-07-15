@@ -3209,8 +3209,31 @@
 ; 2021-07-12
 (defun GetNsJsonListDataByDataType (ss dataType /) 
   (cond 
-    ((= dataType "NsCleanAir") (ExtractBlockPropertyToJsonListStrategy ss dataType))
+    ((= dataType "NsCleanAir") (ExtractBlockPropertyToJsonListStrategy ss "GsCleanAir"))
   ) 
+)
+
+; refactored at 2021-05-08
+; refactored at 2021-07-15
+(defun GetClassDictStrategy (dataType /) 
+  (cond 
+    ((= dataType "InstrumentP") (cons "data_class" "concentrated"))
+    ((= dataType "InstrumentL") (cons "data_class" "location"))
+    ((= dataType "InstrumentSIS") (cons "data_class" "sis"))
+    ((= dataType "Pipe") (cons "data_class" "pipeline"))
+    ((= dataType "Reactor") (cons "data_class" "reactor"))
+    ((= dataType "Tank") (cons "data_class" "tank"))
+    ((= dataType "Heater") (cons "data_class" "heater"))
+    ((= dataType "Pump") (cons "data_class" "pump"))
+    ((= dataType "Vacuum") (cons "data_class" "vacuum"))
+    ((= dataType "Centrifuge") (cons "data_class" "centrifuge"))
+    ((= dataType "CustomEquip") (cons "data_class" "custom"))
+    ((= dataType "OuterPipe") (cons "data_class" "outerpipe"))
+    ((= dataType "GsCleanAir") (cons "data_class" "gscleanair"))
+    ((= dataType "GsComfortAir") (cons "data_class" "gscomfortair"))
+    ((= dataType "KsInstallMaterial") (cons "data_class" "ksinstallmaterial"))
+    ((= dataType "NsCleanAir") (cons "data_class" "nscleanair"))
+  )
 )
 
 ; Export All Type Data Utils Function
@@ -3343,6 +3366,7 @@
     ((= dataType "GsComfortAir") "GsComfortAir")
     ((= dataType "KsInstallMaterial") "KsInstallMaterial")
     ((= dataType "GsToEquipRequire") "GsToEquipRequire")
+    ((= dataType "NsCleanAir") "NsCleanAir")
   )  
 )
 
