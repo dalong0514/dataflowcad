@@ -289,22 +289,6 @@
 )
 
 ; 2021-03-24
-(defun GetTempExportedDataTypeChNameListStrategy (dataClass /) 
-  (cond 
-    ((= dataClass "Ks") (GetKsTempExportedDataTypeChNameList))
-    ((= dataClass "Ns") (GetNsTempExportedDataTypeChNameList))
-  )
-)
-
-; 2021-03-24
-(defun GetTempExportedDataTypeByindexStrategy (dataClass index /) 
-  (cond 
-    ((= dataClass "Ks") (GetKsTempExportedDataTypeByindex index))
-    ((= dataClass "Ns") (GetNsTempExportedDataTypeByindex index))
-  ) 
-)
-
-; 2021-03-24
 (defun GetKsTempExportedDataTypeChNameList ()
   '("°²×°²ÄÁÏ")
 )

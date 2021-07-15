@@ -278,8 +278,8 @@
 )
 
 (defun GetTempExportedDataTypeByindexTest ()
-  (AssertEqual 'GetTempExportedDataTypeByindex (list "0") "Pipe")
-  (AssertEqual 'GetTempExportedDataTypeByindex (list "2") "Equipment")
+  (AssertEqual 'GetGsTempExportedDataTypeByindex (list "0") "Pipe")
+  (AssertEqual 'GetGsTempExportedDataTypeByindex (list "2") "Equipment")
 )
 
 (defun DeduplicateForListUtilsTest ()

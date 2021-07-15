@@ -3557,6 +3557,33 @@
 ;;;-------------------------------------------------------------------------;;;
 ; Update All Type Data Utils Function
 
+; 2021-03-24
+(defun GetTempExportedDataTypeChNameListStrategy (dataClass /) 
+  (cond 
+    ((= dataClass "Ks") (GetKsTempExportedDataTypeChNameList))
+    ((= dataClass "Ns") (GetNsTempExportedDataTypeChNameList))
+    ((= dataClass "Gs") (GetGsTempExportedDataTypeChNameList))
+  )
+)
+
+; 2021-03-24
+(defun GetTempExportedDataTypeByindexStrategy (dataClass index /) 
+  (cond 
+    ((= dataClass "Ks") (GetKsTempExportedDataTypeByindex index))
+    ((= dataClass "Ns") (GetNsTempExportedDataTypeByindex index))
+    ((= dataClass "Gs") (GetGsTempExportedDataTypeByindex index))
+  ) 
+)
+
+; 2021-07-06
+(defun WriteDataFlowToCSVStrategy (dataClass entityNameList dataType /)
+  (cond 
+    ((= dataClass "Gs") (WriteDataToCSVByEntityNameListStrategy entityNameList dataType))
+    ((= dataClass "Ks") (WriteKsDataToCSVByEntityNameListStrategy entityNameList dataType))
+    ((= dataClass "Ns") (WriteNsDataToCSVByEntityNameListStrategy entityNameList dataType))
+  )
+)
+
 ;; 2021-07-15
 (defun UpdateDataStrategyByBoxUtils (tileName dataClass / dcl_id status exportDataType dataType importedDataList ss sslen entityNameList 
                                      exportMsgBtnStatus importMsgBtnStatus  modifyMsgBtnStatus)

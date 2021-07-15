@@ -160,15 +160,6 @@
 )
 
 ; 2021-07-06
-(defun WriteDataFlowToCSVStrategy (dataClass entityNameList dataType /)
-  (cond 
-    ((= dataClass "Gs") (WriteDataToCSVByEntityNameListStrategy entityNameList dataType))
-    ((= dataClass "Ks") (WriteKsDataToCSVByEntityNameListStrategy entityNameList dataType))
-    ((= dataClass "Ns") (WriteNsDataToCSVByEntityNameListStrategy entityNameList dataType))
-  )
-)
-
-; 2021-07-06
 (defun WriteKsDataToCSVByEntityNameListStrategy (entityNameList dataType /)
   (cond 
     ((= dataType "KsInstallMaterial") (WriteKsInstallMaterialDataToCSVByEntityNameListUtils entityNameList))
@@ -1008,6 +999,14 @@
 ;;;-------------------------------------------------------------------------;;;
 ; the macro for modify data
 
+
+
+
+
+
+
+
+
 ; refactored at 2021-04-09
 (defun c:modifyCommonBlockProperty ()
   (ExecuteFunctionAfterVerifyDateUtils 'modifyCommonBlockPropertyMacro '("modifyBlockPropertyBox"))
@@ -1240,7 +1239,7 @@
     (progn
       (start_list "exportDataType" 3)
       (mapcar '(lambda (x) (add_list x)) 
-                (GetTempExportedDataTypeChNameList))
+                (GetGsTempExportedDataTypeChNameList))
       (end_list)
       (start_list "viewPropertyName" 3)
       (mapcar '(lambda (x) (add_list x)) 
@@ -1287,7 +1286,7 @@
     ; export data button
     (if (= 2 (setq status (start_dialog)))
       (progn 
-        (setq dataType (GetTempExportedDataTypeByindex exportDataType))
+        (setq dataType (GetGsTempExportedDataTypeByindex exportDataType))
         (setq ss (GetAllBlockSSByDataTypeUtils dataType))
         (setq entityNameList (GetEntityNameListBySSUtils ss))
         (WriteDataToCSVByEntityNameListStrategy entityNameList dataType)
@@ -1297,7 +1296,7 @@
     ; import data button
     (if (= 3 status) 
       (progn 
-        (setq dataType (GetTempExportedDataTypeByindex exportDataType))
+        (setq dataType (GetGsTempExportedDataTypeByindex exportDataType))
         (if (/= dataType "Equipment") 
           (progn 
             (setq importedDataList (CSVStrListToListListUtils (ReadGsDataFromCSVStrategy dataType)))
@@ -1311,7 +1310,7 @@
     (if (= 4 status) 
       (if (= importMsgBtnStatus 1) 
         (progn 
-          (setq dataType (GetTempExportedDataTypeByindex exportDataType))
+          (setq dataType (GetGsTempExportedDataTypeByindex exportDataType))
           (setq propertyNameList (GetPropertyNameListStrategy dataType))
           (setq selectedName (nth (atoi viewPropertyName) propertyNameList))
           (if (/= importedDataList nil) 
@@ -1341,14 +1340,25 @@
   (princ)
 )
 
-(defun GetTempExportedDataTypeChNameList ()
-  '("管道" "仪表" "所有设备" "反应釜" "输送泵" "储罐" "换热器" "离心机" "真空泵" "自定义设备" "洁净空凋条件" "舒适性空凋条件")
+;;;-------------------------------------------------------------------------;;;
+; Update Data By temp CSV
+; 2021-07-15
+(defun c:UpdateGsData ()
+  (ExecuteFunctionAfterVerifyDateUtils 'UpdateDataStrategyByBoxUtils '("updateDataFlowDataBox" "Gs"))
+)
+
+; refactored at 2021-07-15
+(defun GetGsTempExportedDataTypeChNameList ()
+  '("管道" "仪表" "反应釜" "输送泵" "储罐" "换热器" "离心机" "真空泵" "自定义设备" "洁净空凋条件" "舒适性空凋条件")
+  ; '("管道" "仪表" "所有设备" "反应釜" "输送泵" "储罐" "换热器" "离心机" "真空泵" "自定义设备" "洁净空凋条件" "舒适性空凋条件")
 )
 
 ; unit test compeleted
 ; refactored at 2021-06-25
-(defun GetTempExportedDataTypeByindex (index /)
-  (nth (atoi index) '("Pipe" "Instrument" "Equipment" "Reactor" "Pump" "Tank" "Heater" "Centrifuge" "Vacuum" "CustomEquip" "GsCleanAir" "GsComfortAir"))
+; refactored at 2021-07-15
+(defun GetGsTempExportedDataTypeByindex (index /)
+  (nth (atoi index) '("Pipe" "Instrument" "Reactor" "Pump" "Tank" "Heater" "Centrifuge" "Vacuum" "CustomEquip" "GsCleanAir" "GsComfortAir"))
+  ; (nth (atoi index) '("Pipe" "Instrument" "Equipment" "Reactor" "Pump" "Tank" "Heater" "Centrifuge" "Vacuum" "CustomEquip" "GsCleanAir" "GsComfortAir"))
 )
 
 (defun filterAndModifyBlockPropertyByBox (propertyNameList tileName dataType / dcl_id propertyName propertyValue filterPropertyName patternValue replacedSubstring status selectedName selectedFilterName ss sslen matchedList importedList confirmList blockDataList entityNameList viewPropertyName previewDataList importedDataList exportMsgBtnStatus importMsgBtnStatus modifyMsgBtnStatus)
