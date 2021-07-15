@@ -251,9 +251,10 @@
 
 ; refactored at 2021-04-09
 (defun MoveJSDrawMacro () 
+  ; refactored at 2021-07-15
+  (CADLispCopyUtils (GetAllJSAxisSS) '(0 0 0) '(400000 0 0)) 
   (CADLispMoveUtils (GetAllMoveDrawLabelSS) '(0 0 0) '(400000 0 0))
   (CADLispCopyUtils (GetAllCopyDrawLabelSS) '(0 0 0) '(400000 0 0)) 
-  (CADLispCopyUtils (GetAllJSAxisSS) '(0 0 0) '(400000 0 0)) 
   (generateJSDraw (MoveCopyEntityData))
   ; refactored at 2021-05-11
   (insertAllGsBzColumnCenterLine)
