@@ -3461,6 +3461,7 @@
 
 ; 2021-04-14
 ; refactored at 2021-06-24
+; refactored at 2021-07-15
 (defun GetProjectInfoUtils (/ allDrawLabelData)
   (setq allDrawLabelData 
     (car 
@@ -3485,6 +3486,13 @@
               (GetDottedPairValueUtils "project2l1" allDrawLabelData) 
               (GetDottedPairValueUtils "project2l2" allDrawLabelData)) 
     )
+    (cons "monomerName" (ExtractMonomerNumUtils (GetDottedPairValueUtils "unitname" allDrawLabelData)))
+    (cons "projectManager" (ExtractProjectNumUtils (GetDottedPairValueUtils "projm" allDrawLabelData)))
+    (cons "professionalManager" (ExtractProjectNumUtils (GetDottedPairValueUtils "specim" allDrawLabelData)))
+    (cons "designer" (ExtractProjectNumUtils (GetDottedPairValueUtils "made" allDrawLabelData)))
+    (cons "checker" (ExtractProjectNumUtils (GetDottedPairValueUtils "chkd" allDrawLabelData)))
+    (cons "verifier" (ExtractProjectNumUtils (GetDottedPairValueUtils "appr" allDrawLabelData)))
+    (cons "approver" (ExtractProjectNumUtils (GetDottedPairValueUtils "authd" allDrawLabelData)))
   )
 )
 
