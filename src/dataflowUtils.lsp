@@ -25,17 +25,17 @@
 ; 2021-04-09
 ; very importance for me, convert a function to the parameter for another function
 (defun ExecuteFunctionAfterVerifyDateUtils (functionName argumentList / result) 
-  ; (setq result (vl-catch-all-apply functionName argumentList))
+  (setq result (vl-catch-all-apply functionName argumentList))
   
-  (if (and (> *dataflowDate* (car (GetVerifyDataFromServer))) (< *dataflowDate* (cadr (GetVerifyDataFromServer))) )
-    (progn 
-      (setq result (vl-catch-all-apply functionName argumentList))
-      (if (= (type result) 'VL-CATCH-ALL-APPLY-ERROR) 
-        (vl-catch-all-error-message result)
-      )
-    )
-    (alert "用户未注册，请于管理员联系！")
-  ) 
+  ; (if (and (> *dataflowDate* (car (GetVerifyDataFromServer))) (< *dataflowDate* (cadr (GetVerifyDataFromServer))) )
+  ;   (progn 
+  ;     (setq result (vl-catch-all-apply functionName argumentList))
+  ;     (if (= (type result) 'VL-CATCH-ALL-APPLY-ERROR) 
+  ;       (vl-catch-all-error-message result)
+  ;     )
+  ;   )
+  ;   (alert "用户未注册，请于管理员联系！")
+  ; ) 
   ; remove the 'nil' output in the end - refactored at 2021-07-06
   (princ)
 )
