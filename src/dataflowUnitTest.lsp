@@ -144,8 +144,10 @@
 )
 
 ; 2021-04-14
+; refactored at 2021-07-15
 (defun ExtractProjectNumUtilsTest () 
-  (AssertEqual 'ExtractProjectNumUtils (list "S20C14-23-04-01") "S20C14")
+  (AssertEqual 'ExtractProjectNumUtils (list "S18104GS-23-04-01") "S18104")
+  (AssertEqual 'ExtractProjectNumUtils (list "S20D10GC-02-06-01") "S20D10")
 )
 
 ; 2021-04-09
