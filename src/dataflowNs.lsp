@@ -551,7 +551,8 @@
 (defun GetSysRefrigeratingData (allNsCleanAirData /)
   (car 
     (vl-remove-if-not 
-      '(lambda (x) (/= (GetListPairValueUtils "winterHeatingSteamRate" x) nil))
+      ; red hat - the filter condition - refactored at 2021-07-15
+      '(lambda (x) (/= (GetListPairValueUtils "winterHeatingType" x) nil))
       allNsCleanAirData
     )
   )
