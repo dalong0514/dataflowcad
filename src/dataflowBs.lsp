@@ -770,7 +770,7 @@
               (InsertBsGCTVerticalRotatedDimension drawFrameScale 
                 x
                 y 
-                (MoveInsertPositionUtils insPt (+ barrelRadius thickNess 500) (GetNegativeNumberUtils (GetXHalfDistanceForTwoPoint x y))) 
+                (MoveInsertPositionUtils insPt (+ barrelRadius thickNess 300) (GetNegativeNumberUtils (GetXHalfDistanceForTwoPoint x y))) 
                 "")
             ) 
     *GCTSideRightInsptList*
