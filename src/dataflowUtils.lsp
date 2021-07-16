@@ -3485,7 +3485,6 @@
           (or 
             (= (GetDottedPairValueUtils "room_area" x) "")
             (= (GetDottedPairValueUtils "room_area" x) "0")
-            (= (GetDottedPairValueUtils "room_pressure" x) "")
           )
         ) 
       ) 
@@ -3504,7 +3503,7 @@
           )
         )
       )
-      (alert (strcat nullAreaMsg "洁净房间面积（房间室压）不能为空！"))
+      (alert (strcat nullAreaMsg "洁净房间面积不能为空！"))
       (setq verifyStatus 0)
     )
   )
