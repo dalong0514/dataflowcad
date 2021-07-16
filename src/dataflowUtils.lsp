@@ -3476,8 +3476,9 @@
 )
 
 ; 2021-07-15
-(defun VerifyNsCleanAirDataBeforeExport (ss / roomData nullAreaMsg verifyStatus)
-  
+; refactored 2021-07-16
+(defun VerifyNsCleanAirDataBeforeExport (ss / allRoomDictData roomData someAreaRoomData nullAreaMsg someAreaMsg someAreaMsgList verifyStatus) 
+  (setq allRoomDictData (GetBlockAllPropertyDictListUtils (GetEntityNameListBySSUtils ss)))
   (setq roomData 
     (vl-remove-if-not '(lambda (x) 
         (and 
@@ -3488,23 +3489,49 @@
           )
         ) 
       ) 
-      (GetBlockAllPropertyDictListUtils (GetEntityNameListBySSUtils ss))
+      allRoomDictData
     )
   )
-  (if (= roomData nil) 
-    (setq verifyStatus 1)
-    (progn 
-      (setq nullAreaMsg 
-        (apply 'strcat 
-          (mapcar '(lambda (x) 
-              (strcat (GetDottedPairValueUtils "room_num" x) "/")
-            ) 
-            roomData
+  (setq someAreaRoomData 
+    (mapcar '(lambda (x) 
+        (mapcar '(lambda (xx) 
+            (setq someAreaMsgList (append someAreaMsgList (list (GetDottedPairValueUtils "room_num" xx))))
+            (setq someAreaMsgList (append someAreaMsgList (list "/")))
+          ) 
+          (cdr x)
+        )
+        (setq someAreaMsgList (append someAreaMsgList (list "#")))
+      ) 
+      (vl-remove-if-not '(lambda (x) 
+          (and (> (length (cdr x)) 1) (> (atof (car x)) 9))
+        ) 
+        (ChunkDictListByKeyNameUtils allRoomDictData "floor_height")
+      )
+    )
+  )
+  (cond 
+    ((and (= roomData nil) (= someAreaRoomData nil)) (setq verifyStatus 1))
+    ((/= roomData nil) 
+      (progn 
+        (setq nullAreaMsg 
+          (apply 'strcat 
+            (mapcar '(lambda (x) 
+                (strcat (GetDottedPairValueUtils "room_num" x) "/")
+              ) 
+              roomData
+            )
           )
         )
+        (alert (strcat nullAreaMsg "洁净房间面积不能为空！"))
+        (setq verifyStatus 0)
       )
-      (alert (strcat nullAreaMsg "洁净房间面积不能为空！"))
-      (setq verifyStatus 0)
+    )
+    ((/= someAreaRoomData nil) 
+      (progn 
+        (setq someAreaMsg (apply 'strcat someAreaMsgList))
+        (alert (strcat someAreaMsg "有房间面积一模一样，请核对房间面积是否问问题！"))
+        (setq verifyStatus 0)
+      )
     )
   )
   verifyStatus
