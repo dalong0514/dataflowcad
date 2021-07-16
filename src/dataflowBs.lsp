@@ -464,10 +464,6 @@
     (+ barrelRadius thickNess) dataType sideLeftNozzleDictData drawFrameScale)
   (GenerateSideRightNozzle (MoveInsertPositionUtils insPt (+ barrelRadius thickNess) (- newBarrelHalfHeight straightEdgeHeight)) 
     (+ barrelRadius thickNess) dataType sideRightNozzleDictData drawFrameScale)
-  
-  
-  
-  
 )
 
 ; 2021-07-14
@@ -553,13 +549,14 @@
   (mapcar '(lambda (x) 
              (setq nozzlePositionRadius (atoi (GetDottedPairValueUtils "POSITION_OFFSET" (car (cdr x)))))
              (setq nozzleInsPt (MoveInsertPositionUtils insPt 0 (GetNegativeNumberUtils nozzlePositionRadius)))
+             ; refactored at 2021-07-16 add the Nozzle Inspt List
+             (setq *GCTSideRightInsptList* (append *GCTSideRightInsptList* (list (MoveInsertPositionUtils nozzleInsPt 150 0))))
              (InsertBlockByRotateUtils nozzleInsPt "BsGCTGraphNozzle" "0DataFlow-BsThickLine" (list (cons 0 dataType)) (/ PI -2))
              (if (> nozzlePositionRadius 0) (setq nozzleLeftInsPt nozzleInsPt))
              (InsertBsGTCRightNozzleTag insPt nozzleInsPt equipTag (cdr x) drawFrameScale)
           ) 
     (ChunkDictListByKeyNameUtils upLeftNozzleDictData "POSITION_OFFSET")
   ) 
-  (InsertBsGCTSideRightNozzleDimension insPt nozzleLeftInsPt drawFrameScale)
 )
 
 ; 2021-07-15
