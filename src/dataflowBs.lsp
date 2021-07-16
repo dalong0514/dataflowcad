@@ -761,16 +761,28 @@
 
 ; 2021-07-16
 (defun InsertBsGCTOneEquipSideRightDimension (insPt barrelHalfHeight straightEdgeHeight barrelRadius thickNess drawFrameScale /) 
-  (setq *GCTSideRightInsptList* (append *GCTSideRightInsptList* (list (MoveInsertPositionUtils insPt 0 (+ barrelHalfHeight straightEdgeHeight (/ barrelRadius 2) thickNess)))))
-  (setq *GCTSideRightInsptList* (append *GCTSideRightInsptList* (list (MoveInsertPositionUtils insPt 0 barrelHalfHeight))))
-  (setq *GCTSideRightInsptList* (append *GCTSideRightInsptList* (list (MoveInsertPositionUtils insPt 0 (GetNegativeNumberUtils (+ barrelHalfHeight straightEdgeHeight (/ barrelRadius 2) thickNess))))))
+  (setq *GCTSideRightInsptList* 
+         (append *GCTSideRightInsptList* (list (MoveInsertPositionUtils insPt 0 (+ barrelHalfHeight straightEdgeHeight (/ barrelRadius 2) thickNess)))))
+  (setq *GCTSideRightInsptList* 
+         (append *GCTSideRightInsptList* (list (MoveInsertPositionUtils insPt (+ barrelRadius thickNess) barrelHalfHeight))))
+  (setq *GCTSideRightInsptList* 
+         (append *GCTSideRightInsptList* (list (MoveInsertPositionUtils insPt (+ barrelRadius thickNess) (GetNegativeNumberUtils (+ barrelHalfHeight straightEdgeHeight (/ barrelRadius 2) thickNess))))))
   (setq *GCTSideRightInsptList* (append *GCTSideRightInsptList* (list (MoveInsertPositionUtils insPt 0 (GetNegativeNumberUtils barrelHalfHeight)))))
+  
+  
+  (mapcar '(lambda (x y) 
+              (InsertBsGCTVerticalRotatedDimension drawFrameScale 
+                x
+                y 
+                (MoveInsertPositionUtils insPt (+ barrelRadius thickNess 500) (GetNegativeNumberUtils (GetXHalfDistanceForTwoPoint x y))) 
+                "")
+            ) 
+    *GCTSideRightInsptList*
+    (cdr *GCTSideRightInsptList*)
+  )
+  
 
-  ; (InsertBsGCTVerticalRotatedDimension drawFrameScale 
-  ;   insPt
-  ;   (MoveInsertPositionUtils leftNozzleinsPt 150 0) 
-  ;   (MoveInsertPositionUtils insPt 250 (GetNegativeNumberUtils (GetXHalfDistanceForTwoPoint insPt leftNozzleinsPt))) 
-  ;   "")
+
   (princ *GCTSideRightInsptList*)(princ)
   (setq *GCTSideRightInsptList* nil)
 )
