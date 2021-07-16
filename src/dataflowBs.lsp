@@ -768,8 +768,7 @@
   (setq *GCTSideRightInsptList* 
          (append *GCTSideRightInsptList* (list (MoveInsertPositionUtils insPt (+ barrelRadius thickNess) (GetNegativeNumberUtils (+ barrelHalfHeight straightEdgeHeight (/ barrelRadius 2) thickNess))))))
   (setq *GCTSideRightInsptList* (append *GCTSideRightInsptList* (list (MoveInsertPositionUtils insPt 0 (GetNegativeNumberUtils barrelHalfHeight)))))
-  
-  
+  (setq *GCTSideRightInsptList* (vl-sort *GCTSideRightInsptList* '(lambda (x y) (< (cadr x) (cadr y)))))
   (mapcar '(lambda (x y) 
               (InsertBsGCTVerticalRotatedDimension drawFrameScale 
                 x
@@ -781,8 +780,7 @@
     (cdr *GCTSideRightInsptList*)
   )
   
-
-
+  
   (princ *GCTSideRightInsptList*)(princ)
   (setq *GCTSideRightInsptList* nil)
 )
@@ -984,18 +982,6 @@
     (MoveInsertPositionUtils insPt barrelRadius 0) 
     (MoveInsertPositionUtils insPt (+ barrelRadius thickNess) 0) 
     (MoveInsertPositionUtils insPt (+ barrelRadius thickNess 50) 50) 
-    "") 
-  ; vertical barrel
-  (InsertBsGCTVerticalRotatedDimension drawFrameScale
-    (MoveInsertPositionUtils insPt barrelRadius barrelHalfHeight) 
-    (MoveInsertPositionUtils insPt barrelRadius (GetNegativeNumberUtils barrelHalfHeight))  
-    (MoveInsertPositionUtils insPt (+ barrelRadius 200) 0) 
-    "") 
-  ; vertical head
-  (InsertBsGCTVerticalRotatedDimension drawFrameScale
-    (MoveInsertPositionUtils insPt 0 barrelHalfHeight) 
-    (MoveInsertPositionUtils insPt 0 (+ barrelHalfHeight (/ barrelRadius 2) straightEdgeHeight thickNess))  
-    (MoveInsertPositionUtils insPt (+ barrelRadius 200) 0) 
     "") 
   ; vertical up distance for head and barrel
   (InsertBsGCTVerticalRotatedDimension drawFrameScale
