@@ -464,6 +464,10 @@
     (+ barrelRadius thickNess) dataType sideLeftNozzleDictData drawFrameScale)
   (GenerateSideRightNozzle (MoveInsertPositionUtils insPt (+ barrelRadius thickNess) (- newBarrelHalfHeight straightEdgeHeight)) 
     (+ barrelRadius thickNess) dataType sideRightNozzleDictData drawFrameScale)
+  
+  
+  
+  
 )
 
 ; 2021-07-14
@@ -755,6 +759,22 @@
   )
 )
 
+; 2021-07-16
+(defun InsertBsGCTOneEquipSideRightDimension (insPt barrelHalfHeight straightEdgeHeight barrelRadius thickNess drawFrameScale /) 
+  (setq *GCTSideRightInsptList* (append *GCTSideRightInsptList* (list (MoveInsertPositionUtils insPt 0 (+ barrelHalfHeight straightEdgeHeight (/ barrelRadius 2) thickNess)))))
+  (setq *GCTSideRightInsptList* (append *GCTSideRightInsptList* (list (MoveInsertPositionUtils insPt 0 barrelHalfHeight))))
+  (setq *GCTSideRightInsptList* (append *GCTSideRightInsptList* (list (MoveInsertPositionUtils insPt 0 (GetNegativeNumberUtils (+ barrelHalfHeight straightEdgeHeight (/ barrelRadius 2) thickNess))))))
+  (setq *GCTSideRightInsptList* (append *GCTSideRightInsptList* (list (MoveInsertPositionUtils insPt 0 (GetNegativeNumberUtils barrelHalfHeight)))))
+
+  ; (InsertBsGCTVerticalRotatedDimension drawFrameScale 
+  ;   insPt
+  ;   (MoveInsertPositionUtils leftNozzleinsPt 150 0) 
+  ;   (MoveInsertPositionUtils insPt 250 (GetNegativeNumberUtils (GetXHalfDistanceForTwoPoint insPt leftNozzleinsPt))) 
+  ;   "")
+  (princ *GCTSideRightInsptList*)(princ)
+  (setq *GCTSideRightInsptList* nil)
+)
+
 ; 2021-06-15
 (defun InsertBsGCTReactorGraphy (insPt barrelRadius barrelHalfHeight thickNess headThickNess dataType straightEdgeHeight 
                                       allBsGCTSupportDictData drawFrameScale oneEquipNozzleDictData / newBarrelHalfHeight nozzleOffset oneBsGCTEquipSupportDictData) 
@@ -799,6 +819,11 @@
     dataType legSupportHeight drawFrameScale)
   (InsertBsGCTVerticalTankBarrelDimension insPt barrelRadius barrelHalfHeight thickNess straightEdgeHeight drawFrameScale)
   (InsertBsGCTVerticalTankAnnotation insPt dataType barrelRadius headThickNess straightEdgeHeight drawFrameScale)
+  ;; refactored at 2021-07-16
+  (InsertBsGCTOneEquipSideRightDimension insPt barrelHalfHeight straightEdgeHeight barrelRadius thickNess drawFrameScale)
+  
+  
+  
 )
 
 ; 2021-05-18
