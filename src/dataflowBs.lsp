@@ -833,11 +833,11 @@
 )
 
 ; 2021-06-15
+; refactored at 2021-07-17
 (defun InsertBsGCTReactorGraphy (insPt barrelRadius barrelHalfHeight thickNess headThickNess dataType straightEdgeHeight 
-                                      allBsGCTSupportDictData drawFrameScale oneEquipNozzleDictData / newBarrelHalfHeight nozzleOffset oneBsGCTEquipSupportDictData) 
+                                      allBsGCTSupportDictData drawFrameScale oneEquipNozzleDictData / newBarrelHalfHeight oneBsGCTEquipSupportDictData) 
   ; refactored at 2021-05-06 straightEdgeHeight is 25
   (setq newBarrelHalfHeight (+ barrelHalfHeight straightEdgeHeight)) 
-  (setq nozzleOffset 100)
   (setq oneBsGCTEquipSupportDictData (GetBsGCTOneEquipSupportDictData dataType allBsGCTSupportDictData))
   (GenerateSingleLineVerticalEllipseHeadUtils (MoveInsertPositionUtils insPt 0 newBarrelHalfHeight) 
     barrelRadius "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" 1 thickNess straightEdgeHeight)
@@ -856,12 +856,12 @@
 )
 
 ; 2021-04-18
+; refactored at 2021-07-17
 (defun InsertBsGCTVerticalTankGraphy (insPt barrelRadius barrelHalfHeight thickNess headThickNess dataType straightEdgeHeight 
                                       allBsGCTSupportDictData drawFrameScale oneEquipNozzleDictData / 
-                                      newBarrelHalfHeight nozzleOffset oneBsGCTEquipSupportDictData legSupportHeight) 
+                                      newBarrelHalfHeight oneBsGCTEquipSupportDictData legSupportHeight) 
   ; refactored at 2021-05-06 straightEdgeHeight is 25
   (setq newBarrelHalfHeight (+ barrelHalfHeight straightEdgeHeight)) 
-  (setq nozzleOffset 100)
   (setq oneBsGCTEquipSupportDictData (GetBsGCTOneEquipSupportDictData dataType allBsGCTSupportDictData))
   (setq legSupportHeight (atoi (GetDottedPairValueUtils "SUPPORT_HEIGHT" oneBsGCTEquipSupportDictData)))
   (GenerateSingleLineVerticalEllipseHeadUtils (MoveInsertPositionUtils insPt 0 newBarrelHalfHeight) 
@@ -885,12 +885,12 @@
 )
 
 ; 2021-05-18
+; refactored at 2021-07-17
 (defun InsertBsGCTHorizontalTankGraphy (insPt barrelRadius barrelHalfHeight thickNess headThickNess dataType straightEdgeHeight 
                                         allBsGCTSupportDictData drawFrameScale oneEquipNozzleDictData / 
-                                        newBarrelHalfHeight nozzleOffset oneBsGCTEquipSupportDictData saddleSupportOffset saddleSupportHeight) 
+                                        newBarrelHalfHeight oneBsGCTEquipSupportDictData saddleSupportOffset saddleSupportHeight) 
   ; refactored at 2021-05-06 straightEdgeHeight is 25
   (setq newBarrelHalfHeight (+ barrelHalfHeight straightEdgeHeight)) 
-  (setq nozzleOffset 100)
   (setq oneBsGCTEquipSupportDictData (GetBsGCTOneEquipSupportDictData dataType allBsGCTSupportDictData))
   (setq saddleSupportOffset (atoi (GetDottedPairValueUtils "SUPPORT_POSITION" oneBsGCTEquipSupportDictData)))
   (setq saddleSupportHeight (atoi (GetDottedPairValueUtils "SUPPORT_HEIGHT" oneBsGCTEquipSupportDictData)))
@@ -912,12 +912,12 @@
 )
 
 ; 2021-05-30
+; refactored at 2021-07-17
 (defun InsertBsGCTVerticalHeaterGraphy (insPt barrelRadius barrelHalfHeight exceedLength thickNess headThickNess dataType straightEdgeHeight 
-                                        allBsGCTSupportDictData drawFrameScale oneEquipNozzleDictData / newBarrelHalfHeight nozzleOffset oneBsGCTEquipSupportDictData totalFlangeHeight) 
+                                        allBsGCTSupportDictData drawFrameScale oneEquipNozzleDictData / newBarrelHalfHeight oneBsGCTEquipSupportDictData totalFlangeHeight) 
   (GenerateBsGCTHeaterTube (MoveInsertPositionUtils insPt -100 0) dataType "0DataFlow-BsDottedLine" 25 (* barrelHalfHeight 2))
   ; different from tank, tube length subtract EXCEED_LENGTH - 2021-5-27 refactored at 2021-05-30
   (setq barrelHalfHeight (- barrelHalfHeight exceedLength))
-  (setq nozzleOffset 100)
   (setq oneBsGCTEquipSupportDictData (GetBsGCTOneEquipSupportDictData dataType allBsGCTSupportDictData))
   (setq totalFlangeHeight (GetBsGCTHeaterFlangeTotalHeight barrelRadius))
   (setq newBarrelHalfHeight (+ barrelHalfHeight straightEdgeHeight totalFlangeHeight))
