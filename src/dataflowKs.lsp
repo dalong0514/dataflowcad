@@ -30,9 +30,6 @@
     ; Added the actions to the Cancel and Pick Point button
     (action_tile "cancel" "(done_dialog 0)")
     (action_tile "btnModify" "(done_dialog 2)")
-    (set_tile "textType" "0")
-    ; the default value of input box
-    (mode_tile "textType" 2)
     (action_tile "textType" "(setq textType $value)")
     (progn
       (start_list "textType" 3)
@@ -42,7 +39,7 @@
     ) 
     ; init the default data of text
     (if (= nil textType)
-      (setq textType "0")
+      (setq textType "1")
     ) 
     (if (= updateMsgBtnStatus 1)
       (set_tile "updateBtnMsg" "更新数据状态：已完成")
