@@ -446,7 +446,7 @@
 
 ; 2021-07-14
 ;; refactored at 2021-07-15
-(defun InsertBsGCTOneEquipNozzle (insPt barrelRadius newBarrelHalfHeight thickNess dataType drawFrameScale oneEquipNozzleDictData straightEdgeHeight / 
+(defun InsertBsGCTOneVerticalEquipNozzle (insPt barrelRadius newBarrelHalfHeight thickNess dataType drawFrameScale oneEquipNozzleDictData straightEdgeHeight / 
                                   upLeftNozzleDictData upRightNozzleDictData downLeftNozzleDictData downRightNozzleDictData 
                                   sideLeftNozzleDictData sideRightNozzleDictData) 
   (setq upLeftNozzleDictData (GetOneEquipUpLeftHeadNozzleDictData oneEquipNozzleDictData))
@@ -842,7 +842,7 @@
   (GenerateSingleLineVerticalEllipseHeadUtils (MoveInsertPositionUtils insPt 0 newBarrelHalfHeight) 
     barrelRadius "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" 1 thickNess straightEdgeHeight)
   ; refactored at 2021-07-14
-  (InsertBsGCTOneEquipNozzle insPt barrelRadius newBarrelHalfHeight thickNess dataType drawFrameScale oneEquipNozzleDictData straightEdgeHeight)
+  (InsertBsGCTOneVerticalEquipNozzle insPt barrelRadius newBarrelHalfHeight thickNess dataType drawFrameScale oneEquipNozzleDictData straightEdgeHeight)
   (GenerateVerticalSingleLineBarrelUtils insPt barrelRadius newBarrelHalfHeight "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" thickNess)
   ; refactored at 2021-05-27
   (GenerateBsGCTVerticalTankCenterLine insPt newBarrelHalfHeight barrelRadius thickNess)
@@ -866,7 +866,7 @@
   (setq legSupportHeight (atoi (GetDottedPairValueUtils "SUPPORT_HEIGHT" oneBsGCTEquipSupportDictData)))
   (GenerateSingleLineVerticalEllipseHeadUtils (MoveInsertPositionUtils insPt 0 newBarrelHalfHeight) 
     barrelRadius "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" 1 thickNess straightEdgeHeight)
-  (InsertBsGCTOneEquipNozzle insPt barrelRadius newBarrelHalfHeight thickNess dataType drawFrameScale oneEquipNozzleDictData straightEdgeHeight)
+  (InsertBsGCTOneVerticalEquipNozzle insPt barrelRadius newBarrelHalfHeight thickNess dataType drawFrameScale oneEquipNozzleDictData straightEdgeHeight)
   (GenerateVerticalSingleLineBarrelUtils insPt barrelRadius newBarrelHalfHeight "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" thickNess)
   ; refactored at 2021-05-27
   (GenerateBsGCTVerticalTankCenterLine insPt newBarrelHalfHeight barrelRadius thickNess)
@@ -907,6 +907,9 @@
     dataType saddleSupportHeight oneBsGCTEquipSupportDictData barrelRadius drawFrameScale)
   (InsertBsGCTLeftSaddleSupport (MoveInsertPositionUtils insPt (GetNegativeNumberUtils saddleSupportOffset) (GetNegativeNumberUtils (+ barrelRadius thickNess))) 
     dataType saddleSupportHeight oneBsGCTEquipSupportDictData barrelRadius drawFrameScale)
+  
+  
+  
   (InsertBsGCTHorizonticalTankBarrelDimension insPt barrelRadius barrelHalfHeight thickNess straightEdgeHeight saddleSupportHeight saddleSupportOffset drawFrameScale)
   (InsertBsGCTHorizonticalTankAnnotation insPt dataType barrelRadius headThickNess straightEdgeHeight drawFrameScale)
 )
@@ -923,7 +926,7 @@
   (setq newBarrelHalfHeight (+ barrelHalfHeight straightEdgeHeight totalFlangeHeight))
   (GenerateSingleLineVerticalEllipseHeadUtils (MoveInsertPositionUtils insPt 0 newBarrelHalfHeight) 
     barrelRadius "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" 1 thickNess straightEdgeHeight)
-  (InsertBsGCTOneEquipNozzle insPt barrelRadius newBarrelHalfHeight thickNess dataType drawFrameScale oneEquipNozzleDictData straightEdgeHeight)
+  (InsertBsGCTOneVerticalEquipNozzle insPt barrelRadius newBarrelHalfHeight thickNess dataType drawFrameScale oneEquipNozzleDictData straightEdgeHeight)
   ; the upper Flange - rotate is PI
   (GenerateBsGCTFlangeUtils (MoveInsertPositionUtils insPt 0 (- newBarrelHalfHeight straightEdgeHeight)) dataType barrelRadius thickNess PI -1)
   (GenerateVerticalSingleLineBarrelUtils insPt barrelRadius barrelHalfHeight "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" thickNess)
