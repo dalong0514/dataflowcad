@@ -576,11 +576,11 @@
 
 ; 2021-07-14
 (defun GenerateOneUpLeftHeadNozzle (insPt barrelRadius equipTag upLeftNozzleDictData drawFrameScale / nozzlePositionRadius yOffset nozzleInsPt nozzleLeftInsPt) 
-  ; (setq *GCTTotalHeightInsptList* nil) ;; the key for solve a red hat 2021-07-16 
   (mapcar '(lambda (x) 
              (setq nozzlePositionRadius (GetHalfNumberUtils (atoi (GetDottedPairValueUtils "POSITION_OFFSET" (car (cdr x))))))
              (setq yOffset (- (GetYByXForEllipseUtils barrelRadius nozzlePositionRadius) (/ barrelRadius 2)))
              (setq nozzleInsPt (MoveInsertPositionUtils insPt (GetNegativeNumberUtils nozzlePositionRadius) yOffset))
+             ;; refactored at 2021-07-17
              (setq *GCTTotalHeightInsptList* (append *GCTTotalHeightInsptList* (list (MoveInsertPositionUtils nozzleInsPt 0 150))))
              (InsertBlockUtils nozzleInsPt "BsGCTGraphNozzle" "0DataFlow-BsThickLine" (list (cons 0 equipTag)))
              (if (> nozzlePositionRadius 0) (setq nozzleLeftInsPt nozzleInsPt))
@@ -593,11 +593,11 @@
 
 ; 2021-07-14
 (defun GenerateOneUpRightHeadNozzle (insPt barrelRadius equipTag upRightNozzleDictData drawFrameScale / nozzlePositionRadius yOffset nozzleInsPt nozzleRightInsPt) 
-  ; (setq *GCTTotalHeightInsptList* nil) ;; the key for solve a red hat 2021-07-16 
   (mapcar '(lambda (x) 
              (setq nozzlePositionRadius (GetHalfNumberUtils (atoi (GetDottedPairValueUtils "POSITION_OFFSET" (car (cdr x))))))
              (setq yOffset (- (GetYByXForEllipseUtils barrelRadius nozzlePositionRadius) (/ barrelRadius 2)))
              (setq nozzleInsPt (MoveInsertPositionUtils insPt nozzlePositionRadius yOffset))
+             ;; refactored at 2021-07-17
              (setq *GCTTotalHeightInsptList* (append *GCTTotalHeightInsptList* (list (MoveInsertPositionUtils nozzleInsPt 0 150))))
              (InsertBlockUtils nozzleInsPt "BsGCTGraphNozzle" "0DataFlow-BsThickLine" (list (cons 0 equipTag)))
              (if (> nozzlePositionRadius 0) (setq nozzleRightInsPt nozzleInsPt))
@@ -614,6 +614,8 @@
              (setq nozzlePositionRadius (GetHalfNumberUtils (atoi (GetDottedPairValueUtils "POSITION_OFFSET" (car (cdr x))))))
              (setq yOffset (- (GetYByXForEllipseUtils barrelRadius nozzlePositionRadius) (/ barrelRadius 2)))
              (setq nozzleInsPt (MoveInsertPositionUtils insPt (GetNegativeNumberUtils nozzlePositionRadius) (GetNegativeNumberUtils yOffset)))
+             ;; refactored at 2021-07-17
+             (setq *GCTTotalHeightInsptList* (append *GCTTotalHeightInsptList* (list (MoveInsertPositionUtils nozzleInsPt 0 -150)))) ;; the length of nozzle is 150
              (InsertBlockByRotateUtils nozzleInsPt "BsGCTGraphNozzle" "0DataFlow-BsThickLine" (list (cons 0 dataType)) PI)
              (if (> nozzlePositionRadius 0) (setq nozzleLeftInsPt nozzleInsPt))
              (InsertBsGTCDownNozzleTag insPt nozzleInsPt equipTag (cdr x) drawFrameScale)
@@ -629,6 +631,8 @@
              (setq nozzlePositionRadius (GetHalfNumberUtils (atoi (GetDottedPairValueUtils "POSITION_OFFSET" (car (cdr x))))))
              (setq yOffset (- (GetYByXForEllipseUtils barrelRadius nozzlePositionRadius) (/ barrelRadius 2)))
              (setq nozzleInsPt (MoveInsertPositionUtils insPt nozzlePositionRadius (GetNegativeNumberUtils yOffset)))
+             ;; refactored at 2021-07-17
+             (setq *GCTTotalHeightInsptList* (append *GCTTotalHeightInsptList* (list (MoveInsertPositionUtils nozzleInsPt 0 -150)))) ;; the length of nozzle is 150
              (InsertBlockByRotateUtils nozzleInsPt "BsGCTGraphNozzle" "0DataFlow-BsThickLine" (list (cons 0 dataType)) PI)
              (if (> nozzlePositionRadius 0) (setq nozzleRightInsPt nozzleInsPt))
              (InsertBsGTCDownNozzleTag insPt nozzleInsPt equipTag (cdr x) drawFrameScale)
@@ -641,11 +645,11 @@
 ; 2021-07-15
 (defun InsertBsGTCRightNozzleTag (nozzleInsPt equipTag nozzleDictData drawFrameScale / insPtList)
   (setq insPtList (GetInsertPtListByXMoveUtils nozzleInsPt (GenerateSortedNumByList nozzleDictData 0) (* 6 drawFrameScale)))
-  (GenerateLineUtils (MoveInsertPositionUtils nozzleInsPt 150 0) (MoveInsertPositionUtils nozzleInsPt (- 450 (* 3 drawFrameScale)) 0) "0")
+  (GenerateLineUtils (MoveInsertPositionUtils nozzleInsPt 150 0) (MoveInsertPositionUtils nozzleInsPt (- 500 (* 3 drawFrameScale)) 0) "0")
   (mapcar '(lambda (x y) 
              (InsertBlockByScaleUtils 
                ; get the insert point for nozzle
-               (list (+ (car x) 450) (cadr x) 0)
+               (list (+ (car x) 500) (cadr x) 0)
                "BsGCTGraphNozzleTag" 
                "0DataFlow-BsText" 
                (list (cons 0 equipTag) (cons 1 (GetDottedPairValueUtils "SYMBOL" y))) drawFrameScale)
@@ -764,6 +768,7 @@
 (defun InsertBsGCTOneEquipGlobalDimension (insPt barrelHalfHeight straightEdgeHeight barrelRadius thickNess drawFrameScale /)
   (InsertBsGCTOneEquipSideRightDimension insPt barrelHalfHeight straightEdgeHeight barrelRadius thickNess drawFrameScale)
   (InsertBsGCTOneEquipSideLeftDimension insPt barrelHalfHeight straightEdgeHeight barrelRadius thickNess drawFrameScale)
+  (InsertBsGCTOneEquipTotalHeightDimension insPt barrelHalfHeight straightEdgeHeight barrelRadius thickNess drawFrameScale)
 )
 
 ; 2021-07-16
@@ -808,18 +813,19 @@
 )
 
 ; 2021-07-16
-(defun InsertBsGCTOneEquipTotalHeightDimension (insPt barrelHalfHeight straightEdgeHeight barrelRadius thickNess legSupportHeight drawFrameScale / firstInsPt lastInsPt) 
+; refactored at 2021-07-17
+(defun InsertBsGCTOneEquipTotalHeightDimension (insPt barrelHalfHeight straightEdgeHeight barrelRadius thickNess drawFrameScale / firstInsPt lastInsPt) 
   (setq *GCTTotalHeightInsptList* 
          (append *GCTTotalHeightInsptList* (list (MoveInsertPositionUtils insPt 0 (+ barrelHalfHeight straightEdgeHeight (/ barrelRadius 2) thickNess)))))
   (setq *GCTTotalHeightInsptList* 
-         (append *GCTTotalHeightInsptList* (list (MoveInsertPositionUtils insPt (+ barrelRadius thickNess) (GetNegativeNumberUtils (+ barrelHalfHeight legSupportHeight))))))
+         (append *GCTTotalHeightInsptList* (list (MoveInsertPositionUtils insPt 0 (GetNegativeNumberUtils (+ barrelHalfHeight straightEdgeHeight (/ barrelRadius 2) thickNess))))))
   (setq *GCTTotalHeightInsptList* (vl-sort *GCTTotalHeightInsptList* '(lambda (x y) (< (cadr x) (cadr y)))))
   (setq firstInsPt (car *GCTTotalHeightInsptList*))
   (setq lastInsPt (car (reverse *GCTTotalHeightInsptList*)))
   (InsertBsGCTVerticalRotatedDimension drawFrameScale 
     firstInsPt
     lastInsPt
-    (MoveInsertPositionUtils insPt (+ barrelRadius thickNess 350) (GetNegativeNumberUtils (GetXHalfDistanceForTwoPoint firstInsPt lastInsPt))) 
+    (MoveInsertPositionUtils insPt (+ barrelRadius thickNess 400) (GetNegativeNumberUtils (GetXHalfDistanceForTwoPoint firstInsPt lastInsPt))) 
     "")
   (setq *GCTTotalHeightInsptList* nil)
 )
@@ -871,8 +877,9 @@
   (InsertBsGCTVerticalTankBarrelDimension insPt barrelRadius barrelHalfHeight thickNess straightEdgeHeight drawFrameScale)
   (InsertBsGCTVerticalTankAnnotation insPt dataType barrelRadius headThickNess straightEdgeHeight drawFrameScale)
   ;; refactored at 2021-07-17
+  (setq *GCTTotalHeightInsptList* 
+         (append *GCTTotalHeightInsptList* (list (MoveInsertPositionUtils insPt (+ barrelRadius thickNess) (GetNegativeNumberUtils (+ barrelHalfHeight legSupportHeight))))))
   (InsertBsGCTOneEquipGlobalDimension insPt barrelHalfHeight straightEdgeHeight barrelRadius thickNess drawFrameScale)
-  (InsertBsGCTOneEquipTotalHeightDimension insPt barrelHalfHeight straightEdgeHeight barrelRadius thickNess legSupportHeight drawFrameScale)
 )
 
 ; 2021-05-18
