@@ -446,9 +446,9 @@
 
 ; 2021-07-14
 ;; refactored at 2021-07-15
-(defun InsertBsGCTOneVerticalEquipNozzle (insPt barrelRadius newBarrelHalfHeight thickNess dataType drawFrameScale oneEquipNozzleDictData straightEdgeHeight / 
-                                  upLeftNozzleDictData upRightNozzleDictData downLeftNozzleDictData downRightNozzleDictData 
-                                  sideLeftNozzleDictData sideRightNozzleDictData) 
+;; refactored at 2021-07-17
+(defun InsertBsGCTOneEquipNozzle (insPt barrelRadius newBarrelHalfHeight thickNess dataType drawFrameScale oneEquipNozzleDictData straightEdgeHeight equipNozzleType / 
+                                  upLeftNozzleDictData upRightNozzleDictData downLeftNozzleDictData downRightNozzleDictData sideLeftNozzleDictData sideRightNozzleDictData) 
   (setq upLeftNozzleDictData (GetOneEquipUpLeftHeadNozzleDictData oneEquipNozzleDictData))
   (setq upRightNozzleDictData (GetOneEquipUpRightHeadNozzleDictData oneEquipNozzleDictData))
   (setq downLeftNozzleDictData (GetOneEquipDownLeftHeadNozzleDictData oneEquipNozzleDictData))
@@ -458,6 +458,34 @@
   (setq *GCTTotalHeightInsptList* nil) ;; the key for solve a red hat 2021-07-17
   (setq *GCTSideRightInsptList* nil) ;; the key for solve a red hat 2021-07-17
   (setq *GCTSideLeftInsptList* nil) ;; the key for solve a red hat 2021-07-17
+  (cond 
+    ((= equipNozzleType "vertical") 
+      (InsertBsGCTOneVerticalEquipNozzle insPt barrelRadius newBarrelHalfHeight thickNess dataType drawFrameScale straightEdgeHeight 
+        upLeftNozzleDictData upRightNozzleDictData downLeftNozzleDictData downRightNozzleDictData sideLeftNozzleDictData sideRightNozzleDictData)
+     )
+    ((= equipNozzleType "horizontial") 
+      (InsertBsGCTOneHorizontialEquipNozzle insPt barrelRadius newBarrelHalfHeight thickNess dataType drawFrameScale straightEdgeHeight 
+        upLeftNozzleDictData upRightNozzleDictData downLeftNozzleDictData downRightNozzleDictData sideLeftNozzleDictData sideRightNozzleDictData)
+     )
+  )
+)
+
+; 2021-07-17
+(defun InsertBsGCTOneHorizontialEquipNozzle (insPt barrelRadius newBarrelHalfHeight thickNess dataType drawFrameScale straightEdgeHeight upLeftNozzleDictData 
+                                             upRightNozzleDictData downLeftNozzleDictData downRightNozzleDictData sideLeftNozzleDictData sideRightNozzleDictData /) 
+  (GenerateUpEllipseHeadNozzle (MoveInsertPositionUtils insPt 0 (+ newBarrelHalfHeight (/ barrelRadius 2) thickNess)) 
+    (+ barrelRadius thickNess) dataType thickNess drawFrameScale upLeftNozzleDictData upRightNozzleDictData)
+  (GenerateDownEllipseHeadNozzle (MoveInsertPositionUtils insPt 0 (GetNegativeNumberUtils (+ newBarrelHalfHeight (/ barrelRadius 2) thickNess))) 
+    (+ barrelRadius thickNess) dataType thickNess drawFrameScale downLeftNozzleDictData downRightNozzleDictData)
+  (GenerateSideLeftNozzle (MoveInsertPositionUtils insPt (GetNegativeNumberUtils (+ barrelRadius thickNess)) (- newBarrelHalfHeight straightEdgeHeight)) 
+    (+ barrelRadius thickNess) dataType sideLeftNozzleDictData drawFrameScale)
+  (GenerateSideRightNozzle (MoveInsertPositionUtils insPt (+ barrelRadius thickNess) (- newBarrelHalfHeight straightEdgeHeight)) 
+    (+ barrelRadius thickNess) dataType sideRightNozzleDictData drawFrameScale)
+)
+
+; 2021-07-17
+(defun InsertBsGCTOneVerticalEquipNozzle (insPt barrelRadius newBarrelHalfHeight thickNess dataType drawFrameScale straightEdgeHeight upLeftNozzleDictData 
+                                          upRightNozzleDictData downLeftNozzleDictData downRightNozzleDictData sideLeftNozzleDictData sideRightNozzleDictData /) 
   (GenerateUpEllipseHeadNozzle (MoveInsertPositionUtils insPt 0 (+ newBarrelHalfHeight (/ barrelRadius 2) thickNess)) 
     (+ barrelRadius thickNess) dataType thickNess drawFrameScale upLeftNozzleDictData upRightNozzleDictData)
   (GenerateDownEllipseHeadNozzle (MoveInsertPositionUtils insPt 0 (GetNegativeNumberUtils (+ newBarrelHalfHeight (/ barrelRadius 2) thickNess))) 
@@ -842,7 +870,7 @@
   (GenerateSingleLineVerticalEllipseHeadUtils (MoveInsertPositionUtils insPt 0 newBarrelHalfHeight) 
     barrelRadius "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" 1 thickNess straightEdgeHeight)
   ; refactored at 2021-07-14
-  (InsertBsGCTOneVerticalEquipNozzle insPt barrelRadius newBarrelHalfHeight thickNess dataType drawFrameScale oneEquipNozzleDictData straightEdgeHeight)
+  (InsertBsGCTOneEquipNozzle insPt barrelRadius newBarrelHalfHeight thickNess dataType drawFrameScale oneEquipNozzleDictData straightEdgeHeight "vertical")
   (GenerateVerticalSingleLineBarrelUtils insPt barrelRadius newBarrelHalfHeight "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" thickNess)
   ; refactored at 2021-05-27
   (GenerateBsGCTVerticalTankCenterLine insPt newBarrelHalfHeight barrelRadius thickNess)
@@ -866,7 +894,7 @@
   (setq legSupportHeight (atoi (GetDottedPairValueUtils "SUPPORT_HEIGHT" oneBsGCTEquipSupportDictData)))
   (GenerateSingleLineVerticalEllipseHeadUtils (MoveInsertPositionUtils insPt 0 newBarrelHalfHeight) 
     barrelRadius "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" 1 thickNess straightEdgeHeight)
-  (InsertBsGCTOneVerticalEquipNozzle insPt barrelRadius newBarrelHalfHeight thickNess dataType drawFrameScale oneEquipNozzleDictData straightEdgeHeight)
+  (InsertBsGCTOneEquipNozzle insPt barrelRadius newBarrelHalfHeight thickNess dataType drawFrameScale oneEquipNozzleDictData straightEdgeHeight "vertical")
   (GenerateVerticalSingleLineBarrelUtils insPt barrelRadius newBarrelHalfHeight "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" thickNess)
   ; refactored at 2021-05-27
   (GenerateBsGCTVerticalTankCenterLine insPt newBarrelHalfHeight barrelRadius thickNess)
@@ -926,7 +954,7 @@
   (setq newBarrelHalfHeight (+ barrelHalfHeight straightEdgeHeight totalFlangeHeight))
   (GenerateSingleLineVerticalEllipseHeadUtils (MoveInsertPositionUtils insPt 0 newBarrelHalfHeight) 
     barrelRadius "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" 1 thickNess straightEdgeHeight)
-  (InsertBsGCTOneVerticalEquipNozzle insPt barrelRadius newBarrelHalfHeight thickNess dataType drawFrameScale oneEquipNozzleDictData straightEdgeHeight)
+  (InsertBsGCTOneEquipNozzle insPt barrelRadius newBarrelHalfHeight thickNess dataType drawFrameScale oneEquipNozzleDictData straightEdgeHeight "vertical")
   ; the upper Flange - rotate is PI
   (GenerateBsGCTFlangeUtils (MoveInsertPositionUtils insPt 0 (- newBarrelHalfHeight straightEdgeHeight)) dataType barrelRadius thickNess PI -1)
   (GenerateVerticalSingleLineBarrelUtils insPt barrelRadius barrelHalfHeight "0DataFlow-BsThickLine" "0DataFlow-BsCenterLine" thickNess)
