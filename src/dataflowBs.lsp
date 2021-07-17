@@ -456,6 +456,8 @@
   (setq sideLeftNozzleDictData (GetOneEquipSideLeftNozzleDictData oneEquipNozzleDictData))
   (setq sideRightNozzleDictData (GetOneEquipSideRightNozzleDictData oneEquipNozzleDictData))
   (setq *GCTTotalHeightInsptList* nil) ;; the key for solve a red hat 2021-07-17
+  (setq *GCTSideRightInsptList* nil) ;; the key for solve a red hat 2021-07-17
+  (setq *GCTSideLeftInsptList* nil) ;; the key for solve a red hat 2021-07-17
   (GenerateUpEllipseHeadNozzle (MoveInsertPositionUtils insPt 0 (+ newBarrelHalfHeight (/ barrelRadius 2) thickNess)) 
     (+ barrelRadius thickNess) dataType thickNess drawFrameScale upLeftNozzleDictData upRightNozzleDictData)
   (GenerateDownEllipseHeadNozzle (MoveInsertPositionUtils insPt 0 (GetNegativeNumberUtils (+ newBarrelHalfHeight (/ barrelRadius 2) thickNess))) 
@@ -1191,32 +1193,21 @@
 )
 
 ; 2021-05-30
+;; refactored at 2021-07-17
 (defun InsertBsGCTLugSupport (insPt dataType oneBsGCTEquipSupportDictData thickNess barrelRadius barrelHalfHeight drawFrameScale / 
                               lugSupportOffset flangeTopOffset lugYPosition supportType leftLugPosition rightLugPosition) 
   (setq lugSupportOffset (atoi (GetDottedPairValueUtils "SUPPORT_POSITION" oneBsGCTEquipSupportDictData)))
   (setq flangeTopOffset (+ barrelHalfHeight (GetFlangeHeightEnums (* 2 barrelRadius))))
-  (setq lugYPosition (- flangeTopOffset lugSupportOffset))
+  (setq lugYPosition (- barrelHalfHeight lugSupportOffset))
+  ; (setq lugYPosition (- flangeTopOffset lugSupportOffset))
   (setq supportType (GetLugSupportTypeUtils oneBsGCTEquipSupportDictData))
   (setq leftLugPosition (MoveInsertPositionUtils insPt (- 0 thickNess thickNess barrelRadius) lugYPosition))
   (InsertBsGCTLeftLugSupport leftLugPosition supportType dataType oneBsGCTEquipSupportDictData thickNess)
   (setq rightLugPosition (MoveInsertPositionUtils insPt (+ thickNess thickNess barrelRadius) lugYPosition))
   (InsertBsGCRightLugSupport rightLugPosition supportType dataType oneBsGCTEquipSupportDictData thickNess)
-  ; (setq groundPlateInsPt (MoveInsertPositionUtils insPt (GetSaddleSupportDownOffsetEnums (* 2 barrelRadius)) (- 150 saddleHeight)))
-  ; (InsertBsGCTFaceRightGroundPlate groundPlateInsPt dataType)
-  ; ; groundPlate Dimension 
-  ; (InsertBsGCTVerticalRotatedDimension drawFrameScale
-  ;   groundPlateInsPt 
-  ;   (MoveInsertPositionUtils groundPlateInsPt 0 -150) 
-  ;   (MoveInsertPositionUtils groundPlateInsPt 100 0) 
-  ;   "") 
-  
   ; lug support Dimension 
-  ; Y direction
-  (InsertBsGCTVerticalRotatedDimension drawFrameScale
-    (MoveInsertPositionUtils insPt (- 0 thickNess thickNess barrelRadius) lugYPosition)
-    (MoveInsertPositionUtils insPt (- 0 thickNess thickNess barrelRadius) flangeTopOffset)
-    (MoveInsertPositionUtils leftLugPosition -100 0) 
-    "") 
+  ; Y direction ;; refactored at 2021-07-17
+  (setq *GCTSideRightInsptList* (append *GCTSideRightInsptList* (list rightLugPosition)))
   ; X direction
   (InsertBsGCTHorizontalRotatedDimension drawFrameScale
     (MoveInsertPositionUtils leftLugPosition (GetNegativeNumberUtils (GetLugSupportBlotOffsetEnums supportType)) 0) 
