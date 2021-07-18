@@ -665,7 +665,11 @@
              (setq nozzleInsPt (MoveInsertPositionUtils insPt 0 (GetNegativeNumberUtils nozzlePositionRadius)))
              ;; add the Nozzle Inspt List refactored at 2021-07-16 
              (setq *GCTSideRightInsptList* (append *GCTSideRightInsptList* (list (MoveInsertPositionUtils nozzleInsPt 150 0))))
-             (InsertBlockByRotateUtils nozzleInsPt "BsGCTGraphNozzle" "0DataFlow-BsThickLine" (list (cons 0 dataType)) (/ PI -2))
+             ;; add the insertType: Oblique insertion - 2021-07-18 
+             (cond 
+               ((= (GetDottedPairValueUtils "POSITION_DIRECTION" (car (cdr x))) "Ð±²å") (InsertBlockByRotateUtils nozzleInsPt "BsGCTGraphNozzle" "0DataFlow-BsThickLine" (list (cons 0 dataType)) (/ PI -4)))
+               (T (InsertBlockByRotateUtils nozzleInsPt "BsGCTGraphNozzle" "0DataFlow-BsThickLine" (list (cons 0 dataType)) (/ PI -2)))
+             )
              (if (> nozzlePositionRadius 0) (setq nozzleLeftInsPt nozzleInsPt))
              (InsertBsGTCRightNozzleTag nozzleInsPt equipTag (cdr x) drawFrameScale)
           ) 
@@ -680,7 +684,11 @@
              (setq nozzleInsPt (MoveInsertPositionUtils insPt 0 (GetNegativeNumberUtils nozzlePositionRadius)))
              ;; add the Nozzle Inspt List refactored at 2021-07-16 
              (setq *GCTSideLeftInsptList* (append *GCTSideLeftInsptList* (list (MoveInsertPositionUtils nozzleInsPt -150 0))))
-             (InsertBlockByRotateUtils nozzleInsPt "BsGCTGraphNozzle" "0DataFlow-BsThickLine" (list (cons 0 dataType)) (/ PI 2))
+             ;; add the insertType: Oblique insertion - 2021-07-18 
+             (cond 
+               ((= (GetDottedPairValueUtils "POSITION_DIRECTION" (car (cdr x))) "Ð±²å") (InsertBlockByRotateUtils nozzleInsPt "BsGCTGraphNozzle" "0DataFlow-BsThickLine" (list (cons 0 dataType)) (/ PI 4)))
+               (T (InsertBlockByRotateUtils nozzleInsPt "BsGCTGraphNozzle" "0DataFlow-BsThickLine" (list (cons 0 dataType)) (/ PI 2)))
+             )
              (if (> nozzlePositionRadius 0) (setq nozzleLeftInsPt nozzleInsPt))
              (InsertBsGTCLeftNozzleTag nozzleInsPt equipTag (cdr x) drawFrameScale)
           ) 
@@ -829,7 +837,11 @@
              (setq nozzleInsPt (MoveInsertPositionUtils insPt (GetNegativeNumberUtils yOffset) nozzlePositionRadius))
              ;; refactored at 2021-07-17
              (setq *GCTTotalLengthInsptList* (append *GCTTotalLengthInsptList* (list (MoveInsertPositionUtils nozzleInsPt -150 0))))
-             (InsertBlockByRotateUtils nozzleInsPt "BsGCTGraphNozzle" "0DataFlow-BsThickLine" (list (cons 0 dataType)) (/ PI 2))
+             ;; add the insertType: Oblique insertion - 2021-07-18 
+             (cond 
+               ((= (GetDottedPairValueUtils "POSITION_DIRECTION" (car (cdr x))) "Ð±²å") (InsertBlockByRotateUtils nozzleInsPt "BsGCTGraphNozzle" "0DataFlow-BsThickLine" (list (cons 0 dataType)) (/ PI 4)))
+               (T (InsertBlockByRotateUtils nozzleInsPt "BsGCTGraphNozzle" "0DataFlow-BsThickLine" (list (cons 0 dataType)) (/ PI 2)))
+             )
              (if (> nozzlePositionRadius 0) (setq nozzleLeftInsPt nozzleInsPt))
              (InsertBsGTCLeftNozzleTag nozzleInsPt equipTag (cdr x) drawFrameScale)
           ) 
@@ -846,7 +858,10 @@
              (setq nozzleInsPt (MoveInsertPositionUtils insPt yOffset nozzlePositionRadius))
              ;; refactored at 2021-07-17
              (setq *GCTTotalLengthInsptList* (append *GCTTotalLengthInsptList* (list (MoveInsertPositionUtils nozzleInsPt 150 0))))
-             (InsertBlockByRotateUtils nozzleInsPt "BsGCTGraphNozzle" "0DataFlow-BsThickLine" (list (cons 0 dataType)) (/ PI -2))
+             (cond 
+               ((= (GetDottedPairValueUtils "POSITION_DIRECTION" (car (cdr x))) "Ð±²å") (InsertBlockByRotateUtils nozzleInsPt "BsGCTGraphNozzle" "0DataFlow-BsThickLine" (list (cons 0 dataType)) (/ PI -4)))
+               (T (InsertBlockByRotateUtils nozzleInsPt "BsGCTGraphNozzle" "0DataFlow-BsThickLine" (list (cons 0 dataType)) (/ PI -2)))
+             )
              (if (> nozzlePositionRadius 0) (setq nozzleRightInsPt nozzleInsPt))
              (InsertBsGTCRightNozzleTag nozzleInsPt equipTag (cdr x) drawFrameScale)
           ) 
