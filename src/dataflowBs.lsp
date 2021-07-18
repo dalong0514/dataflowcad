@@ -552,19 +552,15 @@
 )
 
 ; 2021-07-15
+;; refactored at 2021-07-18
 (defun GenerateVerticalSideRightNozzle (insPt barrelRadius equipTag sideRightNozzleDictData drawFrameScale /) 
-  (if (IsNozzleOffsetAllNull sideRightNozzleDictData) 
-    (InsertBlockByRotateUtils insPt "BsGCTGraphNozzle" "0DataFlow-BsThickLine" (list (cons 0 dataType)) (/ PI -2))
-    (GenerateOneVerticalSideRightNozzle insPt barrelRadius equipTag sideRightNozzleDictData drawFrameScale)
-  )
+  (GenerateOneVerticalSideRightNozzle insPt barrelRadius equipTag sideRightNozzleDictData drawFrameScale)
 )
 
 ; 2021-07-15
+;; refactored at 2021-07-18
 (defun GenerateVerticalSideLeftNozzle (insPt barrelRadius equipTag sideLeftNozzleDictData drawFrameScale /) 
-  (if (IsNozzleOffsetAllNull sideLeftNozzleDictData) 
-    (InsertBlockByRotateUtils insPt "BsGCTGraphNozzle" "0DataFlow-BsThickLine" (list (cons 0 dataType)) (/ PI 2))
-    (GenerateOneVerticalSideLeftNozzle insPt barrelRadius equipTag sideLeftNozzleDictData drawFrameScale)
-  )
+  (GenerateOneVerticalSideLeftNozzle insPt barrelRadius equipTag sideLeftNozzleDictData drawFrameScale)
 )
 
 ; 2021-07-14
@@ -586,7 +582,7 @@
 ; 2021-07-14
 (defun GenerateVerticalDownLeftHeadNozzle (insPt barrelRadius equipTag downLeftNozzleDictData drawFrameScale /) 
   (if (IsNozzleOffsetAllNull downLeftNozzleDictData) 
-    (InsertBlockUtils insPt "BsGCTGraphNozzle" "0DataFlow-BsThickLine" (list (cons 0 equipTag)))
+    (InsertBlockByRotateUtils insPt "BsGCTGraphNozzle" "0DataFlow-BsThickLine" (list (cons 0 dataType)) PI)
     (GenerateOneVerticalDownLeftHeadNozzle insPt barrelRadius dataType downLeftNozzleDictData drawFrameScale)
   )
 )
@@ -594,7 +590,7 @@
 ; 2021-07-14
 (defun GenerateVerticalDownRightHeadNozzle (insPt barrelRadius equipTag downRightNozzleDictData drawFrameScale /) 
   (if (IsNozzleOffsetAllNull downRightNozzleDictData) 
-    (InsertBlockUtils insPt "BsGCTGraphNozzle" "0DataFlow-BsThickLine" (list (cons 0 equipTag)))
+    (InsertBlockByRotateUtils insPt "BsGCTGraphNozzle" "0DataFlow-BsThickLine" (list (cons 0 dataType)) PI)
     (GenerateOneVerticalDownRightHeadNozzle insPt barrelRadius dataType downRightNozzleDictData drawFrameScale)
   )
 )
