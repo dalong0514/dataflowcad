@@ -2238,10 +2238,10 @@
 ; 2021-04-17
 ; refactored at 2021-05-25
 ; refactored at 2021-06-15
+; VerifyBsGCTDataBeforeInsert - refactored at 2021-07-15
 (defun InsertAllBsGCTTank (insPt allBsGCTSupportDictData bsGCTProjectDictData allPressureElementDictData 
-                           allStandardDictData allRequirementDictData allOtherRequestDictData allNozzleDictData  / 
-                           allBsGCTTankDictData tankPressureElementList tankOtherRequestList tankStandardList tankRequirementList insPtList) 
-  (setq allBsGCTTankDictData (GetBsGCTTankDictData))
+                           allStandardDictData allRequirementDictData allOtherRequestDictData allNozzleDictData allBsGCTTankDictData / 
+                           tankPressureElementList tankOtherRequestList tankStandardList tankRequirementList insPtList) 
   (setq tankStandardList (GetBsGCTTankAssembleData allStandardDictData)) 
   (setq tankRequirementList (GetBsGCTTankAssembleData allRequirementDictData)) 
   (setq tankPressureElementList (GetBsGCTTankAssembleData allPressureElementDictData)) 
@@ -2258,10 +2258,9 @@
 
 ; 2021-05-25
 (defun InsertAllBsGCTHeater (insPt allBsGCTSupportDictData bsGCTProjectDictData allPressureElementDictData 
-                             allStandardDictData allRequirementDictData allOtherRequestDictData allNozzleDictData / 
-                             allBsGCTHeaterDictData heaterPressureElementList 
+                             allStandardDictData allRequirementDictData allOtherRequestDictData allNozzleDictData allBsGCTHeaterDictData / 
+                             heaterPressureElementList 
                              heaterOtherRequestList heaterStandardList heaterRequirementList insPtList) 
-  (setq allBsGCTHeaterDictData (GetBsGCTHeaterDictData))
   (setq heaterStandardList (GetBsGCTHeaterAssembleData allStandardDictData)) 
   (setq heaterPressureElementList (GetBsGCTHeaterAssembleData allPressureElementDictData))
   (setq heaterRequirementList (GetBsGCTHeaterAssembleData allRequirementDictData)) 
@@ -2278,10 +2277,8 @@
 
 ; 2021-06-14
 (defun InsertAllBsGCTReactor (insPt allBsGCTSupportDictData bsGCTProjectDictData allPressureElementDictData 
-                              allStandardDictData allRequirementDictData allOtherRequestDictData allNozzleDictData / 
-                              allBsGCTReactorDictData reactorPressureElementList 
-                              reactorOtherRequestList reactorStandardList reactorRequirementList insPtList) 
-  (setq allBsGCTReactorDictData (GetBsGCTReactorDictData))
+                              allStandardDictData allRequirementDictData allOtherRequestDictData allNozzleDictData allBsGCTReactorDictData / 
+                              reactorPressureElementList reactorOtherRequestList reactorStandardList reactorRequirementList insPtList) 
   (setq reactorStandardList (GetBsGCTReactorAssembleData allStandardDictData)) 
   (setq reactorRequirementList (GetBsGCTReactorAssembleData allRequirementDictData))
   (setq reactorPressureElementList (GetBsGCTReactorAssembleData allPressureElementDictData))
@@ -2298,9 +2295,8 @@
 
 ; 2021-06-24
 (defun InsertAllBsGCTColumn (insPt allBsGCTSupportDictData bsGCTProjectDictData allPressureElementDictData 
-                             allStandardDictData allRequirementDictData allOtherRequestDictData allNozzleDictData / 
-                             allBsGCTTankDictData tankPressureElementList tankOtherRequestList tankStandardList tankRequirementList insPtList) 
-  (setq allBsGCTTankDictData (GetBsGCTTankDictData))
+                             allStandardDictData allRequirementDictData allOtherRequestDictData allNozzleDictData allBsGCTTankDictData / 
+                             tankPressureElementList tankOtherRequestList tankStandardList tankRequirementList insPtList) 
   (setq tankStandardList (GetBsGCTTankAssembleData allStandardDictData)) 
   (setq tankRequirementList (GetBsGCTTankAssembleData allRequirementDictData)) 
   (setq tankPressureElementList (GetBsGCTTankAssembleData allPressureElementDictData)) 
@@ -2320,8 +2316,8 @@
 ; refactored at 2021-06-15 Reactor
 ; refactored at 2021-06-24 Column
 ; refactored at 2021-07-13 allNozzleDictData
-(defun InsertAllBsGCTMacro (/ insPt allBsGCTSupportDictData bsGCTProjectDictData 
-                            allPressureElementDictData allStandardDictData allRequirementDictData allOtherRequestDictData allNozzleDictData) 
+(defun InsertAllBsGCTMacro (/ insPt allBsGCTSupportDictData bsGCTProjectDictData allPressureElementDictData allStandardDictData allRequirementDictData 
+                            allOtherRequestDictData allNozzleDictData allBsGCTTankDictData allBsGCTHeaterDictData allBsGCTReactorDictData allBsGCTColumnDictData) 
   (VerifyAllBsGCTSymbol)
   (setq insPt (getpoint "\n拾取工程图插入点："))
   (setq allBsGCTSupportDictData (GetBsGCTAllSupportDictData))
@@ -2331,19 +2327,57 @@
   (setq allRequirementDictData (GetBsGCTAllRequirementDictData))
   (setq allOtherRequestDictData (GetBsGCTAllOtherRequestDictData))
   (setq allNozzleDictData (GetBsGCTAllNozzleDictData))
+  (setq allBsGCTTankDictData (GetBsGCTTankDictData))
+  (setq allBsGCTHeaterDictData (GetBsGCTHeaterDictData))
+  (setq allBsGCTReactorDictData (GetBsGCTReactorDictData))
+  ; (setq allBsGCTColumnDictData (GetBsGCTColumnDictData))
+  ;; refactored at 2021-07-18
+  (VerifyBsGCTDataBeforeInsert allBsGCTTankDictData allBsGCTHeaterDictData allBsGCTReactorDictData allBsGCTColumnDictData allBsGCTSupportDictData)
   (InsertAllBsGCTTank insPt allBsGCTSupportDictData bsGCTProjectDictData 
-    allPressureElementDictData allStandardDictData allRequirementDictData allOtherRequestDictData allNozzleDictData)
-  (InsertAllBsGCTHeater (MoveInsertPositionUtils insPt 0 -10000) 
-    allBsGCTSupportDictData bsGCTProjectDictData allPressureElementDictData allStandardDictData allRequirementDictData allOtherRequestDictData allNozzleDictData)
-  (InsertAllBsGCTReactor (MoveInsertPositionUtils insPt 0 -20000) 
-    allBsGCTSupportDictData bsGCTProjectDictData allPressureElementDictData allStandardDictData allRequirementDictData allOtherRequestDictData allNozzleDictData)
-  ; (InsertAllBsGCTColumn (MoveInsertPositionUtils insPt 0 -30000) 
-  ;   allBsGCTSupportDictData bsGCTProjectDictData allPressureElementDictData allStandardDictData allRequirementDictData allOtherRequestDictData allNozzleDictData)
+    allPressureElementDictData allStandardDictData allRequirementDictData allOtherRequestDictData allNozzleDictData allBsGCTTankDictData)
+  (InsertAllBsGCTHeater (MoveInsertPositionUtils insPt 0 -10000) allBsGCTSupportDictData bsGCTProjectDictData 
+    allPressureElementDictData allStandardDictData allRequirementDictData allOtherRequestDictData allNozzleDictData allBsGCTHeaterDictData)
+  (InsertAllBsGCTReactor (MoveInsertPositionUtils insPt 0 -20000) allBsGCTSupportDictData bsGCTProjectDictData 
+    allPressureElementDictData allStandardDictData allRequirementDictData allOtherRequestDictData allNozzleDictData allBsGCTReactorDictData)
+  ; (InsertAllBsGCTColumn (MoveInsertPositionUtils insPt 0 -30000) allBsGCTSupportDictData bsGCTProjectDictData 
+  ;   allPressureElementDictData allStandardDictData allRequirementDictData allOtherRequestDictData allNozzleDictData allBsGCTColumnDictData)
 )
 
 ; 2021-04-21
 (defun c:InsertAllBsGCT ()
   (ExecuteFunctionAfterVerifyDateUtils 'InsertAllBsGCTMacro '())
+)
+
+;; 2021-07-18
+(defun VerifyBsGCTDataBeforeInsert (allBsGCTTankDictData allBsGCTHeaterDictData allBsGCTReactorDictData allBsGCTColumnDictData allBsGCTSupportDictData /) 
+  (VerifyBsGCTDataDrawFrameScale allBsGCTTankDictData)
+  (VerifyBsGCTDataDrawFrameScale allBsGCTHeaterDictData)
+  (VerifyBsGCTDataDrawFrameScale allBsGCTReactorDictData)
+  ; (VerifyBsGCTDataDrawFrameScale allBsGCTColumnDictData)
+  (VerifyBsGCTDataSupportDictData allBsGCTSupportDictData)
+)
+
+;; 2021-07-18
+(defun VerifyBsGCTDataSupportDictData (allBsGCTSupportDictData /) 
+  (if (= allBsGCTSupportDictData nil) 
+    (alert "要生成的工程图其支座数据不能为空！")
+  )
+)
+
+;; 2021-07-18
+(defun VerifyBsGCTDataDrawFrameScale (allBsGCTEquipDictData /) 
+  (if (IsAllEquipDrawFrameScaleNull allBsGCTEquipDictData) 
+    (alert "要生成的工程图其图框比例不能为空！")
+  )
+)
+
+;; 2021-07-18
+(defun IsAllEquipDrawFrameScaleNull (allBsGCTEquipDictData /) 
+  (vl-some '(lambda (x) 
+             (= (GetDottedPairValueUtils "drawFrameScale" x) "") 
+          ) 
+    allBsGCTEquipDictData
+  ) 
 )
 
 ;;;-------------------------------------------------------------------------;;;
