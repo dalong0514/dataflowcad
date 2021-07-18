@@ -772,7 +772,7 @@
              (setq nozzlePositionRadius (atoi (GetDottedPairValueUtils "POSITION_OFFSET" (car (cdr x)))))
              (setq nozzleInsPt (MoveInsertPositionUtils insPt (GetNegativeNumberUtils nozzlePositionRadius) 0))
              ;; add the Nozzle Inspt List refactored at 2021-07-16 
-            ;  (setq *GCTSideLeftInsptList* (append *GCTSideLeftInsptList* (list (MoveInsertPositionUtils nozzleInsPt -150 0))))
+             (setq *GCTSideDownInsptList* (append *GCTSideDownInsptList* (list (MoveInsertPositionUtils nozzleInsPt 0 -150))))
              (InsertBlockByRotateUtils nozzleInsPt "BsGCTGraphNozzle" "0DataFlow-BsThickLine" (list (cons 0 dataType)) PI)
              (if (> nozzlePositionRadius 0) (setq nozzleLeftInsPt nozzleInsPt))
              (InsertBsGTCHorizontalDownNozzleTag nozzleInsPt equipTag (cdr x) drawFrameScale)
@@ -787,7 +787,7 @@
              (setq nozzlePositionRadius (atoi (GetDottedPairValueUtils "POSITION_OFFSET" (car (cdr x)))))
              (setq nozzleInsPt (MoveInsertPositionUtils insPt nozzlePositionRadius 0))
              ;; add the Nozzle Inspt List refactored at 2021-07-16 
-            ;  (setq *GCTSideLeftInsptList* (append *GCTSideLeftInsptList* (list (MoveInsertPositionUtils nozzleInsPt -150 0))))
+             (setq *GCTSideDownInsptList* (append *GCTSideDownInsptList* (list (MoveInsertPositionUtils nozzleInsPt 0 -150))))
              (InsertBlockByRotateUtils nozzleInsPt "BsGCTGraphNozzle" "0DataFlow-BsThickLine" (list (cons 0 dataType)) PI)
              (if (> nozzlePositionRadius 0) (setq nozzleLeftInsPt nozzleInsPt))
              (InsertBsGTCHorizontalDownNozzleTag nozzleInsPt equipTag (cdr x) drawFrameScale)
@@ -994,6 +994,26 @@
 ; 2021-07-18
 (defun InsertBsGCTOneHorizontalEquipGlobalDimension (insPt barrelHalfHeight straightEdgeHeight barrelRadius thickNess drawFrameScale /)
   (InsertBsGCTOneEquipSideUpDimension insPt barrelHalfHeight straightEdgeHeight barrelRadius thickNess drawFrameScale)
+  (InsertBsGCTOneEquipSideDownDimension insPt barrelHalfHeight straightEdgeHeight barrelRadius thickNess drawFrameScale)
+)
+
+; 2021-07-18
+(defun InsertBsGCTOneEquipSideDownDimension (insPt barrelHalfHeight straightEdgeHeight barrelRadius thickNess drawFrameScale /) 
+  (setq *GCTSideDownInsptList* 
+         (append *GCTSideDownInsptList* (list (MoveInsertPositionUtils insPt (GetNegativeNumberUtils barrelHalfHeight) (GetNegativeNumberUtils (+ barrelRadius thickNess))))))
+  (setq *GCTSideDownInsptList* (append *GCTSideDownInsptList* (list (MoveInsertPositionUtils insPt barrelHalfHeight (GetNegativeNumberUtils (+ barrelRadius thickNess))))))
+  (setq *GCTSideDownInsptList* (vl-sort *GCTSideDownInsptList* '(lambda (x y) (< (car x) (car y)))))
+  (mapcar '(lambda (x y) 
+              (InsertBsGCTHorizontalRotatedDimension drawFrameScale 
+                x
+                y 
+                (MoveInsertPositionUtils insPt (GetNegativeNumberUtils (GetXHalfDistanceForTwoPoint x y)) (GetNegativeNumberUtils (+ barrelRadius thickNess 600))) 
+                "")
+            ) 
+    *GCTSideDownInsptList*
+    (cdr *GCTSideDownInsptList*)
+  )
+  (setq *GCTSideDownInsptList* nil)
 )
 
 ; 2021-07-18
@@ -1158,6 +1178,10 @@
   (InsertBsGCTHorizonticalTankBarrelDimension insPt barrelRadius barrelHalfHeight thickNess straightEdgeHeight saddleSupportHeight saddleSupportOffset drawFrameScale)
   (InsertBsGCTHorizonticalTankAnnotation insPt dataType barrelRadius headThickNess straightEdgeHeight drawFrameScale)
   ;; refactored at 2021-07-18
+  (setq *GCTSideDownInsptList* 
+         (append *GCTSideDownInsptList* (list (MoveInsertPositionUtils insPt saddleSupportOffset (GetNegativeNumberUtils (+ barrelRadius thickNess))))))
+  (setq *GCTSideDownInsptList* 
+         (append *GCTSideDownInsptList* (list (MoveInsertPositionUtils insPt (GetNegativeNumberUtils saddleSupportOffset) (GetNegativeNumberUtils (+ barrelRadius thickNess))))))
   (InsertBsGCTOneHorizontalEquipGlobalDimension insPt barrelHalfHeight straightEdgeHeight barrelRadius thickNess drawFrameScale)
 )
 
@@ -1327,18 +1351,6 @@
     (MoveInsertPositionUtils insPt (- 0 barrelHalfHeight straightEdgeHeight) (GetNegativeNumberUtils barrelRadius)) 
     ; the Y position of dimension is option
     (MoveInsertPositionUtils insPt 0 (GetNegativeNumberUtils (- barrelRadius 100))) 
-    "") 
-  ; two saddle support
-  (InsertBsGCTHorizontalRotatedDimension drawFrameScale
-    (MoveInsertPositionUtils insPt saddleSupportOffset (GetNegativeNumberUtils (+ barrelRadius saddleSupportHeight))) 
-    (MoveInsertPositionUtils insPt (GetNegativeNumberUtils saddleSupportOffset) (GetNegativeNumberUtils (+ barrelRadius saddleSupportHeight)))  
-    (MoveInsertPositionUtils insPt 0 (GetNegativeNumberUtils (+ barrelRadius saddleSupportHeight 200))) 
-    "") 
-  ;; left saddle support
-  (InsertBsGCTHorizontalRotatedDimension drawFrameScale
-    (MoveInsertPositionUtils insPt (GetNegativeNumberUtils barrelHalfHeight) (GetNegativeNumberUtils barrelRadius)) 
-    (MoveInsertPositionUtils insPt (GetNegativeNumberUtils saddleSupportOffset) (GetNegativeNumberUtils barrelRadius))  
-    (MoveInsertPositionUtils insPt 0 (GetNegativeNumberUtils (+ barrelRadius saddleSupportHeight 200))) 
     "") 
 )
 
